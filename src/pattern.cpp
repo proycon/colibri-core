@@ -26,36 +26,6 @@ const unsigned char Pattern::category() const {
 
 
 
-
-/*
-int reader_passmarker(const unsigned char c, std::istream * in) const {
-    //read marker from file and skip
-    if ((c >= FACTOR1) && (C <= FACTOR9)) {
-        //read size of the factor
-        unsigned char size;
-        in->read((char *) &size, sizeof(char));
-        //advance pointer (skip)
-        const size_t pos = in->tellg();
-        in->seekg(pos + size);
-    }
-    return i+1;
-}
-
-
-
-void Pattern::reader_marker(unsigned char * _data, std::istream * in) {
-    //read marker from file into data
-    if ((c >= FACTOR1) && (C <= FACTOR9)) {
-        unsigned char size;
-        in->read((char *) _data, sizeof(char));
-        in->read((char *) _data + 1, _data[0]);
-    }
-}
-*/
-
-
-
-
 const unsigned int Pattern::size() const {
     //return the size of the pattern (in bytes)
     if (iskey()) return sizeof(size_t);
@@ -108,10 +78,6 @@ const unsigned int Pattern::n() const {
 
 const StructureType Pattern::type() const {
     //return the size of the pattern (in tokens)
-    if (iskey()) return 0;
-
-
-
     int i = 0;
     int n = 0;
     do {
@@ -138,8 +104,6 @@ const StructureType Pattern::type() const {
 
 
 const size_t Pattern::hash(bool stripmarkers) const {
-    if (iskey()) return (size_t) *(data+1);
-
     bool clean = true;
 
     int s = 0;
@@ -207,10 +171,6 @@ const size_t Pattern::hash(bool stripmarkers) const {
 
 
 void Pattern::write(ostream * out) const {
-    if (iskey()) {
-        cerr << "INTERNAL ERROR Pattern::write(): Attempting to write unresolved PatternKey! Not possible!" << endl;
-        throw InternalError();
-    }
     const int _size = size();
     if (_size <= 0) {
         cerr << "INTERNAL ERROR Pattern::write(): Writing pattern with size <= 0! Not possible!" << endl;
@@ -293,5 +253,38 @@ Pattern::Pattern(const unsigned char* dataref, const int _size) {
 
 Pattern::~Pattern() {
     delete[] data;
+}
+
+
+bool Pattern::operator==(const Pattern &other) const {
+        const int s = size();
+        if (size() == other.size()) {
+            for (int i = 0; i < s; i++) {
+                if (data[i] != other.data[i]) return false;
+            }
+            return true;
+        } else {
+            return false;
+        }        
+}
+
+bool Pattern::operator!=(const EncAnyGram &other) const {
+    return !(*this == other);
+}
+
+
+Pattern & Pattern::operator =(Pattern other) { //(note: argument passed by value!
+        //delete old data
+        if (data != NULL) delete [] data;
+        
+        //set new data
+        const int s = other.size();        
+        data = new unsigned char[s];   
+        for (int i = 0; i < s; i++) {
+            data[i] = other.data[i];
+        }  
+ 
+        // by convention, always return *this (for chaining)
+        return *this;
 }
 
