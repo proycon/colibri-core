@@ -22,18 +22,9 @@ enum PatternCategory {
     KEY = 0, NGRAM = 1, FIXEDSKIPGRAM = 2, DYNAMICSKIPGRAM = 3;
 };
 
-enum StructureType { 
-    STRUCT_PATTERN = 0, //undefined pattern (if n==1 -> token)
-    STRUCT_SENTENCE = 1,
-    STRUCT_PARAGRAPH = 2,
-    STRUCT_HEADER = 3, //like paragraph
-    STRUCT_TEXT = 4, //aka document
-    STRUCT_QUOTE = 5,
-    STRUCT_DIV = 6,
-};
+enum Markers { // <128 size
+    ENDMARKER = 0, //marks the end of each pattern (necessary!)
 
-enum Markers {
-    ENDMARKER = 0,
     TEXTMARKER = 255, //aka begin document 
     SENTENCEMARKER = 254,
     PARAGRAPHMARKER = 253,
@@ -41,21 +32,6 @@ enum Markers {
     ENDDIVMARKER = 251,
     HEADERMARKER = 250,
     
-    IDMARKER = 140,
-    ANNOTATORMARKER = 141,
-    ANNOTATORAUTOMARKER = 142,
-    ANNOTATORMANUALMARKER = 143,
-
-    FACTOR9 = 139,
-    FACTOR8 = 138,
-    FACTOR7 = 137,
-    FACTOR6 = 136,
-    FACTOR5 = 135,
-    FACTOR4 = 134,
-    FACTOR3 = 133,
-    FACTOR2 = 132,
-    FACTOR1 = 131,
-
     DYNAMICGAP = 129,
     FIXEDGAP = 128,
 };
@@ -63,26 +39,6 @@ enum Markers {
 std::set<unsigned char> ALLMARKERS;
 for (int i = 130; i < 256; i++) ALLMARKERS.insert((unsigned char) i);
 
-
-enum FactorType {
-    FT_CONTENT = 0,
-    FT_ID = 1, 
-    FT_TOKENANNOTATION = 2,
-    FT_SPANANNOTATION = 3,    
-};
-
-class FactorDef {
-   private:
-    FactorType type;
-    std::string name; //corresponds with for instance FoLiA tagname
-    std::string set;
-    ClassDecoder * classdecoder;
-   public:
-    FactorType gettype() { return type; }
-    std::string getname() { return name; }
-    std::string getset() { return set; }
-    FactorDef(FactorType type, std::string name, std::set set, ClassDecoder * classdecoder = NULL) { this->type = type; this->name = name; this->set = set; this->classdecoder = classdecoder; }
-};
 
 
 class PatternKeyError: public std::exception {
@@ -94,19 +50,18 @@ class PatternKeyError: public std::exception {
 void readanddiscardpattern(std::istream * in);
 int reader_passmarker(const unsigned char c, std::istream * in); 
 
+
+
+
 class Pattern {
     protected:
-     //uint8_t props; //holds category in first three bits, copy in third bit, remaining fourth are reserved 
-     //void setprops(PatternCategory category); //category can be inferred from data
-     
-     int reader_passmarker(int i) const; //auxiliary function to aid in parsing binary data
      void reader_marker(unsigned char * _data, std::istream * in);
     public:
      unsigned char * data;
 
      Pattern();
-     Pattern(const unsigned char* dataref, const int size, const bool copy=true, const set<int> * factors = NULL);
-     Pattern(const Pattern& ref, int begin, int length, const bool copy=true, const set<int> * factors = NULL); //slice constructor
+     Pattern(const unsigned char* dataref, const int size); //low-level constructor
+     Pattern(const Pattern& ref, int begin, int length); //slice constructor
      Pattern(const Pattern& ref);
      Pattern(std::istream * in); //read from file
      ~Pattern();
@@ -115,16 +70,12 @@ class Pattern {
 
      const unsigned int n() const; //return the size of the pattern in tokens (will return 0 if variable width gaps are present!)
      const unsigned int size() const; //return the size of the pattern (in bytes)
-     const std::set<char> factors() const; //return set of factors present (contain numbers 1...9)
      const unsigned char category() const;
      const StructureType type() const;
      const bool isskipgram() const { return category() > NGRAM; }
-     const bool iskey() const { return (data[0] == 0); }
-
 
 
      virtual std::string str(ClassDecoder& classdecoder) const; //pattern to string (decode)
-     virtual std::string str(vector<ClassDecoder*> classdecoder, std::string factordelimiter="|") const; //pattern to string, with all factors
      virtual bool out() const;
 
      bool operator==(const Pattern * other) const;
@@ -134,43 +85,33 @@ class Pattern {
      Pattern operator +(const Pattern&) const;
 
 
-     virtual size_t hash(bool stripmarkers=true) const;
 
-     Pattern slice(const int begin,const int length, const bool copy=true, const int factors=1) const; 
-     
+     Pattern slice(const int begin,const int length) const; 
      Pattern addcontext(const Pattern & leftcontext, const Pattern & rightcontext) const;
-     Pattern gettoken(int index, const bool copy=true, const int factors=1) const; 
+     Pattern gettoken(const int index) const; 
      int gettoken(const int index) const; // but returns class as int  (was: getclass)
     
 
      bool contains(const Pattern & pattern) const;
 
-     int ngrams(vector<const Pattern> & container, int n, const bool copy=true, const int factors=1) const; //return multiple ngrams
-     Pattern ngram(int n, int index, const bool copy=true,const int factors=1) const; //return a single ngram
-     int parts(vector<const Pattern> & container, const bool copy=true, const int factors=1) const; //only for skipgrams
+     int ngrams(vector<const Pattern> & container, int n) const; //return multiple ngrams
+     Pattern ngram(int n, int index) const; //return a single ngram
+     int parts(vector<const Pattern> & container) const; //only for skipgrams
      int parts(std::vector<std::pair<int,int> > & container) const; //inverse of getgaps
      int gaps(std::vector<std::pair<int,int> > & container) const;
 
      void mask(std::vector<bool> & container) const; //returns a boolean mask of the skipgram (0 = gap(encapsulation) , 1 = skipgram coverage)
-
-     Pattern refactor(vector<int> factors) const;
 };
 
 
 
 class PatternStore {
-    protected:
-        map<int, FactorDef> factors;
     public:
         PatternStore();
 
-        virtual bool has(const Pattern *) const =0;
-        virtual bool hasfactor(const Pattern *, int factor=0) const =0;
+        virtual bool has(const Pattern &) const =0;
 
-        virtual void addfactor(FactorDef factordef);
-
-        virtual const Pattern * get(const Pattern *) =0; //get the pattern in the store, or NULL if it does not exist
-        virtual std::vector<const Pattern *> getbyfactor(const Pattern *, int factor=0) =0; //get the pattern in the store, or NULL if it does not exist
+        virtual const Pattern * get(const Pattern &) =0; //get the pattern in the store, or NULL if it does not exist
         
         virtual size_t size() const =0; 
 
@@ -184,26 +125,21 @@ typedef unordered_map<const Pattern, T> t_patternmap;
 
 typedef unordered_set<const Pattern> t_patternset;
 
-typedef unordered_set<const Pattern> t_patternset_factorindex;
-typedef unordered_map<const Pattern, T>  t_patternmap_factorindex;
 
 
 class PatternSet: public PatternStore {
     protected:
         t_patternset data;
-        map<int,t_patternset_factorindex> factorindex;
     public:
 
         PatternSet(bool freeondestroy=true): PatternStore(freeondestroy) {};
         ~PatternSet();
 
-        void insert(const Pattern * pattern) { data.insert(pattern); }
         void insert(const Pattern pattern) {
-            Pattern * p = new Pattern(pattern);
             data.insert(pattern);
         }
 
-        bool has(const Pattern * pattern) const { return data.count(pattern); }
+        bool has(const Pattern & pattern) const { return data.count(pattern); }
 
 
 
@@ -224,7 +160,6 @@ class PatternSet: public PatternStore {
                 patterniterator operator++(int junk) { iter++; return *this; }
                 reference operator*() { return *iter; }
                 pointer operator->() { return iter; }
-                PatternKey key() { return PatternKey(iter->hash()); }
                 bool operator==(const patterniterator& other) { return iter == other.iter; }
                 bool operator!=(const patterniterator& other) { return iter != other.iter; }
             private:
@@ -240,11 +175,11 @@ class PatternSet: public PatternStore {
             return const_iterator(data.end());
         }
 
-        const_iterator find(const Pattern * pattern) {
+        const_iterator find(const Pattern pattern) {
             return const_iterator(data.find(pattern));
         }
         
-        const Pattern * get(const Pattern * pattern) {
+        const Pattern * get(const Pattern pattern) {
             const_iterator iter = find(pattern);
             if (iter != end()) {
                 return *iter;
@@ -256,7 +191,7 @@ class PatternSet: public PatternStore {
 
 };
 
-
+/*
 template<class T>
 class PatternMap<T>: public PatternStore {
     protected:
@@ -324,7 +259,7 @@ class PatternMap<T>: public PatternStore {
             } 
         }
 }
-
+*/
 
 namespace std {
 

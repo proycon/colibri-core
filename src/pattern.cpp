@@ -4,11 +4,6 @@ using namespace std;
 
 
 const unsigned char Pattern::category() const {
-    //return props >> 5; //get first three bits
-    
-    //return the size of the pattern (in bytes)
-    if (iskey()) return sizeof(size_t)+1;
-
     PatternCategory category = NGRAM;
 
     int i = 0;
@@ -24,35 +19,15 @@ const unsigned char Pattern::category() const {
             //we have a marker
             if ((c == FIXEDGAP) && (category < FIXEDSKIPGRAM)) category = FIXEDSKIPGRAM;
             if (c == DYNAMICGAP) return DYNAMICSKIPGRAM;
-            i = reader_passmarker(i);
+            i++;
         }
     } while (1);
 }
 
 
-//const bool Pattern::iscopy() const {
-//    return (bool) (props & 16); //get fourth bit
-//}
 
 
-//void Pattern::setprops(PatternCategory category) {
-//    props = category << 5; //set first three bits
-    //if (copy) props |= 16; //set fourth bit
-//}
-
-
-int Pattern::reader_passmarker(int i) const {
-    //read marker from memory
-    const unsigned char c = data[i];
-    if ((c >= FACTOR1) && (C <= FACTOR9)) {
-        i += data[i+1] //size of the factor
-    }
-    return i+1;
-}
-
-
-
-
+/*
 int reader_passmarker(const unsigned char c, std::istream * in) const {
     //read marker from file and skip
     if ((c >= FACTOR1) && (C <= FACTOR9)) {
@@ -76,6 +51,8 @@ void Pattern::reader_marker(unsigned char * _data, std::istream * in) {
         in->read((char *) _data + 1, _data[0]);
     }
 }
+*/
+
 
 
 
@@ -94,7 +71,7 @@ const unsigned int Pattern::size() const {
             i += c + 1
         } else {
             //we have a marker
-            i = reader_passmarker(i);
+            i++;
         }
     } while (1);
 }
@@ -120,10 +97,10 @@ const unsigned int Pattern::n() const {
             i++;
             n++;
         } else if (c == DYNAMICGAP) {
-            return 0;
+            return 0; //n is undefined if there's a dynamic gap!
         } else {
-            //we have a marker
-            i = reader_passmarker(i);
+            //we have another marker
+            i++;
         }
     } while (1);
 }
@@ -153,51 +130,11 @@ const StructureType Pattern::type() const {
             return STRUCT_HEADER;
         } else {
             //we have a different marker
-            i = reader_passmarker(i);
+            i++;
         }
     } while (1);
 }
 
-
-
-const set<int> Pattern::factors() const {
-    //return the size of the pattern (in tokens)
-    if (iskey()) return 0;
-
-    set<char> factors;
-    int i = 0;
-    int n = 0;
-    do {
-        const unsigned char c = data[i];
-        if (c == ENDMARKER) {
-            //end marker
-            return factors;
-        } else if (c < 128) {
-            i += c + 1;
-        } else if (c == FACTOR1) {
-            factors.insert(1);
-        } else if (c == FACTOR2) {
-            factors.insert(2);
-        } else if (c == FACTOR3) {
-            factors.insert(3);
-        } else if (c == FACTOR4) {
-            factors.insert(4);
-        } else if (c == FACTOR5) {
-            factors.insert(5);
-        } else if (c == FACTOR6) {
-            factors.insert(6);
-        } else if (c == FACTOR7) {
-            factors.insert(7);
-        } else if (c == FACTOR8) {
-            factors.insert(8);
-        } else if (c == FACTOR9) {
-            factors.insert(9);
-        } else {
-            //we have a marker
-            i = reader_passmarker(i);
-        }
-    } while (1);
-}
 
 
 const size_t Pattern::hash(bool stripmarkers) const {
@@ -217,7 +154,7 @@ const size_t Pattern::hash(bool stripmarkers) const {
             s += c + 1;
         } else {
             //we have a marker
-            s = reader_passmarker(s);
+            s++;
             clean = false;
         }
     } while (1);
