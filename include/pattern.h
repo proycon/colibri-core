@@ -93,15 +93,15 @@ class Pattern {
 
      Pattern operator +(const Pattern&) const;
 
+     int find(const Pattern & pattern) const; //returns the index, -1 if not fount 
+     bool contains(const Pattern & pattern) const;
 
-
-     Pattern slice(const int begin,const int length) const; 
+     //no slice method, use slice constructor
      Pattern addcontext(const Pattern & leftcontext, const Pattern & rightcontext) const;
      Pattern gettoken(const int index) const; 
      int gettoken(const int index) const; // but returns class as int  (was: getclass)
     
 
-     bool contains(const Pattern & pattern) const;
 
      int ngrams(vector<const Pattern> & container, int n) const; //return multiple ngrams
      Pattern ngram(int n, int index) const; //return a single ngram

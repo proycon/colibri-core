@@ -334,3 +334,28 @@ Pattern Pattern::operator +(const Pattern & other) const {
     return Pattern(buffer, s+s2);
 }
 
+
+int Pattern::find(const Pattern & pattern) const { //returns the index, -1 if not fount 
+    const int s = size();
+    const int s2 = pattern.size();
+    if (s2 > s) return -1;
+    
+    for (int i = 0; i < s; i++) {
+        if (data[i] == pattern.data[0]) {
+            bool match = true;
+            for (int j = 0; j < s2; j++) {
+                if (data[i+j] != pattern.data[j]) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) return i;
+        }
+    }
+    return -1;
+}
+
+bool Pattern::contains(const Pattern & pattern) const {
+    return (find(pattern) != -1);
+}
+
