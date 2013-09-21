@@ -287,7 +287,7 @@ Pattern & Pattern::operator =(Pattern other) { //(note: argument passed by value
         return *this;
 }
 
-Pattern operator +(const Pattern & other) const {
+Pattern Pattern::operator +(const Pattern & other) const {
     const int s = size();
     const int s2 = other.size();
     unsigned char buffer[s+s2]; 
