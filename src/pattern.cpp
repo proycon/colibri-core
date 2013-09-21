@@ -369,7 +369,59 @@ int Pattern::ngrams(vector<const Pattern> & container, const int n) const { //re
     
     for (int i = 0; i < (_n - n); i++) {
         container.append( Pattern(*this, i, n) );
+        found++;
     }
+    return found;
+}   
 
+int Pattern::parts(vector<pair<int,int>> & container) const {
+    //to be computed in bytes
+    int partbegin = 0;
+    int partlength = 0;
+
+    int found = 0;
+    int i = 0;
+    int n = 0;
+    do {
+        const unsigned char c = ref.data[i];
+        
+        if (c == ENDMARKER) {
+            partlength = n - partbegin;
+            if (partlength > 0) {
+                container.append(pair<int,int>(partbegin,partlength);
+                found++;
+            }
+            break;
+        } else if (c < 128) {
+            //we have a size
+            i += c + 1;
+            n++;
+        } else if (c == FIXEDGAP) || (c == DYNAMICGAP) {        
+            partlength = n - partbegin;
+            if (partlength > 0) {
+                container.append(pair<int,int>(partbegin,partlength);
+                found++;
+            }
+            i++;
+            n++; 
+            partbegin = n; //for next part
+        } else {
+            //we have another marker
+            i++;
+        }
+    } while (1);
+    return found;
+}
+
+int Pattern::parts(vector<const Pattern> & container) const {
+    vector<pair<int,int>> partoffsets; 
+    found = parts(partoffsets);
+
+    for (vector<pair<int,int>>::iterator iter = partoffsets.begin(); iter != partoffsets.end(); iter++) {
+        const int begin = iter->first;
+        const int length = iter->second;
+        container.append( Pattern(*this, begin, length) );
+    }
+    return found;
 }
 

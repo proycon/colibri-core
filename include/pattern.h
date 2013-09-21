@@ -98,18 +98,19 @@ class Pattern {
 
      int ngrams(vector<const Pattern> & container, const int n) const; //return multiple ngrams
 
+
+     int parts(vector<const Pattern> & container) const; 
+     int parts(std::vector<std::pair<int,int> > & container) const;
+
+     //CHANGES from old colibri ngram:
+     //
+     //no slice, ngram, gettoken method, use slice constructor
+     //no ngram method, use slice constructor
+     
      //NOT IMPLEMENTED YET:
 
-     //no slice method, use slice constructor
      Pattern addcontext(const Pattern & leftcontext, const Pattern & rightcontext) const;
-     Pattern gettoken(const int index) const; 
-     int gettoken(const int index) const; // but returns class as int  (was: getclass)
     
-
-
-     Pattern ngram(int n, int index) const; //return a single ngram
-     int parts(vector<const Pattern> & container) const; //only for skipgrams
-     int parts(std::vector<std::pair<int,int> > & container) const; //inverse of getgaps
      int gaps(std::vector<std::pair<int,int> > & container) const;
 
      void mask(std::vector<bool> & container) const; //returns a boolean mask of the skipgram (0 = gap(encapsulation) , 1 = skipgram coverage)
