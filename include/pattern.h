@@ -71,8 +71,8 @@ class Pattern {
      Pattern();
      Pattern(const unsigned char* dataref, const int size); //low-level constructor
      Pattern(const Pattern& ref, int begin, int length); //slice constructor
-     Pattern(const Pattern& ref);
-     Pattern(std::istream * in); //read from file
+     Pattern(const Pattern& ref); //copy constructor
+     Pattern(std::istream * in); //read from binary file constructor
      ~Pattern();
 
      void write(std::ostream * out) const; //write binary output
@@ -84,7 +84,7 @@ class Pattern {
      const bool isskipgram() const { return category() > NGRAM; }
 
 
-     virtual std::string str(ClassDecoder& classdecoder) const; //pattern to string (decode)
+     std::string tostring(ClassDecoder& classdecoder) const; //pattern to string (decode)
      virtual bool out() const;
 
      bool operator==(const Pattern * other) const;
@@ -93,8 +93,12 @@ class Pattern {
 
      Pattern operator +(const Pattern&) const;
 
-     int find(const Pattern & pattern) const; //returns the index, -1 if not fount 
+     int find(const Pattern & pattern) const; //returns the index, -1 if not found 
      bool contains(const Pattern & pattern) const;
+
+     int ngrams(vector<const Pattern> & container, const int n) const; //return multiple ngrams
+
+     //NOT IMPLEMENTED YET:
 
      //no slice method, use slice constructor
      Pattern addcontext(const Pattern & leftcontext, const Pattern & rightcontext) const;
@@ -103,7 +107,6 @@ class Pattern {
     
 
 
-     int ngrams(vector<const Pattern> & container, int n) const; //return multiple ngrams
      Pattern ngram(int n, int index) const; //return a single ngram
      int parts(vector<const Pattern> & container) const; //only for skipgrams
      int parts(std::vector<std::pair<int,int> > & container) const; //inverse of getgaps

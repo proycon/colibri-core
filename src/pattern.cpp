@@ -359,3 +359,17 @@ bool Pattern::contains(const Pattern & pattern) const {
     return (find(pattern) != -1);
 }
 
+int Pattern::ngrams(vector<const Pattern> & container, const int n) const { //return multiple ngrams
+    const int _n = n();
+    if (n > _n) return 0;
+
+    
+    int found = 0;
+
+    
+    for (int i = 0; i < (_n - n); i++) {
+        container.append( Pattern(*this, i, n) );
+    }
+
+}
+
