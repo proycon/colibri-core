@@ -15,13 +15,22 @@
 #include "common.h"
 
 
-const int MAINPATTERNBUFFERSIZE = 4096;
+const int MAINPATTERNBUFFERSIZE = 40960;
 unsigned char mainpatternbuffer[MAINPATTERNBUFFERSIZE];
 
 enum PatternCategory {
     KEY = 0, NGRAM = 1, FIXEDSKIPGRAM = 2, DYNAMICSKIPGRAM = 3;
 };
 
+enum StructureType { 
+    STRUCT_PATTERN = 0, //undefined pattern (if n==1 -> token)
+    STRUCT_SENTENCE = 1,
+    STRUCT_PARAGRAPH = 2,
+    STRUCT_HEADER = 3, //like paragraph
+    STRUCT_TEXT = 4, //aka document
+    STRUCT_QUOTE = 5,
+    STRUCT_DIV = 6,
+};
 enum Markers { // <128 size
     ENDMARKER = 0, //marks the end of each pattern (necessary!)
 
@@ -70,7 +79,7 @@ class Pattern {
 
      const unsigned int n() const; //return the size of the pattern in tokens (will return 0 if variable width gaps are present!)
      const unsigned int size() const; //return the size of the pattern (in bytes)
-     const unsigned char category() const;
+     const PatternCategory category() const;
      const StructureType type() const;
      const bool isskipgram() const { return category() > NGRAM; }
 

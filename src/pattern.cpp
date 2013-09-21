@@ -3,7 +3,7 @@
 using namespace std;
 
 
-const unsigned char Pattern::category() const {
+const PatternCategory Pattern::category() const {
     PatternCategory category = NGRAM;
 
     int i = 0;
@@ -171,13 +171,12 @@ const size_t Pattern::hash(bool stripmarkers) const {
 
 
 void Pattern::write(ostream * out) const {
-    const int _size = size();
-    if (_size <= 0) {
+    const int s = size();
+    if (s <= 0) {
         cerr << "INTERNAL ERROR Pattern::write(): Writing pattern with size <= 0! Not possible!" << endl;
         throw InternalError();
     }
-    out->write( (char*) &_size, sizeof(unsigned char) ); //data length
-    out->write( (char*) data , (int) _size ); //data
+    out->write( (char*) data , (int) s );
 }
 
 
@@ -286,5 +285,18 @@ Pattern & Pattern::operator =(Pattern other) { //(note: argument passed by value
  
         // by convention, always return *this (for chaining)
         return *this;
+}
+
+Pattern operator +(const Pattern & other) const {
+    const int s = size();
+    const int s2 = other.size();
+    unsigned char buffer[s+s2]; 
+    for (int i = 0; i < s; i++) {
+        buffer[i] = data[i];
+    }
+    for (int i = 0; i < s2; i++) {
+        buffer[s+i] = other.data[i];
+    }
+    return Pattern(buffer, s+s2);
 }
 
