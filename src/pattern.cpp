@@ -28,7 +28,6 @@ const PatternCategory Pattern::category() const {
 
 const unsigned int Pattern::size() const {
     //return the size of the pattern (in bytes)
-    if (iskey()) return sizeof(size_t);
 
     int i = 0;
     do {
@@ -50,7 +49,6 @@ const unsigned int Pattern::size() const {
 
 const unsigned int Pattern::n() const {
     //return the size of the pattern (in tokens)
-    if (iskey()) return 0;
 
     int i = 0;
     int n = 0;
@@ -63,11 +61,10 @@ const unsigned int Pattern::n() const {
             //we have a size
             i += c + 1;
             n++;
-        } else if (c == FIXEDGAP) {
+        } else if ((c == FIXEDGAP)  || (c == DYNAMICGAP)) {
+            //DYNAMICGAP is counted as 1, the minimum fill
             i++;
             n++;
-        } else if (c == DYNAMICGAP) {
-            return 0; //n is undefined if there's a dynamic gap!
         } else {
             //we have another marker
             i++;
@@ -248,6 +245,43 @@ Pattern::Pattern(const unsigned char* dataref, const int _size) {
     }
     data[j++] = ENDMARKER;
 
+}
+
+Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructor
+    //to be computed in bytes
+    int begin_b = 0;
+    int length_b = 0;
+
+    int i = 0;
+    int n = 0;
+    do {
+        const unsigned char c = ref.data[i];
+        
+        if ((n - begin == length) || (c == ENDMARKER)) {
+            length_b = i - begin_b;
+            break;
+        } else if (c < 128) {
+            //we have a size
+            i += c + 1;
+            n++;
+            if (n == begin) begin_b = i;
+        } else if (c == FIXEDGAP) || (c == DYNAMICGAP) {
+            i++;
+            n++;
+            if (n == begin) begin_b = i;
+        } else {
+            //we have another marker
+            i++;
+        }
+    } while (1);
+
+    const unsigned char _size = length_b + 1
+    data = new unsigned char[_size]
+    int j = 0;
+    for (int i = begin_b; i < length_b; i++) {
+        data[j++] = ref.data[i];
+    }
+    data[j++] = ENDMARKER;
 }
 
 Pattern::~Pattern() {
