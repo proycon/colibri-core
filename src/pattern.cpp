@@ -186,7 +186,7 @@ const size_t Pattern::hash(bool stripmarkers) const {
                 }
             } else {
                 //we have a marker
-                i = reader_passmarker(i);
+                i++;
                 clean = false;
             }
         } while (1);
@@ -234,15 +234,16 @@ void readanddiscardpattern(std::istream * in) {
             in->seekg(pos + size);
         } else {
             //we have a marker
-            reader_passmarker(c);
+            i++;
         }
     } while (1);
 }
 
+
+
 Pattern::Pattern(std::istream * in) {
     int i = 0;
     unsigned char c;
-    PatternCategory category = NGRAM;
     do {
         in->read( (char* ) &c, sizeof(char));
         mainpatternbuffer[i++] = c;
@@ -254,8 +255,8 @@ Pattern::Pattern(std::istream * in) {
             in->read( mainpatternbuffer + i, c)
             i += c;
         } else {
-            //we have a marker
-            reader_marker(mainpatternbuffer + i, in);
+            //other marker
+            mainpatternbuffer[i++] = c;
         }
     } while (1);
 
@@ -265,11 +266,10 @@ Pattern::Pattern(std::istream * in) {
         data[j] = mainpatternbuffer[j];
     }
 
-    //setprops(category, true);
 }
 
 
-Pattern::Pattern(const unsigned char* dataref, const int _size, const set<unsigned char> * markers = NULL) {
+Pattern::Pattern(const unsigned char* dataref, const int _size) {
 
     data = new unsigned char[_size]
     int j = 0;
@@ -292,6 +292,6 @@ Pattern::Pattern(const unsigned char* dataref, const int _size, const set<unsign
 }
 
 Pattern::~Pattern() {
-    if (iskey() || copy()) delete[] data;
+    delete[] data;
 }
 
