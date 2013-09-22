@@ -2,10 +2,10 @@ AM_CPPFLAGS = -I@top_srcdir@/include
 
 bin_PROGRAMS = classdecode classencode 
 
-lib_LTLIBRARIES = libcolibring.la
+lib_LTLIBRARIES = libcolibricore.la
 
-libcolibring_la_CXXFLAGS = -Wall -std=c++11
-libcolibring_la_SOURCES = classdecoder.cpp classencoder.cpp pattern.cpp
+libcolibricore_la_CXXFLAGS = -Wall -std=c++11
+libcolibricore_la_SOURCES = classdecoder.cpp classencoder.cpp pattern.cpp
 
 classdecode_CXXFLAGS = -Wall -std=c++11
 classdecode_LDADD = libcolibring.la

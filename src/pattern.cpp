@@ -425,3 +425,4 @@ int Pattern::parts(vector<const Pattern> & container) const {
     return found;
 }
 
+
