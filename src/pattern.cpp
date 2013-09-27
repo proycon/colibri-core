@@ -1,7 +1,10 @@
+#include "pattern.h"
 #include "SpookyV2.h" //spooky hash
 
 using namespace std;
 
+
+unsigned char mainpatternbuffer[MAINPATTERNBUFFERSIZE];
 
 const PatternCategory Pattern::category() const {
     PatternCategory category = NGRAM;
@@ -26,18 +29,18 @@ const PatternCategory Pattern::category() const {
 
 
 
-const unsigned int Pattern::size() const {
+const size_t Pattern::bytesize() const {
     //return the size of the pattern (in bytes)
 
     int i = 0;
     do {
         const unsigned char c = data[i];
         if (c == ENDMARKER) {
-            //end marker
-            return i + 1;
+            //end marker, does not count in bytesize() !
+            return i;
         } else if (c < 128) {
             //we have a size
-            i += c + 1
+            i += c + 1;
         } else {
             //we have a marker
             i++;
@@ -47,7 +50,7 @@ const unsigned int Pattern::size() const {
 
 
 
-const unsigned int Pattern::n() const {
+const size_t Pattern::n() const {
     //return the size of the pattern (in tokens)
 
     int i = 0;
@@ -76,7 +79,6 @@ const unsigned int Pattern::n() const {
 const StructureType Pattern::type() const {
     //return the size of the pattern (in tokens)
     int i = 0;
-    int n = 0;
     do {
         const unsigned char c = data[i];
         if ((c == ENDMARKER) || (c < 128) || (c == FIXEDGAP) || (c == DYNAMICGAP)) {
@@ -87,7 +89,7 @@ const StructureType Pattern::type() const {
             return STRUCT_PARAGRAPH;
         } else if (c == BEGINDIVMARKER) {
             return STRUCT_DIV;
-        } else if (c == BEGINTEXT) {
+        } else if (c == TEXTMARKER) {
             return STRUCT_TEXT;
         } else if (c == HEADERMARKER) {
             return STRUCT_HEADER;
@@ -168,7 +170,7 @@ const size_t Pattern::hash(bool stripmarkers) const {
 
 
 void Pattern::write(ostream * out) const {
-    const int s = size();
+    const int s = bytesize();
     if (s <= 0) {
         cerr << "INTERNAL ERROR Pattern::write(): Writing pattern with size <= 0! Not possible!" << endl;
         throw InternalError();
@@ -176,7 +178,76 @@ void Pattern::write(ostream * out) const {
     out->write( (char*) data , (int) s );
 }
 
+std::string Pattern::tostring(ClassDecoder& classdecoder) const {
+    std::string result = ""; 
+    int i = 0;
+    int gapsize = 0;
+    do {
+        const unsigned char c = data[i];
+        if (c == ENDMARKER) {
+            //end marker
+            if (gapsize > 0) {
+                if (!result.empty()) result += " ";
+                result += std::string("{*") + to_string(gapsize) + std::string("*} ");                
+                gapsize = 0;
+            }
+            return result;
+        } else if (c < 128) {
+            //we have a size
+            if (gapsize > 0) {
+                if (!result.empty()) result += " ";
+                result += std::string("{*") + to_string(gapsize) + std::string("*} ");                
+                gapsize = 0;
+            }
+            i += c + 1;
+            unsigned int cls =  bytestoint(&c + 1, c);
+            if (!result.empty()) result += " ";
+            result += classdecoder[cls];
+        } else if (c == FIXEDGAP) {
+            gapsize++;
+            i++;
+        } else if (c == DYNAMICGAP) {
+            if (result.empty()) {
+                result = "{*}";
+            } else {
+                result = " {*}";
+            }
+            i++;
+        } else {
+            //we have another marker
+            i++;
+        }
+    } while (1);
+    return result;  
+}
 
+bool Pattern::out() const { 
+    int i = 0;
+    do {
+        const unsigned char c = data[i];
+        if (c == ENDMARKER) {
+            //end marker
+            cerr << endl;
+            return true;
+        } else if (c < 128) {
+            //we have a size
+            i += c + 1;
+            cerr << bytestoint(&c + 1, c) << " ";
+        } else if (c == FIXEDGAP) {
+            //DYNAMICGAP is counted as 1, the minimum fill
+            cerr << "FIXEDGAP" << " ";
+            i++;
+        } else if (c == DYNAMICGAP) {
+            //DYNAMICGAP is counted as 1, the minimum fill
+            cerr << "DYNAMICGAP" << " ";
+            i++;
+        } else {
+            //we have another marker
+            i++;
+        }
+    } while (1);
+    return false;
+}
 
 void readanddiscardpattern(std::istream * in) {
     unsigned char c;
@@ -187,10 +258,9 @@ void readanddiscardpattern(std::istream * in) {
         } else if (c < 128) {
             //we have a size
             const size_t pos = in->tellg();
-            in->seekg(pos + size);
+            in->seekg(pos + c);
         } else {
             //we have a marker
-            i++;
         }
     } while (1);
 }
@@ -208,7 +278,7 @@ Pattern::Pattern(std::istream * in) {
             break;
         } else if (c < 128) {
             //we have a size, load token
-            in->read( mainpatternbuffer + i, c)
+            in->read( (char*) mainpatternbuffer + i, c);
             i += c;
         } else {
             //other marker
@@ -217,7 +287,7 @@ Pattern::Pattern(std::istream * in) {
     } while (1);
 
     //copy from mainpatternbuffer
-    data = new unsigned char[i]
+    data = new unsigned char[i];
     for (int j = 0; j < i; j++) {
         data[j] = mainpatternbuffer[j];
     }
@@ -225,9 +295,9 @@ Pattern::Pattern(std::istream * in) {
 }
 
 
-Pattern::Pattern(const unsigned char* dataref, const int _size) {
+Pattern::Pattern(const unsigned char * dataref, const int _size) {
 
-    data = new unsigned char[_size]
+    data = new unsigned char[_size];
     int j = 0;
     for (int i = 0; i < _size; i++) {
         data[j++] = dataref[i];
@@ -236,9 +306,10 @@ Pattern::Pattern(const unsigned char* dataref, const int _size) {
             break;
         } else if (c < 128) {
             int end = i + c;
-            for (i; i < end; i++) {
+            do {
                 data[j++] = dataref[i];
-            }
+                i++;
+            } while (i < end);
         }
 
 
@@ -265,7 +336,7 @@ Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructo
             i += c + 1;
             n++;
             if (n == begin) begin_b = i;
-        } else if (c == FIXEDGAP) || (c == DYNAMICGAP) {
+        } else if ((c == FIXEDGAP) || (c == DYNAMICGAP)) {
             i++;
             n++;
             if (n == begin) begin_b = i;
@@ -275,13 +346,23 @@ Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructo
         }
     } while (1);
 
-    const unsigned char _size = length_b + 1
-    data = new unsigned char[_size]
+    const unsigned char _size = length_b + 1;
+    data = new unsigned char[_size];
     int j = 0;
     for (int i = begin_b; i < length_b; i++) {
         data[j++] = ref.data[i];
     }
     data[j++] = ENDMARKER;
+}
+
+
+Pattern::Pattern(const Pattern& ref) { //copy constructor
+    const int s = ref.bytesize();
+    data = new unsigned char[s + 1];
+    for (int i = 0; i < s; i++) {
+        data[i] = ref.data[i];
+    }
+    data[s] = ENDMARKER;
 }
 
 Pattern::~Pattern() {
@@ -290,8 +371,8 @@ Pattern::~Pattern() {
 
 
 bool Pattern::operator==(const Pattern &other) const {
-        const int s = size();
-        if (size() == other.size()) {
+        const int s = bytesize();
+        if (bytesize() == other.bytesize()) {
             for (int i = 0; i < s; i++) {
                 if (data[i] != other.data[i]) return false;
             }
@@ -301,17 +382,45 @@ bool Pattern::operator==(const Pattern &other) const {
         }        
 }
 
-bool Pattern::operator!=(const EncAnyGram &other) const {
+bool Pattern::operator!=(const Pattern &other) const {
     return !(*this == other);
 }
 
+bool Pattern::operator<(const Pattern & other) const {
+    const int s = bytesize();
+    const int s2 = other.bytesize();
+    int min_s;
+    if (s < s2) {
+        min_s = s;
+    } else {
+        min_s = s2;
+    }
+    for (int i = 0; i < min_s; i++) {
+        if (data[i] < other.data[i]) return true;
+    }
+    return (s < s2);
+}
+bool Pattern::operator>(const Pattern & other) const {
+    const int s = bytesize();
+    const int s2 = other.bytesize();
+    int min_s;
+    if (s < s2) {
+        min_s = s;
+    } else {
+        min_s = s2;
+    }
+    for (int i = 0; i < min_s; i++) {
+        if (data[i] > other.data[i]) return true;
+    }
+    return (s > s2);
+}
 
 Pattern & Pattern::operator =(Pattern other) { //(note: argument passed by value!
         //delete old data
         if (data != NULL) delete [] data;
         
         //set new data
-        const int s = other.size();        
+        const int s = other.bytesize();        
         data = new unsigned char[s];   
         for (int i = 0; i < s; i++) {
             data[i] = other.data[i];
@@ -322,8 +431,8 @@ Pattern & Pattern::operator =(Pattern other) { //(note: argument passed by value
 }
 
 Pattern Pattern::operator +(const Pattern & other) const {
-    const int s = size();
-    const int s2 = other.size();
+    const int s = bytesize();
+    const int s2 = other.bytesize();
     unsigned char buffer[s+s2]; 
     for (int i = 0; i < s; i++) {
         buffer[i] = data[i];
@@ -336,8 +445,8 @@ Pattern Pattern::operator +(const Pattern & other) const {
 
 
 int Pattern::find(const Pattern & pattern) const { //returns the index, -1 if not fount 
-    const int s = size();
-    const int s2 = pattern.size();
+    const int s = bytesize();
+    const int s2 = pattern.bytesize();
     if (s2 > s) return -1;
     
     for (int i = 0; i < s; i++) {
@@ -359,8 +468,8 @@ bool Pattern::contains(const Pattern & pattern) const {
     return (find(pattern) != -1);
 }
 
-int Pattern::ngrams(vector<const Pattern> & container, const int n) const { //return multiple ngrams
-    const int _n = n();
+int Pattern::ngrams(vector<Pattern> & container, const int n) const { //return multiple ngrams
+    const int _n = this->n();
     if (n > _n) return 0;
 
     
@@ -368,11 +477,23 @@ int Pattern::ngrams(vector<const Pattern> & container, const int n) const { //re
 
     
     for (int i = 0; i < (_n - n); i++) {
-        container.append( Pattern(*this, i, n) );
+        Pattern pattern = Pattern(*this,i,n);
+        container.push_back( pattern );
         found++;
     }
     return found;
 }   
+
+int Pattern::subngrams(vector<Pattern> & container, int minn, int maxn) const {
+    const int _n = n();
+    if (maxn > _n-1) maxn = _n-1;
+    if (minn > _n-1) return 0;
+    int found = 0;
+    for (int i = minn; i <= maxn; i++) {
+        found += ngrams(container, i);
+    }
+    return found;
+}
 
 int Pattern::parts(vector<pair<int,int>> & container) const {
     //to be computed in bytes
@@ -383,12 +504,12 @@ int Pattern::parts(vector<pair<int,int>> & container) const {
     int i = 0;
     int n = 0;
     do {
-        const unsigned char c = ref.data[i];
+        const unsigned char c = data[i];
         
         if (c == ENDMARKER) {
             partlength = n - partbegin;
             if (partlength > 0) {
-                container.append(pair<int,int>(partbegin,partlength);
+                container.push_back(pair<int,int>(partbegin,partlength));
                 found++;
             }
             break;
@@ -396,10 +517,10 @@ int Pattern::parts(vector<pair<int,int>> & container) const {
             //we have a size
             i += c + 1;
             n++;
-        } else if (c == FIXEDGAP) || (c == DYNAMICGAP) {        
+        } else if ((c == FIXEDGAP) || (c == DYNAMICGAP)) {        
             partlength = n - partbegin;
             if (partlength > 0) {
-                container.append(pair<int,int>(partbegin,partlength);
+                container.push_back(pair<int,int>(partbegin,partlength));
                 found++;
             }
             i++;
@@ -413,16 +534,98 @@ int Pattern::parts(vector<pair<int,int>> & container) const {
     return found;
 }
 
-int Pattern::parts(vector<const Pattern> & container) const {
+int Pattern::parts(vector<Pattern> & container) const {
     vector<pair<int,int>> partoffsets; 
-    found = parts(partoffsets);
+    int found = parts(partoffsets);
 
     for (vector<pair<int,int>>::iterator iter = partoffsets.begin(); iter != partoffsets.end(); iter++) {
         const int begin = iter->first;
         const int length = iter->second;
-        container.append( Pattern(*this, begin, length) );
+        Pattern pattern = Pattern(*this,begin, length);
+        container.push_back( pattern );
     }
     return found;
 }
 
+const unsigned int Pattern::skipcount() const {
+    int count = 0;
+    int i = 0;
+    do {
+        const unsigned char c = data[i];
+        if (c == ENDMARKER) {
+            //end marker
+            return count;
+        } else if (c < 128) {
+            //we have a size
+            i += c + 1;
+        } else if (((c == DYNAMICGAP) || (c == FIXEDGAP)) && ((i > 0) || ((data[i-1] != DYNAMICGAP) && (data[i-1] != FIXEDGAP))))   {
+            //we have a marker
+            count++;
+            i++;
+        }
+    } while (1); 
+}
 
+int Pattern::gaps(vector<pair<int,int> > & container) const {
+    vector<pair<int,int> > partscontainer;
+    int found = parts(partscontainer);
+    if (found == 1) return 0;
+
+    const int _n = n();
+
+    found = 0;
+    //compute inverse:
+    int begin = 0;
+    for (vector<pair<int,int>>::iterator iter = partscontainer.begin(); iter != partscontainer.end(); iter++) {
+        if (iter->first > begin) {
+            container.push_back(pair<int,int>(begin,iter->first - begin));
+            begin = iter->first + iter->second;
+            found++;
+        }
+    }
+    if (begin != _n) {
+        container.push_back(pair<int,int>(begin,_n - begin));
+    }
+    return found;
+}
+
+Pattern Pattern::extractskipcontent(Pattern & instance) const {
+    if (instance.category() == DYNAMICSKIPGRAM) {
+        cerr << "Extractskipcontent not supported on Pattern with dynamic gaps!" << endl;
+        throw InternalError();
+    }
+    if (instance.category() == NGRAM) {
+        cerr << "Extractskipcontent not supported on Pattern without gaps!" << endl;
+        throw InternalError();
+    }
+    if (instance.n() != n()) {
+        cerr << "WARNING: Extractskipcontent(): instance.n() != skipgram.n(), " << (int) instance.n() << " != " << (int) n() << endl;
+        cerr << "INSTANCE: " << instance.out() << endl;
+        cerr << "SKIPGRAM: " << out() << endl;
+        throw InternalError();
+    }
+    std::vector<std::pair<int,int> > gapcontainer;
+    gaps(gapcontainer);
+    
+    unsigned char a = 128;
+    const Pattern skip = Pattern(&a,1);
+
+    vector<Pattern> subngrams;
+    vector<int> skipcontent_skipref;
+    int cursor = 0;
+    std::vector<std::pair<int,int> >::iterator iter = gapcontainer.begin();
+    Pattern subngram = Pattern(instance,iter->first, iter->second);
+    Pattern pattern = subngram;
+    do {  
+        cursor = iter->first + iter->second;
+        if (cursor > 0) {
+            for (int i = 0; i < iter->first - cursor; i++) {
+                pattern = pattern + skip;
+            }
+        }    
+        subngram = Pattern(instance,iter->first, iter->second);
+        pattern = pattern + subngram;
+
+    } while (iter != gapcontainer.end());
+    return pattern;
+}

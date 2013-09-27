@@ -5,7 +5,8 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include <ngram.h>
+#include <pattern.h>
+#include <common.h>
 
 #include "libfolia/document.h"
 #include "libfolia/folia.h"
@@ -31,6 +32,7 @@ class ClassEncoder {
 
     int encodestring(const std::string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown=false);
     void encodefile(const std::string &, const std::string &, bool allowunknown, bool autoaddunknown=false, bool append=false);
+    std::vector<unsigned int> encodeseq(const std::vector<std::string> & seq);
 
     Pattern input2pattern(const std::string &, bool allowunknown, bool autoaddunknown = false); 
  

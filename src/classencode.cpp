@@ -102,7 +102,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Built " << outputprefix << ".cls" << endl;            
     }   
     
-    for (int i = 0; i < corpusfiles.size(); i++) {
+    for (size_t i = 0; i < corpusfiles.size(); i++) {
         string outfile = corpusfiles[i];
         if (unified) {
             outfile = outputprefix;

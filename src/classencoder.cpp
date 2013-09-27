@@ -4,10 +4,8 @@
 #include <iostream>
 #include <map>
 #include <unordered_map>
-#include "common.h"
 
 using namespace std;
-using namespace folia;
 
 
 unsigned char * inttobytes(unsigned int cls, int & length) {	
@@ -112,12 +110,12 @@ void ClassEncoder::processcorpus(const string & filename, unordered_map<string,i
 
 
 void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<string,int> & freqlist) {
-    Document doc;
+    folia::Document doc;
     doc.readFromFile(filename);
     
-    vector<Word*> words = doc.words();
-    for (vector<Word*>::iterator iterw = words.begin(); iterw != words.end(); iterw++) {
-        Word * word = *iterw;
+    vector<folia::Word*> words = doc.words();
+    for (vector<folia::Word*>::iterator iterw = words.begin(); iterw != words.end(); iterw++) {
+        folia::Word * word = *iterw;
         const string wordtext = word->str();
         freqlist[wordtext]++;
     }
@@ -203,7 +201,17 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
           	  begin = i+1;
           	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
           	    unsigned int cls;
-          	    if (classes.count(word) == 0) {
+                if (word == "{*}") {
+                    //variable length skip
+                    outputbuffer[outputcursor++] = 129; //DYNAMICGAP MARKER 
+                    continue;
+                } else if ((word.substr(0,2) == "{*")  && (word.substr(word.size() - 2,2) == "*}")) {
+                    const int skipcount = atoi(word.substr(2,word.size() - 4).c_str()); 
+                    for (int j = 0; j < skipcount; j++) {
+                        outputbuffer[outputcursor++] = 128; //FIXEDGAP MARKER                     
+                    }                
+                    continue;
+                } else if (classes.count(word) == 0) {
                     if (autoaddunknown) {
                         cls = ++highestclass;
                         classes[word] = cls;  
@@ -242,7 +250,7 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
 Pattern ClassEncoder::input2pattern(const std::string & querystring, bool allowunknown,  bool autoaddunknown) {
 	unsigned char buffer[65536];
 	char buffersize = encodestring(querystring, buffer, allowunknown, autoaddunknown);
-    Pattern pattern = Pattern(buffer,buffersize); //TODO 
+    Pattern pattern = Pattern(buffer,buffersize); 
 	return pattern;
 }
 
@@ -259,7 +267,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	    
     if ((inputfilename.rfind(".xml") != string::npos) ||  (inputfilename.rfind(".bz2") != string::npos) ||  (inputfilename.rfind(".gz") != string::npos)) {
         //FoLiA
-        Document doc;
+        folia::Document doc;
         doc.readFromFile(inputfilename);
         
 	    ofstream OUT;
@@ -275,12 +283,12 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	    unsigned char outputbuffer[65536];
 	    int outputsize = 0;
 	    unsigned int linenum = 1;
-	    vector<Word*> words = doc.words();
+	    vector<folia::Word*> words = doc.words();
 	    const size_t wl = words.size();
-	    FoliaElement * prevparent = NULL;
+        folia::FoliaElement * prevparent = NULL;
 	    string line = "";
-	    for (int i = 0; i < wl; i++) {
-	        Word * word = words[i];
+	    for (size_t i = 0; i < wl; i++) {
+            folia::Word * word = words[i];
 	        if ((!line.empty()) && (word->parent() != prevparent) && (i< wl -1)) {
 	            outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);     
 	            if (outputsize > 0) OUT.write((const char *) outputbuffer, outputsize);
