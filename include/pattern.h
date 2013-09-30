@@ -160,6 +160,7 @@ class AbstractValueHandler {
     virtual ValueType read(std::istream * in)=0;
     virtual void write(std::ostream * out, ValueType & value)=0;
     virtual std::string tostring(ValueType & value)=0;
+    virtual int count(ValueType & value)=0;
 };
 
 template<class ValueType>
@@ -174,6 +175,9 @@ class BaseValueHandler {
     }
     virtual std::string tostring(ValueType & value) {
         return tostring(value);
+    }
+    int count(ValueType & value) {
+        return (int) value;
     }
 };
 
