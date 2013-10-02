@@ -112,6 +112,7 @@ class Pattern {
 
      Pattern extractskipcontent(Pattern & instance) const; //given a pattern and an instance, extract a pattern from the instance that would fill the gaps
 
+     Pattern replace(int begin, int length, const Pattern & replacement) const;
      Pattern addfixedskips(std::vector<std::pair<int,int> > gaps) const;
 
      //CHANGES from old colibri ngram:
