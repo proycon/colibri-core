@@ -54,14 +54,19 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
     uint32_t sentence = 0;
     const int BUFFERSIZE = 65536;
     unsigned char line[BUFFERSIZE];
+    std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
+
     for (int n = 1; n <= options.MAXLENGTH; n++) {
         in->seekg(0);
         cerr << "Counting " << n << "-grams" << endl; 
         sentence++;
 
+        if ((DOFIXEDSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], vector<pair<int,int> >(), n);
+
         Pattern line = Pattern(in);
         vector<pair<Pattern,int>> ngrams;
         line.ngrams(ngrams, n)
+
 
         for (vector<pair<Pattern,int>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
             const Pattern pattern = iter->first;
@@ -118,6 +123,18 @@ int PatternModel::prune(int threshold) {
             iter++;
         }
     } while (iter != reverseindex.end())
+}
+
+std::vector<std::pair<const Pattern, int> > getpatterns(const Pattern & pattern) {
+    //get all patterns in pattern
+    std::vector<std::pair<const Pattern, int> > v;   
+    std::vector<std::pair<const Pattern, int> > ngrams;
+    pattern.subngrams(ngrams, minlength(), maxlength());
+    for (std::vector<std::pair<const Pattern, int> >::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
+        const Pattern p = iter->first;
+        if (has(p)) v.push_back(*iter);
+    }
+    return v;
 }
 
 /////////////////////////////////////////

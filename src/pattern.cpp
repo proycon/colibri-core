@@ -468,7 +468,7 @@ bool Pattern::contains(const Pattern & pattern) const {
     return (find(pattern) != -1);
 }
 
-int Pattern::ngrams(vector<Pattern> & container, const int n) const { //return multiple ngrams
+int Pattern::ngrams(vector<Pattern> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
     const int _n = this->n();
     if (n > _n) return 0;
 
@@ -484,7 +484,35 @@ int Pattern::ngrams(vector<Pattern> & container, const int n) const { //return m
     return found;
 }   
 
-int Pattern::subngrams(vector<Pattern> & container, int minn, int maxn) const {
+
+int Pattern::ngrams(vector<pair<Pattern,int>> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
+    const int _n = this->n();
+    if (n > _n) return 0;
+
+    
+    int found = 0;
+
+    
+    for (int i = 0; i < (_n - n); i++) {
+        Pattern pattern = Pattern(*this,i,n);
+        container.push_back( pair<Pattern,int>(pattern,i) );
+        found++;
+    }
+    return found;
+}   
+
+int Pattern::subngrams(vector<Pattern> & container, int minn, int maxn) const { //also includes skipgrams!
+    const int _n = n();
+    if (maxn > _n-1) maxn = _n-1;
+    if (minn > _n-1) return 0;
+    int found = 0;
+    for (int i = minn; i <= maxn; i++) {
+        found += ngrams(container, i);
+    }
+    return found;
+}
+
+int Pattern::subngrams(vector<pair<Pattern,int>> & container, int minn, int maxn) const { //also includes skipgrams!
     const int _n = n();
     if (maxn > _n-1) maxn = _n-1;
     if (minn > _n-1) return 0;
