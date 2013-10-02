@@ -202,7 +202,6 @@ class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
 }
 
 
-template<class MapType = PatternMap<IndexedData, IndexedDataHandler>> //specialisation
 
 
 
