@@ -70,7 +70,7 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
                     //check if sub-parts were counted
                     vector<Pattern> subngrams;
                     pattern.ngrams(subngrams,n-1);
-                    for (vector<Pattern>::iterator iter2 = subngrams.begin(); iter != subngrams.end(); iter2++) {
+                    for (vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                         const Pattern subpattern = *iter2;
                         if ((subpattern.category() == NGRAM) && (!this->has(subpattern))) {
                             found = false;
