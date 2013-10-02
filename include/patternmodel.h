@@ -178,7 +178,7 @@ class PatternModel: public MapType {
 }
 
 
-template<class MapType = PatternMap<IndexedData, IndexedDataHandler>> //specialisation
+template<class MapType = PatternMap<IndexedData, IndexedDataHandler>> //specialisation for INDEXED pattern models
 class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
     int add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
         value->insert(ref);
@@ -192,6 +192,7 @@ class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
             if (n < minn) minn = n;
             IndexedData * data = getdata(p);
             if (options.DOREVERSEINDEX) {
+                //construct the reverse index
                 for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
                     const IndexReference ref = *iter2
                     reverseindex.insert(ref,p);

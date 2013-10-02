@@ -38,14 +38,13 @@ void PatternModel::write(ostream * out) {
 }
 
 void PatternModel::postread(const PatternModelOptions options) {
+    //this function has a specialisation specific to indexed pattern models,
+    //this is the generic version
     for (iterator iter = this->begin(); iter != this->end(); iter++) {
         const Pattern p = iter->first;
         const int n = p.n();
         if (n > maxn) maxn = n;
         if (n < minn) minn = n;
-        if (options.DOREVERSINDEX) {
-            reverseindex.insert(occurrencecount(p), p);
-        }
     }
 }
 
