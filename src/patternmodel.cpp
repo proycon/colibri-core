@@ -80,13 +80,31 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
                 }
                 if (found) {
                     add(pattern, &((*this)[pattern]), ref );
+                }                
+                if (options.DOFIXEDSKIPGRAMS) {
+                    //TODO
                 }
-            }
+
+            }            
         }
+
+        cerr << "Pruning..." << endl;
+        prune(options.MINTOKENS);
 
     }
 }
 
+int PatternModel::prune(int threshold) {
+    PatternModel::iterator iter = this->begin(); 
+    do {
+        const Pattern pattern = iter->first;
+        if (occurrencecount(pattern) < threshold) {
+            iter = erase(iter); 
+        } else {
+            iter++;
+        }
+    } while(iter != this->end());       
+}
 
 /////////////////////////////////////////
 

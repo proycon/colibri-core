@@ -162,8 +162,8 @@ class PatternModel: public MapType {
 
         void output(std::ostream *);
         
-        typedef typename PatternMapType::iterator iterator;
-        typedef typename PatternMapType::const_iterator const_iterator;        
+        typedef typename MapType::iterator iterator;
+        typedef typename MapType::const_iterator const_iterator;        
         
         int coveragecount(const Pattern &  key);    
         double coverage(const Pattern & key);	 
@@ -171,6 +171,9 @@ class PatternModel: public MapType {
         int add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
             *value = *value + 1;
         }
+
+        int prune(int threshold);
+
 }
 
 

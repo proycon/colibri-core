@@ -195,6 +195,7 @@ class PatternStore {
         virtual void insert(const Pattern & pattern)=0; //might be a noop in some implementations that require a value
 
         virtual bool has(const Pattern &) const =0;
+        virtual bool erase(const Pattern &) =0;
         
         virtual size_t size() const =0; 
         
@@ -240,6 +241,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
         virtual void insert(const Pattern & pattern, ValueType & value)=0;
 
         virtual bool has(const Pattern &) const =0;
+        virtual bool erase(const Pattern &) const =0;
         
         virtual size_t size() const =0; 
         
@@ -298,6 +300,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
         bool has(const Pattern & pattern) const { return data.count(pattern); }
         size_t size() const { return data.size(); } 
 
+
         typedef t_patternset::iterator iterator;
         typedef t_patternset::const_iterator const_iterator;
         
@@ -309,6 +312,9 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
 
         iterator find(const Pattern & pattern) { return data.find(pattern); }
         const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+
+        bool erase(const Pattern & pattern) { return data.erase(pattern); }
+        iterator erase(const_iterator position) { return data.erase(position); }
 
         const Pattern * getpointer(const Pattern & pattern) { //get the pattern in the store, or NULL if it does not exist
             iterator iter = find(pattern);
@@ -351,6 +357,8 @@ class OrderedPatternSet: public PatternStore<t_orderedpatternset,ReadWriteSizeTy
 
         iterator find(const Pattern & pattern) { return data.find(pattern); }
         const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+
+        bool erase(const Pattern & pattern) { return data.erase(pattern); }
 
         const Pattern * getpointer(const Pattern & pattern) { //get the pattern in the store, or NULL if it does not exist
             iterator iter = find(pattern);
@@ -396,6 +404,9 @@ class PatternMap: public PatternMapStore<std::unordered_map<const Pattern,ValueT
 
         iterator find(const Pattern & pattern) { return data.find(pattern); }
         const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+        
+        bool erase(const Pattern & pattern) { return data.erase(pattern); }
+        iterator erase(const_iterator position) { return data.erase(position); }
 
         const Pattern * getpointer(const Pattern & pattern) { //get the pattern in the store, or NULL if it does not exist
             iterator iter = find(pattern);
@@ -423,6 +434,8 @@ class OrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType
         void insert(const Pattern & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType
 
         bool has(const Pattern & pattern) const { return data.count(pattern); }
+
+        bool erase(const Pattern & pattern) { return data.erase(pattern); }
 
         size_t size() const { return data.size(); } 
 
