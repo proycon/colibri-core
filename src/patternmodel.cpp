@@ -109,7 +109,7 @@ int PatternModel::prune(int threshold) {
         }
     } while(iter != this->end());       
 
-    //prune patterns from reverse index if that don't exist anymore
+    //prune patterns from reverse index if they don't exist anymore
     multimap<IndexReference,Pattern>::iterator iter2 = reverseindex.begin(); 
     do {
         if (!has(iter->second)) {
