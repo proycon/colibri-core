@@ -23,6 +23,7 @@ void PatternModel::PatternModel(istream * f) {
     f.read( (char*) &totaltypes, sizeof(uint64_t)); 
 
     read(f); //read PatternStore
+
 }
 
 
@@ -33,11 +34,17 @@ void PatternModel::write(ostrream * out) {
     out.write( (char*) &model_version, sizeof(char));        
     out.write( (char*) &totaltokens, sizeof(uint64_t));        
     out.write( (char*) &totaltypes, sizeof(uint64_t)); 
-
     write(out); //write PatternStore
 }
 
-
+void PatternModel::computestats() {
+    for (iterator iter = begin(); iterator iter = end(); iter++) {
+        const Pattern p = iter->first;
+        const int n = p.n();
+        if (n > maxn) maxn = n;
+        if (n < minn) minn = n;
+    }
+}
 
 
 

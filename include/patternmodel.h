@@ -126,20 +126,25 @@ class PatternModel: public PatternMapType {
         unsigned char model_version;
         uint64_t totaltokens; //INCLUDES TOKENS NOT COVERED BY THE MODEL!
         uint64_t totaltypes; //INCLUDES TOKENS NOT COVERED BY THE MODEL!
+
+        int maxn; 
+        int minn; 
     public:
         PatternModel() {
             totaltokens = 0;
             totaltypes = 0;
+            maxn = 0;
         }
         PatternModel(std::istream *);
 
         void write(std::ostream *);
 
-        virtual int maxlength() const =0;
-        virtual int occurrencecount(const Pattern & key) =0;
-        virtual double freq(const Pattern & pattern) const;
+        virtual int maxlength() const { return maxn; };
+        virtual int minlength() const { return minn; };
+        virtual int occurrencecount(const Pattern & key) const { return valuehandler.count((*this)[pattern]); }
+        virtual double freq(const Pattern & pattern) const { return valuehandler.count((*this)[pattern]) / totaltokens; }
         
-        ValueType getdata(const Pattern & pattern) const;
+        ValueType getdata(const Pattern & pattern) const { return (*this)[pattern]; }
         
         int types() const { return totaltypes; }
         int tokens() const { return totaltokens; }
@@ -148,6 +153,9 @@ class PatternModel: public PatternMapType {
         unsigned char version() const { return model_version; }
 
         void output(std::ostream *);
+        
+        typedef typename PatternMapType::iterator iterator;
+        typedef typename PatternMapType::const_iterator const_iterator;
         
         friend void buildpatternmodel(PatternModel<uint32_t>, const PatternModelOptions & options);
 }
