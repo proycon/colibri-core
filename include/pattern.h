@@ -112,6 +112,8 @@ class Pattern {
 
      Pattern extractskipcontent(Pattern & instance) const; //given a pattern and an instance, extract a pattern from the instance that would fill the gaps
 
+     Pattern addfixedskips(std::vector<std::pair<int,int> > gaps) const;
+
      //CHANGES from old colibri ngram:
      //
      //no slice, ngram, gettoken method, use slice constructor

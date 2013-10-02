@@ -133,6 +133,8 @@ std::vector<std::pair<const Pattern, int> > getpatterns(const Pattern & pattern)
     for (std::vector<std::pair<const Pattern, int> >::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
         const Pattern p = iter->first;
         if (has(p)) v.push_back(*iter);
+        
+        //TODO: match with skipgrams
     }
     return v;
 }

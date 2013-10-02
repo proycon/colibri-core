@@ -8,6 +8,7 @@
 #include <map>
 #include <set>
 #include <multimap>
+#include <pair>
 
 
 
@@ -174,7 +175,7 @@ class PatternModel: public MapType {
         }
 
         int prune(int threshold);
-        std::vector<std::pair<const Pattern, int> > getpatterns(const Pattern & pattern); //get all patterns in pattern
+        std::vector<std::pair<const Pattern, int> > getpatterns(const Pattern & pattern); //get all patterns in pattern that occur in the patternmodel
 }
 
 
