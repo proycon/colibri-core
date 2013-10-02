@@ -63,24 +63,25 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
 
         for (vector<pair<Pattern,int>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
             const Pattern pattern = iter->first;
-            const IndexReference ref = CorpusReference(sentence, iter->second);
-            bool found = true;
-            if (n > 1) {
-                //check if sub-parts were counted
-                vector<Pattern> subngrams;
-                pattern.ngrams(subngrams,n-1);
-                for (vector<Pattern>::iterator iter2 = subngrams.begin(); iter != subngrams.end(); iter2++) {
-                    const Pattern subpattern = *iter2;
-                    if (!this->has(subpattern)) {
-                        found = false;
-                        break;
+            if (pattern.category() == NGRAM) {
+                const IndexReference ref = CorpusReference(sentence, iter->second);
+                bool found = true;
+                if (n > 1) {
+                    //check if sub-parts were counted
+                    vector<Pattern> subngrams;
+                    pattern.ngrams(subngrams,n-1);
+                    for (vector<Pattern>::iterator iter2 = subngrams.begin(); iter != subngrams.end(); iter2++) {
+                        const Pattern subpattern = *iter2;
+                        if ((subpattern.category() == NGRAM) && (!this->has(subpattern))) {
+                            found = false;
+                            break;
+                        }
                     }
                 }
+                if (found) {
+                    add(pattern, &((*this)[pattern]), ref );
+                }
             }
-            if (found) {
-                add(pattern, &((*this)[pattern]), ref );
-            }
-
         }
 
     }
