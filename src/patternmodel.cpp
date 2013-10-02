@@ -80,6 +80,9 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
                 }
                 if (found) {
                     add(pattern, &((*this)[pattern]), ref );
+                    if (options.DOREVERSEINDEX) {
+                        reverseindex.insert(ref,pattern);
+                    }
                 }                
                 if (options.DOFIXEDSKIPGRAMS) {
                     //TODO
@@ -90,6 +93,8 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
 
         cerr << "Pruning..." << endl;
         prune(options.MINTOKENS);
+
+
 
     }
 }
@@ -104,6 +109,16 @@ int PatternModel::prune(int threshold) {
             iter++;
         }
     } while(iter != this->end());       
+
+    //prune patterns from reverse index if that don't exist anymore
+    multimap<IndexReference,Pattern>::iterator iter2 = reverseindex.begin(); 
+    do {
+        if (!has(iter->second)) {
+            iter = reverseindex.erase(iter);
+        } else {
+            iter++;
+        }
+    } while (iter != reverseindex.end())
 }
 
 /////////////////////////////////////////
