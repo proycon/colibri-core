@@ -38,7 +38,7 @@ void PatternModel::write(ostrream * out) {
 }
 
 void PatternModel::computestats() {
-    for (iterator iter = begin(); iterator iter = end(); iter++) {
+    for (iterator iter = this->begin(); iter != this->end(); iter++) {
         const Pattern p = iter->first;
         const int n = p.n();
         if (n > maxn) maxn = n;
@@ -48,6 +48,21 @@ void PatternModel::computestats() {
 
 
 
+void PatternModel::train(std::istream * in, const PatternModelOptions options) {
+    uint32_t sentence = 0;
+    const int BUFFERSIZE = 65536;
+    unsigned char line[BUFFERSIZE];
+    for (int n = 1; n < options.MAXLENGTH; n++) {
+        in->seekg(0);
+        cerr << "Counting " << n << "-grams" << endl; 
+        sentence++;
+
+        Pattern line = Pattern(in);
+        vector<Pattern> ngrams;
+        line.ngrams(ngrams, n)
+
+    }
+}
 
 
 /////////////////////////////////////////

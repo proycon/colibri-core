@@ -60,15 +60,15 @@ class IndexReference {
 
 class IndexedData {
    protected:
-    std::set<CorpusReference> data;
+    std::set<IndexReference> data;
    public:
     IndexedData() {};
     IndexedData(std::istream * in);
     void write(std::ostream * out) const; 
     
-    bool has(const CorpusReference & ref) const { return data.count(ref); }
+    bool has(const IndexReference & ref) const { return data.count(ref); }
 
-    void insert(CorpusReference ref) { data.insert(ref); }
+    void insert(IndexReference ref) { data.insert(ref); }
 
     typedef std::set<IndexReference>::iterator iterator;
     typedef std::set<IndexReference>::const_iterator const_iterator;
@@ -79,12 +79,12 @@ class IndexedData {
     iterator end() { return data.end(); }
     const_iterator end() const { return data.end(); }
 
-    iterator find(const CorpusReference & ref) { return data.find(ref); }
-    const_iterator find(const CorpusReference & ref) const { return data.find(ref); }    
+    iterator find(const IndexReference & ref) { return data.find(ref); }
+    const_iterator find(const IndexReference & ref) const { return data.find(ref); }    
     friend class IndexedDataHandler;
 };
 
-class IndexedDataHandler {
+class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
     IndexedData read(std::istream * in) {
         IndexedData v;
         const uint32_t c = count();
@@ -114,6 +114,9 @@ class IndexedDataHandler {
     int count(IndexedData & value) const {
         return value.data.size();
     }
+    int add(const Pattern & pattern, IndexedData * value, IndexReference & ref) const {
+        value->data.insert(ref);
+    }
 }
 
 
@@ -135,7 +138,8 @@ class PatternModel: public PatternMapType {
             totaltypes = 0;
             maxn = 0;
         }
-        PatternModel(std::istream *);
+        PatternModel(std::istream *); //load from file
+        void train(std::istream *, const PatternModelOptions options);
 
         void write(std::ostream *);
 
@@ -157,7 +161,6 @@ class PatternModel: public PatternMapType {
         typedef typename PatternMapType::iterator iterator;
         typedef typename PatternMapType::const_iterator const_iterator;
         
-        friend void buildpatternmodel(PatternModel<uint32_t>, const PatternModelOptions & options);
 }
 
 
@@ -168,13 +171,18 @@ class IndexedPatternModel: public PatternModel<ValueType,ValueHandler,PatternMap
     public:
         IndexedPatternModel(std::istream *);
 
-        virtual int coveragecount(const Pattern &  key) =0;    
-        virtual double coverage(const Pattern & key) =0;	 
+        int coveragecount(const Pattern &  key);    
+        double coverage(const Pattern & key);	 
 
 
         void output(std::ostream *);
         
-        friend void buildpatternmodel_indexed(PatternModel<IndexData,IndexDataHandler>, const PatternModelOptions & options);
+
+        void train(std::istream *, const PatternModelOptions options);
+        //creates a new test model using the current model as training
+        // i.e. only fragments existing in the training model are counted
+        // remaining fragments are 'uncovered'
+        void test(IndexedPatternModel<ValueType,ValueHandler,PatternMapType> & target, std::stream * in);
 }
 
 class PatternModelOptions {
@@ -234,8 +242,6 @@ class GraphFilter {
 };    
 
 
-void buildpatternmodel(PatternModel<uint32_t>, const PatternModelOptions & options);
-void buildpatternmodel_indexed(PatternModel<IndexData,IndexDataHandler>, const PatternModelOptions & options);
         
 
 

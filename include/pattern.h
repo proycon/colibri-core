@@ -160,11 +160,12 @@ class AbstractValueHandler {
     virtual ValueType read(std::istream * in)=0;
     virtual void write(std::ostream * out, ValueType & value)=0;
     virtual std::string tostring(ValueType & value)=0;
-    virtual int count(ValueType & value)=0;
+    virtual int count(ValueType & value) const =0;
+    virtual int add(const Pattern & pattern, ValueType * value, IndexReference & ref)=0;
 };
 
 template<class ValueType>
-class BaseValueHandler {
+class BaseValueHandler: public AbstractValueHandler<ValueType> {
     ValueType read(std::istream * in) {
         ValueType v;
         in->read( (char*) &v, sizeof(ValueType)); 
@@ -176,8 +177,11 @@ class BaseValueHandler {
     virtual std::string tostring(ValueType & value) {
         return tostring(value);
     }
-    int count(ValueType & value) {
+    int count(ValueType & value) const {
         return (int) value;
+    }
+    int add(const Pattern & pattern, ValueType * value, IndexReference & ref) {
+        *value = *value + 1;
     }
 };
 
