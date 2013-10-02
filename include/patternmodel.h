@@ -21,6 +21,7 @@ enum ModelType {
 
 
 
+
 class IndexReference {
     /* Reference to a position in the corpus */
    public:
@@ -57,7 +58,6 @@ class IndexReference {
     }
 };
 
-
 class IndexedData {
    protected:
     std::set<IndexReference> data;
@@ -85,6 +85,7 @@ class IndexedData {
 };
 
 class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
+    const static bool indexed = true;
     IndexedData read(std::istream * in) {
         IndexedData v;
         const uint32_t c = count();
@@ -114,16 +115,12 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
     int count(IndexedData & value) const {
         return value.data.size();
     }
-    int add(const Pattern & pattern, IndexedData * value, IndexReference & ref) const {
-        value->data.insert(ref);
-    }
 }
 
 
 
-
-template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class PatternMapType = PatternMap<ValueType, ValueHandler> >
-class PatternModel: public PatternMapType {
+template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class MapType = PatternMap<ValueType, BaseValueHandler<ValueType>>>
+class PatternModel: public MapType {
     protected:
         unsigned char model_type;
         unsigned char model_version;
@@ -132,6 +129,8 @@ class PatternModel: public PatternMapType {
 
         int maxn; 
         int minn; 
+        
+        std::multimap<IndexReference,Pattern> reverseindex; 
     public:
         PatternModel() {
             totaltokens = 0;
@@ -140,6 +139,11 @@ class PatternModel: public PatternMapType {
         }
         PatternModel(std::istream *); //load from file
         void train(std::istream *, const PatternModelOptions options);
+        
+        //creates a new test model using the current model as training
+        // i.e. only fragments existing in the training model are counted
+        // remaining fragments are 'uncovered'
+        void test(MapType & target, std::stream * in);
 
         void write(std::ostream *);
 
@@ -159,31 +163,27 @@ class PatternModel: public PatternMapType {
         void output(std::ostream *);
         
         typedef typename PatternMapType::iterator iterator;
-        typedef typename PatternMapType::const_iterator const_iterator;
+        typedef typename PatternMapType::const_iterator const_iterator;        
         
-}
-
-
-template<class ValueType=IndexedData, class ValueHandler = IndexedDataHandler, class PatternMapType = PatternMap<ValueType, ValueHandler> >
-class IndexedPatternModel: public PatternModel<ValueType,ValueHandler,PatternMapType> {
-    protected:
-        std::multimap<IndexReference,Pattern> reverseindex;
-    public:
-        IndexedPatternModel(std::istream *);
-
         int coveragecount(const Pattern &  key);    
         double coverage(const Pattern & key);	 
 
-
-        void output(std::ostream *);
-        
-
-        void train(std::istream *, const PatternModelOptions options);
-        //creates a new test model using the current model as training
-        // i.e. only fragments existing in the training model are counted
-        // remaining fragments are 'uncovered'
-        void test(IndexedPatternModel<ValueType,ValueHandler,PatternMapType> & target, std::stream * in);
+        int add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
+            *value = *value + 1;
+        }
 }
+
+
+template<class MapType = PatternMap<IndexedData, IndexedDataHandler>> //specialisation
+class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
+    int add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
+        *value->insert(ref);
+    }
+}
+
+
+
+
 
 class PatternModelOptions {
     public:

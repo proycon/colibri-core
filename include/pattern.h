@@ -102,6 +102,8 @@ class Pattern {
      int ngrams(std::vector<Pattern> & container, const int n) const; //return multiple ngrams
      int subngrams(std::vector<Pattern> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
 
+     int ngrams(std::vector<std::pair<Pattern,int>> & container, const int n) const; //return multiple ngrams
+     int subngrams(std::vector<std::pair<Pattern,int>> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
 
      int parts(std::vector<Pattern> & container) const; 
      int parts(std::vector<std::pair<int,int> > & container) const;
@@ -166,6 +168,7 @@ class AbstractValueHandler {
 
 template<class ValueType>
 class BaseValueHandler: public AbstractValueHandler<ValueType> {
+    const static bool indexed = false;
     ValueType read(std::istream * in) {
         ValueType v;
         in->read( (char*) &v, sizeof(ValueType)); 
@@ -179,9 +182,6 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     }
     int count(ValueType & value) const {
         return (int) value;
-    }
-    int add(const Pattern & pattern, ValueType * value, IndexReference & ref) {
-        *value = *value + 1;
     }
 };
 

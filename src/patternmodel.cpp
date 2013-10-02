@@ -52,14 +52,36 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
     uint32_t sentence = 0;
     const int BUFFERSIZE = 65536;
     unsigned char line[BUFFERSIZE];
-    for (int n = 1; n < options.MAXLENGTH; n++) {
+    for (int n = 1; n <= options.MAXLENGTH; n++) {
         in->seekg(0);
         cerr << "Counting " << n << "-grams" << endl; 
         sentence++;
 
         Pattern line = Pattern(in);
-        vector<Pattern> ngrams;
+        vector<pair<Pattern,int>> ngrams;
         line.ngrams(ngrams, n)
+
+        for (vector<pair<Pattern,int>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
+            const Pattern pattern = iter->first;
+            const IndexReference ref = CorpusReference(sentence, iter->second);
+            bool found = true;
+            if (n > 1) {
+                //check if sub-parts were counted
+                vector<Pattern> subngrams;
+                pattern.ngrams(subngrams,n-1);
+                for (vector<Pattern>::iterator iter2 = subngrams.begin(); iter != subngrams.end(); iter2++) {
+                    const Pattern subpattern = *iter2;
+                    if (!this->has(subpattern)) {
+                        found = false;
+                        break;
+                    }
+                }
+            }
+            if (found) {
+                add(pattern, &((*this)[pattern]), ref );
+            }
+
+        }
 
     }
 }
