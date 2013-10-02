@@ -131,13 +131,14 @@ class PatternModel: public MapType {
         int minn; 
         
         std::multimap<IndexReference,Pattern> reverseindex; 
+        void postread(const PatternModelOptions options);
     public:
         PatternModel() {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
         }
-        PatternModel(std::istream *); //load from file
+        PatternModel(std::istream *, const PatternModelOptions options); //load from file
         void train(std::istream *, const PatternModelOptions options);
         
         //creates a new test model using the current model as training
@@ -152,7 +153,7 @@ class PatternModel: public MapType {
         virtual int occurrencecount(const Pattern & key) const { return valuehandler.count((*this)[pattern]); }
         virtual double freq(const Pattern & pattern) const { return valuehandler.count((*this)[pattern]) / totaltokens; }
         
-        ValueType getdata(const Pattern & pattern) const { return (*this)[pattern]; }
+        ValueType * getdata(const Pattern & pattern) const { return &((*this)[pattern]); }
         
         int types() const { return totaltypes; }
         int tokens() const { return totaltokens; }
@@ -180,11 +181,28 @@ class PatternModel: public MapType {
 template<class MapType = PatternMap<IndexedData, IndexedDataHandler>> //specialisation
 class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
     int add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
-        *value->insert(ref);
+        value->insert(ref);
+    }
+    
+    void postread(const PatternModelOptions options) {
+        for (iterator iter = this->begin(); iter != this->end(); iter++) {
+            const Pattern p = iter->first;
+            const int n = p.n();
+            if (n > maxn) maxn = n;
+            if (n < minn) minn = n;
+            IndexedData * data = getdata(p);
+            if (options.DOREVERSEINDEX) {
+                for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
+                    const IndexReference ref = *iter2
+                    reverseindex.insert(ref,p);
+                }
+            }
+        }
     }
 }
 
 
+template<class MapType = PatternMap<IndexedData, IndexedDataHandler>> //specialisation
 
 
 

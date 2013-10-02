@@ -6,7 +6,7 @@
 using namespace std;
 
 
-void PatternModel::PatternModel(istream * f) {
+void PatternModel::PatternModel(istream * f, const PatternModelOptions options) {
     char null;
     f.read( (char*) &null, sizeof(char));        
     f.read( (char*) &model_type, sizeof(char));        
@@ -23,11 +23,11 @@ void PatternModel::PatternModel(istream * f) {
     f.read( (char*) &totaltypes, sizeof(uint64_t)); 
 
     read(f); //read PatternStore
-
+    postread(options);
 }
 
 
-void PatternModel::write(ostrream * out) {
+void PatternModel::write(ostream * out) {
     const char null = 0;
     out.write( (char*) &null, sizeof(char));        
     out.write( (char*) &model_type, sizeof(char));        
@@ -37,12 +37,15 @@ void PatternModel::write(ostrream * out) {
     write(out); //write PatternStore
 }
 
-void PatternModel::computestats() {
+void PatternModel::postread(const PatternModelOptions options) {
     for (iterator iter = this->begin(); iter != this->end(); iter++) {
         const Pattern p = iter->first;
         const int n = p.n();
         if (n > maxn) maxn = n;
         if (n < minn) minn = n;
+        if (options.DOREVERSINDEX) {
+            reverseindex.insert(occurrencecount(p), p);
+        }
     }
 }
 
@@ -93,9 +96,6 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
 
         cerr << "Pruning..." << endl;
         prune(options.MINTOKENS);
-
-
-
     }
 }
 
