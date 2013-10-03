@@ -79,7 +79,7 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
                     pattern.ngrams(subngrams,n-1);
                     for (vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                         const Pattern subpattern = *iter2;
-                        if ((subpattern.category() == NGRAM) && (!this->has(subpattern))) {
+                        if ((subpattern.category() == NGRAM) && (this->occurrencecount(subpattern) < options.MINTOKENS)) {
                             found = false;
                             break;
                         }
@@ -104,7 +104,7 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
                             skippattern.parts(parts);
                             for (vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
                                 const Pattern part = *iter3;
-                                if (!has(part)) {
+                                if (this->occurrencecount(part) < options.MINTOKENS) {
                                     skippattern_valid = false;
                                     break;
                                 }
