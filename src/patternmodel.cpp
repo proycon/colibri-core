@@ -131,11 +131,11 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
     }
 }
 
-int PatternModel::prune(int threshold) {
+int PatternModel::prune(int threshold, int _n) {
     PatternModel::iterator iter = this->begin(); 
     do {
         const Pattern pattern = iter->first;
-        if (occurrencecount(pattern) < threshold) {
+        if (( (_n == 0) || (pattern.n() == n) )&& (occurrencecount(pattern) < threshold)) {
             iter = erase(iter); 
         } else {
             iter++;
@@ -145,7 +145,8 @@ int PatternModel::prune(int threshold) {
     //prune patterns from reverse index if they don't exist anymore
     multimap<IndexReference,Pattern>::iterator iter2 = reverseindex.begin(); 
     do {
-        if (!has(iter->second)) {
+        const Pattern pattern = iter->second;
+        if (( (_n == 0) || (pattern.n() == n) ) && (!has(pattern))) {
             iter = reverseindex.erase(iter);
         } else {
             iter++;

@@ -98,6 +98,8 @@ class Pattern {
 
      int find(const Pattern & pattern) const; //returns the index, -1 if not found 
      bool contains(const Pattern & pattern) const;
+     bool instantiates(const Pattern & skipgram) const; //Is this a full instantiation of the skipgram?
+     
 
      int ngrams(std::vector<Pattern> & container, const int n) const; //return multiple ngrams
      int subngrams(std::vector<Pattern> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
@@ -115,6 +117,8 @@ class Pattern {
      Pattern replace(int begin, int length, const Pattern & replacement) const;
      Pattern addfixedskips(std::vector<std::pair<int,int> > & gaps) const;
      Pattern adddynamicskips(std::vector<std::pair<int,int> > & gaps) const;
+
+
 
      //CHANGES from old colibri ngram:
      //

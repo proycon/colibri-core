@@ -176,7 +176,7 @@ class PatternModel: public MapType {
             *value = *value + 1;
         }
 
-        int prune(int threshold);
+        int prune(int threshold,int _n=0);
         std::vector<std::pair<const Pattern, int> > getpatterns(const Pattern & pattern); //get all patterns in pattern that occur in the patternmodel
 
 }
