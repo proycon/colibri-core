@@ -265,11 +265,11 @@ class PatternModel<IndexedData, IndexedDataHandler,MapType>: public MapType {
         return skipcontent;
     }
 
-    std::unordered_set<const Pattern> getsubsumed(const Pattern & pattern) {
+    std::unordered_set<Pattern> getsubsumed(const Pattern & pattern) {
         //TODO: implement
     }
 
-    std::unordered_set<const Pattern> getsubsumedby(const Pattern & pattern) {
+    std::unordered_set<Pattern> getsubsumedby(const Pattern & pattern) {
         //TODO: implement
     }
 
@@ -278,42 +278,42 @@ class PatternModel<IndexedData, IndexedDataHandler,MapType>: public MapType {
         int pruned = 0;
         if ((minskiptypes <=1)  && (minskiptokens <= threshold)) return pruned; //nothing to do
 
-        PatternModel::iterator iter = this->begin(); 
+        typename PatternModel::iterator iter = this->begin(); 
         do {
             const Pattern pattern = iter->first;
-            if (( (_n == 0) || (pattern.n() == n) ) && (pattern.category() = FIXEDSKIPGRAM)) {
-                unordered_set<const Pattern> skipcontent = getskipcontent(pattern);
+            if (( (_n == 0) || (pattern.n() == _n) ) && (pattern.category() = FIXEDSKIPGRAM)) {
+                std::unordered_set<Pattern> skipcontent = getskipcontent(pattern);
                 if (skipcontent.size() < minskiptypes) {
                     iter = erase(iter);
                     pruned++;
-                    continue
+                    continue;
                 }
 
                 std::set<IndexReference> occurrences;
-                for (unordered_set<const Pattern>::iterator iter2 = skipcontent.begin(); iter2 != skipcontent.end(); iter2++) {
+                for (std::unordered_set<Pattern>::iterator iter2 = skipcontent.begin(); iter2 != skipcontent.end(); iter2++) {
                     const Pattern contentpattern = *iter2;
                     IndexedData * data = getdata(contentpattern);
                     for (IndexedData::iterator iter3 = data->begin(); iter3 != data->end(); iter3++) {                    
-                        const IndexReference ref = *iter3
+                        const IndexReference ref = *iter3;
                         occurrences.insert(ref);
                     }
                 }                
                 if (occurrences.size() < minskiptokens) {
                     iter = erase(iter);
                     pruned++;
-                    continue
+                    continue;
                 }
             }
             iter++;
         } while(iter != this->end());       
-        if (pruned) prunereversindex();
+        if (pruned) this->prunereverseindex();
         return pruned;
     } 
 };
 
 
 
-
+/*
 
 
 class GraphFilter {
@@ -344,7 +344,7 @@ class GraphFilter {
     CoocStyle COOCSTYLE = COOCSTYLE_COUNT;
   }
 };    
-
+*/
 
         
 
