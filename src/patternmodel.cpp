@@ -6,38 +6,42 @@
 using namespace std;
 
 
-void PatternModel::PatternModel(istream * f, const PatternModelOptions options) {
+template<class ValueType, class ValueHandler, class MapType> 
+PatternModel<ValueType,ValueHandler,MapType>::PatternModel(istream * f, const PatternModelOptions options) {
     char null;
-    f.read( (char*) &null, sizeof(char));        
-    f.read( (char*) &model_type, sizeof(char));        
-    f.read( (char*) &model_version, sizeof(char));        
+    f->read( (char*) &null, sizeof(char));        
+    f->read( (char*) &model_type, sizeof(char));        
+    f->read( (char*) &model_version, sizeof(char));        
     if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) && (model_type != GRAPHPATTERNMODEL)))  {
-        cerr << "File is not a colibri model file (or a very old one)"
-        throw InternalError()
+        cerr << "File is not a colibri model file (or a very old one)" << endl;
+        throw InternalError();
     }
     if (model_type == GRAPHPATTERNMODEL) {
-        cerr << "Model is a graph model, can not be loaded as pattern model"
-        throw InternalError()
+        cerr << "Model is a graph model, can not be loaded as pattern model" << endl;
+        throw InternalError();
     }
-    f.read( (char*) &totaltokens, sizeof(uint64_t));        
-    f.read( (char*) &totaltypes, sizeof(uint64_t)); 
+    f->read( (char*) &totaltokens, sizeof(uint64_t));        
+    f->read( (char*) &totaltypes, sizeof(uint64_t)); 
 
-    read(f); //read PatternStore
+    this->read(f); //read PatternStore
     postread(options);
 }
 
 
-void PatternModel::write(ostream * out) {
+template<class ValueType, class ValueHandler, class MapType> 
+void PatternModel<ValueType,ValueHandler,MapType>::write(ostream * out) {
     const char null = 0;
-    out.write( (char*) &null, sizeof(char));        
-    out.write( (char*) &model_type, sizeof(char));        
-    out.write( (char*) &model_version, sizeof(char));        
-    out.write( (char*) &totaltokens, sizeof(uint64_t));        
-    out.write( (char*) &totaltypes, sizeof(uint64_t)); 
+    out->write( (char*) &null, sizeof(char));        
+    out->write( (char*) &model_type, sizeof(char));        
+    out->write( (char*) &model_version, sizeof(char));        
+    out->write( (char*) &totaltokens, sizeof(uint64_t));        
+    out->write( (char*) &totaltypes, sizeof(uint64_t)); 
     write(out); //write PatternStore
 }
 
-void PatternModel::postread(const PatternModelOptions options) {
+
+template<class ValueType, class ValueHandler, class MapType> 
+void PatternModel<ValueType,ValueHandler,MapType>::postread(const PatternModelOptions options) {
     //this function has a specialisation specific to indexed pattern models,
     //this is the generic version
     for (iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -50,7 +54,8 @@ void PatternModel::postread(const PatternModelOptions options) {
 
 
 
-void PatternModel::train(std::istream * in, const PatternModelOptions options) {
+template<class ValueType, class ValueHandler, class MapType> 
+void PatternModel<ValueType,ValueHandler,MapType>::train(std::istream * in, const PatternModelOptions options) {
     uint32_t sentence = 0;
     const int BUFFERSIZE = 65536;
     unsigned char line[BUFFERSIZE];
@@ -61,11 +66,11 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
         cerr << "Counting " << n << "-grams" << endl; 
         sentence++;
 
-        if ((DOFIXEDSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], vector<pair<int,int> >(), n);
+        if ((options.DOFIXEDSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], vector<pair<int,int> >(), n);
 
         Pattern line = Pattern(in);
         vector<pair<Pattern,int>> ngrams;
-        line.ngrams(ngrams, n)
+        line.ngrams(ngrams, n);
 
 
         for (vector<pair<Pattern,int>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
@@ -132,7 +137,8 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
     }
 }
 
-int PatternModel::prune(int threshold, int _n) {
+template<class ValueType, class ValueHandler, class MapType> 
+int PatternModel<ValueType,ValueHandler,MapType>::prune(int threshold, int _n) {
     int pruned = 0;
     PatternModel::iterator iter = this->begin(); 
     do {
@@ -149,7 +155,8 @@ int PatternModel::prune(int threshold, int _n) {
     return pruned;
 }
 
-int prunereverseindex() {
+template<class ValueType, class ValueHandler, class MapType> 
+int PatternModel<ValueType,ValueHandler,MapType>::prunereverseindex() {
     //prune patterns from reverse index if they don't exist anymore
     int pruned = 0;
     multimap<IndexReference,Pattern>::iterator iter2 = reverseindex.begin(); 
@@ -166,11 +173,13 @@ int prunereverseindex() {
 }
 
 
-int pruneskipgrams(int threshold, int minskiptypes, int minskiptokens, int _n = 0) {
+template<class ValueType, class ValueHandler, class MapType> 
+int PatternModel<ValueType,ValueHandler,MapType>::pruneskipgrams(int threshold, int minskiptypes, int minskiptokens, int _n = 0) {
     return 0; //only works for indexed models
 }
 
-std::vector<std::pair<const Pattern, int> > getpatterns(const Pattern & pattern) {
+template<class ValueType, class ValueHandler, class MapType> 
+std::vector<std::pair<const Pattern, int> > PatternModel<ValueType,ValueHandler,MapType>::getpatterns(const Pattern & pattern) {
     //get all patterns in pattern
     std::vector<std::pair<const Pattern, int> > v;   
     std::vector<std::pair<const Pattern, int> > ngrams;
