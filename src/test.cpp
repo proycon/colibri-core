@@ -6,6 +6,7 @@
 #include <classencoder.cpp>
 #include <classdecoder.cpp>
 #include <pattern.h>
+#include <patternmodel.h>
 
 
 using namespace std;

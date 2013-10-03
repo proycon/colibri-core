@@ -163,6 +163,10 @@ class PatternModel: public MapType {
             maxn = 0;
         }
         PatternModel(std::istream *, const PatternModelOptions options); //load from file
+        PatternModel(const std::string & filename, const PatternModelOptions options); //load from file
+
+        void load(std::istream *, const PatternModelOptions options); //load from file
+        
         void train(std::istream *, const PatternModelOptions options);
         
         //creates a new test model using the current model as training

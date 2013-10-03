@@ -5,9 +5,27 @@
 
 using namespace std;
 
-
 template<class ValueType, class ValueHandler, class MapType> 
 PatternModel<ValueType,ValueHandler,MapType>::PatternModel(istream * f, const PatternModelOptions options) {
+    totaltokens = 0;
+    totaltypes = 0;
+    maxn = 0;
+    load(f);
+}
+
+
+template<class ValueType, class ValueHandler, class MapType> 
+PatternModel<ValueType,ValueHandler,MapType>::PatternModel(const std::string & filename, const PatternModelOptions options) {
+    totaltokens = 0;
+    totaltypes = 0;
+    maxn = 0;
+    ifstream * in = new ifstream(filename.c_str());
+    load( (istream *) in);
+    in->close();
+}
+
+template<class ValueType, class ValueHandler, class MapType> 
+void PatternModel<ValueType,ValueHandler,MapType>::load(istream * f, const PatternModelOptions options) {
     char null;
     f->read( (char*) &null, sizeof(char));        
     f->read( (char*) &model_type, sizeof(char));        
