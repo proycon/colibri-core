@@ -429,7 +429,6 @@ class PatternMap: public PatternMapStore<std::unordered_map<const Pattern,ValueT
     public:
         //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
         PatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
-        ~PatternMap<ValueType,ValueHandler,ReadWriteSizeType>();
 
         void insert(const Pattern & pattern, ValueType & value) { 
             data[pattern] = value;

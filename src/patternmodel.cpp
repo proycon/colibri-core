@@ -15,7 +15,7 @@ PatternModel<ValueType,ValueHandler,MapType>::PatternModel(istream * f, const Pa
 
 
 template<class ValueType, class ValueHandler, class MapType> 
-PatternModel<ValueType,ValueHandler,MapType>::PatternModel(const std::string & filename, const PatternModelOptions options) {
+PatternModel<ValueType,ValueHandler,MapType>::PatternModel(const std::string filename, const PatternModelOptions options) {
     totaltokens = 0;
     totaltypes = 0;
     maxn = 0;
@@ -73,7 +73,7 @@ void PatternModel<ValueType,ValueHandler,MapType>::postread(const PatternModelOp
 
 
 template<class ValueType, class ValueHandler, class MapType> 
-void PatternModel<ValueType,ValueHandler,MapType>::train(const std::string & filename, const PatternModelOptions options) {
+void PatternModel<ValueType,ValueHandler,MapType>::train(const std::string filename, const PatternModelOptions options) {
     ifstream * in = new ifstream(filename.c_str());
     train((istream*) in, options);
     in->close();
