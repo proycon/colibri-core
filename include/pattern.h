@@ -199,7 +199,9 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
 template<class ContainerType,class ReadWriteSizeType = uint64_t>
 class PatternStore {
     public:
-        PatternStore();
+        PatternStore<ContainerType,ReadWriteSizeType>() {};
+        ~PatternStore<ContainerType,ReadWriteSizeType>() {};
+    
 
         virtual void insert(const Pattern & pattern)=0; //might be a noop in some implementations that require a value
 
@@ -244,8 +246,8 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
      protected:
         ValueHandler valuehandler;
      public:
-        PatternMapStore(): PatternStore<ContainerType,ReadWriteSizeType>() {};
-        ~PatternMapStore();
+        PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType>(): PatternStore<ContainerType,ReadWriteSizeType>() {};
+        ~PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType>() {};
 
         virtual void insert(const Pattern & pattern, ValueType & value)=0;
 
@@ -299,8 +301,8 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
         t_patternset data;
     public:
 
-        PatternSet(): PatternStore<t_patternset,ReadWriteSizeType>() {};
-        ~PatternSet();
+        PatternSet<ReadWriteSizeType>(): PatternStore<t_patternset,ReadWriteSizeType>() {};
+        ~PatternSet<ReadWriteSizeType>() {};
 
         void insert(const Pattern & pattern) {
             data.insert(pattern);
@@ -361,8 +363,8 @@ class OrderedPatternSet: public PatternStore<t_orderedpatternset,ReadWriteSizeTy
         t_orderedpatternset data;
     public:
 
-        OrderedPatternSet(): PatternStore<t_orderedpatternset,ReadWriteSizeType>() {};
-        ~OrderedPatternSet();
+        OrderedPatternSet<ReadWriteSizeType>(): PatternStore<t_orderedpatternset,ReadWriteSizeType>() {};
+        ~OrderedPatternSet<ReadWriteSizeType>();
 
         void insert(const Pattern pattern) {
             data.insert(pattern);
@@ -403,8 +405,9 @@ class PatternMap: public PatternMapStore<std::unordered_map<const Pattern,ValueT
     protected:
         std::unordered_map<const Pattern, ValueType> data;
     public:
-        PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
-        ~PatternMap();
+        //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
+        PatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
+        ~PatternMap<ValueType,ValueHandler,ReadWriteSizeType>();
 
         void insert(const Pattern & pattern, ValueType & value) { 
             data[pattern] = value;
@@ -449,8 +452,8 @@ class OrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType
     protected:
         std::map<const Pattern, ValueType> data;
     public:
-        OrderedPatternMap(): PatternMapStore<std::map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
-        ~OrderedPatternMap();
+        OrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>(): PatternMapStore<std::map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
+        ~OrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
 
         void insert(const Pattern & pattern, ValueType & value) { 
             data[pattern] = value;
