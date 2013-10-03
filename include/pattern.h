@@ -169,6 +169,7 @@ namespace std {
 
 template<class ValueType>
 class AbstractValueHandler {
+   public:
     virtual void read(std::istream * in, ValueType & value)=0;
     virtual void write(std::ostream * out, ValueType & value)=0;
     virtual std::string tostring(ValueType & value)=0;
@@ -177,6 +178,7 @@ class AbstractValueHandler {
 
 template<class ValueType>
 class BaseValueHandler: public AbstractValueHandler<ValueType> {
+   public:
     const static bool indexed = false;
     void read(std::istream * in, ValueType & v) {
         in->read( (char*) &v, sizeof(ValueType)); 
@@ -438,7 +440,7 @@ class PatternMap: public PatternMapStore<std::unordered_map<const Pattern,ValueT
             if (iter == end()) {
                 return NULL;
             } else {
-                return &(*iter);
+                return &(iter->first);
             }
         }
 };
