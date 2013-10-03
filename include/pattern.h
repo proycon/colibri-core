@@ -165,7 +165,7 @@ namespace std {
 
 template<class ValueType>
 class AbstractValueHandler {
-    virtual ValueType read(std::istream * in)=0;
+    virtual void read(std::istream * in, ValueType & value)=0;
     virtual void write(std::ostream * out, ValueType & value)=0;
     virtual std::string tostring(ValueType & value)=0;
     virtual int count(ValueType & value) const =0;
@@ -175,10 +175,8 @@ class AbstractValueHandler {
 template<class ValueType>
 class BaseValueHandler: public AbstractValueHandler<ValueType> {
     const static bool indexed = false;
-    ValueType read(std::istream * in) {
-        ValueType v;
+    void read(std::istream * in, ValueType & v) {
         in->read( (char*) &v, sizeof(ValueType)); 
-        return v;
     }
     void write(std::ostream * out, ValueType & value) {
         out->write( (char*) &value, sizeof(ValueType));
@@ -236,7 +234,7 @@ class PatternStore {
 
 /************* Abstract datatype for all kinds of maps ********************/
 
-template<class ContainerType, class ValueType, class ValueHandler=BaseValueHandler<ValueType>,class ReadWriteSizeType = uint64_t>
+template<class ContainerType, class ValueType, class ValueHandler=BaseValueHandler<ValueType>,class ReadWriteSizeType = uint32_t>
 class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> { 
      protected:
         ValueHandler valuehandler;
@@ -278,7 +276,8 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             for (ReadWriteSizeType i = 0; i < s; i++) {
                 Pattern p = Pattern(in);
-                ValueType value = valuehandler.read(in);
+                ValueType value;
+                valuehandler.read(in, value);
                 insert(p,value);
             }
         }
@@ -290,7 +289,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
 
 typedef std::unordered_set<Pattern> t_patternset;
 
-template<class ReadWriteSizeType = uint64_t>
+template<class ReadWriteSizeType = uint32_t>
 class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
     protected:
         t_patternset data;
@@ -333,6 +332,21 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
 
 };
 
+class PatternSetValueHandler: public AbstractValueHandler<PatternSet> {
+    const static bool indexed = false;
+    void read(std::istream * in, PatternSet & value) {
+        value.read(in);
+    }
+    void write(std::ostream * out, PatternSet & value) {
+        value.write(out);
+    }
+    virtual std::string tostring(ValueType & value) {
+        return ""; //NOT IMPLEMENTED! TODO
+    }
+    int count(PatternSet & value) const {
+        return value.size();
+    }
+}
 typedef std::set<Pattern> t_orderedpatternset;
 
 
@@ -471,14 +485,20 @@ class OrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType
 };
 
 
-
-
-
+/*
 template<class MapType,class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class ReadWriteSizeType = uint32_t>
-class PatternGraph: public PatternMapStore<MapType,ValueType,ValueHandler, ReadWriteSizeType> {
+
+
+class PatternGraphSet: public PatternMap<MapType,ValueType,ValueHandler, ReadWriteSizeType> {
+
+}
+
+
+template<class ContainerType = , class ReadWriteSizeType = uint32_t>
+class PatternGraphMap: public PatternStore<ContainerType,ReadWriteSizeType> {
     public:
-        PatternGraph(): PatternMapStore<MapType,ValueType,ValueHandler, ReadWriteSizeType>() {};
-        ~PatternGraph();
+        PatternGraphMap(): PatternMapStore<MapType,ValueType,ValueHandler, ReadWriteSizeType>() {};
+        ~PatternGraphMap();
 
         bool has(const Pattern & pattern, const Pattern & pattern2) const { if (has(pattern) > 0) { (*this)[pattern].has(pattern2); } else return 0; }
         
@@ -522,7 +542,7 @@ class PatternGraph: public PatternMapStore<MapType,ValueType,ValueHandler, ReadW
         }
 };
 
-
+*/
 
 
 //TODO: Implement a real Trie, conserving more memory

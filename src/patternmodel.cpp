@@ -98,7 +98,9 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
                             vector<pair<int,int>> * gapconfiguration = iter2;
                             //add skips
                             const Pattern skippattern = pattern.addfixedskips(*gapconfiguration);
-                            //test whether parts occur above threshold
+
+                            //test whether parts occur in model, otherwise skip
+                            //can't occur either and we can discard it
                             bool skippattern_valid = true;
                             vector<Pattern> parts;
                             skippattern.parts(parts);

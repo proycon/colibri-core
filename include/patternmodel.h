@@ -87,15 +87,13 @@ class IndexedData {
 
 class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
     const static bool indexed = true;
-    IndexedData read(std::istream * in) {
-        IndexedData v;
+    void read(std::istream * in, IndexedData & v) {
         const uint32_t c = count();
         in->read((char*) &c, sizeof(uint32_t));
         for (unsigned int i = 0; i < c; i++) {
             IndexReference ref = IndexReference(in);
             v.insert(ref);
         }
-        return v;
     }
     void write(std::ostream * out, IndexedData & value) {
         const uint32_t c = value.count();
@@ -119,6 +117,8 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
 }
 
 
+typedef PatternRelations PatternMap<PatternSet,PatternSetValueHandler>;
+
 
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class MapType = PatternMap<ValueType, BaseValueHandler<ValueType>>>
 class PatternModel: public MapType {
@@ -134,6 +134,8 @@ class PatternModel: public MapType {
         std::multimap<IndexReference,Pattern> reverseindex; 
         void postread(const PatternModelOptions options);
     public:
+        PatternRelations skipcontent;
+
         PatternModel() {
             totaltokens = 0;
             totaltypes = 0;
@@ -176,6 +178,7 @@ class PatternModel: public MapType {
 
         int prune(int threshold);
         std::vector<std::pair<const Pattern, int> > getpatterns(const Pattern & pattern); //get all patterns in pattern that occur in the patternmodel
+
 }
 
 
@@ -199,7 +202,40 @@ class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
                     reverseindex.insert(ref,p);
                 }
             }
+/*            if ((p.category() == FIXEDSKIPGRAM) && (options.DOSKIPCONTENT)) {
+                skipcontent[p
+            }*/
         }
+    }
+    
+    std::vector<Pattern> getskipcontent(const Pattern & pattern) {
+        std::vector<Pattern> skipcontent;
+        if (pattern.category() == FIXEDSKIPGRAM) {
+            //find the gaps
+            vector<pair<int,int>> gapdata;
+            pattern.gaps(gapdata);
+
+            IndexedData * data = getdata()
+            for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
+                const IndexReference ref = *iter2
+                
+                //compute all the gaps 
+                for (vector<pair<int,int>>::iterator iter3 = gaps.begin(); iter3 != gaps.end(); iter3++) {
+                    const IndexReference gapref = IndexReference(ref.sentence, ref.token + iter3->first);
+                    const int requiredsize = iter3->second;
+
+                    //find patterns through reverse index
+                    for (multimap<IndexReference,Pattern>::iterator iter4 = reverseindex.lower_bound(gapref); iter4 != reverseindex.upper_bound(gapref); iter4++) {
+                        if (requiredsize == iter4->first) {
+                            const Pattern candidate = iter4->second;
+                            skipcontent.push_back(candidate);
+                        }
+                    }
+
+                }
+            }
+        }
+        return skipcontent;
     }
 }
 
@@ -213,11 +249,11 @@ class PatternModelOptions {
         bool MAXLENGTH;
         
         bool DOFIXEDSKIPGRAMS;
-        bool MINSKIPTOKENS;
-        bool DOINITIALSKIPONLY; //include patterns having only one gap at the very start of the pattern?
-        bool DOFINALSKIPONLY; //include patterns having only one gap at the very end of the pattern?
+        bool MINSKIPTYPES; //requires DOSKIPCONTENT
+        bool MINSKIPTOKENS; //requires DOSKIPCONTENT
 
         bool DOREVERSEINDEX;
+        bool DOSKIPCONTENT; //requires REVERSEINDEX
 
         PatternModelOptions() {
             MINTOKENS = 2;
@@ -225,8 +261,6 @@ class PatternModelOptions {
 
             MINSKIPTOKENS = 2;
             DOFIXEDSKIPGRAMS = false;
-            DOINITIALSKIPONLY = false;
-            DOFINALSKIPONLY = false;
 
             DOREVERSEINDEX = false; //only for indexed models
         }
