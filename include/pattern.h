@@ -173,7 +173,6 @@ class AbstractValueHandler {
     virtual void write(std::ostream * out, ValueType & value)=0;
     virtual std::string tostring(ValueType & value)=0;
     virtual int count(ValueType & value) const =0;
-    virtual int add(const Pattern & pattern, ValueType * value, IndexReference & ref)=0;
 };
 
 template<class ValueType>
@@ -220,7 +219,7 @@ class PatternStore {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
             for (iterator iter = begin(); iter != end(); iter++) {
-                Pattern p = iter->first;
+                Pattern p = *iter;
                 p.write(out);
             }
         }
@@ -228,7 +227,7 @@ class PatternStore {
         virtual void read(std::istream * in) {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
-            for (int i = 0; i < s; i++) {
+            for (unsigned int i = 0; i < s; i++) {
                 Pattern p = Pattern(in);
                 insert(p);
             }
@@ -336,21 +335,22 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
 
 };
 
-class PatternSetValueHandler: public AbstractValueHandler<PatternSet> {
+class PatternSetValueHandler: public AbstractValueHandler<PatternSet<>> {
     const static bool indexed = false;
-    void read(std::istream * in, PatternSet & value) {
+    void read(std::istream * in, PatternSet<> & value) {
         value.read(in);
     }
-    void write(std::ostream * out, PatternSet & value) {
+    void write(std::ostream * out, PatternSet<> & value) {
         value.write(out);
     }
-    virtual std::string tostring(ValueType & value) {
+    virtual std::string tostring(PatternSet<> & value) {
         return ""; //NOT IMPLEMENTED! TODO
     }
-    int count(PatternSet & value) const {
+    int count(PatternSet<> & value) const {
         return value.size();
     }
-}
+};
+
 typedef std::set<Pattern> t_orderedpatternset;
 
 

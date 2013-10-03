@@ -658,7 +658,7 @@ Pattern Pattern::extractskipcontent(Pattern & instance) const {
     return pattern;
 }
 
-bool instantiates(const Pattern & skipgram) const { 
+bool Pattern::instantiates(const Pattern & skipgram) const { 
     //Is this a full instantiation of the skipgram?
     if (category() != NGRAM) return false;
     if (skipgram.category() == NGRAM) return (*this) == skipgram;
@@ -683,7 +683,7 @@ bool instantiates(const Pattern & skipgram) const {
 }
 
 
-Pattern replace(int begin, int length, const Pattern & replacement) const {
+Pattern Pattern::replace(int begin, int length, const Pattern & replacement) const {
     const int _n = n();
     if (begin > 0) {
         Pattern p = Pattern(*this,0,begin) + replacement;
@@ -702,7 +702,7 @@ Pattern replace(int begin, int length, const Pattern & replacement) const {
     }
 }
 
-Pattern addfixedskips(std::vector<std::pair<int,int> > & gaps) const {
+Pattern Pattern::addfixedskips(std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     Pattern pattern = *this;
     for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
@@ -711,7 +711,7 @@ Pattern addfixedskips(std::vector<std::pair<int,int> > & gaps) const {
     return pattern;
 }
 
-Pattern adddynamicskips(std::vector<std::pair<int,int> > & gaps) const {
+Pattern Pattern::adddynamicskips(std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     Pattern pattern = *this;
     for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
