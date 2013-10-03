@@ -127,7 +127,7 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
         }
 
         cerr << "Pruning..." << endl;
-        prune(options.MINTOKENS);
+        prune(options.MINTOKENS,n);
     }
 }
 
