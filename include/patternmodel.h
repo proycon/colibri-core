@@ -52,8 +52,8 @@ class IndexReference {
     bool operator==(const IndexReference &other) const { return ( (sentence == other.sentence) && (token == other.token)); };
     bool operator!=(const IndexReference &other) const { return ( (sentence != other.sentence) || (token != other.token)); };
     
-    virtual std::string tostring(ValueType & value) {
-        return tostring(sentence) + ":" + tostring(token);
+    std::string tostring() const {
+        return std::to_string(sentence) + ":" + std::to_string(token);
     }
 };
 
@@ -66,6 +66,7 @@ class IndexedData {
     void write(std::ostream * out) const; 
     
     bool has(const IndexReference & ref) const { return data.count(ref); }
+    int count() const { return data.size(); }
 
     void insert(IndexReference ref) { data.insert(ref); }
 
@@ -86,7 +87,7 @@ class IndexedData {
 class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
     const static bool indexed = true;
     void read(std::istream * in, IndexedData & v) {
-        const uint32_t c = count();
+        uint32_t c;
         in->read((char*) &c, sizeof(uint32_t));
         for (unsigned int i = 0; i < c; i++) {
             IndexReference ref = IndexReference(in);
@@ -95,15 +96,14 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
     }
     void write(std::ostream * out, IndexedData & value) {
         const uint32_t c = value.count();
-        in->write((char*) &c, sizeof(uint32_t));
-        for (std::set<CorpusReference>::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
+        out->write((char*) &c, sizeof(uint32_t));
+        for (std::set<IndexReference>::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
             iter->write(out);
         }
     }
     virtual std::string tostring(IndexedData & value) {
-        const uint32_t c = value.count();
-        string s = "";
-        for (std::set<CorpusReference>::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
+        std::string s = "";
+        for (std::set<IndexReference>::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
             if (!s.empty()) s += " ";
             s += iter->tostring();
         }
@@ -112,9 +112,10 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
     int count(IndexedData & value) const {
         return value.data.size();
     }
-}
+};
 
 
+class PatternModelOptions;
 
 
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class MapType = PatternMap<ValueType, BaseValueHandler<ValueType>>>
@@ -143,14 +144,14 @@ class PatternModel: public MapType {
         //creates a new test model using the current model as training
         // i.e. only fragments existing in the training model are counted
         // remaining fragments are 'uncovered'
-        void test(MapType & target, std::stream * in);
+        void test(MapType & target, std::istream * in);
 
         void write(std::ostream *);
 
         virtual int maxlength() const { return maxn; };
         virtual int minlength() const { return minn; };
-        virtual int occurrencecount(const Pattern & key) const { return valuehandler.count((*this)[pattern]); }
-        virtual double freq(const Pattern & pattern) const { return valuehandler.count((*this)[pattern]) / totaltokens; }
+        virtual int occurrencecount(const Pattern & pattern) const { return this->valuehandler.count((*this)[pattern]); }
+        virtual double freq(const Pattern & pattern) const { return this->valuehandler.count((*this)[pattern]) / totaltokens; }
         
         ValueType * getdata(const Pattern & pattern) const { return &((*this)[pattern]); }
         
@@ -178,7 +179,7 @@ class PatternModel: public MapType {
 
         std::vector<std::pair<const Pattern, int> > getpatterns(const Pattern & pattern); //get all patterns in pattern that occur in the patternmodel
 
-}
+};
 
 
 template<class MapType = PatternMap<IndexedData, IndexedDataHandler>> //specialisation for INDEXED pattern models
