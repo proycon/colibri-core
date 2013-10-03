@@ -659,6 +659,22 @@ Pattern Pattern::extractskipcontent(Pattern & instance) const {
 }
 
 Pattern replace(int begin, int length, const Pattern & replacement) const {
+    const int _n = n();
+    if (begin > 0) {
+        Pattern p = Pattern(*this,0,begin) + replacement;
+        if (begin+length != _n) {
+            return p + Pattern(*this,begin+length,_n - (begin+length));
+        } else {
+            return p;
+        }
+    } else {
+        Pattern p = replacement;
+        if (begin+length != _n) {
+            return p + Pattern(*this,begin+length,_n - (begin+length));
+        } else {
+            return p;
+        }
+    }
 }
 
 Pattern addfixedskips(std::vector<std::pair<int,int> > gaps) const {
