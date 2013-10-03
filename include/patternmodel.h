@@ -178,6 +178,7 @@ class PatternModel: public MapType {
 
         int prune(int threshold,int _n=0);
         int pruneskipgrams(int threshold, int minskiptypes=2, int minskiptokens=2, int _n = 0);
+        int prunereverseindex();
 
         std::vector<std::pair<const Pattern, int> > getpatterns(const Pattern & pattern); //get all patterns in pattern that occur in the patternmodel
 
@@ -272,6 +273,7 @@ class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
             }
             iter++;
         } while(iter != this->end());       
+        if (pruned) prunereversindex();
         return pruned;
     } 
 }

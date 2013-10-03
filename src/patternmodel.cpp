@@ -145,19 +145,26 @@ int PatternModel::prune(int threshold, int _n) {
         }
     } while(iter != this->end());       
 
+    if (pruned) prunereverseindex();
+    return pruned;
+}
+
+int prunereverseindex() {
     //prune patterns from reverse index if they don't exist anymore
+    int pruned = 0;
     multimap<IndexReference,Pattern>::iterator iter2 = reverseindex.begin(); 
     do {
         const Pattern pattern = iter->second;
         if (( (_n == 0) || (pattern.n() == n) ) && (!has(pattern))) {
             iter = reverseindex.erase(iter);
+            pruned++;
         } else {
             iter++;
         }
     } while (iter != reverseindex.end())
-
     return pruned;
 }
+
 
 int pruneskipgrams(int threshold, int minskiptypes, int minskiptokens, int _n = 0) {
     return 0; //only works for indexed models
