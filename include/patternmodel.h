@@ -177,12 +177,21 @@ class PatternModel: public MapType {
 
         void write(std::ostream *);
 
+        typedef typename MapType::iterator iterator;
+        typedef typename MapType::const_iterator const_iterator;        
+
         virtual int maxlength() const { return maxn; };
         virtual int minlength() const { return minn; };
-        virtual int occurrencecount(const Pattern & pattern) const { return this->valuehandler.count((*this)[pattern]); }
-        virtual double freq(const Pattern & pattern) const { return this->valuehandler.count((*this)[pattern]) / totaltokens; }
+        virtual int occurrencecount(const Pattern & pattern)  { 
+            ValueType * data = getdata(pattern);
+            return this->valuehandler.count(*data); 
+        }
+        virtual double freq(const Pattern & pattern) { return occurrencecount(pattern) / totaltokens; }
         
-        ValueType * getdata(const Pattern & pattern) const { return &((*this)[pattern]); }
+        ValueType * getdata(const Pattern & pattern) { 
+            typename MapType::iterator iter = this->find(pattern);
+            return &(iter->second); 
+        }
         
         int types() const { return totaltypes; }
         int tokens() const { return totaltokens; }
@@ -192,8 +201,6 @@ class PatternModel: public MapType {
 
         void output(std::ostream *);
         
-        typedef typename MapType::iterator iterator;
-        typedef typename MapType::const_iterator const_iterator;        
         
         int coveragecount(const Pattern &  key);    
         double coverage(const Pattern & key);	 
