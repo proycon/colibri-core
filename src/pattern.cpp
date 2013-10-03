@@ -658,6 +658,31 @@ Pattern Pattern::extractskipcontent(Pattern & instance) const {
     return pattern;
 }
 
+bool instantiates(const Pattern & skipgram) const { 
+    //Is this a full instantiation of the skipgram?
+    if (category() != NGRAM) return false;
+    if (skipgram.category() == NGRAM) return (*this) == skipgram;
+
+    if (skipgram.category() == DYNAMICSKIPGRAM) {
+        //DYNAMIC SKIPGRAM
+        //TODO: NOT IMPLEMENTED YET!!
+       return false;
+    } else {
+        //FIXED SKIPGRAM
+        const int _n = n();
+        if (skipgram.n() != _n) return false;
+
+        for (int i = 0; i < _n; i++) {
+            const Pattern token1 = Pattern(skipgram, i, 1);
+            const Pattern token2 = Pattern(*this, i, 1);
+            if ((token1 != token2) && (token1.category() != FIXEDSKIPGRAM)) return false;
+        }
+        return true;
+    }
+
+}
+
+
 Pattern replace(int begin, int length, const Pattern & replacement) const {
     const int _n = n();
     if (begin > 0) {
