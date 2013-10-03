@@ -679,5 +679,18 @@ Pattern replace(int begin, int length, const Pattern & replacement) const {
 
 Pattern addfixedskips(std::vector<std::pair<int,int> > gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
-    //TODO
+    Pattern pattern = *this;
+    for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
+        pattern = pattern.replace(iter->first, iter->second, FIXEDGAPPATTERN);
+    }
+    return pattern;
+}
+
+Pattern adddynamicskips(std::vector<std::pair<int,int> > gaps) const {
+    //Returns a pattern with the specified spans replaced by fixed skips
+    Pattern pattern = *this;
+    for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
+        pattern = pattern.replace(iter->first, iter->second, DYNAMICGAPPATTERN);
+    }
+    return pattern;
 }

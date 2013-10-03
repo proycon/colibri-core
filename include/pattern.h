@@ -114,6 +114,7 @@ class Pattern {
 
      Pattern replace(int begin, int length, const Pattern & replacement) const;
      Pattern addfixedskips(std::vector<std::pair<int,int> > gaps) const;
+     Pattern adddynamicskips(std::vector<std::pair<int,int> > gaps) const;
 
      //CHANGES from old colibri ngram:
      //
@@ -126,8 +127,10 @@ class Pattern {
      void mask(std::vector<bool> & container) const; //returns a boolean mask of the skipgram (0 = gap(encapsulation) , 1 = skipgram coverage)
 };
 
-
-
+const unsigned char tmp_fixedgap = FIXEDGAP;
+const unsigned char tmp_dynamicgap = DYNAMICGAP;
+const Pattern FIXEDGAPPATTERN = Pattern(&tmp_fixedgap,1);
+const Pattern DYNAMICGAPPATTERN = Pattern(&tmp_dynamicgap,1);
 
 namespace std {
 
