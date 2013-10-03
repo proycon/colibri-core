@@ -117,7 +117,6 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
 }
 
 
-typedef PatternRelations PatternMap<PatternSet,PatternSetValueHandler>;
 
 
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class MapType = PatternMap<ValueType, BaseValueHandler<ValueType>>>
@@ -134,7 +133,6 @@ class PatternModel: public MapType {
         std::multimap<IndexReference,Pattern> reverseindex; 
         void postread(const PatternModelOptions options);
     public:
-        PatternRelations skipcontent;
 
         PatternModel() {
             totaltokens = 0;
@@ -211,11 +209,11 @@ class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
         }
     }
     
-    std::vector<Pattern> getskipcontent(const Pattern & pattern) {
-        std::vector<Pattern> skipcontent;
+    std::unordered_set<const Pattern> getskipcontent(const Pattern & pattern) {
+        std::unordered_set<const Pattern> skipcontent;
         if (pattern.category() == FIXEDSKIPGRAM) {
             //find the gaps
-            vector<pair<int,int>> gapdata;
+            std::vector<std::pair<int,int>> gapdata;
             pattern.gaps(gapdata);
 
             IndexedData * data = getdata()
@@ -223,7 +221,7 @@ class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
                 const IndexReference ref = *iter2
                 
                 //compute all the gaps 
-                for (vector<pair<int,int>>::iterator iter3 = gaps.begin(); iter3 != gaps.end(); iter3++) {
+                for (std::vector<std::pair<int,int>>::iterator iter3 = gaps.begin(); iter3 != gaps.end(); iter3++) {
                     const IndexReference gapref = IndexReference(ref.sentence, ref.token + iter3->first);
                     const int requiredsize = iter3->second;
 
@@ -231,7 +229,7 @@ class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
                     for (multimap<IndexReference,Pattern>::iterator iter4 = reverseindex.lower_bound(gapref); iter4 != reverseindex.upper_bound(gapref); iter4++) {
                         if (requiredsize == iter4->first) {
                             const Pattern candidate = iter4->second;
-                            skipcontent.push_back(candidate);
+                            skipcontent.insert(candidate);
                         }
                     }
 
@@ -241,6 +239,15 @@ class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
         return skipcontent;
     }
 
+    std::unordered_set<const Pattern> getsubsumed(const Pattern & pattern) {
+        //TODO: implement
+    }
+
+    std::unordered_set<const Pattern> getsubsumedby(const Pattern & pattern) {
+        //TODO: implement
+    }
+
+
     int pruneskipgrams(int threshold, int minskiptypes, int minskiptokens, int _n = 0) {
         int pruned = 0;
         if ((minskiptypes <=1)  && (minskiptokens <= threshold)) return pruned; //nothing to do
@@ -249,15 +256,15 @@ class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
         do {
             const Pattern pattern = iter->first;
             if (( (_n == 0) || (pattern.n() == n) ) && (pattern.category() = FIXEDSKIPGRAM)) {
-                vector<Pattern> skipcontent = getskipcontent(pattern)
+                unordered_set<const Pattern> skipcontent = getskipcontent(pattern);
                 if (skipcontent.size() < minskiptypes) {
                     iter = erase(iter);
                     pruned++;
                     continue
                 }
 
-                set<IndexReference> occurrences;
-                for (vector<Pattern>::iterator iter2 = skipcontent.begin(); iter2 != skipcontent.end(); iter2++) {
+                std::set<IndexReference> occurrences;
+                for (unordered_set<const Pattern>::iterator iter2 = skipcontent.begin(); iter2 != skipcontent.end(); iter2++) {
                     const Pattern contentpattern = *iter2;
                     IndexedData * data = getdata(contentpattern);
                     for (IndexedData::iterator iter3 = data->begin(); iter3 != data->end(); iter3++) {                    
