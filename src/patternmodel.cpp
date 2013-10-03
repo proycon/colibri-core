@@ -92,7 +92,28 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
                     }
                 }                
                 if (options.DOFIXEDSKIPGRAMS) {
-                    //TODO
+                    //loop over all possible gap configurations
+                    for (vector<vector<pair<int,int>>>::iterator iter =  gapconf[n].begin(); iter != gapconf[n].end(); iter++) {
+                        for (vector<pair<int,int>>::iterator iter2 =  iter->begin(); iter2 != iter->end(); iter2++) {
+                            vector<pair<int,int>> * gapconfiguration = iter2;
+                            //add skips
+                            const Pattern skippattern = pattern.addfixedskips(*gapconfiguration);
+                            //test whether parts occur above threshold
+                            bool skippattern_valid = true;
+                            vector<Pattern> parts;
+                            skippattern.parts(parts);
+                            for (vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
+                                const Pattern part = *iter3;
+                                if (!has(part)) {
+                                    skippattern_valid = false;
+                                    break;
+                                }
+                            }
+                            if (skippattern_valid) {
+                                add(skippattern, &((*this)[skippattern]), ref );
+                            }
+                        }
+                    }
                 }
 
             }            

@@ -677,7 +677,7 @@ Pattern replace(int begin, int length, const Pattern & replacement) const {
     }
 }
 
-Pattern addfixedskips(std::vector<std::pair<int,int> > gaps) const {
+Pattern addfixedskips(std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     Pattern pattern = *this;
     for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
@@ -686,7 +686,7 @@ Pattern addfixedskips(std::vector<std::pair<int,int> > gaps) const {
     return pattern;
 }
 
-Pattern adddynamicskips(std::vector<std::pair<int,int> > gaps) const {
+Pattern adddynamicskips(std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     Pattern pattern = *this;
     for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
