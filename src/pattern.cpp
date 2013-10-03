@@ -658,6 +658,9 @@ Pattern Pattern::extractskipcontent(Pattern & instance) const {
     return pattern;
 }
 
+Pattern replace(int begin, int length, const Pattern & replacement) const {
+}
+
 Pattern addfixedskips(std::vector<std::pair<int,int> > gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     //TODO
