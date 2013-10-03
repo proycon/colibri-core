@@ -128,15 +128,18 @@ void PatternModel::train(std::istream * in, const PatternModelOptions options) {
 
         cerr << "Pruning..." << endl;
         prune(options.MINTOKENS,n);
+        pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, options.MINSKIPTOKENS, n);
     }
 }
 
 int PatternModel::prune(int threshold, int _n) {
+    int pruned = 0;
     PatternModel::iterator iter = this->begin(); 
     do {
         const Pattern pattern = iter->first;
         if (( (_n == 0) || (pattern.n() == n) )&& (occurrencecount(pattern) < threshold)) {
             iter = erase(iter); 
+            pruned++;
         } else {
             iter++;
         }
@@ -152,6 +155,12 @@ int PatternModel::prune(int threshold, int _n) {
             iter++;
         }
     } while (iter != reverseindex.end())
+
+    return pruned;
+}
+
+int pruneskipgrams(int threshold, int minskiptypes, int minskiptokens, int _n = 0) {
+    return 0; //only works for indexed models
 }
 
 std::vector<std::pair<const Pattern, int> > getpatterns(const Pattern & pattern) {

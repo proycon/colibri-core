@@ -177,6 +177,8 @@ class PatternModel: public MapType {
         }
 
         int prune(int threshold,int _n=0);
+        int pruneskipgrams(int threshold, int minskiptypes=2, int minskiptokens=2, int _n = 0);
+
         std::vector<std::pair<const Pattern, int> > getpatterns(const Pattern & pattern); //get all patterns in pattern that occur in the patternmodel
 
 }
@@ -237,6 +239,41 @@ class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
         }
         return skipcontent;
     }
+
+    int pruneskipgrams(int threshold, int minskiptypes, int minskiptokens, int _n = 0) {
+        int pruned = 0;
+        if ((minskiptypes <=1)  && (minskiptokens <= threshold)) return pruned; //nothing to do
+
+        PatternModel::iterator iter = this->begin(); 
+        do {
+            const Pattern pattern = iter->first;
+            if (( (_n == 0) || (pattern.n() == n) ) && (pattern.category() = FIXEDSKIPGRAM)) {
+                vector<Pattern> skipcontent = getskipcontent(pattern)
+                if (skipcontent.size() < minskiptypes) {
+                    iter = erase(iter);
+                    pruned++;
+                    continue
+                }
+
+                set<IndexReference> occurrences;
+                for (vector<Pattern>::iterator iter2 = skipcontent.begin(); iter2 != skipcontent.end(); iter2++) {
+                    const Pattern contentpattern = *iter2;
+                    IndexedData * data = getdata(contentpattern);
+                    for (IndexedData::iterator iter3 = data->begin(); iter3 != data->end(); iter3++) {                    
+                        const IndexReference ref = *iter3
+                        occurrences.insert(ref);
+                    }
+                }                
+                if (occurrences.size() < minskiptokens) {
+                    iter = erase(iter);
+                    pruned++;
+                    continue
+                }
+            }
+            iter++;
+        } while(iter != this->end());       
+        return pruned;
+    } 
 }
 
 
