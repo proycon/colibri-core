@@ -219,23 +219,9 @@ class PatternStore {
         virtual typename ContainerType::iterator end()=0;
         virtual typename ContainerType::iterator find(const Pattern & pattern)=0;
         
-        virtual void write(std::ostream * out) {
-            ReadWriteSizeType s = (ReadWriteSizeType) size();
-            out->write( (char*) &s, sizeof(ReadWriteSizeType));
-            for (iterator iter = begin(); iter != end(); iter++) {
-                Pattern p = *iter;
-                p.write(out);
-            }
-        }
+        virtual void write(std::ostream * out)=0;
+        virtual void read(std::istream * in)=0;
 
-        virtual void read(std::istream * in) {
-            ReadWriteSizeType s; //read size:
-            in->read( (char*) &s, sizeof(ReadWriteSizeType));
-            for (unsigned int i = 0; i < s; i++) {
-                Pattern p = Pattern(in);
-                insert(p);
-            }
-        }
 };
 
 
@@ -336,6 +322,24 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
             }
         }
 
+        void write(std::ostream * out) {
+            ReadWriteSizeType s = (ReadWriteSizeType) size();
+            out->write( (char*) &s, sizeof(ReadWriteSizeType));
+            for (iterator iter = begin(); iter != end(); iter++) {
+                Pattern p = *iter;
+                p.write(out);
+            }
+        }
+
+        void read(std::istream * in) {
+            ReadWriteSizeType s; //read size:
+            in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            for (unsigned int i = 0; i < s; i++) {
+                Pattern p = Pattern(in);
+                insert(p);
+            }
+        }
+
 };
 
 class PatternSetValueHandler: public AbstractValueHandler<PatternSet<>> {
@@ -394,6 +398,24 @@ class OrderedPatternSet: public PatternStore<t_orderedpatternset,ReadWriteSizeTy
                 return NULL;
             } else {
                 return &(*iter);
+            }
+        }
+        
+        void write(std::ostream * out) {
+            ReadWriteSizeType s = (ReadWriteSizeType) size();
+            out->write( (char*) &s, sizeof(ReadWriteSizeType));
+            for (iterator iter = begin(); iter != end(); iter++) {
+                Pattern p = *iter;
+                p.write(out);
+            }
+        }
+
+        void read(std::istream * in) {
+            ReadWriteSizeType s; //read size:
+            in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            for (unsigned int i = 0; i < s; i++) {
+                Pattern p = Pattern(in);
+                insert(p);
             }
         }
 

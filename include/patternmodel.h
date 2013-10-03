@@ -157,13 +157,14 @@ class PatternModel: public MapType {
         void postread(const PatternModelOptions options);
     public:
 
-        PatternModel() {
+        PatternModel<ValueType,ValueHandler,MapType>() {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
         }
-        PatternModel(std::istream *, const PatternModelOptions options); //load from file
-        PatternModel(const std::string & filename, const PatternModelOptions options); //load from file
+        PatternModel<ValueType,ValueHandler,MapType>(std::istream *, const PatternModelOptions options); //load from file
+        PatternModel<ValueType,ValueHandler,MapType>(const std::string & filename, const PatternModelOptions options); //load from file
+        ~PatternModel<ValueType,ValueHandler,MapType>();
 
         void load(std::istream *, const PatternModelOptions options); //load from file
         
