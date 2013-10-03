@@ -115,7 +115,31 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
 };
 
 
-class PatternModelOptions;
+class PatternModelOptions {
+    public:
+        bool MINTOKENS;
+        bool MAXLENGTH;
+        
+        bool DOFIXEDSKIPGRAMS;
+        bool MINSKIPTYPES; //requires DOSKIPCONTENT
+        bool MINSKIPTOKENS; //requires DOSKIPCONTENT
+
+        bool DOREVERSEINDEX;
+        bool DOSKIPCONTENT; //requires REVERSEINDEX
+
+        PatternModelOptions() {
+            MINTOKENS = 2;
+            MAXLENGTH = 8;
+
+            MINSKIPTYPES = 2;
+            MINSKIPTOKENS = 2;
+            DOFIXEDSKIPGRAMS = false;
+
+            DOREVERSEINDEX = false; //only for indexed models
+        }
+
+
+};
 
 
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class MapType = PatternMap<ValueType, BaseValueHandler<ValueType>>>
@@ -182,24 +206,27 @@ class PatternModel: public MapType {
 };
 
 
-template<class MapType = PatternMap<IndexedData, IndexedDataHandler>> //specialisation for INDEXED pattern models
-class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
+template<class MapType> //specialisation for INDEXED pattern models
+class PatternModel<IndexedData, IndexedDataHandler,MapType>: public MapType {
+   public:
     int add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
         value->insert(ref);
     }
     
+    IndexedData * getdata(const Pattern & pattern) const { return &((*this)[pattern]); }
+
     void postread(const PatternModelOptions options) {
-        for (iterator iter = this->begin(); iter != this->end(); iter++) {
+        for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern p = iter->first;
             const int n = p.n();
-            if (n > maxn) maxn = n;
-            if (n < minn) minn = n;
-            IndexedData * data = getdata(p);
+            if (n > this->maxn) this->maxn = n;
+            if (n < this->minn) this->minn = n;
+            IndexedData * data = this->getdata(p);
             if (options.DOREVERSEINDEX) {
                 //construct the reverse index
                 for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
-                    const IndexReference ref = *iter2
-                    reverseindex.insert(ref,p);
+                    const IndexReference ref = *iter2;
+                    this->reverseindex.insert(ref,p);
                 }
             }
 /*            if ((p.category() == FIXEDSKIPGRAM) && (options.DOSKIPCONTENT)) {
@@ -208,26 +235,26 @@ class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
         }
     }
     
-    std::unordered_set<const Pattern> getskipcontent(const Pattern & pattern) {
-        std::unordered_set<const Pattern> skipcontent;
+    std::unordered_set<Pattern> getskipcontent(const Pattern & pattern) {
+        std::unordered_set<Pattern> skipcontent;
         if (pattern.category() == FIXEDSKIPGRAM) {
             //find the gaps
             std::vector<std::pair<int,int>> gapdata;
             pattern.gaps(gapdata);
 
-            IndexedData * data = getdata()
+            IndexedData * data = getdata();
             for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
-                const IndexReference ref = *iter2
+                const IndexReference ref = *iter2;
                 
                 //compute all the gaps 
-                for (std::vector<std::pair<int,int>>::iterator iter3 = gaps.begin(); iter3 != gaps.end(); iter3++) {
+                for (std::vector<std::pair<int,int>>::iterator iter3 = gapdata.begin(); iter3 != gapdata.end(); iter3++) {
                     const IndexReference gapref = IndexReference(ref.sentence, ref.token + iter3->first);
                     const int requiredsize = iter3->second;
 
                     //find patterns through reverse index
-                    for (multimap<IndexReference,Pattern>::iterator iter4 = reverseindex.lower_bound(gapref); iter4 != reverseindex.upper_bound(gapref); iter4++) {
-                        if (requiredsize == iter4->first) {
-                            const Pattern candidate = iter4->second;
+                    for (std::multimap<IndexReference,Pattern>::iterator iter4 = this->reverseindex.lower_bound(gapref); iter4 != this->reverseindex.upper_bound(gapref); iter4++) {
+                        const Pattern candidate = iter4->second;
+                        if (requiredsize == candidate.n()) {
                             skipcontent.insert(candidate);
                         }
                     }
@@ -282,36 +309,12 @@ class PatternModel<IndexedData, IndexedDataHandler>: public MapType {
         if (pruned) prunereversindex();
         return pruned;
     } 
-}
+};
 
 
 
 
 
-class PatternModelOptions {
-    public:
-        bool MINTOKENS:
-        bool MAXLENGTH;
-        
-        bool DOFIXEDSKIPGRAMS;
-        bool MINSKIPTYPES; //requires DOSKIPCONTENT
-        bool MINSKIPTOKENS; //requires DOSKIPCONTENT
-
-        bool DOREVERSEINDEX;
-        bool DOSKIPCONTENT; //requires REVERSEINDEX
-
-        PatternModelOptions() {
-            MINTOKENS = 2;
-            MAXLENGTH = 8;
-
-            MINSKIPTOKENS = 2;
-            DOFIXEDSKIPGRAMS = false;
-
-            DOREVERSEINDEX = false; //only for indexed models
-        }
-
-
-}
 
 class GraphFilter {
    public:
