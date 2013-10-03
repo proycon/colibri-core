@@ -168,6 +168,7 @@ class PatternModel: public MapType {
         void load(std::istream *, const PatternModelOptions options); //load from file
         
         void train(std::istream *, const PatternModelOptions options);
+        void train(const std::string & filename, const PatternModelOptions options);
         
         //creates a new test model using the current model as training
         // i.e. only fragments existing in the training model are counted

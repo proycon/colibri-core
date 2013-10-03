@@ -329,5 +329,15 @@ int main( int argc, char *argv[] ) {
     Pattern s8slice3 = Pattern(skipgram8,1,4);
     cout << s8slice3.decode(classdecoder) << endl;
     cerr << endl; 
-     		  	
+    
+
+
+
+    PatternModelOptions options;
+
+    PatternModel<uint32_t> unindexedmodel;
+    unindexedmodel.build("/tmp/data.colibri.data", options);
+
+
+
 }
