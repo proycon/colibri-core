@@ -336,7 +336,7 @@ int main( int argc, char *argv[] ) {
     PatternModelOptions options;
 
     PatternModel<uint32_t> unindexedmodel;
-    unindexedmodel.build("/tmp/data.colibri.data", options);
+    unindexedmodel.train("/tmp/data.colibri.data", options);
 
 
 
