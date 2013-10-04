@@ -213,7 +213,7 @@ class PatternModel: public MapType {
         int pruneskipgrams(int threshold, int minskiptypes=2, int minskiptokens=2, int _n = 0);
         int prunereverseindex(int _n = 0);
 
-        std::vector<std::pair<const Pattern, int> > getpatterns(const Pattern & pattern); //get all patterns in pattern that occur in the patternmodel
+        std::vector<std::pair<Pattern, int> > getpatterns(const Pattern & pattern); //get all patterns in pattern that occur in the patternmodel
 
 };
 

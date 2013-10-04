@@ -117,7 +117,8 @@ void PatternModel<ValueType,ValueHandler,MapType>::train(std::istream * in, cons
                     }
                 }
                 if (found) {
-                    add(pattern, &((*this)[pattern]), ref );
+                    ValueType * data = getdata(pattern);
+                    add(pattern, data, ref );
                     if (options.DOREVERSEINDEX) {
                         reverseindex.insert(pair<IndexReference,Pattern>(ref,pattern));
                     }
@@ -125,8 +126,8 @@ void PatternModel<ValueType,ValueHandler,MapType>::train(std::istream * in, cons
                 if (options.DOFIXEDSKIPGRAMS) {
                     //loop over all possible gap configurations
                     for (vector<vector<pair<int,int>>>::iterator iter =  gapconf[n].begin(); iter != gapconf[n].end(); iter++) {
-                        for (vector<pair<int,int>>::iterator iter2 =  iter->begin(); iter2 != iter->end(); iter2++) {
-                            vector<pair<int,int>> * gapconfiguration = iter2;
+                        //for (vector<pair<int,int>>::iterator iter2 =  iter->begin(); iter2 != iter->end(); iter2++) {
+                            vector<pair<int,int>> * gapconfiguration = &(*iter);
                             //add skips
                             const Pattern skippattern = pattern.addfixedskips(*gapconfiguration);                            
 
@@ -145,12 +146,13 @@ void PatternModel<ValueType,ValueHandler,MapType>::train(std::istream * in, cons
                             }
 
                             if (skippattern_valid) {
-                                add(skippattern, &((*this)[skippattern]), ref );
+                                ValueType * data = getdata(skippattern);
+                                add(skippattern, data, ref );
                                 if (options.DOREVERSEINDEX) {
                                     reverseindex.insert(pair<IndexReference,Pattern>(ref,skippattern));
                                 }
                             }
-                        }
+                        //}
                     }
                 }
 
@@ -170,7 +172,7 @@ int PatternModel<ValueType,ValueHandler,MapType>::prune(int threshold, int _n) {
     do {
         const Pattern pattern = iter->first;
         if (( (_n == 0) || (pattern.n() == _n) )&& (occurrencecount(pattern) < threshold)) {
-            iter = erase(iter); 
+            iter = this->erase(iter); 
             pruned++;
         } else {
             iter++;
@@ -205,12 +207,12 @@ int PatternModel<ValueType,ValueHandler,MapType>::pruneskipgrams(int threshold, 
 }
 
 template<class ValueType, class ValueHandler, class MapType> 
-std::vector<std::pair<const Pattern, int> > PatternModel<ValueType,ValueHandler,MapType>::getpatterns(const Pattern & pattern) {
+std::vector<std::pair<Pattern, int> > PatternModel<ValueType,ValueHandler,MapType>::getpatterns(const Pattern & pattern) {
     //get all patterns in pattern
-    std::vector<std::pair<const Pattern, int> > v;   
-    std::vector<std::pair<const Pattern, int> > ngrams;
+    std::vector<std::pair<Pattern, int> > v;   
+    std::vector<std::pair<Pattern, int> > ngrams;
     pattern.subngrams(ngrams, minlength(), maxlength());
-    for (std::vector<std::pair<const Pattern, int> >::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
+    for (std::vector<std::pair<Pattern, int> >::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
         const Pattern p = iter->first;
         if (this->has(p)) v.push_back(*iter);
         
