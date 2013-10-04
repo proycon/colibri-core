@@ -3,6 +3,8 @@
 
 #include "pattern.h"
 #include "classencoder.h"
+#include "algorithms.h"
+#include <limits>
 #include <cmath>
 #include <cstdint>
 #include <map>
@@ -154,28 +156,165 @@ class PatternModel: public MapType {
         int minn; 
         
         std::multimap<IndexReference,Pattern> reverseindex; 
+        
+        void postread(const PatternModelOptions options) {
+            //this function has a specialisation specific to indexed pattern models,
+            //this is the generic version
+            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+                const Pattern p = iter->first;
+                const int n = p.n();
+                if (n > maxn) maxn = n;
+                if (n < minn) minn = n;
+            }
+        }
     public:
-        void postread(const PatternModelOptions options);
-
         PatternModel<ValueType,ValueHandler,MapType>() {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
         }
-        PatternModel<ValueType,ValueHandler,MapType>(std::istream *, const PatternModelOptions options); //load from file
-        PatternModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options); //load from file
+        PatternModel<ValueType,ValueHandler,MapType>(std::istream *f, const PatternModelOptions options) { //load from file
+            totaltokens = 0;
+            totaltypes = 0;
+            maxn = 0;
+            this->load(f,options);
+        }
 
-        void load(std::istream *, const PatternModelOptions options); //load from file
+        PatternModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options) { //load from file
+            totaltokens = 0;
+            totaltypes = 0;
+            maxn = 0;
+            std::ifstream * in = new std::ifstream(filename.c_str());
+            this->load( (istream *) in, options);
+            in->close();
+            delete in;
+        }
+
+        void load(std::istream * f, const PatternModelOptions options) { //load from file
+            char null;
+            f->read( (char*) &null, sizeof(char));        
+            f->read( (char*) &model_type, sizeof(char));        
+            f->read( (char*) &model_version, sizeof(char));        
+            if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) && (model_type != GRAPHPATTERNMODEL)))  {
+                cerr << "File is not a colibri model file (or a very old one)" << endl;
+                throw InternalError();
+            }
+            if (model_type == GRAPHPATTERNMODEL) {
+                cerr << "Model is a graph model, can not be loaded as pattern model" << endl;
+                throw InternalError();
+            }
+            f->read( (char*) &totaltokens, sizeof(uint64_t));        
+            f->read( (char*) &totaltypes, sizeof(uint64_t)); 
+
+            this->read(f); //read PatternStore
+            this->postread(options);
+        }
         
-        void train(std::istream *, const PatternModelOptions options);
-        void train(const std::string filename, const PatternModelOptions options);
+        void train(std::istream * in , const PatternModelOptions options) {
+            uint32_t sentence = 0;
+            const int BUFFERSIZE = 65536;
+            unsigned char line[BUFFERSIZE];
+            std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
+
+            for (int n = 1; n <= options.MAXLENGTH; n++) {
+                in->seekg(0);
+                cerr << "Counting " << n << "-grams" << endl; 
+                sentence++;
+
+                if ((options.DOFIXEDSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], vector<pair<int,int> >(), n);
+
+                Pattern line = Pattern(in);
+                vector<pair<Pattern,int>> ngrams;
+                line.ngrams(ngrams, n);
+
+
+                for (std::vector<std::pair<Pattern,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
+                    const Pattern pattern = iter->first;
+                    if (pattern.category() == NGRAM) {
+                        const IndexReference ref = IndexReference(sentence, iter->second);
+                        bool found = true;
+                        if (n > 1) {
+                            //check if sub-parts were counted
+                            std::vector<Pattern> subngrams;
+                            pattern.ngrams(subngrams,n-1);
+                            for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                const Pattern subpattern = *iter2;
+                                if ((subpattern.category() == NGRAM) && (!this->has(subpattern))) {
+                                    found = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (found) {
+                            ValueType * data = getdata(pattern);
+                            add(pattern, data, ref );
+                            if (options.DOREVERSEINDEX) {
+                                reverseindex.insert(pair<IndexReference,Pattern>(ref,pattern));
+                            }
+                        }                
+                        if (options.DOFIXEDSKIPGRAMS) {
+                            //loop over all possible gap configurations
+                            for (std::vector<std::vector<std::pair<int,int>>>::iterator iter =  gapconf[n].begin(); iter != gapconf[n].end(); iter++) {
+                                //for (vector<pair<int,int>>::iterator iter2 =  iter->begin(); iter2 != iter->end(); iter2++) {
+                                std::vector<std::pair<int,int>> * gapconfiguration = &(*iter);
+                                    //add skips
+                                    const Pattern skippattern = pattern.addfixedskips(*gapconfiguration);                            
+
+
+                                    //test whether parts occur in model, otherwise skip
+                                    //can't occur either and we can discard it
+                                    bool skippattern_valid = true;
+                                    std::vector<Pattern> parts;
+                                    skippattern.parts(parts);
+                                    for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
+                                        const Pattern part = *iter3;
+                                        if (!this->has(part)) {
+                                            skippattern_valid = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if (skippattern_valid) {
+                                        ValueType * data = getdata(skippattern);
+                                        add(skippattern, data, ref );
+                                        if (options.DOREVERSEINDEX) {
+                                            reverseindex.insert(pair<IndexReference,Pattern>(ref,skippattern));
+                                        }
+                                    }
+                                //}
+                            }
+                        }
+
+                    }            
+                }
+
+                cerr << "Pruning..." << endl;
+                this->prune(options.MINTOKENS,n);
+                this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, options.MINSKIPTOKENS, n);
+            }
+        }
+        void train(const std::string filename, const PatternModelOptions options) {
+            std::ifstream * in = new std::ifstream(filename.c_str());
+            this->train((istream*) in, options);
+            in->close();
+            delete in;
+        }
+
         
         //creates a new test model using the current model as training
         // i.e. only fragments existing in the training model are counted
         // remaining fragments are 'uncovered'
         void test(MapType & target, std::istream * in);
 
-        void write(std::ostream *);
+        void write(std::ostream * out) {
+            const char null = 0;
+            out->write( (char*) &null, sizeof(char));        
+            out->write( (char*) &model_type, sizeof(char));        
+            out->write( (char*) &model_version, sizeof(char));        
+            out->write( (char*) &totaltokens, sizeof(uint64_t));        
+            out->write( (char*) &totaltypes, sizeof(uint64_t)); 
+            write(out); //write PatternStore
+        }
 
         typedef typename MapType::iterator iterator;
         typedef typename MapType::const_iterator const_iterator;        
@@ -209,11 +348,56 @@ class PatternModel: public MapType {
             *value = *value + 1;
         }
 
-        int prune(int threshold,int _n=0);
-        int pruneskipgrams(int threshold, int minskiptypes=2, int minskiptokens=2, int _n = 0);
-        int prunereverseindex(int _n = 0);
+        int prune(int threshold,int _n=0) {
+            int pruned = 0;
+            PatternModel::iterator iter = this->begin(); 
+            do {
+                const Pattern pattern = iter->first;
+                if (( (_n == 0) || (pattern.n() == _n) )&& (occurrencecount(pattern) < threshold)) {
+                    iter = this->erase(iter); 
+                    pruned++;
+                } else {
+                    iter++;
+                }
+            } while(iter != this->end());       
 
-        std::vector<std::pair<Pattern, int> > getpatterns(const Pattern & pattern); //get all patterns in pattern that occur in the patternmodel
+            if (pruned) prunereverseindex();
+            return pruned;
+        }
+
+        int pruneskipgrams(int threshold, int minskiptypes=2, int minskiptokens=2, int _n = 0) {
+            return 0; //only works for indexed models
+        }
+
+        int prunereverseindex(int _n = 0) {
+            //prune patterns from reverse index if they don't exist anymore
+            int pruned = 0;
+            std::multimap<IndexReference,Pattern>::iterator iter = reverseindex.begin(); 
+            do {
+                const Pattern pattern = iter->second;
+                if (( (_n == 0) || (pattern.n() == _n) ) && (!this->has(pattern))) {
+                    iter = reverseindex.erase(iter);
+                    pruned++;
+                } else {
+                    iter++;
+                }
+            } while (iter != reverseindex.end());
+            return pruned;
+        }
+
+        std::vector<std::pair<Pattern, int> > getpatterns(const Pattern & pattern) { //get all patterns in pattern that occur in the patternmodel
+            //get all patterns in pattern
+            std::vector<std::pair<Pattern, int> > v;   
+            std::vector<std::pair<Pattern, int> > ngrams;
+            pattern.subngrams(ngrams, minlength(), maxlength());
+            for (std::vector<std::pair<Pattern, int> >::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
+                const Pattern p = iter->first;
+                if (this->has(p)) v.push_back(*iter);
+                
+                //TODO: match with skipgrams
+            }
+            return v;
+        }
 
 };
 
