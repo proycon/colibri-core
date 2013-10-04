@@ -334,11 +334,15 @@ int main( int argc, char *argv[] ) {
 
 
     PatternModelOptions options;
+    options.DOREVERSEINDEX = true;
+    options.DOFIXEDSKIPGRAMS = true;
 
     PatternModel<uint32_t> unindexedmodel;
     std::string filename = "/tmp/data.colibri.data";
     unindexedmodel.train(filename, options);
 
+    IndexedPatternModel indexedmodel;
+    indexedmodel.train(filename, options);
 
 
 }

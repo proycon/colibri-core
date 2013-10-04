@@ -87,6 +87,7 @@ class IndexedData {
 };
 
 class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
+   public:
     const static bool indexed = true;
     void read(std::istream * in, IndexedData & v) {
         uint32_t c;
@@ -212,8 +213,6 @@ class PatternModel: public MapType {
         
         void train(std::istream * in , const PatternModelOptions options) {
             uint32_t sentence = 0;
-            const int BUFFERSIZE = 65536;
-            unsigned char line[BUFFERSIZE];
             std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
 
             for (int n = 1; n <= options.MAXLENGTH; n++) {
@@ -353,7 +352,7 @@ class PatternModel: public MapType {
             PatternModel::iterator iter = this->begin(); 
             do {
                 const Pattern pattern = iter->first;
-                if (( (_n == 0) || (pattern.n() == _n) )&& (occurrencecount(pattern) < threshold)) {
+                if (( (_n == 0) || (pattern.n() == (unsigned int) _n) )&& (occurrencecount(pattern) < threshold)) {
                     iter = this->erase(iter); 
                     pruned++;
                 } else {
@@ -375,7 +374,7 @@ class PatternModel: public MapType {
             std::multimap<IndexReference,Pattern>::iterator iter = reverseindex.begin(); 
             do {
                 const Pattern pattern = iter->second;
-                if (( (_n == 0) || (pattern.n() == _n) ) && (!this->has(pattern))) {
+                if (( (_n == 0) || (pattern.n() == (unsigned int) _n) ) && (!this->has(pattern))) {
                     iter = reverseindex.erase(iter);
                     pruned++;
                 } else {
@@ -401,6 +400,8 @@ class PatternModel: public MapType {
 
 };
 
+
+typedef PatternModel<IndexedData, IndexedDataHandler, PatternMap<IndexedData,IndexedDataHandler>> IndexedPatternModel;
 
 template<class MapType> //specialisation for INDEXED pattern models
 class PatternModel<IndexedData, IndexedDataHandler,MapType>: public MapType {
