@@ -165,6 +165,44 @@ namespace std {
 
 }
 
+
+/******************** IndexReference **************************/
+
+class IndexReference {
+    /* Reference to a position in the corpus */
+   public:
+    uint32_t sentence;
+    uint16_t token;
+    IndexReference() { sentence=0; token = 0; } 
+    IndexReference(uint32_t sentence, uint16_t token ) { this->sentence = sentence; this->token = token; }  
+    IndexReference(std::istream * in) {
+        in->read( (char*) &sentence, sizeof(uint32_t)); 
+        in->read( (char*) &token, sizeof(uint16_t)); 
+    }
+    IndexReference(const IndexReference& other) { //copy constructor
+        sentence = other.sentence;
+        token = other.token;
+    };     
+    void write(std::ostream * out) const {
+        out->write( (char*) &sentence, sizeof(uint32_t)); 
+        out->write( (char*) &token, sizeof(uint16_t)); 
+    }
+    bool operator< (const IndexReference& other) const {
+        if (sentence < other.sentence) {
+            return true;
+        } else if (sentence == other.sentence) {
+            return (token < other.token);
+        } else {
+            return false;
+        }
+    }
+    bool operator==(const IndexReference &other) const { return ( (sentence == other.sentence) && (token == other.token)); };
+    bool operator!=(const IndexReference &other) const { return ( (sentence != other.sentence) || (token != other.token)); };
+    
+    std::string tostring() const {
+        return std::to_string(sentence) + ":" + std::to_string(token);
+    }
+};
 /************* ValueHandler for reading/serialising basic types ********************/
 
 template<class ValueType>
@@ -174,6 +212,7 @@ class AbstractValueHandler {
     virtual void write(std::ostream * out, ValueType & value)=0;
     virtual std::string tostring(ValueType & value)=0;
     virtual int count(ValueType & value) const =0;
+    virtual void add(ValueType * value, const IndexReference & ref ) const=0;
 };
 
 template<class ValueType>
@@ -191,6 +230,9 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     }
     int count(ValueType & value) const {
         return (int) value;
+    }
+    void add(ValueType * value, const IndexReference & ref ) const {
+        *value = *value + 1;
     }
 };
 

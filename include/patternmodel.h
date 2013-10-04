@@ -23,41 +23,6 @@ enum ModelType {
 
 
 
-class IndexReference {
-    /* Reference to a position in the corpus */
-   public:
-    uint32_t sentence;
-    uint16_t token;
-    IndexReference() { sentence=0; token = 0; } 
-    IndexReference(uint32_t sentence, uint16_t token ) { this->sentence = sentence; this->token = token; }  
-    IndexReference(std::istream * in) {
-        in->read( (char*) &sentence, sizeof(uint32_t)); 
-        in->read( (char*) &token, sizeof(uint16_t)); 
-    }
-    IndexReference(const IndexReference& other) { //copy constructor
-        sentence = other.sentence;
-        token = other.token;
-    };     
-    void write(std::ostream * out) const {
-        out->write( (char*) &sentence, sizeof(uint32_t)); 
-        out->write( (char*) &token, sizeof(uint16_t)); 
-    }
-    bool operator< (const IndexReference& other) const {
-        if (sentence < other.sentence) {
-            return true;
-        } else if (sentence == other.sentence) {
-            return (token < other.token);
-        } else {
-            return false;
-        }
-    }
-    bool operator==(const IndexReference &other) const { return ( (sentence == other.sentence) && (token == other.token)); };
-    bool operator!=(const IndexReference &other) const { return ( (sentence != other.sentence) || (token != other.token)); };
-    
-    std::string tostring() const {
-        return std::to_string(sentence) + ":" + std::to_string(token);
-    }
-};
 
 class IndexedData {
    protected:
@@ -114,6 +79,9 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
     }
     int count(IndexedData & value) const {
         return value.data.size();
+    }
+    void add(IndexedData * value, const IndexReference & ref ) const {
+        value->insert(ref);
     }
 };
 
@@ -326,7 +294,7 @@ class PatternModel: public MapType {
         }
         virtual double freq(const Pattern & pattern) { return occurrencecount(pattern) / totaltokens; }
         
-        ValueType * getdata(const Pattern & pattern) { 
+        virtual ValueType * getdata(const Pattern & pattern) { 
             typename MapType::iterator iter = this->find(pattern);
             return &(iter->second); 
         }
@@ -343,8 +311,8 @@ class PatternModel: public MapType {
         int coveragecount(const Pattern &  key);    
         double coverage(const Pattern & key);	 
 
-        int add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
-            *value = *value + 1;
+        virtual int add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
+            this->valuehandler.add(value, ref);
         }
 
         int prune(int threshold,int _n=0) {
@@ -364,7 +332,7 @@ class PatternModel: public MapType {
             return pruned;
         }
 
-        int pruneskipgrams(int threshold, int minskiptypes=2, int minskiptokens=2, int _n = 0) {
+        virtual int pruneskipgrams(int threshold, int minskiptypes=2, int minskiptokens=2, int _n = 0) {
             return 0; //only works for indexed models
         }
 
@@ -401,16 +369,18 @@ class PatternModel: public MapType {
 };
 
 
-typedef PatternModel<IndexedData, IndexedDataHandler, PatternMap<IndexedData,IndexedDataHandler>> IndexedPatternModel;
 
-template<class MapType> //specialisation for INDEXED pattern models
-class PatternModel<IndexedData, IndexedDataHandler,MapType>: public MapType {
+template<class MapType = PatternMap<IndexedData,IndexedDataHandler>> 
+class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType> {
    public:
     int add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
-        value->insert(ref);
+        this->valuehandler.add(value, ref);
     }
     
-    IndexedData * getdata(const Pattern & pattern) const { return &((*this)[pattern]); }
+    IndexedData * getdata(const Pattern & pattern)  { 
+        typename MapType::iterator iter = this->find(pattern);
+        return &(iter->second); 
+    }
 
     void postread(const PatternModelOptions options) {
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -439,7 +409,7 @@ class PatternModel<IndexedData, IndexedDataHandler,MapType>: public MapType {
             std::vector<std::pair<int,int>> gapdata;
             pattern.gaps(gapdata);
 
-            IndexedData * data = getdata();
+            IndexedData * data = getdata(pattern);
             for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
                 const IndexReference ref = *iter2;
                 
@@ -475,13 +445,13 @@ class PatternModel<IndexedData, IndexedDataHandler,MapType>: public MapType {
         int pruned = 0;
         if ((minskiptypes <=1)  && (minskiptokens <= threshold)) return pruned; //nothing to do
 
-        typename PatternModel::iterator iter = this->begin(); 
+        typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); 
         do {
             const Pattern pattern = iter->first;
-            if (( (_n == 0) || (pattern.n() == _n) ) && (pattern.category() = FIXEDSKIPGRAM)) {
+            if (( (_n == 0) || (pattern.n() == _n) ) && (pattern.category() == FIXEDSKIPGRAM)) {
                 std::unordered_set<Pattern> skipcontent = getskipcontent(pattern);
                 if (skipcontent.size() < minskiptypes) {
-                    iter = erase(iter);
+                    iter = this->erase(iter);
                     pruned++;
                     continue;
                 }
@@ -496,7 +466,7 @@ class PatternModel<IndexedData, IndexedDataHandler,MapType>: public MapType {
                     }
                 }                
                 if (occurrences.size() < minskiptokens) {
-                    iter = erase(iter);
+                    iter = this->erase(iter);
                     pruned++;
                     continue;
                 }

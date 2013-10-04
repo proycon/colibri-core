@@ -341,7 +341,8 @@ int main( int argc, char *argv[] ) {
     std::string filename = "/tmp/data.colibri.data";
     unindexedmodel.train(filename, options);
 
-    IndexedPatternModel indexedmodel;
+    IndexedPatternModel<> indexedmodel;
+    indexedmodel.types();
     indexedmodel.train(filename, options);
 
 
