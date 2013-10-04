@@ -10,7 +10,7 @@ PatternModel<ValueType,ValueHandler,MapType>::PatternModel(istream * f, const Pa
     totaltokens = 0;
     totaltypes = 0;
     maxn = 0;
-    load(f);
+    load(f,options);
 }
 
 
@@ -20,7 +20,7 @@ PatternModel<ValueType,ValueHandler,MapType>::PatternModel(const std::string fil
     totaltypes = 0;
     maxn = 0;
     ifstream * in = new ifstream(filename.c_str());
-    load( (istream *) in);
+    load( (istream *) in, options);
     in->close();
     delete in;
 }
@@ -72,13 +72,13 @@ void PatternModel<ValueType,ValueHandler,MapType>::postread(const PatternModelOp
 }
 
 
-template<class ValueType, class ValueHandler, class MapType> 
+/*template<class ValueType, class ValueHandler, class MapType> 
 void PatternModel<ValueType,ValueHandler,MapType>::train(const std::string filename, const PatternModelOptions options) {
     ifstream * in = new ifstream(filename.c_str());
-    train((istream*) in, options);
+    this->train((istream*) in, options);
     in->close();
     delete in;
-}
+}*/
 
 template<class ValueType, class ValueHandler, class MapType> 
 void PatternModel<ValueType,ValueHandler,MapType>::train(std::istream * in, const PatternModelOptions options) {
@@ -221,4 +221,5 @@ std::vector<std::pair<const Pattern, int> > PatternModel<ValueType,ValueHandler,
 
 
 
-
+// Explicit template instantiation
+template class PatternModel<uint32_t>;

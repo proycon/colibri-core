@@ -154,8 +154,8 @@ class PatternModel: public MapType {
         int minn; 
         
         std::multimap<IndexReference,Pattern> reverseindex; 
-        void postread(const PatternModelOptions options);
     public:
+        void postread(const PatternModelOptions options);
 
         PatternModel<ValueType,ValueHandler,MapType>() {
             totaltokens = 0;

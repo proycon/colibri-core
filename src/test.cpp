@@ -336,7 +336,8 @@ int main( int argc, char *argv[] ) {
     PatternModelOptions options;
 
     PatternModel<uint32_t> unindexedmodel;
-    unindexedmodel.train("/tmp/data.colibri.data", options);
+    std::string filename = "/tmp/data.colibri.data";
+    unindexedmodel.train(filename, options);
 
 
 
