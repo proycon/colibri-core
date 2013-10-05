@@ -1,6 +1,6 @@
 AM_CPPFLAGS = -I@top_srcdir@/include
 
-bin_PROGRAMS = colibri-classdecode colibri_classencode colibri_test
+bin_PROGRAMS = colibri-classdecode colibri-classencode colibri-test colibri-patternmodeller
 
 lib_LTLIBRARIES = libcolibricore.la
 
@@ -21,3 +21,8 @@ colibri_test_CXXFLAGS = -Wall -std=c++0x
 colibri_test_LDADD = libcolibricore.la
 colibri_test_SOURCES = test.cpp
 colibri_test_LDFLAGS = -static
+
+colibri_patternmodeller_CXXFLAGS = -Wall -std=c++11
+colibri_patternmodeller_LDADD = libcolibricore.la
+colibri_patternmodeller_SOURCES = patternmodeller.cpp
+colibri_patternmodeller_LDFLAGS = -static
