@@ -57,6 +57,12 @@ void decode(IndexedPatternModel & model, string classfile) {
 int main( int argc, char *argv[] ) {
     
     string classfile = "";
+    string inputmodelfile = "";
+    string inputmodelfile2 = "";
+    string outputmodelfile = "";
+    string corpusfile = "";
+    
+
     string corpusfile = "";
     string outputprefix = "";
     string modelfile = "";
@@ -72,29 +78,25 @@ int main( int argc, char *argv[] ) {
     int MAXLENGTH = 8;
     bool DOSKIPGRAMS = false;
     bool DOINDEX = true;
-    bool DOINITIALONLYSKIP = true;
-    bool DOFINALONLYSKIP = true;
     bool DOQUERIER = false;
     bool DOREPORT = false;
     bool DOCOVERAGE = false;
-    bool DOCOVVIEW = false;
     bool DOHISTOGRAM = false;
     bool OUTPUTHASH=false;
     //bool DOCOMPOSITIONALITY = false;
     bool DEBUG = false;
-    double alignthreshold = 0.0;
     char c;    
-    while ((c = getopt(argc, argv, "c:f:d:t:T:S:l:o:suLhnBEQDJ:CRVA:P:Hi")) != -1)
+    while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:S:PRCHQDh")) != -1)
         switch (c)
         {
         case 'c':
             classfile = optarg;
             break;
-        case 'd':
-            modelfile = optarg;
+        case 'i':
+            inputmodelfile = optarg;
             break;
-        case 'J':
-            modelfile2 = optarg;
+        case 'j':
+            inputmodelfile2 = optarg;
             break;
         case 'D':
         	DEBUG = true;
@@ -105,9 +107,6 @@ int main( int argc, char *argv[] ) {
         case 'R':
             DOREPORT = true;
             break;            
-        case 'V':
-            DOCOVVIEW = true;
-            break;
         case 'f':
             corpusfile = optarg;
             break;        
@@ -127,13 +126,7 @@ int main( int argc, char *argv[] ) {
             DOSKIPGRAMS = true;
             break;
         case 'o': 
-            outputprefix = optarg;
-            break;
-        case 'B':
-            DOINITIALONLYSKIP = false;
-            break;
-        case 'E':
-            DOFINALONLYSKIP = false;    
+            outputmodelfile = optarg;
             break;
 		case 'u':
 			DOINDEX = false;    		
@@ -141,18 +134,9 @@ int main( int argc, char *argv[] ) {
 		case 'Q':
 			DOQUERIER = true;
 			break;
-	    case 'A':
-	        alignmodelfile = optarg;
-	        break;
-        case 'P':
-            alignthreshold = atof(optarg);
-            break;	
         case 'H':
             DOHISTOGRAM = true;
             break;        
-        case 'i':
-            OUTPUTHASH=true;
-            break;
         case 'h':
             usage();
             exit(0);
@@ -168,7 +152,19 @@ int main( int argc, char *argv[] ) {
             cerr << "Unknown option: -" <<  optopt << endl;
             abort ();
         }
-    
+   
+
+    ClassDecoder * classdecoder = NULL;
+
+    if (!classfile.empty()) {
+        classdecoder = new ClassDecoder(classfile);
+    }
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+
     if (DOQUERIER && classfile.empty()) {
             cerr << "ERROR: To use the query mode (-Q), specify a -c classfile and an existing model (-d)" << endl;
             usage();
