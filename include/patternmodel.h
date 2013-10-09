@@ -22,13 +22,17 @@ int getmodeltype(const std::string filename) {
     unsigned char null;
     unsigned char model_type;
     unsigned char model version;
+    std::ifstream * f = new std::ifstream(filename.c_str());
     f->read( (char*) &null, sizeof(char));        
     f->read( (char*) &model_type, sizeof(char));        
     f->read( (char*) &model_version, sizeof(char));        
+    f->close();
+    delete f;
     if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) ))  {
         return 0;
+    } else {
+        return model_type;
     }
-    return model_type;
 }
 
 
@@ -313,8 +317,12 @@ class PatternModel: public MapType {
         void output(std::ostream *);
         
         
-        int coveragecount(const Pattern &  key);    
-        double coverage(const Pattern & key);	 
+        int coveragecount(const Pattern &  key) {
+           return this->occurrencecount(pattern) * pattern.size();
+        }
+        double coverage(const Pattern & key) {
+            return this->coveragecount(key) / this->tokens();
+        }
 
         virtual int add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
             this->valuehandler.add(value, ref);
@@ -369,6 +377,19 @@ class PatternModel: public MapType {
                 //TODO: match with skipgrams
             }
             return v;
+        }
+
+        void print(std::ostream * out, ClassDecoder & decoder) {
+            *out << "PATTERN\nCOUNT\tFREQUENCY\tSIZE\tCOVERAGECOUNT\tCOVERAGE\tCATEGORY" << end;
+            for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
+                const Pattern pattern = iter->first;
+                const std::string pattern_s = pattern.tostring(decoder);
+                const int count = this->occurrencecount(pattern);
+                const double freq = count / (double) this->tokens(); 
+                const int covcount = this->coveragecount(pattern);
+                const double coverage = covcount / (double) this->tokens();
+                *out << pattern_s << "\t" << count << "\t" << freq << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << pattern.category() <<  endl;
+            }
         }
 
 };

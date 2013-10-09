@@ -53,6 +53,18 @@ void decode(IndexedPatternModel & model, string classfile) {
     model.decode(classdecoder, (ostream*) &stdout);   
 }
 
+void viewmodel(IndexedPatternModel<> & model, ClassDecoder * classdecoder,  bool print, bool report, bool coveragereport, bool histogram , bool query) {
+    if (print) {
+        if (classdecoder == NULL) {
+            cerr << "ERROR: Unable to print model, no class decoder specified" << endl;
+        } else {
+
+        }
+    }
+}
+
+void viewmodel(PatternModel<uint32_t> & model, ClassDecoder * classdecoder,  bool print, bool report, bool coveragereport, bool histogram, bool query ) {
+}
 
 int main( int argc, char *argv[] ) {
     
@@ -75,11 +87,12 @@ int main( int argc, char *argv[] ) {
     PatternModelOptions options;
     options.DOREVERSEINDEX = true;  //TODO: make configurable?
 
-    bool DOINDEX = true;
+    int outputmodelfile = INDEXEDPATTERNMODEL;
     bool DOQUERIER = false;
     bool DOREPORT = false;
     bool DOCOVERAGE = false;
     bool DOHISTOGRAM = false;
+    bool DOPRINT = false;
     bool DEBUG = false;
     char c;    
     while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:S:PRCHQDh")) != -1)
@@ -125,13 +138,16 @@ int main( int argc, char *argv[] ) {
             outputmodelfile = optarg;
             break;
 		case 'u':
-			DOINDEX = false;    		
+            outputmodelfile = UNINDEXEDPATTERNMODEL;
 			break;
 		case 'Q':
 			DOQUERIER = true;
 			break;
         case 'H':
             DOHISTOGRAM = true;
+            break;        
+        case 'P':
+            DOPRINT = true;
             break;        
         case 'h':
             usage();
@@ -156,32 +172,65 @@ int main( int argc, char *argv[] ) {
         classdecoder = new ClassDecoder(classfile);
     }
 
-
-    if (DOINDEX) {
-        //indexed
-        IndexedPatternModel<> * patternmodel = NULL;
-        
-        if (!inputmodelfile.empty()) { 
-            cerr << "Loading input model " << inoputmodelfile << "..."<<endl;
-            patternmodel = new IndexedPatternModel<>(inputmodelfile, options);
-        }
-
-    } else {
-        //unindexed
-        PatternModel<uint32_t> * patternmodel = NULL;
-    }
-
-    IndexedPatternModel<> * indexedpatternmodel = NULL;
-    PatternModel<uint32_t> * unindexedpatternmodel = NULL;
-
-
+    int inputmodeltype = 0;
     if (!inputmodelfile.empty()) {
-        if (DOINDEX) {
-            indexedpatternmodel = IndexedPatternModel<>();
-        } else {
+        inputmodeltype = getmodeltype(inputmodelfile);
+    }
+
+    if (inputmodeltype == INDEXEDPATTERNMODEL) {
+        cerr << "Loading indexed pattern model " << inputmodelfile << " as input model..."<<endl;
+        IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options);
+
+        viewmodel(inputmodel, classdecoder, DOPRINT, DOREPORT, DOCOVERAGE, DOHIST, DOQUERIER); 
+            
+    } else if (inputmodeltype == UNINDEXEDPATTERNMODEL) {
+        cerr << "Loading unindexed pattern model " << inputmodelfile << " as input model..."<<endl;
+        PatternModel<uint32_t> inputmodel = PatternModel<uint32_t>(inputmodelfile, options);
+
+        viewmodel(inputmodel, classdecoder, DOPRINT, DOREPORT, DOCOVERAGE, DOHIST, DOQUERIER); 
+    } else if (!inputmodelfile.empty()) {
+        cerr << "ERROR: Input model is not a valid colibri pattern model" << endl;
+        exit 2;
+    } else {
+        //operations without input model
+
+        if (outputmodeltype == INDEXEDPATTERNMODEL) {
+            IndexedPatternModel<> outputmodel = IndexedPatternModel<>();
+            if (!corpusfile.empty()) {
+                //build new model from corpus
+                cerr << "Building new indexed model from  " << corpusfile <<endl;
+                outputmodel.train(corpusfile, options);
+            }
+
+            if (!outputmodelfile.empty()) {
+                cerr << "Saving indexed pattern model to " << outputmodelfile <<endl;
+                outputmodel.write(outputmodelfile);
+            }
+        } else if (outputmodeltype == UNINDEXEDPATTERNMODEL) {
+            PatternModel<uint32_t> outputmodel = PatternModel<uint32_t>();
+            if (!corpusfile.empty()) {
+                //build new model from corpus
+                cerr << "Building new unindexed model from  " << corpusfile <<endl;
+                outputmodel.train(corpusfile, options);
+            }
+            if (!outputmodelfile.empty()) {
+                cerr << "Saving unindexed pattern model to " << outputmodelfile <<endl;
+                outputmodel.write(outputmodelfile);
+            }
+
         }
 
     }
+
+
+
+
+    if (!corpusfile.empty()) {
+
+    }
+
+
+    
 
 
 
