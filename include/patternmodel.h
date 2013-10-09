@@ -200,9 +200,9 @@ class PatternModel: public MapType {
                 if ((options.DOFIXEDSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], vector<pair<int,int> >(), n);
 
                 Pattern line = Pattern(in);
+                if (n==1) totaltokens += line.size();
                 vector<pair<Pattern,int>> ngrams;
                 line.ngrams(ngrams, n);
-
 
                 for (std::vector<std::pair<Pattern,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
                     const Pattern pattern = iter->first;
@@ -380,15 +380,15 @@ class PatternModel: public MapType {
         }
 
         void print(std::ostream * out, ClassDecoder & decoder) {
-            *out << "PATTERN\nCOUNT\tFREQUENCY\tSIZE\tCOVERAGECOUNT\tCOVERAGE\tCATEGORY" << end;
+            *out << "PATTERN\nCOUNT\tSIZE\tCOVERAGECOUNT\tCOVERAGE\tCATEGORY" << end;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
                 const std::string pattern_s = pattern.tostring(decoder);
                 const int count = this->occurrencecount(pattern);
-                const double freq = count / (double) this->tokens(); 
+                //const double freq = count / (double) this->tokens(); 
                 const int covcount = this->coveragecount(pattern);
                 const double coverage = covcount / (double) this->tokens();
-                *out << pattern_s << "\t" << count << "\t" << freq << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << pattern.category() <<  endl;
+                *out << pattern_s << "\t" << count << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << pattern.category() <<  endl;
             }
         }
         

@@ -61,6 +61,9 @@ void viewmodel(IndexedPatternModel<> & model, ClassDecoder * classdecoder,  bool
             model.print(*classdecoder);
         }
     }
+    if (report) {
+        model.report((std::ostream*) *cout);
+    }
 }
 
 void viewmodel(PatternModel<uint32_t> & model, ClassDecoder * classdecoder,  bool print, bool report, bool coveragereport, bool histogram, bool query ) {
