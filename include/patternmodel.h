@@ -16,10 +16,20 @@
 enum ModelType {
 	UNINDEXEDPATTERNMODEL = 10, 
     INDEXEDPATTERNMODEL = 20,
-    GRAPHPATTERNMODEL = 30,          
 };
 
-
+int getmodeltype(const std::string filename) {
+    unsigned char null;
+    unsigned char model_type;
+    unsigned char model version;
+    f->read( (char*) &null, sizeof(char));        
+    f->read( (char*) &model_type, sizeof(char));        
+    f->read( (char*) &model_version, sizeof(char));        
+    if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) ))  {
+        return 0;
+    }
+    return model_type;
+}
 
 
 
@@ -92,11 +102,10 @@ class PatternModelOptions {
         bool MAXLENGTH;
         
         bool DOFIXEDSKIPGRAMS;
-        bool MINSKIPTYPES; //requires DOSKIPCONTENT
-        bool MINSKIPTOKENS; //requires DOSKIPCONTENT
+        bool MINSKIPTYPES; 
+        bool MINSKIPTOKENS;
 
         bool DOREVERSEINDEX;
-        bool DOSKIPCONTENT; //requires REVERSEINDEX
 
         PatternModelOptions() {
             MINTOKENS = 2;
@@ -164,12 +173,8 @@ class PatternModel: public MapType {
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
             f->read( (char*) &model_version, sizeof(char));        
-            if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) && (model_type != GRAPHPATTERNMODEL)))  {
+            if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) ))  {
                 cerr << "File is not a colibri model file (or a very old one)" << endl;
-                throw InternalError();
-            }
-            if (model_type == GRAPHPATTERNMODEL) {
-                cerr << "Model is a graph model, can not be loaded as pattern model" << endl;
                 throw InternalError();
             }
             f->read( (char*) &totaltokens, sizeof(uint64_t));        

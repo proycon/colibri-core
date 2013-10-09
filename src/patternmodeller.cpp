@@ -72,18 +72,14 @@ int main( int argc, char *argv[] ) {
     
     
     
-    int MINTOKENS = 2;
-    int MINSKIPTOKENS = 2;
-    unsigned int MINSKIPTYPES = 2;
-    int MAXLENGTH = 8;
-    bool DOSKIPGRAMS = false;
+    PatternModelOptions options;
+    options.DOREVERSEINDEX = true;  //TODO: make configurable?
+
     bool DOINDEX = true;
     bool DOQUERIER = false;
     bool DOREPORT = false;
     bool DOCOVERAGE = false;
     bool DOHISTOGRAM = false;
-    bool OUTPUTHASH=false;
-    //bool DOCOMPOSITIONALITY = false;
     bool DEBUG = false;
     char c;    
     while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:S:PRCHQDh")) != -1)
@@ -111,19 +107,19 @@ int main( int argc, char *argv[] ) {
             corpusfile = optarg;
             break;        
         case 't':
-            MINTOKENS = atoi(optarg);
+            options.MINTOKENS = atoi(optarg);
             break;
         case 'T':
-            MINSKIPTOKENS = atoi(optarg);            
+            options.MINSKIPTOKENS = atoi(optarg);            
             break;
         case 'S':
-            MINSKIPTYPES = atoi(optarg);            
+            options.MINSKIPTYPES = atoi(optarg);            
             break;
         case 'l':
-            MAXLENGTH = atoi(optarg);            
+            options.MAXLENGTH = atoi(optarg);            
             break;
         case 's':
-            DOSKIPGRAMS = true;
+            options.DOFIXEDSKIPGRAMS = true;
             break;
         case 'o': 
             outputmodelfile = optarg;
@@ -160,6 +156,32 @@ int main( int argc, char *argv[] ) {
         classdecoder = new ClassDecoder(classfile);
     }
 
+
+    if (DOINDEX) {
+        //indexed
+        IndexedPatternModel<> * patternmodel = NULL;
+        
+        if (!inputmodelfile.empty()) { 
+            cerr << "Loading input model " << inoputmodelfile << "..."<<endl;
+            patternmodel = new IndexedPatternModel<>(inputmodelfile, options);
+        }
+
+    } else {
+        //unindexed
+        PatternModel<uint32_t> * patternmodel = NULL;
+    }
+
+    IndexedPatternModel<> * indexedpatternmodel = NULL;
+    PatternModel<uint32_t> * unindexedpatternmodel = NULL;
+
+
+    if (!inputmodelfile.empty()) {
+        if (DOINDEX) {
+            indexedpatternmodel = IndexedPatternModel<>();
+        } else {
+        }
+
+    }
 
 
 
