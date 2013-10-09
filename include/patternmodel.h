@@ -391,7 +391,66 @@ class PatternModel: public MapType {
                 *out << pattern_s << "\t" << count << "\t" << freq << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << pattern.category() <<  endl;
             }
         }
+        
+        void report(std::ostream * OUT) {
+            *OUT << setiosflags(ios::fixed) << setprecision(4) << endl;       
+            *OUT << "REPORT" << endl;
+            *OUT << "----------------------------------" << endl;
+            *OUT << "                          " << setw(10) << "TOKENS" << setw(10) << "TYPES" << setw(10) << endl;
+            *OUT << "Total:                    " << setw(10) << this->tokens() << setw(10) << this->types() <<  endl;
+            
+            
+            *OUT << "Per n:" << endl;
+            std::set<int> sizes;
+            std::set<int> cats;
+            int maxn = 1;
+            do {
+                if (n == 1) {
+                    sizes.insert(pattern.size());
+                    cats.insert(pattern.category());
+                } else if ( sizes.count(n)) {
+                    continue;
+                }
+                int count = 0;
+                std::unordered_set<Pattern> tmp;
+                for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
+                    const Pattern pattern = iter->first;
+                    if (pattern.size() == n) {
+                        count++;
+                        tmp.insert(pattern);
+                    }
+                    if (n==1) countpercategory[pattern.category()]++;
+                }
+                *OUT << " n=" << n << "                       "  << setw(10) << count << setw(10) << tmp.size() << endl; 
+                if (n == 1) {
+                    maxn = //TODO: get last item from sizes
+                }
+            } while (n < maxn);
 
+            *OUT << "Per category:" << endl;
+            for (int cat = 1; cat <= 3; cat++) {
+                if (cats.count(cat)) {
+                    int count = 0;
+                    std::unordered_set<Pattern> tmp;
+                    for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
+                        const Pattern pattern = iter->first;
+                        if (pattern.category() == cat) {
+                            count++;
+                            tmp.insert(pattern);
+                        }
+                    }
+                    if (cat == 0) {
+                        *OUT << "N-GRAMS                          ";
+                    } else if (cat == 2) {
+                        *OUT << "FIXED-SKIPGRAMS                  ";
+                    } else if (cat == 3) {
+                        *OUT << "DYNAMIC-SKIPGRAMS                ";
+                    }
+                    *OUT << setw(10) << count << setw(10) << tmp.size() << endl; 
+                }
+
+            }
+        }
 };
 
 

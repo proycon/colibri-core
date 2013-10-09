@@ -56,14 +56,21 @@ void decode(IndexedPatternModel & model, string classfile) {
 void viewmodel(IndexedPatternModel<> & model, ClassDecoder * classdecoder,  bool print, bool report, bool coveragereport, bool histogram , bool query) {
     if (print) {
         if (classdecoder == NULL) {
-            cerr << "ERROR: Unable to print model, no class decoder specified" << endl;
+            cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
         } else {
-
+            model.print(*classdecoder);
         }
     }
 }
 
 void viewmodel(PatternModel<uint32_t> & model, ClassDecoder * classdecoder,  bool print, bool report, bool coveragereport, bool histogram, bool query ) {
+    if (print) {
+        if (classdecoder == NULL) {
+            cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
+        } else {
+            model.print(*classdecoder);
+        }
+    }
 }
 
 int main( int argc, char *argv[] ) {
