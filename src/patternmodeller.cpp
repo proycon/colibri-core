@@ -74,6 +74,9 @@ void viewmodel(PatternModel<uint32_t> & model, ClassDecoder * classdecoder,  boo
             model.print(*classdecoder);
         }
     }
+    if (report) {
+        model.report((std::ostream*) *cout);
+    }
 }
 
 int main( int argc, char *argv[] ) {
@@ -190,13 +193,20 @@ int main( int argc, char *argv[] ) {
     if (inputmodeltype == INDEXEDPATTERNMODEL) {
         cerr << "Loading indexed pattern model " << inputmodelfile << " as input model..."<<endl;
         IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options);
-
+        inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, options.MINSKIPTOKENS);
+        
+        if (!outputmodelfile.empty()) {
+            inputmodel.write(outputmodelfile);
+        }
         viewmodel(inputmodel, classdecoder, DOPRINT, DOREPORT, DOCOVERAGE, DOHIST, DOQUERIER); 
-            
+        
     } else if (inputmodeltype == UNINDEXEDPATTERNMODEL) {
         cerr << "Loading unindexed pattern model " << inputmodelfile << " as input model..."<<endl;
         PatternModel<uint32_t> inputmodel = PatternModel<uint32_t>(inputmodelfile, options);
 
+        if (!outputmodelfile.empty()) {
+            inputmodel.write(outputmodelfile);
+        }
         viewmodel(inputmodel, classdecoder, DOPRINT, DOREPORT, DOCOVERAGE, DOHIST, DOQUERIER); 
     } else if (!inputmodelfile.empty()) {
         cerr << "ERROR: Input model is not a valid colibri pattern model" << endl;

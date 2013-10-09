@@ -305,14 +305,16 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
             }
         }
 
-        virtual void read(std::istream * in) {
+        virtual void read(std::istream * in, int MINTOKENS=0) {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             for (ReadWriteSizeType i = 0; i < s; i++) {
                 Pattern p = Pattern(in);
                 ValueType value;
                 valuehandler.read(in, value);
-                insert(p,value);
+                if (valuehandler.count(value) >= MINTOKENS) {
+                    insert(p,value);
+                }
             }
         }
 

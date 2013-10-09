@@ -148,6 +148,7 @@ class PatternModel: public MapType {
                 if (n > maxn) maxn = n;
                 if (n < minn) minn = n;
             }
+            totaltypes = this->size();
         }
     public:
         PatternModel<ValueType,ValueHandler,MapType>() {
@@ -184,7 +185,7 @@ class PatternModel: public MapType {
             f->read( (char*) &totaltokens, sizeof(uint64_t));        
             f->read( (char*) &totaltypes, sizeof(uint64_t)); 
 
-            this->read(f); //read PatternStore
+            this->read(f, options.MINTOKENS); //read PatternStore
             this->postread(options);
         }
         
@@ -301,7 +302,6 @@ class PatternModel: public MapType {
             ValueType * data = getdata(pattern);
             return this->valuehandler.count(*data); 
         }
-        virtual double freq(const Pattern & pattern) { return occurrencecount(pattern) / totaltokens; }
         
         virtual ValueType * getdata(const Pattern & pattern) { 
             typename MapType::iterator iter = this->find(pattern);
@@ -389,6 +389,7 @@ class PatternModel: public MapType {
                 const int covcount = this->coveragecount(pattern);
                 const double coverage = covcount / (double) this->tokens();
                 *out << pattern_s << "\t" << count << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << pattern.category() <<  endl;
+
             }
         }
         
@@ -485,6 +486,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 skipcontent[p
             }*/
         }
+        totaltypes = this->size();
     }
     
     std::unordered_set<Pattern> getskipcontent(const Pattern & pattern) {
