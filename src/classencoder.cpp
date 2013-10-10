@@ -205,6 +205,10 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
                     //variable length skip
                     outputbuffer[outputcursor++] = 129; //DYNAMICGAP MARKER 
                     continue;
+                } else if (word == "{?}") {
+                    //single tokenskip
+                    outputbuffer[outputcursor++] = 128; //FIXEDGAP MARKER
+                    continue;
                 } else if ((word.substr(0,2) == "{*")  && (word.substr(word.size() - 2,2) == "*}")) {
                     const int skipcount = atoi(word.substr(2,word.size() - 4).c_str()); 
                     for (int j = 0; j < skipcount; j++) {
@@ -324,8 +328,9 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	    while (IN.good()) {	
           string line = "";
           getline(IN, line);
-          if ((outputsize > 0) && (!IN.eof())) {      
-          	 OUT.write(&one, sizeof(char)); //newline          
+          if (!IN.good()) break;
+          if (outputsize > 0) {      
+          	 OUT.write(&zero, sizeof(char)); //newline          
           	 linenum++;      	 
           }           
           outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
