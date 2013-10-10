@@ -462,6 +462,12 @@ class PatternModel: public MapType {
 template<class MapType = PatternMap<IndexedData,IndexedDataHandler>> 
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType> {
    public:
+    IndexedPatternModel<MapType>(): PatternModel<IndexedData,IndexedDataHandler,MapType>() {}; 
+    
+    IndexedPatternModel<MapType>(std::istream *f, const PatternModelOptions options): PatternModel<IndexedData,IndexedDataHandler,MapType>(f, options) {}; 
+    IndexedPatternModel<MapType>(const std::string filename, const PatternModelOptions options): PatternModel<IndexedData,IndexedDataHandler,MapType>(filename, options) {}; 
+                                                                   
+
     int add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
         this->valuehandler.add(value, ref);
     }

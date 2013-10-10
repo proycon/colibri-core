@@ -18,7 +18,7 @@ void usage() {
     cerr << "\t-f [datafile]    Corpus data file" << endl;
     cerr << "\t-c [classfile]   Class file"<< endl;
     cerr << "\t-j [modelfile]   2nd input model (e.g. test data)" << endl;
-    cerr << " Building a model:  patternmodeller -o [modelfile] -f [datafile] -c [classfile]"
+    cerr << " Building a model:  patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
     cerr << "\t-t <number>      Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
     cerr << "\t-u               Build an unindexed model" << endl;    
     cerr << "\t-l <number>      Maximum pattern length (default: 8)" << endl;
@@ -39,29 +39,17 @@ void usage() {
 }
 
 
-void decode(IndexedPatternModel & model, string classfile) {
-    cerr << "Loading class decoder " << classfile << endl;
-    ClassDecoder classdecoder = ClassDecoder(classfile);
-    
-    /*const string ngramoutputfile = outputprefix + ".ngrams";
-    ofstream *NGRAMSOUT =  new ofstream( ngramoutputfile.c_str() );      
-    const string skipgramoutputfile = outputprefix + ".skipgrams";
-    ofstream *SKIPGRAMSOUT = NULL;*/
-    //if (DOSKIPGRAMS) SKIPGRAMSOUT = new ofstream( skipgramoutputfile.c_str() );      
-    cerr << "Decoding" << endl;
-    model.decode(classdecoder, (ostream*) &stdout);   
-}
 
 void viewmodel(IndexedPatternModel<> & model, ClassDecoder * classdecoder,  bool print, bool report, bool coveragereport, bool histogram , bool query) {
     if (print) {
         if (classdecoder == NULL) {
             cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
         } else {
-            model.print(*classdecoder);
+            model.print(&cout, *classdecoder);
         }
     }
     if (report) {
-        model.report((std::ostream*) *cout);
+        model.report(&cout);
     }
 }
 
@@ -70,11 +58,11 @@ void viewmodel(PatternModel<uint32_t> & model, ClassDecoder * classdecoder,  boo
         if (classdecoder == NULL) {
             cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
         } else {
-            model.print(*classdecoder);
+            model.print(&cout, *classdecoder);
         }
     }
     if (report) {
-        model.report((std::ostream*) *cout);
+        model.report(&cout);
     }
 }
 
@@ -87,19 +75,16 @@ int main( int argc, char *argv[] ) {
     string corpusfile = "";
     
 
-    string corpusfile = "";
-    string outputprefix = "";
     string modelfile = "";
     string modelfile2 = "";
-    string covviewfile = "";
-    string alignmodelfile = "";
+    string covviewfile = ""; //not used yet
     
     
     
     PatternModelOptions options;
     options.DOREVERSEINDEX = true;  //TODO: make configurable?
 
-    int outputmodelfile = INDEXEDPATTERNMODEL;
+    int outputmodeltype = INDEXEDPATTERNMODEL;
     bool DOQUERIER = false;
     bool DOREPORT = false;
     bool DOCOVERAGE = false;
