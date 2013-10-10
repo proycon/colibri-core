@@ -98,8 +98,8 @@ int main( int argc, char *argv[] ) {
         cerr << "Building classes from corpus" << endl;
         classencoder = ClassEncoder();
         classencoder.build(corpusfiles);
-        classencoder.save(outputprefix + ".cls");
-        cerr << "Built " << outputprefix << ".cls" << endl;            
+        classencoder.save(outputprefix + ".colibri.cls");
+        cerr << "Built " << outputprefix << ".colibri.cls" << endl;            
     }   
     
     for (size_t i = 0; i < corpusfiles.size(); i++) {
@@ -110,8 +110,8 @@ int main( int argc, char *argv[] ) {
             strip_extension(outfile,"txt");
             strip_extension(outfile,"xml");
         }       
-        classencoder.encodefile(corpusfiles[i], outfile + ".clsenc", allowunknown, false, unified);
-        cerr << "Encoded corpus " << corpusfiles[i] << " in " << outfile << ".clsenc" << endl;
+        classencoder.encodefile(corpusfiles[i], outfile + ".colibri.dat", allowunknown, false, unified);
+        cerr << "Encoded corpus " << corpusfiles[i] << " in " << outfile << ".colibri.dat" << endl;
     }
 
     
