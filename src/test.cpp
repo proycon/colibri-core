@@ -26,6 +26,7 @@ int main( int argc, char *argv[] ) {
 		
     cerr << "Loading class decoder" << endl;
 	ClassDecoder classdecoder = ClassDecoder(classfile);
+    cerr << "  Number of classes: " << classdecoder.size() << endl;
 
     cerr << "Loading class encoder" << endl;
     ClassEncoder encoder = ClassEncoder(classfile);
@@ -36,8 +37,10 @@ int main( int argc, char *argv[] ) {
 	Pattern ngram = encoder.input2pattern(querystring, true); 	
 
 	cerr << "Ngram: " << ngram.decode(classdecoder) << endl;
-	cerr << "N: " << (int) ngram.n() << endl;
-	cerr << "Size: " << (int) ngram.size() << endl;
+	cerr << "Size (n): " << (int) ngram.n() << endl; //== size()
+	cerr << "Bytesize: " << (int) ngram.bytesize() << endl;
+	cerr << "Raw: " << endl;
+    ngram.out();
 
     
     cerr << "Subgrams: " << endl;
@@ -76,7 +79,7 @@ int main( int argc, char *argv[] ) {
 	
 	cerr << "Skipgram: " << skipgram.decode(classdecoder) << endl;
 	cerr << "N: " << (int) skipgram.n() << endl;
-	cerr << "Size: " << (int) skipgram.size() << endl;
+	cerr << "Bytesize: " << (int) skipgram.bytesize() << endl;
  
     cerr << "Parts: " << endl;
     vector<Pattern> parts;
@@ -94,7 +97,7 @@ int main( int argc, char *argv[] ) {
     
     cerr << "Ngram: " << ngram2.decode(classdecoder) << endl;
 	cerr << "N: " << (int) ngram2.n() << endl;
-	cerr << "Size: " << (int) ngram2.size() << endl;
+	cerr << "Bytesize: " << (int) ngram2.bytesize() << endl;
 	
 	
 	cerr << "----------------------------------------------------" << endl;
@@ -104,7 +107,7 @@ int main( int argc, char *argv[] ) {
     
     cerr << "Skipcontent: " << skipcontent.decode(classdecoder) << endl;
 	cerr << "N: " << (int) skipcontent.n() << endl;
-	cerr << "Size: " << (int) skipcontent.size() << endl;
+	cerr << "Bytesize: " << (int) skipcontent.bytesize() << endl;
 	
     cerr << "----------------------------------------------------" << endl;
 
@@ -135,7 +138,7 @@ int main( int argc, char *argv[] ) {
 	
 	cerr << "Skipgram: " << skipgraminv2.decode(classdecoder) << endl;
 	cerr << "N: " << (int) skipgraminv2.n() << endl;
-	cerr << "Size: " << (int) skipgraminv2.size() << endl;	
+	cerr << "Bytesize: " << (int) skipgraminv2.bytesize() << endl;	
 	
 	cerr << "Parts: " << endl;
     parts2.clear();
@@ -338,7 +341,7 @@ int main( int argc, char *argv[] ) {
     options.DOFIXEDSKIPGRAMS = true;
 
     PatternModel<uint32_t> unindexedmodel;
-    std::string filename = "/tmp/data.colibri.data";
+    std::string filename = "/tmp/data.colibri.patternmodel";
     unindexedmodel.train(filename, options);
 
     IndexedPatternModel<> indexedmodel;

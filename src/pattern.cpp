@@ -179,6 +179,8 @@ void Pattern::write(ostream * out) const {
 }
 
 std::string Pattern::tostring(ClassDecoder& classdecoder) const {
+
+
     std::string result = ""; 
     int i = 0;
     int gapsize = 0;
@@ -199,8 +201,9 @@ std::string Pattern::tostring(ClassDecoder& classdecoder) const {
                 result += std::string("{*") + to_string(gapsize) + std::string("*} ");                
                 gapsize = 0;
             }
+            unsigned int cls =  bytestoint(data + i +1, c);
+            //cerr << (int) c << ":" << (int) *(data+i + 1) << ":" << (int) data[i+1] << ":" << cls << endl;
             i += c + 1;
-            unsigned int cls =  bytestoint(&c + 1, c);
             if (!result.empty()) result += " ";
             result += classdecoder[cls];
         } else if (c == FIXEDGAP) {
@@ -231,8 +234,8 @@ bool Pattern::out() const {
             return true;
         } else if (c < 128) {
             //we have a size
+            cerr << bytestoint(data + i + 1, c) << " ";
             i += c + 1;
-            cerr << bytestoint(&c + 1, c) << " ";
         } else if (c == FIXEDGAP) {
             //DYNAMICGAP is counted as 1, the minimum fill
             cerr << "FIXEDGAP" << " ";
@@ -307,8 +310,8 @@ Pattern::Pattern(const unsigned char * dataref, const int _size) {
         } else if (c < 128) {
             int end = i + c;
             do {
-                data[j++] = dataref[i];
                 i++;
+                data[j++] = dataref[i];
             } while (i < end);
         }
 
