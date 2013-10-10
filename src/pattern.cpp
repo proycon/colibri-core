@@ -479,7 +479,7 @@ int Pattern::ngrams(vector<Pattern> & container, const int n) const { //return m
     int found = 0;
 
     
-    for (int i = 0; i < (_n - n); i++) {
+    for (int i = 0; i < (_n - n) + 1; i++) {
         Pattern pattern = Pattern(*this,i,n);
         container.push_back( pattern );
         found++;
