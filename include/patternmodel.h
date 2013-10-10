@@ -424,7 +424,7 @@ class PatternModel: public MapType {
                             sizes.insert(pattern.size());
                             cats.insert(pattern.category());
                         }
-                        if (pattern.size() == n) {
+                        if ((int) pattern.size() == n) {
                             count++;
                             tmp.insert(pattern);
                         }
@@ -524,7 +524,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                     //find patterns through reverse index
                     for (std::multimap<IndexReference,Pattern>::iterator iter4 = this->reverseindex.lower_bound(gapref); iter4 != this->reverseindex.upper_bound(gapref); iter4++) {
                         const Pattern candidate = iter4->second;
-                        if (requiredsize == candidate.n()) {
+                        if (requiredsize == (int) candidate.n()) {
                             skipcontent.insert(candidate);
                         }
                     }
@@ -551,9 +551,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); 
         do {
             const Pattern pattern = iter->first;
-            if (( (_n == 0) || (pattern.n() == _n) ) && (pattern.category() == FIXEDSKIPGRAM)) {
+            if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == FIXEDSKIPGRAM)) {
                 std::unordered_set<Pattern> skipcontent = getskipcontent(pattern);
-                if (skipcontent.size() < minskiptypes) {
+                if ((int) skipcontent.size() < minskiptypes) {
                     iter = this->erase(iter);
                     pruned++;
                     continue;
@@ -568,7 +568,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         occurrences.insert(ref);
                     }
                 }                
-                if (occurrences.size() < minskiptokens) {
+                if ((int) occurrences.size() < minskiptokens) {
                     iter = this->erase(iter);
                     pruned++;
                     continue;

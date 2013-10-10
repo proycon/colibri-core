@@ -669,10 +669,10 @@ bool Pattern::instantiates(const Pattern & skipgram) const {
        return false;
     } else {
         //FIXED SKIPGRAM
-        const int _n = n();
+        const unsigned int _n = n();
         if (skipgram.n() != _n) return false;
 
-        for (int i = 0; i < _n; i++) {
+        for (unsigned int i = 0; i < _n; i++) {
             const Pattern token1 = Pattern(skipgram, i, 1);
             const Pattern token2 = Pattern(*this, i, 1);
             if ((token1 != token2) && (token1.category() != FIXEDSKIPGRAM)) return false;
