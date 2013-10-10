@@ -190,7 +190,7 @@ std::string Pattern::tostring(ClassDecoder& classdecoder) const {
             //end marker
             if (gapsize > 0) {
                 if (!result.empty()) result += " ";
-                result += std::string("{*") + to_string(gapsize) + std::string("*} ");                
+                result += std::string("{*") + to_string(gapsize) + std::string("*}");                
                 gapsize = 0;
             }
             return result;
@@ -198,7 +198,7 @@ std::string Pattern::tostring(ClassDecoder& classdecoder) const {
             //we have a size
             if (gapsize > 0) {
                 if (!result.empty()) result += " ";
-                result += std::string("{*") + to_string(gapsize) + std::string("*} ");                
+                result += std::string("{*") + to_string(gapsize) + std::string("*}");                
                 gapsize = 0;
             }
             unsigned int cls =  bytestoint(data + i +1, c);
