@@ -291,7 +291,14 @@ class PatternModel: public MapType {
             out->write( (char*) &model_version, sizeof(char));        
             out->write( (char*) &totaltokens, sizeof(uint64_t));        
             out->write( (char*) &totaltypes, sizeof(uint64_t)); 
-            write(out); //write PatternStore
+            MapType::write(out); //write PatternStore
+        }
+
+        void write(const std::string filename) {
+            std::ofstream * out = new std::ofstream(filename.c_str());
+            this->write(out);
+            out->close();
+            delete out;
         }
 
         typedef typename MapType::iterator iterator;
