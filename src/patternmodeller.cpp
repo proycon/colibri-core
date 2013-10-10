@@ -1,5 +1,3 @@
-#include <patternmodel.h>
-#include <alignmodel.h>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -7,6 +5,7 @@
 #include <algorithms.h>
 #include <common.h>
 #include <getopt.h>
+#include <patternmodel.h>
 
 using namespace std;
 
@@ -241,13 +240,10 @@ int main( int argc, char *argv[] ) {
         }
 
     }
+}
 
 
 
-
-    if (!corpusfile.empty()) {
-
-    }
 
 
     
