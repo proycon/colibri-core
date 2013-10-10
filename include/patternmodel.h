@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <map>
 #include <set>
+#include <sstream>
 
 
 
@@ -168,7 +169,7 @@ class PatternModel: public MapType {
             totaltypes = 0;
             maxn = 0;
             std::ifstream * in = new std::ifstream(filename.c_str());
-            this->load( (istream *) in, options);
+            this->load( (std::istream *) in, options);
             in->close();
             delete in;
         }
@@ -179,7 +180,7 @@ class PatternModel: public MapType {
             f->read( (char*) &model_type, sizeof(char));        
             f->read( (char*) &model_version, sizeof(char));        
             if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) ))  {
-                cerr << "File is not a colibri model file (or a very old one)" << endl;
+                std::cerr << "File is not a colibri model file (or a very old one)" << std::endl;
                 throw InternalError();
             }
             f->read( (char*) &totaltokens, sizeof(uint64_t));        
@@ -195,14 +196,14 @@ class PatternModel: public MapType {
 
             for (int n = 1; n <= options.MAXLENGTH; n++) {
                 in->seekg(0);
-                cerr << "Counting " << n << "-grams" << endl; 
+                std::cerr << "Counting " << n << "-grams" << std::endl; 
                 sentence++;
 
-                if ((options.DOFIXEDSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], vector<pair<int,int> >(), n);
+                if ((options.DOFIXEDSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
 
                 Pattern line = Pattern(in);
                 if (n==1) totaltokens += line.size();
-                vector<pair<Pattern,int>> ngrams;
+                std::vector<std::pair<Pattern,int>> ngrams;
                 line.ngrams(ngrams, n);
 
                 for (std::vector<std::pair<Pattern,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
@@ -226,7 +227,7 @@ class PatternModel: public MapType {
                             ValueType * data = getdata(pattern);
                             add(pattern, data, ref );
                             if (options.DOREVERSEINDEX) {
-                                reverseindex.insert(pair<IndexReference,Pattern>(ref,pattern));
+                                reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
                             }
                         }                
                         if (options.DOFIXEDSKIPGRAMS) {
@@ -255,7 +256,7 @@ class PatternModel: public MapType {
                                         ValueType * data = getdata(skippattern);
                                         add(skippattern, data, ref );
                                         if (options.DOREVERSEINDEX) {
-                                            reverseindex.insert(pair<IndexReference,Pattern>(ref,skippattern));
+                                            reverseindex.insert(std::pair<IndexReference,Pattern>(ref,skippattern));
                                         }
                                     }
                                 //}
@@ -265,14 +266,14 @@ class PatternModel: public MapType {
                     }            
                 }
 
-                cerr << "Pruning..." << endl;
+                std::cerr << "Pruning..." << std::endl;
                 this->prune(options.MINTOKENS,n);
                 this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, options.MINSKIPTOKENS, n);
             }
         }
         void train(const std::string filename, const PatternModelOptions options) {
             std::ifstream * in = new std::ifstream(filename.c_str());
-            this->train((istream*) in, options);
+            this->train((std::istream*) in, options);
             in->close();
             delete in;
         }
@@ -380,7 +381,7 @@ class PatternModel: public MapType {
         }
 
         void print(std::ostream * out, ClassDecoder & decoder) {
-            *out << "PATTERN\nCOUNT\tSIZE\tCOVERAGECOUNT\tCOVERAGE\tCATEGORY" << endl;
+            *out << "PATTERN\nCOUNT\tSIZE\tCOVERAGECOUNT\tCOVERAGE\tCATEGORY" << std::endl;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
                 const std::string pattern_s = pattern.tostring(decoder);
@@ -388,20 +389,20 @@ class PatternModel: public MapType {
                 //const double freq = count / (double) this->tokens(); 
                 const int covcount = this->coveragecount(pattern);
                 const double coverage = covcount / (double) this->tokens();
-                *out << pattern_s << "\t" << count << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << pattern.category() <<  endl;
+                *out << pattern_s << "\t" << count << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << pattern.category() <<  std::endl;
 
             }
         }
         
         void report(std::ostream * OUT) {
-            *OUT << setiosflags(ios::fixed) << setprecision(4) << endl;       
-            *OUT << "REPORT" << endl;
-            *OUT << "----------------------------------" << endl;
-            *OUT << "                          " << setw(10) << "TOKENS" << setw(10) << "TYPES" << setw(10) << endl;
-            *OUT << "Total:                    " << setw(10) << this->tokens() << setw(10) << this->types() <<  endl;
+            *OUT << std::setiosflags(std::ios::fixed) << std::setprecision(4) << std::endl;       
+            *OUT << "REPORT" << std::endl;
+            *OUT << "----------------------------------" << std::endl;
+            *OUT << "                          " << std::setw(10) << "TOKENS" << std::setw(10) << "TYPES" << std::setw(10) << std::endl;
+            *OUT << "Total:                    " << std::setw(10) << this->tokens() << std::setw(10) << this->types() <<  std::endl;
             
             
-            *OUT << "Per n:" << endl;
+            *OUT << "Per n:" << std::endl;
             std::set<int> sizes;
             std::set<int> cats;
             int maxn = 1;
@@ -422,7 +423,7 @@ class PatternModel: public MapType {
                         }
                         if (n==1) cats.insert(pattern.category());
                     }
-                    *OUT << " n=" << n << "                       "  << setw(10) << count << setw(10) << tmp.size() << endl; 
+                    *OUT << " n=" << n << "                       "  << std::setw(10) << count << std::setw(10) << tmp.size() << std::endl; 
                     if (n == 1) {
                         std::set<int>::reverse_iterator iter = sizes.rbegin();
                         maxn = *iter; //get last item from sizes
@@ -430,7 +431,7 @@ class PatternModel: public MapType {
                 }
             } while (n < maxn);
 
-            *OUT << "Per category:" << endl;
+            *OUT << "Per category:" << std::endl;
             for (int cat = 1; cat <= 3; cat++) {
                 if (cats.count(cat)) {
                     int count = 0;
@@ -449,7 +450,7 @@ class PatternModel: public MapType {
                     } else if (cat == 3) {
                         *OUT << "DYNAMIC-SKIPGRAMS                ";
                     }
-                    *OUT << setw(10) << count << setw(10) << tmp.size() << endl; 
+                    *OUT << std::setw(10) << count << std::setw(10) << tmp.size() << std::endl; 
                 }
 
             }

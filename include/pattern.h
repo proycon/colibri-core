@@ -262,7 +262,7 @@ class PatternStore {
         virtual typename ContainerType::iterator find(const Pattern & pattern)=0;
         
         virtual void write(std::ostream * out)=0;
-        virtual void read(std::istream * in)=0;
+        virtual void read(std::istream * in, int MINTOKENS)=0;
 
 };
 

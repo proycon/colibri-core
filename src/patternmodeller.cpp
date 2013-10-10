@@ -25,14 +25,14 @@ void usage() {
     cerr << "\t-s               Compute fixed-size skip-grams (costs extra memory and time)" << endl;    
     cerr << "\t-T <number>      Skip threshold: only skip content that occurs at least x times will be considered (default: same as -t). Value can never be lower than value for -t. Requires indexed models." << endl;
     cerr << "\t-S <number>      Skip type threshold: only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, this value is unchangable and fixed to 2 when -u is set). Required indexed models" << endl;
-    cerr << " Viewing a model:  patternmodeller -i [modelfile] -c [classfile] -[PRCHQ]
+    cerr << " Viewing a model:  patternmodeller -i [modelfile] -c [classfile] -[PRCHQ]" << endl;
     cerr << "\t-P               Print the entire model" << endl;
     cerr << "\t-R               Generate a simple statistical report" << endl;
     cerr << "\t-C               Generate an extensive coverage report (indexed patternmodels) only)" << endl;
     cerr << "\t-H               Generate a histogram report" << endl;   
     cerr << "\t-Q               Start query mode, allows for pattern lookup against the loaded model" << endl; 
     cerr << "\tOptions -tlTS can be used to further filter the model" << endl;
-    cerr << "Editing a model:  patternmodeller -o [modelfile] -i [modelfile] 
+    cerr << "Editing a model:  patternmodeller -o [modelfile] -i [modelfile]" << endl;
     cerr << "\tOptions -tlTS can be used to filter the model, -u can be used to remove the index" << endl;
     cerr << "Run train model on test data:  patternmodeller -o [modelfile] -i [modelfile] -j [modelfile2] --test" << endl;
     cerr << " New model will only contain counts from model2 but only for the patterns also occurring in model1. The total number of tokens equals that of model2 (i.e. the amount uncovered is retained in the model)" << endl;
