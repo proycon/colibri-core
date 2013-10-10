@@ -323,18 +323,16 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	    }	
 	    IN.open(inputfilename.c_str());
 	    unsigned char outputbuffer[65536];
-	    int outputsize = 0;
-	    unsigned int linenum = 1;
+	    int outputsize ;
+	    unsigned int linenum = 0;
 	    while (IN.good()) {	
           string line = "";
           getline(IN, line);
           if (!IN.good()) break;
-          if (outputsize > 0) {      
-          	 OUT.write(&zero, sizeof(char)); //newline          
-          	 linenum++;      	 
-          }           
+          linenum++;
           outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
-          if (outputsize > 0) OUT.write((const char *) outputbuffer, outputsize);                        
+          OUT.write((const char *) outputbuffer, outputsize);                        
+          OUT.write(&zero, sizeof(char)); //newline          
         }
         cerr << "Encoded " << linenum << " lines" << endl;
 	    IN.close();

@@ -131,6 +131,7 @@ void ClassDecoder::decodefile(const string & filename, unsigned int start, unsig
         }
     }
     IN->close();
+    linenumber--;
     cerr << "Processed " << linenumber  << " lines" << endl;               
 } 
 	
