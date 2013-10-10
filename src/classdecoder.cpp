@@ -105,13 +105,12 @@ void ClassDecoder::decodefile(const string & filename, unsigned int start, unsig
     while (IN->good()) {
         IN->read( (char* ) &c, sizeof(char));
         if (!IN->good()) break;
-        if (c == 0) {
+        if (c == 0) { //endmarker
             if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
                 cout << endl;
             }
             linenumber++;
             first = true;
-            break;
         } else if (c < 128) {
             //we have a size, load token
             IN->read( (char*) buffer, c);
@@ -121,6 +120,14 @@ void ClassDecoder::decodefile(const string & filename, unsigned int start, unsig
                 cout << classes[cls];
                 first = false;
             }
+        } else if (c == 128) {
+            if (!first) cout << " ";
+            cout << "{?}";
+            first = false;
+        } else if (c == 129) {
+            if (!first) cout << " ";
+            cout << "{*}";
+            first = false;
         }
     }
     IN->close();
