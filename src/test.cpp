@@ -103,6 +103,13 @@ int main( int argc, char *argv[] ) {
     }
 
 
+    cerr << "Gaps: " << endl;
+    std::vector<std::pair<int,int> > gapcontainer;
+    skipgram.gaps(gapcontainer);
+    skipgram.parts(parts);
+    for (vector<std::pair<int,int>>::iterator iter2 = gapcontainer.begin(); iter2 != gapcontainer.end(); iter2++) {                
+    	cout << iter2->first << "-" << iter2->second << endl;
+    }
 	
 	
 	cerr << "----------------------------------------------------" << endl;

@@ -621,11 +621,11 @@ int Pattern::gaps(vector<pair<int,int> > & container) const {
 }
 
 Pattern Pattern::extractskipcontent(Pattern & instance) const {
-    if (instance.category() == DYNAMICSKIPGRAM) {
+    if (this->category() == DYNAMICSKIPGRAM) {
         cerr << "Extractskipcontent not supported on Pattern with dynamic gaps!" << endl;
         throw InternalError();
     }
-    if (instance.category() == NGRAM) {
+    if (this->category() == NGRAM) {
         cerr << "Extractskipcontent not supported on Pattern without gaps!" << endl;
         throw InternalError();
     }
