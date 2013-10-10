@@ -92,7 +92,8 @@ int main( int argc, char *argv[] ) {
 	cerr << "Skipgram: " << skipgram.decode(classdecoder) << endl;
 	cerr << "N: " << (int) skipgram.n() << endl;
 	cerr << "Bytesize: " << (int) skipgram.bytesize() << endl;
-	cerr << "Category==skipgram: " << (int) (skipgram.category() == FIXEDSKIPGRAM) << endl;
+	cerr << "Category==skipgram? " << (int) (skipgram.category() == FIXEDSKIPGRAM) << endl;
+	cerr << "Skipcount==2? " << (int) (skipgram.skipcount() == 2) << endl;
  
     cerr << "Parts: " << endl;
     vector<Pattern> parts;
