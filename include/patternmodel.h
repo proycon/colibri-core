@@ -21,7 +21,7 @@ enum ModelType {
 int getmodeltype(const std::string filename) {
     unsigned char null;
     unsigned char model_type;
-    unsigned char model version;
+    unsigned char model_version;
     std::ifstream * f = new std::ifstream(filename.c_str());
     f->read( (char*) &null, sizeof(char));        
     f->read( (char*) &model_type, sizeof(char));        
@@ -318,7 +318,7 @@ class PatternModel: public MapType {
         
         
         int coveragecount(const Pattern &  key) {
-           return this->occurrencecount(pattern) * pattern.size();
+           return this->occurrencecount(key) * key.size();
         }
         double coverage(const Pattern & key) {
             return this->coveragecount(key) / this->tokens();
@@ -380,7 +380,7 @@ class PatternModel: public MapType {
         }
 
         void print(std::ostream * out, ClassDecoder & decoder) {
-            *out << "PATTERN\nCOUNT\tSIZE\tCOVERAGECOUNT\tCOVERAGE\tCATEGORY" << end;
+            *out << "PATTERN\nCOUNT\tSIZE\tCOVERAGECOUNT\tCOVERAGE\tCATEGORY" << endl;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
                 const std::string pattern_s = pattern.tostring(decoder);
@@ -405,26 +405,28 @@ class PatternModel: public MapType {
             std::set<int> sizes;
             std::set<int> cats;
             int maxn = 1;
+            int n = 1;
             do {
-                if (n == 1) {
-                    sizes.insert(pattern.size());
-                    cats.insert(pattern.category());
-                } else if ( sizes.count(n)) {
-                    continue;
-                }
                 int count = 0;
                 std::unordered_set<Pattern> tmp;
-                for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
-                    const Pattern pattern = iter->first;
-                    if (pattern.size() == n) {
-                        count++;
-                        tmp.insert(pattern);
+                if ((n == 1) || (sizes.count(n))) { 
+                    for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
+                        const Pattern pattern = iter->first;
+                        if (n == 1) {
+                            sizes.insert(pattern.size());
+                            cats.insert(pattern.category());
+                        }
+                        if (pattern.size() == n) {
+                            count++;
+                            tmp.insert(pattern);
+                        }
+                        if (n==1) cats.insert(pattern.category());
                     }
-                    if (n==1) countpercategory[pattern.category()]++;
-                }
-                *OUT << " n=" << n << "                       "  << setw(10) << count << setw(10) << tmp.size() << endl; 
-                if (n == 1) {
-                    maxn = //TODO: get last item from sizes
+                    *OUT << " n=" << n << "                       "  << setw(10) << count << setw(10) << tmp.size() << endl; 
+                    if (n == 1) {
+                        std::set<int>::reverse_iterator iter = sizes.rbegin();
+                        maxn = *iter; //get last item from sizes
+                    }
                 }
             } while (n < maxn);
 
@@ -486,7 +488,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 skipcontent[p
             }*/
         }
-        totaltypes = this->size();
+        this->totaltypes = this->size();
     }
     
     std::unordered_set<Pattern> getskipcontent(const Pattern & pattern) {
