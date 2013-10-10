@@ -352,7 +352,7 @@ Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructo
     const unsigned char _size = length_b + 1;
     data = new unsigned char[_size];
     int j = 0;
-    for (int i = begin_b; i < length_b; i++) {
+    for (int i = begin_b; i < begin_b + length_b; i++) {
         data[j++] = ref.data[i];
     }
     data[j++] = ENDMARKER;

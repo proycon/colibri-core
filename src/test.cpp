@@ -36,14 +36,25 @@ int main( int argc, char *argv[] ) {
  	string querystring = "To be or not to be";
 	Pattern ngram = encoder.input2pattern(querystring, true); 	
 
-	cerr << "Ngram: " << ngram.decode(classdecoder) << endl;
+	cerr << "Ngram #1: " << ngram.decode(classdecoder) << endl;
 	cerr << "Size (n): " << (int) ngram.n() << endl; //== size()
 	cerr << "Bytesize: " << (int) ngram.bytesize() << endl;
 	cerr << "Raw: " << endl;
     ngram.out();
 
     
-    cerr << "Subgrams: " << endl;
+	cerr << "----------------------------------------------------" << endl;
+
+    cerr << "Slice constructor, specific subngram" << endl;
+    Pattern ngram2 = Pattern(ngram, 2, 2);
+    
+    cerr << "Ngram: " << ngram2.decode(classdecoder) << endl;
+	cerr << "N: " << (int) ngram2.n() << endl;
+	cerr << "Bytesize: " << (int) ngram2.bytesize() << endl;
+
+	cerr << "----------------------------------------------------" << endl;
+    cerr << "Subgrams of ngram #1: " << endl;
+
  	
     vector<Pattern> subngrams;
     ngram.subngrams(subngrams);
@@ -90,14 +101,6 @@ int main( int argc, char *argv[] ) {
     }
 
 
-	cerr << "----------------------------------------------------" << endl;
-
-    cerr << "Slice constructor, specific subngram" << endl;
-    Pattern ngram2 = Pattern(ngram, 2, 2);
-    
-    cerr << "Ngram: " << ngram2.decode(classdecoder) << endl;
-	cerr << "N: " << (int) ngram2.n() << endl;
-	cerr << "Bytesize: " << (int) ngram2.bytesize() << endl;
 	
 	
 	cerr << "----------------------------------------------------" << endl;
