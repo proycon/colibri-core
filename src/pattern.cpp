@@ -20,7 +20,7 @@ const PatternCategory Pattern::category() const {
             i += c + 1;
         } else {
             //we have a marker
-            if ((c == FIXEDGAP) && (category < FIXEDSKIPGRAM)) category = FIXEDSKIPGRAM;
+            if (c == FIXEDGAP) category = FIXEDSKIPGRAM;
             if (c == DYNAMICGAP) return DYNAMICSKIPGRAM;
             i++;
         }
