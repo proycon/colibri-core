@@ -261,7 +261,6 @@ void ClassEncoder::add(std::string s, unsigned int cls) {
 }
 
 void ClassEncoder::encodefile(const std::string & inputfilename, const std::string & outputfilename, bool allowunknown, bool autoaddunknown, bool append) {
-    //TODO: move to corpus.h
     const char zero = 0;
     const char one = 1;
 	    
@@ -292,7 +291,6 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	        if ((!line.empty()) && (word->parent() != prevparent) && (i< wl -1)) {
 	            outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);     
 	            if (outputsize > 0) OUT.write((const char *) outputbuffer, outputsize);
-	        	OUT.write(&one, sizeof(char)); //newline          
           	    OUT.write(&zero, sizeof(char)); //write separator
           	    linenum++;        
           	    line = "";
@@ -316,10 +314,6 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	    ifstream IN;
 	    if (append) {
 	        OUT.open(outputfilename.c_str(), ios::app | ios::binary);
-	        if (OUT.tellp() > 0) {
-	            OUT.write(&one, sizeof(char)); //newline          
-          	    OUT.write(&zero, sizeof(char)); //write separator
-	        }
 	    } else {
 	        OUT.open(outputfilename.c_str(), ios::out | ios::binary);
 	    }	
@@ -332,7 +326,6 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
           getline(IN, line);
           if ((outputsize > 0) && (!IN.eof())) {      
           	 OUT.write(&one, sizeof(char)); //newline          
-          	 OUT.write(&zero, sizeof(char)); //write separator
           	 linenum++;      	 
           }           
           outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);

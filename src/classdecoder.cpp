@@ -91,48 +91,39 @@ string decodestring(const unsigned char * data, unsigned char datasize) {
             n = 0;
         } else {
             n++;
-        }
+65500bri.cls}
 	}
 } */
 
 
 void ClassDecoder::decodefile(const string & filename, unsigned int start, unsigned int end) {
+    unsigned char buffer[1024]; //bit large, only for one token
     ifstream *IN = new ifstream(filename.c_str()); //, ios::in | ios::binary);
-    unsigned char buffer[10];
-    int n = 0;
-    bool eol = true;
-    unsigned int linenumber = 1;
-    while ((IN->good()) && ((end == 0) || (linenumber <= end))) {
-        char bufchar;
-        IN->get(bufchar);
-        
-        unsigned char c = (unsigned char) bufchar;
-        buffer[n] = c;
-        //cout << "READ: " << ((int) c) << endl;
+    int linenumber = 1;
+    bool first = true;
+    unsigned char c;
+    while (IN->good()) {
+        IN->read( (char* ) &c, sizeof(char));
+        if (!IN->good()) break;
         if (c == 0) {
-            //cout << "N: " << n << endl;
-            const unsigned int cls = bytestoint(buffer, n);  
-            if (cls == 1) {
-            	if (linenumber >= start) cout << endl;
-            	eol = true;
-                linenumber++;            
-            } else if (classes.count(cls)) {
-                //cout << cls << ' ';
-                if ((linenumber >= start) && (!eol)) cout << ' ';
-                if (linenumber >= start) cout << classes[cls];
-                eol = false;
-             } else if (cls != 0) {
-             	cerr <<  "ERROR: Unknown class, unable to resolve: " << cls << endl;
-				exit(5);
+            if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
+                cout << endl;
             }
-            n = 0;
-        } else {
-            n++;
+            linenumber++;
+            first = true;
+            break;
+        } else if (c < 128) {
+            //we have a size, load token
+            IN->read( (char*) buffer, c);
+            if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
+                int cls = bytestoint(buffer, (int) c);
+                if (!first) cout << " ";
+                cout << classes[cls];
+                first = false;
+            }
         }
     }
     IN->close();
-    delete IN;
-    if (!eol) cout << endl; //final endline not in corpus (which is good, but we want it outputted anyhow)     
     cerr << "Processed " << linenumber  << " lines" << endl;               
 } 
 	
