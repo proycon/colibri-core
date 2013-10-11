@@ -257,7 +257,7 @@ int main( int argc, char *argv[] ) {
         const Pattern subngram = *iter2;
     	cout << "'" << subngram.decode(classdecoder) << "'" << endl;
     }    	 
-	cerr << "getgaps: " << endl;
+	cerr << "Gaps: " << endl;
 	vector<pair<int,int> > gaps6;
 	skipgram6.gaps(gaps6);
 	for (vector<pair<int,int >>::iterator iter2 = gaps6.begin(); iter2 != gaps6.end(); iter2++) {
@@ -325,9 +325,9 @@ int main( int argc, char *argv[] ) {
         const Pattern subngram = *iter2;
     	cout << "'" << subngram.decode(classdecoder) << "'" << endl;
     }    	 
-	cerr << "getgaps: " << endl;
+	cerr << "gaps: " << endl;
 	gaps.clear();
-	skipgram8.gaps(gaps);
+	skipgram8.gaps(gaps); //TODO: FIX!!
 	for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); iter2++) {
 	    cout << iter2->first << ':' << iter2->second << endl; 
 	}
