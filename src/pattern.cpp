@@ -650,23 +650,23 @@ Pattern Pattern::extractskipcontent(Pattern & instance) const {
     unsigned char a = 128;
     const Pattern skip = Pattern(&a,1);
 
-    vector<Pattern> subngrams;
-    vector<int> skipcontent_skipref;
-    int cursor = 0;
     std::vector<std::pair<int,int> >::iterator iter = gapcontainer.begin();
     Pattern subngram = Pattern(instance,iter->first, iter->second);
     Pattern pattern = subngram;
-    do {  
-        cursor = iter->first + iter->second;
+    int cursor = iter->first + iter->second;
+    iter++;
+    while (iter != gapcontainer.end()) {  
         if (cursor > 0) {
-            for (int i = 0; i < iter->first - cursor; i++) {
+            const int skipsize = iter->first - cursor;
+            for (int i = 0; i < skipsize; i++) {
                 pattern = pattern + skip;
             }
         }    
         subngram = Pattern(instance,iter->first, iter->second);
         pattern = pattern + subngram;
-
-    } while (iter != gapcontainer.end());
+        cursor = iter->first + iter->second;
+        iter++;
+    }
     return pattern;
 }
 
