@@ -615,20 +615,18 @@ int Pattern::gaps(vector<pair<int,int> > & container) const {
 
     const int _n = n();
 
-    found = 0;
     //compute inverse:
     int begin = 0;
     for (vector<pair<int,int>>::iterator iter = partscontainer.begin(); iter != partscontainer.end(); iter++) {
         if (iter->first > begin) {
             container.push_back(pair<int,int>(begin,iter->first - begin));
-            begin = iter->first + iter->second;
-            found++;
         }
+        begin = iter->first + iter->second;
     }
     if (begin != _n) {
         container.push_back(pair<int,int>(begin,_n - begin));
     }
-    return found;
+    return container.size();
 }
 
 Pattern Pattern::extractskipcontent(Pattern & instance) const {
