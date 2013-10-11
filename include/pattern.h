@@ -61,7 +61,7 @@ class Pattern {
     public:
      unsigned char * data;
 
-     Pattern();
+     Pattern() { data = NULL; }
      Pattern(const unsigned char* dataref, const int size); //low-level constructor
      Pattern(const Pattern& ref, int begin, int length); //slice constructor
      Pattern(const Pattern& ref); //copy constructor

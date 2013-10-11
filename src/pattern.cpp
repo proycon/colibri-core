@@ -418,7 +418,7 @@ bool Pattern::operator>(const Pattern & other) const {
     return (s > s2);
 }
 
-Pattern & Pattern::operator =(Pattern other) { //(note: argument passed by value!
+Pattern & Pattern::operator =(Pattern other) { //(note: argument passed by value!)
         //delete old data
         if (data != NULL) delete [] data;
         
