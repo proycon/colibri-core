@@ -369,7 +369,10 @@ Pattern::Pattern(const Pattern& ref) { //copy constructor
 }
 
 Pattern::~Pattern() {
-    delete[] data;
+    if (data != NULL) {
+        delete[] data;
+        data = NULL;
+    }
 }
 
 
@@ -418,19 +421,27 @@ bool Pattern::operator>(const Pattern & other) const {
     return (s > s2);
 }
 
-Pattern & Pattern::operator =(Pattern other) { //(note: argument passed by value!)
-        //delete old data
-        if (data != NULL) delete [] data;
-        
-        //set new data
-        const int s = other.bytesize();        
-        data = new unsigned char[s];   
-        for (int i = 0; i < s; i++) {
-            data[i] = other.data[i];
-        }  
- 
-        // by convention, always return *this (for chaining)
-        return *this;
+Pattern & Pattern::operator =(const Pattern other) { //(note: argument passed by value!)
+    //delete old data
+    if (data != NULL) {
+        delete[] data;
+        data = NULL;
+    }
+    
+    //set new data
+    const int s = other.bytesize();        
+    if (s == 0) {
+        cerr << "Pattern operator=: other pattern is empty!" << endl;
+        throw InternalError();
+    }
+    data = new unsigned char[s+1];   
+    for (int i = 0; i < s; i++) {
+        data[i] = other.data[i];
+    }  
+    data[s] = ENDMARKER;
+
+    // by convention, always return *this (for chaining)
+    return *this;
 }
 
 Pattern Pattern::operator +(const Pattern & other) const {

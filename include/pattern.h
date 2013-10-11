@@ -88,7 +88,7 @@ class Pattern {
 
      bool operator==(const Pattern & other) const;
      bool operator!=(const Pattern & other) const;
-     Pattern & operator =(Pattern other);   
+     Pattern & operator =(const Pattern other);   
 
      //patterns are sortable
      bool operator<(const Pattern & other) const;

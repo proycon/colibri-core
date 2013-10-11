@@ -53,6 +53,7 @@ int main( int argc, char *argv[] ) {
 	cerr << "N: " << (int) ngram2.n() << endl;
 	cerr << "Bytesize: " << (int) ngram2.bytesize() << endl;
 
+
 	cerr << "----------------------------------------------------" << endl;
     cerr << "Subgrams of ngram #1: " << endl;
 
@@ -83,6 +84,19 @@ int main( int argc, char *argv[] ) {
   	cerr << "Testing occurrence of substring 'or': " << (ngram.contains(subngram4) == 1) << endl;  
     
     
+	cerr << "----------------------------------------------------" << endl;
+    cerr << "Ngram addition: " << endl;
+    Pattern ngramconc = subngram3;
+    ngramconc = ngramconc + subngram;
+    ngramconc = ngramconc + subngram3;
+    cerr << "Ngram: " << ngramconc.decode(classdecoder) << endl;
+	cerr << "N: " << (int) ngramconc.n() << endl;
+	cerr << "Bytesize: " << (int) ngramconc.bytesize() << endl;
+	cerr << "Raw: " << endl;
+    ngramconc.out();
+
+    
+
     cerr << "----------------------------------------------------" << endl;
     cerr << "Encoding skip-gram from string input" << endl;
 	string querystring2 = "To {*1*} or {*1*} to be";
