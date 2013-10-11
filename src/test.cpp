@@ -69,24 +69,25 @@ int main( int argc, char *argv[] ) {
     
     string substring = "or not";     	
   	Pattern subngram = encoder.input2pattern(substring, true);
-  	cerr << "Testing occurrence of substring 'or not': " << (ngram.contains(subngram) == 1) << endl; 	
+  	cerr << "Testing occurrence of substring 'or not'? " << (ngram.contains(subngram) == 1) << endl; 	
     
     string substring2 = "to not";     	
   	Pattern subngram2 = encoder.input2pattern(substring2, true);
-  	cerr << "Testing non-occurrence of substring 'to not': " << (ngram.contains(subngram2) == 0) << endl;
+  	cerr << "Testing non-occurrence of substring 'to not'? " << (ngram.contains(subngram2) == 0) << endl;
     
     string substring3 = "to be";     	
   	Pattern subngram3 = encoder.input2pattern(substring3, true);
-  	cerr << "Testing occurrence of substring 'to be': " << (ngram.contains(subngram3) == 1) << endl;    
+  	cerr << "Testing occurrence of substring 'to be'? " << (ngram.contains(subngram3) == 1) << endl;    
     
     string substring4 = "or";     	
   	Pattern subngram4 = encoder.input2pattern(substring4, true);
-  	cerr << "Testing occurrence of substring 'or': " << (ngram.contains(subngram4) == 1) << endl;  
+  	cerr << "Testing occurrence of substring 'or'? " << (ngram.contains(subngram4) == 1) << endl;  
     
     
 	cerr << "----------------------------------------------------" << endl;
     cerr << "Ngram addition: " << endl;
-    Pattern ngramconc = subngram3;
+    const Pattern ngrambegin = Pattern(ngram,0,2);
+    Pattern ngramconc = ngrambegin; 
     ngramconc = ngramconc + subngram;
     ngramconc = ngramconc + subngram3;
     cerr << "Ngram: " << ngramconc.decode(classdecoder) << endl;
@@ -94,6 +95,14 @@ int main( int argc, char *argv[] ) {
 	cerr << "Bytesize: " << (int) ngramconc.bytesize() << endl;
 	cerr << "Raw: " << endl;
     ngramconc.out();
+	cerr << "----------------------------------------------------" << endl;
+    cerr << "Ngram comparison: " << endl;
+    cerr << "Equality? " << (int) (ngramconc == ngram) << endl;
+    cerr << "Non-equality? " << (int) (ngramconc != ngrambegin) << endl;
+    cerr << "greater than? " << (int) (subngram2 > subngram3) << endl;
+    cerr << "greater than? " << (int) (subngram3 > subngram4) << endl;
+    cerr << "less than? " << (int) (subngram3 < subngram2) << endl;
+    cerr << "Begin is less? " << (int) (ngrambegin < ngramconc) << endl;
 
     
 
