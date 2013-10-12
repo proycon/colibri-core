@@ -339,7 +339,7 @@ class PatternModel: public MapType {
         int prune(int threshold,int _n=0) {
             int pruned = 0;
             PatternModel::iterator iter = this->begin(); 
-            do {
+            while (iter != this->end()) {
                 const Pattern pattern = iter->first;
                 if (( (_n == 0) || (pattern.n() == (unsigned int) _n) )&& (occurrencecount(pattern) < threshold)) {
                     iter = this->erase(iter); 
@@ -347,7 +347,7 @@ class PatternModel: public MapType {
                 } else {
                     iter++;
                 }
-            } while(iter != this->end());       
+            };       
 
             if (pruned) prunereverseindex();
             return pruned;
@@ -361,7 +361,7 @@ class PatternModel: public MapType {
             //prune patterns from reverse index if they don't exist anymore
             int pruned = 0;
             std::multimap<IndexReference,Pattern>::iterator iter = reverseindex.begin(); 
-            do {
+            while (iter != reverseindex.end()) {
                 const Pattern pattern = iter->second;
                 if (( (_n == 0) || (pattern.n() == (unsigned int) _n) ) && (!this->has(pattern))) {
                     iter = reverseindex.erase(iter);
@@ -369,7 +369,7 @@ class PatternModel: public MapType {
                 } else {
                     iter++;
                 }
-            } while (iter != reverseindex.end());
+            }
             return pruned;
         }
 
@@ -549,7 +549,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         if ((minskiptypes <=1)  && (minskiptokens <= threshold)) return pruned; //nothing to do
 
         typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); 
-        do {
+        while(iter != this->end()) { 
             const Pattern pattern = iter->first;
             if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == FIXEDSKIPGRAM)) {
                 std::unordered_set<Pattern> skipcontent = getskipcontent(pattern);
@@ -575,7 +575,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 }
             }
             iter++;
-        } while(iter != this->end());       
+        }
         if (pruned) this->prunereverseindex();
         return pruned;
     } 
