@@ -103,12 +103,12 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
 
 class PatternModelOptions {
     public:
-        bool MINTOKENS;
-        bool MAXLENGTH;
+        int MINTOKENS;
+        int MAXLENGTH;
         
         bool DOFIXEDSKIPGRAMS;
-        bool MINSKIPTYPES; 
-        bool MINSKIPTOKENS;
+        int MINSKIPTYPES; 
+        int MINSKIPTOKENS;
 
         bool DOREVERSEINDEX;
 
@@ -194,6 +194,7 @@ class PatternModel: public MapType {
             uint32_t sentence = 0;
             std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
 
+            std::cerr << "Training patternmodel" << std::endl;
             for (int n = 1; n <= options.MAXLENGTH; n++) {
                 in->seekg(0);
                 std::cerr << "Counting " << n << "-grams" << std::endl; 
