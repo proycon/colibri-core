@@ -45,6 +45,10 @@ int main( int argc, char *argv[] ) {
 
     
 	cerr << "----------------------------------------------------" << endl;
+    cerr << "Copy constructor" << endl;
+    Pattern ngramcopy = Pattern(ngram);
+    cerr << endl;
+    
 
     cerr << "Slice constructor, specific subngram" << endl;
     Pattern ngram2 = Pattern(ngram, 2, 2);
