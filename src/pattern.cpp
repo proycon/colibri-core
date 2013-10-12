@@ -645,7 +645,8 @@ int Pattern::gaps(vector<pair<int,int> > & container) const {
         } else {
             break;
         }
-   
+    } 
+
     if (endskip) container.push_back(pair<int,int>(_n - endskip,endskip));
     return container.size();
 }
