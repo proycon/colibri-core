@@ -611,20 +611,10 @@ const unsigned int Pattern::skipcount() const {
 int Pattern::gaps(vector<pair<int,int> > & container) const {
     vector<pair<int,int> > partscontainer;
     int found = parts(partscontainer);
-    if (found == 1) return 0;
 
     const int _n = n();
     const int bs = bytesize();
     
-    int beginskip = 0;
-    for (int i = 0; i < bs; i++) {
-        if ((data[i] == FIXEDGAP) || (data[i] == DYNAMICGAP)) {
-            beginskip++;
-        } else {
-            break;
-        }
-    }
-    if (beginskip) container.push_back(pair<int,int>(0,beginskip));
 
     //compute inverse:
     int begin = 0;
