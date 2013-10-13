@@ -227,7 +227,6 @@ class PatternModel: public MapType {
                         if (found) {
                             ValueType * data = getdata(pattern);
                             if (data != NULL) {
-                                std::cerr << *data << std::endl;
                                 add(pattern, data, ref );
                             } else {
                                 std::cerr << "Data not found!" << std::endl;
@@ -320,7 +319,11 @@ class PatternModel: public MapType {
         
         virtual ValueType * getdata(const Pattern & pattern) { 
             typename MapType::iterator iter = this->find(pattern);
-            return &(iter->second); 
+            if (iter == this->end()) {
+                return NULL;
+            } else {
+                return &(iter->second); 
+            }
         }
         
         int types() const { return totaltypes; }
