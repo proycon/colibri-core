@@ -254,7 +254,10 @@ class PatternModel: public MapType {
                                     std::vector<std::pair<int,int>> * gapconfiguration = &(*iter);
                                         //add skips
                                         const Pattern skippattern = pattern.addfixedskips(*gapconfiguration);                            
-
+                                        if (skippattern.n() != n) {
+                                            std::cerr << "Generated invalid skipgram, n=" << skippattern.n() << ", expected " << n << std::endl;
+                                            throw InternalError();
+                                        }
 
                                         //test whether parts occur in model, otherwise skip
                                         //can't occur either and we can discard it
@@ -272,6 +275,7 @@ class PatternModel: public MapType {
                                         if (skippattern_valid) {
                                             ValueType * data = getdata(skippattern);
                                             add(skippattern, data, ref );
+                                            foundcount++;
                                             if (options.DOREVERSEINDEX) {
                                                 reverseindex.insert(std::pair<IndexReference,Pattern>(ref,skippattern));
                                             }
@@ -288,11 +292,16 @@ class PatternModel: public MapType {
                     if (n > this->maxn) this->maxn = n;
                     if (n < this->minn) this->minn = n;
                 }
-                std::cerr << " Found " << foundcount << "...Pruning...";
+                std::cerr << " Found " << foundcount << "...";
                 if (n == 1) totaltypes += this->size(); //total unigrams, also those not in model
                 int pruned = this->prune(options.MINTOKENS,n);
-                pruned += this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, options.MINSKIPTOKENS, n);
-                std::cerr << "pruned " << pruned << std::endl;
+                std::cerr << "pruned " << pruned;
+                int prunedextra = this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, options.MINSKIPTOKENS, n);
+                if (prunedextra) {
+                    std::cerr << " plus " << prunedextra << " extra skipgrams (=" << pruned + prunedextra << ")" << std::endl;
+                } else {
+                    std::cerr << std::endl;
+                }
 
             }
         }
@@ -379,7 +388,10 @@ class PatternModel: public MapType {
             while (iter != this->end()) {
                 const Pattern pattern = iter->first;
                 if (( (_n == 0) || (pattern.n() == (unsigned int) _n) )&& (occurrencecount(pattern) < threshold)) {
+                    //std::cerr << occurrencecount(pattern) << std::endl;
+                    //std::cerr << "preprune:" << this->size() << std::endl;
                     iter = this->erase(iter); 
+                    //std::cerr << "postprune:" << this->size() << std::endl;
                     pruned++;
                 } else {
                     iter++;
@@ -622,7 +634,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         occurrences.insert(ref);
                     }
                 }                
-                if ((int) occurrences.size() < minskiptokens) {
+                const int s = occurrences.size();
+                if ((s < minskiptokens) || (s < threshold)) {
                     iter = this->erase(iter);
                     pruned++;
                     continue;
