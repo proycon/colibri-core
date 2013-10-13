@@ -726,11 +726,15 @@ Pattern Pattern::replace(int begin, int length, const Pattern & replacement) con
     }
 }
 
+
 Pattern Pattern::addfixedskips(std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     Pattern pattern = *this;
+    unsigned char fixedgapbuffer[101];
+    for (int i = 0; i< 100; i++) fixedgapbuffer[i] = 128;
     for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
-        pattern = pattern.replace(iter->first, iter->second, FIXEDGAPPATTERN);
+        const Pattern replacement = Pattern(fixedgapbuffer,iter->second);
+        pattern = pattern.replace(iter->first, iter->second, replacement);
     }
     return pattern;
 }

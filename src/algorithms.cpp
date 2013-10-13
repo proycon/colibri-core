@@ -4,7 +4,7 @@
 using namespace std;
 
 
-vector< pair<int,int> > get_consecutive_gaps(const int n, const int leftmargin=0, const int rightmargin=0) {
+vector< pair<int,int> > get_consecutive_gaps(const int n, const int leftmargin=1, const int rightmargin=1) {
     vector< pair<int,int> > gaps;
     int begin = leftmargin;
     while (begin < n) {
