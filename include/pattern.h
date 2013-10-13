@@ -167,7 +167,6 @@ namespace std {
 
 
 /******************** IndexReference **************************/
-
 class IndexReference {
     /* Reference to a position in the corpus */
    public:
@@ -198,6 +197,7 @@ class IndexReference {
     }
     bool operator==(const IndexReference &other) const { return ( (sentence == other.sentence) && (token == other.token)); };
     bool operator!=(const IndexReference &other) const { return ( (sentence != other.sentence) || (token != other.token)); };
+    IndexReference operator+(const int other) const { return IndexReference(sentence, token+ other); };
     
     std::string tostring() const {
         return std::to_string(sentence) + ":" + std::to_string(token);

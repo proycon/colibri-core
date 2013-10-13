@@ -439,7 +439,7 @@ int main( int argc, char *argv[] ) {
     std::string outputfilename = "/tmp/data.colibri.patternmodel";
     unindexedmodel.train(infilename, options);
     cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
-    //unindexedmodel.print(&std::cerr, classdecoder2);
+    unindexedmodel.print(&std::cerr, classdecoder2);
 
 
     cerr << endl;
@@ -448,6 +448,8 @@ int main( int argc, char *argv[] ) {
     indexedmodel.train(infilename, options);
     cerr << "Found " << indexedmodel.size() << " patterns, " << indexedmodel.types() << " types, " << indexedmodel.tokens() << " tokens" << endl;
     indexedmodel.print(&std::cerr, classdecoder2);
+    cerr << endl;
+    indexedmodel.report(&std::cerr);
 
 
 

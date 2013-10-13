@@ -250,37 +250,36 @@ class PatternModel: public MapType {
                             if (options.DOFIXEDSKIPGRAMS) {
                                 //loop over all possible gap configurations
                                 for (std::vector<std::vector<std::pair<int,int>>>::iterator iter =  gapconf[n].begin(); iter != gapconf[n].end(); iter++) {
-                                    //for (vector<pair<int,int>>::iterator iter2 =  iter->begin(); iter2 != iter->end(); iter2++) {
                                     std::vector<std::pair<int,int>> * gapconfiguration = &(*iter);
-                                        //add skips
-                                        const Pattern skippattern = pattern.addfixedskips(*gapconfiguration);                            
-                                        if (skippattern.n() != n) {
-                                            std::cerr << "Generated invalid skipgram, n=" << skippattern.n() << ", expected " << n << std::endl;
-                                            throw InternalError();
-                                        }
 
-                                        //test whether parts occur in model, otherwise skip
-                                        //can't occur either and we can discard it
-                                        bool skippattern_valid = true;
-                                        std::vector<Pattern> parts;
-                                        skippattern.parts(parts);
-                                        for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
-                                            const Pattern part = *iter3;
-                                            if (!this->has(part)) {
-                                                skippattern_valid = false;
-                                                break;
-                                            }
-                                        }
+                                    //add skips
+                                    const Pattern skippattern = pattern.addfixedskips(*gapconfiguration);                            
+                                    if (skippattern.n() != n) {
+                                        std::cerr << "Generated invalid skipgram, n=" << skippattern.n() << ", expected " << n << std::endl;
+                                        throw InternalError();
+                                    }
 
-                                        if (skippattern_valid) {
-                                            ValueType * data = getdata(skippattern);
-                                            add(skippattern, data, ref );
-                                            foundcount++;
-                                            if (options.DOREVERSEINDEX) {
-                                                reverseindex.insert(std::pair<IndexReference,Pattern>(ref,skippattern));
-                                            }
+                                    //test whether parts occur in model, otherwise skip
+                                    //can't occur either and we can discard it
+                                    bool skippattern_valid = true;
+                                    std::vector<Pattern> parts;
+                                    skippattern.parts(parts);
+                                    for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
+                                        const Pattern part = *iter3;
+                                        if (!this->has(part)) {
+                                            skippattern_valid = false;
+                                            break;
                                         }
-                                    //}
+                                    }
+
+                                    if (skippattern_valid) {
+                                        ValueType * data = getdata(skippattern);
+                                        add(skippattern, data, ref );
+                                        foundcount++;
+                                        if (options.DOREVERSEINDEX) {
+                                            reverseindex.insert(std::pair<IndexReference,Pattern>(ref,skippattern));
+                                        }
+                                    }
                                 }
                             }
 
@@ -484,17 +483,18 @@ class PatternModel: public MapType {
                             cats.insert(pattern.category());
                         }
                         if ((int) pattern.size() == n) {
-                            count++;
+                            count += this->coverage(pattern);
                             tmp.insert(pattern);
                         }
                         if (n==1) cats.insert(pattern.category());
                     }
-                    *OUT << " n=" << n << "                       "  << std::setw(10) << count << std::setw(10) << tmp.size() << std::endl; 
+                    *OUT << " n=" << n << "                      "  << std::setw(10) << count << std::setw(10) << tmp.size() << std::endl; 
                     if (n == 1) {
                         std::set<int>::reverse_iterator iter = sizes.rbegin();
                         maxn = *iter; //get last item from sizes
                     }
                 }
+                n++;
             } while (n < maxn);
 
             *OUT << "Per category:" << std::endl;
@@ -509,12 +509,12 @@ class PatternModel: public MapType {
                             tmp.insert(pattern);
                         }
                     }
-                    if (cat == 0) {
-                        *OUT << "N-GRAMS                          ";
+                    if (cat == 1) {
+                        *OUT << " N-GRAMS                  ";
                     } else if (cat == 2) {
-                        *OUT << "FIXED-SKIPGRAMS                  ";
+                        *OUT << " FIXED-SKIPGRAMS          ";
                     } else if (cat == 3) {
-                        *OUT << "DYNAMIC-SKIPGRAMS                ";
+                        *OUT << " DYNAMIC-SKIPGRAMS        ";
                     }
                     *OUT << std::setw(10) << count << std::setw(10) << tmp.size() << std::endl; 
                 }
@@ -646,6 +646,102 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         if (pruned) this->prunereverseindex();
         return pruned;
     } 
+
+    void report(std::ostream * OUT) {
+        *OUT << std::setiosflags(std::ios::fixed) << std::setprecision(4) << std::endl;       
+        *OUT << "REPORT" << std::endl;
+        *OUT << "----------------------------------" << std::endl;
+        *OUT << "                          " << std::setw(10) << "PATTERNS" << std::setw(10) << "TOKENS" << std::setw(10) << "TYPES" << std::setw(10) << std::endl;
+        *OUT << "Total:                    " << std::setw(10) << this->size() << std::setw(10) << this->tokens() << std::setw(10) << this->types() <<  std::endl;
+        std::set<IndexReference> coverage;
+        int coveredtypes = 0;
+        for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+            const Pattern pattern = iter->first;
+            const int _n = pattern.n();
+            IndexedData * data = getdata(pattern);
+            for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {
+                const IndexReference ref = *iter2;
+                for (int i = 0; i < _n; i++) coverage.insert(ref+i);
+            }
+            if (_n == 1) coveredtypes++;
+        }
+        int coveredtokens = coverage.size();
+        *OUT << "Uncovered:                " << std::setw(10) << 0 << std::setw(10) << this->tokens() - coveredtokens << std::setw(10) << this->types() - coveredtypes <<  std::endl;
+        *OUT << "Covered:                  " << std::setw(10) << this->size() << std::setw(10) << coveredtokens << std::setw(10) << this->types() <<  std::endl;
+        
+        
+        *OUT << "Per n:" << std::endl;
+        std::set<int> sizes;
+        std::set<int> cats;
+        int maxn = 1;
+        int n = 1;
+        do {
+            int count = 0;
+            coverage.clear();
+            int coveredtypes_n = 0;
+            int totalpatterns_n = 0;
+            if ((n == 1) || (sizes.count(n))) { 
+                for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+                    const Pattern pattern = iter->first;
+                    const int _n = pattern.n();
+                    if (n == 1) {
+                        sizes.insert(pattern.size());
+                        cats.insert(pattern.category());
+                    }
+                    if ((int) pattern.size() == n) {
+                        IndexedData * data = getdata(pattern);
+                        //std::cerr << data->count() << std::endl;
+                        for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {
+                            const IndexReference ref = *iter2;
+                            for (int i = 0; i < _n; i++) coverage.insert(ref+i);
+                        }
+                        if (_n == 1) coveredtypes_n++;
+
+                        totalpatterns_n++;
+                    }
+                    if (n==1) cats.insert(pattern.category());
+                }
+                *OUT << " n=" << n << "                      " << std::setw(10) << totalpatterns_n << std::setw(10) << coverage.size() << std::setw(10) << coveredtypes_n << std::endl; 
+                if (n == 1) {
+                    std::set<int>::reverse_iterator iter = sizes.rbegin();
+                    maxn = *iter; //get last item from sizes
+                }
+            }
+            n++;
+        } while (n < maxn);
+
+        *OUT << "Per category:" << std::endl;
+        for (int cat = 1; cat <= 3; cat++) {
+            if (cats.count(cat)) {
+                int totalpatterns_c = 0;
+                int coveredtypes_c = 0;
+                coverage.clear();
+                for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+                    const Pattern pattern = iter->first;
+                    const int _n = pattern.n();
+                    if (pattern.category() == cat) {
+                        IndexedData * data = getdata(pattern);
+                        for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {
+                            const IndexReference ref = *iter2;
+                            for (int i = 0; i < _n; i++) coverage.insert(ref+i);
+                        }
+                        if (_n == 1) coveredtypes_c++;
+
+                        totalpatterns_c++;
+                    }
+                }
+                if (cat == 1) {
+                    *OUT << " N-GRAMS                  ";
+                } else if (cat == 2) {
+                    *OUT << " FIXED-SKIPGRAMS          ";
+                } else if (cat == 3) {
+                    *OUT << " DYNAMIC-SKIPGRAMS        ";
+                }
+                *OUT << std::setw(10) << totalpatterns_c << std::setw(10) << coverage.size() << std::setw(10) << coveredtypes_c << std::endl; 
+            }
+
+        }
+    }
 };
 
 
