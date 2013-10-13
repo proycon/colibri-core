@@ -115,6 +115,8 @@ class PatternModelOptions {
         int MINSKIPTOKENS;
 
         bool DOREVERSEINDEX;
+        
+        bool DEBUG;
 
         PatternModelOptions() {
             MINTOKENS = 2;
@@ -125,6 +127,8 @@ class PatternModelOptions {
             DOFIXEDSKIPGRAMS = false;
 
             DOREVERSEINDEX = false; //only for indexed models
+
+            DEBUG = false;
         }
 
 
@@ -206,70 +210,73 @@ class PatternModel: public MapType {
 
                 if ((options.DOFIXEDSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
 
-                Pattern line = Pattern(in);
-                if (n==1) totaltokens += line.size();
-                std::vector<std::pair<Pattern,int>> ngrams;
-                line.ngrams(ngrams, n);
+                while (in->good()) {
+                    Pattern line = Pattern(in);
+                    if (!in->good()) break;
+                    if (n==1) totaltokens += line.size();
+                    std::vector<std::pair<Pattern,int>> ngrams;
+                    line.ngrams(ngrams, n);
 
-                for (std::vector<std::pair<Pattern,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
-                    const Pattern pattern = iter->first;
-                    if (pattern.category() == NGRAM) {
-                        const IndexReference ref = IndexReference(sentence, iter->second);
-                        bool found = true;
-                        if (n > 1) {
-                            //check if sub-parts were counted
-                            std::vector<Pattern> subngrams;
-                            pattern.ngrams(subngrams,n-1);
-                            for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                                const Pattern subpattern = *iter2;
-                                if ((subpattern.category() == NGRAM) && (!this->has(subpattern))) {
-                                    found = false;
-                                    break;
+                    for (std::vector<std::pair<Pattern,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
+                        const Pattern pattern = iter->first;
+                        if (pattern.category() == NGRAM) {
+                            const IndexReference ref = IndexReference(sentence, iter->second);
+                            bool found = true;
+                            if (n > 1) {
+                                //check if sub-parts were counted
+                                std::vector<Pattern> subngrams;
+                                pattern.ngrams(subngrams,n-1);
+                                for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                    const Pattern subpattern = *iter2;
+                                    if ((subpattern.category() == NGRAM) && (!this->has(subpattern))) {
+                                        found = false;
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                        if (found) {
-                            ValueType * data = getdata(pattern);
-                            foundcount++;
-                            add(pattern, data, ref );
-                            if (options.DOREVERSEINDEX) {
-                                reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
-                            }
-                        }                
-                        if (options.DOFIXEDSKIPGRAMS) {
-                            //loop over all possible gap configurations
-                            for (std::vector<std::vector<std::pair<int,int>>>::iterator iter =  gapconf[n].begin(); iter != gapconf[n].end(); iter++) {
-                                //for (vector<pair<int,int>>::iterator iter2 =  iter->begin(); iter2 != iter->end(); iter2++) {
-                                std::vector<std::pair<int,int>> * gapconfiguration = &(*iter);
-                                    //add skips
-                                    const Pattern skippattern = pattern.addfixedskips(*gapconfiguration);                            
+                            if (found) {
+                                ValueType * data = getdata(pattern);
+                                foundcount++;
+                                add(pattern, data, ref );
+                                if (options.DOREVERSEINDEX) {
+                                    reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
+                                }
+                            }                
+                            if (options.DOFIXEDSKIPGRAMS) {
+                                //loop over all possible gap configurations
+                                for (std::vector<std::vector<std::pair<int,int>>>::iterator iter =  gapconf[n].begin(); iter != gapconf[n].end(); iter++) {
+                                    //for (vector<pair<int,int>>::iterator iter2 =  iter->begin(); iter2 != iter->end(); iter2++) {
+                                    std::vector<std::pair<int,int>> * gapconfiguration = &(*iter);
+                                        //add skips
+                                        const Pattern skippattern = pattern.addfixedskips(*gapconfiguration);                            
 
 
-                                    //test whether parts occur in model, otherwise skip
-                                    //can't occur either and we can discard it
-                                    bool skippattern_valid = true;
-                                    std::vector<Pattern> parts;
-                                    skippattern.parts(parts);
-                                    for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
-                                        const Pattern part = *iter3;
-                                        if (!this->has(part)) {
-                                            skippattern_valid = false;
-                                            break;
+                                        //test whether parts occur in model, otherwise skip
+                                        //can't occur either and we can discard it
+                                        bool skippattern_valid = true;
+                                        std::vector<Pattern> parts;
+                                        skippattern.parts(parts);
+                                        for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
+                                            const Pattern part = *iter3;
+                                            if (!this->has(part)) {
+                                                skippattern_valid = false;
+                                                break;
+                                            }
                                         }
-                                    }
 
-                                    if (skippattern_valid) {
-                                        ValueType * data = getdata(skippattern);
-                                        add(skippattern, data, ref );
-                                        if (options.DOREVERSEINDEX) {
-                                            reverseindex.insert(std::pair<IndexReference,Pattern>(ref,skippattern));
+                                        if (skippattern_valid) {
+                                            ValueType * data = getdata(skippattern);
+                                            add(skippattern, data, ref );
+                                            if (options.DOREVERSEINDEX) {
+                                                reverseindex.insert(std::pair<IndexReference,Pattern>(ref,skippattern));
+                                            }
                                         }
-                                    }
-                                //}
+                                    //}
+                                }
                             }
-                        }
 
-                    }           
+                        }           
+                    }
                 }
 
                 if (foundcount) {
@@ -281,6 +288,7 @@ class PatternModel: public MapType {
                 int pruned = this->prune(options.MINTOKENS,n);
                 pruned += this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, options.MINSKIPTOKENS, n);
                 std::cerr << "pruned " << pruned << std::endl;
+
             }
         }
         void train(const std::string filename, const PatternModelOptions options) {
