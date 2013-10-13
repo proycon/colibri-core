@@ -226,7 +226,13 @@ class PatternModel: public MapType {
                         }
                         if (found) {
                             ValueType * data = getdata(pattern);
-                            add(pattern, data, ref );
+                            if (data != NULL) {
+                                std::cerr << *data << std::endl;
+                                add(pattern, data, ref );
+                            } else {
+                                std::cerr << "Data not found!" << std::endl;
+                                throw InternalError();
+                            } 
                             if (options.DOREVERSEINDEX) {
                                 reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
                             }
