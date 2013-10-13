@@ -414,9 +414,14 @@ int main( int argc, char *argv[] ) {
     "in thy orisons be all my sins remember'd .\n";
     *out << string(poem);
     out->close();
+
     cerr << "Class encoding corpus..." << endl;
     system("colibri-classencode /tmp/hamlet.txt");
 
+
+
+    cerr << "Class decoding corpus..." << endl;
+    system("colibri-classdecode -c /tmp/hamlet.colibri.cls -f /tmp/hamlet.colibri.dat");
 
 
     PatternModelOptions options;
