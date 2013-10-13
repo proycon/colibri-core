@@ -96,6 +96,10 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         return value.data.size();
     }
     void add(IndexedData * value, const IndexReference & ref ) const {
+        if (value == NULL) {
+            std::cerr << "ValueHandler: Value is NULL!" << std::endl;
+            throw InternalError();
+        }
         value->insert(ref);
     }
 };
@@ -226,12 +230,7 @@ class PatternModel: public MapType {
                         }
                         if (found) {
                             ValueType * data = getdata(pattern);
-                            if (data != NULL) {
-                                add(pattern, data, ref );
-                            } else {
-                                std::cerr << "Data not found!" << std::endl;
-                                throw InternalError();
-                            } 
+                            add(pattern, data, ref );
                             if (options.DOREVERSEINDEX) {
                                 reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
                             }
@@ -347,6 +346,10 @@ class PatternModel: public MapType {
         }
 
         virtual int add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
+            if (value == NULL) {
+                (*this)[pattern]; //creates the data point if it didn't exist yet
+                value = getdata(pattern);
+            }
             this->valuehandler.add(value, ref);
         }
 
@@ -490,6 +493,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                                                                    
 
     int add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
+        if (value == NULL) {
+            (*this)[pattern]; //creates the data point if it didn't exist yet
+            value = getdata(pattern);
+        }
         this->valuehandler.add(value, ref);
     }
     
