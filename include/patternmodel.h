@@ -200,19 +200,24 @@ class PatternModel: public MapType {
         void train(std::istream * in , const PatternModelOptions options) {
             uint32_t sentence = 0;
             std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
+            if (!in->good()) {
+                std::cerr << "ERROR: inputstream not good, file does not exist?" << std::endl;
+                throw InternalError();
+            }
 
             std::cerr << "Training patternmodel" << std::endl;
             for (int n = 1; n <= options.MAXLENGTH; n++) {
                 int foundcount = 0;
+                in->clear();
                 in->seekg(0);
                 std::cerr << "Counting " << n << "-grams" << std::endl; 
                 sentence++;
 
                 if ((options.DOFIXEDSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
 
-                while (in->good()) {
+                while (!in->eof()) {
                     Pattern line = Pattern(in);
-                    if (!in->good()) break;
+                    if (in->eof()) break;
                     if (n==1) totaltokens += line.size();
                     std::vector<std::pair<Pattern,int>> ngrams;
                     line.ngrams(ngrams, n);
@@ -223,6 +228,7 @@ class PatternModel: public MapType {
                             const IndexReference ref = IndexReference(sentence, iter->second);
                             bool found = true;
                             if (n > 1) {
+
                                 //check if sub-parts were counted
                                 std::vector<Pattern> subngrams;
                                 pattern.ngrams(subngrams,n-1);
