@@ -427,21 +427,27 @@ int main( int argc, char *argv[] ) {
 
     PatternModelOptions options;
     options.DOREVERSEINDEX = true;
-    options.DOFIXEDSKIPGRAMS = true;
+    options.DOFIXEDSKIPGRAMS = false;
 
     cerr << "Building unindexed model" << endl;
     PatternModel<uint32_t> unindexedmodel;
     classfile = "/tmp/hamlet.colibri.cls";
+    ClassDecoder classdecoder2 = ClassDecoder(classfile);
+
+    cerr << endl;
     std::string infilename = "/tmp/hamlet.colibri.dat";
     std::string outputfilename = "/tmp/data.colibri.patternmodel";
     unindexedmodel.train(infilename, options);
     cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
+    unindexedmodel.print(&std::cerr, classdecoder2);
 
 
+    cerr << endl;
     cerr << "Building indexed model" << endl;
     IndexedPatternModel<> indexedmodel;
     indexedmodel.train(infilename, options);
     cerr << "Found " << indexedmodel.size() << " patterns, " << indexedmodel.types() << " types, " << indexedmodel.tokens() << " tokens" << endl;
+    indexedmodel.print(&std::cerr, classdecoder2);
 
 
 }

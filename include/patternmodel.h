@@ -228,7 +228,6 @@ class PatternModel: public MapType {
                             const IndexReference ref = IndexReference(sentence, iter->second);
                             bool found = true;
                             if (n > 1) {
-
                                 //check if sub-parts were counted
                                 std::vector<Pattern> subngrams;
                                 pattern.ngrams(subngrams,n-1);
@@ -426,7 +425,7 @@ class PatternModel: public MapType {
         }
 
         void print(std::ostream * out, ClassDecoder & decoder) {
-            *out << "PATTERN\nCOUNT\tSIZE\tCOVERAGECOUNT\tCOVERAGE\tCATEGORY" << std::endl;
+            *out << "PATTERN\tCOUNT\tSIZE\tCOVERAGECOUNT\tCOVERAGE\tCATEGORY" << std::endl;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
                 const std::string pattern_s = pattern.tostring(decoder);
