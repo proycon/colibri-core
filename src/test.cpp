@@ -410,7 +410,7 @@ int main( int argc, char *argv[] ) {
     "And enterprises of great pitch and moment\n"
     "With this regard their currents turn awry ,\n"
     "And lose the name of action .\n"
-    "Soft you now! The fair Ophelia ! Nymph ,\n"
+    "Soft you now ! The fair Ophelia ! Nymph ,\n"
     "in thy orisons be all my sins remember'd .\n";
     *out << string(poem);
     out->close();
@@ -437,7 +437,7 @@ int main( int argc, char *argv[] ) {
     cerr << "Found " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
 
 
-    cerr << "Building nindexed model" << endl;
+    cerr << "Building indexed model" << endl;
     IndexedPatternModel<> indexedmodel;
     indexedmodel.train(infilename, options);
     cerr << "Found " << indexedmodel.types() << " types, " << indexedmodel.tokens() << " tokens" << endl;

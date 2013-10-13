@@ -314,7 +314,11 @@ class PatternModel: public MapType {
         virtual int minlength() const { return minn; };
         virtual int occurrencecount(const Pattern & pattern)  { 
             ValueType * data = getdata(pattern);
-            return this->valuehandler.count(*data); 
+            if (data != NULL) {
+                return this->valuehandler.count(*data); 
+            } else {
+                return 0;
+            }
         }
         
         virtual ValueType * getdata(const Pattern & pattern) { 
