@@ -137,7 +137,7 @@ class PatternModel: public MapType {
         unsigned char model_type;
         unsigned char model_version;
         uint64_t totaltokens; //INCLUDES TOKENS NOT COVERED BY THE MODEL!
-        uint64_t totaltypes; //INCLUDES TOKENS NOT COVERED BY THE MODEL!
+        uint64_t totaltypes; //TOTAL UNIGRAM TYPES, INCLUDING NOT COVERED BY THE MODEL!
 
         int maxn; 
         int minn; 
@@ -153,7 +153,6 @@ class PatternModel: public MapType {
                 if (n > maxn) maxn = n;
                 if (n < minn) minn = n;
             }
-            totaltypes = this->size();
         }
     public:
         PatternModel<ValueType,ValueHandler,MapType>() {
@@ -200,6 +199,7 @@ class PatternModel: public MapType {
 
             std::cerr << "Training patternmodel" << std::endl;
             for (int n = 1; n <= options.MAXLENGTH; n++) {
+                bool foundanything = false;
                 in->seekg(0);
                 std::cerr << "Counting " << n << "-grams" << std::endl; 
                 sentence++;
@@ -230,6 +230,7 @@ class PatternModel: public MapType {
                         }
                         if (found) {
                             ValueType * data = getdata(pattern);
+                            foundanything = true;
                             add(pattern, data, ref );
                             if (options.DOREVERSEINDEX) {
                                 reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
@@ -268,10 +269,15 @@ class PatternModel: public MapType {
                             }
                         }
 
-                    }            
+                    }           
+                    if (foundanything) {
+                        if (n > this->maxn) this->maxn = n;
+                        if (n < this->minn) this->minn = n;
+                    }
                 }
 
                 std::cerr << "Pruning..." << std::endl;
+                if (n == 1) totaltypes += this->size(); //total unigrams, also those not in model
                 this->prune(options.MINTOKENS,n);
                 this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, options.MINSKIPTOKENS, n);
             }
@@ -420,10 +426,20 @@ class PatternModel: public MapType {
         
         void report(std::ostream * OUT) {
             *OUT << std::setiosflags(std::ios::fixed) << std::setprecision(4) << std::endl;       
-            *OUT << "REPORT" << std::endl;
+            *OUT << "REPORT (total patterns=" << this->size() <<")" << std::endl;
             *OUT << "----------------------------------" << std::endl;
             *OUT << "                          " << std::setw(10) << "TOKENS" << std::setw(10) << "TYPES" << std::setw(10) << std::endl;
             *OUT << "Total:                    " << std::setw(10) << this->tokens() << std::setw(10) << this->types() <<  std::endl;
+            int coveredtokens = 0;
+            int coveredtypes = 0;
+            for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
+                const Pattern pattern = iter->first;
+                coveredtokens += occurrencecount(pattern);
+                if (pattern.n() == 1) coveredtypes += 1;
+
+            }
+            *OUT << "Uncovered:                " << std::setw(10) << this->tokens() - coveredtokens << std::setw(10) << this->types() - coveredtypes <<  std::endl;
+            *OUT << "Covered:                  " << std::setw(10) << coveredtokens << std::setw(10) << this->types() <<  std::endl;
             
             
             *OUT << "Per n:" << std::endl;
@@ -527,7 +543,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 skipcontent[p
             }*/
         }
-        this->totaltypes = this->size();
     }
     
     std::unordered_set<Pattern> getskipcontent(const Pattern & pattern) {

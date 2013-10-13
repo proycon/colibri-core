@@ -434,13 +434,13 @@ int main( int argc, char *argv[] ) {
     std::string infilename = "/tmp/hamlet.colibri.dat";
     std::string outputfilename = "/tmp/data.colibri.patternmodel";
     unindexedmodel.train(infilename, options);
-    cerr << "Found " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
+    cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
 
 
     cerr << "Building indexed model" << endl;
     IndexedPatternModel<> indexedmodel;
     indexedmodel.train(infilename, options);
-    cerr << "Found " << indexedmodel.types() << " types, " << indexedmodel.tokens() << " tokens" << endl;
+    cerr << "Found " << indexedmodel.size() << " patterns, " << indexedmodel.types() << " types, " << indexedmodel.tokens() << " tokens" << endl;
 
 
 }
