@@ -495,7 +495,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     
     IndexedData * getdata(const Pattern & pattern)  { 
         typename MapType::iterator iter = this->find(pattern);
-        return &(iter->second); 
+        if (iter != this->end()) {
+            return &(iter->second); 
+        } else {
+            return NULL;
+        }
     }
 
     void postread(const PatternModelOptions options) {
