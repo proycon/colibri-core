@@ -199,7 +199,7 @@ class PatternModel: public MapType {
 
             std::cerr << "Training patternmodel" << std::endl;
             for (int n = 1; n <= options.MAXLENGTH; n++) {
-                bool foundanything = false;
+                int foundcount = 0;
                 in->seekg(0);
                 std::cerr << "Counting " << n << "-grams" << std::endl; 
                 sentence++;
@@ -230,7 +230,7 @@ class PatternModel: public MapType {
                         }
                         if (found) {
                             ValueType * data = getdata(pattern);
-                            foundanything = true;
+                            foundcount++;
                             add(pattern, data, ref );
                             if (options.DOREVERSEINDEX) {
                                 reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
@@ -270,16 +270,17 @@ class PatternModel: public MapType {
                         }
 
                     }           
-                    if (foundanything) {
-                        if (n > this->maxn) this->maxn = n;
-                        if (n < this->minn) this->minn = n;
-                    }
                 }
 
-                std::cerr << "Pruning..." << std::endl;
+                if (foundcount) {
+                    if (n > this->maxn) this->maxn = n;
+                    if (n < this->minn) this->minn = n;
+                }
+                std::cerr << " Found " << foundcount << "...Pruning...";
                 if (n == 1) totaltypes += this->size(); //total unigrams, also those not in model
-                this->prune(options.MINTOKENS,n);
-                this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, options.MINSKIPTOKENS, n);
+                int pruned = this->prune(options.MINTOKENS,n);
+                pruned += this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, options.MINSKIPTOKENS, n);
+                std::cerr << "pruned " << pruned << std::endl;
             }
         }
         void train(const std::string filename, const PatternModelOptions options) {

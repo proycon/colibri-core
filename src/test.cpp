@@ -40,6 +40,7 @@ int main( int argc, char *argv[] ) {
 	cerr << "Size (n): " << (int) ngram.n() << endl; //== size()
 	cerr << "Bytesize: " << (int) ngram.bytesize() << endl;
 	cerr << "Category==ngram: " << (int) (ngram.category() == NGRAM) << endl;
+    cerr << "Hash: " << ngram.hash() << endl;
 	cerr << "Raw: " << endl;
     ngram.out();
 
@@ -377,7 +378,7 @@ int main( int argc, char *argv[] ) {
     string rawcorpusfile = "/tmp/hamlet.txt";
     ofstream * out = new ofstream(rawcorpusfile);
     const char * poem = 
-    "To be or not to be, that is the question ;\n"
+    "To be or not to be , that is the question ;\n"
     "Whether 'tis nobler in the mind to suffer\n"
     "The slings and arrows of outrageous fortune ,\n"
     "Or to take arms against a sea of troubles ,\n"
