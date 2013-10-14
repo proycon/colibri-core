@@ -440,6 +440,8 @@ int main( int argc, char *argv[] ) {
     unindexedmodel.train(infilename, options);
     cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
     unindexedmodel.print(&std::cerr, classdecoder2);
+    cerr << endl;
+    unindexedmodel.report(&std::cerr);
 
 
     cerr << endl;

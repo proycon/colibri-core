@@ -452,20 +452,26 @@ class PatternModel: public MapType {
         
         void report(std::ostream * OUT) {
             *OUT << std::setiosflags(std::ios::fixed) << std::setprecision(4) << std::endl;       
-            *OUT << "REPORT (total patterns=" << this->size() <<")" << std::endl;
+            *OUT << "REPORT" << std::endl;
+            *OUT << "   Warning: Model is unindexed, token coverage counts are mere maximal projections" << std::endl;
+            *OUT << "            assuming no overlap at all!!! Use an indexed model for accurate coverage counts" << std::endl;
             *OUT << "----------------------------------" << std::endl;
-            *OUT << "                          " << std::setw(10) << "TOKENS" << std::setw(10) << "TYPES" << std::setw(10) << std::endl;
-            *OUT << "Total:                    " << std::setw(10) << this->tokens() << std::setw(10) << this->types() <<  std::endl;
-            int coveredtokens = 0;
+            *OUT << "                          " << std::setw(10) << "PATTERNS" << std::setw(10) << "PR.TOKENS" << std::setw(10) << "TYPES" << std::setw(10) << std::endl;
+            *OUT << "Total:                    " << std::setw(10) << this->size() << std::setw(10) << this->tokens() << std::setw(10) << this->types() <<  std::endl;
+            std::set<IndexReference> coverage;
             int coveredtypes = 0;
-            for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
+            int coveredtokens = 0;
+            for (typename PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
-                coveredtokens += occurrencecount(pattern);
-                if (pattern.n() == 1) coveredtypes += 1;
-
+                const int _n = pattern.n();
+                coveredtokens += this->occurrencecount(pattern) * _n;
+                if (_n == 1) coveredtypes++;
             }
-            *OUT << "Uncovered:                " << std::setw(10) << this->tokens() - coveredtokens << std::setw(10) << this->types() - coveredtypes <<  std::endl;
-            *OUT << "Covered:                  " << std::setw(10) << coveredtokens << std::setw(10) << this->types() <<  std::endl;
+            if (coveredtokens > this->tokens()) coveredtokens = this->tokens();
+            int uncoveredtokens = this->tokens() - coveredtokens;
+            if (uncoveredtokens < 0) uncoveredtokens = 0;
+            *OUT << "Uncovered: (min.projection): " << std::setw(10) << 0 << std::setw(10) << uncoveredtokens << std::setw(10) << this->types() - coveredtypes <<  std::endl;
+            *OUT << "Covered (max. projection):   " << std::setw(10) << this->size() << std::setw(10) << coveredtokens << std::setw(10) << coveredtypes <<  std::endl;
             
             
             *OUT << "Per n:" << std::endl;
@@ -474,22 +480,37 @@ class PatternModel: public MapType {
             int maxn = 1;
             int n = 1;
             do {
-                int count = 0;
-                std::unordered_set<Pattern> tmp;
+                coverage.clear();
+                int coveredtypes_n = 0;
+                int coveredtokens_n = 0;
+                int totalpatterns_n = 0;
+                std::set<Pattern> types_n;
                 if ((n == 1) || (sizes.count(n))) { 
-                    for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
+                    for (typename PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                         const Pattern pattern = iter->first;
+                        const int _n = pattern.n();
                         if (n == 1) {
                             sizes.insert(pattern.size());
                             cats.insert(pattern.category());
                         }
-                        if ((int) pattern.size() == n) {
-                            count += this->coverage(pattern);
-                            tmp.insert(pattern);
+                        if (_n == n) {
+                            coveredtokens_n += this->occurrencecount(pattern) * _n;
+                            if (_n == 1) {  
+                                coveredtypes_n++;
+                            } else {
+                                std::vector<Pattern> unigrams;
+                                pattern.ngrams(unigrams, 1);
+                                for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
+                                    const Pattern p = *iter2;
+                                    types_n.insert(p);
+                                }
+                            }
+
+                            totalpatterns_n++;
                         }
-                        if (n==1) cats.insert(pattern.category());
                     }
-                    *OUT << " n=" << n << "                      "  << std::setw(10) << count << std::setw(10) << tmp.size() << std::endl; 
+                    if (n > 1) coveredtypes_n = types_n.size();
+                    *OUT << " n=" << n << "                      " << std::setw(10) << totalpatterns_n << std::setw(10) << coveredtokens << std::setw(10) << coveredtypes_n << std::endl; 
                     if (n == 1) {
                         std::set<int>::reverse_iterator iter = sizes.rbegin();
                         maxn = *iter; //get last item from sizes
@@ -498,18 +519,34 @@ class PatternModel: public MapType {
                 n++;
             } while (n < maxn);
 
+            std::set<Pattern> types_c;
+
             *OUT << "Per category:" << std::endl;
             for (int cat = 1; cat <= 3; cat++) {
                 if (cats.count(cat)) {
-                    int count = 0;
-                    std::unordered_set<Pattern> tmp;
-                    for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
+                    int totalpatterns_c = 0;
+                    int coveredtypes_c = 0;
+                    int coveredtokens_c = 0;
+                    coverage.clear();
+                    for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
                         const Pattern pattern = iter->first;
+                        const int _n = pattern.n();
                         if (pattern.category() == cat) {
-                            count++;
-                            tmp.insert(pattern);
+                            coveredtokens_c += this->occurrencecount(pattern) * _n;
+                            if (_n == 1) {  
+                                coveredtypes_c++;
+                            } else {
+                                std::vector<Pattern> unigrams;
+                                pattern.ngrams(unigrams, 1);
+                                for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
+                                    const Pattern p = *iter2;
+                                    types_c.insert(p);
+                                }
+                            }
+                            totalpatterns_c++;
                         }
                     }
+                    if (n > 1) coveredtypes_c = types_c.size();
                     if (cat == 1) {
                         *OUT << " N-GRAMS                  ";
                     } else if (cat == 2) {
@@ -517,7 +554,7 @@ class PatternModel: public MapType {
                     } else if (cat == 3) {
                         *OUT << " DYNAMIC-SKIPGRAMS        ";
                     }
-                    *OUT << std::setw(10) << count << std::setw(10) << tmp.size() << std::endl; 
+                    *OUT << std::setw(10) << totalpatterns_c << std::setw(10) << coveredtokens_c << std::setw(10) << coveredtypes_c << std::endl; 
                 }
 
             }
@@ -723,6 +760,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             n++;
         } while (n < maxn);
 
+
+        std::set<Pattern> types_c;
+
         *OUT << "Per category:" << std::endl;
         for (int cat = 1; cat <= 3; cat++) {
             if (cats.count(cat)) {
@@ -738,7 +778,16 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                             const IndexReference ref = *iter2;
                             for (int i = 0; i < _n; i++) coverage.insert(ref+i);
                         }
-                        if (_n == 1) coveredtypes_c++;
+                        if (_n == 1) {  
+                            coveredtypes_c++;
+                        } else {
+                            std::vector<Pattern> unigrams;
+                            pattern.ngrams(unigrams, 1);
+                            for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
+                                const Pattern p = *iter2;
+                                types_c.insert(p);
+                            }
+                        }
 
                         totalpatterns_c++;
                     }
