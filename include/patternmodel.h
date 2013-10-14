@@ -623,38 +623,76 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
     
-    std::unordered_set<Pattern> getskipcontent(const Pattern & pattern) {
-        std::unordered_set<Pattern> skipcontent;
+    Pattern * getpatternfromtoken(IndexReference ref) {
+        std::multimap<IndexReference,Pattern>::iterator iter = this->reverseindex.lower_bound(gapref);
+        if (iter != this->reverseindex.upper_bound(gapref)) {
+            return &(iter->second);
+        } else {
+            return NULL;
+        }
+    }
+    
+    std::map<Pattern,int> getskipcontent(const Pattern & pattern) {
+        //NOTE: skipcontent patterns of skipgrams with multiple gaps are
+        //themselves skipgrams!
+        unsigned char fixedgapbuffer[101];
+        for (int i = 0; i< 100; i++) fixedgapbuffer[i] = 128;
+
+        std::map<Pattern,int> skipcontent;
         if (pattern.category() == FIXEDSKIPGRAM) {
             //find the gaps
             std::vector<std::pair<int,int>> gapdata;
             pattern.gaps(gapdata);
 
+            
+            std::vector<std::pair<int,int>>::iterator gapiter = gapdata.begin();
+            int offset = gapiter->first;
+            int begin = gapiter->first + gapiter->second; //begin of part in original, gap in content)
+
+            std::vector<std::pair<int,int>> skipcontent_gaps;
+            gapiter++;
+            while (gapiter != gapdata.end()) {
+                int gaplength = gapiter->first - length;
+                skipcontent_gaps.push_back(pair<int,int>(begin,gaplength);
+                begin = gapiter->first + gapiter->second;
+                gapiter++;
+            }
+
+
             IndexedData * data = getdata(pattern);
             for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
                 const IndexReference ref = *iter2;
-                
-                //compute all the gaps 
-                for (std::vector<std::pair<int,int>>::iterator iter3 = gapdata.begin(); iter3 != gapdata.end(); iter3++) {
-                    const IndexReference gapref = IndexReference(ref.sentence, ref.token + iter3->first);
-                    const int requiredsize = iter3->second;
+                Pattern skipcontent_atref;
 
-                    //find patterns through reverse index
-                    for (std::multimap<IndexReference,Pattern>::iterator iter4 = this->reverseindex.lower_bound(gapref); iter4 != this->reverseindex.upper_bound(gapref); iter4++) {
-                        const Pattern candidate = iter4->second;
-                        if (requiredsize == (int) candidate.n()) {
-                            skipcontent.insert(candidate);
+                notoken = false;
+                gapiter = gapdata.begin();
+                skipcontent_gapiter = skipcontent_gaps.begin();
+                while (gapiter != gapdata.end()) {
+                    for (int i = gapiter->first; i < gapiter->first + gapiter->second; i++) {
+                        Pattern * p = this->getpatternfromtoken(ref + i);
+                        if (p == NULL) {
+                            notoken = true; break;
+                        } else {
+                            skipcontent_atref += *p;
                         }
                     }
-
+                    if (notoken) break;
+                    if (skipcontent_gapiter != skipcontent_gaps.end()) {
+                        skipcontent_atref += Pattern(gapbuffer, skipcontent_gapiter->second);
+                    }
                 }
+                if (notoken) continue;
+
+                skipcontent[skipcontent_atref] += 1;
             }
+
+        } else if (pattern.category() == DYNAMICSKIPGRAM) {
+            //TODO: implement
         }
         return skipcontent;
     }
 
     std::set<Pattern> getsubsumed(const Pattern & pattern) {
-        //TODO: implement
         if (this->reverseindex.empty()) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -684,6 +722,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(begin); iter2 != this->reverseindex.upper_bound(begin); iter2++) {
                     const Pattern candidate = iter2->second;
                     if ((int) candidate.n() <= maxsubn) {
+                        if (subsumed.category() == FIXEDSKIPGRAM) {
+                            //may not have skips in places where the larger
+                            //pattern does not
+                            //TODO
+                        }
                         subsumed.insert(candidate);
                     }
                 }
@@ -693,9 +736,42 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
     std::set<Pattern> getsubsumedby(const Pattern & pattern) {
+        if (this->reverseindex.empty()) {
+            std::cerr << "ERROR: No reverse index present" << std::endl;
+            throw InternalError();
+        }
+
+        IndexedData * data = this->getdata(pattern);
+        if (data == NULL) {
+            std::cerr << "ERROR: No data found for pattern!" << std::endl;
+            throw InternalError();
+        }
+        
+        std::set<Pattern> subsumedby;
+        const int _n = pattern.n();
+        //search in forward index
+        for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
+            const IndexReference ref = *iter;
+
+            //search in reverse index
+            for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(begin); iter2 != this->reverseindex.upper_bound(begin); iter2++) {
+                const Pattern candidate = iter2->second;
+                if ((int) candidate.n() <= maxsubn) {
+                    subsumed.insert(candidate);
+                }
+            }
+        }
+        return subsumed;
+    }
+
+
+    std::map<Pattern,int> getleftneighbours(const Pattern & pattern) {
         //TODO: implement
     }
 
+    std::map<Pattern,int> getrightneighbours(const Pattern & pattern) {
+        //TODO: implement
+    }
 
     int pruneskipgrams(int threshold, int minskiptypes, int minskiptokens, int _n = 0) {
         int pruned = 0;
@@ -705,24 +781,16 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         while(iter != this->end()) { 
             const Pattern pattern = iter->first;
             if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == FIXEDSKIPGRAM)) {
-                std::unordered_set<Pattern> skipcontent = getskipcontent(pattern);
-                if ((int) skipcontent.size() < minskiptypes) {
-                    iter = this->erase(iter);
-                    pruned++;
-                    continue;
-                }
+                std::map<Pattern,int> skipcontent = getskipcontent(pattern);
 
-                std::set<IndexReference> occurrences;
-                for (std::unordered_set<Pattern>::iterator iter2 = skipcontent.begin(); iter2 != skipcontent.end(); iter2++) {
-                    const Pattern contentpattern = *iter2;
-                    IndexedData * data = getdata(contentpattern);
-                    for (IndexedData::iterator iter3 = data->begin(); iter3 != data->end(); iter3++) {                    
-                        const IndexReference ref = *iter3;
-                        occurrences.insert(ref);
+                int matchingtypes = 0;
+                for (std::map<Pattern,int>::iterator iter2 = skipcontent.begin(); iter2 != skipcontent.end(); iter2++) {
+                    if ((iter2->second >= minskiptokens) && (iter2->second >= threshold)) {
+                        matchingtypes++;
                     }
-                }                
-                const int s = occurrences.size();
-                if ((s < minskiptokens) || (s < threshold)) {
+                }               
+
+                if (matchingtypes < minskiptypes) { //will take care of token threshold too, patterns not meeting the token threshold are not included
                     iter = this->erase(iter);
                     pruned++;
                     continue;
