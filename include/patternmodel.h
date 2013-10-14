@@ -441,7 +441,7 @@ class PatternModel: public MapType {
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
                 const std::string pattern_s = pattern.tostring(decoder);
-                const int count = this->occurrencecount(pattern);
+                const int count = this->occurrencecount(pattern); //TODO: can be sped up by using iter->second!
                 //const double freq = count / (double) this->tokens(); 
                 const int covcount = this->coveragecount(pattern);
                 const double coverage = covcount / (double) this->tokens();
@@ -450,6 +450,20 @@ class PatternModel: public MapType {
             }
         }
         
+        void histogram(std::ostream * OUT) {
+            std::map<int,int> hist;
+            for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
+                const Pattern pattern = iter->first;
+                int c = this->occurrencecount(pattern);
+                hist[c]++;
+            }
+            *OUT << "HISTOGRAM" << std::endl;
+            *OUT << "Frequency\tpatterns" << std::endl;
+            for (std::map<int,int>::iterator iter = hist.begin(); iter != hist.end(); iter++) {
+                *OUT << iter->first << "\t" << iter->second << std::endl;
+            }
+        }
+
         void report(std::ostream * OUT) {
             *OUT << std::setiosflags(std::ios::fixed) << std::setprecision(4) << std::endl;       
             *OUT << "REPORT" << std::endl;

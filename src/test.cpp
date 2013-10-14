@@ -442,6 +442,8 @@ int main( int argc, char *argv[] ) {
     unindexedmodel.print(&std::cerr, classdecoder2);
     cerr << endl;
     unindexedmodel.report(&std::cerr);
+    cerr << endl;
+    unindexedmodel.histogram(&std::cerr);
 
 
     cerr << endl;
@@ -452,6 +454,8 @@ int main( int argc, char *argv[] ) {
     indexedmodel.print(&std::cerr, classdecoder2);
     cerr << endl;
     indexedmodel.report(&std::cerr);
+    cerr << endl;
+    indexedmodel.histogram(&std::cerr);
 
 
 

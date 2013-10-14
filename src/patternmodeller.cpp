@@ -27,9 +27,8 @@ void usage() {
     cerr << "\t-S <number>      Skip type threshold: only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, this value is unchangable and fixed to 2 when -u is set). Required indexed models" << endl;
     cerr << " Viewing a model:  patternmodeller -i [modelfile] -c [classfile] -[PRCHQ]" << endl;
     cerr << "\t-P               Print the entire model" << endl;
-    cerr << "\t-R               Generate a simple statistical report" << endl;
-    cerr << "\t-C               Generate an extensive coverage report (indexed patternmodels) only)" << endl;
-    cerr << "\t-H               Generate a histogram report" << endl;   
+    cerr << "\t-R               Generate a (statistical/coverage) report" << endl;
+    cerr << "\t-H               Generate a histogram" << endl;   
     cerr << "\t-Q               Start query mode, allows for pattern lookup against the loaded model" << endl; 
     cerr << "\tOptions -tlTS can be used to further filter the model" << endl;
     cerr << "Editing a model:  patternmodeller -o [modelfile] -i [modelfile]" << endl;
@@ -40,7 +39,7 @@ void usage() {
 
 
 
-void viewmodel(IndexedPatternModel<> & model, ClassDecoder * classdecoder,  bool print, bool report, bool coveragereport, bool histogram , bool query) {
+void viewmodel(IndexedPatternModel<> & model, ClassDecoder * classdecoder,  bool print, bool report,  bool histogram , bool query) {
     if (print) {
         if (classdecoder == NULL) {
             cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
@@ -53,7 +52,7 @@ void viewmodel(IndexedPatternModel<> & model, ClassDecoder * classdecoder,  bool
     }
 }
 
-void viewmodel(PatternModel<uint32_t> & model, ClassDecoder * classdecoder,  bool print, bool report, bool coveragereport, bool histogram, bool query ) {
+void viewmodel(PatternModel<uint32_t> & model, ClassDecoder * classdecoder,  bool print, bool report,  bool histogram, bool query ) {
     if (print) {
         if (classdecoder == NULL) {
             cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
@@ -87,12 +86,11 @@ int main( int argc, char *argv[] ) {
     int outputmodeltype = INDEXEDPATTERNMODEL;
     bool DOQUERIER = false;
     bool DOREPORT = false;
-    bool DOCOVERAGE = false;
     bool DOHISTOGRAM = false;
     bool DOPRINT = false;
     bool DEBUG = false;
     char c;    
-    while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:S:PRCHQDh")) != -1)
+    while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:S:PRHQDh")) != -1)
         switch (c)
         {
         case 'c':
@@ -107,9 +105,6 @@ int main( int argc, char *argv[] ) {
         case 'D':
         	DEBUG = true;
         	break;
-        case 'C':
-            DOCOVERAGE = true;
-            break;
         case 'R':
             DOREPORT = true;
             break;            
@@ -182,7 +177,7 @@ int main( int argc, char *argv[] ) {
         if (!outputmodelfile.empty()) {
             inputmodel.write(outputmodelfile);
         }
-        viewmodel(inputmodel, classdecoder, DOPRINT, DOREPORT, DOCOVERAGE, DOHISTOGRAM, DOQUERIER); 
+        viewmodel(inputmodel, classdecoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER); 
         
     } else if (inputmodeltype == UNINDEXEDPATTERNMODEL) {
         cerr << "Loading unindexed pattern model " << inputmodelfile << " as input model..."<<endl;
@@ -191,7 +186,7 @@ int main( int argc, char *argv[] ) {
         if (!outputmodelfile.empty()) {
             inputmodel.write(outputmodelfile);
         }
-        viewmodel(inputmodel, classdecoder, DOPRINT, DOREPORT, DOCOVERAGE, DOHISTOGRAM, DOQUERIER); 
+        viewmodel(inputmodel, classdecoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER); 
     } else if (!inputmodelfile.empty()) {
         cerr << "ERROR: Input model is not a valid colibri pattern model" << endl;
         exit(2);
