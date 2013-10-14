@@ -667,7 +667,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
         int coveredtokens = coverage.size();
         *OUT << "Uncovered:                " << std::setw(10) << 0 << std::setw(10) << this->tokens() - coveredtokens << std::setw(10) << this->types() - coveredtypes <<  std::endl;
-        *OUT << "Covered:                  " << std::setw(10) << this->size() << std::setw(10) << coveredtokens << std::setw(10) << this->types() <<  std::endl;
+        *OUT << "Covered:                  " << std::setw(10) << this->size() << std::setw(10) << coveredtokens << std::setw(10) << coveredtypes <<  std::endl;
         
         
         *OUT << "Per n:" << std::endl;
@@ -680,6 +680,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             coverage.clear();
             int coveredtypes_n = 0;
             int totalpatterns_n = 0;
+            std::set<Pattern> types_n;
             if ((n == 1) || (sizes.count(n))) { 
                 for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
                     const Pattern pattern = iter->first;
@@ -695,12 +696,22 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                             const IndexReference ref = *iter2;
                             for (int i = 0; i < _n; i++) coverage.insert(ref+i);
                         }
-                        if (_n == 1) coveredtypes_n++;
+                        if (_n == 1) {  
+                            coveredtypes_n++;
+                        } else {
+                            std::vector<Pattern> unigrams;
+                            pattern.ngrams(unigrams, 1);
+                            for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
+                                const Pattern p = *iter2;
+                                types_n.insert(p);
+                            }
+                        }
 
                         totalpatterns_n++;
                     }
                     if (n==1) cats.insert(pattern.category());
                 }
+                if (n > 1) coveredtypes_n = types_n.size();
                 *OUT << " n=" << n << "                      " << std::setw(10) << totalpatterns_n << std::setw(10) << coverage.size() << std::setw(10) << coveredtypes_n << std::endl; 
                 if (n == 1) {
                     std::set<int>::reverse_iterator iter = sizes.rbegin();
