@@ -211,12 +211,13 @@ class PatternModel: public MapType {
                 in->clear();
                 in->seekg(0);
                 std::cerr << "Counting " << n << "-grams" << std::endl; 
-                sentence++;
 
                 if ((options.DOFIXEDSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
-
+                
+                sentence = 0; //reset
                 while (!in->eof()) {
                     Pattern line = Pattern(in);
+                    sentence++;
                     if (in->eof()) break;
                     if (n==1) totaltokens += line.size();
                     std::vector<std::pair<Pattern,int>> ngrams;
@@ -676,7 +677,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         int maxn = 1;
         int n = 1;
         do {
-            int count = 0;
             coverage.clear();
             int coveredtypes_n = 0;
             int totalpatterns_n = 0;
@@ -689,12 +689,15 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         sizes.insert(pattern.size());
                         cats.insert(pattern.category());
                     }
-                    if ((int) pattern.size() == n) {
+                    if (_n == n) {
                         IndexedData * data = getdata(pattern);
                         //std::cerr << data->count() << std::endl;
                         for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {
                             const IndexReference ref = *iter2;
-                            for (int i = 0; i < _n; i++) coverage.insert(ref+i);
+                            for (int i = 0; i < _n; i++) {
+                                const IndexReference ref2 = ref + i;
+                                coverage.insert(ref2);
+                            }
                         }
                         if (_n == 1) {  
                             coveredtypes_n++;
@@ -709,7 +712,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
                         totalpatterns_n++;
                     }
-                    if (n==1) cats.insert(pattern.category());
                 }
                 if (n > 1) coveredtypes_n = types_n.size();
                 *OUT << " n=" << n << "                      " << std::setw(10) << totalpatterns_n << std::setw(10) << coverage.size() << std::setw(10) << coveredtypes_n << std::endl; 

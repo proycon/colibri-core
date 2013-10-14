@@ -195,6 +195,9 @@ class IndexReference {
             return false;
         }
     }
+    bool operator> (const IndexReference& other) const {
+        return other < *this;
+    }
     bool operator==(const IndexReference &other) const { return ( (sentence == other.sentence) && (token == other.token)); };
     bool operator!=(const IndexReference &other) const { return ( (sentence != other.sentence) || (token != other.token)); };
     IndexReference operator+(const int other) const { return IndexReference(sentence, token+ other); };
