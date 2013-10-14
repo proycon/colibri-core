@@ -653,11 +653,46 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return skipcontent;
     }
 
-    std::unordered_set<Pattern> getsubsumed(const Pattern & pattern) {
+    std::set<Pattern> getsubsumed(const Pattern & pattern) {
         //TODO: implement
+        if (this->reverseindex.empty()) {
+            std::cerr << "ERROR: No reverse index present" << std::endl;
+            throw InternalError();
+        }
+
+        IndexedData * data = this->getdata(pattern);
+        if (data == NULL) {
+            std::cerr << "ERROR: No data found for pattern!" << std::endl;
+            throw InternalError();
+        }
+
+        std::set<Pattern> subsumed;
+        const int _n = pattern.n();
+        //search in forward index
+        for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
+            const IndexReference ref = *iter;
+            for (int i = ref.token; i < ref.token + _n; i++) {
+                const IndexReference begin = ref + i;
+                int maxsubn;
+                if (i == 0) {
+                    maxsubn = _n - 1; //prevent classifying the same pattern as subsumed
+                } else {
+                    maxsubn = _n - i;
+                }
+
+                //search in reverse index
+                for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(begin); iter2 != this->reverseindex.upper_bound(begin); iter2++) {
+                    const Pattern candidate = iter2->second;
+                    if ((int) candidate.n() <= maxsubn) {
+                        subsumed.insert(candidate);
+                    }
+                }
+            }
+        }
+        return subsumed;
     }
 
-    std::unordered_set<Pattern> getsubsumedby(const Pattern & pattern) {
+    std::set<Pattern> getsubsumedby(const Pattern & pattern) {
         //TODO: implement
     }
 
