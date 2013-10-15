@@ -61,7 +61,7 @@ class Pattern {
     public:
      unsigned char * data;
 
-     Pattern() { data = new unsigned char[1]; data[0] = 0; }
+     Pattern() { data = new unsigned char[1]; data[0] = 0; } //empty constructor (still consumes 1 byte though)
      Pattern(const unsigned char* dataref, const int size); //low-level constructor
      Pattern(const Pattern& ref, int begin, int length); //slice constructor
      Pattern(const Pattern& ref); //copy constructor

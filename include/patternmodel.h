@@ -678,8 +678,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                     }
                     if (notoken) break;
                     if (skipcontent_gapiter != skipcontent_gaps.end()) {
-                        skipcontent_atref = skipcontent_atref +  Pattern(fixedgapbuffer, skipcontent_gapiter->second);
+                        skipcontent_atref = skipcontent_atref + Pattern(fixedgapbuffer, skipcontent_gapiter->second);
                     }
+                    gapiter++;
                 }
                 if (notoken) continue;
                 skipcontent[skipcontent_atref] += 1;
