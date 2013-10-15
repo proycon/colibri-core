@@ -106,6 +106,9 @@ int main( int argc, char *argv[] ) {
 	cerr << "Raw: " << endl;
     ngramconc.out();
 	cerr << "----------------------------------------------------" << endl;
+    emptypattern = emptypattern + ngramconc;
+    cerr << "Adding to empty? " << (int) (emptypattern == ngramconc) << endl;
+	cerr << "----------------------------------------------------" << endl;
     cerr << "Ngram comparison: " << endl;
     cerr << "Equality? " << (int) (ngramconc == ngram) << endl;
     cerr << "Non-equality? " << (int) (ngramconc != ngrambegin) << endl;
