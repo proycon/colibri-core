@@ -420,7 +420,10 @@ int main( int argc, char *argv[] ) {
     "With this regard their currents turn awry ,\n"
     "And lose the name of action .\n"
     "Soft you now ! The fair Ophelia ! Nymph ,\n"
-    "in thy orisons be all my sins remember'd .\n";
+    "in thy orisons be all my sins remember'd .\n"
+    "To flee or not to flee .\n" //additions to test skipgrams
+    "To see or not to see .\n"
+    "To pee or not to pee .\n"; //See that Shakespeare? I could be a poet too! 
     *out << string(poem);
     out->close();
 

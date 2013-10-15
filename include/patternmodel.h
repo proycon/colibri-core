@@ -112,7 +112,6 @@ class PatternModelOptions {
         
         bool DOFIXEDSKIPGRAMS;
         int MINSKIPTYPES; 
-        int MINSKIPTOKENS;
 
         bool DOREVERSEINDEX;
         
@@ -123,7 +122,6 @@ class PatternModelOptions {
             MAXLENGTH = 8;
 
             MINSKIPTYPES = 2;
-            MINSKIPTOKENS = 2;
             DOFIXEDSKIPGRAMS = false;
 
             DOREVERSEINDEX = false; //only for indexed models
@@ -296,7 +294,7 @@ class PatternModel: public MapType {
                 if (n == 1) totaltypes += this->size(); //total unigrams, also those not in model
                 int pruned = this->prune(options.MINTOKENS,n);
                 std::cerr << "pruned " << pruned;
-                int prunedextra = this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, options.MINSKIPTOKENS, n);
+                int prunedextra = this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, n);
                 if (prunedextra) {
                     std::cerr << " plus " << prunedextra << " extra skipgrams (=" << pruned + prunedextra << ")" << std::endl;
                 } else {
@@ -402,7 +400,7 @@ class PatternModel: public MapType {
             return pruned;
         }
 
-        virtual int pruneskipgrams(int threshold, int minskiptypes=2, int minskiptokens=2, int _n = 0) {
+        virtual int pruneskipgrams(int threshold, int minskiptypes=2, int _n = 0) {
             return 0; //only works for indexed models
         }
 
@@ -666,29 +664,33 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 gapiter = gapdata.begin();
                 std::vector<std::pair<int,int>>::iterator skipcontent_gapiter = skipcontent_gaps.begin();
                 while (gapiter != gapdata.end()) {
+                    Pattern part;
                     for (int i = gapiter->first; i < gapiter->first + gapiter->second; i++) {
                         Pattern * p = this->getpatternfromtoken(ref + i);
                         if (p == NULL) {
-                            std::cerr << "notoken@" << ref.token + i << std::endl;
+                            //std::cerr << "notoken@" << ref.sentence << ":" << ref.token + i << std::endl;
                             notoken = true; break;
                         } else {
+                            //std::cerr << "foundtoken@" << ref.sentence << ":" << ref.token + i << std::endl;
                             skipcontent_atref = skipcontent_atref +  *p;
                         }
                     }
                     if (notoken) break;
+                    
                     if (skipcontent_gapiter != skipcontent_gaps.end()) {
                         skipcontent_atref = skipcontent_atref + Pattern(fixedgapbuffer, skipcontent_gapiter->second);
                     }
                     gapiter++;
                 }
                 if (notoken) continue;
-                std::cerr << "counting skipcontent " << skipcontent_atref.hash() << std::endl;
+                //std::cerr << "counting skipcontent " << skipcontent_atref.hash() << " at " << ref.sentence << ":" << ref.token << std::endl;
                 skipcontent[skipcontent_atref] += 1;
             }
 
         } else if (pattern.category() == DYNAMICSKIPGRAM) {
             //TODO: implement
         }
+        //std::cerr << "Total found " << skipcontent.size() << std::endl;
         return skipcontent;
     }
 
@@ -781,24 +783,16 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         //TODO: implement
     }
 
-    int pruneskipgrams(int threshold, int minskiptypes, int minskiptokens, int _n = 0) {
+    int pruneskipgrams(int threshold, int minskiptypes, int _n = 0) {
         int pruned = 0;
-        if ((minskiptypes <=1)  && (minskiptokens <= threshold)) return pruned; //nothing to do
+        if (minskiptypes <=1) return pruned; //nothing to do
 
         typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); 
         while(iter != this->end()) { 
             const Pattern pattern = iter->first;
             if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == FIXEDSKIPGRAM)) {
                 std::map<Pattern,int> skipcontent = getskipcontent(pattern);
-
-                int matchingtypes = 0;
-                for (std::map<Pattern,int>::iterator iter2 = skipcontent.begin(); iter2 != skipcontent.end(); iter2++) {
-                    if ((iter2->second >= minskiptokens) && (iter2->second >= threshold)) {
-                        matchingtypes++;
-                    }
-                }               
-
-                if (matchingtypes < minskiptypes) { //will take care of token threshold too, patterns not meeting the token threshold are not included
+                if (skipcontent.size() < minskiptypes) { //will take care of token threshold too, patterns not meeting the token threshold are not included
                     iter = this->erase(iter);
                     pruned++;
                     continue;

@@ -23,8 +23,7 @@ void usage() {
     cerr << "\t-u               Build an unindexed model" << endl;    
     cerr << "\t-l <number>      Maximum pattern length (default: 8)" << endl;
     cerr << "\t-s               Compute fixed-size skip-grams (costs extra memory and time)" << endl;    
-    cerr << "\t-T <number>      Skip threshold: only skip content that occurs at least x times will be considered (default: same as -t). Value can never be lower than value for -t. Requires indexed models." << endl;
-    cerr << "\t-S <number>      Skip type threshold: only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, this value is unchangable and fixed to 2 when -u is set). Required indexed models" << endl;
+    cerr << "\t-T <number>      Skip type threshold: only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, this value is unchangable and fixed to 2 when -u is set). Requires indexed models" << endl;
     cerr << " Viewing a model:  patternmodeller -i [modelfile] -c [classfile] -[PRCHQ]" << endl;
     cerr << "\t-P               Print the entire model" << endl;
     cerr << "\t-R               Generate a (statistical/coverage) report" << endl;
@@ -90,7 +89,7 @@ int main( int argc, char *argv[] ) {
     bool DOPRINT = false;
     bool DEBUG = false;
     char c;    
-    while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:S:PRHQDh")) != -1)
+    while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:PRHQDh")) != -1)
         switch (c)
         {
         case 'c':
@@ -115,9 +114,6 @@ int main( int argc, char *argv[] ) {
             options.MINTOKENS = atoi(optarg);
             break;
         case 'T':
-            options.MINSKIPTOKENS = atoi(optarg);            
-            break;
-        case 'S':
             options.MINSKIPTYPES = atoi(optarg);            
             break;
         case 'l':
@@ -172,7 +168,7 @@ int main( int argc, char *argv[] ) {
     if (inputmodeltype == INDEXEDPATTERNMODEL) {
         cerr << "Loading indexed pattern model " << inputmodelfile << " as input model..."<<endl;
         IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options);
-        inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, options.MINSKIPTOKENS);
+        inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
         
         if (!outputmodelfile.empty()) {
             inputmodel.write(outputmodelfile);
