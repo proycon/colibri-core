@@ -58,6 +58,11 @@ int main( int argc, char *argv[] ) {
 	cerr << "N: " << (int) ngram2.n() << endl;
 	cerr << "Bytesize: " << (int) ngram2.bytesize() << endl;
 
+    cerr << "Empty/null pattern" << endl;
+    Pattern emptypattern;
+	cerr << "N: " << (int) emptypattern.n() << endl;
+	cerr << "Bytesize: " << (int) emptypattern.bytesize() << endl;
+
 
 	cerr << "----------------------------------------------------" << endl;
     cerr << "Subgrams of ngram #1: " << endl;
