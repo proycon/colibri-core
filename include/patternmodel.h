@@ -652,8 +652,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             std::vector<std::pair<int,int>> skipcontent_gaps;
             gapiter++;
             while (gapiter != gapdata.end()) {
-                int gaplength = gapiter->first - length;
-                skipcontent_gaps.push_back(pair<int,int>(begin,gaplength);
+                int gaplength = gapiter->first - begin;
+                skipcontent_gaps.push_back(std::pair<int,int>(begin,gaplength));
                 begin = gapiter->first + gapiter->second;
                 gapiter++;
             }
@@ -664,25 +664,24 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const IndexReference ref = *iter2;
                 Pattern skipcontent_atref;
 
-                notoken = false;
+                bool notoken = false;
                 gapiter = gapdata.begin();
-                skipcontent_gapiter = skipcontent_gaps.begin();
+                std::vector<std::pair<int,int>>::iterator skipcontent_gapiter = skipcontent_gaps.begin();
                 while (gapiter != gapdata.end()) {
                     for (int i = gapiter->first; i < gapiter->first + gapiter->second; i++) {
                         Pattern * p = this->getpatternfromtoken(ref + i);
                         if (p == NULL) {
                             notoken = true; break;
                         } else {
-                            skipcontent_atref += *p;
+                            skipcontent_atref = skipcontent_atref +  *p;
                         }
                     }
                     if (notoken) break;
                     if (skipcontent_gapiter != skipcontent_gaps.end()) {
-                        skipcontent_atref += Pattern(gapbuffer, skipcontent_gapiter->second);
+                        skipcontent_atref = skipcontent_atref +  Pattern(fixedgapbuffer, skipcontent_gapiter->second);
                     }
                 }
                 if (notoken) continue;
-
                 skipcontent[skipcontent_atref] += 1;
             }
 
@@ -722,7 +721,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(begin); iter2 != this->reverseindex.upper_bound(begin); iter2++) {
                     const Pattern candidate = iter2->second;
                     if ((int) candidate.n() <= maxsubn) {
-                        if (subsumed.category() == FIXEDSKIPGRAM) {
+                        if (candidate.category() == FIXEDSKIPGRAM) {
                             //may not have skips in places where the larger
                             //pattern does not
                             //TODO
@@ -753,15 +752,23 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
             const IndexReference ref = *iter;
 
+            IndexReference bos = IndexReference(ref, 0);
+
             //search in reverse index
-            for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(begin); iter2 != this->reverseindex.upper_bound(begin); iter2++) {
+            for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(bos); iter2 != this->reverseindex.end(); iter2++) {
+                if ((iter2->first.sentence != ref.sentence) || (iter2->first.token > ref.token)) break;
+                
                 const Pattern candidate = iter2->second;
-                if ((int) candidate.n() <= maxsubn) {
-                    subsumed.insert(candidate);
+
+                int minsubsize = _n + (iter2->first.token - ref.token);
+                if (minsubsize == _n) minsubsize++;
+
+                if ((int) candidate.n() >= minsubsize) {
+                    subsumedby.insert(candidate);
                 }
             }
         }
-        return subsumed;
+        return subsumedby;
     }
 
 
