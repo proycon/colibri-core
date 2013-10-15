@@ -624,12 +624,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
     
     Pattern * getpatternfromtoken(IndexReference ref) {
-        std::multimap<IndexReference,Pattern>::iterator iter = this->reverseindex.lower_bound(ref);
-        if (iter != this->reverseindex.upper_bound(ref)) {
-            return &(iter->second);
-        } else {
-            return NULL;
+        for (std::multimap<IndexReference,Pattern>::iterator iter = this->reverseindex.lower_bound(ref); iter != this->reverseindex.upper_bound(ref); iter++) {
+            if (iter->second.n() == 1) return &(iter->second);
         }
+        return NULL;
     }
     
     std::map<Pattern,int> getskipcontent(const Pattern & pattern) {
@@ -671,6 +669,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                     for (int i = gapiter->first; i < gapiter->first + gapiter->second; i++) {
                         Pattern * p = this->getpatternfromtoken(ref + i);
                         if (p == NULL) {
+                            std::cerr << "notoken@" << ref.token + i << std::endl;
                             notoken = true; break;
                         } else {
                             skipcontent_atref = skipcontent_atref +  *p;
@@ -683,6 +682,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                     gapiter++;
                 }
                 if (notoken) continue;
+                std::cerr << "counting skipcontent " << skipcontent_atref.hash() << std::endl;
                 skipcontent[skipcontent_atref] += 1;
             }
 
