@@ -624,8 +624,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
     
     Pattern * getpatternfromtoken(IndexReference ref) {
-        std::multimap<IndexReference,Pattern>::iterator iter = this->reverseindex.lower_bound(gapref);
-        if (iter != this->reverseindex.upper_bound(gapref)) {
+        std::multimap<IndexReference,Pattern>::iterator iter = this->reverseindex.lower_bound(ref);
+        if (iter != this->reverseindex.upper_bound(ref)) {
             return &(iter->second);
         } else {
             return NULL;
