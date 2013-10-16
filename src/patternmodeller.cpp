@@ -37,8 +37,33 @@ void usage() {
 }
 
 
+template<class ModelType = IndexedPatternModel<>>
+void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, bool repeat = true) {
+    const bool allowunknown = true;
+    unsigned char buffer[65536];
+    uint32_t linenum = 0;
+    std::string line;
+    do {
+            linenum++;
+            cout << linenum << ">> "; 
+            getline(cin,line);            
+            if (!line.empty()) {
+                int buffersize = classencoder->encodestring(line, buffer, allowunknown); 
+                Pattern linepattern = Pattern(buffer, buffersize);
+                vector<pair<Pattern, int> > patterns = model.getpatterns(linepattern);
+                for (vector<pair<Pattern,int> >::iterator iter = patterns.begin(); iter != patterns.end(); iter++) {
+                        const Pattern pattern = iter->first;
+                        const IndexReference ref = IndexReference(linenum,iter->second);
 
-void viewmodel(IndexedPatternModel<> & model, ClassDecoder * classdecoder,  bool print, bool report,  bool histogram , bool query) {
+                        //output instance
+                        cout << ref.sentence << ':' << (int) ref.token << "\t" << pattern.tostring(*classdecoder) << "\t" << model.occurrencecount(pattern) << "\t" << setprecision(numeric_limits<double>::digits10 + 1) << model.coverage(pattern) << endl; 
+                } 
+            }
+    } while (!cin.eof() && (repeat)); 
+}
+
+template<class ModelType = IndexedPatternModel<>>
+void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query) {
     if (print) {
         if (classdecoder == NULL) {
             cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
@@ -52,23 +77,15 @@ void viewmodel(IndexedPatternModel<> & model, ClassDecoder * classdecoder,  bool
     if (histogram) {
         model.histogram(&cout);
     }
-}
-
-void viewmodel(PatternModel<uint32_t> & model, ClassDecoder * classdecoder,  bool print, bool report,  bool histogram, bool query ) {
-    if (print) {
-        if (classdecoder == NULL) {
-            cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
+    if (query) {
+        if (classencoder == NULL) {
+            cerr << "ERROR: Unable to query model, no class encoder specified (-c)" << endl;
         } else {
-            model.print(&cout, *classdecoder);
+            querymodel<ModelType>(model, classencoder, classdecoder); 
         }
     }
-    if (report) {
-        model.report(&cout);
-    }
-    if (histogram) {
-        model.histogram(&cout);
-    }
 }
+
 
 int main( int argc, char *argv[] ) {
     
@@ -161,9 +178,15 @@ int main( int argc, char *argv[] ) {
    
 
     ClassDecoder * classdecoder = NULL;
+    ClassEncoder * classencoder = NULL;
 
     if (!classfile.empty()) {
+        cerr << "Loading class decoder from file " << classfile << endl;
         classdecoder = new ClassDecoder(classfile);
+        if (DOQUERIER) {
+            cerr << "Loading class encoder from file " << classfile << endl;
+            classencoder = new ClassEncoder(classfile);
+        }
     }
 
     int inputmodeltype = 0;
@@ -179,7 +202,7 @@ int main( int argc, char *argv[] ) {
         if (!outputmodelfile.empty()) {
             inputmodel.write(outputmodelfile);
         }
-        viewmodel(inputmodel, classdecoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER); 
+        viewmodel<IndexedPatternModel<>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER); 
         
     } else if (inputmodeltype == UNINDEXEDPATTERNMODEL) {
         cerr << "Loading unindexed pattern model " << inputmodelfile << " as input model..."<<endl;
@@ -188,7 +211,7 @@ int main( int argc, char *argv[] ) {
         if (!outputmodelfile.empty()) {
             inputmodel.write(outputmodelfile);
         }
-        viewmodel(inputmodel, classdecoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER); 
+        viewmodel<PatternModel<uint32_t>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER); 
     } else if (!inputmodelfile.empty()) {
         cerr << "ERROR: Input model is not a valid colibri pattern model" << endl;
         exit(2);
