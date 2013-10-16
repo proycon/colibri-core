@@ -57,7 +57,7 @@ void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassD
        const string s = *iter;
        const int buffersize = classencoder->encodestring(s, buffer, allowunknown); 
        const Pattern pattern = Pattern(buffer, buffersize);
-       processquerypattern<ModelType>(model,classdecoder,pattern);
+       processquerypattern<ModelType>(model,classdecoder,pattern, dorelations);
     }
 }
 
@@ -86,7 +86,7 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
                 const int buffersize = classencoder->encodestring(line, buffer, allowunknown); 
                 Pattern linepattern = Pattern(buffer, buffersize);
                 if (exact) { 
-                    processquerypattern<ModelType>(model,classdecoder, linepattern);
+                    processquerypattern<ModelType>(model,classdecoder, linepattern, dorelations);
                 } else {
                     vector<pair<Pattern, int> > patterns = model.getpatterns(linepattern);
                     for (vector<pair<Pattern,int> >::iterator iter = patterns.begin(); iter != patterns.end(); iter++) {
@@ -95,7 +95,7 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
 
                             //process and output instance
                             cout << ref.sentence << ':' << (int) ref.token << "\t";
-                            processquerypattern<ModelType>(pattern);                                
+                            processquerypattern<ModelType>(model, classdecoder, pattern, dorelations);                                
                     } 
                 }
             }
@@ -105,7 +105,7 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
 
 
 template<class ModelType = IndexedPatternModel<>>
-void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query) {
+void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations) {
     if (print) {
         if (classdecoder == NULL) {
             cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
@@ -123,7 +123,7 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
         if (classencoder == NULL) {
             cerr << "ERROR: Unable to query model, no class encoder specified (-c)" << endl;
         } else {
-            querymodel<ModelType>(model, classencoder, classdecoder); 
+            querymodel<ModelType>(model, classencoder, classdecoder, relations); 
         }
     }
 }
@@ -153,9 +153,10 @@ int main( int argc, char *argv[] ) {
     bool DOREPORT = false;
     bool DOHISTOGRAM = false;
     bool DOPRINT = false;
+    bool DORELATIONS = false;
     bool DEBUG = false;
     char c;    
-    while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:PRHQDhq:")) != -1)
+    while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:PRHQDhq:r")) != -1)
         switch (c)
         {
         case 'c':
@@ -193,6 +194,9 @@ int main( int argc, char *argv[] ) {
             break;
 		case 'u':
             outputmodelfile = UNINDEXEDPATTERNMODEL;
+			break;
+		case 'r':
+            DORELATIONS = true;
 			break;
 		case 'Q':
 			DOQUERIER = true;
@@ -248,8 +252,8 @@ int main( int argc, char *argv[] ) {
         if (!outputmodelfile.empty()) {
             inputmodel.write(outputmodelfile);
         }
-        viewmodel<IndexedPatternModel<>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER); 
-        if (!querypatterns.empty()) processquerypatterns<IndexedPatternModel<>>(inputmodel, options, classencoder, classdecoder, querypatterns);
+        viewmodel<IndexedPatternModel<>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS); 
+        if (!querypatterns.empty()) processquerypatterns<IndexedPatternModel<>>(inputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
         
     } else if (inputmodeltype == UNINDEXEDPATTERNMODEL) {
         cerr << "Loading unindexed pattern model " << inputmodelfile << " as input model..."<<endl;
@@ -258,8 +262,8 @@ int main( int argc, char *argv[] ) {
         if (!outputmodelfile.empty()) {
             inputmodel.write(outputmodelfile);
         }
-        viewmodel<PatternModel<uint32_t>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER); 
-        if (!querypatterns.empty()) processquerypatterns<PatternModel<uint32_t>>(inputmodel, options, classencoder, classdecoder, querypatterns);
+        viewmodel<PatternModel<uint32_t>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS); 
+        if (!querypatterns.empty()) processquerypatterns<PatternModel<uint32_t>>(inputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
 
     } else if (!inputmodelfile.empty()) {
         cerr << "ERROR: Input model is not a valid colibri pattern model" << endl;
