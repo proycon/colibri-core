@@ -682,9 +682,11 @@ Pattern Pattern::extractskipcontent(Pattern & instance) const {
     return pattern;
 }
 
-bool Pattern::instantiates(const Pattern & skipgram) const { 
-    //Is this a full instantiation of the skipgram?
-    if (category() != NGRAM) return false;
+bool Pattern::instanceof(const Pattern & skipgram) const { 
+    //Is this an instantiation of the skipgram?
+    //Instantiation is not necessarily full, aka: A ? B C is also an instantiation
+    //of A ? ? C
+    if (this->category() == DYNAMICSKIPGRAM) return false;
     if (skipgram.category() == NGRAM) return (*this) == skipgram;
 
     if (skipgram.category() == DYNAMICSKIPGRAM) {

@@ -724,12 +724,18 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(begin); iter2 != this->reverseindex.upper_bound(begin); iter2++) {
                     const Pattern candidate = iter2->second;
                     if ((int) candidate.n() <= maxsubn) {
-                        if (candidate.category() == FIXEDSKIPGRAM) {
-                            //may not have skips in places where the larger
+                        if ((pattern.category() == FIXEDSKIPGRAM) || (candidate.category() == FIXEDSKIPGRAM)) { //MAYBE TODO: I may check too much now... could be more efficient? 
+                            //candidate may not have skips in places where the larger
                             //pattern does not
+                            Pattern tmpl = Pattern(pattern, i, candidate.n()); //get the proper slice to match
+                            if (candidate.instanceof(tmpl)) {
+                                subsumed.insert(candidate);
+                            }
+                        } else if (candidate.category() == DYNAMICSKIPGRAM) {
                             //TODO
+                        } else {
+                            subsumed.insert(candidate);
                         }
-                        subsumed.insert(candidate);
                     }
                 }
             }
@@ -767,7 +773,18 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 if (minsubsize == _n) minsubsize++;
 
                 if ((int) candidate.n() >= minsubsize) {
-                    subsumedby.insert(candidate);
+                    if ((candidate.category() == FIXEDSKIPGRAM) || (pattern.category() == FIXEDSKIPGRAM))  {//MAYBE TODO: I may check too much now... could be more efficient? 
+                        //instance may not have skips in places where the larger
+                        //candidate pattern does not
+                        Pattern inst = Pattern(candidate, iter2->first.token, pattern.n()); //get the proper slice to match
+                        if (pattern.instanceof(candidate)) {
+                            subsumedby.insert(candidate);
+                        }
+                    } else if (candidate.category() == DYNAMICSKIPGRAM) {
+                        //TODO
+                    } else {
+                        subsumedby.insert(candidate);
+                    }
                 }
             }
         }

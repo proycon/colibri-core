@@ -88,7 +88,9 @@ class Pattern {
 
      bool operator==(const Pattern & other) const;
      bool operator!=(const Pattern & other) const;
+
      Pattern & operator =(const Pattern other);   
+
 
      //patterns are sortable
      bool operator<(const Pattern & other) const;
@@ -98,7 +100,7 @@ class Pattern {
 
      int find(const Pattern & pattern) const; //returns the index, -1 if not found 
      bool contains(const Pattern & pattern) const;
-     bool instantiates(const Pattern & skipgram) const; //Is this a full instantiation of the skipgram?
+     bool instanceof(const Pattern & skipgram) const; //Is this a full instantiation of the skipgram?
      
 
      int ngrams(std::vector<Pattern> & container, const int n) const; //return multiple ngrams

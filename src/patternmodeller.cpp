@@ -28,7 +28,7 @@ void usage() {
     cerr << "\t-P               Print the entire model" << endl;
     cerr << "\t-R               Generate a (statistical/coverage) report" << endl;
     cerr << "\t-H               Generate a histogram" << endl;   
-    cerr << "\t-Q               Start query mode, allows for pattern lookup against the loaded model" << endl; 
+    cerr << "\t-Q               Start query mode, allows for interactive pattern lookup against the loaded model" << endl; 
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
     cerr << "Editing a model:  patternmodeller -o [modelfile] -i [modelfile]" << endl;
     cerr << "\tOptions -tlT can be used to filter the model, -u can be used to remove the index" << endl;
