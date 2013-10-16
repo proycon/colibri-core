@@ -766,7 +766,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
             const IndexReference ref = *iter;
 
-            IndexReference bos = IndexReference(ref, 0);
+            IndexReference bos = IndexReference(ref.sentence, 0);
 
             //search in reverse index
             for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(bos); iter2 != this->reverseindex.end(); iter2++) {
