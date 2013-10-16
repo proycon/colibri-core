@@ -793,11 +793,56 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
     std::map<Pattern,int> getleftneighbours(const Pattern & pattern) {
-        //TODO: implement
+        if (this->reverseindex.empty()) {
+            std::cerr << "ERROR: No reverse index present" << std::endl;
+            throw InternalError();
+        }
+
+        IndexedData * data = this->getdata(pattern);
+        if (data == NULL) {
+            std::cerr << "ERROR: No data found for pattern!" << std::endl;
+            throw InternalError();
+        }
+        
+        std::map<Pattern,int> neighbours;
+        for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
+            const IndexReference ref = *iter;
+
+            IndexReference bos =  IndexReference(ref.sentence, 0);
+
+            for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(bos); iter2 != this->reverseindex.end(); iter2++) {
+                const IndexReference ref2 = iter2->first;
+                if (ref2.token + pattern.n() == ref.token) {
+                    neighbours[iter2->second] += 1;
+                }
+            }
+        }
+        return neighbours;
     }
 
     std::map<Pattern,int> getrightneighbours(const Pattern & pattern) {
-        //TODO: implement
+        if (this->reverseindex.empty()) {
+            std::cerr << "ERROR: No reverse index present" << std::endl;
+            throw InternalError();
+        }
+
+        IndexedData * data = this->getdata(pattern);
+        if (data == NULL) {
+            std::cerr << "ERROR: No data found for pattern!" << std::endl;
+            throw InternalError();
+        }
+        
+        std::map<Pattern,int> neighbours;
+        for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
+            const IndexReference ref = *iter;
+
+            IndexReference nextref = ref + 1;
+
+            for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(nextref); iter2 != this->reverseindex.upper_bound(nextref); iter2++) {
+                neighbours[iter2->second] += 1;
+            }
+        }
+        return neighbours;
     }
 
     int pruneskipgrams(int threshold, int minskiptypes, int _n = 0) {
