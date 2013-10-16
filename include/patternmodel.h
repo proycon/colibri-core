@@ -571,6 +571,11 @@ class PatternModel: public MapType {
 
             }
         }
+        
+        void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT) {
+            //nothing to do, model is unindexed
+            return;
+        }
 };
 
 
@@ -694,7 +699,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return skipcontent;
     }
 
-    std::set<Pattern> getsubsumed(const Pattern & pattern) {
+    std::map<Pattern,int> getsubsumed(const Pattern & pattern) {
         if (this->reverseindex.empty()) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -706,7 +711,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             throw InternalError();
         }
 
-        std::set<Pattern> subsumed;
+        std::map<Pattern,int> subsumed;
         const int _n = pattern.n();
         //search in forward index
         for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
@@ -729,12 +734,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                             //pattern does not
                             Pattern tmpl = Pattern(pattern, i, candidate.n()); //get the proper slice to match
                             if (candidate.instanceof(tmpl)) {
-                                subsumed.insert(candidate);
+                                subsumed[candidate] += 1;
                             }
                         } else if (candidate.category() == DYNAMICSKIPGRAM) {
                             //TODO
                         } else {
-                            subsumed.insert(candidate);
+                            subsumed[candidate] += 1;
                         }
                     }
                 }
@@ -743,7 +748,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return subsumed;
     }
 
-    std::set<Pattern> getsubsumedby(const Pattern & pattern) {
+    std::map<Pattern,int> getsubsumedby(const Pattern & pattern) {
         if (this->reverseindex.empty()) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -755,7 +760,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             throw InternalError();
         }
         
-        std::set<Pattern> subsumedby;
+        std::map<Pattern,int> subsumedby;
         const int _n = pattern.n();
         //search in forward index
         for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
@@ -778,12 +783,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         //candidate pattern does not
                         Pattern inst = Pattern(candidate, iter2->first.token, pattern.n()); //get the proper slice to match
                         if (pattern.instanceof(candidate)) {
-                            subsumedby.insert(candidate);
+                            subsumedby[candidate] += 1;
                         }
                     } else if (candidate.category() == DYNAMICSKIPGRAM) {
                         //TODO
                     } else {
-                        subsumedby.insert(candidate);
+                        subsumedby[candidate] += 1;
                     }
                 }
             }
@@ -983,6 +988,39 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 *OUT << std::setw(10) << totalpatterns_c << std::setw(10) << coverage.size() << std::setw(10) << coveredtypes_c << std::endl; 
             }
 
+        }
+    }
+
+    void outputrelations(const Pattern & pattern, std::map<Pattern,int> & relations, ClassDecoder & classdecoder, std::ostream *OUT, const std::string label = "RELATED-TO") {
+        int total = 0;
+        for (std::map<Pattern,int>::iterator iter = relations.begin(); iter != relations.end(); iter++) {
+            total += iter->second;
+        }
+        if (total == 0) return;
+        double total_f = total;
+        const std::string pattern_s = pattern.tostring(classdecoder);
+        for (std::map<Pattern,int>::iterator iter = relations.begin(); iter != relations.end(); iter++) {
+            const Pattern pattern2 = iter->first;
+            *OUT << "\t" << pattern_s << "\t" << label << "\t" << pattern2.tostring(classdecoder) << "\t" << iter->second << "\t" << iter->second / total_f << std::endl;
+        }
+    }
+ 
+    void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT) {
+        {
+            std::map<Pattern,int> relations = this->getsubsumed(pattern);
+            this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMES");
+        }
+        {
+            std::map<Pattern,int> relations = this->getsubsumedby(pattern);
+            this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");
+        }
+        {
+            std::map<Pattern,int> relations = this->getleftneighbours(pattern);
+            this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-OF");
+        }
+        {
+            std::map<Pattern,int> relations = this->getrightneighbours(pattern);
+            this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-OF");
         }
     }
 };

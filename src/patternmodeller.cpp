@@ -30,6 +30,8 @@ void usage() {
     cerr << "\t-H               Generate a histogram" << endl;   
     cerr << "\t-Q               Start interactive query mode, allows for pattern lookup against the loaded model (input from standard input)" << endl; 
     cerr << "\t-q               Query a pattern (may be specified multiple times!)" << endl; 
+    cerr << "\t-r               Compute relationships for the specified patterns (use with -q or -Q). Relationships are: subsumptions, neigbours, skipcontent " << endl; 
+    cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
     cerr << "Editing a model:  patternmodeller -o [modelfile] -i [modelfile]" << endl;
     cerr << "\tOptions -tlT can be used to filter the model, -u can be used to remove the index" << endl;
@@ -37,31 +39,70 @@ void usage() {
     cerr << " New model will only contain counts from model2 but only for the patterns also occurring in model1. The total number of tokens equals that of model2 (i.e. the amount uncovered is retained in the model)" << endl;
 }
 
+template<class ModelType = IndexedPatternModel<>>
+void processquerypattern(ModelType & model, ClassDecoder * classdecoder, const Pattern & pattern, bool dorelations) {
+    if (!model.has(pattern)) {
+        cout << "PATTERN NOT FOUND IN MODEL" << endl;
+    } else {
+        cout << pattern.tostring(*classdecoder) << "\t" << model.occurrencecount(pattern) << "\t" << setprecision(numeric_limits<double>::digits10 + 1) << model.coverage(pattern) << endl; 
+        if (dorelations) model.outputrelations(pattern, *classdecoder, &cout);
+    }
+}
 
 template<class ModelType = IndexedPatternModel<>>
-void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, bool repeat = true) {
+void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, vector<string> & querypatterns, bool dorelations) {
+    const bool allowunknown = true;
+    unsigned char buffer[65536];
+    for (vector<string>::iterator iter = querypatterns.begin(); iter != querypatterns.end(); iter++) {
+       const string s = *iter;
+       const int buffersize = classencoder->encodestring(s, buffer, allowunknown); 
+       const Pattern pattern = Pattern(buffer, buffersize);
+       processquerypattern<ModelType>(model,classdecoder,pattern);
+    }
+}
+
+
+template<class ModelType = IndexedPatternModel<>>
+void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, bool dorelations, bool repeat = true) {
     const bool allowunknown = true;
     unsigned char buffer[65536];
     uint32_t linenum = 0;
     std::string line;
+    cerr << "Colibri Patternmodeller -- Interactive query mode." << endl;
+    cerr << "  Type ctrl-D to quit, type X to switch between exact mode and extensive mode (default: extensive mode)." << endl;
+    bool exact = false;
     do {
             linenum++;
-            cout << linenum << ">> "; 
+            cerr << linenum << ">> "; 
             getline(cin,line);            
-            if (!line.empty()) {
-                int buffersize = classencoder->encodestring(line, buffer, allowunknown); 
+            if ((line == "X") || (line == "X\n")) {
+                exact = !exact;
+                if (exact) {
+                    cerr << "Switched to Exact mode - Only exact matches will be shown now" << endl;
+                } else {
+                    cerr << "Switched to Extensive mode - Input will be scanned for all matching patterns" << endl;
+                }
+            } else if (!line.empty()) {
+                const int buffersize = classencoder->encodestring(line, buffer, allowunknown); 
                 Pattern linepattern = Pattern(buffer, buffersize);
-                vector<pair<Pattern, int> > patterns = model.getpatterns(linepattern);
-                for (vector<pair<Pattern,int> >::iterator iter = patterns.begin(); iter != patterns.end(); iter++) {
-                        const Pattern pattern = iter->first;
-                        const IndexReference ref = IndexReference(linenum,iter->second);
+                if (exact) { 
+                    processquerypattern<ModelType>(model,classdecoder, linepattern);
+                } else {
+                    vector<pair<Pattern, int> > patterns = model.getpatterns(linepattern);
+                    for (vector<pair<Pattern,int> >::iterator iter = patterns.begin(); iter != patterns.end(); iter++) {
+                            const Pattern pattern = iter->first;
+                            const IndexReference ref = IndexReference(linenum,iter->second);
 
-                        //output instance
-                        cout << ref.sentence << ':' << (int) ref.token << "\t" << pattern.tostring(*classdecoder) << "\t" << model.occurrencecount(pattern) << "\t" << setprecision(numeric_limits<double>::digits10 + 1) << model.coverage(pattern) << endl; 
-                } 
+                            //process and output instance
+                            cout << ref.sentence << ':' << (int) ref.token << "\t";
+                            processquerypattern<ModelType>(pattern);                                
+                    } 
+                }
             }
     } while (!cin.eof() && (repeat)); 
 }
+
+
 
 template<class ModelType = IndexedPatternModel<>>
 void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query) {
@@ -100,7 +141,8 @@ int main( int argc, char *argv[] ) {
     string modelfile = "";
     string modelfile2 = "";
     string covviewfile = ""; //not used yet
-    
+   
+    vector<string> querypatterns;
     
     
     PatternModelOptions options;
@@ -113,7 +155,7 @@ int main( int argc, char *argv[] ) {
     bool DOPRINT = false;
     bool DEBUG = false;
     char c;    
-    while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:PRHQDh")) != -1)
+    while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:PRHQDhq:")) != -1)
         switch (c)
         {
         case 'c':
@@ -155,6 +197,9 @@ int main( int argc, char *argv[] ) {
 		case 'Q':
 			DOQUERIER = true;
 			break;
+        case 'q':
+            querypatterns.push_back(optarg);
+            break;
         case 'H':
             DOHISTOGRAM = true;
             break;        
@@ -184,7 +229,7 @@ int main( int argc, char *argv[] ) {
     if (!classfile.empty()) {
         cerr << "Loading class decoder from file " << classfile << endl;
         classdecoder = new ClassDecoder(classfile);
-        if (DOQUERIER) {
+        if ((DOQUERIER) || (!querypatterns.empty())) {
             cerr << "Loading class encoder from file " << classfile << endl;
             classencoder = new ClassEncoder(classfile);
         }
@@ -204,6 +249,7 @@ int main( int argc, char *argv[] ) {
             inputmodel.write(outputmodelfile);
         }
         viewmodel<IndexedPatternModel<>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER); 
+        if (!querypatterns.empty()) processquerypatterns<IndexedPatternModel<>>(inputmodel, options, classencoder, classdecoder, querypatterns);
         
     } else if (inputmodeltype == UNINDEXEDPATTERNMODEL) {
         cerr << "Loading unindexed pattern model " << inputmodelfile << " as input model..."<<endl;
@@ -213,6 +259,8 @@ int main( int argc, char *argv[] ) {
             inputmodel.write(outputmodelfile);
         }
         viewmodel<PatternModel<uint32_t>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER); 
+        if (!querypatterns.empty()) processquerypatterns<PatternModel<uint32_t>>(inputmodel, options, classencoder, classdecoder, querypatterns);
+
     } else if (!inputmodelfile.empty()) {
         cerr << "ERROR: Input model is not a valid colibri pattern model" << endl;
         exit(2);
