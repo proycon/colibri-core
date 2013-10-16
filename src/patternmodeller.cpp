@@ -24,14 +24,14 @@ void usage() {
     cerr << "\t-l <number>      Maximum pattern length (default: 8)" << endl;
     cerr << "\t-s               Compute fixed-size skip-grams (costs extra memory and time)" << endl;    
     cerr << "\t-T <number>      Skip type threshold: only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, this value is unchangable and fixed to 2 when -u is set). Requires indexed models" << endl;
-    cerr << " Viewing a model:  patternmodeller -i [modelfile] -c [classfile] -[PRCHQ]" << endl;
+    cerr << " Viewing a model:  patternmodeller -i [modelfile] -c [classfile] -[PRHQ]" << endl;
     cerr << "\t-P               Print the entire model" << endl;
     cerr << "\t-R               Generate a (statistical/coverage) report" << endl;
     cerr << "\t-H               Generate a histogram" << endl;   
     cerr << "\t-Q               Start query mode, allows for pattern lookup against the loaded model" << endl; 
-    cerr << "\tOptions -tlTS can be used to further filter the model" << endl;
+    cerr << "\tOptions -tlT can be used to further filter the model" << endl;
     cerr << "Editing a model:  patternmodeller -o [modelfile] -i [modelfile]" << endl;
-    cerr << "\tOptions -tlTS can be used to filter the model, -u can be used to remove the index" << endl;
+    cerr << "\tOptions -tlT can be used to filter the model, -u can be used to remove the index" << endl;
     cerr << "Run train model on test data:  patternmodeller -o [modelfile] -i [modelfile] -j [modelfile2] --test" << endl;
     cerr << " New model will only contain counts from model2 but only for the patterns also occurring in model1. The total number of tokens equals that of model2 (i.e. the amount uncovered is retained in the model)" << endl;
 }
@@ -49,6 +49,9 @@ void viewmodel(IndexedPatternModel<> & model, ClassDecoder * classdecoder,  bool
     if (report) {
         model.report(&cout);
     }
+    if (histogram) {
+        model.histogram(&cout);
+    }
 }
 
 void viewmodel(PatternModel<uint32_t> & model, ClassDecoder * classdecoder,  bool print, bool report,  bool histogram, bool query ) {
@@ -61,6 +64,9 @@ void viewmodel(PatternModel<uint32_t> & model, ClassDecoder * classdecoder,  boo
     }
     if (report) {
         model.report(&cout);
+    }
+    if (histogram) {
+        model.histogram(&cout);
     }
 }
 
