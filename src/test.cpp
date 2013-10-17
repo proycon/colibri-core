@@ -486,5 +486,11 @@ int main( int argc, char *argv[] ) {
     std::map<Pattern,int> relations2 = indexedmodel.getsubsumes(patternnot);
     indexedmodel.outputrelations(patternnot, relations2, classdecoder, &cerr,"SUBSUMED-BY");
 
+
+    std::map<Pattern,int> relations3 = indexedmodel.getleftneighbours(patternnot);
+    indexedmodel.outputrelations(patternnot, relations3, classdecoder, &cerr,"RIGHT-OF");
+
+    std::map<Pattern,int> relations4 = indexedmodel.getrightneighbours(patternnot);
+    indexedmodel.outputrelations(patternnot, relations4, classdecoder, &cerr,"LEFT-OF");
 }
 

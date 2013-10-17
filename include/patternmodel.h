@@ -821,9 +821,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
             for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(bos); iter2 != this->reverseindex.end(); iter2++) {
                 const IndexReference ref2 = iter2->first;
+                const Pattern neighbour = iter2->second;
                 if (ref2.token + pattern.n() == ref.token) {
-                    neighbours[iter2->second] += 1;
-                }
+                    neighbours[neighbour]  = neighbours[neighbour] + 1;
+                } else if (ref2.token > ref.token) break;
             }
         }
         return neighbours;
@@ -848,7 +849,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             IndexReference nextref = ref + 1;
 
             for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(nextref); iter2 != this->reverseindex.upper_bound(nextref); iter2++) {
-                neighbours[iter2->second] += 1;
+                const Pattern neighbour = iter2->second;
+                neighbours[neighbour]++;
             }
         }
         return neighbours;
