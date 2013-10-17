@@ -700,6 +700,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
     std::map<Pattern,int> getsubsumed(const Pattern & pattern) {
+        //returns patterns that are subsumed by the specified pattern (i.e.
+        //smaller patterns)
         if (this->reverseindex.empty()) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -748,7 +750,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return subsumed;
     }
 
-    std::map<Pattern,int> getsubsumedby(const Pattern & pattern) {
+    std::map<Pattern,int> getsubsumes(const Pattern & pattern) {
+        //returns patterns that subsume the specified pattern (i.e. larger
+        //patterns)
         if (this->reverseindex.empty()) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -760,7 +764,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             throw InternalError();
         }
         
-        std::map<Pattern,int> subsumedby;
+        std::map<Pattern,int> subsumes;
         const int _n = pattern.n();
         //search in forward index
         for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
@@ -783,17 +787,17 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         //candidate pattern does not
                         Pattern inst = Pattern(candidate, iter2->first.token, pattern.n()); //get the proper slice to match
                         if (pattern.instanceof(candidate)) {
-                            subsumedby[candidate] += 1;
+                            subsumes[candidate] += 1;
                         }
                     } else if (candidate.category() == DYNAMICSKIPGRAM) {
                         //TODO
                     } else {
-                        subsumedby[candidate] += 1;
+                        subsumes[candidate] += 1;
                     }
                 }
             }
         }
-        return subsumedby;
+        return subsumes;
     }
 
 
@@ -1008,11 +1012,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT) {
         {
             std::map<Pattern,int> relations = this->getsubsumed(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMES");
+            this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");
         }
         {
-            std::map<Pattern,int> relations = this->getsubsumedby(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");
+            std::map<Pattern,int> relations = this->getsubsumes(pattern);
+            this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMES");
         }
         {
             std::map<Pattern,int> relations = this->getleftneighbours(pattern);
