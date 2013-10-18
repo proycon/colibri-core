@@ -313,10 +313,13 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
         virtual void read(std::istream * in, int MINTOKENS=0) {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            //std::cerr << "Reading " << (int) s << " patterns" << std::endl;
             for (ReadWriteSizeType i = 0; i < s; i++) {
                 Pattern p = Pattern(in);
                 ValueType value;
+                //std::cerr << "Read pattern: " << std::endl;
                 valuehandler.read(in, value);
+                //std::cerr << "Read value: " << valuehandler.count(value) << std::endl;
                 if (valuehandler.count(value) >= MINTOKENS) {
                     insert(p,value);
                 }

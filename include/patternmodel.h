@@ -327,9 +327,11 @@ class PatternModel: public MapType {
 
         void write(std::ostream * out) {
             const char null = 0;
-            out->write( (char*) &null, sizeof(char));        
-            out->write( (char*) &model_type, sizeof(char));        
-            out->write( (char*) &model_version, sizeof(char));        
+            out->write( (char*) &null, sizeof(char));       
+            unsigned char t = this->getmodeltype();
+            out->write( (char*) &t, sizeof(char));        
+            unsigned char v = this->getmodelversion();
+            out->write( (char*) &v, sizeof(char));        
             out->write( (char*) &totaltokens, sizeof(uint64_t));        
             out->write( (char*) &totaltypes, sizeof(uint64_t)); 
             MapType::write(out); //write PatternStore

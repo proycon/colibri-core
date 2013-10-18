@@ -381,7 +381,25 @@ int main( int argc, char *argv[] ) {
         Pattern s8slice3 = Pattern(skipgram8,1,4);
         cout << s8slice3.decode(classdecoder) << endl;
         cerr << endl; 
-    }
+        
+        cerr << "Writing patterns to file: " << endl;
+        ofstream * out = new ofstream("/tmp/patterns.tmp");
+        ngram.write(out);
+        skipgram.write(out);
+        out->close();
+
+        cerr << "Reading from file" << endl;
+        ifstream * in = new ifstream("/tmp/patterns.tmp");
+        Pattern ngram_read = Pattern(in);
+        Pattern skipgram_read = Pattern(in);
+        in->close();
+        cerr << "Integrity check for ngram?" << (ngram == ngram_read) <<  endl;
+        cerr << "Integrity check for skipgram?" << (skipgram == skipgram_read) <<  endl;
+
+
+
+
+        }
         { 
 
         string rawcorpusfile = "/tmp/hamlet.txt";

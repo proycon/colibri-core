@@ -171,11 +171,9 @@ const size_t Pattern::hash(bool stripmarkers) const {
 
 void Pattern::write(ostream * out) const {
     const int s = bytesize();
-    if (s <= 0) {
-        cerr << "INTERNAL ERROR Pattern::write(): Writing pattern with size <= 0! Not possible!" << endl;
-        throw InternalError();
+    if (s > 0) {
+        out->write( (char*) data , (int) s + 1); //+1 to include the \0 marker
     }
-    out->write( (char*) data , (int) s );
 }
 
 std::string Pattern::tostring(ClassDecoder& classdecoder) const {
