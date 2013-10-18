@@ -716,7 +716,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return skipcontent;
     }
 
-    std::map<Pattern,int> getsubsumed(const Pattern & pattern) {
+    std::map<Pattern,int> getsubchildren(const Pattern & pattern) {
         //returns patterns that are subsumed by the specified pattern (i.e.
         //smaller patterns)
         if (this->reverseindex.empty()) {
@@ -730,8 +730,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             throw InternalError();
         }
 
-        std::map<Pattern,int> subsumed;
+        
+
+        std::map<Pattern,int> subchildren;
         const int _n = pattern.n();
+        const bool isfixedskipgram = (pattern.category() == FIXEDSKIPGRAM);
         //search in forward index
         for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
             const IndexReference ref = *iter;
@@ -741,33 +744,36 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 if (i == 0) {
                     maxsubn = _n - 1; //prevent classifying the same pattern as subsumed
                 } else {
-                    maxsubn = _n - i;
+                    maxsubn = _n - (i - ref.token);
                 }
+
 
                 //search in reverse index
                 for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(begin); iter2 != this->reverseindex.upper_bound(begin); iter2++) {
+                    const IndexReference ref2 = iter2->first;
                     const Pattern candidate = iter2->second;
+                    std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << std::endl;
                     if ((int) candidate.n() <= maxsubn) {
-                        if ((pattern.category() == FIXEDSKIPGRAM) || (candidate.category() == FIXEDSKIPGRAM)) { //MAYBE TODO: I may check too much now... could be more efficient? 
+                        if ((isfixedskipgram) || (candidate.category() == FIXEDSKIPGRAM)) { //MAYBE TODO: I may check too much now... could be more efficient? 
                             //candidate may not have skips in places where the larger
                             //pattern does not
                             Pattern tmpl = Pattern(pattern, i, candidate.n()); //get the proper slice to match
                             if (candidate.instanceof(tmpl)) {
-                                subsumed[candidate] += 1;
+                                subchildren[candidate] += 1;
                             }
                         } else if (candidate.category() == DYNAMICSKIPGRAM) {
                             //TODO
                         } else {
-                            subsumed[candidate] += 1;
+                            subchildren[candidate] += 1;
                         }
                     }
                 }
             }
         }
-        return subsumed;
+        return subchildren;
     }
 
-    std::map<Pattern,int> getsubsumes(const Pattern & pattern) {
+    std::map<Pattern,int> getsubparents(const Pattern & pattern) {
         //returns patterns that subsume the specified pattern (i.e. larger
         //patterns)
         if (this->reverseindex.empty()) {
@@ -1029,11 +1035,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
  
     void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT) {
         {
-            std::map<Pattern,int> relations = this->getsubsumed(pattern);
+            std::map<Pattern,int> relations = this->getsubparents(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");
         }
         {
-            std::map<Pattern,int> relations = this->getsubsumes(pattern);
+            std::map<Pattern,int> relations = this->getsubchildren(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMES");
         }
         {

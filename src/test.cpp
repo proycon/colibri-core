@@ -524,14 +524,14 @@ int main( int argc, char *argv[] ) {
         Pattern ngram = classencoder.input2pattern(querystring, true); 	
         cerr << "Extracting subsumption relations for " << querystring << endl;
 
-        std::map<Pattern,int> relations = indexedmodel.getsubsumed(ngram);
+        std::map<Pattern,int> relations = indexedmodel.getsubchildren(ngram);
         indexedmodel.outputrelations(ngram, relations, classdecoder, &cerr,"SUBSUMES");
 
 
         string querystring2  = "not";
         cerr << "Extracting subsumption relations for " << querystring2 << endl;
         Pattern patternnot = classencoder.input2pattern(querystring2, true); 	
-        std::map<Pattern,int> relations2 = indexedmodel.getsubsumes(patternnot);
+        std::map<Pattern,int> relations2 = indexedmodel.getsubparents(patternnot);
         indexedmodel.outputrelations(patternnot, relations2, classdecoder, &cerr,"SUBSUMED-BY");
 
 
