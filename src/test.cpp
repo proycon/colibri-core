@@ -459,7 +459,14 @@ int main( int argc, char *argv[] ) {
         unindexedmodel.histogram(&std::cerr);
 
         cerr << endl;
+        cerr << "Writing to file" << endl;
         unindexedmodel.write(outputfilename);
+
+
+        cerr << "Reading from file" << endl;
+        PatternModel<uint32_t> unindexedmodel2 = PatternModel<uint32_t>(outputfilename, options);
+        cerr << "Outputting report again" << endl;
+        unindexedmodel2.report(&std::cerr);
 
 
 
