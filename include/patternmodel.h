@@ -741,12 +741,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const IndexReference ref = *iter;
             for (int i = ref.token; i < ref.token + _n; i++) {
                 const IndexReference begin = IndexReference(ref.sentence,i);
-                int maxsubn;
-                if (i == 0) {
-                    maxsubn = _n - 1; //prevent classifying the same pattern as subsumed
-                } else {
-                    maxsubn = _n - (i - ref.token);
-                }
+                int maxsubn = _n - (i - ref.token);
+                if (i == ref.token) maxsubn--;//prevent classifying the same pattern as subsumed
 
                 //std::cerr << "Begin " << begin.sentence << ":" << begin.token << ",<< std::endl;
 
