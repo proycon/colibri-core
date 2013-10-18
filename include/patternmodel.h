@@ -161,11 +161,15 @@ class PatternModel: public MapType {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
+            model_type = this->getmodeltype();
+            model_version = this->getmodelversion();
         }
         PatternModel<ValueType,ValueHandler,MapType>(std::istream *f, const PatternModelOptions options) { //load from file
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
+            model_type = this->getmodeltype();
+            model_version = this->getmodelversion();
             this->load(f,options);
         }
 
@@ -173,11 +177,16 @@ class PatternModel: public MapType {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
+            model_type = this->getmodeltype();
+            model_version = this->getmodelversion();
             std::ifstream * in = new std::ifstream(filename.c_str());
             this->load( (std::istream *) in, options);
             in->close();
             delete in;
         }
+
+        virtual int getmodeltype() const { return UNINDEXEDPATTERNMODEL; }
+        virtual int getmodelversion() const { return 1; }
 
         void load(std::istream * f, const PatternModelOptions options) { //load from file
             char null;
@@ -583,11 +592,17 @@ class PatternModel: public MapType {
 template<class MapType = PatternMap<IndexedData,IndexedDataHandler>> 
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType> {
    public:
+
+
+
     IndexedPatternModel<MapType>(): PatternModel<IndexedData,IndexedDataHandler,MapType>() {}; 
     
     IndexedPatternModel<MapType>(std::istream *f, const PatternModelOptions options): PatternModel<IndexedData,IndexedDataHandler,MapType>(f, options) {}; 
     IndexedPatternModel<MapType>(const std::string filename, const PatternModelOptions options): PatternModel<IndexedData,IndexedDataHandler,MapType>(filename, options) {}; 
-                                                                   
+       
+    int getmodeltype() const { return INDEXEDPATTERNMODEL; }
+    int getmodelversion() const { return 1;} 
+
 
     int add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
         if (value == NULL) {
