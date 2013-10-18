@@ -731,6 +731,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
 
         
+        for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.begin(); iter2 != this->reverseindex.end(); iter2++) {
+            const IndexReference ref2 = iter2->first;
+            std::cerr << ref2.sentence << ":" << ref2.token << std::endl;
+        }
+
 
         std::map<Pattern,int> subchildren;
         const int _n = pattern.n();
@@ -739,7 +744,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
             const IndexReference ref = *iter;
             for (int i = ref.token; i < ref.token + _n; i++) {
-                const IndexReference begin = ref + i;
+                const IndexReference begin = IndexReference(ref.sentence,i);
                 int maxsubn;
                 if (i == 0) {
                     maxsubn = _n - 1; //prevent classifying the same pattern as subsumed
@@ -747,12 +752,14 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                     maxsubn = _n - (i - ref.token);
                 }
 
+                //std::cerr << "Begin " << begin.sentence << ":" << begin.token << ",<< std::endl;
 
                 //search in reverse index
                 for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(begin); iter2 != this->reverseindex.upper_bound(begin); iter2++) {
                     const IndexReference ref2 = iter2->first;
                     const Pattern candidate = iter2->second;
                     std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << std::endl;
+                    std::cerr << subchildren.size() << std::endl;
                     if ((int) candidate.n() <= maxsubn) {
                         if ((isfixedskipgram) || (candidate.category() == FIXEDSKIPGRAM)) { //MAYBE TODO: I may check too much now... could be more efficient? 
                             //candidate may not have skips in places where the larger
@@ -764,7 +771,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         } else if (candidate.category() == DYNAMICSKIPGRAM) {
                             //TODO
                         } else {
-                            subchildren[candidate] += 1;
+                            subchildren[candidate]++;
                         }
                     }
                 }
