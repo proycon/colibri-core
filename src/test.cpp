@@ -105,6 +105,9 @@ int main( int argc, char *argv[] ) {
         cerr << "Testing occurrence of substring 'or'? "; test(ngram.contains(subngram4) == 1);
         
         
+        string substring5 = "to";     	
+        Pattern subngram5 = encoder.input2pattern(substring5, true);
+
         cerr << "----------------------------------------------------" << endl;
         cerr << "Ngram addition: " << endl;
         const Pattern ngrambegin = Pattern(ngram,0,2);
@@ -126,6 +129,7 @@ int main( int argc, char *argv[] ) {
         cerr << "greater than? " ; test(subngram2 > subngram3) ;
         cerr << "greater than? " ; test(subngram3 > subngram4) ;
         cerr << "less than? " ; test(subngram3 < subngram2);
+        cerr << "less than? " ; test(subngram5 < subngram3);
         cerr << "Begin is less? " ; test(ngrambegin < ngramconc);
 
         

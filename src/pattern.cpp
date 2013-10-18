@@ -377,7 +377,7 @@ Pattern::~Pattern() {
 bool Pattern::operator==(const Pattern &other) const {
         const int s = bytesize();
         if (bytesize() == other.bytesize()) {
-            for (int i = 0; i < s; i++) {
+            for (int i = 0; i < s+1; i++) { //+1 for endmarker
                 if (data[i] != other.data[i]) return false;
             }
             return true;
@@ -393,30 +393,17 @@ bool Pattern::operator!=(const Pattern &other) const {
 bool Pattern::operator<(const Pattern & other) const {
     const int s = bytesize();
     const int s2 = other.bytesize();
-    int min_s;
     if (s < s2) {
-        min_s = s;
+        return true;
+    } else if (s2 > s) {
+        return false;
     } else {
-        min_s = s2;
+        return (this->hash() < other.hash());
     }
-    for (int i = 0; i < min_s; i++) {
-        if (data[i] < other.data[i]) return true;
-    }
-    return (s < s2);
 }
+
 bool Pattern::operator>(const Pattern & other) const {
-    const int s = bytesize();
-    const int s2 = other.bytesize();
-    int min_s;
-    if (s < s2) {
-        min_s = s;
-    } else {
-        min_s = s2;
-    }
-    for (int i = 0; i < min_s; i++) {
-        if (data[i] > other.data[i]) return true;
-    }
-    return (s > s2);
+    return (other < *this);
 }
 
 Pattern & Pattern::operator =(const Pattern other) { //(note: argument passed by value!)
