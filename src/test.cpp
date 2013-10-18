@@ -511,6 +511,14 @@ int main( int argc, char *argv[] ) {
         indexedmodel.histogram(&std::cerr);
 
 
+        cerr << "Writing to file" << endl;
+        indexedmodel.write(outputfilename);
+        cerr << "Reading from file" << endl;
+        IndexedPatternModel<> indexedmodel2 = IndexedPatternModel<>(outputfilename, options);
+        cerr << "Outputting report again" << endl;
+        indexedmodel2.report(&std::cerr);
+
+
 
         string querystring  = "To die , to sleep";
         Pattern ngram = classencoder.input2pattern(querystring, true); 	
