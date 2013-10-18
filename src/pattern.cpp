@@ -270,20 +270,20 @@ void readanddiscardpattern(std::istream * in) {
 
 Pattern::Pattern(std::istream * in) {
     int i = 0;
+    int readingdata = 0;
     unsigned char c;
     do {
         in->read( (char* ) &c, sizeof(char));
         mainpatternbuffer[i++] = c;
-        if (c == ENDMARKER) {
-            mainpatternbuffer[i++] = ENDMARKER;
-            break;
-        } else if (c < 128) {
-            //we have a size, load token
-            in->read( (char*) mainpatternbuffer + i, c);
-            i += c;
+        if (readingdata) {
+            readingdata--;
         } else {
-            //other marker
-            mainpatternbuffer[i++] = c;
+            if (c == ENDMARKER) {
+                break;
+            } else if (c < 128) {
+                //we have a size
+                readingdata = c;
+            }
         }
     } while (1);
 

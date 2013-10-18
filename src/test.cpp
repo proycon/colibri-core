@@ -11,6 +11,17 @@
 
 using namespace std;
 
+bool test(bool r) {
+    if (r) {
+        cerr << string( ".... ok") << endl;
+    } else {
+        cerr << ".... FAILED!" << endl;
+        exit(2);
+    }
+}
+
+
+
 int main( int argc, char *argv[] ) {
 	//string model = argv[1];
 	//string classfile = argv[1];
@@ -79,19 +90,19 @@ int main( int argc, char *argv[] ) {
         
         string substring = "or not";     	
         Pattern subngram = encoder.input2pattern(substring, true);
-        cerr << "Testing occurrence of substring 'or not'? " << (ngram.contains(subngram) == 1) << endl; 	
+        cerr << "Testing occurrence of substring 'or not'? "; test(ngram.contains(subngram) == 1);
         
         string substring2 = "to not";     	
         Pattern subngram2 = encoder.input2pattern(substring2, true);
-        cerr << "Testing non-occurrence of substring 'to not'? " << (ngram.contains(subngram2) == 0) << endl;
+        cerr << "Testing non-occurrence of substring 'to not'? "; test(ngram.contains(subngram2) == 0);
         
         string substring3 = "to be";     	
         Pattern subngram3 = encoder.input2pattern(substring3, true);
-        cerr << "Testing occurrence of substring 'to be'? " << (ngram.contains(subngram3) == 1) << endl;    
+        cerr << "Testing occurrence of substring 'to be'? "; test(ngram.contains(subngram3) == 1);
         
         string substring4 = "or";     	
         Pattern subngram4 = encoder.input2pattern(substring4, true);
-        cerr << "Testing occurrence of substring 'or'? " << (ngram.contains(subngram4) == 1) << endl;  
+        cerr << "Testing occurrence of substring 'or'? "; test(ngram.contains(subngram4) == 1);
         
         
         cerr << "----------------------------------------------------" << endl;
@@ -107,15 +118,15 @@ int main( int argc, char *argv[] ) {
         ngramconc.out();
         cerr << "----------------------------------------------------" << endl;
         emptypattern = emptypattern + ngramconc;
-        cerr << "Adding to empty? " << (int) (emptypattern == ngramconc) << endl;
+        cerr << "Adding to empty? "; test(emptypattern == ngramconc);
         cerr << "----------------------------------------------------" << endl;
         cerr << "Ngram comparison: " << endl;
-        cerr << "Equality? " << (int) (ngramconc == ngram) << endl;
-        cerr << "Non-equality? " << (int) (ngramconc != ngrambegin) << endl;
-        cerr << "greater than? " << (int) (subngram2 > subngram3) << endl;
-        cerr << "greater than? " << (int) (subngram3 > subngram4) << endl;
-        cerr << "less than? " << (int) (subngram3 < subngram2) << endl;
-        cerr << "Begin is less? " << (int) (ngrambegin < ngramconc) << endl;
+        cerr << "Equality? " ; test(ngramconc == ngram);
+        cerr << "Non-equality? " ; test(ngramconc != ngrambegin);
+        cerr << "greater than? " ; test(subngram2 > subngram3) ;
+        cerr << "greater than? " ; test(subngram3 > subngram4) ;
+        cerr << "less than? " ; test(subngram3 < subngram2);
+        cerr << "Begin is less? " ; test(ngrambegin < ngramconc);
 
         
 
@@ -128,8 +139,8 @@ int main( int argc, char *argv[] ) {
         cerr << "Skipgram: " << skipgram.decode(classdecoder) << endl;
         cerr << "N: " << (int) skipgram.n() << endl;
         cerr << "Bytesize: " << (int) skipgram.bytesize() << endl;
-        cerr << "Category==skipgram? " << (int) (skipgram.category() == FIXEDSKIPGRAM) << endl;
-        cerr << "Skipcount==2? " << (int) (skipgram.skipcount() == 2) << endl;
+        cerr << "Category==skipgram? " ; test(skipgram.category() == FIXEDSKIPGRAM) ;
+        cerr << "Skipcount==2? " ; test(skipgram.skipcount() == 2) ;
     
         cerr << "Parts: " << endl;
         vector<Pattern> parts;
@@ -393,8 +404,8 @@ int main( int argc, char *argv[] ) {
         Pattern ngram_read = Pattern(in);
         Pattern skipgram_read = Pattern(in);
         in->close();
-        cerr << "Integrity check for ngram?" << (ngram == ngram_read) <<  endl;
-        cerr << "Integrity check for skipgram?" << (skipgram == skipgram_read) <<  endl;
+        cerr << "Integrity check for ngram? " ; test(ngram == ngram_read) ;
+        cerr << "Integrity check for skipgram? " ; test(skipgram == skipgram_read) ;
 
 
 
