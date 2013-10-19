@@ -750,8 +750,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(begin); iter2 != this->reverseindex.upper_bound(begin); iter2++) {
                     const IndexReference ref2 = iter2->first;
                     const Pattern candidate = iter2->second;
-                    std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << ", bs=" << candidate.bytesize() <<  std::endl;
-                    candidate.out();
+                    //std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << ", bs=" << candidate.bytesize() <<  std::endl;
+                    //candidate.out();
                     if ((int) candidate.n() <= maxsubn) {
                         if ((isfixedskipgram) || (candidate.category() == FIXEDSKIPGRAM)) { //MAYBE TODO: I may check too much now... could be more efficient? 
                             //candidate may not have skips in places where the larger
@@ -764,10 +764,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                             //TODO
                         } else {
                             subchildren[candidate]++;
-                            std::cerr << "Updated map:" << std::endl;
-                            for (std::map<Pattern,int>::iterator iter3 = subchildren.begin(); iter3 != subchildren.end(); iter3++) {
-                                iter3->first.out();
-                            }
                         }
                     }
                 }
