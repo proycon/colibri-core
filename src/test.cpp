@@ -540,12 +540,25 @@ int main( int argc, char *argv[] ) {
         indexedmodel.outputrelations(patternnot, relations2, classdecoder, &cerr,"SUBSUMED-BY");
 
 
+        cerr << "Extracting neighbour relations for " << querystring2 << endl;
         std::map<Pattern,int> relations3 = indexedmodel.getleftneighbours(patternnot);
         indexedmodel.outputrelations(patternnot, relations3, classdecoder, &cerr,"RIGHT-OF");
 
         std::map<Pattern,int> relations4 = indexedmodel.getrightneighbours(patternnot);
         indexedmodel.outputrelations(patternnot, relations4, classdecoder, &cerr,"LEFT-OF");
 
+
+        string querystring3 = "To {*3*} to";
+        Pattern skipgram = classencoder.input2pattern(querystring3, true);
+        cerr << "Extracting subsumption relations for " << querystring3 << endl;
+
+        std::map<Pattern,int> relations5 = indexedmodel.getsubchildren(skipgram);
+        indexedmodel.outputrelations(skipgram, relations5, classdecoder, &cerr,"SUBSUMES");
+
+        cerr << "Extracting skipcontent relations for " << querystring3 << endl;
+
+        std::map<Pattern,int> relations6 = indexedmodel.getskipcontent(skipgram);
+        indexedmodel.outputrelations(skipgram, relations6, classdecoder, &cerr,"INSTANTIATED-BY");
     }
 }
 
