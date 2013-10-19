@@ -156,7 +156,7 @@ int main( int argc, char *argv[] ) {
     bool DORELATIONS = false;
     bool DEBUG = false;
     char c;    
-    while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:PRHQDhq:r")) != -1)
+    while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:PRHQDhq:rG")) != -1)
         switch (c)
         {
         case 'c':
@@ -210,6 +210,9 @@ int main( int argc, char *argv[] ) {
         case 'P':
             DOPRINT = true;
             break;        
+        case 'G':
+            cerr << "Option -G NOT IMPLEMENTED YET!" << endl;
+            exit(2);
         case 'h':
             usage();
             exit(0);

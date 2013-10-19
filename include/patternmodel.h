@@ -742,7 +742,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             for (int i = ref.token; i < ref.token + _n; i++) {
                 const IndexReference begin = IndexReference(ref.sentence,i);
                 int maxsubn = _n - (i - ref.token);
-                if (i == ref.token) maxsubn--;//prevent classifying the same pattern as subsumed
 
                 //std::cerr << "Begin " << begin.sentence << ":" << begin.token << ",<< std::endl;
 
@@ -752,7 +751,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                     const Pattern candidate = iter2->second;
                     //std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << ", bs=" << candidate.bytesize() <<  std::endl;
                     //candidate.out();
-                    if ((int) candidate.n() <= maxsubn) {
+                    if (((int) candidate.n() <= maxsubn) && (candidate != pattern)) {
                         if ((isfixedskipgram) || (candidate.category() == FIXEDSKIPGRAM)) { //MAYBE TODO: I may check too much now... could be more efficient? 
                             //candidate may not have skips in places where the larger
                             //pattern does not
@@ -801,9 +800,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const Pattern candidate = iter2->second;
 
                 int minsubsize = _n + (ref.token - iter2->first.token);
-                if (minsubsize == _n) minsubsize++;
 
-                if ((int) candidate.n() >= minsubsize) {
+                if (((int) candidate.n() >= minsubsize)  && (candidate != pattern)) {
                     if ((candidate.category() == FIXEDSKIPGRAM) || (pattern.category() == FIXEDSKIPGRAM))  {//MAYBE TODO: I may check too much now... could be more efficient? 
                         //instance may not have skips in places where the larger
                         //candidate pattern does not
