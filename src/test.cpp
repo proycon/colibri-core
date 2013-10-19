@@ -127,10 +127,11 @@ int main( int argc, char *argv[] ) {
         cerr << "Equality? " ; test(ngramconc == ngram);
         cerr << "Non-equality? " ; test(ngramconc != ngrambegin);
         cerr << "greater than? " ; test(subngram2 > subngram3) ;
-        cerr << "greater than? " ; test(subngram3 > subngram4) ;
+        cerr << "greater than? " ; test(subngram4 > subngram3) ;
         cerr << "less than? " ; test(subngram3 < subngram2);
         cerr << "less than? " ; test(subngram5 < subngram3);
         cerr << "Begin is less? " ; test(ngrambegin < ngramconc);
+        cerr << "equivalence under less? " ; test(!(subngram < subngram));
 
         
 

@@ -391,15 +391,21 @@ bool Pattern::operator!=(const Pattern &other) const {
 }
 
 bool Pattern::operator<(const Pattern & other) const {
+/*    std::cerr << "IS ";
+    this->out();
+    std::cerr << "SMALLER THAN ";
+    other.out();*/
     const int s = bytesize();
     const int s2 = other.bytesize();
-    if (s < s2) {
-        return true;
-    } else if (s2 > s) {
-        return false;
-    } else {
-        return (this->hash() < other.hash());
+    bool r;
+    for (int i = 0; (i <= s && i <= s2); i++) {
+        if (data[i] < other.data[i]) {
+            return true;
+        } else if (data[i] > other.data[i]) {
+            return false;
+        }
     }
+    return (s < s2);
 }
 
 bool Pattern::operator>(const Pattern & other) const {
