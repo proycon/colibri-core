@@ -800,7 +800,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 
                 const Pattern candidate = iter2->second;
 
-                int minsubsize = _n + (iter2->first.token - ref.token);
+                int minsubsize = _n + (ref.token - iter2->first.token);
                 if (minsubsize == _n) minsubsize++;
 
                 if ((int) candidate.n() >= minsubsize) {
