@@ -262,11 +262,19 @@ int main( int argc, char *argv[] ) {
     int inputmodeltype = 0;
     if (!inputmodelfile.empty()) {
         inputmodeltype = getmodeltype(inputmodelfile);
+        if ((inputmodeltype == INDEXEDPATTERNMODEL) && (outputmodeltype == UNINDEXEDPATTERNMODEL)) {
+            cerr << "Indexed input model will be read as unindexed because -u was set" << endl;
+            inputmodeltype = UNINDEXEDPATTERNMODEL; //will read indexed models as unindexed automatically
+        }
     }
     
     int inputmodeltype2 = 0;
     if (!inputmodelfile2.empty()) {
         inputmodeltype2 = getmodeltype(inputmodelfile2);
+        if ((inputmodeltype2 == INDEXEDPATTERNMODEL) && (outputmodeltype == UNINDEXEDPATTERNMODEL)) {
+            cerr << "Indexed joint model will be read as unindexed because -u was set" << endl;
+            inputmodeltype2 = UNINDEXEDPATTERNMODEL; //will read indexed models as unindexed automatically
+        }
     }
 
 
