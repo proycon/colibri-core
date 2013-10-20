@@ -324,9 +324,8 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                 //std::cerr << "Read pattern: " << std::endl;
                 readvaluehandler.read(in, readvalue);
                 if (readvaluehandler.count(readvalue) >= MINTOKENS) {
-                        //conversion needed
                         ValueType convertedvalue;
-                        readvaluehandler.convertto(readvalue, convertedvalue);
+                        readvaluehandler.convertto(readvalue, convertedvalue); 
                         insert(p,convertedvalue);
                 }
             }
