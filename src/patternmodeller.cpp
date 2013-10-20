@@ -17,7 +17,7 @@ void usage() {
     cerr << "\t-o [modelfile]   Output model" << endl;
     cerr << "\t-f [datafile]    Corpus data file" << endl;
     cerr << "\t-c [classfile]   Class file"<< endl;
-    cerr << "\t-j [modelfile]   2nd input model for joining models (intersection) (e.g. test data)" << endl;
+    cerr << "\t-j [modelfile]   Joined input model. Result will be the *intersection* of this (training) model and the input model or constructed model." << endl;
     cerr << " Building a model:  patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
     cerr << "\t-t <number>      Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
     cerr << "\t-u               Build an unindexed model" << endl;    
@@ -34,9 +34,8 @@ void usage() {
     //cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
     cerr << "Editing a model:  patternmodeller -o [modelfile] -i [modelfile]" << endl;
-    cerr << "\tOptions -tlT can be used to filter the model, -u can be used to remove the index" << endl;
-    cerr << "Run train model on test data:  patternmodeller -i [modelfile] -j [modelfile2] --test" << endl;
-    cerr << " New model will only contain counts from model2 but only for the patterns also occurring in model1. The total number of tokens equals that of model2 (i.e. the amount uncovered is retained in the model)" << endl;
+    cerr << "\tOptions -tlT can be used to filter the model, -u can be used to remove the index, -j can be used to take the intersection with another model" << endl;
+    cerr << "Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
 }
 
 template<class ModelType = IndexedPatternModel<>>
