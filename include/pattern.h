@@ -239,6 +239,7 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     void add(ValueType * value, const IndexReference & ref ) const {
         *value = *value + 1;
     }
+    ValueType convert(ValueType value) const { return value; } //noop
 };
 
 /************* Base abstract container for pattern storage  ********************/
@@ -267,7 +268,7 @@ class PatternStore {
         virtual typename ContainerType::iterator find(const Pattern & pattern)=0;
         
         virtual void write(std::ostream * out)=0;
-        virtual void read(std::istream * in, int MINTOKENS)=0;
+        //virtual void read(std::istream * in, int MINTOKENS)=0;
 
 };
 
@@ -313,7 +314,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
 
         template<class ReadValueType = ValueType, class ReadValueHandler = ValueHandler>
         void read(std::istream * in, int MINTOKENS=0) {
-            const ReadValueHandler readvaluehandler = ReadValueHandler();
+            ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             //std::cerr << "Reading " << (int) s << " patterns" << std::endl;

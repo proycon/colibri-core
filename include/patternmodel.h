@@ -102,6 +102,14 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         }
         value->insert(ref);
     }
+    IndexedData convert(IndexedData & value) const { 
+        return value; //nothing to do
+    }
+    IndexedData convert(int value) const { 
+        std::cerr << "ValueHandler: Can not convert integer to IndexedData!" << std::endl;
+        throw InternalError();
+        return IndexedData();
+    }
 };
 
 
