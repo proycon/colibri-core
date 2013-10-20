@@ -302,13 +302,18 @@ int main( int argc, char *argv[] ) {
         exit(2);
     } else {
         //operations without input model
+        PatternModelInterface * constrainbymodel = NULL;
+        if (!inputmodelfile2.empty()) {
+            constrainbymodel = new PatternModel<uint32_t>(inputmodelfile2, options);
+        }
+
 
         if (outputmodeltype == INDEXEDPATTERNMODEL) {
             IndexedPatternModel<> outputmodel = IndexedPatternModel<>();
             if (!corpusfile.empty()) {
                 //build new model from corpus
                 cerr << "Building new indexed model from  " << corpusfile <<endl;
-                outputmodel.train(corpusfile, options);
+                outputmodel.train(corpusfile, options, constrainbymodel);
             }
 
             if (!outputmodelfile.empty()) {
@@ -320,7 +325,7 @@ int main( int argc, char *argv[] ) {
             if (!corpusfile.empty()) {
                 //build new model from corpus
                 cerr << "Building new unindexed model from  " << corpusfile <<endl;
-                outputmodel.train(corpusfile, options);
+                outputmodel.train(corpusfile, options, constrainbymodel);
             }
             if (!outputmodelfile.empty()) {
                 cerr << "Saving unindexed pattern model to " << outputmodelfile <<endl;

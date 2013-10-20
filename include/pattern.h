@@ -274,6 +274,7 @@ class PatternStore {
 
 /************* Abstract datatype for all kinds of maps ********************/
 
+
 template<class ContainerType, class ValueType, class ValueHandler=BaseValueHandler<ValueType>,class ReadWriteSizeType = uint32_t>
 class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> { 
      protected:

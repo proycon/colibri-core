@@ -133,8 +133,21 @@ class PatternModelOptions {
 };
 
 
+class PatternModelInterface {
+    public:
+        virtual int getmodeltype() const=0;
+        virtual int getmodelversion() const=0;
+        virtual bool has(const Pattern &) const =0;
+        virtual size_t size() const =0; 
+        virtual int occurrencecount(const Pattern & pattern)=0;
+        virtual int maxlength() const=0;
+        virtual int minlength() const=0;
+        virtual int types() const=0;
+        virtual int tokens() const=0;
+};
+
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class MapType = PatternMap<ValueType, BaseValueHandler<ValueType>>>
-class PatternModel: public MapType {
+class PatternModel: public MapType, public PatternModelInterface {
     protected:
         unsigned char model_type;
         unsigned char model_version;
@@ -188,6 +201,13 @@ class PatternModel: public MapType {
         virtual int getmodeltype() const { return UNINDEXEDPATTERNMODEL; }
         virtual int getmodelversion() const { return 1; }
 
+        virtual size_t size() const {
+            return MapType::size();
+        }
+        virtual bool has(const Pattern & pattern) const {
+            return MapType::has(pattern);
+        }
+
         void load(std::istream * f, const PatternModelOptions options) { //load from file
             char null;
             f->read( (char*) &null, sizeof(char));        
@@ -204,7 +224,7 @@ class PatternModel: public MapType {
             this->postread(options);
         }
         
-        void train(std::istream * in , const PatternModelOptions options) {
+        void train(std::istream * in , const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
             uint32_t sentence = 0;
             std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
             if (!in->good()) {
@@ -232,6 +252,7 @@ class PatternModel: public MapType {
 
                     for (std::vector<std::pair<Pattern,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
                         const Pattern pattern = iter->first;
+                        if ((constrainbymodel != NULL) && (!constrainbymodel->has(pattern))) continue;
                         if (pattern.category() == NGRAM) {
                             const IndexReference ref = IndexReference(sentence, iter->second);
                             bool found = true;
@@ -312,9 +333,9 @@ class PatternModel: public MapType {
 
             }
         }
-        void train(const std::string filename, const PatternModelOptions options) {
+        void train(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL) {
             std::ifstream * in = new std::ifstream(filename.c_str());
-            this->train((std::istream*) in, options);
+            this->train((std::istream*) in, options, constrainbymodel);
             in->close();
             delete in;
         }
