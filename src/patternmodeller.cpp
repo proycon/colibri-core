@@ -274,10 +274,10 @@ int main( int argc, char *argv[] ) {
     if (inputmodeltype == INDEXEDPATTERNMODEL) {
         cerr << "Loading indexed pattern model " << inputmodelfile << " as input model..."<<endl;
         IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options);
+        if (!inputmodelfile2.empty()) prunebymodel(inputmodel, inputmodelfile2, inputmodeltype2, options);
         inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
 
 
-        if (!inputmodelfile2.empty()) prunebymodel(inputmodel, inputmodelfile2, inputmodeltype2, options);
         
         if (!outputmodelfile.empty()) {
             inputmodel.write(outputmodelfile);
