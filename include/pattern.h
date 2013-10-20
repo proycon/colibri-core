@@ -239,7 +239,7 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     void add(ValueType * value, const IndexReference & ref ) const {
         *value = *value + 1;
     }
-    void convertto(ValueType &, ValueType &) const {}; //noop
+    void convertto(ValueType & source, ValueType & target) const { if (&source != &target) target = source; }; 
 };
 
 /************* Base abstract container for pattern storage  ********************/

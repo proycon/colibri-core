@@ -102,7 +102,7 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         }
         value->insert(ref);
     }
-    void convertto(IndexedData &, IndexedData &) const {}; //noop
+    void convertto(IndexedData & source , IndexedData & target) const { if (&source != &target) target = source;  }; //noop
     void convertto(IndexedData & value, unsigned int & convertedvalue) const { convertedvalue = value.count(); };
 };
 
@@ -229,7 +229,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 std::cerr << "ERROR: PAttern model is unindexed, unable to read as indexed" << std::endl;
                 throw InternalError();
             } else {
-                 MapType::read(f, options.MINTOKENS); //read PatternStore
+                 MapType::template read(f, options.MINTOKENS); //read PatternStore
             }
             this->postread(options);
         }
