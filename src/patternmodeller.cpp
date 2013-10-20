@@ -17,7 +17,7 @@ void usage() {
     cerr << "\t-o [modelfile]   Output model" << endl;
     cerr << "\t-f [datafile]    Corpus data file" << endl;
     cerr << "\t-c [classfile]   Class file"<< endl;
-    cerr << "\t-j [modelfile]   2nd input model (e.g. test data)" << endl;
+    cerr << "\t-j [modelfile]   2nd input model for joining models (intersection) (e.g. test data)" << endl;
     cerr << " Building a model:  patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
     cerr << "\t-t <number>      Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
     cerr << "\t-u               Build an unindexed model" << endl;    
@@ -31,11 +31,11 @@ void usage() {
     cerr << "\t-Q               Start interactive query mode, allows for pattern lookup against the loaded model (input from standard input)" << endl; 
     cerr << "\t-q               Query a pattern (may be specified multiple times!)" << endl; 
     cerr << "\t-r               Compute relationships for the specified patterns (use with -q or -Q). Relationships are: subsumptions, neigbours, skipcontent " << endl; 
-    cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
+    //cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
     cerr << "Editing a model:  patternmodeller -o [modelfile] -i [modelfile]" << endl;
     cerr << "\tOptions -tlT can be used to filter the model, -u can be used to remove the index" << endl;
-    cerr << "Run train model on test data:  patternmodeller -o [modelfile] -i [modelfile] -j [modelfile2] --test" << endl;
+    cerr << "Run train model on test data:  patternmodeller -i [modelfile] -j [modelfile2] --test" << endl;
     cerr << " New model will only contain counts from model2 but only for the patterns also occurring in model1. The total number of tokens equals that of model2 (i.e. the amount uncovered is retained in the model)" << endl;
 }
 
@@ -200,7 +200,7 @@ int main( int argc, char *argv[] ) {
             outputmodelfile = optarg;
             break;
 		case 'u':
-            outputmodelfile = UNINDEXEDPATTERNMODEL;
+            outputmodeltype = UNINDEXEDPATTERNMODEL;
 			break;
 		case 'r':
             DORELATIONS = true;
