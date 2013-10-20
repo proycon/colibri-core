@@ -135,6 +135,16 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
     }
 }
 
+template<class A,class B,class C>
+void prunebymodel(PatternModel<A,B,C> & inputmodel, const std::string & inputmodelfile2, int inputmodeltype2, PatternModelOptions options) {
+    if (inputmodeltype2 == UNINDEXEDPATTERNMODEL) {
+        PatternModel<uint32_t> inputmodel2 = PatternModel<uint32_t>(inputmodelfile2, options);
+        inputmodel.prunebymodel(inputmodel2);
+    } else if (inputmodeltype2 == INDEXEDPATTERNMODEL) {
+        IndexedPatternModel<> inputmodel2 = IndexedPatternModel<>(inputmodelfile2, options);
+        inputmodel.prunebymodel(inputmodel2);
+    }
+}
 
 int main( int argc, char *argv[] ) {
     
@@ -253,11 +263,21 @@ int main( int argc, char *argv[] ) {
     if (!inputmodelfile.empty()) {
         inputmodeltype = getmodeltype(inputmodelfile);
     }
+    
+    int inputmodeltype2 = 0;
+    if (!inputmodelfile2.empty()) {
+        inputmodeltype2 = getmodeltype(inputmodelfile2);
+    }
+
+
 
     if (inputmodeltype == INDEXEDPATTERNMODEL) {
         cerr << "Loading indexed pattern model " << inputmodelfile << " as input model..."<<endl;
         IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options);
         inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
+
+
+        if (!inputmodelfile2.empty()) prunebymodel(inputmodel, inputmodelfile2, inputmodeltype2, options);
         
         if (!outputmodelfile.empty()) {
             inputmodel.write(outputmodelfile);
@@ -268,6 +288,8 @@ int main( int argc, char *argv[] ) {
     } else if (inputmodeltype == UNINDEXEDPATTERNMODEL) {
         cerr << "Loading unindexed pattern model " << inputmodelfile << " as input model..."<<endl;
         PatternModel<uint32_t> inputmodel = PatternModel<uint32_t>(inputmodelfile, options);
+
+        if (!inputmodelfile2.empty()) prunebymodel(inputmodel, inputmodelfile2, inputmodeltype2, options);
 
         if (!outputmodelfile.empty()) {
             inputmodel.write(outputmodelfile);

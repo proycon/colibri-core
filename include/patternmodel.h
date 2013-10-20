@@ -431,6 +431,22 @@ class PatternModel: public MapType {
             return pruned;
         }
 
+        template<class ValueType2,class ValueHandler2,class MapType2>
+        int prunebymodel(PatternModel<ValueType2,ValueHandler2,MapType2> & secondmodel) {
+            int pruned = 0;
+            typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); 
+            while(iter != this->end()) { 
+                const Pattern pattern = iter->first;
+                if (!secondmodel.has(pattern)) {
+                    iter = this->erase(iter);
+                    pruned++;
+                    continue;
+                }
+                iter++;
+            }
+        }
+
+
         std::vector<std::pair<Pattern, int> > getpatterns(const Pattern & pattern) { //get all patterns in pattern that occur in the patternmodel
             //get all patterns in pattern
             std::vector<std::pair<Pattern, int> > v;   
