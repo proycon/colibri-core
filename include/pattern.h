@@ -239,7 +239,7 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     void add(ValueType * value, const IndexReference & ref ) const {
         *value = *value + 1;
     }
-    ValueType convert(ValueType value) const { return value; } //noop
+    void convertto(ValueType &, ValueType &) const {}; //noop
 };
 
 /************* Base abstract container for pattern storage  ********************/
@@ -328,7 +328,8 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                             insert(p,readvalue);
                     } else {
                         //conversion needed
-                        ValueType convertedvalue = valuehandler.convert(readvalue);
+                        ValueType convertedvalue;
+                        readvaluehandler.convertto(readvalue, convertedvalue);
                         insert(p,convertedvalue);
                     }
                 }

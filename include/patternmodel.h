@@ -102,6 +102,9 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         }
         value->insert(ref);
     }
+    void convertto(IndexedData &, IndexedData &) const {}; //noop
+    void convertto(IndexedData & value, unsigned int & convertedvalue) const { convertedvalue = value.count(); };
+
     IndexedData convert(IndexedData & value) const { 
         return value; //nothing to do
     }
