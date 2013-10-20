@@ -524,6 +524,8 @@ int main( int argc, char *argv[] ) {
         indexedmodel2.report(&std::cerr);
 
 
+        cerr << "Reading indexed model as unindexed" << endl;
+        PatternModel<uint32_t> indexedasunindexedmodel = PatternModel<uint32_t>(outputfilename, options);
 
         string querystring  = "To die , to sleep";
         Pattern ngram = classencoder.input2pattern(querystring, true); 	
