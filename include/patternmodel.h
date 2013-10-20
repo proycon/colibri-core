@@ -333,6 +333,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
             }
         }
+
         void train(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL) {
             std::ifstream * in = new std::ifstream(filename.c_str());
             this->train((std::istream*) in, options, constrainbymodel);
