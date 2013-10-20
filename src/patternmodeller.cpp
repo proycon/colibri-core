@@ -30,7 +30,8 @@ void usage() {
     cerr << "\t-H               Generate a histogram" << endl;   
     cerr << "\t-Q               Start interactive query mode, allows for pattern lookup against the loaded model (input from standard input)" << endl; 
     cerr << "\t-q               Query a pattern (may be specified multiple times!)" << endl; 
-    cerr << "\t-r               Compute relationships for the specified patterns (use with -q or -Q). Relationships are: subsumptions, neigbours, skipcontent " << endl; 
+    cerr << "\t-r               Compute and show relationships for the specified patterns (use with -q or -Q). Relationships are: subsumptions, neigbours, skipcontent " << endl; 
+    //cerr << "\t-C               Compute and show co-occurrence counts (pointwise mutual information)" << endl;  //TODO
     //cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
     cerr << "Editing a model:  patternmodeller -o [modelfile] -i [modelfile]" << endl;
