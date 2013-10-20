@@ -222,7 +222,15 @@ class PatternModel: public MapType, public PatternModelInterface {
             f->read( (char*) &totaltokens, sizeof(uint64_t));        
             f->read( (char*) &totaltypes, sizeof(uint64_t)); 
 
-            this->read(f, options.MINTOKENS); //read PatternStore
+            if ((model_type == INDEXEDPATTERNMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) {
+                //reading indexed pattern model as unindexed, ok:
+                 MapType::template read<IndexedData,IndexedDataHandler>(f, options.MINTOKENS);
+            } else if ((model_type == UNINDEXEDPATTERNMODEL) && (this->getmodeltype() == INDEXEDPATTERNMODEL)) {
+                std::cerr << "ERROR: PAttern model is unindexed, unable to read as indexed" << std::endl;
+                throw InternalError();
+            } else {
+                 MapType::read(f, options.MINTOKENS); //read PatternStore
+            }
             this->postread(options);
         }
         

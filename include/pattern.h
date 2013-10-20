@@ -312,7 +312,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
             }
         }
 
-        template<class ReadValueType = ValueType, class ReadValueHandler = ValueHandler>
+        template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler>
         void read(std::istream * in, int MINTOKENS=0) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
@@ -324,18 +324,13 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                 //std::cerr << "Read pattern: " << std::endl;
                 readvaluehandler.read(in, readvalue);
                 if (readvaluehandler.count(readvalue) >= MINTOKENS) {
-                    if (std::is_same<ReadValueType, ValueType>::value) {
-                            insert(p,readvalue);
-                    } else {
                         //conversion needed
                         ValueType convertedvalue;
                         readvaluehandler.convertto(readvalue, convertedvalue);
                         insert(p,convertedvalue);
-                    }
                 }
             }
         }
-
 };
 
 
