@@ -89,6 +89,13 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
                     processquerypattern<ModelType>(model,classdecoder, linepattern, dorelations);
                 } else {
                     vector<pair<Pattern, int> > patterns = model.getpatterns(linepattern);
+                    if (model.has(linepattern)) {
+                        const IndexReference ref = IndexReference(linenum,0);
+
+                        //process and output instance
+                        cout << ref.sentence << ':' << (int) ref.token << "\t";
+                        processquerypattern<ModelType>(model, classdecoder, linepattern, dorelations);                                
+                    }
                     for (vector<pair<Pattern,int> >::iterator iter = patterns.begin(); iter != patterns.end(); iter++) {
                             const Pattern pattern = iter->first;
                             const IndexReference ref = IndexReference(linenum,iter->second);
