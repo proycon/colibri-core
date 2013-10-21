@@ -414,6 +414,19 @@ class PatternModel: public MapType, public PatternModelInterface {
         double coverage(const Pattern & key) {
             return this->coveragecount(key) / this->tokens();
         }
+        
+        int grouptotal(int category, int n) {
+            int total = 0;
+            PatternModel::iterator iter = this->begin(); 
+            while (iter != this->end()) {
+                const Pattern pattern = iter->first;
+                if (((category == 0) || (pattern.category() == category)) && ((n == 0) || (pattern.n() == n))) {
+                    total += this->valuehandler.count(iter->second);
+                }
+                iter++;
+            }
+        }
+
 
         virtual int add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
             if (value == NULL) {
