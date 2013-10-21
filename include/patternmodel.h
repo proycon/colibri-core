@@ -643,8 +643,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                 *OUT << "            assuming no overlap at all!!! Use an indexed model for accurate coverage counts" << std::endl;
             }
             *OUT << "----------------------------------" << std::endl;
-            *OUT << "                          " << std::setw(10) << "PATTERNS" << std::setw(10) << "TOKENS" << std::setw(10) << "TYPES" << std::setw(10) << std::endl;
-            *OUT << "Total:                    " << std::setw(10) << this->size() << std::setw(10) << this->tokens() << std::setw(10) << this->types() <<  std::endl;
+            *OUT << "                          " << std::setw(10) << "PATTERNS" << std::setw(10) << "TOKENS" << std::setw(10) << "COVERAGE" << std::setw(10) << "TYPES" << std::setw(10) << std::endl;
+            *OUT << "Total:                    " << std::setw(10) << "-" << std::setw(10) << this->tokens() << std::setw(10) << "-" << std::setw(10) << this->types() <<  std::endl;
 
             int coveredtypes = totalwordtypesingroup(0,0);
             int coveredtokens = totalwordtypesingroup(0,0);
@@ -652,12 +652,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (coveredtokens > this->tokens()) coveredtokens = this->tokens();
             int uncoveredtokens = this->tokens() - coveredtokens;
             if (uncoveredtokens < 0) uncoveredtokens = 0;
-            *OUT << "Uncovered:                   " << std::setw(10) << 0 << std::setw(10) << uncoveredtokens << std::setw(10) << this->types() - coveredtypes <<  std::endl;
-            *OUT << "Covered:                     " << std::setw(10) << this->size() << std::setw(10) << coveredtokens << std::setw(10) << coveredtypes <<  std::endl << std::endl;
+            *OUT << "Uncovered:                 " << std::setw(10) << 0 << std::setw(10) << uncoveredtokens << std::setw(10) << uncoveredtokens / (double) this->tokens() << std::setw(10) << this->types() - coveredtypes <<  std::endl;
+            *OUT << "Covered:                   " << std::setw(10) << this->size() << std::setw(10) << coveredtokens << std::setw(10) << coveredtokens / (double) this->tokens() <<  std::setw(10) << coveredtypes <<  std::endl << std::endl;
             
             
             *OUT << std::setw(10) << "CATEGORY" << std::setw(10) << "N (SIZE) "<< std::setw(10) << "PATTERNS";
-            if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) *OUT << std::setw(10) << "TOKENS";
+            if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) *OUT << std::setw(10) << "TOKENS" << std::setw(10) << "COVERAGE";
             *OUT << std::setw(10) << "TYPES" << std::setw(12) << "OCCURRENCES" << std::endl;
             
             for (std::set<int>::iterator iterc = cache_categories.begin(); iterc != cache_categories.end(); iterc++) {
@@ -681,7 +681,10 @@ class PatternModel: public MapType, public PatternModelInterface {
                             *OUT << std::setw(10) << n;
                         }
                         *OUT << std::setw(10) << cache_grouptotalpatterns[c][n];
-                        if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) *OUT << std::setw(10) << cache_grouptotaltokens[c][n];
+                        if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) {
+                            *OUT << std::setw(10) << cache_grouptotaltokens[c][n];
+                            *OUT << std::setw(10) << cache_grouptotaltokens[c][n] / (double) this->tokens();
+                        }
                         *OUT << std::setw(10) << cache_grouptotalwordtypes[c][n];
                         *OUT << std::setw(12) << cache_grouptotal[c][n] << std::endl;;
                     }
