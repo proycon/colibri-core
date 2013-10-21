@@ -477,10 +477,10 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 types.insert(p);
                             }
                         }
-                        cache_grouptotalwordtypes[*iterc][*itern] += types.size();
                         cache_grouptotaltokens[*iterc][*itern] += this->valuehandler.count(iter->second);
                         iter++;
                     }
+                    cache_grouptotalwordtypes[*iterc][*itern] += types.size();
                 }
             }
         }
@@ -1030,10 +1030,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                             }
                         }
                     }
-                    this->cache_grouptotalwordtypes[*iterc][*itern] += types.size();
-                    this->cache_grouptotaltokens[*iterc][*itern] += tokens.size();
                     iter++;
                 }
+                this->cache_grouptotalwordtypes[*iterc][*itern] += types.size();
+                this->cache_grouptotaltokens[*iterc][*itern] += tokens.size();
             }
         }
     }
@@ -1072,3 +1072,4 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 };
 
+#endif
