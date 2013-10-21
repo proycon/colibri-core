@@ -46,4 +46,4 @@ cdef extern from "classencoder.h":
     cdef cppclass ClassEncoder:
         ClassEncoder(string) except +
         int size()
-        EncAnyGram* input2anygram(string , bool allowunknown, bool autoaddunknown)
+        Pattern input2pattern(string , bool allowunknown, bool autoaddunknown)

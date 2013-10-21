@@ -75,13 +75,13 @@ from unordered_map cimport unordered_map
 #            inc(it)
 
 cdef class ClassEncoder:
-    cdef pycolibri_classes.ClassEncoder *thisptr
+    cdef colibricore_classes.ClassEncoder *thisptr
 
     def __cinit__(self):
         self.thisptr = NULL
 
     def __cinit__(self, str filename):
-        self.thisptr = new pycolibri_classes.ClassEncoder(filename.encode('utf-8'))
+        self.thisptr = new colibricore_classes.ClassEncoder(filename.encode('utf-8'))
 
     def __dealloc__(self):
         del self.thisptr
@@ -97,13 +97,13 @@ cdef class ClassEncoder:
 
 
 cdef class ClassDecoder:
-    cdef pycolibri_classes.ClassDecoder *thisptr
+    cdef colibricore_classes.ClassDecoder *thisptr
 
     def __cinit__(self):
         self.thisptr = NULL
 
     def __cinit__(self, str filename):
-        self.thisptr = new pycolibri_classes.ClassDecoder(filename.encode('utf-8'))
+        self.thisptr = new colibricore_classes.ClassDecoder(filename.encode('utf-8'))
 
     def __dealloc__(self):
         del self.thisptr
@@ -114,37 +114,28 @@ cdef class ClassDecoder:
 
 cdef class Pattern:
 
-    cdef colibricore_classes.Pattern * thisptr
+    cdef colibricore_classes.Pattern cpattern
 
-    def __cinit__(self):
-        self.thisptr = NULL
-
-    cdef bind(self, pycolibri_classes.Pattern * ptr):
-        self.thisptr = ptr
-
-    def __dealloc__(self):
-        del self.thisptr
+    cdef bind(self, colibricore_classes.Pattern cpattern):
+        self.cpattern = cpattern
 
     def tostring(self, ClassDecoder decoder):
-        if self.thisptr != NULL:
-            return str(self.thisptr.tostring(deref(decoder.thisptr)),'utf-8')
-        else:
-            raise KeyError
+        return str(self.cpattern.tostring(deref(decoder.thisptr)),'utf-8')
 
     def __len__(self):
         return self.thisptr.n()
 
-    def __getitem__(self, item):
-        if isinstance(item, slice):
-            c_pattern = colibricore_classes.Pattern(deref(self.thisptr), item.start, item.stop)
-            newpattern = Pattern()
-            newpattern.bind(c_pattern)
-            return newpattern
-        else:
-            c_pattern = colibricore_classes.Pattern(deref(self.thisptr), item.start, item.start+1)
-            newpattern = Pattern()
-            newpattern.bind(c_pattern)
-            return newpattern
+#    def __getitem__(self, item):
+#        if isinstance(item, slice):
+#            c_pattern = colibricore_classes.Pattern(self.cpattern, item.start, item.stop)
+#            newpattern = Pattern()
+#            newpattern.bind(c_pattern)
+#            return newpattern
+#        else:
+#            c_pattern = colibricore_classes.Pattern(self.cpattern, item.start, item.start+1)
+#            newpattern = Pattern()
+#            newpattern.bind(c_pattern)
+#            return newpattern
 
     def __iter__(self):
         for i in range(0, len(self)):
