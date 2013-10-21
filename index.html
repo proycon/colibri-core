@@ -1,0 +1,47 @@
+---
+layout: ilkng
+title: Colibri Core
+subtitle: Constructions as Linguistic Bridges
+keywords: colibri, constructions, skipgrams
+description:
+lang: en
+homelabel: Home
+sourcelabel: Source
+documentationlabel: Documentation
+---
+
+<div class="leftbox">
+
+
+<p><strong>Colibri Core</strong> is an NLP tool as well as a C++ and Python library for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. At the core is the tool <tt>colibri-patternmodeller</tt> which allows you to build, view, manipulate and query pattern models.</p>
+
+<p>The software is developed in the scope of the Ph.D. research project <strong>Constructions as Linguistic Bridges</strong>. This research examines the identification and extraction of aligned constructions or patterns across natural languages, and the usage of such constructions in Machine Translation. The aligned constructions are not identified on the basis of an extensive and explicitly defined grammar or expert database of linguistic knowledge, but rather are implicitly distilled from large amounts of example data. Our notion of constructions is broad and transcends the idea of words or variable-length phrases. </p>
+
+
+<p>The software consists out of various tools and an API for C++ as well as Python, each of which will be discussed in the <a href="doc/">documentation</a>. Depending on the size of your input corpus, certain tasks may take considerable memory. We recommend a Linux machine with at least 8GB RAM.</p>
+
+<p>
+<strong>Colibri Core</strong> has the following facilities:
+<ul>
+    <li><strong>Pattern modelling</strong> - Build pattern models from corpus data. Models may contain n-grams and/or skipgrams and may be either unindexed or indexed (maintaining precise references to the covered tokens).</li>
+    <li><strong>Model visualisation</strong> - Visualisation of models in various ways, including token coverage reports, histograms, and graphs that show the relationships between patterns</li>
+    <li><strong>Model querying</strong> - Interactively query generated models for specific patterns and relations between patterns</li>
+    <li><strong>Model/corpus comparison</strong> - Match patterns generated from one corpus to another corpus.</li>
+</ul>
+</p>
+
+<p>Most of the code is written in C++, offering a clean API interface. A Python wrapper binding with the C++ library is available, giving access to fast and memory-efficient pattern models from a high-level language.</p>
+
+</div>
+
+<div class="rightbox">
+<h2>Resources</h2>
+
+<ul>
+<li><a href="http://github.com/proycon/colibri-core">Source code</a></li>
+<li><a href="doc/">Documentation</a></li>
+</ul>
+
+<p>Colibri was developed by Maarten van Gompel at the Centre of Language Studies, Radboud University Nijmegen, under supervision of Antal van den Bosch.</p>
+
+</div>
