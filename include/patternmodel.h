@@ -604,7 +604,16 @@ class PatternModel: public MapType, public PatternModelInterface {
                 const int covcount = this->coveragecount(pattern);
                 const double coverage = covcount / (double) this->tokens();
                 const double freq = this->frequency(pattern);
-                *out << pattern_s << "\t" << count << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << pattern.category() << "\t" << freq << std::endl;
+                const int cat = pattern.category();
+                std::string cat_s;
+                if (cat == 1) {
+                    cat_s = "ngram";
+                } else if (cat == 2) {
+                    cat_s = "skipgram";
+                } else if (cat == 3) {
+                    cat_s = "dyn-skipgram";
+                }
+                *out << pattern_s << "\t" << count << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << freq << std::endl;;
             }
         }
         
@@ -749,7 +758,16 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const int covcount = this->coveragecount(pattern);
             const double coverage = covcount / (double) this->tokens();
             const double freq = this->frequency(pattern);
-            *out << pattern_s << "\t" << count << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << pattern.category() << "\t" << freq << "\t";
+            const int cat = pattern.category();
+            std::string cat_s;
+            if (cat == 1) {
+                cat_s = "ngram";
+            } else if (cat == 2) {
+                cat_s = "skipgram";
+            } else if (cat == 3) {
+                cat_s = "dyn-skipgram";
+            }
+            *out << pattern_s << "\t" << count << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << freq << "\t";
             IndexedData * data = this->getdata(pattern);
             int i = 0;
             for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
