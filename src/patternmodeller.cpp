@@ -112,7 +112,7 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
 
 
 template<class ModelType = IndexedPatternModel<>>
-void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations) {
+bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations) {
     if (print) {
         if (classdecoder == NULL) {
             cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
@@ -133,6 +133,7 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
             querymodel<ModelType>(model, classencoder, classdecoder, relations); 
         }
     }
+    return (print || report || histogram || query);
 }
 
 template<class A,class B,class C>
@@ -173,7 +174,7 @@ int main( int argc, char *argv[] ) {
     bool DORELATIONS = false;
     bool DEBUG = false;
     char c;    
-    while ((c = getopt(argc, argv, "c:i:j:o:f:t:ul:sT:PRHQDhq:rG")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:rG")) != -1)
         switch (c)
         {
         case 'c':
@@ -245,7 +246,12 @@ int main( int argc, char *argv[] ) {
             cerr << "Unknown option: -" <<  optopt << endl;
             abort ();
         }
-   
+  
+    bool didsomething = false;
+    if ((inputmodelfile.empty()) && (corpusfile.empty())) {
+        cerr << "ERROR: No input model (-i) or corpus data file specified (-f), specify at least one." << classfile << endl;
+        exit(2);
+    }
 
     ClassDecoder * classdecoder = NULL;
     ClassEncoder * classencoder = NULL;
@@ -288,10 +294,15 @@ int main( int argc, char *argv[] ) {
 
         
         if (!outputmodelfile.empty()) {
+            didsomething = true;
             inputmodel.write(outputmodelfile);
         }
-        viewmodel<IndexedPatternModel<>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS); 
-        if (!querypatterns.empty()) processquerypatterns<IndexedPatternModel<>>(inputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
+        didsomething = viewmodel<IndexedPatternModel<>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS) || didsomething; 
+        if (!querypatterns.empty()) {
+            didsomething = true;
+            processquerypatterns<IndexedPatternModel<>>(inputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
+        }
+        
         
     } else if (inputmodeltype == UNINDEXEDPATTERNMODEL) {
         cerr << "Loading unindexed pattern model " << inputmodelfile << " as input model..."<<endl;
@@ -300,10 +311,14 @@ int main( int argc, char *argv[] ) {
         if (!inputmodelfile2.empty()) prunebymodel(inputmodel, inputmodelfile2, inputmodeltype2, options);
 
         if (!outputmodelfile.empty()) {
+            didsomething = true;
             inputmodel.write(outputmodelfile);
         }
-        viewmodel<PatternModel<uint32_t>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS); 
-        if (!querypatterns.empty()) processquerypatterns<PatternModel<uint32_t>>(inputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
+        didsomething = viewmodel<PatternModel<uint32_t>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS) || didsomething; 
+        if (!querypatterns.empty()) {
+            didsomething = true;
+            processquerypatterns<PatternModel<uint32_t>>(inputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
+        }
 
     } else if (!inputmodelfile.empty()) {
         cerr << "ERROR: Input model is not a valid colibri pattern model" << endl;
@@ -329,6 +344,12 @@ int main( int argc, char *argv[] ) {
             if (!outputmodelfile.empty()) {
                 cerr << "Saving indexed pattern model to " << outputmodelfile <<endl;
                 outputmodel.write(outputmodelfile);
+                didsomething = true;
+            }
+            didsomething = viewmodel<IndexedPatternModel<>>(outputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS) || didsomething; 
+            if (!querypatterns.empty()) {
+                didsomething = true;
+                processquerypatterns<IndexedPatternModel<>>(outputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
             }
         } else if (outputmodeltype == UNINDEXEDPATTERNMODEL) {
             PatternModel<uint32_t> outputmodel = PatternModel<uint32_t>();
@@ -340,10 +361,22 @@ int main( int argc, char *argv[] ) {
             if (!outputmodelfile.empty()) {
                 cerr << "Saving unindexed pattern model to " << outputmodelfile <<endl;
                 outputmodel.write(outputmodelfile);
+                didsomething = true;
+            }
+            didsomething = viewmodel<PatternModel<uint32_t>>(outputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS) || didsomething; 
+            if (!querypatterns.empty()) {
+                didsomething = true;
+                processquerypatterns<PatternModel<uint32_t>>(outputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
             }
 
         }
 
+    }
+
+
+    if (!didsomething)  {
+        cerr << "Ooops... You didn't really give me anything to do...that can't be right.. Please study the usage options (-h) again! Did you perhaps forget a -P or -o? " << endl;
+        exit(1);
     }
 }
 
