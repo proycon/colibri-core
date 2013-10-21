@@ -127,7 +127,7 @@ cdef class Pattern:
 
     def tostring(self, ClassDecoder decoder):
         if self.thisptr != NULL:
-            return str(self.thisptr.decode(deref(decoder.thisptr)),'utf-8')
+            return str(self.thisptr.tostring(deref(decoder.thisptr)),'utf-8')
         else:
             raise KeyError
 
