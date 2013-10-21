@@ -142,6 +142,8 @@ class PatternModelInterface {
         virtual bool has(const Pattern &) const =0;
         virtual size_t size() const =0; 
         virtual int occurrencecount(const Pattern & pattern)=0;
+        virtual double frequency(const Pattern &) =0;
+        virtual double grouptotal(int, int) =0;
         virtual int maxlength() const=0;
         virtual int minlength() const=0;
         virtual int types() const=0;
@@ -160,7 +162,14 @@ class PatternModel: public MapType, public PatternModelInterface {
         int minn; 
         
         std::multimap<IndexReference,Pattern> reverseindex; 
-        
+
+        std::set<int> cache_categories;
+        std::set<int> cache_n;
+        std::map<int,std::map<int,int>> cache_grouptotal; //total occurrences (used for frequency computation, within a group)
+        std::map<int,std::map<int,int>> cache_grouptotalpatterns ; //total distinct patterns per group
+        std::map<int,std::map<int,int>> cache_grouptotalwordtypes; //total covered word types per group
+        std::map<int,std::map<int,int>> cache_grouptotaltokens; //total covered tokens per group
+
         void postread(const PatternModelOptions options) {
             //this function has a specialisation specific to indexed pattern models,
             //this is the generic version
@@ -414,19 +423,86 @@ class PatternModel: public MapType, public PatternModelInterface {
         double coverage(const Pattern & key) {
             return this->coveragecount(key) / this->tokens();
         }
-        
-        int grouptotal(int category, int n) {
-            int total = 0;
+       
+        double frequency(const Pattern & key) {
+            //frequency within the same n and category class
+            return this->occurencecount(pattern) / (double) grouptotal(pattern.category(),pattern.n());
+        }
+
+        void computestats() {
             PatternModel::iterator iter = this->begin(); 
             while (iter != this->end()) {
                 const Pattern pattern = iter->first;
-                if (((category == 0) || (pattern.category() == category)) && ((n == 0) || (pattern.n() == n))) {
-                    total += this->valuehandler.count(iter->second);
-                }
+                const int c = pattern.category();
+                cache_categories.insert(c);
+                const int n = pattern.n();
+                cache_n.insert(n);
+                
+                //total of occurrences in a group, used for frequency computation
+                cache_grouptotal[c][n] += this->valuehandler.count(iter->second); 
+                cache_grouptotal[0][n] += this->valuehandler.count(iter->second);
+                cache_grouptotal[c][0] += this->valuehandler.count(iter->second);
+                cache_grouptotal[0][0] += this->valuehandler.count(iter->second);
+                
+                //total of distinct patterns in a group
+                cache_grouptotalpatterns[c][n]++;
+                cache_grouptotalpatterns[0][n]++;
+                cache_grouptotalpatterns[c][0]++;
+                cache_grouptotalpatterns[0][0]++;
                 iter++;
+            }            
+        }
+        
+        void computecoveragestats() {
+            //opting for memory over speed (more iterations, less memory)
+            // Indexed model overloads this for better cache_grouptotaltokens computation! 
+            for (std::set<int>::iterator iterc = cache_categories.begin(); iterc != cache_categories.end(); iterc++) {
+                for (std::set<int>::iterator itern = cache_n.begin(); itern != cache_n.end(); itern++) {
+                    std::map<Pattern> types;
+                    iter = this->begin(); 
+                    while (iter != this->end()) {
+                        const Pattern pattern = iter->first;                        
+                        if ((pattern.n() == *itern) && (pattern.category() == *iterc)) {
+                            std::vector<Pattern> unigrams;
+                            pattern.ngrams(unigrams, 1);
+                            for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
+                                const Pattern p = *iter2;
+                                types.insert(p);
+                            }
+                        }
+                        cache_grouptotalwordtypes[*iterc][*itern] += types.size();
+                        cache_grouptotaltokens[*iterc][*itern] += this->valuehandler.count(iter->second);
+                        iter++;
+                    }
+                }
             }
         }
+        
 
+        int totaloccurrencesingroup(int category, int n) {
+            //category and n can be set to 0 to loop over all
+            if ((cache_grouptotal.empty()) && (!this->data.empty())) this->computestats();
+            return cache_grouptotal[category][n];
+        }
+
+        int totalpatternsingroup(int category, int n) {
+            //category and n can be set to 0 to loop over all
+            if ((cache_grouptotalpatterns.empty()) && (!this->data.empty())) this->computestats();
+            return cache_grouptotalpatterns[category][n];
+        }
+
+        int totalwordtypesingroup(int category, int n) {
+            //total covered word/unigram types
+            //category and n can be set to 0 to loop over all
+            if ((cache_grouptotalwordtypes.empty()) && (!this->data.empty())) this->computecoveragestats();
+            return cache_grouptotalwordtypes[category][n];
+        }
+        int totaltokensingroup(int category, int n) {
+            //total COVERED tokens
+            //category and n can be set to 0 to loop over all
+            if ((cache_grouptotaltokens.empty()) && (!this->data.empty())) this->computecoveragestats();
+            return cache_grouptotaltokens[category][n];
+        }
 
         virtual int add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
             if (value == NULL) {
