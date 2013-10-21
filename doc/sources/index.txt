@@ -202,48 +202,43 @@ First make sure to have class-encoded your corpus. Given this encoded corpus, ``
 
 	$ colibri-patternmodeller -f yourcorpus.dat -t 10 
 	
-This will result in a pattern model ``yourcorpus.indexedpatternmodel.colibri``. This model is stored in a binary format. To turn it into a human readable presentation it needs to be decoded. The ``colibri-patternmodeller`` program can do this by specifying an input model using the ``-i`` flag, the class file using the ``-c`` parameter, and the desired action to print it all using ``-P``::
+This will result in a pattern model ``yourcorpus.indexedpatternmodel.colibri``. This model is stored in a binary format. To print it into a human readable presentation it needs to be decoded. The ``colibri-patternmodeller`` program can do this by specifying an input model using the ``-i`` flag, the class file using the ``-c`` parameter, and the desired action to print it all using ``-P``::
 
-	$ patternfinder -i yourcorpus.indexedpatternmodel.colibri -c yourcorpus.colibri.cls -P
+	$ colibri-patternmodeller -i yourcorpus.indexedpatternmodel.colibri -c yourcorpus.colibri.cls -P
 	
-Output will be to ``stdout`` in a tab delimited format, facilitating easy parsing. An excerpt follows::
+Output will be to ``stdout`` in a tab delimited format, with the first line reserved for the header. This facilitates easy parsing as you can just load it into any software accepting CSV files, such as spreadsheets. An excerpt follows::
 
-	#TYPES=89126;TOTALTOKENS=681047
-	#N      CLASS   OCC.COUNT       TOKENS  COVERAGE        FREQ-ALL        FREQ-G  FREQ-N  SKIPTYPES       ENTROPY REFERENCES
-	3       the criteria of 3       9       1.321494698603767e-05   2.054269696851421e-06   2.054269696851421e-06   1.43282213423633e-05    0       -       1028:15 4342:43 14772:15 
-	1       picking 3       3       4.404982328679225e-06   2.054269696851421e-06   2.054269696851421e-06   4.502354731524587e-06   0       -       2289:2 5825:20 13913:47 
-	2       and interests   5       10      1.468327442893075e-05   3.423782828085701e-06   3.423782828085701e-06   1.056798703096632e-05   0       -       225:20 2466:47 2796:14 12622:13 21237:22 
+    PATTERN	COUNT	SIZE	TOKENS	COVERAGE	CATEGORY    REFERENCES
+    With	2	1	2	0.0059	1	21:0 32:0
+    or	4	1	4	0.0118	1	1:2 36:2 37:2 38:2
+    To die	2	2	4	0.0118	1	5:7 9:5
+    to be	2	2	4	0.0118	1	1:4 9:1
+    is	2	1	2	0.0059	1	1:8 8:2
 
 The various columns are:
 
-* **N** - The length of the n-gram or skipgram in words
-* **Class** - The actual pattern. Gaps in skipgrams are represented as ``{*x*}`` where x is a number representing the size of the skip. 
+* **Pattern** - The actual pattern. Gaps in skipgrams are represented as ``{*x*}`` where x is a number representing the size of the skip. Variable-width skipgrams are just ``{*}``. 
 * **Occurrence count** - The absolute number of times this pattern occurs
+* **Size** - The length of the n-gram or skipgram in words.
 * **Tokens** - The absolute number of tokens in the corpus that this pattern covers. Computed as ``occurrencecount * n``. 
 * **Coverage** - The number of covered tokens, as a fraction of the total number of tokens.
-* **Frequency over all** - The frequency of the pattern, as a fraction of the sum of all n-grams and skipgrams 
-* **Frequency within group** - The frequency of the pattern, as a fraction of either all n-grams or all skipgrams, depending on the nature of the pattern.
-* **Frequency within n** - The frequency of the patterns, as a fraction of either all n-grams or all skipgrams of the same size (again depending on the nature of the pattern).
-* **Skip-types** - The number of unique types in the skip content, i.e. the number of unique ways in which gaps can be filled (only for skip-grams, 0 otherwise)
-* **Entropy** - The entropy over the skip content distribution.
+* **Category** - 1 for ngrams, 2 for fixed-width skipgrams, 3 for variable-width skipgrams.
 * **References** - A space-delimited list of indices in the corpus that correspond to a occurrence of this pattern. Indices are in the form ``sentence:token`` where sentence starts at one and token starts at zero. This column is only available for indexed models.
  
+The pattern model created in the previous example did not yet include skip-grams, these have to be explicitly enabled with the ``-s`` flag. When this is used, another options becomes available for consideration:
 
-The pattern model created in the previous example did not yet include skip-grams, these have to be explicitly enabled with the ``-s`` flag. When this is used, several other options become available for consideration:
-
-* ``-B`` - Do **not** include skipgrams that start with a gap.
-* ``-E`` - Do **not** include skipgrams that end with a gap.
-* ``-T [value]`` - Skip content threshold value. Only skip content that occurs at least this many times will be considered. This is an extra occurrence threshold that applies to the amount of occurrences that can fill the gaps. The defaut is the same as the over-all threshold ``-t``. Moreover, this value 
-* ``-S [value]`` - Type threshold value. Skipgrams will only be included if they have at least this many unique types as skip content, i.e. if there are at least this many options to fill the gaps. The default is two. Note that ``-S`` applies to types whereas ``-T`` applies to tokens. The default value is two.
-
+* ``-T [value]`` - Only skipgrams that have at least this many different types
+  as skip content, i.e. possible options filling the gaps, will be considered.
+  The default is set to two.
+  
 Here is an example of generating an indexed pattern model including skipgrams::
 
-	$ patternfinder -f yourcorpus.clsenc -t 10 -s -S 3 -B -E
+	$ colibri-patternmodeller -f yourcorpus.colibri.dat -t 10 -s -T 3
 
-If you want to generate unindexed models, simply add the flag ``-u``. Do note that for unindexed models the parameter ``-S`` is set unchangeably to two and and ``-T`` is set fixed to the same value as ``-t``. When decoding an unindexed model, you explicitly need to add the ``-u`` flag, as shown in the next example.  Note that indexed models can also be read (and decoded) in an unindexed way (with the ``-u`` flag); but unindexed models can not be read in an indexed way, as they simply lack indices::
+If you want to generate unindexed models, simply add the flag ``-u``. Do note that for unindexed models the parameter ``-T`` has no effect, it will extract all skipgrams it can find as if ``-T`` were set to one! If you want decent skpigrams, you're best off with an indexed model. Note that indexed models can always be read and printed in an unindexed way (with the ``-u`` flag); but unindexed models can not be read in an indexed way, as they simply lack indices::
 
-	$ patternfinder -d yourcorpus.unindexedpatternmodel.colibri -c yourcorpus.cls -u 
-	$ patternfinder -d yourcorpus.indexedpatternmodel.colibri -c yourcorpus.cls -u 
+	$ colibri-patternmodeller -d yourcorpus.unindexedpatternmodel.colibri -c yourcorpus.cls -u 
+	$ colibri-patternmodeller -d yourcorpus.indexedpatternmodel.colibri -c yourcorpus.cls -u 
 
 
 Statistical reports and histograms
