@@ -7,7 +7,7 @@ extensions = [ Extension("colibricore",
                 language='c++',
                 include_dirs=['/home/proycon/local/include/colibri/', '/home/proycon/local/include/', '/usr/include/libxml2' ],
                 library_dirs=['/home/proycon/local/lib/','/usr/include/lib'],
-                libraries=['colibri'],
+                libraries=['colibri-core'],
                 extra_compile_args=['--std=c++11'],
                 pyrex_gdb=True
                 ) ]
