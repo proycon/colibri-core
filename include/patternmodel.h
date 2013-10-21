@@ -596,7 +596,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
         void print(std::ostream * out, ClassDecoder & decoder) {
-            *out << "PATTERN\tCOUNT\tSIZE\tTOKENS\tCOVERAGE\tCATEGORY\tFREQUENCY" << std::endl;
+            *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY" << std::endl;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
                 const std::string pattern_s = pattern.tostring(decoder);
@@ -613,7 +613,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 } else if (cat == 3) {
                     cat_s = "dyn-skipgram";
                 }
-                *out << pattern_s << "\t" << count << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << freq << std::endl;;
+                *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq << std::endl;;
             }
         }
         
@@ -750,7 +750,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
     
     void print(std::ostream * out, ClassDecoder & decoder) {
-        *out << "PATTERN\tCOUNT\tSIZE\tTOKENS\tCOVERAGE\tCATEGORY\tFREQUENCY\tREFERENCES" << std::endl;
+        *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY\tREFERENCES" << std::endl;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;
             const std::string pattern_s = pattern.tostring(decoder);
@@ -767,7 +767,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             } else if (cat == 3) {
                 cat_s = "dyn-skipgram";
             }
-            *out << pattern_s << "\t" << count << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << freq << "\t";
+            *out << pattern_s << "\t" << count<< "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq << "\t";
             IndexedData * data = this->getdata(pattern);
             int i = 0;
             for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
@@ -1073,11 +1073,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         const std::string pattern_s = pattern.tostring(classdecoder);
         for (std::map<Pattern,int>::iterator iter = relations.begin(); iter != relations.end(); iter++) {
             const Pattern pattern2 = iter->first;
-            *OUT << "\t" << pattern_s << "\t" << label << "\t" << pattern2.tostring(classdecoder) << "\t" << iter->second << "\t" << iter->second / total_f << std::endl;
+            *OUT << "\t" << pattern_s << "\t" << label << "\t" << pattern2.tostring(classdecoder) << "\t" << iter->second << "\t" << iter->second / total_f << "\t" << this->occurrencecount(pattern2) << std::endl;
         }
     }
  
-    void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT) {
+    void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT, bool outputheader=true) {
+        if (outputheader) *OUT << "#\tPATTERN1\tRELATION\tPATTERN2\tREL.COUNT\tREL.FREQUENCY\tCOUNT2" << std::endl;
         {
             std::map<Pattern,int> relations = this->getsubparents(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");
@@ -1093,6 +1094,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         {
             std::map<Pattern,int> relations = this->getrightneighbours(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-OF");
+        }
+        if (pattern.category() == FIXEDSKIPGRAM) {
+            std::map<Pattern,int> relations = this->getskipcontent(pattern);
+            this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANTIATED-BY");
         }
     }
 };

@@ -561,6 +561,11 @@ int main( int argc, char *argv[] ) {
 
         std::map<Pattern,int> relations6 = indexedmodel.getskipcontent(skipgram);
         indexedmodel.outputrelations(skipgram, relations6, classdecoder, &cerr,"INSTANTIATED-BY");
+
+
+        cerr << "All relations for  " << querystring3 << " in one go" << endl;
+        indexedmodel.outputrelations(skipgram, classdecoder, &cerr);
+
     }
 }
 
