@@ -143,7 +143,6 @@ class PatternModelInterface {
         virtual size_t size() const =0; 
         virtual int occurrencecount(const Pattern & pattern)=0;
         virtual double frequency(const Pattern &) =0;
-        virtual double grouptotal(int, int) =0;
         virtual int maxlength() const=0;
         virtual int minlength() const=0;
         virtual int types() const=0;
@@ -424,10 +423,6 @@ class PatternModel: public MapType, public PatternModelInterface {
             return this->coveragecount(key) / this->tokens();
         }
        
-        double frequency(const Pattern & key) {
-            //frequency within the same n and category class
-            return this->occurencecount(pattern) / (double) grouptotal(pattern.category(),pattern.n());
-        }
 
         void computestats() {
             PatternModel::iterator iter = this->begin(); 
@@ -458,8 +453,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             // Indexed model overloads this for better cache_grouptotaltokens computation! 
             for (std::set<int>::iterator iterc = cache_categories.begin(); iterc != cache_categories.end(); iterc++) {
                 for (std::set<int>::iterator itern = cache_n.begin(); itern != cache_n.end(); itern++) {
-                    std::map<Pattern> types;
-                    iter = this->begin(); 
+                    std::set<Pattern> types;
+                    PatternModel::iterator iter = this->begin(); 
                     while (iter != this->end()) {
                         const Pattern pattern = iter->first;                        
                         if ((pattern.n() == *itern) && (pattern.category() == *iterc)) {
@@ -502,6 +497,11 @@ class PatternModel: public MapType, public PatternModelInterface {
             //category and n can be set to 0 to loop over all
             if ((cache_grouptotaltokens.empty()) && (!this->data.empty())) this->computecoveragestats();
             return cache_grouptotaltokens[category][n];
+        }
+        
+        double frequency(const Pattern & pattern) {
+            //frequency within the same n and category class
+            return this->occurrencecount(pattern) / (double) totaloccurrencesingroup(pattern.category(),pattern.n());
         }
 
         virtual int add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
