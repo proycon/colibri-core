@@ -625,7 +625,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                 hist[c]++;
             }
             *OUT << "HISTOGRAM" << std::endl;
-            *OUT << "Frequency\tpatterns" << std::endl;
+            *OUT << "------------------------------" << std::endl;
+            *OUT << "OCCURRENCES\tPATTERNS" << std::endl;
             for (std::map<int,int>::iterator iter = hist.begin(); iter != hist.end(); iter++) {
                 *OUT << iter->first << "\t" << iter->second << std::endl;
             }
