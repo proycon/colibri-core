@@ -457,7 +457,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             }            
         }
         
-        void computecoveragestats() {
+
+        virtual void computecoveragestats() {
             if ((cache_grouptotal.empty()) && (!this->data.empty())) this->computestats();
             cache_grouptotalwordtypes.clear();
             cache_grouptotaltokens.clear();
@@ -1008,9 +1009,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return pruned;
     } 
 
-    void computecoveragestats() {
+    virtual void computecoveragestats() {
         //opting for memory over speed (more iterations, less memory)
         // Indexed model overloads this for better cache_grouptotaltokens computation! 
+        if ((this->cache_grouptotal.empty()) && (!this->data.empty())) this->computestats();
         for (std::set<int>::iterator iterc = this->cache_categories.begin(); iterc != this->cache_categories.end(); iterc++) {
             for (std::set<int>::iterator itern = this->cache_n.begin(); itern != this->cache_n.end(); itern++) {
                 std::set<Pattern> types;
@@ -1024,10 +1026,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
                             const Pattern p = *iter2;
                             types.insert(p);
-                            IndexedData * data = this->getdata(p);
-                            for (IndexedData::iterator dataiter = data->begin(); dataiter != data->end(); dataiter++) {
-                                tokens.insert(*dataiter);
-                            }
+                        }
+                        IndexedData * data = this->getdata(pattern);
+                        for (IndexedData::iterator dataiter = data->begin(); dataiter != data->end(); dataiter++) {
+                            tokens.insert(*dataiter);
                         }
                     }
                     iter++;
