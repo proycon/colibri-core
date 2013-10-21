@@ -494,16 +494,14 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
         void print(std::ostream * out, ClassDecoder & decoder) {
-            *out << "PATTERN\tCOUNT\tSIZE\tCOVERAGECOUNT\tCOVERAGE\tCATEGORY" << std::endl;
+            *out << "PATTERN\tCOUNT\tSIZE\tTOKENS\tCOVERAGE\tCATEGORY" << std::endl;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
                 const std::string pattern_s = pattern.tostring(decoder);
                 const int count = this->occurrencecount(pattern); //TODO: can be sped up by using iter->second!
-                //const double freq = count / (double) this->tokens(); 
                 const int covcount = this->coveragecount(pattern);
                 const double coverage = covcount / (double) this->tokens();
                 *out << pattern_s << "\t" << count << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << pattern.category() <<  std::endl;
-
             }
         }
         
@@ -691,6 +689,26 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
     
+    void print(std::ostream * out, ClassDecoder & decoder) {
+        *out << "PATTERN\tCOUNT\tSIZE\tTOKENS\tCOVERAGE\tCATEGORY\tREFERENCES" << std::endl;
+        for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+            const Pattern pattern = iter->first;
+            const std::string pattern_s = pattern.tostring(decoder);
+            const int count = this->occurrencecount(pattern); //TODO: can be sped up by using iter->second!
+            const int covcount = this->coveragecount(pattern);
+            const double coverage = covcount / (double) this->tokens();
+            *out << pattern_s << "\t" << count << "\t" << pattern.size() << "\t" << covcount << "\t" << coverage << "\t" << pattern.category() << "\t";
+            IndexedData * data = this->getdata(pattern);
+            int i = 0;
+            for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
+                i++;
+                *out << iter2->tostring();
+                if (i < count) *out << " ";
+            }
+            *out << std::endl;
+        }
+    }
+
     Pattern * getpatternfromtoken(IndexReference ref) {
         for (std::multimap<IndexReference,Pattern>::iterator iter = this->reverseindex.lower_bound(ref); iter != this->reverseindex.upper_bound(ref); iter++) {
             if (iter->second.n() == 1) return &(iter->second);
