@@ -647,7 +647,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Total:                    " << std::setw(10) << "-" << std::setw(10) << this->tokens() << std::setw(10) << "-" << std::setw(10) << this->types() <<  std::endl;
 
             int coveredtypes = totalwordtypesingroup(0,0);
-            int coveredtokens = totalwordtypesingroup(0,0);
+            int coveredtokens = totaltokensingroup(0,0);
 
             if (coveredtokens > this->tokens()) coveredtokens = this->tokens();
             int uncoveredtokens = this->tokens() - coveredtokens;
