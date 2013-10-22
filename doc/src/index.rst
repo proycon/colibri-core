@@ -36,7 +36,7 @@ In addition to the C/C++ compiler (``gcc``), the build process for colibri makes
 
   $ cd colibri
   $ bash bootstrap
-  $ ./configure [--with-libfolia=/path/to/libfolia]
+  $ ./configure [--with-folia=/path/to/libfolia]
   $ make
   $ make install
   
