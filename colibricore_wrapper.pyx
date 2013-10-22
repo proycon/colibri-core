@@ -186,12 +186,26 @@ cdef class IndexedPatternModel:
         assert isinstance(pattern, Pattern)
         return self.has(pattern)
 
+    def __iter__(self):
+        cdef cPatternModel[cIndexedData,cIndexedValueHandler,uint64_t].iterator it = self.data.begin()
+        cdef cPattern cpattern
+        cdef cIndexedData cvalue
+        while it != self.data.end():
+            cpattern = deref(it).first
+            cvalue = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            value = IndexedData()
+            value.bind(cvalue)
+            yield tuple(pattern,value)
+            inc(it)
+        
+
 cdef class UnindexedPatternModel:
     cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],uint64_t] data
 
     def __len__(self):
         return self.data.size()
-
 
     cdef has(self, Pattern pattern):
         return self.data.has(pattern.cpattern)
