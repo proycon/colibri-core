@@ -144,6 +144,8 @@ cdef extern from "patternmodel.h":
         ValueType& operator[](Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
+        void load(string, PatternModelOptions) nogil
+        void write(string) nogil
 
 #    cdef cppclass NGramData(AnyGramData):
 #        cppset[CorpusReference] refs

@@ -218,6 +218,13 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual bool has(const Pattern & pattern) const {
             return MapType::has(pattern);
         }
+        
+        void load(std::string filename, const PatternModelOptions options) {
+            std::ifstream * in = new std::ifstream(filename.c_str());
+            this->load( (std::istream *) in, options);
+            in->close();
+            delete in;
+        }
 
         void load(std::istream * f, const PatternModelOptions options) { //load from file
             char null;

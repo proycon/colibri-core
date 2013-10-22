@@ -3,7 +3,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternModel as cPatternModel, IndexedValueHandler as cIndexedValueHandler, BaseValueHandler as cBaseValueHandler
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel, IndexedValueHandler as cIndexedValueHandler, BaseValueHandler as cBaseValueHandler
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 
@@ -199,6 +199,19 @@ cdef class IndexedPatternModel:
             value.bind(cvalue)
             yield tuple(pattern,value)
             inc(it)
+
+    cdef load(self, str filename, threshold, dofixedskipgrams, maxlength, minskiptypes):
+        cdef cPatternModelOptions options
+        options.MINTOKENS = threshold
+        options.DOFIXEDSKIPGRAMS = dofixedskipgrams
+        options.MAXLENGTH = maxlength
+        options.MINSKIPTYPES = minskiptypes
+        options.DOREVERSEINDEX = True
+        self.data.load(filename, options)
+    
+    cdef write(self, str filename):
+        self.write(filename)
+        
         
 
 cdef class UnindexedPatternModel:
