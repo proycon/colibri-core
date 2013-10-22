@@ -6,13 +6,25 @@ from unordered_map cimport unordered_map
 from libcpp.utility cimport pair
 from libc.stdint cimport *
 
+cdef extern from "<iostream>" namespace "std":
+    cdef cppclass ostream:
+        pass
+
+    extern ostream cout
 
 cdef extern from "pattern.h":
     cdef cppclass Pattern:
-        Pattern()
-        Pattern(Pattern&, int,int)
-        string tostring(ClassDecoder&)
-        int n()
+        Pattern() nogil
+        Pattern(Pattern&, int,int) nogil
+        string tostring(ClassDecoder&) nogil
+        int n() nogil
+        int bytesize() nogil
+        int skipcount() nogil
+        int category() nogil
+        int hash() nogil
+        bint operator==(Pattern&) nogil
+        bint operator<(Pattern&) nogil
+        bint operator>(Pattern&) nogil
 
     cdef cppclass IndexReference:
         IndexReference()
@@ -146,6 +158,12 @@ cdef extern from "patternmodel.h":
         iterator find(Pattern&) nogil
         void load(string, PatternModelOptions) nogil
         void write(string) nogil
+        void printmodel(ostream*, ClassDecoder&) nogil
+        void printpattern(ostream*, ClassDecoder&, Pattern&) nogil
+        void report(ostream*) nogil
+        void histogram(ostream*) nogil
+        void outputrelations(Pattern&,ClassDecoder&, ostream*)
+        
 
 #    cdef cppclass NGramData(AnyGramData):
 #        cppset[CorpusReference] refs

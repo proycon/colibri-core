@@ -605,7 +605,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             return v;
         }
 
-        void print(std::ostream * out, ClassDecoder & decoder) {
+        virtual void print(std::ostream * out, ClassDecoder & decoder) {
             *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY" << std::endl;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
@@ -614,7 +614,11 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
-        void print(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool endline = true) {
+        void printmodel(std::ostream * out, ClassDecoder & decoder) { //an alias because cython can't deal with a method named print
+            this->print(out, decoder); 
+        }
+
+        virtual void print(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool endline = true) {
             const std::string pattern_s = pattern.tostring(decoder);
             const int count = this->occurrencecount(pattern); 
             const int covcount = this->coveragecount(pattern);
@@ -634,6 +638,10 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
         
+        void printpattern(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool endline = true) {  //another alias for cython who can't deal with methods named print
+            return this->print(out,decoder,pattern,endline);
+        }
+
         void histogram(std::ostream * OUT) {
             std::map<int,int> hist;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {

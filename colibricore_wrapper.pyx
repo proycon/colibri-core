@@ -3,7 +3,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 
@@ -120,10 +120,6 @@ cdef class Pattern:
     cdef bind(self, cPattern cpattern):
         self.cpattern = cpattern
 
-    cdef cPattern get(self):
-        return self.cpattern
-
-
     def tostring(self, ClassDecoder decoder):
         return str(self.cpattern.tostring(deref(decoder.thisptr)),'utf-8')
 
@@ -146,6 +142,38 @@ cdef class Pattern:
     def __iter__(self):
         for i in range(0, len(self)):
             yield self[i]
+
+    def bytesize(self):
+        return self.cpattern.bytesize()
+
+    def skipcount(self):
+        return self.cpattern.skipcount()
+
+    def category(self):
+        return self.cpattern.category()
+
+    def __hash__(self):
+        return self.cpattern.hash()
+
+    def __richcmp__(Pattern self, Pattern other, int op):
+        if op == 2: # ==
+            return self.cpattern == other.cpattern
+        elif op == 0: #<
+            return self.cpattern < other.cpattern
+        elif op == 4: #>
+            return self.cpattern > other.cpattern
+        elif op == 3: #!=
+            return not( self.cpattern == other.cpattern)
+        elif op == 1: #<=
+            return (self.cpattern == other.cpattern) or (self.cpattern < other.cpattern)
+        elif op == 5: #>=
+            return (self.cpattern == other.cpattern) or (self.cpattern > other.cpattern)
+
+
+#    def ngrams(self,n=0):
+#        
+#        for i in range(0, len(self)):
+#            yield self[i]
 
 cdef class IndexedData:
 
@@ -179,7 +207,7 @@ cdef class IndexedPatternModel:
     def __len__(self):
         return self.data.size()
 
-    cdef has(self, Pattern pattern):
+    cpdef has(self, Pattern pattern):
         return self.data.has(pattern.cpattern)
 
     def __contains__(self, pattern):
@@ -216,7 +244,7 @@ cdef class IndexedPatternModel:
             yield tuple(pattern,value)
             inc(it)
     
-    cdef load(self, str filename, threshold, dofixedskipgrams, maxlength, minskiptypes):
+    cpdef load(self, str filename, threshold=2, dofixedskipgrams=False, maxlength=99, minskiptypes=2):
         cdef cPatternModelOptions options
         options.MINTOKENS = threshold
         options.DOFIXEDSKIPGRAMS = dofixedskipgrams
@@ -225,8 +253,21 @@ cdef class IndexedPatternModel:
         options.DOREVERSEINDEX = True
         self.data.load(filename, options)
     
-    cdef write(self, str filename):
+    cpdef write(self, str filename):
         self.write(filename) 
+
+    cpdef printmodel(self,ClassDecoder decoder):
+        self.data.printmodel(&cout, deref(decoder.thisptr) )
+        
+    cpdef report(self):
+        self.data.report(&cout)
+
+    cpdef histogram(self):
+        self.data.report(&cout)
+
+    cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
+        self.data.outputrelations(pattern.cpattern,deref(decoder.thisptr),&cout)
+
 
 cdef class UnindexedPatternModel:
     cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]] data
@@ -245,7 +286,7 @@ cdef class UnindexedPatternModel:
         assert isinstance(pattern, Pattern)
         return self.getdata(pattern)
 
-    cdef getdata(self, Pattern pattern):
+    cpdef getdata(self, Pattern pattern):
         assert isinstance(pattern, Pattern)
         cdef cIndexedData cvalue
         if pattern in self:
@@ -266,7 +307,7 @@ cdef class UnindexedPatternModel:
             yield tuple(pattern,value)
             inc(it)
     
-    cdef load(self, str filename, threshold, dofixedskipgrams, maxlength, minskiptypes):
+    cpdef load(self, str filename, threshold=2, dofixedskipgrams=False, maxlength=99, minskiptypes=2):
         cdef cPatternModelOptions options
         options.MINTOKENS = threshold
         options.DOFIXEDSKIPGRAMS = dofixedskipgrams
@@ -275,5 +316,17 @@ cdef class UnindexedPatternModel:
         options.DOREVERSEINDEX = True
         self.data.load(filename, options)
     
-    cdef write(self, str filename):
+    cpdef write(self, str filename):
         self.write(filename) 
+    
+    cpdef printmodel(self,ClassDecoder decoder):
+        self.data.printmodel(&cout, deref(decoder.thisptr) )
+        
+    cpdef report(self):
+        self.data.report(&cout)
+
+    cpdef histogram(self):
+        self.data.report(&cout)
+    
+    cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
+        self.data.outputrelations(pattern.cpattern,deref(decoder.thisptr),&cout)
