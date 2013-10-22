@@ -217,16 +217,27 @@ class IndexReference {
 };
 /************* ValueHandler for reading/serialising basic types ********************/
 
+/*
+ * Value handler deal are interfaces to the values in Pattern Maps. They are
+ * used to abstract from the actual value data type and provide some common
+ * methods required for all values, as well at methods for serialisation
+ * from/to binary file. All are derived from the abstract class
+ * AbstractValueHandler
+*/
+
 template<class ValueType>
 class AbstractValueHandler {
    public:
-    virtual void read(std::istream * in, ValueType & value)=0;
-    virtual void write(std::ostream * out, ValueType & value)=0;
-    virtual std::string tostring(ValueType & value)=0;
-    virtual int count(ValueType & value) const =0;
-    virtual void add(ValueType * value, const IndexReference & ref ) const=0;
+    virtual void read(std::istream * in, ValueType & value)=0; //read value from input stream (binary)
+    virtual void write(std::ostream * out, ValueType & value)=0; //write value to output stream (binary)
+    virtual std::string tostring(ValueType & value)=0; //convert value to string)
+    virtual int count(ValueType & value) const =0; //what count does this value represent?
+    virtual void add(ValueType * value, const IndexReference & ref ) const=0; //add the indexreference to the value, will be called whenever a token is found during pattern building
+    virtual void convertto(ValueType & source, ValueType & target ) const { if (&source != &target) target = source; }; //this doesn't really convert as source and target are same type, but it is required!
 };
 
+// This templated class can be used for all numeric base types (such as int, uint16_t,
+// float, etc)
 template<class ValueType>
 class BaseValueHandler: public AbstractValueHandler<ValueType> {
    public:
@@ -246,11 +257,12 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     void add(ValueType * value, const IndexReference & ref ) const {
         *value = *value + 1;
     }
-    void convertto(ValueType & source, ValueType & target) const { if (&source != &target) target = source; }; 
 };
 
 /************* Base abstract container for pattern storage  ********************/
 
+//This is an abstract class, all Pattern storage containers are derived from
+//this. ContainerType is the low-level container type used (an STL container such as set/map). ReadWriteSizeType influences only the maximum number of items that can be stored (2**64) in the container, as this will be represented in the very beginning of the binary file. No reason to change this unless the container is very deeply nested in others and contains only few items.
 template<class ContainerType,class ReadWriteSizeType = uint64_t>
 class PatternStore {
     public:
