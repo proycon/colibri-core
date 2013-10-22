@@ -41,27 +41,31 @@ aclocal=aclocal
 # inspired by hack as used in mcl (from http://micans.org/)
 
 # autoconf-archive Debian package, aclocal-archive RPM, obsolete/badly supported OS, installed in home dir
-   acdirs="/usr/share/autoconf-archive/ /usr/share/aclocal/ /usr/local/share/aclocal/ $HOME/local/share/autoconf-archive/"
+acdirs="/usr/share/autoconf-archive/ /usr/share/aclocal/ /usr/local/share/autoconf-archive/ /usr/local/share/aclocal/ $HOME/local/share/autoconf-archive/"
 
-   found=false
-   for d in $acdirs
-   do
-      if test -f ${d}ac_define_dir.m4
-      then
-         found=true
-         break
-      fi
-   done
+found=false
+for d in $acdirs
+do
+    if test -f ${d}libtool.m4
+    then
+        echo "Autoconf archive found in $d, good"
+        found=true
+        break
+    fi
+done
 
-   if ! $found
-   then
-      cat <<EOT
-You need the autoconf-archive Debian package, or the aclocal-archive
-RPM package.  Alternatively, you could install the GNU Autoconf Macro
+if ! $found
+then
+    cat <<EOT
+WARNING!!! The Autoconf Archive was not found. If anything goes wrong, this is
+most likely the cause! Look for the autoconf-archive package in your
+distribution. If you use Debian, Ubuntu, or Homebrew on Mac OS X, then such a
+package will be available, other distributions may use alternate names such as
+aclocal-archive or ac-archive. Alternatively, you could install the GNU Autoconf Macro
 Archive's http://autoconf-archive.cryp.to/ac_path_lib.html
 as `pwd`/acinclude.m4.
 EOT
-   fi
+fi
 
 
 if $automake --version|head -1 |grep ' 1\.[4-8]'; then
@@ -86,8 +90,7 @@ fi
 # to make sure the right automake is being used.
 # if not installed, use: apt-get install automake1.9
 
-AUTOMAKE=automake ACLOCAL=aclocal autoreconf --install \
-      --symlink
+AUTOMAKE=automake ACLOCAL=aclocal autoreconf --install --symlink
 
 # add --make if you want to run "make" too.
 
