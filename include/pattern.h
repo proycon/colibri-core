@@ -352,7 +352,13 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
 };
 
 
-/************* Specific STL-compatible containers ********************/
+/************* Specific STL-like containers for patterns ********************/
+
+
+/*
+ * These are the containers you can directly use from your software
+ *
+ */
 
 typedef std::unordered_set<Pattern> t_patternset;
 
@@ -417,6 +423,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
 
 };
 
+//using PatternSet as value in a PatternMap requires a special valuehandler:
 class PatternSetValueHandler: public AbstractValueHandler<PatternSet<>> {
     const static bool indexed = false;
     void read(std::istream * in, PatternSet<> & value) {
@@ -587,66 +594,6 @@ class OrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType
             }
         }
 };
-
-
-/*
-template<class MapType,class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class ReadWriteSizeType = uint32_t>
-
-
-class PatternGraphSet: public PatternMap<MapType,ValueType,ValueHandler, ReadWriteSizeType> {
-
-}
-
-
-template<class ContainerType = , class ReadWriteSizeType = uint32_t>
-class PatternGraphMap: public PatternStore<ContainerType,ReadWriteSizeType> {
-    public:
-        PatternGraphMap(): PatternMapStore<MapType,ValueType,ValueHandler, ReadWriteSizeType>() {};
-        ~PatternGraphMap();
-
-        bool has(const Pattern & pattern, const Pattern & pattern2) const { if (has(pattern) > 0) { (*this)[pattern].has(pattern2); } else return 0; }
-        
-        ValueType getvalue(const Pattern & pattern, const Pattern & pattern2) { if (has(pattern,pattern2)) { return (*this)[pattern][pattern2]; } else return ValueType(); }
-
-
-        void insert(const Pattern pattern, const Pattern pattern2, const ValueType value) {
-            (*this)[pattern][pattern2] = value;
-        }
-
-        
-        virtual void write(std::ostream * out) {
-            uint64_t s = (uint64_t) this->size();
-            out->write( (char*) &s, sizeof(uint64_t));
-            for (typename PatternMapStore<MapType,ValueType,ValueHandler, ReadWriteSizeType>::iterator iter = this->begin(); iter != this->end(); iter++) {
-                Pattern p = iter->first;
-                p.write(out);
-                ReadWriteSizeType s2 = (ReadWriteSizeType) iter->second.size();
-                out->write( (char*) &s2, sizeof(ReadWriteSizeType));
-                for (typename MapType::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
-                    Pattern p2 = iter->first;
-                    p2.write(out);
-                    this->valuehandler.write(out, iter->second);
-                }
-            }
-        }
-
-        virtual void read(std::istream * in) {
-            uint64_t s; //read size:
-            in->read( (char*) &s, sizeof(uint64_t));
-            for (uint64_t i = 0; i < s; i++) {
-                Pattern p = Pattern(in);
-                ReadWriteSizeType s2; //read size:
-                in->read( (char*) &s2, sizeof(ReadWriteSizeType));
-                for (ReadWriteSizeType i = 0; i < s2; i++) {
-                    Pattern p2 = Pattern(in);
-                    ValueType value = this->valuehandler.read(in);
-                    insert(p,p2,value);
-                }
-            }
-        }
-};
-
-*/
 
 
 //TODO: Implement a real Trie, conserving more memory
