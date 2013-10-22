@@ -125,17 +125,18 @@ cdef class Pattern:
     def __len__(self):
         return self.thisptr.n()
 
-#    def __getitem__(self, item):
-#        if isinstance(item, slice):
-#            c_pattern = colibricore_classes.Pattern(self.cpattern, item.start, item.stop)
-#            newpattern = Pattern()
-#            newpattern.bind(c_pattern)
-#            return newpattern
-#        else:
-#            c_pattern = colibricore_classes.Pattern(self.cpattern, item.start, item.start+1)
-#            newpattern = Pattern()
-#            newpattern.bind(c_pattern)
-#            return newpattern
+    def __getitem__(self, item):
+        cdef cPattern c_pattern
+        if isinstance(item, slice):
+            c_pattern = cPattern(self.cpattern, item.start, item.stop)
+            newpattern = Pattern()
+            newpattern.bind(c_pattern)
+            return newpattern
+        else:
+            c_pattern = cPattern(self.cpattern, item.start, item.start+1)
+            newpattern = Pattern()
+            newpattern.bind(c_pattern)
+            return newpattern
 
     def __iter__(self):
         for i in range(0, len(self)):

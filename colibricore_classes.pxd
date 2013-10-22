@@ -8,6 +8,8 @@ from libc.stdint cimport *
 
 cdef extern from "pattern.h":
     cdef cppclass Pattern:
+        Pattern()
+        Pattern(Pattern&, int,int)
         string tostring(ClassDecoder&)
         int n()
 
