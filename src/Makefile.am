@@ -17,7 +17,7 @@ colibri_classencode_LDADD = libcolibricore.la
 colibri_classencode_SOURCES = classencode.cpp
 colibri_classencode_LDFLAGS = -static
 
-colibri_test_CXXFLAGS = -Wall -std=c++0x
+colibri_test_CXXFLAGS = -Wall -std=c++11
 colibri_test_LDADD = libcolibricore.la
 colibri_test_SOURCES = test.cpp
 colibri_test_LDFLAGS = -static
