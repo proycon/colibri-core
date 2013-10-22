@@ -191,6 +191,49 @@ cdef class IndexedPatternModel:
 
     def __len__(self):
         return self.data.size()
+    
+    def types(self):
+        return self.data.types()
+
+    def tokens(self):
+        return self.data.tokens()
+    
+    def minlength(self):
+        return self.data.minlength()
+
+    def maxlength(self):
+        return self.data.maxlength()
+
+    def type(self):
+        return self.data.type()
+
+    def version(self):
+        return self.data.version()
+        
+    def occurrencecount(self, Pattern pattern):
+        return self.data.occurrencecount(pattern.cpattern)
+
+    def coveragecount(self, Pattern pattern):
+        return self.data.coveragecount(pattern.cpattern)
+
+    def coverage(self, Pattern pattern):
+        return self.data.coverage(pattern.cpattern)
+
+    def frequency(self, Pattern pattern):
+        return self.data.coverage(pattern.cpattern)
+
+    
+    def totaloccurrencesingroup(self, int category=0, int n=0):
+        return self.data.totaloccurrencesingroup(category,n)
+
+    def totalpatternsingroup(self, int category=0, int n=0):
+        return self.data.totalpatternsingroup(category,n)
+
+    def totaltokensingroup(self, int category=0, int n=0):
+        return self.data.totaltokensingroup(category,n)
+    
+    def totalwordtypesingroup(self, int category=0, int n=0):
+        return self.data.totalwordtypesingroup(category,n)
 
     cpdef has(self, Pattern pattern):
         return self.data.has(pattern.cpattern)
@@ -253,12 +296,58 @@ cdef class IndexedPatternModel:
     cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
         self.data.outputrelations(pattern.cpattern,deref(decoder.thisptr),&cout)
 
+    cpdef prune(self, int threshold, int n=0):
+        self.data.prune(threshold, n)
 
 cdef class UnindexedPatternModel:
     cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]] data
 
     def __len__(self):
         return self.data.size()
+
+    
+    def types(self):
+        return self.data.types()
+
+    def tokens(self):
+        return self.data.tokens()
+    
+    def minlength(self):
+        return self.data.minlength()
+
+    def maxlength(self):
+        return self.data.maxlength()
+
+    def type(self):
+        return self.data.type()
+
+    def version(self):
+        return self.data.version()
+        
+    def occurrencecount(self, Pattern pattern):
+        return self.data.occurrencecount(pattern.cpattern)
+
+    def coveragecount(self, Pattern pattern):
+        return self.data.coveragecount(pattern.cpattern)
+
+    def coverage(self, Pattern pattern):
+        return self.data.coverage(pattern.cpattern)
+
+    def frequency(self, Pattern pattern):
+        return self.data.coverage(pattern.cpattern)
+
+    
+    def totaloccurrencesingroup(self, int category=0, int n=0):
+        return self.data.totaloccurrencesingroup(category,n)
+
+    def totalpatternsingroup(self, int category=0, int n=0):
+        return self.data.totalpatternsingroup(category,n)
+
+    def totaltokensingroup(self, int category=0, int n=0):
+        return self.data.totaltokensingroup(category,n)
+    
+    def totalwordtypesingroup(self, int category=0, int n=0):
+        return self.data.totalwordtypesingroup(category,n)
 
     cdef has(self, Pattern pattern):
         return self.data.has(pattern.cpattern)
@@ -315,4 +404,7 @@ cdef class UnindexedPatternModel:
     
     cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
         self.data.outputrelations(pattern.cpattern,deref(decoder.thisptr),&cout)
+
+    cpdef prune(self, int threshold, int n=0):
+        self.data.prune(threshold, n)
 

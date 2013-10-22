@@ -154,11 +154,28 @@ cdef extern from "patternmodel.h":
         iterator begin() nogil
         iterator end() nogil
         PatternModel() nogil
+        int types() nogil
+        int tokens() nogil
+        int type() nogil
+        int version() nogil
+        int maxlength() nogil
+        int minlength() nogil
+        int occurrencecount(Pattern&) nogil
+        int coveragecount(Pattern&) nogil
+        float coverage(Pattern&) nogil
+        float frequency(Pattern&) nogil
+
+        int totaloccurrencesingroup(int category, int n)
+        int totalpatternsingroup(int category, int n)
+        int totaltokensingroup(int category, int n)
+        int totalwordtypesingroup(int category, int n)
+
         void insert(Pattern&, ValueType& value) nogil
         bool has(Pattern&) nogil
         int size() nogil
         ValueType& operator[](Pattern&) nogil
         iterator erase(Pattern&) nogil
+        int prune(int threshold, int n) nogil
         iterator find(Pattern&) nogil
         void load(string, PatternModelOptions) nogil
         void write(string) nogil
