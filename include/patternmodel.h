@@ -121,7 +121,7 @@ class PatternModelOptions {
 
         PatternModelOptions() {
             MINTOKENS = 2;
-            MAXLENGTH = 8;
+            MAXLENGTH = 100;
 
             MINSKIPTYPES = 2;
             DOFIXEDSKIPGRAMS = false;
@@ -338,6 +338,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (foundcount) {
                     if (n > this->maxn) this->maxn = n;
                     if (n < this->minn) this->minn = n;
+                } else {
+                    break;
                 }
                 std::cerr << " Found " << foundcount << "...";
                 if (n == 1) totaltypes += this->size(); //total unigrams, also those not in model
@@ -349,7 +351,6 @@ class PatternModel: public MapType, public PatternModelInterface {
                 } else {
                     std::cerr << std::endl;
                 }
-
             }
         }
 

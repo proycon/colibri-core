@@ -21,7 +21,7 @@ void usage() {
     cerr << " Building a model:  patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
     cerr << "\t-t <number>      Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
     cerr << "\t-u               Build an unindexed model" << endl;    
-    cerr << "\t-l <number>      Maximum pattern length (default: 8)" << endl;
+    cerr << "\t-l <number>      Maximum pattern length (default: 100)" << endl;
     cerr << "\t-s               Compute fixed-size skip-grams (costs extra memory and time)" << endl;    
     cerr << "\t-T <number>      Skip type threshold: only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, this value is unchangable and fixed to 2 when -u is set). Requires indexed models" << endl;
     cerr << " Viewing a model:  patternmodeller -i [modelfile] -c [classfile] -[PRHQ]" << endl;

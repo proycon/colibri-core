@@ -129,7 +129,23 @@ cdef extern from "patternmodel.h":
         int add(IndexedData *, IndexReference&)
         str tostring(IndexedData&)
 
-    #cdef cppclass PatternModel[ValueType,ValueHandler,MapType]:
+    cdef cppclass PatternModel[ValueType,ValueHandler,MapType]:
+        cppclass iterator:
+            pair[Pattern,ValueType] & operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        PatternModel() nogil
+        void insert(Pattern&, ValueType& value) nogil
+        void has(Pattern&) nogil
+        int size() nogil
+        ValueType& operator[](Pattern&) nogil
+        iterator erase(Pattern&) nogil
+        iterator find(Pattern&) nogil
+
 #    cdef cppclass NGramData(AnyGramData):
 #        cppset[CorpusReference] refs
 #        int count()
