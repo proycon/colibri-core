@@ -208,21 +208,27 @@ This will result in a pattern model ``yourcorpus.indexedpatternmodel.colibri``. 
 	
 Output will be to ``stdout`` in a tab delimited format, with the first line reserved for the header. This facilitates easy parsing as you can just load it into any software accepting CSV files, such as spreadsheets. An excerpt follows::
 
-    PATTERN	COUNT	SIZE	TOKENS	COVERAGE	CATEGORY    REFERENCES
-    With	2	1	2	0.0059	1	21:0 32:0
-    or	4	1	4	0.0118	1	1:2 36:2 37:2 38:2
-    To die	2	2	4	0.0118	1	5:7 9:5
-    to be	2	2	4	0.0118	1	1:4 9:1
-    is	2	1	2	0.0059	1	1:8 8:2
+    PATTERN	COUNT	TOKENS	COVERAGE	CATEGORY	SIZE	FREQUENCY	REFERENCES
+    For	2	2	0.0059	ngram	1	0.0121	11:0 15:0
+    death	2	2	0.0059	ngram	1	0.0121	11:5 23:7
+    who	2	2	0.0059	ngram	1	0.0121	15:1 21:5
+    .	4	4	0.0118	ngram	1	0.0242	5:6 9:4 10:6 13:4
+    be	4	4	0.0118	ngram	1	0.0242	1:1 1:5 9:2 35:3
+    flee	2	2	0.0059	ngram	1	0.0121	36:1 36:5
+    not to	4	8	0.0235	ngram	2	0.1538	1:3 36:3 37:3 38:3
+
 
 The various columns are:
 
 * **Pattern** - The actual pattern. Gaps in skipgrams are represented as ``{*x*}`` where x is a number representing the size of the skip. Variable-width skipgrams are just ``{*}``. 
 * **Occurrence count** - The absolute number of times this pattern occurs
-* **Size** - The length of the n-gram or skipgram in words.
 * **Tokens** - The absolute number of tokens in the corpus that this pattern covers. Computed as ``occurrencecount * n``. 
 * **Coverage** - The number of covered tokens, as a fraction of the total number of tokens.
-* **Category** - 1 for ngrams, 2 for fixed-width skipgrams, 3 for variable-width skipgrams.
+* **Category** - The type of pattern.
+* **Size** - The length of the n-gram or skipgram in words/tokens.
+* **Frequency** - The frequency of the pattern *within its category and
+  size class*, so for an ngram of size two, the frequency indicates the
+  frequency amongst all bigrams.
 * **References** - A space-delimited list of indices in the corpus that correspond to a occurrence of this pattern. Indices are in the form ``sentence:token`` where sentence starts at one and token starts at zero. This column is only available for indexed models.
  
 The pattern model created in the previous example did not yet include skip-grams, these have to be explicitly enabled with the ``-s`` flag. When this is used, another options becomes available for consideration:
@@ -244,27 +250,72 @@ If you want to generate unindexed models, simply add the flag ``-u``. Do note th
 Statistical reports and histograms
 ----------------------------------
 
-If you have a pattern model, you can generate a simple statistical report which includes information on the number of occurrences and number of types for patterns, grouped for n-grams or skipgrams for a specific value of *n*. A report is generated using the ``-R`` flag::
+If you have a pattern model, you can generate a statistical report which includes information on the number of occurrences and number of types for patterns, grouped for n-grams or skipgrams for a specific value of *n*. A report is generated using the ``-R`` flag, the input model is specified using ``-i``::
 
-	   $ patternfinder -d yourcorpus.indexedpatternmodel.colibri -R
-	   
-	   EXAMPLE OUTPUT:
-	   
-	    REPORT
-		----------------------------------
-				                      TOKENS     TYPES
-		Total:                        1245756     78261
-		N-grams:                      1245756     78261
-		 n=1                           603046     10321
-		 n=2                           400409     31734
-		 n=3                           161613     22529
-		 n=4                            51499      8522
-		 n=5                            17219      3027
-		 n=6                             6666      1209
-		 n=7                             3325       575
-		 n=8                             1979       344
+	   $ colibri-patternmodeller -i yourcorpus.indexedpatternmodel.colibri -R
+
+Example output::
+
+ REPORT
+ ----------------------------------
+                             PATTERNS    TOKENS  COVERAGE     TYPES
+ Total:                             -       340         -       177
+ Uncovered:                         -       175    0.5147       136
+ Covered:                          69       165    0.4853        41
  
-A histogram can also be generated, using the ``-H`` flag.
+   CATEGORY N (SIZE)   PATTERNS    TOKENS  COVERAGE     TYPES OCCURRENCES
+        all       all        69       165    0.4853        41         243
+        all         1        40       165    0.4853        40         165
+        all         2        11        26    0.0765        13          26
+        all         3         7        17    0.0500         9          19
+        all         4         5        10    0.0294         9          14
+        all         5         5         9    0.0265         9          17
+        all         6         1         2    0.0059         6           2
+     n-gram       all        62       165    0.4853        40         215
+     n-gram         1        40       165    0.4853        40         165
+     n-gram         2        11        26    0.0765        13          26
+     n-gram         3         5        12    0.0353         8          12
+     n-gram         4         3         6    0.0176         6           6
+     n-gram         5         2         4    0.0118         6           4
+     n-gram         6         1         2    0.0059         6           2
+   skipgram       all         7         7    0.0206         6          28
+   skipgram         3         2         7    0.0206         4           7
+   skipgram         4         2         4    0.0118         4           8
+   skipgram         5         3         5    0.0147         5          13
+
+Some explanation is in order to correctly interpret this data. There are three
+columns:
+
+    * **Pattern** - The number of distinct patterns
+    * **Tokens** - The number of tokens that is covered. This is only available
+      for indexed models, for unindexed models it is either omitted or the
+      number shown is maximum projection.
+    * **Coverage** - The number of tokens covered as a fraction of the total number of tokens. Only for indexed models.
+    * **Types** - The number of unique **word** types covered
+    * **Occurrences** - Cumulative occurrence count of all the patterns in
+      the group. Used as a basis for computing frequency.
+
+Pattern models store how many of the tokens and types in the original corpus were covered. Tokens and types not covered did not make the set thresholds. Make sure to use indexed models if you want accurate coverage data.
+
+Similarly, a histogram can also be generated, using the ``-H`` flag::
+	   
+        $ colibri-patternmodeller -i yourcorpus.indexedpatternmodel.colibri -H
+
+Example output::
+
+        OCCURRENCES   PATTERNS
+        2   39
+        3   5
+        4   13
+        5   5
+        6   1
+        7   1
+        8   1
+        10  1
+        13  1
+        14  1
+        15  1
+
 
 Training and testing coverage
 --------------------------------
@@ -280,45 +331,14 @@ This results in a model ``testset.colibri.indexedpatternmodel``. This model can 
 
    $ patternfinder -d yourcorpus.indexedpatternmodel.colibri -C  
 
-	EXAMPLE OUTPUT:
-
-		  COVERAGE REPORT
-	----------------------------------
-	Total number of tokens:      6258043
-
-		                          TOKENS  COVERAGE  TYPES        TTR     COUNT FREQUENCY
-	Total coverage:              6095775    0.9741 298298 123969.960  23769771    1.0000
-	Uncovered:                    162268    0.0259
-
-	N-gram coverage:             6095772    0.9741 174363    34.9602  13357746    0.5620
-	 1-gram coverage:            6095772    0.9741  16977     0.0028   6095772    0.2565
-	 2-gram coverage:            5399143    0.8628  66845     0.0124   4353264    0.1831
-	 3-gram coverage:            2298818    0.3673  55001     0.0239   1918446    0.0807
-	 4-gram coverage:             615552    0.0984  22227     0.0361    633196    0.0266
-	 5-gram coverage:              80184    0.0128   8002     0.0998    213206    0.0090
-	 6-gram coverage:              19643    0.0031   3046     0.1551     81033    0.0034
-	 7-gram coverage:               5174    0.0008   1414     0.2733     39487    0.0017
-	 8-gram coverage:               2732    0.0004    851     0.3115     23342    0.0010
-
-	Skipgram coverage:           2871204    0.4588 123935    23.1670  10412025    0.4380
-	 3-skipgram coverage:        1819730    0.2908  23063     0.0127   2088113    0.0878
-	 4-skipgram coverage:        1380211    0.2205  19573     0.0142   1494049    0.0629
-	 5-skipgram coverage:         757273    0.1210  21957     0.0290   1994542    0.0839
-	 6-skipgram coverage:         299785    0.0479  20698     0.0690   1669473    0.0702
-	 7-skipgram coverage:         137551    0.0220  18281     0.1329   1525863    0.0642
-	 8-skipgram coverage:          81042    0.0130  20363     0.2513   1639985    0.0690
 
 
-The coverage report shows the number of tokens covered by n-grams or skipgrams, split down in different categories for each *n*. The *coverage* column expresses this value as a fraction of the total number of tokens in the corpus. It shows how much of the test set is covered by the training set. The *types* column expresses how many unique patterns exist in the category. The *count* columns expresses the absolute occurrence count and the *frequency* column expresses the over-all frequency. The fact that the occurrence count can be higher than the absolute number of tokens covered is due to the fact that n-grams and skipgrams inherently show considerable overlap when grouped together. 
-
-
-A coverage report can be generated for any *indexed* pattern model; including models not generated on a separate test set.
 
 
 Query mode
 --------------
 
-The pattern finder has query mode which allows you to quickly extract patterns from test sentences or fragments thereof. The query mode is invoked by loading a pattern model (``-d``), a class file (``-c``) and the ``-Q`` flag. The query mode can be run interactively as it takes input from ``stdin``, one *tokenised* sentence per line. The following example illustrates this, the sentence *"This is a test ."* was typed as input::
+The pattern modeller has query mode which allows you to quickly extract patterns from test sentences or fragments thereof. The query mode is invoked by loading a pattern model (``-i``), a class file (``-c``) and the ``-Q`` flag. The query mode can be run interactively as it takes input from ``stdin``, one *tokenised* sentence per line. The following example illustrates this, the sentence *"This is a test ."* was typed as input::[MC
 
 	$ patternfinder -d europarl25k-en.indexedpatternmodel.colibri -c europarl25k-en.cls -Q                                                        
 	Loading model
@@ -462,309 +482,4 @@ This generated the following image:
 .. image:: summer.png
 
 .. TODO: Coverage report
-
-Alignment Models
-=====================
-
-Introduction
---------------
-
-An alignment model establishes a translation from patterns in one model to patterns in another. Each alignment has an associated score, or a vector of multiple scores, expressing the quality of the alignment. Alignments can currently be computed in three ways, all of which are unsupervised methods, and the of which the last method is the superior one:
-
-* **Co-occurrence (Jaccard)** - Alignments are established according to simple Jaccard co-occurrence
-* **Expectation Maximisation** - Alignments between patterns are computed in a fashion similar to IBM Model 1, using Expectation Maximisation. Computation proceeds over the matrix of all patterns, rather than a matrix of mere words as in IBM Model 1. 
-* **GIZA Word Alignments** - Alignments are established on the basis of word-alignments computed with ``GIZA++``.
-
-The pattern models have to be generated on the basis of a parallel corpus. For colibri a parallel corpus consists of two corpus files, one for each language. The sentences on the n-th line of each of the  corpus files corresponds and should be translations of each other. Pattern and graph models can then be generated separately on both of these corpora. An indexed pattern model, or derived graph model, is required as input for the ``aligner`` program.
-
-Co-occurrence
----------------------
-
-Alignments computed solely on the basis of sentence co-occurrence are fairly weak. For all patterns that co-occur in at least one sentence, a Jaccard co-occurrence score is computed as :math:`\frac{|s \cap t|}{|s \cup t|}`, where *s* and *t* are sets of sentence numbers in which the pattern occurs. 
-
-In the following example we translate French to English and assume pattern models have been computed already. Invoke the ``aligner`` program as follows, the ``-J`` flag chooses Jaccard co-occurrence::
-
-	$ aligner -s fr.indexedpatternmodel.colibri -t en.indexedpatternmodel.colibri -J
- 
-This will result in an output file ``alignmodel.colibri``, which is in a binary format. If you want an alternative output filename you can specify it using the ``-o`` parameter.
-
-Several other parameters adjust the behaviour of the alignment algorithm and output:
-
-* ``-p [n]`` - Pruning value. Alignments with co-occurrence scores lower than *n* will be pruned (prior to any normalisation)
-* ``-z`` - Disable normalisation. By default, the aligner will normalise all scores, if you want to retain the exact co-occurrence scores, pass this flag
-* ``-b [n]`` - Best alignments only. Only the best *n* target alignments for a source pattern will be retained, others are pruned.
-* ``-N`` - Do not attempt to directly align any skipgrams
- 
-Expectation Maximisation
-----------------------------
-
-This is an experimental method for computing alignments *directly* on the basis of the patterns. It is modelled after IBM Model 1 and uses the Expectation Maximisation algorithm to iteratively optimise the model's parameters.  The pseudo-code for the EM algorithm applied to this model is as follows:
-
-.. code-block:: python
-
-   initialize t(t|s) uniformly
-   do until convergence
-   	  set count(t|s) to 0 for all t,s
-  	  set total(s) to 0 for all s
-      for all sentence pairs (t_s,s_s)
-         set total_s(t) = 0 for all t
-         for all patterns t in t_s
-            for all patterns s in s_s
-              total_s(t) += t(t|s)
-         for all patterns t in t_s
-             for all patterns s in s_s
-                count(t|s) += t(t|s) / total_s(t)
-                total(s)   += t(t|s) / total_s(t)
-      for all s
-     	for all t
-           t(t|s) = count(t|s) / total(s)
-
-In the following example we translate French to English and assume pattern models have been computed already. Invoke the ``aligner`` program as follows, the ``-E`` flag chooses Expectation Maximisation::
-
-	$ aligner -s fr.indexedpatternmodel.colibri -t en.indexedpatternmodel.colibri -E
-
-This will result in an output file ``alignmodel.colibri``, which is in a binary format. If you want an alternative output filename you can specify it using the ``-o`` parameter. 
-
-Several other parameters adjust the behaviour of the EM alignment algorithm and output:
-
-* ``-P [n]`` - Probability pruning value. Alignments with a probability lower than *n* will be pruned
-* ``-M [n]`` - Maximum number of iterations (default: 10000)
-* ``-v [n]`` - Minimum delta-value when convergence is considered to have been reached (default: 0.001)
-* ``-z`` - Disable normalisation. By default, the aligner will normalise all scores, if you want to retain the exact co-occurrence scores, pass this flag
-* ``-b [n]`` - Best alignments only. Only the best *n* target alignments for a source pattern will be retained, others are pruned.
-* ``-N`` - Do not attempt to directly align any skipgrams, skipgrams tend to worsen alignment quality significantly.
-* ``--null`` - Take into account zero-fertility words in EM
-* ``-I 1`` - Compute bi-directional alignments and use one joint score. This will run the algorithm twice, once for each direction, and compute the intersection of the results.
-* ``-I 2`` - Compute bi-directional alignments and use two separate scores, representing p(t|s) and p(s|t). This will run the algorithm twice, once for each direction, and compute the intersection of the results.
-
-Instead of uniform initiatisation, this method can also be initialised using the co-occurrence method laid out in the previous section. Simply add the ``-J`` parameter to achieve this.
-
-GIZA Alignment
------------------
-
-``GIZA++`` is open-source software for the computation of word alignment models according to the IBM Models and HMM models (see `GIZA++ <http://code.google.com/p/giza-pp/>`_) [OchNey2003]_ . The ``aligner`` program can use the models produced by GIZA++ and extract aligned pairs of phrases. Two GIZA models (``*.A3.final``) are required, one for each translation direction. The extraction algorithm iterates over all sentence pairs in the GIZA models, these sentence pairs contain information in the form of what word-index of the source sentence is aligned to what word-index of the target sentence, and vice versa for the reverse model. Given such a bidirectional pair of alignments, the algorithm first collects all relevant patterns and for each possible combination it computes whether the word-alignment indices from the GIZA models support the alignment of the patterns.  The criteria for whether an alignment between patterns is supported by the word alignments are:
-
-* Is the first word of the source pattern properly aligned according to the bidirectional intersection of the word alignments?
-* Is the last word of the source pattern properly aligned according to the bidirectional intersection of the word alignments?
-* Is the first word of the target pattern properly aligned according to the bidirectional intersection of the word alignments?
-* Is the last word of the target pattern properly aligned according to the bidirectional intersection of the word alignments?
-* Are none of the source words aligned to target words outside the target pattern?
-* Are none of the target words aligned to source words outside the source pattern?
-
-Of all target patterns (if any) meeting this criteria for a given source pattern, only the strongest one is chosen. An alignment strength score is computed to represent how well an alignment is supported by word alignments. This is not to be confused with the actual alignment probability. This score is the number of words that aligns properly, as a fraction of the longest pattern size of the pair. Only alignments that reach a certain threshold will be aligned. If the score is not perfect (< 0), points from the union of the two word alignment directions will be considered and added to the score as well, however, these alignments carry less weight than intersection alignments (four times less by default). 
-
-This extraction algorithm is implemented as follows, given word alignments for source-to-target (``sentence_s``) and target-to-source (``sentence_t``):
-
-.. code-block:: python
-
-    patterns_t = all patterns in sentence_t           
-    for all words word_s in sentence_s:
-        patterns_s = find patterns BEGINNING WITH word_s
-        for all patterns pattern_s in patterns_s:
-            bestscore = 0
-            for all patterns pattern_t in patterns_t:
-                aligned = 0
-                halfaligned = 0
-                firstsourcealigned = false
-                lastsourcealigned = false
-                firsttargetaligned = false
-                lasttargetaligned = false
-                for for all indices (alignedsourceindex, alignedtargetindex) in intersection:
-                    if alignedsourceindex not in pattern_s or alignedtargetindex not in pattern_t:
-                        aligned--; break;
-                    else:
-                        aligned++;
-                        if alignedsourceindex == sourceindex: firstsourcealigned = true
-                        if alignedsourceindex == sourceindex + patternsize_s: lastsourcealigned = true
-                        if alignedtargetindex == targetindex: firstsourcealigned = true
-                        if alignedtargetindex == targetindex + patternsize_t: lastsourcealigned = true
-                                                  
-                        
-                if ((aligned < 0) || (!firstaligned) || (!lastaligned)) break;
-                
-                maxpatternsize = max(|pattern_s|,|pattern_t|)
-                score = aligned / maxpatternsize
-                
-                if (score < 1):
-                    for alignedsourceindex, alignedtargetindex in union:                            
-                        if (alignedsourceindex in pattern_s and alignedtargetindex not in pattern_t) or (alignedsourceindex not in pattern_s and alignedtargetindex in pattern_t):
-                            halfaligned++;
-                    if halfaligned:
-                        score = score + halfaligned / (maxpatternsize*4)
-                        if (score > 1) score = 1
-
-               if score > bestscore:
-                    bestscore = score
-                    bestpattern_t = pattern_t                            
-           
-           
-In the following example we translate French to English and assume pattern models have been computed already. Invoke the ``aligner`` program as follows, the ``-W`` flag chooses GIZA extraction and takes as parameters the two GIZA ``A3.final`` models (order matters!) separated by a colon. It is also necessary to pass the class the class file for both source (``-S``) and target language (``-T``), as the GIZA models do not use the colibri class encodings and thus need to be interpreted on the fly::
-
-	$ aligner -s fr.indexedpatternmodel.colibri -t en.indexedpatternmodel.colibri -W fr-en.A3.final:en-fr.A3.final -S fr.cls -T en.cls
-
-Several other parameters adjust the behaviour of the EM alignment algorithm and output:
-
-* ``-a [n]`` - Alignment strength, value between 0 and 1. Determines how strong word alignments have to be if phrases are to be extracted, weak alignments will not be considered.
-* ``-p [n]``-  Prune all alignments with a jaccard co-occurence score lower than specified (0 <= x <= 1). Uses heuristics to prune, final probabilities may turn out lower than they would otherwise be
-* ``-c [n]`` - Prune phrase pairs that occur less than specified, here *n* is an integer representing the absolute count required for the phrase pair as a whole.
-* ``-I 1`` - Compute bi-directional alignments and use one joint score. This does *not* run the algorithm twice, but is directly integrated.
-* ``-I 2`` - Compute bi-directional alignments and use two separate scores, representing p(t|s) and p(s|t). This does *not* run the algorithm twice, but is directly integrated.
-
-This alignment method replaces unsupervised word alignment symmetrisations heuristics like ``grow-diag``, ``grow-diag-final`` [OchNey2003].  
-
-Skipgram alignment
-----------------------
-
-The alignment of skipgrams poses extra challenges. The three above alignment methods function much worse as soon as skipgrams are included. Therefore, an experimental alignment algorithm has been implemented to extract skipgrams on the basis of a graph model with instance and template relations. The algorithm starts with the n-grams that have been aligned by any of the three aforementioned algorithms, it then determines whether multiple target n-grams for a given source n-gram share a common template (i.e. a skip-gram that is an abstraction of a pattern). The template relation is a transitive relation, so recursion is applied to collect all possible templates, these can subsequently be clustered in one or more clusters, each cluster being completely independent of the other, not sharing any template or instance relationships. From each cluster only the best match, according to Jaccard co-occurrence is selected and aligned to the template(s) of the source pattern. This results in skipgram to skipgram alignments. N-gram to skipgram or skipgram to n-gram alignments are not supported by this method.
-
-The algorithm is implemented as illustrated by the following pseudo-code:
-
-.. code-block:: python
-
-     for ngram_s in alignmatrix:
-        if |alignmatrix[ngram_s]| > 1: #(nothing to generalise otherwise)
-            skipgrams_s = get_templates_recursively(rel_templates_s[ngram_s])
-            if skipgrams_s:            
-                for ngram_t in alignmatrix[ngram_s]
-                    skipgrams_t = get_templates_recursively(rel_templates_t[ngram_t])
-                    if skipgrams_t:
-                        for skipgram_s in skipgrams_s:
-                            for skipgram_t in skipgrams_t:
-                                submatrix[skipgram_s][skipgram_t]++
-    prune all 1-values in submatrix                     
-       
-    for skipgram_s in submatrix: #conflict resolution
-        if |submatrix[skipgram_s]| == 1:
-            skipgram_t = first and only
-            alignmatrix[skipgram_s][skipgram_t] = submatrix[skipgram_s][skipgram_t]
-        else:                                
-            clusters = get_independent_cluster(skipgrams_t) #complete subgraphs
-            for cluster in clusters:
-              maxcooc = 0
-              for skipgram_t in cluster:
-                if cooc(skipgram_s, skipgram_t) > maxcooc:
-                    maxcooc = _
-                    best = skipgram_t
-                elif   == maxcooc:
-                   if skipgram_t more abstract than best:
-                        best = skipgram_t
-              if best:
-                 alignmatrix[skipgram_s][best] = submatrix[skipgram_s][best]                      
- 
-
-The following example takes an alignment model computed with only n-grams according to one of the three methods outlined earlier. It outputs a new alignment model, a superset of the original one, that adds the skipgram relations. The ``-U`` flag activates the skipgram extraction algorithm. Make sure to use the ``-o`` parameter to output a new model to a new file::
-    
-	$ aligner -U -d europarl25k-nl-en.alignmodel.colibri -o europarl25k-nl-en-withskipgrams.alignmodel.colibri 
- 
-Viewing an alignment model
-----------------------------
-
-An alignment model can be viewed by decoding it using the ``-d`` option and by passing it the class file for both source (``-S``) and target language (``-T``)::
-
-	$ aligner -d alignmodel.colibri -S fr.cls -T en.cls
- 
-The output format is a simple tab-delimited format.
-
-An alignment model can also be outputted in a format suitable for the MT decoder *moses* [Koehn2007]_::
-
-	$ aligner -d alignmodel.colibri -S fr.cls -T en.cls --moses
-
-MT Decoder
-=====================
- 
-Introduction
--------------
-
-A good translation should faithfully convey the meaning of the original, and it should be rendered in fluent natural language. In statistical machine translation, these two aspects are represented by two distinct statistical models. The translation model is used to compute the likelihood of a sentence being faithful to the original meaning, and the target language model imposes a maximally fluent natural word order on the resulting translation in the target language by scoring typical, predictable word order as more probable than uncommon or malformed combinations. The central processing component of an SMT system is the decoder, which computes probabilities according to at least these two models for a huge number of possible translation hypotheses. This constitutes a vast search problem in which countless hypotheses are tested and compete against one another for the best probability score according to the joint statistical models. The translation chosen is the hypothesis found to attain the best score. Due to the size and complexity of the search problem, and the need to keep time and memory requirements manageable, considerable pruning of the search takes place. It is quite possible that the selected translation is found in a local maximum.
-
-Colibri features a custom-tailored MT decoder modelled after the stack-based decoding principle used in Moses [Koehn2003]_. This algorithm employs a beam search as a means to constrain the search space. The alignment model as discussed in the previous chapter provide the translation model. The mandatory language model can be computed with third-party software such as `SRILM <http://www.speech.sri.com/projects/srilm/>`_ [Stolcke2002]_ .
-
-The stack decoder maintains *n* separate stacks, the number of stacks equals the number of words in the *source* sentence. Each stack contains translation hypotheses that cover an arbitrary *n* words of the source sentence. Only a fixed number of the best translation hypotheses are retained, this is the *stack size*. In the decoding process proceeds iteratively, starting with an *empty hypothesis* for which no source words have been covered and thus no target words have been generated. This initial hypotheses is *expanded* by choosing each input pattern matching the source sentence, at any position, and translating it according to the translation model. The translations are added left-to-right, but the selected source are from any location. This makes reordering possible. This expansions in turn results in a larger number of new translation hypotheses which are added to the appropriate stacks. After the initial hypothesis, the first stack is processed top to bottom, expanding in turn each of the hypotheses in it, resulting in more hypotheses to be added to the higher stacks. When a stack is processed, the algorithm moves on to the next. The final stack will be the stack in which all source words are covered and thus in which the hypotheses represent translations of the whole sentence. The best one is selected as the translation. 
-
-The pseudo-code for the algorithm is as follows (from `Moses Background <http://www.statmt.org/moses/?n=Moses.Background>`_) [Koehn2007]_::
-
-	 initialize hypothesisStack[0 .. nf];
-	 create initial hypothesis hyp_init;
-	 add to stack hypothesisStack[0];
-	 for i=0 to nf-1:
-	   for each hyp in hypothesisStack[i]:
-		 for each new_hyp that can be derived from hyp:
-		   nf[new_hyp] = number of foreign words covered by new_hyp;
-		   add new_hyp to hypothesisStack[nf[new_hyp]];
-		   prune hypothesisStack[nf[new_hyp]];
-	 find best hypothesis best_hyp in hypothesisStack[nf];
-	 output best path that leads to best_hyp;
-
-The website `Moses Background <http://www.statmt.org/moses/?n=Moses.Background>`_ provides more detail about this algorithm. The algorithm implemented in colibri is identical, although hypothesis recombination is not implemented yet in the Colibi decoder. 
-
-The colibri decoder has been enhanced to be able to handle skipgrams. Source-side skipgrams need no special handling due to the stack-based nature that already supports it; translations with gaps however do need special attention. The colibri decoder solves this by introducing a second set of another *n* stacks for hypotheses containing gaps. The expansion operation for hypotheses in these stacks attempts explicitly seeks to fill one of gaps first, the expanded hypotheses will again form part of the normal *gapless* stacks once all gaps are filled. 
-
-Unlike Moses, the colibri decoder also integrates support for classifiers. This will be introduced in the next chapter.
-
-Language Model
------------------
-
-As a Language Model is a vital component of a machine translation system, here are instructions on how to generate a language model using `SRILM <http://www.speech.sri.com/projects/srilm/>`_ [Stolcke 2002]_. The language model should be generated for only the target language corpus::
-
-	$ ngram-count -kndiscount -order 3 -unk -text yourtargetcorpus.txt -lm yourtargetcorpus.lm
-
-The above command generates a trigram model (``-order 3``) with (modified) Knesser Ney discounting (``-kndiscount``), it includes supports for unknown words (``-unk``). Support for unknown words and back-off are requirements for the colibri decoder. The final argument specifies the output file for the language model, this can in turn be read by the colibri decoder.
-
-Note that as this is external softare, you need to pass the *tokenised* corpus in plain-text format, not the class-encoded binary variant used by colibri. But do make sure both are generated on exactly the same data. 
-
-Decoder Usage
------------------
-
-The colibri decoder requires at least an alignment model (also known as translation model), and a language model. The translation model may contain multiple scores. The final score for an hypothesis is a weighted log-linear combination of all components model, in which each model carries a weight. These weights are passed as parameters to the decoder. The ``-W`` argument specifies weights for the scores in the alignment model, it should be repeated for the amount of scores in a model. The ``-L`` argument sets the weight for the language model, ``-D`` does the same for the distortion model (both default to one). The following example shows how to invoke the decoder given a translation model (``-t``) and language model (``-l``). It is also necessary to specify the class file for both source (``-S``) and (``-T``) target::
-
-	$ decoder -t alignmodel.colibri -l yourtargetcorpus.lm -S yoursourcecorpus.cls -T yourtargetcorpus.cls -W 1 -W 1 < inputfile.txt
-	
-The decoder reads its input from ``stdin``, hence the `` < inputfile.txt``. The input should consist of tokenised sentences in the source language, one sentence per line. It will output the translation to ``stdout``, again one sentence per line. Extra information will be written to ``stderr``, the verbosity of which can be adjusted with the ``-v`` parameter.	 
-
-The decoder takes the following extra parameters:
-
-* ``-s`` - The stacksize (defaults to 100)
-* ``-p`` - The prune threshold. The pruning threshold is a number between 0 and 1. It determines how much of a stack to prune based on the highest scoring hypothesis in the stack. If the prune threshold is set to for instance *0.8* then all hypotheses having a score of less than *80%* of the highest scoring hypothesis are pruned.
-* ``-W n`` - Translation model weight. Issue this parameter multiple times if there are multiple scores in your alignment model (``-W 1 -W 1``). Alignment models generated with ``aligner -I 2`` generate two scores. If there is a mismatch between the number of scores specified here and in the alignment model, then an error will be raised.
-* ``-L n`` - Language model weight.
-* ``-D n`` - Distortion model weight.
-* ``-N`` - Ignore and do not use skipgrams
-* ``-M n`` -   Distortion limit. This corresponds to the maximum number of words a reordering displacement occurs over (default: unlimited). 
-
-In addition, the following parameters control output and verbosity:
-
-* ``-v n`` - Sets the verbosity value. *n* is a number from 0 to 5. Setting a high level will very explicitly show what the decoder is doing, be aware that this generates a huge amount of output to ``stderr``.
-* ``--stats`` - Compute and output decoding statistics for each solution.
-* ``--globalstats`` - Compute and output decoding statistics for all hypothesis accepted on a stack.
-
-Machine Learning
-=================
-
-(yet to be written)
- 
-MT Experiment Framework
-=======================
-
-(yet to be written)
-
-References
-==================
-
-.. [Daelemans2010] Daelemans, W., Zavrel, J., Van der Sloot, K., and Van den Bosch, A. (2010). TiMBL: Tilburg Memory Based Learner, version 6.3, Reference Guide. ILK Research Group Technical Report Series no. 10-01.
-
-.. [Koehn2003] P. Koehn, F.J Och, D. Marcu, *Statistical phrase-based translation*, NAACL '03 Proceedings of the 2003. Conference of the North American Chapter of the Association for Computational Linguistics on Human Language Technology - Volume 1 (2003) pp. 48-54.
-
-.. [Koehn2007] P. Koehn, H. Hoang, A. Birch, C. Callison-Burch, M. Federico, N. Bertoldi, B. Cowan, W. Shen, C. Moran, R. Zens, C. Dyer, O. Bojar, A. Constantin and E. Herbst, *Moses: Open source toolkit for statistical machine translation*, ACL '07 Proceedings of the 45th Annual Meeting of the ACL on Interactive Poster and Demonstration Sessions. (2007) pp. 177-180.
-
-.. [OchNey2003] F.J Och and H. Ney, *A Systematic Comparison of Various Statistical Alignment Models*, Computational Linguistics, (2003) volume 29, number 1, pp. 19-51
-
-.. [Stolcke2002] A. Stolcke, *SRILM — an extensible language modeling toolkit*, in J. H. L. Hansen and B. Pellom, editors, Proc. ICSLP, vol. 2, pp. 901–904, Denver, Sep. 2002.
-
-.. 
-	Indices and tables
-	==================
-
-	* :ref:`genindex`
-	* :ref:`modindex`
-	* :ref:`search`
 
