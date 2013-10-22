@@ -18,10 +18,12 @@
 
 const int MAINPATTERNBUFFERSIZE = 40960;
 
+//Pattern categories
 enum PatternCategory {
-    KEY = 0, NGRAM = 1, FIXEDSKIPGRAM = 2, DYNAMICSKIPGRAM = 3
+    UNKNOWNPATTERN = 0, NGRAM = 1, FIXEDSKIPGRAM = 2, DYNAMICSKIPGRAM = 3
 };
 
+//Not really used much yet, but reserved for encoding structural markup
 enum StructureType { 
     STRUCT_PATTERN = 0, //undefined pattern (if n==1 -> token)
     STRUCT_SENTENCE = 1,
@@ -31,6 +33,9 @@ enum StructureType {
     STRUCT_QUOTE = 5,
     STRUCT_DIV = 6,
 };
+
+
+//Markers (en lieu of the size marker with byte value <128)
 enum Markers { // <128 size
     ENDMARKER = 0, //marks the end of each pattern (necessary!)
 
@@ -54,12 +59,14 @@ int reader_passmarker(const unsigned char c, std::istream * in);
 
 
 
-
+/*
+ * This is the main pattern class
+ * */
 class Pattern {
     protected:
      void reader_marker(unsigned char * _data, std::istream * in);
     public:
-     unsigned char * data;
+     unsigned char * data; //holds the variable-width byte representation, terminated by \0 (ENDMARKER)
 
      Pattern() { data = new unsigned char[1]; data[0] = 0; } //empty constructor (still consumes 1 byte though)
      Pattern(const unsigned char* dataref, const int size); //low-level constructor
@@ -99,7 +106,7 @@ class Pattern {
      Pattern operator +(const Pattern&) const;
 
      int find(const Pattern & pattern) const; //returns the index, -1 if not found 
-     bool contains(const Pattern & pattern) const;
+     bool contains(const Pattern & pattern) const; //does the pattern contain the smaller pattern?
      bool instanceof(const Pattern & skipgram) const; //Is this a full instantiation of the skipgram?
      
 
@@ -109,10 +116,10 @@ class Pattern {
      int ngrams(std::vector<std::pair<Pattern,int>> & container, const int n) const; //return multiple ngrams
      int subngrams(std::vector<std::pair<Pattern,int>> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
 
-     int parts(std::vector<Pattern> & container) const; 
-     int parts(std::vector<std::pair<int,int> > & container) const;
+     int parts(std::vector<Pattern> & container) const; //find all the parts of a skipgram, parts are the portions that are not skips... Thus 'to be {*} not {*} be' has three parts 
+     int parts(std::vector<std::pair<int,int> > & container) const; //same as above, but return (begin,length) pairs instead of patterns
 
-     int gaps(std::vector<std::pair<int,int> > & container) const;
+     int gaps(std::vector<std::pair<int,int> > & container) const; //returns the positions (begin, length) of the gaps in a skipgram
 
      Pattern extractskipcontent(Pattern & instance) const; //given a pattern and an instance, extract a pattern from the instance that would fill the gaps
 
