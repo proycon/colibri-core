@@ -51,6 +51,7 @@ class IndexedData {
     int count() const { return data.size(); }
 
     void insert(IndexReference ref) { data.insert(ref); }
+    size_t size() const { return data.size(); }
 
     typedef std::set<IndexReference>::iterator iterator;
     typedef std::set<IndexReference>::const_iterator const_iterator;

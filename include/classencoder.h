@@ -1,7 +1,9 @@
 #ifndef CLASSENCODER_H
 #define CLASSENCODER_H
 
+#if HAVE_CONFIG_H
 #include <config.h>
+#endif
 #include <unordered_map>
 #include <string>
 #include <vector>

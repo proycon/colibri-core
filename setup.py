@@ -5,10 +5,10 @@ from Cython.Distutils import build_ext
 extensions = [ Extension("colibricore",
                 ["unordered_map.pxd", "colibricore_classes.pxd", "colibricore_wrapper.pyx"],
                 language='c++',
-                include_dirs=['/home/proycon/local/include/colibri/', '/home/proycon/local/include/', '/usr/include/libxml2' ],
+                include_dirs=['/home/proycon/local/include/colibri-core/', '/home/proycon/local/include/', '/usr/include/libxml2' ],
                 library_dirs=['/home/proycon/local/lib/','/usr/include/lib'],
                 libraries=['colibri-core'],
-                extra_compile_args=['--std=c++11'],
+                extra_compile_args=['--std=c++0x'],
                 pyrex_gdb=True
                 ) ]
 

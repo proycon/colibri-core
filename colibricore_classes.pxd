@@ -124,7 +124,7 @@ cdef extern from "patternmodel.h":
         bool DOREVERSEINDEX
         bool DEBUG
 
-    cdef cppclass IndexedValueHandler:
+    cdef cppclass IndexedDataHandler:
         int count(IndexedData &)
         int add(IndexedData *, IndexReference&)
         str tostring(IndexedData&)
