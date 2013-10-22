@@ -7,7 +7,7 @@ AC_PREREQ([2.67])
 AC_INIT([colibri-core],[0.1],[proycon@anaproy.nl])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([configure.ac])
-AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIR([./m4])
 AC_CONFIG_HEADER([config.h])
 
 #AC_DEFINE_DIR([SYSCONF_PATH], sysconfdir, sysconfdir)
@@ -33,7 +33,7 @@ AC_SUBST([LIBTOOL_DEPS])
 
 # when running tests, use CXX
 AC_LANG([C++])
-
+AX_CXX_COMPILE_STDCXX_11([])
 # Checks for libraries.
 
 if test $prefix = "NONE"; then
@@ -41,7 +41,9 @@ if test $prefix = "NONE"; then
 fi
 
 
+
 PKG_PROG_PKG_CONFIG
+
 # Checks for timbl library.
 # inspired by feh-1.3.4/configure.ac.  Tnx Tom Gilbert and feh hackers.
 
