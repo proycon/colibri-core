@@ -3,6 +3,7 @@ from libcpp.set cimport set as cppset
 from libcpp.vector cimport vector
 from libcpp cimport bool
 from unordered_map cimport unordered_map
+from libcpp.utility cimport pair
 from libc.stdint cimport *
 
 
@@ -18,6 +19,75 @@ cdef extern from "pattern.h":
         IndexReference(int,int)
         uint32_t sentence
         uint16_t token
+
+
+    cdef cppclass PatternMap[ValueType,ValueHandler,ReadWriteSizeType]:
+        cppclass iterator:
+            pair[Pattern,ValueType] & operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        PatternMap() nogil
+        void insert(Pattern&, ValueType& value) nogil
+        void has(Pattern&) nogil
+        int size() nogil
+        ValueType& operator[](Pattern&) nogil
+        iterator erase(Pattern&) nogil
+        iterator find(Pattern&) nogil
+
+
+    cdef cppclass OrderedPatternMap[ValueType,ValueHandler,ReadWriteSizeType]:
+        cppclass iterator:
+            pair[Pattern,ValueType] & operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        OrderedPatternMap() nogil
+        void insert(Pattern&, ValueType& value) nogil
+        void has(Pattern&) nogil
+        int size() nogil
+        ValueType& operator[](Pattern&) nogil
+        iterator erase(Pattern&) nogil
+        iterator find(Pattern&) nogil
+
+    cdef cppclass PatternSet[ReadWriteSizeType]:
+        cppclass iterator:
+            Pattern& operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        PatternSet() nogil
+        void insert(Pattern&) nogil
+        void has(Pattern&) nogil
+        int size() nogil
+        iterator erase(Pattern&) nogil
+        iterator find(Pattern&) nogil
+
+    cdef cppclass OrderedPatternSet[ReadWriteSizeType]:
+        cppclass iterator:
+            Pattern& operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        PatternSet() nogil
+        void insert(Pattern&) nogil
+        void has(Pattern&) nogil
+        int size() nogil
+        iterator erase(Pattern&) nogil
+        iterator find(Pattern&) nogil
+
 
 cdef extern from "classdecoder.h":
     cdef cppclass ClassDecoder:
@@ -41,6 +111,17 @@ cdef extern from "patternmodel.h":
         iterator begin() nogil
         iterator end() nogil
         bool has(IndexReference& ref)
+
+    cdef cppclass PatternModelOptions:
+        int MINTOKENS
+        int MAXLENGTH
+        bool DOFIXEDSKIPGRAMS
+        int MINSKIPTYPES
+        bool DOREVERSEINDEX
+        bool DEBUG
+    #cdef cppclass PatternModel[ValueType,ValueHandler,MapType]:
+
+
 
 #    cdef cppclass NGramData(AnyGramData):
 #        cppset[CorpusReference] refs
