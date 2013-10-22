@@ -12,6 +12,8 @@ cdef extern from "pattern.h":
         int n()
 
     cdef cppclass IndexReference:
+        IndexReference()
+        IndexReference(int,int)
         uint32_t sentence
         uint16_t token
 
@@ -36,7 +38,7 @@ cdef extern from "patternmodel.h":
         size_t size() nogil
         iterator begin() nogil
         iterator end() nogil
-        void has(IndexReference& ref)
+        bool has(IndexReference& ref)
 
 #    cdef cppclass NGramData(AnyGramData):
 #        cppset[CorpusReference] refs

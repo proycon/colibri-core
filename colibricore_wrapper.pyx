@@ -151,6 +151,8 @@ cdef class IndexedData:
     def __contains__(self, item):
         if not isinstance(item, tuple) or len(item) != 2:
             raise ValueError("Item should be a 2-tuple (sentence,token)")
+        cdef cIndexReference ref = cIndexReference(item[0], item[1])
+        return self.data.has(ref)
 
     def __iter__(self):
         cdef cIndexReference ref
