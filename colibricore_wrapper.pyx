@@ -3,7 +3,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 
@@ -174,7 +174,7 @@ cdef class IndexedData:
 
 
 cdef class IndexedPatternModel:
-    cdef cPatternModel[cIndexedData,cIndexedDataHandler,uint64_t] data
+    cdef cPatternModel[cIndexedData,cIndexedDataHandler,cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]] data
 
     def __len__(self):
         return self.data.size()
@@ -203,7 +203,7 @@ cdef class IndexedPatternModel:
         
 
     def __iter__(self):
-        cdef cPatternModel[cIndexedData,cIndexedDataHandler,uint64_t].iterator it = self.data.begin()
+        cdef cPatternModel[cIndexedData,cIndexedDataHandler,cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]].iterator it = self.data.begin()
         cdef cPattern cpattern
         cdef cIndexedData cvalue
         while it != self.data.end():
@@ -229,7 +229,7 @@ cdef class IndexedPatternModel:
         self.write(filename) 
 
 cdef class UnindexedPatternModel:
-    cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],uint64_t] data
+    cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]] data
 
     def __len__(self):
         return self.data.size()
