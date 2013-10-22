@@ -109,6 +109,7 @@ void ClassEncoder::processcorpus(const string & filename, unordered_map<string,i
 }
 
 
+#ifdef WITHFOLIA
 void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<string,int> & freqlist) {
     folia::Document doc;
     doc.readFromFile(filename);
@@ -121,6 +122,7 @@ void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<str
     }
     
 }
+#endif
 
 void ClassEncoder::buildclasses(unordered_map<string,int> freqlist) {
 
@@ -144,7 +146,12 @@ void ClassEncoder::buildclasses(unordered_map<string,int> freqlist) {
 void ClassEncoder::build(const string & filename) {
 	    unordered_map<string,int> freqlist;
 	    if (filename.rfind(".xml") != string::npos) {
+            #ifdef WITHFOLIA
 	        processfoliacorpus(filename, freqlist);
+            #else
+            cerr << "Colibri Core was not compiled with FoLiA support!" << endl;
+            exit(2);
+            #endif
 	    } else {
 	        processcorpus(filename, freqlist);
 	    }
@@ -159,7 +166,12 @@ void ClassEncoder::build(vector<string> & files) {
 	        const string filename = *iter;
 	        cerr << "Processing " << filename << endl;
 	        if (filename.rfind(".xml") != string::npos) {
-	            processfoliacorpus(filename, freqlist);
+                #ifdef WITHFOLIA
+                processfoliacorpus(filename, freqlist);
+                #else
+                cerr << "Colibri Core was not compiled with FoLiA support!" << endl;
+                exit(2);
+                #endif
 	        } else {
 	            processcorpus(filename, freqlist);
 	        }
@@ -269,6 +281,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
     const char one = 1;
 	    
     if ((inputfilename.rfind(".xml") != string::npos) ||  (inputfilename.rfind(".bz2") != string::npos) ||  (inputfilename.rfind(".gz") != string::npos)) {
+        #ifdef WITHFOLIA
         //FoLiA
         folia::Document doc;
         doc.readFromFile(inputfilename);
@@ -312,7 +325,9 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
         }
 	    cerr << "Encoded " << linenum << " lines" << endl;
 	    OUT.close();
-	            
+        #else
+        cerr << "Colibri Core was not compiled with FoLiA support!" << endl;
+        #endif
     } else {
 	    ofstream OUT;
 	    ifstream IN;

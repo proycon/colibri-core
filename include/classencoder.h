@@ -1,6 +1,7 @@
 #ifndef CLASSENCODER_H
 #define CLASSENCODER_H
 
+#include <config.h>
 #include <unordered_map>
 #include <string>
 #include <vector>
@@ -8,8 +9,10 @@
 #include <pattern.h>
 #include <common.h>
 
+#ifdef WITHFOLIA
 #include "libfolia/document.h"
 #include "libfolia/folia.h"
+#endif
 
 class ClassEncoder {
     private:
@@ -20,7 +23,9 @@ class ClassEncoder {
      unsigned int highestclass;
      void buildclasses(std::unordered_map<std::string,int> freqlist);
      void processcorpus(const std::string & filename, std::unordered_map<std::string,int> & freqlist);
+     #ifdef WITHFOLIA
      void processfoliacorpus(const std::string & filename, std::unordered_map<std::string,int> & freqlist);
+     #endif
     public:
     ClassEncoder();
     ClassEncoder(const std::string &); //load an existing classer

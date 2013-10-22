@@ -61,14 +61,20 @@ fi
 #CXXFLAGS="$CXXFLAGS $timbl_CFLAGS"
 #LIBS="$LIBS $timbl_LIBS"
 
-AC_ARG_WITH(folia,
-       [  --with-folia=DIR       use libfolia installed in <DIR>],
+AC_ARG_WITH(folia-path,
+       [  --with-folia-path=DIR       use libfolia installed in <DIR>],
        [PKG_CONFIG_PATH="$withval/lib/pkgconfig:$PKG_CONFIG_PATH"],
        [PKG_CONFIG_PATH="$prefix/lib/pkgconfig:$PKG_CONFIG_PATH"])
-AC_MSG_NOTICE( [pkg-config search path: $PKG_CONFIG_PATH] )
-PKG_CHECK_MODULES([folia],[folia >= 0.10])
-CXXFLAGS="$CXXFLAGS $folia_CFLAGS"
-LIBS="$folia_LIBS $LIBS"
+
+AC_ARG_WITH([folia], AS_HELP_STRING([--with-folia], [Build with FoLiA support (default: disabled)]))
+
+AS_IF([test "x$with_folia" = "xyes"], [
+    AC_MSG_NOTICE( [pkg-config search path: $PKG_CONFIG_PATH] )
+    PKG_CHECK_MODULES([folia],[folia >= 0.10])
+    CXXFLAGS="$CXXFLAGS $folia_CFLAGS"
+    LIBS="$folia_LIBS $LIBS"
+    AC_DEFINE([WITHFOLIA],[1],[Compile with libfolia support])
+])
 
 
 # Checks for library functions.
