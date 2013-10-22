@@ -22,7 +22,7 @@ fi
 # Checks for programs.
 #AC_PROG_CXX( [g++] )
 AC_LANG([C++])
-AX_CXX_COMPILE_STDCXX_11
+AX_CXX_COMPILE_STDCXX_11([ext])
 
 if $cxx_flags_were_set; then
   CXXFLAGS=$CXXFLAGS
