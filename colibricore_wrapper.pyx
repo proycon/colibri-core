@@ -240,3 +240,40 @@ cdef class UnindexedPatternModel:
     def __contains__(self, pattern):
         assert isinstance(pattern, Pattern)
         return self.has(pattern)
+
+    def __getitem__(self, pattern):
+        assert isinstance(pattern, Pattern)
+        return self.getdata(pattern)
+
+    cdef getdata(self, Pattern pattern):
+        assert isinstance(pattern, Pattern)
+        cdef cIndexedData cvalue
+        if pattern in self:
+            return self.data[pattern.cpattern]
+        else:
+            raise KeyError
+        
+
+    def __iter__(self):
+        cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]].iterator it = self.data.begin()
+        cdef cPattern cpattern
+        cdef int value
+        while it != self.data.end():
+            cpattern = deref(it).first
+            value = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield tuple(pattern,value)
+            inc(it)
+    
+    cdef load(self, str filename, threshold, dofixedskipgrams, maxlength, minskiptypes):
+        cdef cPatternModelOptions options
+        options.MINTOKENS = threshold
+        options.DOFIXEDSKIPGRAMS = dofixedskipgrams
+        options.MAXLENGTH = maxlength
+        options.MINSKIPTYPES = minskiptypes
+        options.DOREVERSEINDEX = True
+        self.data.load(filename, options)
+    
+    cdef write(self, str filename):
+        self.write(filename) 
