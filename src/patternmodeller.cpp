@@ -42,9 +42,9 @@ void usage() {
 template<class ModelType = IndexedPatternModel<>>
 void processquerypattern(ModelType & model, ClassDecoder * classdecoder, const Pattern & pattern, bool dorelations) {
     if (!model.has(pattern)) {
-        cout << "PATTERN '" << pattern.tostring(*classdecoder) << "' NOT FOUND IN MODEL" << endl;
+        cout << "PATTERN \"" << pattern.tostring(*classdecoder) << "\" NOT FOUND IN MODEL" << endl;
     } else {
-        cout << pattern.tostring(*classdecoder) << "\t" << model.occurrencecount(pattern) << "\t" << setprecision(numeric_limits<double>::digits10 + 1) << model.coverage(pattern) << endl; 
+        model.print(&cout, *classdecoder, pattern);
         if (dorelations) model.outputrelations(pattern, *classdecoder, &cout);
     }
 }

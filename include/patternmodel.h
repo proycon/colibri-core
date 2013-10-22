@@ -599,23 +599,30 @@ class PatternModel: public MapType, public PatternModelInterface {
             *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY" << std::endl;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
-                const std::string pattern_s = pattern.tostring(decoder);
-                const int count = this->occurrencecount(pattern); //TODO: can be sped up by using iter->second!
-                const int covcount = this->coveragecount(pattern);
-                const double coverage = covcount / (double) this->tokens();
-                const double freq = this->frequency(pattern);
-                const int cat = pattern.category();
-                std::string cat_s;
-                if (cat == 1) {
-                    cat_s = "ngram";
-                } else if (cat == 2) {
-                    cat_s = "skipgram";
-                } else if (cat == 3) {
-                    cat_s = "dyn-skipgram";
-                }
-                *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq << std::endl;;
+                this->print(out, decoder, pattern, true);
             }
         }
+
+
+        void print(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool endline = true) {
+            const std::string pattern_s = pattern.tostring(decoder);
+            const int count = this->occurrencecount(pattern); 
+            const int covcount = this->coveragecount(pattern);
+            const double coverage = covcount / (double) this->tokens();
+            const double freq = this->frequency(pattern);
+            const int cat = pattern.category();
+            std::string cat_s;
+            if (cat == 1) {
+                cat_s = "ngram";
+            } else if (cat == 2) {
+                cat_s = "skipgram";
+            } else if (cat == 3) {
+                cat_s = "dyn-skipgram";
+            }
+            *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq;
+            if (endline) *out << std::endl;
+        }
+
         
         void histogram(std::ostream * OUT) {
             std::map<int,int> hist;
@@ -757,8 +764,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY\tREFERENCES" << std::endl;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;
+            this->print(out, decoder, pattern, true);
+        }
+    }
+
+    void print(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool endline = true) {
             const std::string pattern_s = pattern.tostring(decoder);
-            const int count = this->occurrencecount(pattern); //TODO: can be sped up by using iter->second!
+            const int count = this->occurrencecount(pattern); 
             const int covcount = this->coveragecount(pattern);
             const double coverage = covcount / (double) this->tokens();
             const double freq = this->frequency(pattern);
@@ -771,7 +783,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             } else if (cat == 3) {
                 cat_s = "dyn-skipgram";
             }
-            *out << pattern_s << "\t" << count<< "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq << "\t";
+            *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq; 
             IndexedData * data = this->getdata(pattern);
             int i = 0;
             for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
@@ -779,9 +791,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 *out << iter2->tostring();
                 if (i < count) *out << " ";
             }
-            *out << std::endl;
-        }
+            if (endline) *out << std::endl;
     }
+
 
     Pattern * getpatternfromtoken(IndexReference ref) {
         for (std::multimap<IndexReference,Pattern>::iterator iter = this->reverseindex.lower_bound(ref); iter != this->reverseindex.upper_bound(ref); iter++) {
