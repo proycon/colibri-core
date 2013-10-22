@@ -5,10 +5,10 @@
 
 AC_PREREQ([2.67])
 AC_INIT([colibri-core],[0.1],[proycon@anaproy.nl])
-AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_MACRO_DIR([./m4])
 AC_CONFIG_HEADER([config.h])
+AM_INIT_AUTOMAKE
 
 #AC_DEFINE_DIR([SYSCONF_PATH], sysconfdir, sysconfdir)
 
@@ -20,20 +20,20 @@ else
 fi
 
 # Checks for programs.
-AC_PROG_CXX( [g++] )
+#AC_PROG_CXX( [g++] )
+AC_LANG([C++])
+AX_CXX_COMPILE_STDCXX_11([ext,mandatory])
 
 if $cxx_flags_were_set; then
   CXXFLAGS=$CXXFLAGS
 fi
 
-AC_PROG_RANLIB
+#AC_PROG_RANLIB
 # use libtool
 LT_INIT
 AC_SUBST([LIBTOOL_DEPS])
 
 # when running tests, use CXX
-AC_LANG([C++])
-AX_CXX_COMPILE_STDCXX_11([])
 # Checks for libraries.
 
 if test $prefix = "NONE"; then
