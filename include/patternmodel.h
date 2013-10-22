@@ -783,7 +783,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             } else if (cat == 3) {
                 cat_s = "dyn-skipgram";
             }
-            *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq; 
+            *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq << "\t"; 
             IndexedData * data = this->getdata(pattern);
             int i = 0;
             for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
