@@ -169,11 +169,41 @@ cdef class Pattern:
         elif op == 5: #>=
             return (self.cpattern == other.cpattern) or (self.cpattern > other.cpattern)
 
+    def ngrams(self,int n=0):
+        cdef vector[cPattern] result
+        self.cpattern.ngrams(result, n)
+        cdef cPattern cngram
+        cdef vector[cPattern].iterator it = result.begin()
+        while it != result.end():
+            cngram  = deref(it)
+            ngram = Pattern()
+            ngram.bind(cngram)
+            yield ngram
+            inc(it)
+    
+    def parts(self):
+        cdef vector[cPattern] result
+        self.cpattern.parts(result)
+        cdef cPattern cngram
+        cdef vector[cPattern].iterator it = result.begin()
+        while it != result.end():
+            cngram  = deref(it)
+            ngram = Pattern()
+            ngram.bind(cngram)
+            yield ngram
+            inc(it)
 
-#    def ngrams(self,n=0):
-#        
-#        for i in range(0, len(self)):
-#            yield self[i]
+    #def subngrams(self,int minn=0,int maxn=9):
+    #    cdef vector[cPattern] result
+    #    self.cpattern.subngrams(result, minn,maxn)
+    #    cdef cPattern cngram
+    #    cdef vector[cPattern].iterator it = result.begin()
+    #    while it != result.end():
+    #        cngram  = deref(it)
+    #        ngram = Pattern()
+    #        ngram.bind(cngram)
+    #        yield ngram
+    #        inc(it)
 
 cdef class IndexedData:
 

@@ -25,6 +25,10 @@ cdef extern from "pattern.h":
         bint operator==(Pattern&) nogil
         bint operator<(Pattern&) nogil
         bint operator>(Pattern&) nogil
+        Pattern operator+(Pattern&) nogil
+        int ngrams(vector[Pattern] container,int n)
+        int parts(vector[Pattern] container)
+        int subngrams(vector[Pattern] container,int minn=0,int maxn=9)
 
     cdef cppclass IndexReference:
         IndexReference()
