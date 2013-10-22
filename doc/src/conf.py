@@ -41,7 +41,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Colibri Core'
-copyright = u'2012, Maarten van Gompel'
+copyright = u'2013, Maarten van Gompel'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
