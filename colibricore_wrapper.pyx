@@ -185,6 +185,22 @@ cdef class IndexedPatternModel:
     def __contains__(self, pattern):
         assert isinstance(pattern, Pattern)
         return self.has(pattern)
+ 
+    def __getitem__(self, pattern):
+        assert isinstance(pattern, Pattern)
+        return self.getdata(pattern)
+
+    cdef getdata(self, Pattern pattern):
+        assert isinstance(pattern, Pattern)
+        cdef cIndexedData cvalue
+        if pattern in self:
+            cvalue = self.data[pattern.cpattern]
+            value = IndexedData()
+            value.bind(cvalue)
+            return value
+        else:
+            raise KeyError
+        
 
     def __iter__(self):
         cdef cPatternModel[cIndexedData,cIndexedValueHandler,uint64_t].iterator it = self.data.begin()
@@ -199,7 +215,7 @@ cdef class IndexedPatternModel:
             value.bind(cvalue)
             yield tuple(pattern,value)
             inc(it)
-
+    
     cdef load(self, str filename, threshold, dofixedskipgrams, maxlength, minskiptypes):
         cdef cPatternModelOptions options
         options.MINTOKENS = threshold
