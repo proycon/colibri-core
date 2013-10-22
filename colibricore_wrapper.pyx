@@ -3,7 +3,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-cimport colibricore_classes
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference
 from unordered_map cimport unordered_map
 
 #cdef class IndexedPatternModel:
@@ -75,13 +75,13 @@ from unordered_map cimport unordered_map
 #            inc(it)
 
 cdef class ClassEncoder:
-    cdef colibricore_classes.ClassEncoder *thisptr
+    cdef cClassEncoder *thisptr
 
     def __cinit__(self):
         self.thisptr = NULL
 
     def __cinit__(self, str filename):
-        self.thisptr = new colibricore_classes.ClassEncoder(filename.encode('utf-8'))
+        self.thisptr = new cClassEncoder(filename.encode('utf-8'))
 
     def __dealloc__(self):
         del self.thisptr
@@ -97,13 +97,13 @@ cdef class ClassEncoder:
 
 
 cdef class ClassDecoder:
-    cdef colibricore_classes.ClassDecoder *thisptr
+    cdef cClassDecoder *thisptr
 
     def __cinit__(self):
         self.thisptr = NULL
 
     def __cinit__(self, str filename):
-        self.thisptr = new colibricore_classes.ClassDecoder(filename.encode('utf-8'))
+        self.thisptr = new cClassDecoder(filename.encode('utf-8'))
 
     def __dealloc__(self):
         del self.thisptr
@@ -114,9 +114,9 @@ cdef class ClassDecoder:
 
 cdef class Pattern:
 
-    cdef colibricore_classes.Pattern cpattern
+    cdef cPattern cpattern
 
-    cdef bind(self, colibricore_classes.Pattern cpattern):
+    cdef bind(self, cPattern cpattern):
         self.cpattern = cpattern
 
     def tostring(self, ClassDecoder decoder):
@@ -141,4 +141,25 @@ cdef class Pattern:
         for i in range(0, len(self)):
             yield self[i]
 
+cdef class IndexedData:
+
+    cdef cIndexedData data
+
+    cdef bind(self, cIndexedData cdata):
+        self.data = cdata
+
+    def __contains__(self, item):
+        if not isinstance(item, tuple) or len(item) != 2:
+            raise ValueError("Item should be a 2-tuple (sentence,token)")
+
+    def __iter__(self):
+        cdef cIndexReference ref
+        cdef cIndexedData.iterator it = self.data.begin()
+        while it != self.data.end():
+            ref  = deref(it)
+            yield tuple(ref.sentence, ref.token)
+            inc(it)
+
+    def __len__(self):
+        return self.data.size()
 

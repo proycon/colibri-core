@@ -135,6 +135,7 @@ class PatternModelOptions {
 };
 
 
+//basic read-only interface for pattern models, abstract base class.
 class PatternModelInterface {
     public:
         virtual int getmodeltype() const=0;

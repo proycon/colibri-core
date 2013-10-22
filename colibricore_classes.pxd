@@ -15,11 +15,29 @@ cdef extern from "pattern.h":
         uint32_t sentence
         uint16_t token
 
-#cdef extern from "patternmodel.h":
-#
-#    cdef cppclass AnyGramData:
-#        pass
-#
+cdef extern from "classdecoder.h":
+    cdef cppclass ClassDecoder:
+        ClassDecoder(string) except +
+        int size()
+
+cdef extern from "classencoder.h":
+    cdef cppclass ClassEncoder:
+        ClassEncoder(string) except +
+        int size()
+        Pattern input2pattern(string , bool allowunknown, bool autoaddunknown)
+
+cdef extern from "patternmodel.h":
+    cdef cppclass IndexedData:
+        cppclass iterator:
+            IndexReference& operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        void has(IndexReference& ref)
+
 #    cdef cppclass NGramData(AnyGramData):
 #        cppset[CorpusReference] refs
 #        int count()
@@ -37,13 +55,3 @@ cdef extern from "pattern.h":
 #        AnyGramData * getdata(EncAnyGram*)
 #        anygramvector get_reverse_index(int i)
 
-cdef extern from "classdecoder.h":
-    cdef cppclass ClassDecoder:
-        ClassDecoder(string) except +
-        int size()
-
-cdef extern from "classencoder.h":
-    cdef cppclass ClassEncoder:
-        ClassEncoder(string) except +
-        int size()
-        Pattern input2pattern(string , bool allowunknown, bool autoaddunknown)
