@@ -60,7 +60,7 @@
 <p>Colibri is hosted on <a class="reference external" href="http://github.com/proycon/colibri-core/">github</a> and should be retrieved through the versioning control system <tt class="docutils literal"><span class="pre">git</span></tt>. Provided git is installed on your system, this is done as follows:</p>
 <div class="highlight-python"><pre>$ git clone http://github.com/proycon/colibri-core.git</pre>
 </div>
-<p>You need to compile the software, if you want FoLiA support you will need to first to install the following dependency:</p>
+<p>You need to compile the software, if you want FoLiA support you will need to first to install the following dependency. By default FoLiA support is disabled.</p>
 <blockquote>
 <div><ul class="simple">
 <li><strong>libfolia</strong>; obtainable from <a class="reference external" href="http://proycon.github.com/folia">the FoLiA website</a>,  follow the instructions included with libfolia to install it.</li>
@@ -69,7 +69,7 @@
 <p>In addition to the C/C++ compiler (<tt class="docutils literal"><span class="pre">gcc</span></tt>), the build process for colibri makes use of <tt class="docutils literal"><span class="pre">autoconf</span></tt> and <tt class="docutils literal"><span class="pre">automake</span></tt>. Make sure these are installed on your system. Also install the package <tt class="docutils literal"><span class="pre">autoconf-archive</span></tt> if available on your distribution. Colibri can now be compiled and installed:</p>
 <div class="highlight-python"><pre>$ cd colibri
 $ bash bootstrap
-$ ./configure [--with-libfolia=/path/to/libfolia]
+$ ./configure [--with-folia --with-folia-path=/path/to/libfolia]
 $ make
 $ make install</pre>
 </div>

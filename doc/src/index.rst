@@ -28,7 +28,7 @@ Colibri is hosted on `github <http://github.com/proycon/colibri-core/>`_ and sho
 
 	$ git clone http://github.com/proycon/colibri-core.git
 	
-You need to compile the software, if you want FoLiA support you will need to first to install the following dependency:
+You need to compile the software, if you want FoLiA support you will need to first to install the following dependency. By default FoLiA support is disabled.
 
  * **libfolia**; obtainable from `the FoLiA website <http://proycon.github.com/folia>`_,  follow the instructions included with libfolia to install it.
 
@@ -36,7 +36,7 @@ In addition to the C/C++ compiler (``gcc``), the build process for colibri makes
 
   $ cd colibri
   $ bash bootstrap
-  $ ./configure [--with-folia=/path/to/libfolia]
+  $ ./configure [--with-folia --with-folia-path=/path/to/libfolia]
   $ make
   $ make install
   
