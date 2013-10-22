@@ -198,15 +198,31 @@ unindexed model may suffice.
 Creating a pattern model
 ----------------------------
 
-First make sure to have class-encoded your corpus. Given this encoded corpus, ``colibri-patternmodeller`` can be invoked to produce an indexed pattern model. The occurrence threshold is specified with parameter ``-t``, patterns occuring less will not be counted. The default value is two.  The maximum value for n, i.e. the maximum n-gram/skipgram size, can be restricted using the parameter ``-l``.:: 
+First make sure to have class-encoded your corpus. Given this encoded corpus,
+``colibri-patternmodeller`` can be invoked to produce an indexed pattern model.
+Always specify the output file using the ``-o`` flag. The occurrence threshold
+is specified with parameter ``-t``, patterns occuring less will not be counted.
+The default value is two.  The maximum value for n, i.e. the maximum
+n-gram/skipgram size, can be restricted using the parameter ``-l``.:: 
 
-	$ colibri-patternmodeller -f yourcorpus.dat -t 10 
+	$ colibri-patternmodeller -f yourcorpus.dat -t 10 -o yourcorpus.colibri.indexedpatternmodel
 	
-This will result in a pattern model ``yourcorpus.indexedpatternmodel.colibri``. This model is stored in a binary format. To print it into a human readable presentation it needs to be decoded. The ``colibri-patternmodeller`` program can do this by specifying an input model using the ``-i`` flag, the class file using the ``-c`` parameter, and the desired action to print it all using ``-P``::
+This outputted model ``yourcorpus.colibri.indexedpatternmodel`` is stored in a
+binary format. To print it into a human readable presentation it needs to be
+decoded. The ``colibri-patternmodeller`` program can do this by specifying an
+input model using the ``-i`` flag, the class file using the ``-c`` parameter,
+and the desired action to print it all using ``-P``::
 
-	$ colibri-patternmodeller -i yourcorpus.indexedpatternmodel.colibri -c yourcorpus.colibri.cls -P
+	$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -c yourcorpus.colibri.cls -P
+
+
+Optionally, instead of or in addition to outputting a model to file using
+``-o``, you can also print it directly with ``-P``.
 	
-Output will be to ``stdout`` in a tab delimited format, with the first line reserved for the header. This facilitates easy parsing as you can just load it into any software accepting CSV files, such as spreadsheets. An excerpt follows::
+Output will be to ``stdout`` in a tab delimited format, with the first line
+reserved for the header. This facilitates easy parsing as you can just load it
+into any software accepting CSV files, such as spreadsheets. An excerpt
+follows::
 
     PATTERN	COUNT	TOKENS	COVERAGE	CATEGORY	SIZE	FREQUENCY	REFERENCES
     For	2	2	0.0059	ngram	1	0.0121	11:0 15:0
@@ -239,12 +255,18 @@ The pattern model created in the previous example did not yet include skip-grams
   
 Here is an example of generating an indexed pattern model including skipgrams::
 
-	$ colibri-patternmodeller -f yourcorpus.colibri.dat -t 10 -s -T 3
+	$ colibri-patternmodeller -f yourcorpus.colibri.dat -t 10 -s -T 3 -o yourcorpus.colibri.indexedpatternmodel
 
-If you want to generate unindexed models, simply add the flag ``-u``. Do note that for unindexed models the parameter ``-T`` has no effect, it will extract all skipgrams it can find as if ``-T`` were set to one! If you want decent skpigrams, you're best off with an indexed model. Note that indexed models can always be read and printed in an unindexed way (with the ``-u`` flag); but unindexed models can not be read in an indexed way, as they simply lack indices::
+If you want to generate unindexed models, simply add the flag ``-u``. Do note
+that for unindexed models the parameter ``-T`` has no effect, it will extract
+all skipgrams it can find as if ``-T`` were set to one! If you want decent
+skpigrams, you're best off with an indexed model. Note that indexed models can
+always be read and printed in an unindexed way (with the ``-u`` flag); but
+unindexed models can not be read in an indexed way, as they simply lack
+indices::
 
-	$ colibri-patternmodeller -d yourcorpus.unindexedpatternmodel.colibri -c yourcorpus.cls -u 
-	$ colibri-patternmodeller -d yourcorpus.indexedpatternmodel.colibri -c yourcorpus.cls -u 
+	$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -c yourcorpus.colibri.cls -u -P
+	$ colibri-patternmodeller -i yourcorpus.colibri.unindexedpatternmodel -c yourcorpus.colibri.cls -u -P
 
 
 Statistical reports and histograms
@@ -252,7 +274,7 @@ Statistical reports and histograms
 
 If you have a pattern model, you can generate a statistical report which includes information on the number of occurrences and number of types for patterns, grouped for n-grams or skipgrams for a specific value of *n*. A report is generated using the ``-R`` flag, the input model is specified using ``-i``::
 
-	   $ colibri-patternmodeller -i yourcorpus.indexedpatternmodel.colibri -R
+	   $ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -R
 
 Example output::
 
@@ -299,7 +321,7 @@ Pattern models store how many of the tokens and types in the original corpus wer
 
 Similarly, a histogram can also be generated, using the ``-H`` flag::
 	   
-        $ colibri-patternmodeller -i yourcorpus.indexedpatternmodel.colibri -H
+        $ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -H
 
 Example output::
 
@@ -317,19 +339,39 @@ Example output::
         15  1
 
 
+Filtering models
+--------------------------------
+
+Patterns models can be read with ``-i`` and filtered by setting stricter thresholds prior to printing, reporting or outputting to file. An example::
+
+    $ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -t 20 -T 10 -o yourcorpus_filtered.colibri.indexedpatternmodel -P
+
+
 Training and testing coverage
 --------------------------------
 
-An important quality of pattern models lies in the fact that pattern models can be compared. More specifically, you can train a pattern model on a corpus and test it on another corpus, which yields another pattern model containing only those patterns that occur in both training and test data. The difference in count, frequency and coverage can then be easily be compared.
+An important quality of pattern models lies in the fact that pattern models can
+be compared. More specifically, you can train a pattern model on a corpus and
+test it on another corpus, which yields another pattern model containing only
+those patterns that occur in both training and test data. The difference in
+count, frequency and coverage can then be easily be compared. You build such a
+model by taking the intersection with a training model using the ``-j`` flag.
+Make sure to always use the same class file for all datasets you are comparing.
+Instructions for this were given in :ref:`classencodetraintest`.
 
-Make sure to use the same class file for all datasets you are comparing. Instructions for this were given in :ref:`classencodetraintest`::
-  
-   $ patternfinder -f trainset.clsenc -t 10 -s -B -E
-   $ patternfinder -d trainset.indexedpatternmodel.colibri -f testset.clsenc -t 10 -s -B -E
- 
-This results in a model ``testset.colibri.indexedpatternmodel``. This model can be used to generate a coverage report using the ``-C`` flag::
+Training::
+   $ colibri-patternmodeller -f trainset.colibri.dat -o trainset.colibri.indexedpatternmodel
 
-   $ patternfinder -d yourcorpus.indexedpatternmodel.colibri -C  
+This results in a model ``trainset.colibri.indexedpatternmodel``. Now proceed
+with testing on another corpus:
+
+Testing::
+   $ colibri-patternmodeller -f testset.colibri.dat -j trainset.indexedpatternmodel.colibri -o testset.colibri.indexedpatternmodel
+
+This results in a model ``testset.colibri.indexedpatternmodel`` that only contains patterns that also occur in the specified training model. 
+
+Such an intersection of models can also be created at any later stage using
+``-i`` and ``-j``.
 
 
 
@@ -338,148 +380,53 @@ This results in a model ``testset.colibri.indexedpatternmodel``. This model can 
 Query mode
 --------------
 
-The pattern modeller has query mode which allows you to quickly extract patterns from test sentences or fragments thereof. The query mode is invoked by loading a pattern model (``-i``), a class file (``-c``) and the ``-Q`` flag. The query mode can be run interactively as it takes input from ``stdin``, one *tokenised* sentence per line. The following example illustrates this, the sentence *"This is a test ."* was typed as input::[MC
+The pattern modeller has query mode which allows you to quickly extract patterns from test sentences or fragments thereof. The query mode is invoked by loading a pattern model (``-i``), a class file (``-c``) and the ``-Q`` flag. The query mode can be run interactively as it takes input from ``stdin``, one *tokenised* sentence per line. The following example illustrates this, the sentence *"To be or not to be"* was typed as input::
 
-	$ patternfinder -d europarl25k-en.indexedpatternmodel.colibri -c europarl25k-en.cls -Q                                                        
-	Loading model
-	Loading class decoder europarl25k-en.cls
-	Loading class encoder europarl25k-en.cls
-	Starting query mode:
-	1>> This is a test .
-	1:0	This	1085	0.001593135275538986
-	1:0	This is	395	0.001159978679885529
-	1:0	This is a	64	0.0002819188690354704
-	1:0	This {*1*} a	66	0.0002907288336928288
-	1:1	is	10570	0.0155202210713798
-	1:1	is a	947	0.002781012176839484
-	1:2	a	10272	0.01508265949339767
-	1:2	a test	2	5.8733097715723e-06
-	1:3	test	30	4.404982328679225e-05
-	1:4	.	23775	0.03490948495478285
 
-The output starts with an index in the format ``sentence:token``, the pattern found, and the next two values are the absolute occurrence count and the coverage ratio.
 
-Graph Models
-===================
+    $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -Q
+    Loading class decoder from file /tmp/hamlet.colibri.cls
+    Loading class encoder from file /tmp/hamlet.colibri.cls
+    Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
+    Colibri Patternmodeller -- Interactive query mode.
+    Type ctrl-D to quit, type X to switch between exact mode and extensive mode (default: extensive mode).
+    1>> To be or not to be
+    1:0	To	8	0
+    1:1	be	4	0
+    1:2	or	4	0
+    1:3	not	5	0
+    1:4	to	13	0
+    1:2	or not	4	0
+    1:3	not to	4	0
+    1:2	or not to	4	0
 
-Introduction
+The output starts with an index in the format ``sentence:token``, the pattern found, and the next two values are the absolute occurrence count in the entire model and the coverage ratio.
+The interactive query mode distinguishes two modes, extensive mode and exact mode. In
+extensive mode, your input string will be scanned for all patterns occurring in
+it. In exact mode, the input you specified needs to match exactly and as a
+whole. Type ``X`` to switch between the modes.
+
+In addition to interactive query mode, there is also a command line query mode
+``-q`` in which you specify the pattern you want to query as argument on the command
+line. Multiple patterns can be specified by repeating the ``-q`` flag. This
+mode always behaves according to exact mode::
+
+    $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q "or not"
+    1:2	or not	4	0
+
+
+Pattern Relations
 ---------------------
 
-A pattern model contains a wide variety of patterns; a graph model goes a step further by making explicit relationships between the various patterns in this model. These relationships can be visualised as a directed graph, in which the nodes represent the various patterns (n-grams and skipgrams), and the edges represent the relations. The following relations are distinguished; note that as the graph is directed relations often come in pairs; one relationship for each direction: 
+A pattern model contains a wide variety of patterns; the relationships between those can be made explicit. These relationships can be imagined as a directed graph, in which the nodes represent the various patterns (n-grams and skipgrams), and the edges represent the relations. The following relations are distinguished; note that as the graph is directed relations often come in pairs; one relationship for each direction: 
 
-* **Subsumption relations** - Patterns that are subsumed by larger patterns are called *children*, the larger patterns are called *parents*. These are the two subsumption relations that can be extracted from an indexed pattern model.
-* **Successor relations**  - If a pattern A and a pattern B form part of a combined pattern A B, then the two patterns are in a successor/predecessor relationship.
-* **Template relations** - Template relations indicate abstraction and go from n-grams to skipgrams. An example of a template relation is ``to be or not to be`` to ``to be {*1*} not {*1*} be``. The reverse direction is called the instance-relationship, as an specific n-gram is an instance of a more abstract template.
-* **Skip content relations** - Relations between patterns that can be used to fill the gaps of higher patterns are called skip content relations. These can go in two directions; skipgram to skip content and skip content to skipgram. Example: ``to`` is a in a skip-content to skipgram relationship with  ``to be {*1*} not {*1*} be``.
+* **Subsumption relations** - Patterns that are subsumed by larger patterns are called *subsumption children*, the larger patterns are called *subsumption parents*. These are the two subsumption relations that can be extracted from an indexed pattern model.
+* **Successor relations**  - Patterns that follow eachother are in a left-of/right-of relation.
+* **Instantiation relations** - There is a relation between skipgrams and
+  patterns that instantiate them ``to be {*1*} not {*1*} be`` is instantiated
+  by ``to {*1*} or``.
 
-In addition to the relations, a graph model can also compute a so-called *exclusivity count* and *exclusivity ratio* for each pattern. The exclusivity count of a pattern is the number of times the pattern occurs in the data *without* being subsumed by a larger found pattern. This exclusivity ratio is the exclusivity count as a fraction of the total occurrence count for the pattern. An exclusivity ratio of one indicates that the pattern is fully exclusive, meaning it is not subsumed by higher-order patterns. This notion of exclusivity may be of use in assessing compositionality of patterns. 
+You can all of these extract relations using the ``-R`` flag, which is to be
+used in combination with the query mode ``-Q`` or ``-q``.
 
-
-Computing a graph model
-------------------------
-
-The ``grapher`` program computes a graph model on the basis of an **indexed** pattern model created with ``patternfinder``. When computing a model, you need to explicitly specify which relations you desire to extract and include in your model. The more relations you include, the more memory will be required. To keep the models as small as possible, it is recommended to include only the relations you need. The following flags are available:
-
-*	``-P`` - Compute/load subsumption relations from children to parents (reverse of -C)
-*	``-C`` - Compute/load subsumption relations from parents to children (reverse of -P)
-*	``-S`` - Compute/load skipgram to skipcontent relations
-*	``-s`` - Compute/load skip-content to skipgram relations (reverse of -S)
-*	``-L`` - Compute/load predecessor relations (constructions to the left)
-*	``-R`` - Compute/load sucessor relations (constructions to the right)
-*	``-T`` - Compute/load template relations
-*	``-I`` - Compute/load instance relations (reverse of -T)
-*	``-a`` - Compute/load all relations
-*   ``-X`` - Compute/load count/ratios
-
-The indexed pattern model that acts as input is specified using the ``-f`` flag. The following example generates a graph model with all relations::
-
-	$ grapher -f yourcorpus.indexedpatternmodel.colibri -a
- 
-The graph model will be stored in binary form, in the file ``yourcorpus.graphpatternmodel.colibri``. 
-
-Viewing and querying a graph model
-------------------------------------
-
-To decode this binary graph model into human readable form, read it in using the ``-d`` flag and pass a class file. In addition, you again need to pass what relations you want to load, as it is also possible to only load a subset of the relations. Simply use the ``-a`` flag if you want to load and output relations existing in the model::
-
-  $ grapher -d yourcorpus.graphpatternmodel.colibri -c yourcorpus.cls -a
-
-This will result in output to ``stdout`` in a tab-separated format, as illustrated below::
-
-	#N      VALUE   OCC.COUNT       TOKENS  COVERAGE        XCOUNT  XRATIO  PARENTS CHILDREN        TEMPLATES       INSTANCES       SKIPUSAGE       SKIPCONTENT     SUCCESSORS      PREDECESSORS
-	4       the summer break the    2       8       1.17466195431446e-05    0       0       1       8       1       0       0       0       0       1       
-	2       that sustainable        2       4       5.8733097715723e-06     0       0       1       2       0       0       0       0       0       0       
-	2       Kosovo ,        20      40      5.8733097715723e-05     4       0.2     5       2       0       0       1       0       0       1       
-	2       which refer     2       4       5.8733097715723e-06     0       0       2       2       0       0       0       0       1       0       
-	2       relief ,        2       4       5.8733097715723e-06     2       1       0       2       0       0       0       0       0       0       
-	6       rule of law and respect for     3       18      2.642989397207535e-05   1       0.3333333333333333      2       20      0       0       1       0       0       2  
-
-In the above example, only the number of relations for each type is shown, if you want to view the actual relations, you need to instruct ``grapher`` to output the the whole graph by adding the ``-g`` flag::
-
-
-  $ grapher -d yourcorpus.graphpatternmodel.colibri -c yourcorpus.cls -a -g
-
-
-	#N      VALUE   OCC.COUNT       TOKENS  COVERAGE        XCOUNT  XRATIO  PARENTS CHILDREN        TEMPLATES       INSTANCES       SKIPUSAGE       SKIPCONTENT     SUCCESSORS      PREDECESSORS
-	4       the summer break the    2       8       1.17466195431446e-05    0       0       1       8       1       0       0       0       0       1       
-	Parent relations - 1
-		    before the summer break the     2       10      1.468327442893075e-05   2       1
-	Child relations - 8
-		    the     44027   44027   0.06464605232825341     90      0.002044200149908011
-		    the summer      15      30      4.404982328679225e-05   5       0.3333333333333333
-		    the summer break        2       6       8.80996465735845e-06    0       0
-		    summer  30      30      4.404982328679225e-05   3       0.1
-		    break   17      17      2.496156652918227e-05   2       0.1176470588235294
-		    break the       5       10      1.468327442893075e-05   1       0.2
-		    summer break the        2       6       8.80996465735845e-06    0       0
-		    summer break    2       4       5.8733097715723e-06     0       0
-	Predecessor relations - 1
-		    before  357     357     0.0005241928971128277   36      0.1008403361344538
-	Templates - 1
-		    the {*2*} the   3266    13064   0.01918222971395513     3266    1
-
-Outputting the whole graph may however produce a lot of unwanted output. Often you want to query your graph model for only one pattern. This is done with the ``-q`` parameter. In the following example we query our model for the pattern "summer"::
-
-	$ grapher -d yourcorpus.graphpatternmodel.colibri -c yourcorpus.cls -a -q "summer"
-
-	Outputting graph for "summer"
-	Query:
-		summer	30	30	4.40498e-05	3	0.1
-	Parent relations - 16
-		summer break	2	4	5.87331e-06	0	0
-		after the summer	2	6	8.80996e-06	2	1
-		the summer break the	2	8	1.17466e-05	0	0
-		this summer .	5	15	2.20249e-05	5	1
-		before the summer break	2	8	1.17466e-05	0	0
-		of this summer	2	6	8.80996e-06	2	1
-		the summer .	5	15	2.20249e-05	5	1
-		before the summer	5	15	2.20249e-05	3	0.6
-		the summer	15	30	4.40498e-05	5	0.333333
-		before the summer break the	2	10	1.46833e-05	2	1
-		this summer	11	22	3.23032e-05	2	0.181818
-		the summer break	2	6	8.80996e-06	0	0
-		this summer ,	4	12	1.76199e-05	4	1
-		summer .	10	20	2.93665e-05	0	0
-		summer ,	5	10	1.46833e-05	1	0.2
-		summer break the	2	6	8.80996e-06	0	0
-	Successor relations - 1
-		break the	5	10	1.46833e-05	1	0.2
-	Skipusage - 3
-		this {*1*} ,	585	1755	0.00257691	585	1
-		this {*1*} .	537	1611	0.00236548	537	1
-		the {*1*} .	1496	4488	0.00658985	1496	1
-
-It is possible to actually visualise the graph, ``grapher`` can output to the so-called dot-format used by the open-source graph visualisation software `graphviz <http://www.graphviz.org>`_. You can output to this format by specifying the ``-G`` flag. This works both with and without ``-q``, but if you do not specify a query the graph may turn out to be too huge to visualise::
-
-	$ grapher -d yourcorpus.graphpatternmodel.colibri -c yourcorpus.cls -a -q "summer" -G > summer.dot
- 
-Graphviz will do the actual conversion to an image file, such as png::
- 
-	$ dot -Tpng summer.dot -o summer.png
- 
-This generated the following image:
-
-.. image:: summer.png
-
-.. TODO: Coverage report
 
