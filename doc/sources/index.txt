@@ -383,7 +383,6 @@ Query mode
 The pattern modeller has query mode which allows you to quickly extract patterns from test sentences or fragments thereof. The query mode is invoked by loading a pattern model (``-i``), a class file (``-c``) and the ``-Q`` flag. The query mode can be run interactively as it takes input from ``stdin``, one *tokenised* sentence per line. The following example illustrates this, the sentence *"To be or not to be"* was typed as input::
 
 
-
     $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -Q
     Loading class decoder from file /tmp/hamlet.colibri.cls
     Loading class encoder from file /tmp/hamlet.colibri.cls
@@ -391,28 +390,33 @@ The pattern modeller has query mode which allows you to quickly extract patterns
     Colibri Patternmodeller -- Interactive query mode.
     Type ctrl-D to quit, type X to switch between exact mode and extensive mode (default: extensive mode).
     1>> To be or not to be
-    1:0	To	8	0
-    1:1	be	4	0
-    1:2	or	4	0
-    1:3	not	5	0
-    1:4	to	13	0
-    1:2	or not	4	0
-    1:3	not to	4	0
-    1:2	or not to	4	0
+    1:0	To	8		8	0.0235294	ngram	1	0.0484848   1:0 5:7 9:5 10:0 22:0 36:0 37:0 38:0
+    1:1	be	4		4	0.0117647	ngram	1	0.0242424   1:1 1:5 9:2 35:3
+    1:2	or	4		4	0.0117647	ngram	1	0.0242424   1:2 36:2 37:2 38:2
+    1:3	not	5		5	0.0147059	ngram	1	0.030303    1:3 27:7 36:3 37:3 38:3
+    1:4	to	13		13	0.0382353	ngram	1	0.0787879   1:4 2:6 4:1 5:10 6:7 8:4 9:1 9:8 10:4 27:2 36:4 37:4 38:4
+    1:2	or not	4		8	0.0235294	ngram	2	0.153846    1:2 36:2 37:2 38:2
+    1:3	not to	4		8	0.0235294	ngram	2	0.153846    1:3 36:3 37:3 38:3
+    1:2	or not to	4		12	0.0352941	ngram	3	0.333333    1:2 36:2 37:2 38:2
 
-The output starts with an index in the format ``sentence:token``, the pattern found, and the next two values are the absolute occurrence count in the entire model and the coverage ratio.
-The interactive query mode distinguishes two modes, extensive mode and exact mode. In
-extensive mode, your input string will be scanned for all patterns occurring in
-it. In exact mode, the input you specified needs to match exactly and as a
-whole. Type ``X`` to switch between the modes.
+The output starts with an index in the format ``sentence:token``, specifying
+where the pattern found was found in your input. The next columns are the same
+as the print output.The interactive query mode distinguishes two modes,
+extensive mode and exact mode. In extensive mode, your input string will be
+scanned for all patterns occurring in it. In exact mode, the input you
+specified needs to match exactly and as a whole. Type ``X`` to switch between
+the modes.
 
 In addition to interactive query mode, there is also a command line query mode
 ``-q`` in which you specify the pattern you want to query as argument on the command
 line. Multiple patterns can be specified by repeating the ``-q`` flag. This
 mode always behaves according to exact mode::
 
-    $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q "or not"
-    1:2	or not	4	0
+    $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q "to be"
+    Loading class decoder from file /tmp/hamlet.colibri.cls
+    Loading class encoder from file /tmp/hamlet.colibri.cls
+    Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
+    to be	2		4	0.0117647	ngram	2	0.0769231   1:4 9:1
 
 
 Pattern Relations
@@ -426,7 +430,8 @@ A pattern model contains a wide variety of patterns; the relationships between t
   patterns that instantiate them ``to be {*1*} not {*1*} be`` is instantiated
   by ``to {*1*} or``.
 
-You can all of these extract relations using the ``-R`` flag, which is to be
-used in combination with the query mode ``-Q`` or ``-q``.
+You can all of these extract relations using the ``-r`` flag, which is to be
+used in combination with the query mode ``-Q`` or ``-q``. Consider the
+following sample::
 
-
+    #TODO still
