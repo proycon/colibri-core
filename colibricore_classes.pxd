@@ -124,7 +124,7 @@ cdef extern from "patternmodel.h":
         bool DOREVERSEINDEX
         bool DEBUG
 
-    cdef cppclass IndexValueHandler:
+    cdef cppclass IndexedValueHandler:
         int count(IndexedData &)
         int add(IndexedData *, IndexReference&)
         str tostring(IndexedData&)
@@ -135,12 +135,11 @@ cdef extern from "patternmodel.h":
             iterator operator++() nogil
             bint operator==(iterator) nogil
             bint operator!=(iterator) nogil
-        size_t size() nogil
         iterator begin() nogil
         iterator end() nogil
         PatternModel() nogil
         void insert(Pattern&, ValueType& value) nogil
-        void has(Pattern&) nogil
+        bool has(Pattern&) nogil
         int size() nogil
         ValueType& operator[](Pattern&) nogil
         iterator erase(Pattern&) nogil

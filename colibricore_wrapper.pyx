@@ -3,8 +3,9 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternModel as cPatternModel, IndexedValueHandler as cIndexedValueHandler, BaseValueHandler as cBaseValueHandler
 from unordered_map cimport unordered_map
+from libc.stdint cimport *
 
 #cdef class IndexedPatternModel:
 #    cdef pycolibri_classes.IndexedPatternModel *thisptr
@@ -119,6 +120,10 @@ cdef class Pattern:
     cdef bind(self, cPattern cpattern):
         self.cpattern = cpattern
 
+    cdef cPattern get(self):
+        return self.cpattern
+
+
     def tostring(self, ClassDecoder decoder):
         return str(self.cpattern.tostring(deref(decoder.thisptr)),'utf-8')
 
@@ -149,6 +154,7 @@ cdef class IndexedData:
     cdef bind(self, cIndexedData cdata):
         self.data = cdata
 
+
     def __contains__(self, item):
         if not isinstance(item, tuple) or len(item) != 2:
             raise ValueError("Item should be a 2-tuple (sentence,token)")
@@ -166,3 +172,30 @@ cdef class IndexedData:
     def __len__(self):
         return self.data.size()
 
+
+cdef class IndexedPatternModel:
+    cdef cPatternModel[cIndexedData,cIndexedValueHandler,uint64_t] data
+
+    def __len__(self):
+        return self.data.size()
+
+    cdef has(self, Pattern pattern):
+        return self.data.has(pattern.cpattern)
+
+    def __contains__(self, pattern):
+        assert isinstance(pattern, Pattern)
+        return self.has(pattern)
+
+cdef class UnindexedPatternModel:
+    cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],uint64_t] data
+
+    def __len__(self):
+        return self.data.size()
+
+
+    cdef has(self, Pattern pattern):
+        return self.data.has(pattern.cpattern)
+
+    def __contains__(self, pattern):
+        assert isinstance(pattern, Pattern)
+        return self.has(pattern)
