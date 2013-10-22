@@ -1,5 +1,6 @@
 from libcpp.string cimport string
-from libcpp.set cimport set as cppset
+from libcpp.set cimport set as stdset
+from libcpp.map cimport map as stdmap
 from libcpp.vector cimport vector
 from libcpp cimport bool
 from unordered_map cimport unordered_map
@@ -185,6 +186,12 @@ cdef extern from "patternmodel.h":
         void histogram(ostream*) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
         
+        stdmap[Pattern,int] getsubchildren(Pattern & pattern)
+        stdmap[Pattern,int] getsubparents(Pattern & pattern)
+        stdmap[Pattern,int] getleftneighbours(Pattern & pattern)
+        stdmap[Pattern,int] getrightneighbours(Pattern & pattern)
+        stdmap[Pattern,int] getskipcontent(Pattern & pattern)
+
 
 #    cdef cppclass NGramData(AnyGramData):
 #        cppset[CorpusReference] refs

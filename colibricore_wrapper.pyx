@@ -6,6 +6,7 @@ from cython import address
 from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
+from libcpp.map cimport map as stdmap
 
 #    def reverseindex(self, int index):
 #        #cdef vector[const pycolibri_classes.EncAnyGram *] v = self.thisptr.reverse_index[index]
@@ -304,8 +305,7 @@ cdef class UnindexedPatternModel:
 
     def __len__(self):
         return self.data.size()
-
-    
+ 
     def types(self):
         return self.data.types()
 
@@ -408,3 +408,67 @@ cdef class UnindexedPatternModel:
     cpdef prune(self, int threshold, int n=0):
         self.data.prune(threshold, n)
 
+    def getsubchildren(self, Pattern pattern):
+        cdef stdmap[cPattern,int] relations = self.data.getsubchildren(pattern.cpattern)
+        cdef stdmap[cPattern,int].iterator it = relations.begin()
+        cdef cPattern cpattern
+        cdef int value
+        while it != relations.end():
+            cpattern = deref(it).first
+            value = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield tuple(pattern,value)
+            inc(it)
+    
+    def getsubparents(self, Pattern pattern):
+        cdef stdmap[cPattern,int] relations = self.data.getsubparents(pattern.cpattern)
+        cdef stdmap[cPattern,int].iterator it = relations.begin()
+        cdef cPattern cpattern
+        cdef int value
+        while it != relations.end():
+            cpattern = deref(it).first
+            value = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield tuple(pattern,value)
+            inc(it)
+    
+    def getleftneighbours(self, Pattern pattern):
+        cdef stdmap[cPattern,int] relations = self.data.getleftneighbours(pattern.cpattern)
+        cdef stdmap[cPattern,int].iterator it = relations.begin()
+        cdef cPattern cpattern
+        cdef int value
+        while it != relations.end():
+            cpattern = deref(it).first
+            value = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield tuple(pattern,value)
+            inc(it)
+
+    def getrightneighbours(self, Pattern pattern):
+        cdef stdmap[cPattern,int] relations = self.data.getrightneighbours(pattern.cpattern)
+        cdef stdmap[cPattern,int].iterator it = relations.begin()
+        cdef cPattern cpattern
+        cdef int value
+        while it != relations.end():
+            cpattern = deref(it).first
+            value = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield tuple(pattern,value)
+            inc(it)
+    
+    def getskipcontent(self, Pattern pattern):
+        cdef stdmap[cPattern,int] relations = self.data.getskipcontent(pattern.cpattern)
+        cdef stdmap[cPattern,int].iterator it = relations.begin()
+        cdef cPattern cpattern
+        cdef int value
+        while it != relations.end():
+            cpattern = deref(it).first
+            value = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield tuple(pattern,value)
+            inc(it)

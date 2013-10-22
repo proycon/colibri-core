@@ -718,10 +718,17 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
         
-        void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT) {
+        virtual void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT) {
             //nothing to do, model is unindexed
             return;
         }
+
+        
+        virtual std::map<Pattern,int> getsubchildren(const Pattern & pattern) { return std::map<Pattern,int>(); } //does nothing for unindexed models
+        virtual std::map<Pattern,int> getsubparents(const Pattern & pattern) { return std::map<Pattern,int>(); } //does nothing for unindexed models
+        virtual std::map<Pattern,int> getskipcontent(const Pattern & pattern) { return std::map<Pattern,int>(); } //does nothing for unindexed models
+        virtual std::map<Pattern,int> getleftneighbours(const Pattern & pattern) { return std::map<Pattern,int>(); } //does nothing for unindexed models
+        virtual std::map<Pattern,int> getrightneighbours(const Pattern & pattern) { return std::map<Pattern,int>(); } //does nothing for unindexed models
 };
 
 
