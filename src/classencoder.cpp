@@ -263,7 +263,7 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
 }
 
 
-Pattern ClassEncoder::input2pattern(const std::string & querystring, bool allowunknown,  bool autoaddunknown) {
+Pattern ClassEncoder::buildpattern(const std::string & querystring, bool allowunknown,  bool autoaddunknown) {
 	unsigned char buffer[65536];
 	char buffersize = encodestring(querystring, buffer, allowunknown, autoaddunknown);
     Pattern pattern = Pattern(buffer,buffersize); 

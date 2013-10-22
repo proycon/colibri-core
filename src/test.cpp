@@ -45,7 +45,7 @@ int main( int argc, char *argv[] ) {
         
         cerr << "Encoding n-gram from string input" << endl;
         string querystring = "To be or not to be";
-        Pattern ngram = encoder.input2pattern(querystring, true); 	
+        Pattern ngram = encoder.buildpattern(querystring, true); 	
 
         cerr << "Ngram #1: " << ngram.decode(classdecoder) << endl;
         cerr << "Size (n): " << (int) ngram.n() << endl; //== size()
@@ -89,24 +89,24 @@ int main( int argc, char *argv[] ) {
         cerr << "Below tests should all return 1" << endl;
         
         string substring = "or not";     	
-        Pattern subngram = encoder.input2pattern(substring, true);
+        Pattern subngram = encoder.buildpattern(substring, true);
         cerr << "Testing occurrence of substring 'or not'? "; test(ngram.contains(subngram) == 1);
         
         string substring2 = "to not";     	
-        Pattern subngram2 = encoder.input2pattern(substring2, true);
+        Pattern subngram2 = encoder.buildpattern(substring2, true);
         cerr << "Testing non-occurrence of substring 'to not'? "; test(ngram.contains(subngram2) == 0);
         
         string substring3 = "to be";     	
-        Pattern subngram3 = encoder.input2pattern(substring3, true);
+        Pattern subngram3 = encoder.buildpattern(substring3, true);
         cerr << "Testing occurrence of substring 'to be'? "; test(ngram.contains(subngram3) == 1);
         
         string substring4 = "or";     	
-        Pattern subngram4 = encoder.input2pattern(substring4, true);
+        Pattern subngram4 = encoder.buildpattern(substring4, true);
         cerr << "Testing occurrence of substring 'or'? "; test(ngram.contains(subngram4) == 1);
         
         
         string substring5 = "to";     	
-        Pattern subngram5 = encoder.input2pattern(substring5, true);
+        Pattern subngram5 = encoder.buildpattern(substring5, true);
 
         cerr << "----------------------------------------------------" << endl;
         cerr << "Ngram addition: " << endl;
@@ -139,7 +139,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Encoding skip-gram from string input" << endl;
         string querystring2 = "To {*1*} or {*1*} to be";
 
-        Pattern skipgram = encoder.input2pattern(querystring2, true);
+        Pattern skipgram = encoder.buildpattern(querystring2, true);
         
         cerr << "Skipgram: " << skipgram.decode(classdecoder) << endl;
         cerr << "N: " << (int) skipgram.n() << endl;
@@ -199,7 +199,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Encoding skip-gram from string input" << endl;
         string querystring4 = "be {*1*} not";
         
-        Pattern skipgraminv2 = encoder.input2pattern(querystring4, true);
+        Pattern skipgraminv2 = encoder.buildpattern(querystring4, true);
         
         cerr << "Skipgram: " << skipgraminv2.decode(classdecoder) << endl;
         cerr << "N: " << (int) skipgraminv2.n() << endl;
@@ -222,7 +222,7 @@ int main( int argc, char *argv[] ) {
         
         cerr << "----------------------------------------------------" << endl;
         string querystring5 = "be {*1*} not {*2*} be";
-        Pattern skipgram5 = encoder.input2pattern(querystring5, true);
+        Pattern skipgram5 = encoder.buildpattern(querystring5, true);
         cout << skipgram5.decode(classdecoder) << endl;
         
         cerr << "Parts: " << endl;
@@ -275,7 +275,7 @@ int main( int argc, char *argv[] ) {
         
         cerr << "----------------------------------------------------" << endl;
         string querystring6 = "be {*1*} not";
-        Pattern skipgram6 = encoder.input2pattern(querystring6, true);
+        Pattern skipgram6 = encoder.buildpattern(querystring6, true);
         cout << skipgram6.decode(classdecoder) << endl;
         skipgram6.out();
         
@@ -303,7 +303,7 @@ int main( int argc, char *argv[] ) {
 
         cerr << "----------------------------------------------------" << endl;
         string querystring7 = "blah {*1*} or {*2*} blah";
-        Pattern skipgram7 = encoder.input2pattern(querystring7, true);
+        Pattern skipgram7 = encoder.buildpattern(querystring7, true);
         cout << skipgram7.decode(classdecoder) << endl;
         
         cerr << "Parts: " << endl;
@@ -343,7 +343,7 @@ int main( int argc, char *argv[] ) {
         
         cerr << "----------------------------------------------------" << endl;
         string querystring8 = "{*1*} or blah {*2*}";
-        Pattern skipgram8 = encoder.input2pattern(querystring8, true);
+        Pattern skipgram8 = encoder.buildpattern(querystring8, true);
         cout << skipgram8.decode(classdecoder) << endl;
         
             
@@ -528,7 +528,7 @@ int main( int argc, char *argv[] ) {
         PatternModel<uint32_t> indexedasunindexedmodel = PatternModel<uint32_t>(outputfilename, options);
 
         string querystring  = "To die , to sleep";
-        Pattern ngram = classencoder.input2pattern(querystring, true); 	
+        Pattern ngram = classencoder.buildpattern(querystring, true); 	
         cerr << "Extracting subsumption relations for " << querystring << endl;
 
         std::map<Pattern,int> relations = indexedmodel.getsubchildren(ngram);
@@ -537,7 +537,7 @@ int main( int argc, char *argv[] ) {
 
         string querystring2  = "not";
         cerr << "Extracting subsumption relations for " << querystring2 << endl;
-        Pattern patternnot = classencoder.input2pattern(querystring2, true); 	
+        Pattern patternnot = classencoder.buildpattern(querystring2, true); 	
         std::map<Pattern,int> relations2 = indexedmodel.getsubparents(patternnot);
         indexedmodel.outputrelations(patternnot, relations2, classdecoder, &cerr,"SUBSUMED-BY");
 
@@ -551,7 +551,7 @@ int main( int argc, char *argv[] ) {
 
 
         string querystring3 = "To {*3*} to";
-        Pattern skipgram = classencoder.input2pattern(querystring3, true);
+        Pattern skipgram = classencoder.buildpattern(querystring3, true);
         cerr << "Extracting subsumption relations for " << querystring3 << endl;
 
         std::map<Pattern,int> relations5 = indexedmodel.getsubchildren(skipgram);
