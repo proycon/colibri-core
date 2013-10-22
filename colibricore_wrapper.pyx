@@ -8,17 +8,6 @@ from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
 
-#    def reverseindex(self, int index):
-#        #cdef vector[const pycolibri_classes.EncAnyGram *] v = self.thisptr.reverse_index[index]
-#        cdef vector[const pycolibri_classes.EncAnyGram*] v = self.thisptr.get_reverse_index(index)
-#        cdef vector[const pycolibri_classes.EncAnyGram *].iterator it = v.begin()
-#        while it != v.end():
-#            anygram  = <pycolibri_classes.EncAnyGram*> deref(it)
-#            pattern = Pattern()
-#            pattern.bind(anygram)
-#            yield pattern
-#            inc(it)
-
 
 cdef class ClassEncoder:
     cdef cClassEncoder *thisptr
@@ -472,3 +461,15 @@ cdef class UnindexedPatternModel:
             pattern.bind(cpattern)
             yield tuple(pattern,value)
             inc(it)
+
+#    def reverseindex(self, int index):
+#        #cdef vector[const pycolibri_classes.EncAnyGram *] v = self.thisptr.reverse_index[index]
+#        cdef vector[const pycolibri_classes.EncAnyGram*] v = self.thisptr.get_reverse_index(index)
+#        cdef vector[const pycolibri_classes.EncAnyGram *].iterator it = v.begin()
+#        while it != v.end():
+#            anygram  = <pycolibri_classes.EncAnyGram*> deref(it)
+#            pattern = Pattern()
+#            pattern.bind(anygram)
+#            yield pattern
+#            inc(it)
+
