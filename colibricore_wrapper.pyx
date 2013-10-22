@@ -18,6 +18,7 @@ from libc.stdint cimport *
 #            yield pattern
 #            inc(it)
 
+
 cdef class ClassEncoder:
     cdef cClassEncoder *thisptr
 
@@ -34,7 +35,7 @@ cdef class ClassEncoder:
         return self.thisptr.size()
 
     def buildpattern(self, str text, bool allowunknown=True, bool autoaddunknown=False):
-        c_pattern = self.thisptr.input2pattern(text.encode('utf-8'), allowunknown, autoaddunknown)
+        c_pattern = self.thisptr.buildpattern(text.encode('utf-8'), allowunknown, autoaddunknown)
         pattern = Pattern()
         pattern.bind(c_pattern)
         return pattern
@@ -111,6 +112,17 @@ cdef class Pattern:
             return (self.cpattern == other.cpattern) or (self.cpattern < other.cpattern)
         elif op == 5: #>=
             return (self.cpattern == other.cpattern) or (self.cpattern > other.cpattern)
+
+
+
+    cdef Pattern add(Pattern self, Pattern other):
+        cdef cPattern newcpattern = self.cpattern + other.cpattern
+        newpattern = Pattern()
+        newpattern.bind(newcpattern)
+        return newpattern
+
+    def __add__(self, Pattern other):
+        return self.add(other)
 
     def ngrams(self,int n=0):
         cdef vector[cPattern] result
@@ -303,3 +315,4 @@ cdef class UnindexedPatternModel:
     
     cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
         self.data.outputrelations(pattern.cpattern,deref(decoder.thisptr),&cout)
+
