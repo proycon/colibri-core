@@ -20,6 +20,10 @@ cdef extern from "pattern.h":
         uint32_t sentence
         uint16_t token
 
+    cdef cppclass BaseValueHandler[T]:
+        int count(T &)
+        int add(T *, IndexReference&)
+        str tostring(T&)
 
     cdef cppclass PatternMap[ValueType,ValueHandler,ReadWriteSizeType]:
         cppclass iterator:
@@ -119,10 +123,13 @@ cdef extern from "patternmodel.h":
         int MINSKIPTYPES
         bool DOREVERSEINDEX
         bool DEBUG
+
+    cdef cppclass IndexValueHandler:
+        int count(IndexedData &)
+        int add(IndexedData *, IndexReference&)
+        str tostring(IndexedData&)
+
     #cdef cppclass PatternModel[ValueType,ValueHandler,MapType]:
-
-
-
 #    cdef cppclass NGramData(AnyGramData):
 #        cppset[CorpusReference] refs
 #        int count()
