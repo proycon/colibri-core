@@ -64,6 +64,14 @@ class IndexedData {
 
     iterator find(const IndexReference & ref) { return data.find(ref); }
     const_iterator find(const IndexReference & ref) const { return data.find(ref); }    
+
+    std::set<int> sentences() const {
+        std::set<int> sentences;
+        for (iterator iter = this->begin(); iter != this->end(); iter++) {
+            const IndexReference ref = *iter;
+            sentences.insert(ref.sentence); 
+        }
+    }
     friend class IndexedDataHandler;
 };
 
@@ -719,12 +727,14 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
         
+        
         virtual void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT) {} //does nothing for unindexed models
         virtual std::map<Pattern,int> getsubchildren(const Pattern & pattern) { return std::map<Pattern,int>(); } //does nothing for unindexed models
         virtual std::map<Pattern,int> getsubparents(const Pattern & pattern) { return std::map<Pattern,int>(); } //does nothing for unindexed models
         virtual std::map<Pattern,int> getskipcontent(const Pattern & pattern) { return std::map<Pattern,int>(); } //does nothing for unindexed models
         virtual std::map<Pattern,int> getleftneighbours(const Pattern & pattern) { return std::map<Pattern,int>(); } //does nothing for unindexed models
         virtual std::map<Pattern,int> getrightneighbours(const Pattern & pattern) { return std::map<Pattern,int>(); } //does nothing for unindexed models
+        virtual std::map<Pattern,double> getnpmi(const Pattern & pattern, double threshold) { return std::map<Pattern,double>(); } //does nothing for unindexed models
         virtual void computedynskipgrams_fromfixed() {}//does nothing for unindexed models
         virtual void computedynskipgrams_fromcooc() {}//does nothing for unindexed models
 };
@@ -1033,7 +1043,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const Pattern neighbour = iter2->second;
                 if (ref2.token + neighbour.n() == ref.token) {
                     neighbours[neighbour]++;
-                } else if (ref2.token > ref.token) break;
+                } else if ((ref2.token > ref.token) || (ref2.sentence > ref.sentence)) break;
             }
         }
         return neighbours;
@@ -1116,6 +1126,130 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
+    std::map<Pattern,int> getrightcooc(const Pattern & pattern) { 
+        if (this->reverseindex.empty()) {
+            std::cerr << "ERROR: No reverse index present" << std::endl;
+            throw InternalError();
+        }
+
+        IndexedData * data = this->getdata(pattern);
+        if (data == NULL) {
+            std::cerr << "ERROR: No data found for pattern!" << std::endl;
+            throw InternalError();
+        }
+       
+        const int _n = pattern.n();
+        std::map<Pattern,int> cooc;
+        //find everything that co-occurs *without overlap* TO THE RIGHT 
+        for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
+            const IndexReference ref = *iter;
+
+
+            for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(ref); iter2 != this->reverseindex.end(); iter2++) {
+                const IndexReference ref2 = iter2->first;
+                const Pattern neighbour = iter2->second;
+                if (ref2.token > ref.token + _n) {
+                    cooc[neighbour]++;
+                } else if (ref2.sentence > ref.sentence) break;
+            }
+        }
+        return cooc;
+    }
+
+
+    std::map<Pattern,int> getleftcooc(const Pattern & pattern) { 
+        if (this->reverseindex.empty()) {
+            std::cerr << "ERROR: No reverse index present" << std::endl;
+            throw InternalError();
+        }
+
+        IndexedData * data = this->getdata(pattern);
+        if (data == NULL) {
+            std::cerr << "ERROR: No data found for pattern!" << std::endl;
+            throw InternalError();
+        }
+       
+        std::map<Pattern,int> cooc;
+        //find everything that co-occurs *without overlap* TO THE RIGHT 
+        for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
+            const IndexReference ref = *iter;
+
+            IndexReference bos =  IndexReference(ref.sentence, 0);
+
+            for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(bos); iter2 != this->reverseindex.end(); iter2++) {
+                const IndexReference ref2 = iter2->first;
+                const Pattern neighbour = iter2->second;
+                const int _n = neighbour.n();
+                if (ref2.token + _n < ref.token ) {
+                    cooc[neighbour]++;
+                } else if (ref2.sentence > ref.sentence) break;
+            }
+        }
+        return cooc;
+    }
+
+
+    std::map<Pattern,int> getcooc(const Pattern & pattern) { 
+        if (this->reverseindex.empty()) {
+            std::cerr << "ERROR: No reverse index present" << std::endl;
+            throw InternalError();
+        }
+
+        IndexedData * data = this->getdata(pattern);
+        if (data == NULL) {
+            std::cerr << "ERROR: No data found for pattern!" << std::endl;
+            throw InternalError();
+        }
+       
+        const int _n = pattern.n();
+        std::map<Pattern,int> cooc;
+        //find everything that co-occurs *without overlap* TO THE RIGHT 
+        for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
+            const IndexReference ref = *iter;
+
+            IndexReference bos =  IndexReference(ref.sentence, 0);
+
+            for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(bos); iter2 != this->reverseindex.end(); iter2++) {
+                const IndexReference ref2 = iter2->first;
+                const Pattern neighbour = iter2->second;
+                const int _n2 = neighbour.n();
+                if ((ref2.token + _n2 < ref.token ) || (ref2.token > ref.token + _n)) {
+                    cooc[neighbour]++;
+                } else if (ref2.sentence > ref.sentence) break;
+            }
+        }
+        return cooc;
+    }
+
+    /*double npmi(const Pattern & key1, const Pattern & key2) {
+        //normalised pointwise mutual information
+        double jointcount = 0;
+            
+        IndexedData * data1 = this->getdata(key1);
+        IndexedData * data2 = this->getdata(key2);
+        if ((data1 == NULL) || (data2 == NULL)) return -1;
+
+        std::set<int> sentences1 = data1->sentences();
+        std::set<int> sentences2 = data2->sentences();
+        
+        std::set<int>::const_iterator sourceiter = sentences1.begin();    
+        std::set<int>::const_iterator targetiter = sentences2.begin();
+        
+        while ((sourceiter !=sentences1.end()) && (targetiter!=sentences2.end())) {
+            if (*sourceiter < *targetiter) { 
+                sourceiter++;
+            } else if (*targetiter < *sourceiter) {
+                targetiter++;
+            } else {  //equal
+                jointcount++;
+                sourceiter++;
+                targetiter++;
+            }
+        }
+        
+        return  log( (double) jointcount / (this->occurrencecount(key1) * this->occurrencecount(key2)) )  / -log((double)jointcount/(double)grouptotal(0,0) );    
+    }*/
+
     void outputrelations(const Pattern & pattern, std::map<Pattern,int> & relations, ClassDecoder & classdecoder, std::ostream *OUT, const std::string label = "RELATED-TO") {
         int total = 0;
         for (std::map<Pattern,int>::iterator iter = relations.begin(); iter != relations.end(); iter++) {
@@ -1142,11 +1276,19 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
         {
             std::map<Pattern,int> relations = this->getleftneighbours(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-OF");
+            this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-NEIGHBOUR-OF");
         }
         {
             std::map<Pattern,int> relations = this->getrightneighbours(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-OF");
+            this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-NEIGHBOUR-OF");
+        }
+        {
+            std::map<Pattern,int> relations = this->getrightcooc(pattern);
+            this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-COOC-OF");
+        }
+        {
+            std::map<Pattern,int> relations = this->getleftcooc(pattern);
+            this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-COOC-OF");
         }
         if (pattern.category() == FIXEDSKIPGRAM) {
             std::map<Pattern,int> relations = this->getskipcontent(pattern);
