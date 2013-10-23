@@ -404,7 +404,7 @@ to be       2               4       0.0117647       ngram   2       0.0769231   
 <li><strong>Successor relations</strong>  - Patterns that follow eachother are in a left-of/right-of relation.</li>
 <li><strong>Instantiation relations</strong> - There is a relation between skipgrams and
 patterns that instantiate them <tt class="docutils literal"><span class="pre">to</span> <span class="pre">be</span> <span class="pre">{*1*}</span> <span class="pre">not</span> <span class="pre">{*1*}</span> <span class="pre">be</span></tt> is instantiated
-by <tt class="docutils literal"><span class="pre">to</span> <span class="pre">{*1*}</span> <span class="pre">or</span></tt>.</li>
+by <tt class="docutils literal"><span class="pre">to</span> <span class="pre">{*1*}</span> <span class="pre">or</span></tt>, also referred to as the skip content.</li>
 </ul>
 <p>You can all of these extract relations using the <tt class="docutils literal"><span class="pre">-r</span></tt> flag, which is to be
 used in combination with the query mode <tt class="docutils literal"><span class="pre">-Q</span></tt> or <tt class="docutils literal"><span class="pre">-q</span></tt>. Consider the
@@ -418,10 +418,10 @@ to be       2               4       0.0117647       ngram   2       0.0769231   
 #   PATTERN1        RELATION        PATTERN2        REL.COUNT       REL.FREQUENCY   COUNT2
     to be   SUBSUMES        to      2       0.5     13
     to be   SUBSUMES        be      2       0.5     4
-    to be   RIGHT-OF        To {*1*} or not 1       0.25    4
-    to be   RIGHT-OF        To {*2*} not    1       0.25    4
-    to be   RIGHT-OF        not     1       0.25    5
-    to be   RIGHT-OF        or not  1       0.25    4</pre>
+    to be   RIGHT-NEIGHBOUR-OF      To {*1*} or not 1       0.25    4
+    to be   RIGHT-NEIGHBOUR-OF      To {*2*} not    1       0.25    4
+    to be   RIGHT-NEIGHBOUR-OF      not     1       0.25    5
+    to be   RIGHT-NEIGHBOUR-OF      or not  1       0.25    4</pre>
 </div>
 <p>The following columns are reported, all are indented with a single tab so
 possible parsers can distinguish the numbers for the queried pattern itself from the relationships with other patterns.</p>
@@ -436,6 +436,10 @@ possible parsers can distinguish the numbers for the queried pattern itself from
 </ul>
 </div></blockquote>
 </div>
+</div>
+<div class="section" id="library-reference">
+<h2>Library Reference<a class="headerlink" href="#library-reference" title="Permalink to this headline">¶</a></h2>
+<p>(todo)</p>
 </div>
 </div>
 
@@ -471,6 +475,7 @@ possible parsers can distinguish the numbers for the queried pattern itself from
 <li><a class="reference internal" href="#pattern-relations">Pattern Relations</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#library-reference">Library Reference</a></li>
 </ul>
 </li>
 </ul>

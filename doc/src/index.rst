@@ -428,7 +428,7 @@ A pattern model contains a wide variety of patterns; the relationships between t
 * **Successor relations**  - Patterns that follow eachother are in a left-of/right-of relation.
 * **Instantiation relations** - There is a relation between skipgrams and
   patterns that instantiate them ``to be {*1*} not {*1*} be`` is instantiated
-  by ``to {*1*} or``.
+  by ``to {*1*} or``, also referred to as the skip content.
 
 You can all of these extract relations using the ``-r`` flag, which is to be
 used in combination with the query mode ``-Q`` or ``-q``. Consider the
@@ -443,10 +443,10 @@ following sample::
     #	PATTERN1	RELATION	PATTERN2	REL.COUNT	REL.FREQUENCY	COUNT2
         to be	SUBSUMES	to	2	0.5	13
         to be	SUBSUMES	be	2	0.5	4
-        to be	RIGHT-OF	To {*1*} or not	1	0.25	4
-        to be	RIGHT-OF	To {*2*} not	1	0.25	4
-        to be	RIGHT-OF	not	1	0.25	5
-        to be	RIGHT-OF	or not	1	0.25	4
+        to be	RIGHT-NEIGHBOUR-OF	To {*1*} or not	1	0.25	4
+        to be	RIGHT-NEIGHBOUR-OF	To {*2*} not	1	0.25	4
+        to be	RIGHT-NEIGHBOUR-OF	not	1	0.25	5
+        to be	RIGHT-NEIGHBOUR-OF	or not	1	0.25	4
         
 The following columns are reported, all are indented with a single tab so
 possible parsers can distinguish the numbers for the queried pattern itself from the relationships with other patterns.
