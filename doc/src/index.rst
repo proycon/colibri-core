@@ -448,7 +448,8 @@ following sample::
         to be	RIGHT-OF	not	1	0.25	5
         to be	RIGHT-OF	or not	1	0.25	4
         
-The following columns are reported:
+The following columns are reported, all are indented with a single tab so
+possible parsers can distinguish the numbers for the queried pattern itself from the relationships with other patterns.
 
     * **Pattern 1** -- The pattern you queried
     * **Relation** -- The nature of the relationship between pattern 1 and pattern 2
