@@ -127,7 +127,7 @@ class PatternModelOptions {
             MINSKIPTYPES = 2;
             DOFIXEDSKIPGRAMS = false;
 
-            DOREVERSEINDEX = false; //only for indexed models
+            DOREVERSEINDEX = true; //only for indexed models
 
             DEBUG = false;
         }
@@ -172,6 +172,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::map<int,std::map<int,int>> cache_grouptotaltokens; //total covered tokens per group
 
         virtual void postread(const PatternModelOptions options) {
+            std::cerr <<"Post-read processing (unindexedmodel)" << std::endl;
             //this function has a specialisation specific to indexed pattern models,
             //this is the generic version
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -220,14 +221,14 @@ class PatternModel: public MapType, public PatternModelInterface {
             return MapType::has(pattern);
         }
         
-        void load(std::string filename, const PatternModelOptions options) {
+        virtual void load(std::string filename, const PatternModelOptions options) {
             std::ifstream * in = new std::ifstream(filename.c_str());
             this->load( (std::istream *) in, options);
             in->close();
             delete in;
         }
 
-        void load(std::istream * f, const PatternModelOptions options) { //load from file
+        virtual void load(std::istream * f, const PatternModelOptions options) { //load from file
             char null;
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
@@ -735,15 +736,48 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 template<class MapType = PatternMap<IndexedData,IndexedDataHandler>> 
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType> {
+    protected:
+        virtual void postread(const PatternModelOptions options) {
+            std::cerr <<"Post-read processing (indexedmodel)" << std::endl;
+            for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+                const Pattern p = iter->first;
+                const int n = p.n();
+                if (n > this->maxn) this->maxn = n;
+                if (n < this->minn) this->minn = n;
+                IndexedData * data = this->getdata(p);
+                if (options.DOREVERSEINDEX) {
+                    //construct the reverse index
+                    for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
+                        const IndexReference ref = *iter2;
+                        this->reverseindex.insert(std::pair<IndexReference,Pattern>(ref,p));
+                    }
+                }
+            }
+        }
    public:
 
 
 
-    IndexedPatternModel<MapType>(): PatternModel<IndexedData,IndexedDataHandler,MapType>() {}; 
-    
-    IndexedPatternModel<MapType>(std::istream *f, const PatternModelOptions options): PatternModel<IndexedData,IndexedDataHandler,MapType>(f, options) {}; 
-    IndexedPatternModel<MapType>(const std::string filename, const PatternModelOptions options): PatternModel<IndexedData,IndexedDataHandler,MapType>(filename, options) {}; 
        
+    IndexedPatternModel<MapType>(): PatternModel<IndexedData,IndexedDataHandler,MapType>() {
+        this->model_type = this->getmodeltype();
+        this->model_version = this->getmodelversion();
+    }
+    IndexedPatternModel<MapType>(std::istream *f, const PatternModelOptions options):  PatternModel<IndexedData,IndexedDataHandler,MapType>(){ //load from file
+        this->model_type = this->getmodeltype();
+        this->model_version = this->getmodelversion();
+        this->load(f,options);
+    }
+
+    IndexedPatternModel<MapType>(const std::string filename, const PatternModelOptions options): PatternModel<IndexedData,IndexedDataHandler,MapType>() { //load from file
+        this->model_type = this->getmodeltype();
+        this->model_version = this->getmodelversion();
+        std::ifstream * in = new std::ifstream(filename.c_str());
+        this->load( (std::istream *) in, options);
+        in->close();
+        delete in;
+    }
+
     int getmodeltype() const { return INDEXEDPATTERNMODEL; }
     int getmodelversion() const { return 1;} 
 
@@ -765,22 +799,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
-    void postread(const PatternModelOptions options) {
-        for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
-            const Pattern p = iter->first;
-            const int n = p.n();
-            if (n > this->maxn) this->maxn = n;
-            if (n < this->minn) this->minn = n;
-            IndexedData * data = this->getdata(p);
-            if (options.DOREVERSEINDEX) {
-                //construct the reverse index
-                for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
-                    const IndexReference ref = *iter2;
-                    this->reverseindex.insert(std::pair<IndexReference,Pattern>(ref,p));
-                }
-            }
-        }
-    }
     
     void print(std::ostream * out, ClassDecoder & decoder) {
         *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY\tREFERENCES" << std::endl;
