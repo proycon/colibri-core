@@ -1126,7 +1126,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
-    std::map<Pattern,int> getrightcooc(const Pattern & pattern) { 
+    std::map<Pattern,int> getrightcooc(const Pattern & pattern, IndexedData * matches = NULL) { 
         if (this->reverseindex.empty()) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -1150,6 +1150,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const Pattern neighbour = iter2->second;
                 if (ref2.token > ref.token + _n) {
                     cooc[neighbour]++;
+                    if (matches != NULL) matches->insert(ref2);
                 } else if (ref2.sentence > ref.sentence) break;
             }
         }
@@ -1272,6 +1273,27 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
+    std::map<Pattern,std::map<Pattern,double>> & computenpmi(double threshold, bool right=true, bool left=false) { 
+        std::map<Pattern,std::map<Pattern,double>> coocmap;
+        for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+            const Pattern pattern = iter->first;
+            std::map<Pattern,int> tmp;
+            if ((right)&&(!left)) {
+                tmp =  this->getrightcooc(pattern);
+            } else if ((left)&&(!right)) {
+                tmp =  this->getleftcooc(pattern);
+            } else if (left && right) {
+                tmp =  this->getcooc(pattern);
+            }
+            for (std::map<Pattern,int>::iterator iter2 = tmp.begin(); iter2 != tmp.end(); iter2++) {
+                const Pattern pattern2 = iter2->first;
+                const double value = npmi(pattern,pattern2,iter2->second);
+                if (value >= threshold) coocmap[pattern][pattern2] = value;
+            }
+        }
+        return coocmap; 
+    } 
+
     void computedynskipgrams_fromfixed() {
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;
@@ -1288,7 +1310,21 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
     void computedynskipgrams_fromcooc(double threshold) {
-        
+        const unsigned char dynamicgap = 129;
+        const Pattern dynamicpattern = Pattern(&dynamicgap,1);
+        for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+            const Pattern pattern = iter->first;
+            IndexedData matches;
+            std::map<Pattern,int> tmp =  this->getrightcooc(pattern, &matches);
+            for (std::map<Pattern,int>::iterator iter2 = tmp.begin(); iter2 != tmp.end(); iter2++) {
+                const Pattern pattern2 = iter2->first;
+                const double value = npmi(pattern,pattern2,iter2->second);
+                if (value >= threshold) {
+                    const Pattern skipgram = pattern + dynamicpattern + pattern2;
+                    this->data[skipgram] = value;
+                }
+            }
+        }
     }
 };
 
