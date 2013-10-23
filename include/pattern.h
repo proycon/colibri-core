@@ -216,6 +216,41 @@ class IndexReference {
         return std::to_string(sentence) + ":" + std::to_string(token);
     }
 };
+
+
+/***********************************************************************************/
+
+//Class for reading an entire (class encoded) corpus into memory, providing an
+//index by IndexReference
+//TODO: implement
+class IndexedCorpus {
+    protected:
+        std::map<IndexReference,Pattern> data; //tokens
+    public:
+        IndexedCorpus(std::istream *in);
+        IndexedCorpus(std::string filename);
+        
+        typedef std::map<IndexReference,Pattern>::iterator iterator;
+        typedef std::map<IndexReference,Pattern>::const_iterator const_iterator;
+
+        iterator begin() { return data.begin(); }
+        const_iterator begin() const { return data.begin(); }
+
+        iterator end() { return data.end(); }
+        const_iterator end() const { return data.end(); }
+
+        iterator find(const IndexReference ref) { return data.find(ref); }
+        const_iterator find(const IndexReference ref) const { return data.find(ref); }
+        
+        bool has(const IndexReference ref) const { return data.count(ref); }
+
+        size_t size() const { return data.size(); } 
+
+        Pattern operator [](const IndexReference ref) { return data[ref]; } 
+
+        Pattern getpattern(IndexReference begin, int length);
+};
+
 /************* ValueHandler for reading/serialising basic types ********************/
 
 /*
