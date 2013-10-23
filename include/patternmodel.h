@@ -171,7 +171,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::map<int,std::map<int,int>> cache_grouptotalwordtypes; //total covered word types per group
         std::map<int,std::map<int,int>> cache_grouptotaltokens; //total covered tokens per group
 
-        void postread(const PatternModelOptions options) {
+        virtual void postread(const PatternModelOptions options) {
             //this function has a specialisation specific to indexed pattern models,
             //this is the generic version
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -779,9 +779,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                     this->reverseindex.insert(ref,p);
                 }
             }
-/*            if ((p.category() == FIXEDSKIPGRAM) && (options.DOSKIPCONTENT)) {
-                skipcontent[p
-            }*/
         }
     }
     
