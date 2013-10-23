@@ -776,7 +776,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 //construct the reverse index
                 for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
                     const IndexReference ref = *iter2;
-                    this->reverseindex.insert(ref,p);
+                    this->reverseindex.insert(std::pair<IndexReference,Pattern>(ref,p));
                 }
             }
         }
