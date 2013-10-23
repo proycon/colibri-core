@@ -737,6 +737,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual std::map<Pattern,double> getnpmi(const Pattern & pattern, double threshold) { return std::map<Pattern,double>(); } //does nothing for unindexed models
         virtual void computedynskipgrams_fromfixed() {}//does nothing for unindexed models
         virtual void computedynskipgrams_fromcooc() {}//does nothing for unindexed models
+        virtual void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {}
 };
 
 
@@ -1224,7 +1225,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     double npmi(const Pattern & key1, const Pattern & key2, int jointcount) {
         //normalised pointwise mutual information
-        return  log( (double) jointcount / (this->occurrencecount(key1) * this->occurrencecount(key2)) )  / -log((double)jointcount/(double)this->grouptotal(0,0) );    
+        return  log( (double) jointcount / (this->occurrencecount(key1) * this->occurrencecount(key2)) )  / -log((double)jointcount/(double)this->totaloccurrencesingroup(0,0) );    
     }
 
     void outputrelations(const Pattern & pattern, std::map<Pattern,int> & relations, ClassDecoder & classdecoder, std::ostream *OUT, const std::string label = "RELATED-TO") {
@@ -1272,6 +1273,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANTIATED-BY");
         }
     }
+
 
     std::map<Pattern,std::map<Pattern,double>> & computenpmi(double threshold, bool right=true, bool left=false) { 
         std::map<Pattern,std::map<Pattern,double>> coocmap;
@@ -1324,6 +1326,26 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                     this->data[skipgram] = value;
                 }
             }
+        }
+    }
+
+    void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {
+        std::map<Pattern,std::map<Pattern,double>> npmimap = computenpmi(threshold); 
+        //we want the reverse,, so we can sort by co-occurrence
+        std::multimap<double,std::pair<Pattern,Pattern>> inversemap;
+        std::map<Pattern,std::map<Pattern,double>>::iterator iter = npmimap.begin();
+        while (iter != npmimap.end()) {
+            for (std::map<Pattern,double>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
+                inversemap.insert(std::pair<double,std::pair<Pattern,Pattern>>(iter2->second, std::pair<Pattern,Pattern>(iter->first, iter2->first)));
+            }
+            iter = npmimap.erase(iter);
+        }
+
+        *OUT << "Pattern1\tPattern2\tNPMI" << std::endl;
+        for (std::multimap<double,std::pair<Pattern,Pattern>>::reverse_iterator iter2 = inversemap.rbegin(); iter2 != inversemap.rend(); iter2++) {
+            const Pattern pattern1 = iter2->second.first;
+            const Pattern pattern2 = iter2->second.second;
+            *OUT << pattern1.tostring(classdecoder) << "\t" << pattern2.tostring(classdecoder) << "\t" << iter2->first << std::endl;
         }
     }
 };
