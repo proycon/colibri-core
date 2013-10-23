@@ -1221,34 +1221,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return cooc;
     }
 
-    /*double npmi(const Pattern & key1, const Pattern & key2) {
+    double npmi(const Pattern & key1, const Pattern & key2, int jointcount) {
         //normalised pointwise mutual information
-        double jointcount = 0;
-            
-        IndexedData * data1 = this->getdata(key1);
-        IndexedData * data2 = this->getdata(key2);
-        if ((data1 == NULL) || (data2 == NULL)) return -1;
-
-        std::set<int> sentences1 = data1->sentences();
-        std::set<int> sentences2 = data2->sentences();
-        
-        std::set<int>::const_iterator sourceiter = sentences1.begin();    
-        std::set<int>::const_iterator targetiter = sentences2.begin();
-        
-        while ((sourceiter !=sentences1.end()) && (targetiter!=sentences2.end())) {
-            if (*sourceiter < *targetiter) { 
-                sourceiter++;
-            } else if (*targetiter < *sourceiter) {
-                targetiter++;
-            } else {  //equal
-                jointcount++;
-                sourceiter++;
-                targetiter++;
-            }
-        }
-        
-        return  log( (double) jointcount / (this->occurrencecount(key1) * this->occurrencecount(key2)) )  / -log((double)jointcount/(double)grouptotal(0,0) );    
-    }*/
+        return  log( (double) jointcount / (this->occurrencecount(key1) * this->occurrencecount(key2)) )  / -log((double)jointcount/(double)this->grouptotal(0,0) );    
+    }
 
     void outputrelations(const Pattern & pattern, std::map<Pattern,int> & relations, ClassDecoder & classdecoder, std::ostream *OUT, const std::string label = "RELATED-TO") {
         int total = 0;
