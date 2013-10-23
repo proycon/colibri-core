@@ -243,9 +243,9 @@ std::string Pattern::tostring(ClassDecoder& classdecoder) const {
             i++;
         } else if (c == DYNAMICGAP) {
             if (result.empty()) {
-                result = "{*}";
+                result += "{*}";
             } else {
-                result = " {*}";
+                result += " {*}";
             }
             i++;
         } else {
