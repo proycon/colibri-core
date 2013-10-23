@@ -434,4 +434,25 @@ You can all of these extract relations using the ``-r`` flag, which is to be
 used in combination with the query mode ``-Q`` or ``-q``. Consider the
 following sample::
 
-    #TODO still
+    $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q "to be" -r  
+    Loading class decoder from file /tmp/hamlet.colibri.cls
+    Loading class encoder from file /tmp/hamlet.colibri.cls
+    Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
+    Post-read processing (indexedmodel)
+    to be	2		4	0.0117647	ngram	2	0.0769231	1:4 9:1
+    #	PATTERN1	RELATION	PATTERN2	REL.COUNT	REL.FREQUENCY	COUNT2
+        to be	SUBSUMES	to	2	0.5	13
+        to be	SUBSUMES	be	2	0.5	4
+        to be	RIGHT-OF	To {*1*} or not	1	0.25	4
+        to be	RIGHT-OF	To {*2*} not	1	0.25	4
+        to be	RIGHT-OF	not	1	0.25	5
+        to be	RIGHT-OF	or not	1	0.25	4
+        
+The following columns are reported:
+
+    * **Pattern 1** -- The pattern you queried
+    * **Relation** -- The nature of the relationship between pattern 1 and pattern 2
+    * **Pattern 2** -- The pattern that is related to the queried pattern
+    * **Relation Count** -- The number of times pattern 1 and pattern 2 occur in this relation 
+    * **Relation Frequency** -- The number of times pattern 1 and pattern 2 occur in this relationas a fraction of all relations of this type
+    * **Count 2** -- The absolute number of occurrences of pattern 2 in the model

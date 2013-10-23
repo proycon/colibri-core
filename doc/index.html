@@ -409,9 +409,31 @@ by <tt class="docutils literal"><span class="pre">to</span> <span class="pre">{*
 <p>You can all of these extract relations using the <tt class="docutils literal"><span class="pre">-r</span></tt> flag, which is to be
 used in combination with the query mode <tt class="docutils literal"><span class="pre">-Q</span></tt> or <tt class="docutils literal"><span class="pre">-q</span></tt>. Consider the
 following sample:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#TODO still</span>
-</pre></div>
+<div class="highlight-python"><pre>$ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q "to be" -r
+Loading class decoder from file /tmp/hamlet.colibri.cls
+Loading class encoder from file /tmp/hamlet.colibri.cls
+Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
+Post-read processing (indexedmodel)
+to be       2               4       0.0117647       ngram   2       0.0769231       1:4 9:1
+#   PATTERN1        RELATION        PATTERN2        REL.COUNT       REL.FREQUENCY   COUNT2
+    to be   SUBSUMES        to      2       0.5     13
+    to be   SUBSUMES        be      2       0.5     4
+    to be   RIGHT-OF        To {*1*} or not 1       0.25    4
+    to be   RIGHT-OF        To {*2*} not    1       0.25    4
+    to be   RIGHT-OF        not     1       0.25    5
+    to be   RIGHT-OF        or not  1       0.25    4</pre>
 </div>
+<p>The following columns are reported:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>Pattern 1</strong> &#8211; The pattern you queried</li>
+<li><strong>Relation</strong> &#8211; The nature of the relationship between pattern 1 and pattern 2</li>
+<li><strong>Pattern 2</strong> &#8211; The pattern that is related to the queried pattern</li>
+<li><strong>Relation Count</strong> &#8211; The number of times pattern 1 and pattern 2 occur in this relation</li>
+<li><strong>Relation Frequency</strong> &#8211; The number of times pattern 1 and pattern 2 occur in this relationas a fraction of all relations of this type</li>
+<li><strong>Count 2</strong> &#8211; The absolute number of occurrences of pattern 2 in the model</li>
+</ul>
+</div></blockquote>
 </div>
 </div>
 </div>
