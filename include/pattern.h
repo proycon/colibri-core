@@ -108,6 +108,7 @@ class Pattern {
      int find(const Pattern & pattern) const; //returns the index, -1 if not found 
      bool contains(const Pattern & pattern) const; //does the pattern contain the smaller pattern?
      bool instanceof(const Pattern & skipgram) const; //Is this a full instantiation of the skipgram?
+    
      
 
      int ngrams(std::vector<Pattern> & container, const int n) const; //return multiple ngrams
@@ -127,7 +128,7 @@ class Pattern {
      Pattern addfixedskips(std::vector<std::pair<int,int> > & gaps) const;
      Pattern adddynamicskips(std::vector<std::pair<int,int> > & gaps) const;
 
-
+     Pattern todynamic() const; //converts a fixed skipgram into a dynamic one, ngrams just come out unchanged
 
      //CHANGES from old colibri ngram:
      //

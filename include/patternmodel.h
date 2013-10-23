@@ -1156,6 +1156,25 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANTIATED-BY");
         }
     }
+
+    void computedynskipgrams_fromfixed() {
+        for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+            const Pattern pattern = iter->first;
+            if (pattern.category() == FIXEDSKIPGRAM) {
+                const Pattern dynskipgram = pattern.todynamic();
+                //copy data from pattern
+                IndexedData * data = this->getdata(pattern);
+                for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {
+                    const IndexReference ref = *iter2;
+                    this->data[dynskipgram].insert(ref);
+                }
+            }
+        }
+    }
+
+    void computedynskipgrams_fromcooc(double threshold) {
+        
+    }
 };
 
 #endif

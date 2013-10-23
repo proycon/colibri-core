@@ -76,6 +76,40 @@ const size_t Pattern::n() const {
 }
 
 
+Pattern Pattern::todynamic() const { //converts a fixed skipgram into a dynamic one, ngrams just come out unchanged
+    //to be computed in bytes
+    int i = 0;
+    int j = 0;
+    int copybytes = 0;
+    bool skipgap = false;
+    do {
+        const unsigned char c = data[i++];
+        if (copybytes) {
+            mainpatternbuffer[j++] = c;
+            copybytes--;
+        } else if (copybytes == 0) {
+            if (c == ENDMARKER) {
+                mainpatternbuffer[j++] = c;
+                break;
+            } else if (c < 128) {
+                mainpatternbuffer[j++] = c;
+                copybytes = c;
+                skipgap = false;
+            } else if (c == 128) {
+                if (!skipgap) {
+                    mainpatternbuffer[j++] = 129; //store a DYNAMIC GAP instead
+                    skipgap = true; //skip next consecutive gap markers
+                }
+            } else {
+                mainpatternbuffer[j++] = c;
+            }
+        }
+    } while (1);
+    
+    //copy from mainpatternbuffer
+    return Pattern(mainpatternbuffer,j-1);
+}
+
 const StructureType Pattern::type() const {
     //return the size of the pattern (in tokens)
     int i = 0;
