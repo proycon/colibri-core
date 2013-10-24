@@ -318,36 +318,50 @@ class PatternModel: public MapType, public PatternModelInterface {
                             }                
                             if (options.DOSKIPGRAMS) {
                                 //loop over all possible gap configurations
-                                for (std::vector<std::vector<std::pair<int,int>>>::iterator iter =  gapconf[n].begin(); iter != gapconf[n].end(); iter++) {
-                                    std::vector<std::pair<int,int>> * gapconfiguration = &(*iter);
+                                for (std::vector<std::vector<std::pair<int,int>>>::iterator iter2 =  gapconf[n].begin(); iter2 != gapconf[n].end(); iter2++) {
+                                    std::vector<std::pair<int,int>> * gapconfiguration = &(*iter2);
 
                                     //add skips
-                                    const Pattern skippattern = pattern.addskips(*gapconfiguration);                            
-                                    if ((int) skippattern.n() != n) {
-                                        std::cerr << "Generated invalid skipgram, n=" << skippattern.n() << ", expected " << n << std::endl;
+                                    const Pattern skipgram = pattern.addskips(*gapconfiguration);                            
+                                    if ((int) skipgram.n() != n) {
+                                        std::cerr << "Generated invalid skipgram, n=" << skipgram.n() << ", expected " << n << std::endl;
                                         throw InternalError();
                                     }
 
                                     //test whether parts occur in model, otherwise skip
                                     //can't occur either and we can discard it
-                                    bool skippattern_valid = true;
+                                    bool skipgram_valid = true;
                                     std::vector<Pattern> parts;
-                                    skippattern.parts(parts);
+                                    skipgram.parts(parts);
                                     for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
                                         const Pattern part = *iter3;
                                         if (!this->has(part)) {
-                                            skippattern_valid = false;
+                                            skipgram_valid = false;
                                             break;
                                         }
                                     }
 
-                                    if (skippattern_valid) {
-                                        ValueType * data = getdata(skippattern);
-                                        add(skippattern, data, ref );
+                                    //check whether the the gaps with single token context (X * Y) occur in model,
+                                    //otherwise skipgram can't occur
+                                    for (std::vector<std::pair<int,int>>::iterator iter3 = gapconfiguration->begin(); iter3 != gapconfiguration->end(); iter3++) {
+                                        if (!((iter3->first - 1 == 0) && (iter3->first + iter3->second + 1 == n))) { //entire skipgarm is already X * Y format
+                                            const Pattern subskipgram = Pattern(skipgram, iter3->first - 1, iter->second + 2);
+                                            if (!this->has(subskipgram)) {
+                                                skipgram_valid = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+
+
+                                    if (skipgram_valid) {
+                                        ValueType * data = getdata(skipgram);
+                                        add(skipgram, data, ref ); //counts the actual skipgram, will add it to the model
                                         foundcount++;
                                         skipgramfoundcount++;
                                         if (options.DOREVERSEINDEX) {
-                                            reverseindex.insert(std::pair<IndexReference,Pattern>(ref,skippattern));
+                                            reverseindex.insert(std::pair<IndexReference,Pattern>(ref,skipgram));
                                         }
                                     }
                                 }
