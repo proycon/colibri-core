@@ -99,7 +99,7 @@ string decodestring(const unsigned char * data, unsigned char datasize) {
 void ClassDecoder::decodefile(const string & filename, unsigned int start, unsigned int end) {
     unsigned char buffer[1024]; //bit large, only for one token
     ifstream *IN = new ifstream(filename.c_str()); //, ios::in | ios::binary);
-    int linenumber = 1;
+    unsigned int linenumber = 1;
     bool first = true;
     unsigned char c;
     while (IN->good()) {

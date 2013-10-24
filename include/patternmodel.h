@@ -322,7 +322,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                                     //add skips
                                     const Pattern skippattern = pattern.addfixedskips(*gapconfiguration);                            
-                                    if (skippattern.n() != n) {
+                                    if ((int) skippattern.n() != n) {
                                         std::cerr << "Generated invalid skipgram, n=" << skippattern.n() << ", expected " << n << std::endl;
                                         throw InternalError();
                                     }
@@ -492,7 +492,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     PatternModel::iterator iter = this->begin(); 
                     while (iter != this->end()) {
                         const Pattern pattern = iter->first;                        
-                        if (((*itern == 0) || (pattern.n() == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
+                        if (((*itern == 0) || ((int) pattern.n() == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
                             std::vector<Pattern> unigrams;
                             pattern.ngrams(unigrams, 1);
                             for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
@@ -539,7 +539,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             return this->occurrencecount(pattern) / (double) totaloccurrencesingroup(pattern.category(),pattern.n());
         }
 
-        virtual int add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
+        virtual void add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
             if (value == NULL) {
                 (*this)[pattern]; //creates the data point if it didn't exist yet
                 value = getdata(pattern);
@@ -600,6 +600,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
                 iter++;
             }
+            return pruned;
         }
 
 
@@ -794,7 +795,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     int getmodelversion() const { return 1;} 
 
 
-    int add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
+    void add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
         if (value == NULL) {
             (*this)[pattern]; //creates the data point if it didn't exist yet
             value = getdata(pattern);
@@ -870,7 +871,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
             
             std::vector<std::pair<int,int>>::iterator gapiter = gapdata.begin();
-            int offset = gapiter->first;
+            //int offset = gapiter->first;
             int begin = gapiter->first + gapiter->second; //begin of part in original, gap in content)
 
             std::vector<std::pair<int,int>> skipcontent_gaps;
@@ -953,7 +954,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
                 //search in reverse index
                 for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(begin); iter2 != this->reverseindex.upper_bound(begin); iter2++) {
-                    const IndexReference ref2 = iter2->first;
+                    //const IndexReference ref2 = iter2->first;
                     const Pattern candidate = iter2->second;
                     //std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << ", bs=" << candidate.bytesize() <<  std::endl;
                     //candidate.out();
@@ -1090,7 +1091,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const Pattern pattern = iter->first;
             if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == FIXEDSKIPGRAM)) {
                 t_relationmap skipcontent = getskipcontent(pattern);
-                if (skipcontent.size() < minskiptypes) { //will take care of token threshold too, patterns not meeting the token threshold are not included
+                if ((int) skipcontent.size() < minskiptypes) { //will take care of token threshold too, patterns not meeting the token threshold are not included
                     iter = this->erase(iter);
                     pruned++;
                     continue;
@@ -1113,7 +1114,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); 
                 while (iter != this->end()) {
                     const Pattern pattern = iter->first;                        
-                    if (((*itern == 0) || (pattern.n() == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
+                    if (((*itern == 0) || ((int) pattern.n() == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
                         std::vector<Pattern> unigrams;
                         pattern.ngrams(unigrams, 1);
                         for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
@@ -1281,7 +1282,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
 
-    std::map<Pattern,t_relationmap_double> & computenpmi(double threshold, bool right=true, bool left=false) { 
+    std::map<Pattern,t_relationmap_double> computenpmi(double threshold, bool right=true, bool left=false) { 
         std::map<Pattern,t_relationmap_double> coocmap;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;

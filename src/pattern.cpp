@@ -425,13 +425,8 @@ bool Pattern::operator!=(const Pattern &other) const {
 }
 
 bool Pattern::operator<(const Pattern & other) const {
-/*    std::cerr << "IS ";
-    this->out();
-    std::cerr << "SMALLER THAN ";
-    other.out();*/
     const int s = bytesize();
     const int s2 = other.bytesize();
-    bool r;
     for (int i = 0; (i <= s && i <= s2); i++) {
         if (data[i] < other.data[i]) {
             return true;
@@ -635,7 +630,7 @@ const unsigned int Pattern::skipcount() const {
 
 int Pattern::gaps(vector<pair<int,int> > & container) const {
     vector<pair<int,int> > partscontainer;
-    int found = parts(partscontainer);
+    parts(partscontainer);
 
     const int _n = n();
     const int bs = bytesize();
