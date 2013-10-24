@@ -126,7 +126,9 @@ class PatternModelOptions {
         int MINSKIPTYPES; 
 
         bool DOREVERSEINDEX;
-        
+
+
+        bool QUIET;
         bool DEBUG;
 
         PatternModelOptions() {
@@ -139,6 +141,7 @@ class PatternModelOptions {
             DOREVERSEINDEX = true; //only for indexed models
 
             DEBUG = false;
+            QUIET = false;
         }
 
 
@@ -271,13 +274,13 @@ class PatternModel: public MapType, public PatternModelInterface {
                 throw InternalError();
             }
 
-            std::cerr << "Training patternmodel" << std::endl;
+            if (!options.QUIET) std::cerr << "Training patternmodel" << std::endl;
             for (int n = 1; n <= options.MAXLENGTH; n++) {
-                int foundcount = 0;
-                int skipgramfoundcount = 0;
+                int foundngrams = 0;
+                int foundskipgrams = 0;
                 in->clear();
                 in->seekg(0);
-                std::cerr << "Counting " << n << "-grams" << std::endl; 
+                if (!options.QUIET) std::cerr << "Counting " << n << "-grams" << std::endl; 
 
                 if ((options.DOSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
                 
@@ -310,7 +313,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             }
                             if (found) {
                                 ValueType * data = getdata(pattern);
-                                foundcount++;
+                                foundngrams++;
                                 add(pattern, data, ref );
                                 if (options.DOREVERSEINDEX) {
                                     reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
@@ -358,8 +361,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                     if (skipgram_valid) {
                                         ValueType * data = getdata(skipgram);
                                         add(skipgram, data, ref ); //counts the actual skipgram, will add it to the model
-                                        foundcount++;
-                                        skipgramfoundcount++;
+                                        foundskipgrams++;
                                         if (options.DOREVERSEINDEX) {
                                             reverseindex.insert(std::pair<IndexReference,Pattern>(ref,skipgram));
                                         }
@@ -371,23 +373,20 @@ class PatternModel: public MapType, public PatternModelInterface {
                     }
                 }
 
-                if (foundcount) {
+                if (foundngrams) {
                     if (n > this->maxn) this->maxn = n;
                     if (n < this->minn) this->minn = n;
                 } else {
                     break;
                 }
-                std::cerr << " Found " << foundcount << "...";
-                if (skipgramfoundcount) std::cerr << "(of which " << skipgramfoundcount << " skipgrams)...";
+                if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngrams...";
+                if (foundskipgrams && !options.QUIET) std::cerr << foundskipgrams << " skipgrams...";
                 if (n == 1) totaltypes += this->size(); //total unigrams, also those not in model
                 int pruned = this->prune(options.MINTOKENS,n);
-                std::cerr << "pruned " << pruned;
+                if (!options.QUIET) std::cerr << "pruned " << pruned;
                 int prunedextra = this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, n);
-                if (prunedextra) {
-                    std::cerr << " plus " << prunedextra << " extra skipgrams (=" << pruned + prunedextra << ")" << std::endl;
-                } else {
-                    std::cerr << std::endl;
-                }
+                if (prunedextra && !options.QUIET) std::cerr << " plus " << prunedextra << " extra skipgrams..";
+                if (!options.QUIET) std::cerr << "...total kept: " << (foundngrams + foundskipgrams) - pruned - prunedextra << std::endl;
             }
         }
 
