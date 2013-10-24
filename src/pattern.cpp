@@ -4,7 +4,7 @@
 using namespace std;
 
 
-unsigned char mainpatternbuffer[MAINPATTERNBUFFERSIZE];
+unsigned char mainpatternbuffer[MAINPATTERNBUFFERSIZE+1];
 
 const PatternCategory Pattern::category() const {
     PatternCategory category = NGRAM;
@@ -84,6 +84,10 @@ Pattern Pattern::toflexgram() const { //converts a fixed skipgram into a dynamic
     bool skipgap = false;
     do {
         const unsigned char c = data[i++];
+        if (j >= MAINPATTERNBUFFERSIZE) {
+            std::cerr << "ERROR: toflexgram(): Patternbuffer size exceeded" << std::endl;
+            throw InternalError();
+        }
         if (copybytes) {
             mainpatternbuffer[j++] = c;
             copybytes--;
@@ -308,6 +312,10 @@ Pattern::Pattern(std::istream * in) {
     unsigned char c;
     do {
         in->read( (char* ) &c, sizeof(char));
+        if (i >= MAINPATTERNBUFFERSIZE) {
+            std::cerr << "ERROR: Pattern(): Patternbuffer size exceeded" << std::endl;
+            throw InternalError();
+        }
         mainpatternbuffer[i++] = c;
         if (readingdata) {
             readingdata--;
