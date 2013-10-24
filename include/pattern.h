@@ -117,7 +117,6 @@ class Pattern {
      bool contains(const Pattern & pattern) const; //does the pattern contain the smaller pattern?
      bool instanceof(const Pattern & skipgram) const; //Is this a full instantiation of the skipgram?
     
-     
 
      int ngrams(std::vector<Pattern> & container, const int n) const; //return multiple ngrams
      int subngrams(std::vector<Pattern> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
@@ -137,6 +136,8 @@ class Pattern {
      Pattern addflexgaps(std::vector<std::pair<int,int> > & gaps) const;
 
      Pattern toflexgram() const; //converts a skipgram into a flexgram, ngrams just come out unchanged
+
+     bool isgap(int i) const; //is the word at this position a gap?
 
      //CHANGES from old colibri ngram:
      //

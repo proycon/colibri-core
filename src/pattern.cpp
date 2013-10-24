@@ -75,6 +75,32 @@ const size_t Pattern::n() const {
     } while (1);
 }
 
+bool Pattern::isgap(int index) const { //is the word at this position a gap?
+    //return the size of the pattern (in tokens)
+
+    int i = 0;
+    int n = 0;
+    do {
+        const unsigned char c = data[i];
+        if (c == ENDMARKER) {
+            //end marker
+            return false;
+        } else if (c < 128) {
+            //we have a size
+            if (n == index) return false;
+            i += c + 1;
+            n++;
+        } else if ((c == SKIPMARKER)  || (c == FLEXMARKER)) {
+            //FLEXMARKER is counted as 1, the minimum fill
+            if (n == index) return true;
+            i++;
+            n++;
+        } else {
+            //we have another marker
+            i++;
+        }
+    } while (1);
+}
 
 Pattern Pattern::toflexgram() const { //converts a fixed skipgram into a dynamic one, ngrams just come out unchanged
     //to be computed in bytes

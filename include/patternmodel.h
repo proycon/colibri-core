@@ -331,43 +331,58 @@ class PatternModel: public MapType, public PatternModelInterface {
                                     }
 
                                     bool skipgram_valid = true;
+                                    bool check_extra = false;
                                     //check if sub-parts were counted
                                     std::vector<Pattern> subngrams;
                                     pattern.ngrams(subngrams,n-1); //this also works for and returns skipgrams, despite the name
                                     for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                                         const Pattern subpattern = *iter2;
-                                        if ((subpattern.category() == NGRAM) && (!this->has(subpattern))) {
-                                            skipgram_valid = false;
+                                        if (!subpattern.isgap(0) && !subpattern.isgap(subpattern.n() - 1)) {
+                                            //this subpattern is a valid
+                                            //skipgram (no beginning or ending
+                                            //gaps) that should occur
+                                            if (!this->has(subpattern)) {
+                                                skipgram_valid = false;
+                                                break;
+                                            }
+                                        } else {
+                                            //this check isn't enough, subpattern
+                                            //starts or ends with gap
+                                            //do additional checks
+                                            check_extra = true;
                                             break;
                                         }
                                     }
                                     if (!skipgram_valid) continue;
 
-                                    //test whether parts occur in model, otherwise skip
-                                    //can't occur either and we can discard it
-                                    std::vector<Pattern> parts;
-                                    skipgram.parts(parts);
-                                    for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
-                                        const Pattern part = *iter3;
-                                        if (!this->has(part)) {
-                                            skipgram_valid = false;
-                                            break;
-                                        }
-                                    }
-                                    if (!skipgram_valid) continue;
 
-                                    //check whether the the gaps with single token context (X * Y) occur in model,
-                                    //otherwise skipgram can't occur
-                                    for (std::vector<std::pair<int,int>>::iterator iter3 = gapconfiguration->begin(); iter3 != gapconfiguration->end(); iter3++) {
-                                        if (!((iter3->first - 1 == 0) && (iter3->first + iter3->second + 1 == n))) { //entire skipgarm is already X * Y format
-                                            const Pattern subskipgram = Pattern(skipgram, iter3->first - 1, iter->second + 2);
-                                            if (!this->has(subskipgram)) {
+                                    if (check_extra) {
+                                        //test whether parts occur in model, otherwise skip
+                                        //can't occur either and we can discard it
+                                        std::vector<Pattern> parts;
+                                        skipgram.parts(parts);
+                                        for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
+                                            const Pattern part = *iter3;
+                                            if (!this->has(part)) {
                                                 skipgram_valid = false;
                                                 break;
                                             }
                                         }
-                                    }
+                                        if (!skipgram_valid) continue;
+                                        
 
+                                        //check whether the the gaps with single token context (X * Y) occur in model,
+                                        //otherwise skipgram can't occur
+                                        for (std::vector<std::pair<int,int>>::iterator iter3 = gapconfiguration->begin(); iter3 != gapconfiguration->end(); iter3++) {
+                                            if (!((iter3->first - 1 == 0) && (iter3->first + iter3->second + 1 == n))) { //entire skipgarm is already X * Y format
+                                                const Pattern subskipgram = Pattern(skipgram, iter3->first - 1, iter->second + 2);
+                                                if (!this->has(subskipgram)) {
+                                                    skipgram_valid = false;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
 
 
                                     if (skipgram_valid) {
