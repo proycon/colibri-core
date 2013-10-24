@@ -539,7 +539,7 @@ int main( int argc, char *argv[] ) {
         for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
             const Pattern pattern = iter->first;
             const IndexedData data = iter->second;
-            cerr << pattern.tostring(*classdecoder) << endl;
+            cerr << pattern.tostring(classdecoder) << endl;
         }
 
 

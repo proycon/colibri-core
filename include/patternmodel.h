@@ -1282,8 +1282,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
 
-    std::map<Pattern,t_relationmap_double> computenpmi(double threshold, bool right=true, bool left=false) { 
-        std::map<Pattern,t_relationmap_double> coocmap;
+    void computenpmi( std::map<Pattern,t_relationmap_double> &  coocmap , double threshold, bool right=true, bool left=false) { 
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;
             t_relationmap tmp;
@@ -1300,7 +1299,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 if (value >= threshold) coocmap[pattern][pattern2] = value;
             }
         }
-        return coocmap; 
     } 
 
     void computedynskipgrams_fromfixed() {
@@ -1337,7 +1335,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
     void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {
-        std::map<Pattern,t_relationmap_double> npmimap = computenpmi(threshold); 
+        std::map<Pattern,t_relationmap_double> npmimap;
+        computenpmi(npmimap, threshold); 
         //we want the reverse,, so we can sort by co-occurrence
         std::multimap<double,std::pair<Pattern,Pattern>> inversemap;
         std::map<Pattern,t_relationmap_double>::iterator iter = npmimap.begin();
