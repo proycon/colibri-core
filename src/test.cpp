@@ -400,7 +400,7 @@ int main( int argc, char *argv[] ) {
 
 
         cerr << "----------------------------------------------------" << endl;
-        Pattern dynskipgram5 = skipgram5.todynamic();
+        Pattern dynskipgram5 = skipgram5.toflexgram();
         cerr << "Converting skipgram '" << querystring5 << "' to flexgram:" << endl;	    
         cout << dynskipgram5.decode(classdecoder) << endl;
         cerr << "Size (n): " << (int) dynskipgram5.n() << endl; //== size()
