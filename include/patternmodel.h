@@ -330,9 +330,21 @@ class PatternModel: public MapType, public PatternModelInterface {
                                         throw InternalError();
                                     }
 
+                                    bool skipgram_valid = true;
+                                    //check if sub-parts were counted
+                                    std::vector<Pattern> subngrams;
+                                    pattern.ngrams(subngrams,n-1); //this also works for and returns skipgrams, despite the name
+                                    for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                        const Pattern subpattern = *iter2;
+                                        if ((subpattern.category() == NGRAM) && (!this->has(subpattern))) {
+                                            skipgram_valid = false;
+                                            break;
+                                        }
+                                    }
+                                    if (!skipgram_valid) continue;
+
                                     //test whether parts occur in model, otherwise skip
                                     //can't occur either and we can discard it
-                                    bool skipgram_valid = true;
                                     std::vector<Pattern> parts;
                                     skipgram.parts(parts);
                                     for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
@@ -342,6 +354,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                             break;
                                         }
                                     }
+                                    if (!skipgram_valid) continue;
 
                                     //check whether the the gaps with single token context (X * Y) occur in model,
                                     //otherwise skipgram can't occur
