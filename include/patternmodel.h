@@ -186,7 +186,6 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::map<int,std::map<int,int>> cache_grouptotaltokens; //total covered tokens per group
 
         virtual void postread(const PatternModelOptions options) {
-            std::cerr <<"Post-read processing (unindexedmodel)" << std::endl;
             //this function has a specialisation specific to indexed pattern models,
             //this is the generic version
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -767,7 +766,6 @@ template<class MapType = PatternMap<IndexedData,IndexedDataHandler>>
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType> {
     protected:
         virtual void postread(const PatternModelOptions options) {
-            std::cerr <<"Post-read processing (indexedmodel)" << std::endl;
             for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern p = iter->first;
                 const int n = p.n();
