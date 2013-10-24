@@ -11,7 +11,7 @@
 
 using namespace std;
 
-bool test(bool r) {
+void test(bool r) {
     if (r) {
         cerr << string( ".... ok") << endl;
     } else {
@@ -534,6 +534,13 @@ int main( int argc, char *argv[] ) {
         indexedmodel.report(&std::cerr);
         cerr << endl;
         indexedmodel.histogram(&std::cerr);
+
+        cerr << "Iterating over all patterns" << endl;
+        for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
+            const Pattern pattern = iter->first;
+            const IndexedData data = iter->second;
+            cerr << pattern.tostring(*classdecoder) << endl;
+        }
 
 
         cerr << "Writing to file" << endl;
