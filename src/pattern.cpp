@@ -311,9 +311,14 @@ Pattern::Pattern(std::istream * in) {
     int readingdata = 0;
     unsigned char c;
     do {
-        in->read( (char* ) &c, sizeof(char));
+        if (in->good()) {
+            in->read( (char* ) &c, sizeof(char));
+        } else {
+            std::cerr << "ERROR: Invalid pattern data, unexpected end of file" << std::endl;
+            throw InternalError();
+        }
         if (i >= MAINPATTERNBUFFERSIZE) {
-            std::cerr << "ERROR: Pattern(): Patternbuffer size exceeded" << std::endl;
+            std::cerr << "ERROR: Pattern(): Patternbuffer size exceeded, exceptionally large pattern, must be invalid" << std::endl;
             throw InternalError();
         }
         mainpatternbuffer[i++] = c;

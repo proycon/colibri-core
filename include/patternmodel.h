@@ -274,6 +274,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             std::cerr << "Training patternmodel" << std::endl;
             for (int n = 1; n <= options.MAXLENGTH; n++) {
                 int foundcount = 0;
+                int skipgramfoundcount = 0;
                 in->clear();
                 in->seekg(0);
                 std::cerr << "Counting " << n << "-grams" << std::endl; 
@@ -344,6 +345,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                         ValueType * data = getdata(skippattern);
                                         add(skippattern, data, ref );
                                         foundcount++;
+                                        skipgramfoundcount++;
                                         if (options.DOREVERSEINDEX) {
                                             reverseindex.insert(std::pair<IndexReference,Pattern>(ref,skippattern));
                                         }
@@ -362,6 +364,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     break;
                 }
                 std::cerr << " Found " << foundcount << "...";
+                if (skipgramfoundcount) std::cerr << "(of which " << skipgramfoundcount << " skipgrams)...";
                 if (n == 1) totaltypes += this->size(); //total unigrams, also those not in model
                 int pruned = this->prune(options.MINTOKENS,n);
                 std::cerr << "pruned " << pruned;
