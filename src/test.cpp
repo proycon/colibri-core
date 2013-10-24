@@ -493,7 +493,8 @@ int main( int argc, char *argv[] ) {
 
         PatternModelOptions options;
         options.DOREVERSEINDEX = true;
-        options.DOSKIPGRAMS = true;
+        options.DOSKIPGRAMS_EXHAUSTIVE = true;
+        options.DOSKIPGRAMS = false ;
 
         cerr << "Building unindexed model" << endl;
         PatternModel<uint32_t> unindexedmodel;
@@ -525,6 +526,8 @@ int main( int argc, char *argv[] ) {
 
 
         cerr << endl;
+        options.DOSKIPGRAMS_EXHAUSTIVE = false;
+        options.DOSKIPGRAMS = true ;
         cerr << "Building indexed model" << endl;
         IndexedPatternModel<> indexedmodel;
         indexedmodel.train(infilename, options);

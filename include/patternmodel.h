@@ -123,6 +123,7 @@ class PatternModelOptions {
         int MAXLENGTH;
         
         bool DOSKIPGRAMS;
+        bool DOSKIPGRAMS_EXHAUSTIVE;
         int MINSKIPTYPES; 
 
         bool DOREVERSEINDEX;
@@ -137,6 +138,7 @@ class PatternModelOptions {
 
             MINSKIPTYPES = 2;
             DOSKIPGRAMS = false;
+            DOSKIPGRAMS_EXHAUSTIVE = false;
 
             DOREVERSEINDEX = true; //only for indexed models
 
@@ -265,7 +267,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             this->postread(options);
         }
         
-        void train(std::istream * in , const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
+        virtual void train(std::istream * in , const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
             uint32_t sentence = 0;
             std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
             if (!in->good()) {
@@ -281,7 +283,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 in->seekg(0);
                 if (!options.QUIET) std::cerr << "Counting " << n << "-grams" << std::endl; 
 
-                if ((options.DOSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
+                if ((options.DOSKIPGRAMS_EXHAUSTIVE) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
                 
                 sentence = 0; //reset
                 while (!in->eof()) {
@@ -295,7 +297,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     for (std::vector<std::pair<Pattern,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
                         const Pattern pattern = iter->first;
                         if ((constrainbymodel != NULL) && (!constrainbymodel->has(pattern))) continue;
-                        if (pattern.category() == NGRAM) {
+                        if (pattern.category() == NGRAM) { //should be the only option in decent corpus input
                             const IndexReference ref = IndexReference(sentence, iter->second);
                             bool found = true;
                             if (n > 1) {
@@ -311,94 +313,20 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 }
                             }
                             if (found) {
+                                if (!has(pattern)) foundngrams++;
                                 ValueType * data = getdata(pattern);
-                                foundngrams++;
                                 add(pattern, data, ref );
                                 if (options.DOREVERSEINDEX) {
                                     reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
                                 }
-                            }                
-                            if (options.DOSKIPGRAMS) {
-                                //loop over all possible gap configurations
-                                for (std::vector<std::vector<std::pair<int,int>>>::iterator iter2 =  gapconf[n].begin(); iter2 != gapconf[n].end(); iter2++) {
-                                    std::vector<std::pair<int,int>> * gapconfiguration = &(*iter2);
-
-                                    //add skips
-                                    const Pattern skipgram = pattern.addskips(*gapconfiguration);                            
-                                    if ((int) skipgram.n() != n) {
-                                        std::cerr << "Generated invalid skipgram, n=" << skipgram.n() << ", expected " << n << std::endl;
-                                        throw InternalError();
-                                    }
-
-                                    bool skipgram_valid = true;
-                                    bool check_extra = false;
-                                    //check if sub-parts were counted
-                                    std::vector<Pattern> subngrams;
-                                    pattern.ngrams(subngrams,n-1); //this also works for and returns skipgrams, despite the name
-                                    for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                                        const Pattern subpattern = *iter2;
-                                        if (!subpattern.isgap(0) && !subpattern.isgap(subpattern.n() - 1)) {
-                                            //this subpattern is a valid
-                                            //skipgram (no beginning or ending
-                                            //gaps) that should occur
-                                            if (!this->has(subpattern)) {
-                                                skipgram_valid = false;
-                                                break;
-                                            }
-                                        } else {
-                                            //this check isn't enough, subpattern
-                                            //starts or ends with gap
-                                            //do additional checks
-                                            check_extra = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!skipgram_valid) continue;
-
-
-                                    if (check_extra) {
-                                        //test whether parts occur in model, otherwise skip
-                                        //can't occur either and we can discard it
-                                        std::vector<Pattern> parts;
-                                        skipgram.parts(parts);
-                                        for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
-                                            const Pattern part = *iter3;
-                                            if (!this->has(part)) {
-                                                skipgram_valid = false;
-                                                break;
-                                            }
-                                        }
-                                        if (!skipgram_valid) continue;
-                                        
-
-                                        //check whether the the gaps with single token context (X * Y) occur in model,
-                                        //otherwise skipgram can't occur
-                                        for (std::vector<std::pair<int,int>>::iterator iter3 = gapconfiguration->begin(); iter3 != gapconfiguration->end(); iter3++) {
-                                            if (!((iter3->first - 1 == 0) && (iter3->first + iter3->second + 1 == n))) { //entire skipgarm is already X * Y format
-                                                const Pattern subskipgram = Pattern(skipgram, iter3->first - 1, iter->second + 2);
-                                                if (!this->has(subskipgram)) {
-                                                    skipgram_valid = false;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-
-
-                                    if (skipgram_valid) {
-                                        ValueType * data = getdata(skipgram);
-                                        add(skipgram, data, ref ); //counts the actual skipgram, will add it to the model
-                                        foundskipgrams++;
-                                        if (options.DOREVERSEINDEX) {
-                                            reverseindex.insert(std::pair<IndexReference,Pattern>(ref,skipgram));
-                                        }
-                                    }
-                                }
+                            } else if ((n >= 3) && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
+                                foundskipgrams += this->computeskipgrams(pattern, options, gapconf, &ref, NULL, constrainbymodel, true);
                             }
 
                         }           
                     }
                 }
+
 
                 if (foundngrams) {
                     if (n > this->maxn) this->maxn = n;
@@ -406,25 +334,136 @@ class PatternModel: public MapType, public PatternModelInterface {
                 } else {
                     break;
                 }
-                if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngrams...";
-                if (foundskipgrams && !options.QUIET) std::cerr << foundskipgrams << " skipgrams...";
+                if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngram...";
+                if (foundskipgrams && !options.QUIET) std::cerr << foundskipgrams << " skipgram occurrences...";
                 if (n == 1) totaltypes += this->size(); //total unigrams, also those not in model
                 int pruned = this->prune(options.MINTOKENS,n);
                 if (!options.QUIET) std::cerr << "pruned " << pruned;
-                int prunedextra = this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, n);
-                if (prunedextra && !options.QUIET) std::cerr << " plus " << prunedextra << " extra skipgrams..";
-                if (!options.QUIET) std::cerr << "...total kept: " << (foundngrams + foundskipgrams) - pruned - prunedextra << std::endl;
+                if (foundskipgrams) {
+                    int prunedextra = this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, n);
+                    if (prunedextra && !options.QUIET) std::cerr << " plus " << prunedextra << " extra skipgrams..";
+                    pruned += prunedextra;
+                }
+                if (!options.QUIET) std::cerr << "...total kept: " << (foundngrams + foundskipgrams) - pruned << std::endl;
+            }
+            if (options.DOSKIPGRAMS && !options.DOSKIPGRAMS_EXHAUSTIVE) {
+                this->trainskipgrams(options, constrainbymodel);
             }
         }
 
-        void train(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL) {
+
+        virtual void train(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL) {
             std::ifstream * in = new std::ifstream(filename.c_str());
             this->train((std::istream*) in, options, constrainbymodel);
             in->close();
             delete in;
         }
 
+
+        virtual int computeskipgrams(const Pattern & pattern, const PatternModelOptions & options, std::map<int, std::vector< std::vector< std::pair<int,int>>>> & gapconf, const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, const bool exhaustive = false) {
+            //internal function for computing skipgrams for a single pattern
+            int foundskipgrams = 0;
+            const int n = pattern.n();
+            //loop over all possible gap configurations
+            for (std::vector<std::vector<std::pair<int,int>>>::iterator iter2 =  gapconf[n].begin(); iter2 != gapconf[n].end(); iter2++) {
+                std::vector<std::pair<int,int>> * gapconfiguration = &(*iter2);
+
+                //add skips
+                const Pattern skipgram = pattern.addskips(*gapconfiguration);                            
+                if ((constrainbymodel != NULL) && (!constrainbymodel->has(skipgram))) continue;
+                if ((int) skipgram.n() != n) {
+                    std::cerr << "Generated invalid skipgram, n=" << skipgram.n() << ", expected " << n << std::endl;
+                    throw InternalError();
+                }
+
+                bool skipgram_valid = true;
+                bool check_extra = false;
+                //check if sub-parts were counted
+                std::vector<Pattern> subngrams;
+                pattern.ngrams(subngrams,n-1); //this also works for and returns skipgrams, despite the name
+                for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                    const Pattern subpattern = *iter2;
+                    if (!subpattern.isgap(0) && !subpattern.isgap(subpattern.n() - 1)) {
+                        //this subpattern is a valid
+                        //skipgram (no beginning or ending
+                        //gaps) that should occur
+                        if (!this->has(subpattern)) {
+                            skipgram_valid = false;
+                            break;
+                        }
+                    } else {
+                        //this check isn't enough, subpattern
+                        //starts or ends with gap
+                        //do additional checks
+                        check_extra = true;
+                        break;
+                    }
+                }
+                if (!skipgram_valid) continue;
+
+
+                if (check_extra) {
+                    if (exhaustive) { //by definition the case in non-exhaustive mode
+                        //test whether parts occur in model, otherwise skip
+                        //can't occur either and we can discard it
+                        std::vector<Pattern> parts;
+                        skipgram.parts(parts);
+                        for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
+                            const Pattern part = *iter3;
+                            if (!this->has(part)) {
+                                skipgram_valid = false;
+                                break;
+                            }
+                        }
+                        if (!skipgram_valid) continue;
+                    }
+
+                    //check whether the the gaps with single token context (X * Y) occur in model,
+                    //otherwise skipgram can't occur
+                    for (std::vector<std::pair<int,int>>::iterator iter3 = gapconfiguration->begin(); iter3 != gapconfiguration->end(); iter3++) {
+                        if (!((iter3->first - 1 == 0) && (iter3->first + iter3->second + 1 == n))) { //entire skipgarm is already X * Y format
+                            const Pattern subskipgram = Pattern(skipgram, iter3->first - 1, iter3->second + 2);
+                            if (!this->has(subskipgram)) {
+                                skipgram_valid = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+
+                if (skipgram_valid) {
+                    if (!has(pattern)) foundskipgrams++;
+                    ValueType * data = this->getdata(skipgram);
+                    if (singleref != NULL) {
+                        add(skipgram, data, *singleref ); //counts the actual skipgram, will add it to the model
+                        if (options.DOREVERSEINDEX) {
+                            reverseindex.insert(std::pair<IndexReference,Pattern>(*singleref,skipgram));
+                        }
+                    } else if (multiplerefs != NULL) {
+                        for (IndexedData::iterator refiter =  multiplerefs->begin(); refiter != multiplerefs->end(); refiter++) {
+                            const IndexReference ref = *refiter;
+                            add(skipgram, data, ref ); //counts the actual skipgram, will add it to the model
+                            if (options.DOREVERSEINDEX) {
+                                reverseindex.insert(std::pair<IndexReference,Pattern>(ref,skipgram));
+                            }
+                        }
+                    } else {
+                        std::cerr << "ERROR: computeskipgrams() called with no singleref and no multiplerefs" << std::endl;
+                        throw InternalError();
+                    }
+
+                }
+            }
+            return foundskipgrams;
+        }
+
         
+        virtual void trainskipgrams(const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
+            std::cerr << "Can not compute skipgrams on unindexed model (except exhaustively)" << std::endl;
+            throw InternalError();
+        }
+
         //creates a new test model using the current model as training
         // i.e. only fragments existing in the training model are counted
         // remaining fragments are 'uncovered'
@@ -889,6 +928,27 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             if (endline) *out << std::endl;
     }
 
+
+    virtual void trainskipgrams(const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
+        std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
+        for (int n = 3; n <= options.MAXLENGTH; n++) {
+            if ((options.DOSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
+            if (!options.QUIET) std::cerr << "Counting " << n << "-skipgrams" << std::endl; 
+            int foundskipgrams = 0;
+            for (typename MapType::iterator iter = this->begin(); iter != this->end(); iter++) {
+                const Pattern pattern = iter->first;
+                const IndexedData multirefs = iter->second;
+                if (((int) pattern.n() == n) && (pattern.category() == NGRAM) ) foundskipgrams += this->computeskipgrams(pattern,options, gapconf, NULL, &multirefs, constrainbymodel, false);
+            }
+            if (!foundskipgrams) break;
+            if (!options.QUIET) std::cerr << " Found " << foundskipgrams << " skipgrams...";
+            int pruned = this->prune(options.MINTOKENS,n);
+            if (!options.QUIET) std::cerr << "pruned " << pruned;
+            int prunedextra = this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, n);
+            if (prunedextra && !options.QUIET) std::cerr << " plus " << prunedextra << " extra skipgrams..";
+            if (!options.QUIET) std::cerr << "...total kept: " <<  foundskipgrams << std::endl;
+        }
+    }
 
     Pattern * getpatternfromtoken(IndexReference ref) {
         for (std::multimap<IndexReference,Pattern>::iterator iter = this->reverseindex.lower_bound(ref); iter != this->reverseindex.upper_bound(ref); iter++) {
