@@ -144,7 +144,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Skipgram: " << skipgram.decode(classdecoder) << endl;
         cerr << "N: " << (int) skipgram.n() << endl;
         cerr << "Bytesize: " << (int) skipgram.bytesize() << endl;
-        cerr << "Category==skipgram? " ; test(skipgram.category() == FIXEDSKIPGRAM) ;
+        cerr << "Category==skipgram? " ; test(skipgram.category() == SKIPGRAM) ;
         cerr << "Skipcount==2? " ; test(skipgram.skipcount() == 2) ;
     
         cerr << "Parts: " << endl;
@@ -405,7 +405,7 @@ int main( int argc, char *argv[] ) {
         cout << dynskipgram5.decode(classdecoder) << endl;
         cerr << "Size (n): " << (int) dynskipgram5.n() << endl; //== size()
         cerr << "Bytesize: " << (int) dynskipgram5.bytesize() << endl;
-        cerr << "Category==dynamicskipgram: "; test(dynskipgram5.category() == DYNAMICSKIPGRAM);
+        cerr << "Category==dynamicskipgram: "; test(dynskipgram5.category() == FLEXGRAM);
         cerr << "Raw" << endl;
         dynskipgram5.out();
         cerr << "Parts: " << endl;
@@ -493,7 +493,7 @@ int main( int argc, char *argv[] ) {
 
         PatternModelOptions options;
         options.DOREVERSEINDEX = true;
-        options.DOFIXEDSKIPGRAMS = true;
+        options.DOSKIPGRAMS = true;
 
         cerr << "Building unindexed model" << endl;
         PatternModel<uint32_t> unindexedmodel;

@@ -20,8 +20,8 @@ const PatternCategory Pattern::category() const {
             i += c + 1;
         } else {
             //we have a marker
-            if (c == FIXEDGAP) category = FIXEDSKIPGRAM;
-            if (c == DYNAMICGAP) return DYNAMICSKIPGRAM;
+            if (c == SKIPMARKER) category = SKIPGRAM;
+            if (c == FLEXMARKER) return FLEXGRAM;
             i++;
         }
     } while (1);
@@ -64,8 +64,8 @@ const size_t Pattern::n() const {
             //we have a size
             i += c + 1;
             n++;
-        } else if ((c == FIXEDGAP)  || (c == DYNAMICGAP)) {
-            //DYNAMICGAP is counted as 1, the minimum fill
+        } else if ((c == SKIPMARKER)  || (c == FLEXMARKER)) {
+            //FLEXMARKER is counted as 1, the minimum fill
             i++;
             n++;
         } else {
@@ -95,7 +95,7 @@ Pattern Pattern::todynamic() const { //converts a fixed skipgram into a dynamic 
                 mainpatternbuffer[j++] = c;
                 copybytes = c;
                 skipgap = false;
-            } else if (c == 128) {
+            } else if (c == SKIPMARKER) {
                 if (!skipgap) {
                     mainpatternbuffer[j++] = 129; //store a DYNAMIC GAP instead
                     skipgap = true; //skip next consecutive gap markers
@@ -115,7 +115,7 @@ const StructureType Pattern::type() const {
     int i = 0;
     do {
         const unsigned char c = data[i];
-        if ((c == ENDMARKER) || (c < 128) || (c == FIXEDGAP) || (c == DYNAMICGAP)) {
+        if ((c == ENDMARKER) || (c < 128) || (c == SKIPMARKER) || (c == FLEXMARKER)) {
             return STRUCT_PATTERN;
         } else if (c == SENTENCEMARKER) {
             return STRUCT_SENTENCE;
@@ -238,10 +238,10 @@ std::string Pattern::tostring(ClassDecoder& classdecoder) const {
             i += c + 1;
             if (!result.empty()) result += " ";
             result += classdecoder[cls];
-        } else if (c == FIXEDGAP) {
+        } else if (c == SKIPMARKER) {
             gapsize++;
             i++;
-        } else if (c == DYNAMICGAP) {
+        } else if (c == FLEXMARKER) {
             if (result.empty()) {
                 result += "{*}";
             } else {
@@ -268,13 +268,13 @@ bool Pattern::out() const {
             //we have a size
             cerr << bytestoint(data + i + 1, c) << " ";
             i += c + 1;
-        } else if (c == FIXEDGAP) {
-            //DYNAMICGAP is counted as 1, the minimum fill
-            cerr << "FIXEDGAP" << " ";
+        } else if (c == SKIPMARKER) {
+            //FLEXMARKER is counted as 1, the minimum fill
+            cerr << "SKIPMARKER" << " ";
             i++;
-        } else if (c == DYNAMICGAP) {
-            //DYNAMICGAP is counted as 1, the minimum fill
-            cerr << "DYNAMICGAP" << " ";
+        } else if (c == FLEXMARKER) {
+            //FLEXMARKER is counted as 1, the minimum fill
+            cerr << "FLEXMARKER" << " ";
             i++;
         } else {
             //we have another marker
@@ -371,7 +371,7 @@ Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructo
             i += c + 1;
             n++;
             if (n == begin) begin_b = i;
-        } else if ((c == FIXEDGAP) || (c == DYNAMICGAP)) {
+        } else if ((c == SKIPMARKER) || (c == FLEXMARKER)) {
             i++;
             n++;
             if (n == begin) begin_b = i;
@@ -579,7 +579,7 @@ int Pattern::parts(vector<pair<int,int>> & container) const {
             //we have a size
             i += c + 1;
             n++;
-        } else if ((c == FIXEDGAP) || (c == DYNAMICGAP)) {        
+        } else if ((c == SKIPMARKER) || (c == FLEXMARKER)) {        
             partlength = n - partbegin;
             if (partlength > 0) {
                 container.push_back(pair<int,int>(partbegin,partlength));
@@ -620,7 +620,7 @@ const unsigned int Pattern::skipcount() const {
         } else if (c < 128) {
             //we have a size
             i += c + 1;
-        } else if (((c == DYNAMICGAP) || (c == FIXEDGAP)) && ((i > 0) || ((data[i-1] != DYNAMICGAP) && (data[i-1] != FIXEDGAP))))   {
+        } else if (((c == FLEXMARKER) || (c == SKIPMARKER)) && ((i > 0) || ((data[i-1] != FLEXMARKER) && (data[i-1] != SKIPMARKER))))   {
             //we have a marker
             count++;
             i++;
@@ -650,7 +650,7 @@ int Pattern::gaps(vector<pair<int,int> > & container) const {
     
     int endskip = 0;
     for (int i = bs; i > 0; i--) {
-        if ((data[i] == FIXEDGAP) || (data[i] == DYNAMICGAP)) {
+        if ((data[i] == SKIPMARKER) || (data[i] == FLEXMARKER)) {
             endskip++;
         } else {
             break;
@@ -662,7 +662,7 @@ int Pattern::gaps(vector<pair<int,int> > & container) const {
 }
 
 Pattern Pattern::extractskipcontent(Pattern & instance) const {
-    if (this->category() == DYNAMICSKIPGRAM) {
+    if (this->category() == FLEXGRAM) {
         cerr << "Extractskipcontent not supported on Pattern with dynamic gaps!" << endl;
         throw InternalError();
     }
@@ -706,10 +706,10 @@ bool Pattern::instanceof(const Pattern & skipgram) const {
     //Is this an instantiation of the skipgram?
     //Instantiation is not necessarily full, aka: A ? B C is also an instantiation
     //of A ? ? C
-    if (this->category() == DYNAMICSKIPGRAM) return false;
+    if (this->category() == FLEXGRAM) return false;
     if (skipgram.category() == NGRAM) return (*this) == skipgram;
 
-    if (skipgram.category() == DYNAMICSKIPGRAM) {
+    if (skipgram.category() == FLEXGRAM) {
         //DYNAMIC SKIPGRAM
         //TODO: NOT IMPLEMENTED YET!!
        return false;
@@ -721,7 +721,7 @@ bool Pattern::instanceof(const Pattern & skipgram) const {
         for (unsigned int i = 0; i < _n; i++) {
             const Pattern token1 = Pattern(skipgram, i, 1);
             const Pattern token2 = Pattern(*this, i, 1);
-            if ((token1 != token2) && (token1.category() != FIXEDSKIPGRAM)) return false;
+            if ((token1 != token2) && (token1.category() != SKIPGRAM)) return false;
         }
         return true;
     }
@@ -731,6 +731,11 @@ bool Pattern::instanceof(const Pattern & skipgram) const {
 
 Pattern Pattern::replace(int begin, int length, const Pattern & replacement) const {
     const int _n = n();
+    if (begin + length > _n) {
+        cerr << "ERROR: Replacing slice " << begin << "," << length << " in a pattern of length " << _n << "! Out of bounds!" << endl;
+        throw InternalError();
+    }
+
     if (begin > 0) {
         Pattern p = Pattern(*this,0,begin) + replacement;
         if (begin+length != _n) {
@@ -752,10 +757,8 @@ Pattern Pattern::replace(int begin, int length, const Pattern & replacement) con
 Pattern Pattern::addfixedskips(std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     Pattern pattern = *this;
-    unsigned char fixedgapbuffer[101];
-    for (int i = 0; i< 100; i++) fixedgapbuffer[i] = 128;
     for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
-        const Pattern replacement = Pattern(fixedgapbuffer,iter->second);
+        const Pattern replacement = Pattern(iter->second);
         pattern = pattern.replace(iter->first, iter->second, replacement);
     }
     return pattern;
@@ -765,7 +768,7 @@ Pattern Pattern::adddynamicskips(std::vector<std::pair<int,int> > & gaps) const 
     //Returns a pattern with the specified spans replaced by fixed skips
     Pattern pattern = *this;
     for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
-        pattern = pattern.replace(iter->first, iter->second, DYNAMICGAPPATTERN);
+        pattern = pattern.replace(iter->first, iter->second, FLEXPATTERN);
     }
     return pattern;
 }

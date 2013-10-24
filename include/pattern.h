@@ -20,7 +20,7 @@ const int MAINPATTERNBUFFERSIZE = 40960;
 
 //Pattern categories
 enum PatternCategory {
-    UNKNOWNPATTERN = 0, NGRAM = 1, FIXEDSKIPGRAM = 2, DYNAMICSKIPGRAM = 3
+    UNKNOWNPATTERN = 0, NGRAM = 1, SKIPGRAM = 2, FLEXGRAM = 3
 };
 
 //Not really used much yet, but reserved for encoding structural markup
@@ -46,8 +46,8 @@ enum Markers { // <128 size
     ENDDIVMARKER = 251,
     HEADERMARKER = 250,
     
-    DYNAMICGAP = 129,
-    FIXEDGAP = 128,
+    FLEXMARKER = 129,
+    SKIPMARKER = 128,
 };
 
 
@@ -68,22 +68,30 @@ class Pattern {
     public:
      unsigned char * data; //holds the variable-width byte representation, terminated by \0 (ENDMARKER)
 
-     Pattern() { data = new unsigned char[1]; data[0] = 0; } //empty constructor (still consumes 1 byte though)
+     Pattern() { data = new unsigned char[1]; data[0] = ENDMARKER; } //empty constructor (still consumes 1 byte though)
      Pattern(const unsigned char* dataref, const int size); //low-level constructor
      Pattern(const Pattern& ref, int begin, int length); //slice constructor
      Pattern(const Pattern& ref); //copy constructor
      Pattern(std::istream * in); //read from binary file constructor
      ~Pattern();
 
+     Pattern(int size) {
+         //pattern consisting only of fixed skips
+         data = new unsigned char[size+1];
+         for (int i = 0; i < size; i++) data[i] = SKIPMARKER;
+         data[size] = ENDMARKER;
+     }
+
      void write(std::ostream * out) const; //write binary output
 
-     const size_t n() const; //return the size of the pattern in tokens (will return 0 if variable width gaps are present!)
+     const size_t n() const; //return the size of the pattern in tokens (will count dynamic gaps as size ))
      const size_t bytesize() const; //return the size of the pattern (in bytes)
      const size_t size() const { return n(); } // alias
      const unsigned int skipcount() const; //return the number of skips
      const PatternCategory category() const;
      const StructureType type() const;
-     const bool isskipgram() const { return category() > NGRAM; }
+     const bool isskipgram() const { return category() == SKIPGRAM; }
+     const bool isflexgram() const { return category() == FLEXGRAM; }
      
      Pattern operator [](int index) { return Pattern(*this, index,1); } //return single token, not byte!! use with n(), not with size()
 
@@ -141,10 +149,10 @@ class Pattern {
      void mask(std::vector<bool> & container) const; //returns a boolean mask of the skipgram (0 = gap(encapsulation) , 1 = skipgram coverage)
 };
 
-const unsigned char tmp_fixedgap = FIXEDGAP;
-const unsigned char tmp_dynamicgap = DYNAMICGAP;
-const Pattern FIXEDGAPPATTERN = Pattern(&tmp_fixedgap,1);
-const Pattern DYNAMICGAPPATTERN = Pattern(&tmp_dynamicgap,1);
+const unsigned char tmp_skipmarker = SKIPMARKER;
+const unsigned char tmp_flexmarker = FLEXMARKER;
+const Pattern SKIPPATTERN = Pattern(&tmp_skipmarker,1);
+const Pattern FLEXPATTERN = Pattern(&tmp_flexmarker,1);
 
 namespace std {
 

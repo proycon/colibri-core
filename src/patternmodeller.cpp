@@ -133,7 +133,7 @@ bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
     }
     if (cooc) {
         model.outputcooc(&cout, *classdecoder,coocthreshold);
-    }
+   }
     if (query) {
         if (classencoder == NULL) {
             cerr << "ERROR: Unable to query model, no class encoder specified (-c)" << endl;
@@ -220,7 +220,7 @@ int main( int argc, char *argv[] ) {
             options.MAXLENGTH = atoi(optarg);            
             break;
         case 's':
-            options.DOFIXEDSKIPGRAMS = true;
+            options.DOSKIPGRAMS = true;
             break;
         case 'o': 
             outputmodelfile = optarg;
@@ -246,7 +246,7 @@ int main( int argc, char *argv[] ) {
         case 'S':
             if (string(optarg) == "S") {
                 DODYNSKIPFROMFIXED = true;
-                options.DOFIXEDSKIPGRAMS = true;
+                options.DOSKIPGRAMS = true;
             } else {
                 DODYNSKIPFROMCOOC = true;
                 COOCTHRESHOLD = atof(optarg);

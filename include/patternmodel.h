@@ -122,7 +122,7 @@ class PatternModelOptions {
         int MINTOKENS;
         int MAXLENGTH;
         
-        bool DOFIXEDSKIPGRAMS;
+        bool DOSKIPGRAMS;
         int MINSKIPTYPES; 
 
         bool DOREVERSEINDEX;
@@ -134,7 +134,7 @@ class PatternModelOptions {
             MAXLENGTH = 100;
 
             MINSKIPTYPES = 2;
-            DOFIXEDSKIPGRAMS = false;
+            DOSKIPGRAMS = false;
 
             DOREVERSEINDEX = true; //only for indexed models
 
@@ -278,7 +278,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 in->seekg(0);
                 std::cerr << "Counting " << n << "-grams" << std::endl; 
 
-                if ((options.DOFIXEDSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
+                if ((options.DOSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
                 
                 sentence = 0; //reset
                 while (!in->eof()) {
@@ -315,7 +315,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                     reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
                                 }
                             }                
-                            if (options.DOFIXEDSKIPGRAMS) {
+                            if (options.DOSKIPGRAMS) {
                                 //loop over all possible gap configurations
                                 for (std::vector<std::vector<std::pair<int,int>>>::iterator iter =  gapconf[n].begin(); iter != gapconf[n].end(); iter++) {
                                     std::vector<std::pair<int,int>> * gapconfiguration = &(*iter);
@@ -462,7 +462,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 cache_n.insert(n);
                 
                 //total of occurrences in a group, used for frequency computation
-                if (c != DYNAMICSKIPGRAM){
+                if (c != FLEXGRAM){
                     //no storage per N for dynamic skipgrams
                     cache_grouptotal[c][n] += this->valuehandler.count(iter->second); 
                     cache_grouptotal[0][n] += this->valuehandler.count(iter->second);
@@ -709,9 +709,9 @@ class PatternModel: public MapType, public PatternModelInterface {
                             *OUT << std::setw(10) << "all";
                         } else if (c == NGRAM) {
                             *OUT << std::setw(10) << "n-gram";
-                        } else if (c == FIXEDSKIPGRAM) {
+                        } else if (c == SKIPGRAM) {
                             *OUT << std::setw(10) << "skipgram";
-                        } else if (c == DYNAMICSKIPGRAM) {
+                        } else if (c == FLEXGRAM) {
                             *OUT << std::setw(10) << "dyn.skip.";
                         }
                         if (n == 0) {
@@ -864,7 +864,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         for (int i = 0; i< 100; i++) fixedgapbuffer[i] = 128;
 
         t_relationmap skipcontent;
-        if (pattern.category() == FIXEDSKIPGRAM) {
+        if (pattern.category() == SKIPGRAM) {
             //find the gaps
             std::vector<std::pair<int,int>> gapdata;
             pattern.gaps(gapdata);
@@ -916,7 +916,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 skipcontent[skipcontent_atref] += 1;
             }
 
-        } else if (pattern.category() == DYNAMICSKIPGRAM) {
+        } else if (pattern.category() == FLEXGRAM) {
             //TODO: implement
         }
         //std::cerr << "Total found " << skipcontent.size() << std::endl;
@@ -942,7 +942,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         t_relationmap subchildren;
         const int _n = pattern.n();
-        const bool isfixedskipgram = (pattern.category() == FIXEDSKIPGRAM);
+        const bool isfixedskipgram = (pattern.category() == SKIPGRAM);
         //search in forward index
         for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
             const IndexReference ref = *iter;
@@ -959,14 +959,14 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                     //std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << ", bs=" << candidate.bytesize() <<  std::endl;
                     //candidate.out();
                     if (((int) candidate.n() <= maxsubn) && (candidate != pattern)) {
-                        if ((isfixedskipgram) || (candidate.category() == FIXEDSKIPGRAM)) { //MAYBE TODO: I may check too much now... could be more efficient? 
+                        if ((isfixedskipgram) || (candidate.category() == SKIPGRAM)) { //MAYBE TODO: I may check too much now... could be more efficient? 
                             //candidate may not have skips in places where the larger
                             //pattern does not
                             Pattern tmpl = Pattern(pattern, i, candidate.n()); //get the proper slice to match
                             if (candidate.instanceof(tmpl)) {
                                 subchildren[candidate] = subchildren[candidate] + 1;
                             }
-                        } else if (candidate.category() == DYNAMICSKIPGRAM) {
+                        } else if (candidate.category() == FLEXGRAM) {
                             //TODO
                         } else {
                             subchildren[candidate]++;
@@ -1009,14 +1009,14 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 int minsubsize = _n + (ref.token - iter2->first.token);
 
                 if (((int) candidate.n() >= minsubsize)  && (candidate != pattern)) {
-                    if ((candidate.category() == FIXEDSKIPGRAM) || (pattern.category() == FIXEDSKIPGRAM))  {//MAYBE TODO: I may check too much now... could be more efficient? 
+                    if ((candidate.category() == SKIPGRAM) || (pattern.category() == SKIPGRAM))  {//MAYBE TODO: I may check too much now... could be more efficient? 
                         //instance may not have skips in places where the larger
                         //candidate pattern does not
                         Pattern inst = Pattern(candidate, iter2->first.token, pattern.n()); //get the proper slice to match
                         if (pattern.instanceof(candidate)) {
                             subsumes[candidate] += 1;
                         }
-                    } else if (candidate.category() == DYNAMICSKIPGRAM) {
+                    } else if (candidate.category() == FLEXGRAM) {
                         //TODO
                     } else {
                         subsumes[candidate] += 1;
@@ -1089,7 +1089,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); 
         while(iter != this->end()) { 
             const Pattern pattern = iter->first;
-            if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == FIXEDSKIPGRAM)) {
+            if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == SKIPGRAM)) {
                 t_relationmap skipcontent = getskipcontent(pattern);
                 if ((int) skipcontent.size() < minskiptypes) { //will take care of token threshold too, patterns not meeting the token threshold are not included
                     iter = this->erase(iter);
@@ -1275,7 +1275,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             t_relationmap relations = this->getleftcooc(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-COOC-OF");
         }
-        if (pattern.category() == FIXEDSKIPGRAM) {
+        if (pattern.category() == SKIPGRAM) {
             t_relationmap relations = this->getskipcontent(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANTIATED-BY");
         }
@@ -1304,7 +1304,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     void computedynskipgrams_fromfixed() {
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;
-            if (pattern.category() == FIXEDSKIPGRAM) {
+            if (pattern.category() == SKIPGRAM) {
                 const Pattern dynskipgram = pattern.todynamic();
                 //copy data from pattern
                 IndexedData * data = this->getdata(pattern);
