@@ -248,7 +248,9 @@ class IndexedCorpus {
 
         Pattern operator [](const IndexReference ref) { return data[ref]; } 
 
-        Pattern getpattern(IndexReference begin, int length);
+        Pattern getpattern(IndexReference begin, int length); //TODO: implement
+        
+        std::vector<IndexReference> findmatches(const Pattern & pattern); //not as efficient as a pattern model obviously, TODO: implement
 };
 
 /************* ValueHandler for reading/serialising basic types ********************/
@@ -348,7 +350,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
         
         virtual const Pattern * getpointer(const Pattern &) =0; //get the pattern in the store, or NULL if it does not exist
         
-        virtual ValueType operator [](const Pattern & pattern)=0;
+        virtual ValueType & operator [](const Pattern & pattern)=0;
         
         typedef typename ContainerType::iterator iterator;
         typedef typename ContainerType::const_iterator const_iterator;
@@ -558,7 +560,7 @@ class PatternMap: public PatternMapStore<std::unordered_map<const Pattern,ValueT
 
         size_t size() const { return data.size(); } 
 
-        ValueType operator [](const Pattern & pattern) { return data[pattern]; } 
+        ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
         
         typedef typename std::unordered_map<const Pattern,ValueType>::iterator iterator;
         typedef typename std::unordered_map<const Pattern,ValueType>::const_iterator const_iterator;

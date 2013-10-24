@@ -551,22 +551,22 @@ int main( int argc, char *argv[] ) {
         Pattern ngram = classencoder.buildpattern(querystring, true); 	
         cerr << "Extracting subsumption relations for " << querystring << endl;
 
-        std::map<Pattern,int> relations = indexedmodel.getsubchildren(ngram);
+        t_relationmap relations = indexedmodel.getsubchildren(ngram);
         indexedmodel.outputrelations(ngram, relations, classdecoder, &cerr,"SUBSUMES");
 
 
         string querystring2  = "not";
         cerr << "Extracting subsumption relations for " << querystring2 << endl;
         Pattern patternnot = classencoder.buildpattern(querystring2, true); 	
-        std::map<Pattern,int> relations2 = indexedmodel.getsubparents(patternnot);
+        t_relationmap relations2 = indexedmodel.getsubparents(patternnot);
         indexedmodel.outputrelations(patternnot, relations2, classdecoder, &cerr,"SUBSUMED-BY");
 
 
         cerr << "Extracting neighbour relations for " << querystring2 << endl;
-        std::map<Pattern,int> relations3 = indexedmodel.getleftneighbours(patternnot);
+        t_relationmap relations3 = indexedmodel.getleftneighbours(patternnot);
         indexedmodel.outputrelations(patternnot, relations3, classdecoder, &cerr,"RIGHT-OF");
 
-        std::map<Pattern,int> relations4 = indexedmodel.getrightneighbours(patternnot);
+        t_relationmap relations4 = indexedmodel.getrightneighbours(patternnot);
         indexedmodel.outputrelations(patternnot, relations4, classdecoder, &cerr,"LEFT-OF");
 
 
@@ -574,12 +574,12 @@ int main( int argc, char *argv[] ) {
         Pattern skipgram = classencoder.buildpattern(querystring3, true);
         cerr << "Extracting subsumption relations for " << querystring3 << endl;
 
-        std::map<Pattern,int> relations5 = indexedmodel.getsubchildren(skipgram);
+        t_relationmap relations5 = indexedmodel.getsubchildren(skipgram);
         indexedmodel.outputrelations(skipgram, relations5, classdecoder, &cerr,"SUBSUMES");
 
         cerr << "Extracting skipcontent relations for " << querystring3 << endl;
 
-        std::map<Pattern,int> relations6 = indexedmodel.getskipcontent(skipgram);
+        t_relationmap relations6 = indexedmodel.getskipcontent(skipgram);
         indexedmodel.outputrelations(skipgram, relations6, classdecoder, &cerr,"INSTANTIATED-BY");
 
 
