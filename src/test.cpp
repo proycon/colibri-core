@@ -401,11 +401,11 @@ int main( int argc, char *argv[] ) {
 
         cerr << "----------------------------------------------------" << endl;
         Pattern dynskipgram5 = skipgram5.todynamic();
-        cerr << "Converting fixed skipgram '" << querystring5 << "' to dynamic skipgram:" << endl;	    
+        cerr << "Converting skipgram '" << querystring5 << "' to flexgram:" << endl;	    
         cout << dynskipgram5.decode(classdecoder) << endl;
         cerr << "Size (n): " << (int) dynskipgram5.n() << endl; //== size()
         cerr << "Bytesize: " << (int) dynskipgram5.bytesize() << endl;
-        cerr << "Category==dynamicskipgram: "; test(dynskipgram5.category() == FLEXGRAM);
+        cerr << "Category==flexgram: "; test(dynskipgram5.category() == FLEXGRAM);
         cerr << "Raw" << endl;
         dynskipgram5.out();
         cerr << "Parts: " << endl;

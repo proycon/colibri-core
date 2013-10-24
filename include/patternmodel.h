@@ -321,7 +321,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                     std::vector<std::pair<int,int>> * gapconfiguration = &(*iter);
 
                                     //add skips
-                                    const Pattern skippattern = pattern.addfixedskips(*gapconfiguration);                            
+                                    const Pattern skippattern = pattern.addskips(*gapconfiguration);                            
                                     if ((int) skippattern.n() != n) {
                                         std::cerr << "Generated invalid skipgram, n=" << skippattern.n() << ", expected " << n << std::endl;
                                         throw InternalError();
@@ -1305,7 +1305,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;
             if (pattern.category() == SKIPGRAM) {
-                const Pattern dynskipgram = pattern.todynamic();
+                const Pattern dynskipgram = pattern.toflexgram();
                 //copy data from pattern
                 IndexedData * data = this->getdata(pattern);
                 for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {

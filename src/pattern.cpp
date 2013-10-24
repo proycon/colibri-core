@@ -76,7 +76,7 @@ const size_t Pattern::n() const {
 }
 
 
-Pattern Pattern::todynamic() const { //converts a fixed skipgram into a dynamic one, ngrams just come out unchanged
+Pattern Pattern::toflexgram() const { //converts a fixed skipgram into a dynamic one, ngrams just come out unchanged
     //to be computed in bytes
     int i = 0;
     int j = 0;
@@ -754,7 +754,7 @@ Pattern Pattern::replace(int begin, int length, const Pattern & replacement) con
 }
 
 
-Pattern Pattern::addfixedskips(std::vector<std::pair<int,int> > & gaps) const {
+Pattern Pattern::addskips(std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     Pattern pattern = *this;
     for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
@@ -764,7 +764,7 @@ Pattern Pattern::addfixedskips(std::vector<std::pair<int,int> > & gaps) const {
     return pattern;
 }
 
-Pattern Pattern::adddynamicskips(std::vector<std::pair<int,int> > & gaps) const {
+Pattern Pattern::addflexgaps(std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     Pattern pattern = *this;
     for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {

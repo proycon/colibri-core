@@ -84,7 +84,7 @@ class Pattern {
 
      void write(std::ostream * out) const; //write binary output
 
-     const size_t n() const; //return the size of the pattern in tokens (will count dynamic gaps as size ))
+     const size_t n() const; //return the size of the pattern in tokens (will count flex gaps gaps as size 1)
      const size_t bytesize() const; //return the size of the pattern (in bytes)
      const size_t size() const { return n(); } // alias
      const unsigned int skipcount() const; //return the number of skips
@@ -133,10 +133,10 @@ class Pattern {
      Pattern extractskipcontent(Pattern & instance) const; //given a pattern and an instance, extract a pattern from the instance that would fill the gaps
 
      Pattern replace(int begin, int length, const Pattern & replacement) const;
-     Pattern addfixedskips(std::vector<std::pair<int,int> > & gaps) const;
-     Pattern adddynamicskips(std::vector<std::pair<int,int> > & gaps) const;
+     Pattern addskips(std::vector<std::pair<int,int> > & gaps) const;
+     Pattern addflexgaps(std::vector<std::pair<int,int> > & gaps) const;
 
-     Pattern todynamic() const; //converts a fixed skipgram into a dynamic one, ngrams just come out unchanged
+     Pattern toflexgram() const; //converts a skipgram into a flexgram, ngrams just come out unchanged
 
      //CHANGES from old colibri ngram:
      //
