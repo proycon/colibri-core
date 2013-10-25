@@ -957,7 +957,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 if (((int) pattern.n() == n) && (pattern.category() == NGRAM) ) foundskipgrams += this->computeskipgrams(pattern,options, gapconf, NULL, &multirefs, constrainbymodel, false);
             }
             if (!foundskipgrams) {
-                std::cerr << " Non found" << std::endl;
+                std::cerr << " None found" << std::endl;
                 break;
             }
             if (!options.QUIET) std::cerr << " Found " << foundskipgrams << " skipgrams...";
