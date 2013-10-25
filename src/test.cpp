@@ -477,6 +477,8 @@ int main( int argc, char *argv[] ) {
         "Soft you now ! The fair Ophelia ! Nymph ,\n"
         "in thy orisons be all my sins remember'd .\n"
         "To flee or not to flee .\n" //additions to test skipgrams
+        "To flee or not to flee .\n"
+        "To see or not to see .\n"
         "To see or not to see .\n"
         "To pee or not to pee .\n"; //See that Shakespeare? I could be a poet too! 
         *out << string(poem);

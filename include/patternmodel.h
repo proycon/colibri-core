@@ -370,6 +370,11 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                 //add skips
                 const Pattern skipgram = pattern.addskips(*gapconfiguration);                            
+                if (options.DEBUG) {
+                    std::cerr << "Checking for: " << std::endl;
+                    skipgram.out();
+                }
+
                 if ((constrainbymodel != NULL) && (!constrainbymodel->has(skipgram))) continue;
                 if ((int) skipgram.n() != n) {
                     std::cerr << "Generated invalid skipgram, n=" << skipgram.n() << ", expected " << n << std::endl;
@@ -380,14 +385,19 @@ class PatternModel: public MapType, public PatternModelInterface {
                 bool check_extra = false;
                 //check if sub-parts were counted
                 std::vector<Pattern> subngrams;
-                pattern.ngrams(subngrams,n-1); //this also works for and returns skipgrams, despite the name
+                skipgram.ngrams(subngrams,n-1); //this also works for and returns skipgrams, despite the name
                 for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                     const Pattern subpattern = *iter2;
                     if (!subpattern.isgap(0) && !subpattern.isgap(subpattern.n() - 1)) {
+                        if (options.DEBUG) {
+                            std::cerr << "Subpattern: " << std::endl;
+                            subpattern.out();
+                        }
                         //this subpattern is a valid
                         //skipgram (no beginning or ending
                         //gaps) that should occur
                         if (!this->has(subpattern)) {
+                            if (options.DEBUG) std::cerr << "  discarded" << std::endl;
                             skipgram_valid = false;
                             break;
                         }
@@ -423,7 +433,12 @@ class PatternModel: public MapType, public PatternModelInterface {
                     for (std::vector<std::pair<int,int>>::iterator iter3 = gapconfiguration->begin(); iter3 != gapconfiguration->end(); iter3++) {
                         if (!((iter3->first - 1 == 0) && (iter3->first + iter3->second + 1 == n))) { //entire skipgarm is already X * Y format
                             const Pattern subskipgram = Pattern(skipgram, iter3->first - 1, iter3->second + 2);
+                            if (options.DEBUG) {
+                                std::cerr << "Subskipgram: " << std::endl;
+                                subskipgram.out();
+                            }
                             if (!this->has(subskipgram)) {
+                                if (options.DEBUG) std::cerr << "  discarded" << std::endl;
                                 skipgram_valid = false;
                                 break;
                             }
@@ -433,7 +448,8 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
                 if (skipgram_valid) {
-                    if (!has(pattern)) foundskipgrams++;
+                    if (options.DEBUG) std::cerr << "  counted!" << std::endl;
+                    if (!has(skipgram)) foundskipgrams++;
                     ValueType * data = this->getdata(skipgram);
                     if (singleref != NULL) {
                         add(skipgram, data, *singleref ); //counts the actual skipgram, will add it to the model
