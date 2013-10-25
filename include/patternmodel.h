@@ -956,7 +956,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const IndexedData multirefs = iter->second;
                 if (((int) pattern.n() == n) && (pattern.category() == NGRAM) ) foundskipgrams += this->computeskipgrams(pattern,options, gapconf, NULL, &multirefs, constrainbymodel, false);
             }
-            if (!foundskipgrams) break;
+            if (!foundskipgrams) {
+                cerr << " Non found" << endl;
+                break;
+            }
             if (!options.QUIET) std::cerr << " Found " << foundskipgrams << " skipgrams...";
             int pruned = this->prune(options.MINTOKENS,n);
             if (!options.QUIET) std::cerr << "pruned " << pruned;
