@@ -597,6 +597,14 @@ int main( int argc, char *argv[] ) {
 
         cerr << "All relations for  " << querystring3 << " in one go" << endl;
         indexedmodel.outputrelations(skipgram, classdecoder, &cerr);
+        
+        cerr << endl;
+
+        cerr << "Building indexed model with mintokens=1" << endl;
+        options.MINTOKENS = 1;
+        IndexedPatternModel<> indexedmodel1;
+        indexedmodel1.train(infilename, options);
+        cerr << "Found " << indexedmodel1.size() << " patterns, " << indexedmodel1.types() << " types, " << indexedmodel1.tokens() << " tokens" << endl;
 
     }
 }
