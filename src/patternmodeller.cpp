@@ -181,8 +181,8 @@ int main( int argc, char *argv[] ) {
     bool DOPRINT = false;
     bool DORELATIONS = false;
     bool DEBUG = false;
-    bool DODYNSKIPFROMFIXED = false;
-    bool DODYNSKIPFROMCOOC = false;
+    bool DOFLEXFROMSKIP = false;
+    bool DOFLEXFROMCOOC = false;
     double COOCTHRESHOLD = 0;
     bool DOCOOC = false;
     bool DOREMOVEFIXEDSKIPGRAMS = false;
@@ -245,10 +245,10 @@ int main( int argc, char *argv[] ) {
             break;        
         case 'S':
             if (string(optarg) == "S") {
-                DODYNSKIPFROMFIXED = true;
+                DOFLEXFROMSKIP = true;
                 options.DOSKIPGRAMS = true;
             } else {
-                DODYNSKIPFROMCOOC = true;
+                DOFLEXFROMCOOC = true;
                 COOCTHRESHOLD = atof(optarg);
             }
             break;
@@ -322,6 +322,11 @@ int main( int argc, char *argv[] ) {
     }
 
 
+    if ( (options.DOSKIPGRAMS) && ((outputmodeltype == UNINDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNMODEL))) {
+        cerr << "NOTE: Skipgram generation on unindexed pattern models can only be done exhaustively! This generated lots of skipgrams and is far less memory efficient than with indexed models." << endl;
+        options.DOSKIPGRAMS_EXHAUSTIVE = true;
+        options.DOSKIPGRAMS = false;
+    }
 
     if (inputmodeltype == INDEXEDPATTERNMODEL) {
         cerr << "Loading indexed pattern model " << inputmodelfile << " as input model..."<<endl;
@@ -329,7 +334,16 @@ int main( int argc, char *argv[] ) {
         if (!inputmodelfile2.empty()) prunebymodel(inputmodel, inputmodelfile2, inputmodeltype2, options);
         inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
 
-
+        if (options.DOSKIPGRAMS) {
+            cerr << "Computing skipgrams" << endl;
+            if (!inputmodelfile2.empty()) cerr << "WARNING: Can not compute skipgrams constrained by " << inputmodelfile2 << "!" << endl;
+            inputmodel.trainskipgrams(options);
+            if (DOFLEXFROMSKIP) {
+                cerr << "Computing flexgrams from skipgrams" << corpusfile <<endl;
+                int found = inputmodel.computeflexgrams_fromskipgrams();
+                cerr << found << " flexgrams found" << corpusfile <<endl;
+            }
+        }
         
         if (!outputmodelfile.empty()) {
             didsomething = true;
@@ -347,6 +361,11 @@ int main( int argc, char *argv[] ) {
         PatternModel<uint32_t> inputmodel = PatternModel<uint32_t>(inputmodelfile, options);
 
         if (!inputmodelfile2.empty()) prunebymodel(inputmodel, inputmodelfile2, inputmodeltype2, options);
+
+
+        if (options.DOSKIPGRAMS || options.DOSKIPGRAMS_EXHAUSTIVE) {
+            cerr << "WARNING: Can not compute skipgrams on unindexed models after initial model training!" << endl;
+        }
 
         if (!outputmodelfile.empty()) {
             didsomething = true;
@@ -379,6 +398,12 @@ int main( int argc, char *argv[] ) {
                 outputmodel.train(corpusfile, options, constrainbymodel);
             }
 
+            if (DOFLEXFROMSKIP) {
+                cerr << "Computing flexgrams from skipgrams" << corpusfile <<endl;
+                int found = outputmodel.computeflexgrams_fromskipgrams();
+                cerr << found << " flexgrams found" << corpusfile <<endl;
+            }
+            
             if (!outputmodelfile.empty()) {
                 cerr << "Saving indexed pattern model to " << outputmodelfile <<endl;
                 outputmodel.write(outputmodelfile);
@@ -395,6 +420,9 @@ int main( int argc, char *argv[] ) {
                 //build new model from corpus
                 cerr << "Building new unindexed model from  " << corpusfile <<endl;
                 outputmodel.train(corpusfile, options, constrainbymodel);
+            }
+            if (DOFLEXFROMSKIP) {
+                cerr << "WARNING: Can not compute flexgrams form skipgrams on unindexed models!" << endl;
             }
             if (!outputmodelfile.empty()) {
                 cerr << "Saving unindexed pattern model to " << outputmodelfile <<endl;
