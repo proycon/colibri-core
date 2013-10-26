@@ -839,8 +839,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual t_relationmap getleftneighbours(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getrightneighbours(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap_double getnpmi(const Pattern & pattern, double threshold) { return t_relationmap_double(); } //does nothing for unindexed models
-        virtual void computedynskipgrams_fromfixed() {}//does nothing for unindexed models
-        virtual void computedynskipgrams_fromcooc() {}//does nothing for unindexed models
+        virtual int computeflexgrams_fromskipgrams() { return 0; }//does nothing for unindexed models
+        virtual int computeflexgrams_fromcooc() {return 0; }//does nothing for unindexed models
         virtual void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {}
 };
 
@@ -1423,22 +1423,26 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     } 
 
-    void computedynskipgrams_fromfixed() {
+    int computeflexgrams_fromskipgrams() {
+        int count = 0;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;
             if (pattern.category() == SKIPGRAM) {
-                const Pattern dynskipgram = pattern.toflexgram();
+                const Pattern flexgram = pattern.toflexgram();
+                if (!this->has(flexgram)) count++;
                 //copy data from pattern
                 IndexedData * data = this->getdata(pattern);
                 for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {
                     const IndexReference ref = *iter2;
-                    this->data[dynskipgram].insert(ref);
+                    this->data[flexgram].insert(ref);
                 }
             }
         }
+        return count;
     }
 
-    void computedynskipgrams_fromcooc(double threshold) {
+    int computeflexgrams_fromcooc(double threshold) {
+        int found = 0;
         const unsigned char dynamicgap = 129;
         const Pattern dynamicpattern = Pattern(&dynamicgap,1);
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -1449,11 +1453,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const Pattern pattern2 = iter2->first;
                 const double value = npmi(pattern,pattern2,iter2->second);
                 if (value >= threshold) {
-                    const Pattern skipgram = pattern + dynamicpattern + pattern2;
-                    this->data[skipgram] = value;
+                    const Pattern flexgram = pattern + dynamicpattern + pattern2;
+                    if (!this->has(flexgram)) found++;
+                    this->data[flexgram] = value;
                 }
             }
         }
+        return found;
     }
 
     void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {
