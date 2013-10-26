@@ -332,6 +332,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     if (n > this->maxn) this->maxn = n;
                     if (n < this->minn) this->minn = n;
                 } else {
+                    std::cerr << "None found" << std::endl;
                     break;
                 }
                 if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngram...";
