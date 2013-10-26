@@ -606,6 +606,13 @@ int main( int argc, char *argv[] ) {
         indexedmodel1.train(infilename, options);
         cerr << "Found " << indexedmodel1.size() << " patterns, " << indexedmodel1.types() << " types, " << indexedmodel1.tokens() << " tokens" << endl;
 
+
+        cerr << "Computing flexgrams out of skipgrams" << endl;
+        int foundflex = indexedmodel.computeflexgrams_fromskipgrams();
+        cerr << "Found " << foundflex << " flexgrams" << endl;
+        cerr << "outputting all" << endl;
+        indexedmodel.print(&std::cerr, classdecoder);
+
     }
 }
 

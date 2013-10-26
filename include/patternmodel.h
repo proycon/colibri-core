@@ -743,7 +743,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             } else if (cat == 2) {
                 cat_s = "skipgram";
             } else if (cat == 3) {
-                cat_s = "dyn-skipgram";
+                cat_s = "flexgram";
             }
             *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq;
             if (endline) *out << std::endl;
@@ -932,7 +932,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             } else if (cat == 2) {
                 cat_s = "skipgram";
             } else if (cat == 3) {
-                cat_s = "dyn-skipgram";
+                cat_s = "flexgram";
             }
             *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq << "\t"; 
             IndexedData * data = this->getdata(pattern);
