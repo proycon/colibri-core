@@ -8,7 +8,10 @@ from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
 
-
+class Category:
+    NGRAM=1
+    SKIPGRAM=2
+    FLEXGRAM=3
 
 cdef class ClassEncoder:
     cdef cClassEncoder *thisptr
@@ -59,7 +62,7 @@ cdef class Pattern:
         return str(self.cpattern.tostring(deref(decoder.thisptr)),'utf-8')
 
     def __len__(self):
-        return self.thisptr.n()
+        return self.cpattern.n()
 
     def __getitem__(self, item):
         cdef cPattern c_pattern
@@ -139,17 +142,10 @@ cdef class Pattern:
             yield ngram
             inc(it)
 
-    #def subngrams(self,int minn=0,int maxn=9):
-    #    cdef vector[cPattern] result
-    #    self.cpattern.subngrams(result, minn,maxn)
-    #    cdef cPattern cngram
-    #    cdef vector[cPattern].iterator it = result.begin()
-    #    while it != result.end():
-    #        cngram  = deref(it)
-    #        ngram = Pattern()
-    #        ngram.bind(cngram)
-    #        yield ngram
-    #        inc(it)
+    def subngrams(self,int minn=0,int maxn=9):
+        for n in range(minn,maxn+1):
+            for pattern in self.ngrams(n):
+                yield pattern
 
 cdef class IndexedData:
 
