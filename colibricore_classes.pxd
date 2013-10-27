@@ -13,6 +13,7 @@ cdef extern from "<iostream>" namespace "std":
 
     extern ostream cout
 
+
 cdef extern from "pattern.h":
     cdef cppclass Pattern:
         Pattern() nogil
@@ -27,9 +28,10 @@ cdef extern from "pattern.h":
         bint operator<(Pattern&) nogil
         bint operator>(Pattern&) nogil
         Pattern operator+(Pattern&) nogil
-        int ngrams(vector[Pattern] container,int n)
-        int parts(vector[Pattern] container)
-        int subngrams(vector[Pattern] container,int minn=0,int maxn=9)
+        int ngrams(vector[Pattern] container,int n) nogil
+        int parts(vector[Pattern] container) nogil
+        int subngrams(vector[Pattern] container,int minn=0,int maxn=9) nogil
+        Pattern toflexgram() nogil
 
     cdef cppclass IndexReference:
         IndexReference()
@@ -136,7 +138,8 @@ cdef extern from "patternmodel.h":
     cdef cppclass PatternModelOptions:
         int MINTOKENS
         int MAXLENGTH
-        bool DOFIXEDSKIPGRAMS
+        bool DOSKIPGRAMS
+        bool DOSKIPGRAMS_EXHAUSTIVE
         int MINSKIPTYPES
         bool DOREVERSEINDEX
         bool DEBUG
@@ -145,6 +148,12 @@ cdef extern from "patternmodel.h":
         int count(IndexedData &)
         int add(IndexedData *, IndexReference&)
         str tostring(IndexedData&)
+
+    ctypedef PatternMap[uint32_t,BaseValueHandler[uint32_t],uint64_t] t_relationmap
+    ctypedef PatternMap[double,BaseValueHandler[double],uint64_t] t_relationmap_double
+
+    ctypedef PatternMap[uint32_t,BaseValueHandler[uint32_t],uint64_t].iterator t_relationmap_iterator
+    ctypedef PatternMap[double,BaseValueHandler[double],uint64_t].iterator t_relationmap_double_iterator
 
     cdef cppclass PatternModel[ValueType,ValueHandler,MapType]:
         cppclass iterator:
@@ -186,11 +195,11 @@ cdef extern from "patternmodel.h":
         void histogram(ostream*) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
         
-        stdmap[Pattern,int] getsubchildren(Pattern & pattern)
-        stdmap[Pattern,int] getsubparents(Pattern & pattern)
-        stdmap[Pattern,int] getleftneighbours(Pattern & pattern)
-        stdmap[Pattern,int] getrightneighbours(Pattern & pattern)
-        stdmap[Pattern,int] getskipcontent(Pattern & pattern)
+        t_relationmap getsubchildren(Pattern & pattern)
+        t_relationmap getsubparents(Pattern & pattern)
+        t_relationmap getleftneighbours(Pattern & pattern)
+        t_relationmap getrightneighbours(Pattern & pattern)
+        t_relationmap getskipcontent(Pattern & pattern)
 
 
 #    cdef cppclass NGramData(AnyGramData):

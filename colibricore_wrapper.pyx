@@ -3,10 +3,11 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
+
 
 
 cdef class ClassEncoder:
@@ -125,7 +126,7 @@ cdef class Pattern:
             ngram.bind(cngram)
             yield ngram
             inc(it)
-    
+
     def parts(self):
         cdef vector[cPattern] result
         self.cpattern.parts(result)
@@ -181,13 +182,13 @@ cdef class IndexedPatternModel:
 
     def __len__(self):
         return self.data.size()
-    
+
     def types(self):
         return self.data.types()
 
     def tokens(self):
         return self.data.tokens()
-    
+
     def minlength(self):
         return self.data.minlength()
 
@@ -199,7 +200,7 @@ cdef class IndexedPatternModel:
 
     def version(self):
         return self.data.version()
-        
+
     def occurrencecount(self, Pattern pattern):
         return self.data.occurrencecount(pattern.cpattern)
 
@@ -212,7 +213,7 @@ cdef class IndexedPatternModel:
     def frequency(self, Pattern pattern):
         return self.data.coverage(pattern.cpattern)
 
-    
+
     def totaloccurrencesingroup(self, int category=0, int n=0):
         return self.data.totaloccurrencesingroup(category,n)
 
@@ -221,7 +222,7 @@ cdef class IndexedPatternModel:
 
     def totaltokensingroup(self, int category=0, int n=0):
         return self.data.totaltokensingroup(category,n)
-    
+
     def totalwordtypesingroup(self, int category=0, int n=0):
         return self.data.totalwordtypesingroup(category,n)
 
@@ -231,7 +232,7 @@ cdef class IndexedPatternModel:
     def __contains__(self, pattern):
         assert isinstance(pattern, Pattern)
         return self.has(pattern)
- 
+
     def __getitem__(self, pattern):
         assert isinstance(pattern, Pattern)
         return self.getdata(pattern)
@@ -246,7 +247,7 @@ cdef class IndexedPatternModel:
             return value
         else:
             raise KeyError
-        
+
 
     def __iter__(self):
         cdef cPatternModel[cIndexedData,cIndexedDataHandler,cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]].iterator it = self.data.begin()
@@ -261,22 +262,22 @@ cdef class IndexedPatternModel:
             value.bind(cvalue)
             yield tuple(pattern,value)
             inc(it)
-    
-    cpdef load(self, str filename, threshold=2, dofixedskipgrams=False, maxlength=99, minskiptypes=2):
+
+    cpdef load(self, str filename, threshold=2, doskipgrams=False, maxlength=99, minskiptypes=2):
         cdef cPatternModelOptions options
         options.MINTOKENS = threshold
-        options.DOFIXEDSKIPGRAMS = dofixedskipgrams
+        options.DOSKIPGRAMS = doskipgrams
         options.MAXLENGTH = maxlength
         options.MINSKIPTYPES = minskiptypes
         options.DOREVERSEINDEX = True
         self.data.load(filename, options)
-    
+
     cpdef write(self, str filename):
-        self.write(filename) 
+        self.write(filename)
 
     cpdef printmodel(self,ClassDecoder decoder):
         self.data.printmodel(&cout, deref(decoder.thisptr) )
-        
+
     cpdef report(self):
         self.data.report(&cout)
 
@@ -294,13 +295,13 @@ cdef class UnindexedPatternModel:
 
     def __len__(self):
         return self.data.size()
- 
+
     def types(self):
         return self.data.types()
 
     def tokens(self):
         return self.data.tokens()
-    
+
     def minlength(self):
         return self.data.minlength()
 
@@ -312,7 +313,7 @@ cdef class UnindexedPatternModel:
 
     def version(self):
         return self.data.version()
-        
+
     def occurrencecount(self, Pattern pattern):
         return self.data.occurrencecount(pattern.cpattern)
 
@@ -325,7 +326,7 @@ cdef class UnindexedPatternModel:
     def frequency(self, Pattern pattern):
         return self.data.coverage(pattern.cpattern)
 
-    
+
     def totaloccurrencesingroup(self, int category=0, int n=0):
         return self.data.totaloccurrencesingroup(category,n)
 
@@ -334,7 +335,7 @@ cdef class UnindexedPatternModel:
 
     def totaltokensingroup(self, int category=0, int n=0):
         return self.data.totaltokensingroup(category,n)
-    
+
     def totalwordtypesingroup(self, int category=0, int n=0):
         return self.data.totalwordtypesingroup(category,n)
 
@@ -356,7 +357,7 @@ cdef class UnindexedPatternModel:
             return self.data[pattern.cpattern]
         else:
             raise KeyError
-        
+
 
     def __iter__(self):
         cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]].iterator it = self.data.begin()
@@ -369,28 +370,28 @@ cdef class UnindexedPatternModel:
             pattern.bind(cpattern)
             yield tuple(pattern,value)
             inc(it)
-    
-    cpdef load(self, str filename, threshold=2, dofixedskipgrams=False, maxlength=99, minskiptypes=2):
+
+    cpdef load(self, str filename, threshold=2, doskipgrams=False, maxlength=99, minskiptypes=2):
         cdef cPatternModelOptions options
         options.MINTOKENS = threshold
-        options.DOFIXEDSKIPGRAMS = dofixedskipgrams
+        options.DOSKIPGRAMS = doskipgrams
         options.MAXLENGTH = maxlength
         options.MINSKIPTYPES = minskiptypes
         options.DOREVERSEINDEX = True
         self.data.load(filename, options)
-    
+
     cpdef write(self, str filename):
-        self.write(filename) 
-    
+        self.write(filename)
+
     cpdef printmodel(self,ClassDecoder decoder):
         self.data.printmodel(&cout, deref(decoder.thisptr) )
-        
+
     cpdef report(self):
         self.data.report(&cout)
 
     cpdef histogram(self):
         self.data.report(&cout)
-    
+
     cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
         self.data.outputrelations(pattern.cpattern,deref(decoder.thisptr),&cout)
 
@@ -398,8 +399,9 @@ cdef class UnindexedPatternModel:
         self.data.prune(threshold, n)
 
     def getsubchildren(self, Pattern pattern):
-        cdef stdmap[cPattern,int] relations = self.data.getsubchildren(pattern.cpattern)
-        cdef stdmap[cPattern,int].iterator it = relations.begin()
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubchildren(pattern.cpattern)
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
+
         cdef cPattern cpattern
         cdef int value
         while it != relations.end():
@@ -409,10 +411,10 @@ cdef class UnindexedPatternModel:
             pattern.bind(cpattern)
             yield tuple(pattern,value)
             inc(it)
-    
+
     def getsubparents(self, Pattern pattern):
-        cdef stdmap[cPattern,int] relations = self.data.getsubparents(pattern.cpattern)
-        cdef stdmap[cPattern,int].iterator it = relations.begin()
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubparents(pattern.cpattern)
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
         cdef cPattern cpattern
         cdef int value
         while it != relations.end():
@@ -422,10 +424,10 @@ cdef class UnindexedPatternModel:
             pattern.bind(cpattern)
             yield tuple(pattern,value)
             inc(it)
-    
+
     def getleftneighbours(self, Pattern pattern):
-        cdef stdmap[cPattern,int] relations = self.data.getleftneighbours(pattern.cpattern)
-        cdef stdmap[cPattern,int].iterator it = relations.begin()
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern)
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
         cdef cPattern cpattern
         cdef int value
         while it != relations.end():
@@ -437,8 +439,8 @@ cdef class UnindexedPatternModel:
             inc(it)
 
     def getrightneighbours(self, Pattern pattern):
-        cdef stdmap[cPattern,int] relations = self.data.getrightneighbours(pattern.cpattern)
-        cdef stdmap[cPattern,int].iterator it = relations.begin()
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern)
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
         cdef cPattern cpattern
         cdef int value
         while it != relations.end():
@@ -448,10 +450,10 @@ cdef class UnindexedPatternModel:
             pattern.bind(cpattern)
             yield tuple(pattern,value)
             inc(it)
-    
+
     def getskipcontent(self, Pattern pattern):
-        cdef stdmap[cPattern,int] relations = self.data.getskipcontent(pattern.cpattern)
-        cdef stdmap[cPattern,int].iterator it = relations.begin()
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getskipcontent(pattern.cpattern)
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
         cdef cPattern cpattern
         cdef int value
         while it != relations.end():
