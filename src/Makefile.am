@@ -5,7 +5,7 @@ bin_PROGRAMS = colibri-classdecode colibri-classencode colibri-test colibri-patt
 lib_LTLIBRARIES = libcolibricore.la
 
 libcolibricore_la_CXXFLAGS = -Wall 
-libcolibricore_la_SOURCES = SpookyV2.cpp common.cpp algorithms.cpp classdecoder.cpp classencoder.cpp pattern.cpp
+libcolibricore_la_SOURCES = SpookyV2.cpp common.cpp algorithms.cpp classdecoder.cpp classencoder.cpp pattern.cpp patternmodel.cpp
 
 colibri_classdecode_CXXFLAGS = -Wall 
 colibri_classdecode_LDADD = libcolibricore.la
