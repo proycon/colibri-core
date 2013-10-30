@@ -155,5 +155,6 @@ options.DOSKIPGRAMS = False
 
 print("Building unindexed model")
 
-
+unindexedmodel = colibricore.UnindexedPatternModel()
+unindexedmodel.train("/tmp/hamlet.colibri.dat",options)
 

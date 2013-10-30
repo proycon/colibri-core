@@ -146,6 +146,7 @@ cdef extern from "patternmodel.h":
         int MINSKIPTYPES
         bool DOREVERSEINDEX
         bool DEBUG
+        bool QUIET
 
     cdef cppclass IndexedDataHandler:
         int count(IndexedData &)

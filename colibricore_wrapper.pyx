@@ -518,3 +518,42 @@ cdef class UnindexedPatternModel:
 #            yield pattern
 #            inc(it)
 
+
+cdef class PatternModelOptions:
+    cdef cPatternModelOptions coptions
+
+    def __setattr__(self,key, value):
+        if key == 'MINTOKENS':
+            self.coptions.MINTOKENS = value
+        elif key == 'MAXLENGTH':
+            self.coptions.MAXLENGTH = value
+        elif key == 'DOSKIPGRAMS':
+            self.coptions.DOSKIPGRAMS = value
+        elif key == 'DOSKIPGRAMS_EXHAUSTIVE':
+            self.coptions.DOSKIPGRAMS_EXHAUSTIVE = value
+        elif key == 'MINSKIPTYPES':
+            self.coptions.MINSKIPTYPES = value
+        elif key == 'DOREVERSEINDEX':
+            self.coptions.DOREVERSEINDEX = value
+        elif key == 'DEBUG':
+            self.coptions.DEBUG = value
+        elif key == 'QUIET':
+            self.coptions.QUIET = value
+
+    def __getattr__(self,key):
+        if key == 'MINTOKENS':
+            return self.coptions.MINTOKENS
+        elif key == 'MAXLENGTH':
+            return self.coptions.MAXLENGTH
+        elif key == 'DOSKIPGRAMS':
+            return self.coptions.DOSKIPGRAMS
+        elif key == 'DOSKIPGRAMS_EXHAUSTIVE':
+            return self.coptions.DOSKIPGRAMS_EXHAUSTIVE
+        elif key == 'MINSKIPTYPES':
+            return self.coptions.MINSKIPTYPES
+        elif key == 'DOREVERSEINDEX':
+            return self.coptions.DOREVERSEINDEX
+        elif key == 'DEBUG':
+            return self.coptions.DEBUG
+        elif key == 'QUIET':
+            return self.coptions.QUIET
