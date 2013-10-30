@@ -32,6 +32,7 @@ cdef extern from "pattern.h":
         int ngrams(vector[Pattern] container,int n) nogil
         int parts(vector[Pattern] container) nogil
         int subngrams(vector[Pattern] container,int minn=0,int maxn=9) nogil
+        bool contains(Pattern&) nogil
         Pattern toflexgram() nogil
 
     cdef cppclass IndexReference:

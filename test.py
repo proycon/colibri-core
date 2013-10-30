@@ -41,3 +41,20 @@ print("Subgrams of ngram:")
 for subngram in ngram.subngrams():
     print(subngram.tostring(decoder))
 
+subngram = encoder.buildpattern("or not")
+print("Testing occurrence of substring 'or not'...")
+assert (subngram in ngram)
+
+subngram2 = encoder.buildpattern("to be")
+print("Testing occurrence of substring 'to be'...")
+assert (subngram2 in ngram)
+
+subngram = encoder.buildpattern("or")
+print("Testing occurrence of substring 'or'...")
+assert (subngram in ngram)
+
+print("Testing gram addition")
+ngramconc = subngram + subngram2
+assert (ngramconc.tostring(decoder) == "or not to be" )
+
+

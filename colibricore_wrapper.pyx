@@ -61,6 +61,11 @@ cdef class Pattern:
     def tostring(self, ClassDecoder decoder):
         return str(self.cpattern.tostring(deref(decoder.thisptr)),'utf-8')
 
+    def __contains__(self, Pattern pattern):
+        cdef bool r
+        r = self.cpattern.contains(pattern.cpattern)
+        return r
+
     def __len__(self):
         return self.cpattern.n()
 
