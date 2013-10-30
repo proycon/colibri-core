@@ -930,6 +930,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
     virtual void trainskipgrams(const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
+        cache_grouptotal.clear(); //forces recomputation of statistics
         std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
         for (int n = 3; n <= options.MAXLENGTH; n++) {
             if ((options.DOSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
@@ -1407,6 +1408,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     } 
 
     int computeflexgrams_fromskipgrams() {
+        cache_grouptotal.clear(); //forces recomputation of statistics
         int count = 0;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;
@@ -1425,6 +1427,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
     int computeflexgrams_fromcooc(double threshold) {
+        cache_grouptotal.clear(); //forces recomputation of statistics
         int found = 0;
         const unsigned char dynamicgap = 129;
         const Pattern dynamicpattern = Pattern(&dynamicgap,1);

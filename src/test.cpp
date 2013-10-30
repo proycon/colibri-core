@@ -612,6 +612,8 @@ int main( int argc, char *argv[] ) {
         cerr << "Found " << foundflex << " flexgrams" << endl;
         cerr << "outputting all" << endl;
         indexedmodel.print(&std::cerr, classdecoder);
+        cerr << "Outputting report again, now with flexgrams" << endl;
+        indexedmodel.report(&std::cerr);
 
     }
 }
