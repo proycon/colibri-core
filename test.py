@@ -36,6 +36,10 @@ print("Copying n-gram:")
 ngram3 = copy(ngram)
 print(ngram3.tostring(decoder))
 
+print("Equality check")
+assert( ngram == ngram3 )
+
+
 
 print("Subgrams of ngram:")
 for subngram in ngram.subngrams():
@@ -57,5 +61,23 @@ print("Testing gram addition:")
 ngramconc = subngram + subngram2
 print(ngramconc.tostring(decoder))
 assert (ngramconc.tostring(decoder) == "or not to be" )
+
+print("Testing sorting")
+for subngram in sorted(ngram.subngrams()):
+    print(subngram.tostring(decoder))
+
+print("Skipgram test")
+skipgram = encoder.buildpattern("To {*1*} or {*1*} to be")
+print("Skipgram: ", skipgram.tostring(decoder))
+print("Size: ", len(skipgram))
+print("Bytesize: ", skipgram.bytesize())
+print("Category==SKIPGRAM", (skipgram.category() == colibricore.Category.SKIPGRAM) )
+print("Hash: ", hash(skipgram))
+print("Skipcount check...")
+assert(skipgram.skipcount() == 2)
+
+print("Parts:")
+for part in skipgram.parts():
+    print(part.tostring(decoder))
 
 
