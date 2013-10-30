@@ -1468,6 +1468,49 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             *OUT << pattern1.tostring(classdecoder) << "\t" << pattern2.tostring(classdecoder) << "\t" << iter2->first << std::endl;
         }
     }
+
+    int flexgramsize(const Pattern & pattern, IndexReference begin) {
+        //attempt to find the flexgram size for the given begin position,
+        //returns 0 if the flexgram was not found at all
+        //if there are multiple matches, the shortest is returned
+        
+        if (pattern.category() != FLEXGRAM) return pattern.n();
+
+        std::vector<Pattern> parts;
+        int numberofparts = pattern.parts(parts);
+        bool strictbegin = true;
+        std::multimap<int, IndexReference> partmatches;
+        int i = 0;
+        for (std::multimap<Pattern,IndexReference>::iterator iter = this->reverseindex.lower_bound(begin); iter != this->reversindex.end(); iter++) {            
+            const Pattern part = iter->first;
+            IndexReference ref = iter->second;
+            if (ref.sentence > begin.sentence) break;
+            partmatches.insert(std::pair<int,IndexReference>(i, ref));
+            i++;
+        }
+
+        int firsttoken = begin.token;
+        IndexReference nextbegin = IndexReference(begin.sentence,999);
+        for (int j = 0; j < numberofparts; j++) {
+           //find a path
+           int prevlevel = -1;
+           bool found = false;
+           for (std::multimap<int, IndexReference>::iterator iter = partmatches.lower_bound(j); iter != partmatches.upper_bound(j); iter++) {
+                found = true;
+                if (iter->first != prevlevel) {
+                    begin = nextbegin;
+                    nextbegin = IndexReference(begin.sentence,999); //reset
+                }
+                if (((iter->second == begin) || (begin < iter->second)) && (iter->second + parts[j].n() + 1 < nextbegin)) {
+                    nextbegin = iter->second + parts[j].n() + 1;
+                }
+                prevlevel = iter->first;
+           }
+           if (!found) return 0;
+        }
+        return (nextbegin.token - firsttoken);
+    }
+
 };
 
 #endif
