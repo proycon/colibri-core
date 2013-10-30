@@ -181,6 +181,11 @@ cdef class Pattern:
             yield (p.first, p.second)
             inc(it)
 
+    def toflexgram(self):
+        cdef cPattern newcpattern = self.cpattern.toflexgram()
+        newpattern = Pattern()
+        newpattern.bind(newcpattern)
+        return newpattern
 
     def subngrams(self,int minn=0,int maxn=9):
         minn = max(1,minn)

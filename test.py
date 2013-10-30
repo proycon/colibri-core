@@ -84,3 +84,17 @@ print("Gaps:")
 for begin,length in skipgram.gaps():
     print(begin,length)
 
+print("Converting to flexgram")
+flexgram = skipgram.toflexgram()
+print("Flexgram: ", flexgram.tostring(decoder))
+print("Size: ", len(flexgram))
+print("Bytesize: ", flexgram.bytesize())
+print("Category==SKIPGRAM", (flexgram.category() == colibricore.Category.FLEXGRAM) )
+print("Hash: ", hash(flexgram))
+print("Skipcount check...")
+assert(flexgram.skipcount() == 2)
+
+print("Parts:")
+for part in flexgram.parts():
+    print(part.tostring(decoder))
+
