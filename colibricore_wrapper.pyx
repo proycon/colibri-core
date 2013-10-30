@@ -157,6 +157,8 @@ cdef class Pattern:
             inc(it)
 
     def subngrams(self,int minn=0,int maxn=9):
+        minn = max(1,minn)
+        maxn = min(maxn, len(self) -1 )
         for n in range(minn,maxn+1):
             for pattern in self.ngrams(n):
                 yield pattern

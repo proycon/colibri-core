@@ -489,10 +489,6 @@ Pattern & Pattern::operator =(const Pattern other) { //(note: argument passed by
     
     //set new data
     const int s = other.bytesize();        
-    if (s == 0) {
-        cerr << "Pattern operator=: other pattern is empty!" << endl;
-        throw InternalError();
-    }
     data = new unsigned char[s+1];   
     for (int i = 0; i < s; i++) {
         data[i] = other.data[i];
