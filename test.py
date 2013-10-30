@@ -4,6 +4,7 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 
 import os.path
 import sys
+from copy import copy
 
 try:
     import colibricore
@@ -22,7 +23,7 @@ ngram = encoder.buildpattern("To be or not to be")
 print("Ngram: ", ngram.tostring(decoder))
 print("Size: ", len(ngram))
 print("Bytesize: ", ngram.bytesize())
-print("Category==", (ngram.category() == colibricore.Category.NGRAM) )
+print("Category==NGRAM", (ngram.category() == colibricore.Category.NGRAM) )
 print("Hash: ", hash(ngram))
 
 
@@ -30,6 +31,11 @@ print("Slicing ngram")
 ngram2 = ngram[2:2]
 
 print("Sliced ngram: ", ngram2.tostring(decoder))
+
+print("Copying n-gram:")
+ngram3 = copy(ngram)
+print(ngram3.tostring(decoder))
+
 
 print("Subgrams of ngram:")
 for subngram in ngram.subngrams():

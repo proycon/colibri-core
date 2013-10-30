@@ -64,6 +64,20 @@ cdef class Pattern:
     def __len__(self):
         return self.cpattern.n()
 
+    def __copy__(self):
+        cdef cPattern c_pattern
+        c_pattern = cPattern(self.cpattern) #copy constructor
+        newpattern = Pattern()
+        newpattern.bind(c_pattern)
+        return newpattern
+
+    def __deepcopy__(self):
+        cdef cPattern c_pattern
+        c_pattern = cPattern(self.cpattern) #copy constructor
+        newpattern = Pattern()
+        newpattern.bind(c_pattern)
+        return newpattern
+
     def __getitem__(self, item):
         cdef cPattern c_pattern
         if isinstance(item, slice):

@@ -18,6 +18,7 @@ cdef extern from "pattern.h":
     cdef cppclass Pattern:
         Pattern() nogil
         Pattern(Pattern&, int,int) nogil
+        Pattern(Pattern&) nogil
         string tostring(ClassDecoder&) nogil
         int n() nogil
         int bytesize() nogil
@@ -194,7 +195,7 @@ cdef extern from "patternmodel.h":
         void report(ostream*) nogil
         void histogram(ostream*) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
-        
+
         t_relationmap getsubchildren(Pattern & pattern)
         t_relationmap getsubparents(Pattern & pattern)
         t_relationmap getleftneighbours(Pattern & pattern)
