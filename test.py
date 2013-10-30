@@ -49,12 +49,13 @@ subngram2 = encoder.buildpattern("to be")
 print("Testing occurrence of substring 'to be'...")
 assert (subngram2 in ngram)
 
-subngram = encoder.buildpattern("or")
+subngram3 = encoder.buildpattern("or")
 print("Testing occurrence of substring 'or'...")
-assert (subngram in ngram)
+assert (subngram3 in ngram)
 
-print("Testing gram addition")
+print("Testing gram addition:")
 ngramconc = subngram + subngram2
+print(ngramconc.tostring(decoder))
 assert (ngramconc.tostring(decoder) == "or not to be" )
 
 

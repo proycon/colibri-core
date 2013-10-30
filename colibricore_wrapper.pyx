@@ -55,6 +55,9 @@ cdef class Pattern:
 
     cdef cPattern cpattern
 
+    cdef cPattern getcpattern(self):
+        return self.cpattern
+
     cdef bind(self, cPattern cpattern):
         self.cpattern = cpattern
 
@@ -82,6 +85,15 @@ cdef class Pattern:
         newpattern = Pattern()
         newpattern.bind(c_pattern)
         return newpattern
+
+    def concat(self, Pattern pattern):
+        cdef cPattern newcpattern = self.cpattern + pattern.cpattern
+        newpattern = Pattern()
+        newpattern.bind(newcpattern)
+        return newpattern
+
+    def __add__(self, Pattern other):
+        return self.concat(other)
 
     def __getitem__(self, item):
         cdef cPattern c_pattern
@@ -133,9 +145,6 @@ cdef class Pattern:
         newpattern = Pattern()
         newpattern.bind(newcpattern)
         return newpattern
-
-    def __add__(self, Pattern other):
-        return self.add(other)
 
     def ngrams(self,int n=0):
         cdef vector[cPattern] result
