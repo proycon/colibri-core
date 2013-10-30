@@ -81,6 +81,7 @@ AS_IF([test "x$with_folia" = "xyes"], [
 # Checks for library functions.
 
 AC_CONFIG_FILES([
+  colibri-core.pc
   Makefile
   src/Makefile
   include/Makefile

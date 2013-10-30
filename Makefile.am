@@ -5,10 +5,8 @@ ACLOCAL_AMFLAGS = -I m4 --install
 
 SUBDIRS = src include
 
-#EXTRA_DIST = bootstrap AUTHORS TODO NEWS ucto.pc.in ucto-icu.pc.in
+EXTRA_DIST = bootstrap AUTHORS TODO NEWS colibri-core.pc.in
 
-#pkgconfigdir = $(libdir)/pkgconfig
-#pkgconfig_DATA = ucto.pc ucto-icu.pc
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = colibri-core.pc
 
-#ChangeLog: NEWS
-#	svn update; svn2cl --include-rev
