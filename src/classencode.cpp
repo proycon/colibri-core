@@ -10,6 +10,7 @@ void usage() {
     cerr << "Syntax: classencoder [ -c classmodel ] corpus [corpus2 etc..]" << endl;
     cerr << "Description: Encodes a corpus. If used with -c, encodes a corpus according to the specified pre-existing class model" << endl;
     cerr << "Options: -o    outputprefix for class file" << endl;
+    cerr << "         -d    output directory, including trailing slash" << endl;
     cerr << "         -l    read input filenames from list-file (one filename per line)" << endl;
     cerr << "         -u    produce one unified encoded corpus (in case multiple corpora are specified)" << endl;
     cerr << "         -e    extend specified class file with unseen classes" << endl;
@@ -20,6 +21,7 @@ int main( int argc, char *argv[] ) {
     string classfile = "";
     string corpusfile = "";
     string outputprefix = "";
+    string outputdirectoryprefix = "";
     vector<string> corpusfiles;
     bool unified = false;
     bool extend = false;
@@ -28,7 +30,7 @@ int main( int argc, char *argv[] ) {
     string tmpfilename;
     
     char c;    
-    while ((c = getopt(argc, argv, "f:h:c:o:ul:eU")) != -1) {
+    while ((c = getopt(argc, argv, "f:h:c:o:d:ul:eU")) != -1) {
         switch (c)
         {
         case 'f': //keep for backward compatibility
@@ -41,6 +43,9 @@ int main( int argc, char *argv[] ) {
         case 'o':
             outputprefix = optarg;
             break;
+        case 'd':
+        	outputdirectoryprefix = optarg;
+        	break;
         case 'u':
             unified = true;
             break;
@@ -93,22 +98,22 @@ int main( int argc, char *argv[] ) {
 
     ClassEncoder classencoder;
     
-    
+    string prefixedoutputprefix = outputdirectoryprefix + outputprefix;
     if (!classfile.empty()) {
         cerr << "Loading classes from file" << endl;
         classencoder = ClassEncoder(classfile);
         if (extend) {
             cerr << "Building classes from corpus (extending existing classes)" << endl;
             classencoder.build(corpusfiles);
-            classencoder.save(outputprefix + ".colibri.cls");
-            cerr << "Built " << outputprefix << ".colibri.cls , extending " << classfile << endl;          
+            classencoder.save(prefixedoutputprefix + ".colibri.cls");
+            cerr << "Built " << prefixedoutputprefix << ".colibri.cls , extending " << classfile << endl;
         }
     } else {
         cerr << "Building classes from corpus" << endl;
         classencoder = ClassEncoder();
         classencoder.build(corpusfiles);
-        classencoder.save(outputprefix + ".colibri.cls");
-        cerr << "Built " << outputprefix << ".colibri.cls" << endl;            
+        classencoder.save(prefixedoutputprefix + ".colibri.cls");
+        cerr << "Built " << prefixedoutputprefix << ".colibri.cls" << endl;
     }   
     
     int highestclass = classencoder.gethighestclass();
@@ -119,9 +124,10 @@ int main( int argc, char *argv[] ) {
         } else {
             strip_extension(outfile,"txt");
             strip_extension(outfile,"xml");
-        }       
-        classencoder.encodefile(corpusfiles[i], outfile + ".colibri.dat", allowunknown, extend, unified);
-        cerr << "Encoded corpus " << corpusfiles[i] << " in " << outfile << ".colibri.dat" << endl;
+        }
+        string prefixedoutfile = outputdirectoryprefix + outfile;
+        classencoder.encodefile(corpusfiles[i], prefixedoutfile + ".colibri.dat", allowunknown, extend, unified);
+        cerr << "Encoded corpus " << corpusfiles[i] << " in " << prefixedoutfile << ".colibri.dat" << endl;
     }
 
     if ((classencoder.gethighestclass() > highestclass)) {
