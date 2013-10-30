@@ -794,7 +794,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                         } else if (c == SKIPGRAM) {
                             *OUT << std::setw(10) << "skipgram";
                         } else if (c == FLEXGRAM) {
-                            *OUT << std::setw(10) << "dyn.skip.";
+                            *OUT << std::setw(10) << "flexgram";
                         }
                         if (n == 0) {
                             *OUT << std::setw(10) << "all";
