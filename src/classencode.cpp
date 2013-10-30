@@ -124,11 +124,13 @@ int main( int argc, char *argv[] ) {
         cerr << "Encoded corpus " << corpusfiles[i] << " in " << outfile << ".colibri.dat" << endl;
     }
 
-    if ((classencoder.gethighestclass() > highestclass) && (extend)) {
-        classencoder.save(outputprefix + ".colibri.cls");
-        cerr << "Built " << outputprefix << ".colibri.cls" << endl;            
-    } else {
-        cerr << "WARNING: classes were added but the result was ignored! Use -e!" << endl;
+    if ((classencoder.gethighestclass() > highestclass)) {
+        if (extend) {
+            classencoder.save(outputprefix + ".colibri.cls");
+            cerr << "Built " << outputprefix << ".colibri.cls" << endl;            
+        } else {
+            cerr << "WARNING: classes were added but the result was ignored! Use -e!" << endl;
+        }
     }
     
 }
