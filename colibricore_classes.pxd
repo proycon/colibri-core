@@ -30,7 +30,8 @@ cdef extern from "pattern.h":
         bint operator>(Pattern&) nogil
         Pattern operator+(Pattern&) nogil
         int ngrams(vector[Pattern] container,int n) nogil
-        int parts(vector[Pattern] container) nogil
+        int parts(vector[Pattern]& container) nogil
+        int gaps(vector[pair[int,int]]& container) nogil
         int subngrams(vector[Pattern] container,int minn=0,int maxn=9) nogil
         bool contains(Pattern&) nogil
         Pattern toflexgram() nogil

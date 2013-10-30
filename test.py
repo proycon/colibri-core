@@ -80,4 +80,7 @@ print("Parts:")
 for part in skipgram.parts():
     print(part.tostring(decoder))
 
+print("Gaps:")
+for begin,length in skipgram.gaps():
+    print(begin,length)
 

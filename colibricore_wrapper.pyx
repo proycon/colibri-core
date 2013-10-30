@@ -7,6 +7,7 @@ from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as 
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
+from libcpp.utility cimport pair
 
 class Category:
     NGRAM=1
@@ -169,6 +170,17 @@ cdef class Pattern:
             ngram.bind(cngram)
             yield ngram
             inc(it)
+
+    def gaps(self):
+        cdef vector[pair[int,int]] result
+        self.cpattern.gaps(result)
+        cdef vector[pair[int,int]].iterator it = result.begin()
+        cdef pair[int,int] p
+        while it != result.end():
+            p  = deref(it)
+            yield (p.first, p.second)
+            inc(it)
+
 
     def subngrams(self,int minn=0,int maxn=9):
         minn = max(1,minn)
