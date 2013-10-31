@@ -425,7 +425,7 @@ cdef class UnindexedPatternModel:
     def load(self, str filename, PatternModelOptions options=None):
         if not options:
             options = PatternModelOptions()
-        self.data.load(filename, options.coptions)
+        self.data.load(filename.encode('utf-8'), options.coptions)
 
     cpdef write(self, str filename):
         self.write(filename)
