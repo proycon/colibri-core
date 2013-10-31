@@ -414,20 +414,18 @@ cdef class UnindexedPatternModel:
             yield tuple(pattern,value)
             inc(it)
 
-    def __init__(self, str filename = "",threshold=2, doskipgrams=False, maxlength=99, minskiptypes=2):
+    def __init__(self, str filename = "",PatternModelOptions options = None):
         if filename:
-            self.load(filename,threshold, doskipgrams, maxlength, minskiptypes)
+            if not options:
+                options = PatternModelOptions()
+            self.load(filename,options)
 
 
 
-    cpdef load(self, str filename, threshold=2, doskipgrams=False, maxlength=99, minskiptypes=2):
-        cdef cPatternModelOptions options
-        options.MINTOKENS = threshold
-        options.DOSKIPGRAMS = doskipgrams
-        options.MAXLENGTH = maxlength
-        options.MINSKIPTYPES = minskiptypes
-        options.DOREVERSEINDEX = True
-        self.data.load(filename, options)
+    def load(self, str filename, PatternModelOptions options=None):
+        if not options:
+            options = PatternModelOptions()
+        self.data.load(filename, options.coptions)
 
     cpdef write(self, str filename):
         self.write(filename)

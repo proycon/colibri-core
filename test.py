@@ -148,13 +148,15 @@ with open('/tmp/hamlet.txt','w',encoding='utf-8') as f:
 print("Class encoding corpus...")
 os.system("colibri-classencode /tmp/hamlet.txt");
 
-print("Loading unindexed corpus")
-unindexedmodel = colibricore.UnindexedPatternModel("/tmp/data.colibri.patternmodel")
-
 options = colibricore.PatternModelOptions()
 options.DOREVERSEINDEX = True
 options.DOSKIPGRAMS_EXHAUSTIVE = True
 options.DOSKIPGRAMS = False
+print(options.DOSKIPGRAMS)
+
+print("Loading unindexed corpus")
+unindexedmodel = colibricore.UnindexedPatternModel("/tmp/data.colibri.patternmodel")
+
 
 #print("Building unindexed model")
 

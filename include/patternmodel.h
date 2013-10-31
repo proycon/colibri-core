@@ -203,7 +203,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             maxn = 0;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
+            if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
+            if (!in->good()) {
+                std::cerr << "ERROR: Unable to load file " << filename << std::endl;
+                throw InternalError();
+            }
             this->load( (std::istream *) in, options);
             in->close();
             delete in;
@@ -220,7 +225,12 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
         
         virtual void load(std::string filename, const PatternModelOptions options) {
+            if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
+            if (!in->good()) {
+                std::cerr << "ERROR: Unable to load file " << filename << std::endl;
+                throw InternalError();
+            }
             this->load( (std::istream *) in, options);
             in->close();
             delete in;
