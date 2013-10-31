@@ -125,7 +125,14 @@ int main( int argc, char *argv[] ) {
             strip_extension(outfile,"txt");
             strip_extension(outfile,"xml");
         }
-        string prefixedoutfile = outputdirectoryprefix + outfile;
+
+        string prefixedoutfile = outfile;
+        if(outputdirectoryprefix.compare("")) // output directory given
+        {
+        	std::string barename = outfile.substr(outfile.find_last_of("/") + 1, outfile.length());
+        	prefixedoutfile = outputdirectoryprefix + "/" + barename;
+        }
+
         classencoder.encodefile(corpusfiles[i], prefixedoutfile + ".colibri.dat", allowunknown, extend, unified);
         cerr << "Encoded corpus " << corpusfiles[i] << " in " << prefixedoutfile << ".colibri.dat" << endl;
     }
