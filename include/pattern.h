@@ -20,6 +20,7 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <array>
 #include <unordered_set>
 #include <iomanip> // contains setprecision()
 #include <exception>
@@ -651,6 +652,41 @@ class OrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType
                 return &(*iter);
             }
         }
+};
+
+
+template<class T,size_t N,int countindex = 0>
+class ArrayValueHandler: public AbstractValueHandler<T> {
+   public:
+    const static bool indexed = false;
+    void read(std::istream * in, std::array<T,N> & a) {
+        for (int i = 0; i < N; i++) {
+            T v;
+            in->read( (char*) &v, sizeof(T)); 
+            a[i] = v;
+        }
+    }
+    void write(std::ostream * out, std::array<T,N> & a) {
+        for (int i = 0; i < N; i++) {
+            T v = a[i];
+            out->write( (char*) &v, sizeof(T)); 
+        }
+    }
+    std::string tostring(std::array<T,N> & a) {
+        std::string s;
+        for (int i = 0; i < N; i++) {
+            T v = a[i];
+            if (!s.empty()) s += " ";
+            s += " " + tostring(a[i]);
+        }
+        return s;
+    }
+    int count(std::array<T,N> & a) const {
+        return (int) a[countindex];
+    }
+    void add(std::array<T,N> * value, const IndexReference & ref ) const {
+        (*value)[countindex] += 1;
+    }
 };
 
 
