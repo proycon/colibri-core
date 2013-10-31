@@ -150,6 +150,7 @@ os.system("colibri-classencode /tmp/hamlet.txt");
 
 print("Loading new decoder")
 decoder = colibricore.ClassDecoder("/tmp/hamlet.colibri.cls")
+encoder = colibricore.ClassEncoder("/tmp/hamlet.colibri.cls")
 
 options = colibricore.PatternModelOptions()
 options.DOREVERSEINDEX = True
@@ -185,6 +186,8 @@ print("iterating over all patterns and values")
 for pattern, value in unindexedmodel.items():
     print(pattern.tostring(decoder), value)
 
+print("Extracting count for specific pattern")
+print(unindexedmodel[encoder.buildpattern("to be")])
 
 options = colibricore.PatternModelOptions()
 options.DOREVERSEINDEX = True
@@ -211,3 +214,6 @@ indexedmodel = colibricore.IndexedPatternModel("/tmp/data.colibri.indexedpattern
 print("iterating over all patterns and values")
 for pattern, value in indexedmodel.items():
     print(pattern.tostring(decoder), len(value))
+
+print("Extracting count for specific pattern")
+print(len(indexedmodel[encoder.buildpattern("to be")]))

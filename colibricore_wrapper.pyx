@@ -219,6 +219,9 @@ cdef class IndexedData:
     def __len__(self):
         return self.data.size()
 
+    def __int__(self):
+        return self.data.size()
+
 
 cdef class IndexedPatternModel:
     cdef cIndexedPatternModel[cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]] data
@@ -245,15 +248,23 @@ cdef class IndexedPatternModel:
         return self.data.version()
 
     def occurrencecount(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.data.occurrencecount(pattern.cpattern)
 
     def coveragecount(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.data.coveragecount(pattern.cpattern)
 
     def coverage(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.data.coverage(pattern.cpattern)
 
     def frequency(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.data.coverage(pattern.cpattern)
 
 
@@ -270,18 +281,23 @@ cdef class IndexedPatternModel:
         return self.data.totalwordtypesingroup(category,n)
 
     cpdef has(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.data.has(pattern.cpattern)
 
     def __contains__(self, pattern):
-        assert isinstance(pattern, Pattern)
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.has(pattern)
 
     def __getitem__(self, pattern):
-        assert isinstance(pattern, Pattern)
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.getdata(pattern)
 
     cdef getdata(self, Pattern pattern):
-        assert isinstance(pattern, Pattern)
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         cdef cIndexedData cvalue
         if pattern in self:
             cvalue = self.data[pattern.cpattern]
@@ -349,6 +365,8 @@ cdef class IndexedPatternModel:
         self.data.prune(threshold, n)
 
     def getsubchildren(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubchildren(pattern.cpattern)
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
 
@@ -363,6 +381,8 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def getsubparents(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubparents(pattern.cpattern)
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
         cdef cPattern cpattern
@@ -376,6 +396,8 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def getleftneighbours(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern)
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
         cdef cPattern cpattern
@@ -389,6 +411,8 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def getrightneighbours(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern)
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
         cdef cPattern cpattern
@@ -402,6 +426,8 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def getskipcontent(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getskipcontent(pattern.cpattern)
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
         cdef cPattern cpattern
@@ -439,15 +465,23 @@ cdef class UnindexedPatternModel:
         return self.data.version()
 
     def occurrencecount(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.data.occurrencecount(pattern.cpattern)
 
     def coveragecount(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.data.coveragecount(pattern.cpattern)
 
     def coverage(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.data.coverage(pattern.cpattern)
 
     def frequency(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.data.coverage(pattern.cpattern)
 
 
@@ -464,18 +498,23 @@ cdef class UnindexedPatternModel:
         return self.data.totalwordtypesingroup(category,n)
 
     cdef has(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.data.has(pattern.cpattern)
 
     def __contains__(self, pattern):
-        assert isinstance(pattern, Pattern)
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.has(pattern)
 
     def __getitem__(self, pattern):
-        assert isinstance(pattern, Pattern)
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         return self.getdata(pattern)
 
     cpdef getdata(self, Pattern pattern):
-        assert isinstance(pattern, Pattern)
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
         cdef cIndexedData cvalue
         if pattern in self:
             return self.data[pattern.cpattern]
