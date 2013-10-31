@@ -154,12 +154,22 @@ options.DOSKIPGRAMS_EXHAUSTIVE = True
 options.DOSKIPGRAMS = False
 print(options.DOSKIPGRAMS)
 
+
+
+print("Building unindexed model")
+unindexedmodel = colibricore.UnindexedPatternModel()
+unindexedmodel.train("/tmp/hamlet.colibri.dat",options)
+
+print("Found ", len(unindexedmodel), " patterns, " , unindexedmodel.types()," types, " , unindexedmodel.tokens(), " tokens")
+unindexedmodel.printmodel(decoder);
+print("REPORT:")
+unindexedmodel.report();
+print("HISTOGRAM:")
+unindexedmodel.histogram();
+
+outputfilename = "/tmp/data.colibri.patternmodel"
+print("Writing to file")
+unindexedmodel.write(outputfilename);
+
 print("Loading unindexed corpus")
 unindexedmodel = colibricore.UnindexedPatternModel("/tmp/data.colibri.patternmodel")
-
-
-#print("Building unindexed model")
-
-#unindexedmodel = colibricore.UnindexedPatternModel()
-#unindexedmodel.train("/tmp/hamlet.colibri.dat",options)
-

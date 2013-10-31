@@ -428,7 +428,7 @@ cdef class UnindexedPatternModel:
         self.data.load(filename.encode('utf-8'), options.coptions)
 
     cpdef write(self, str filename):
-        self.write(filename)
+        self.data.write(filename.encode('utf-8'))
 
     cpdef printmodel(self,ClassDecoder decoder):
         self.data.printmodel(&cout, deref(decoder.thisptr) )
