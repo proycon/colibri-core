@@ -1,6 +1,16 @@
 #ifndef CLASSENCODER_H
 #define CLASSENCODER_H
 
+/*****************************
+* Colibri Core
+*   by Maarten van Gompel
+*   Centre for Language Studies
+*   Radboud University Nijmegen
+*
+*   http://proycon.github.io/colibri-core
+*   
+*   Licensed under GPLv3
+*****************************/
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif

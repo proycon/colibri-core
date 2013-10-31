@@ -3,6 +3,16 @@
 #include <cmath>
 #include <iostream>
 
+/*****************************
+* Colibri Core
+*   by Maarten van Gompel
+*   Centre for Language Studies
+*   Radboud University Nijmegen
+*
+*   http://proycon.github.io/colibri-core
+*   
+*   Licensed under GPLv3
+*****************************/
 using namespace std;
 
 unsigned int bytestoint(const unsigned char* a, const int l) {

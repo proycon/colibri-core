@@ -1,6 +1,17 @@
 #ifndef COLIBRIPATTERN_H
 #define COLIBRIPATTERN_H
 
+/*****************************
+* Colibri Core
+*   by Maarten van Gompel
+*   Centre for Language Studies
+*   Radboud University Nijmegen
+*
+*   http://proycon.github.io/colibri-core
+*   
+*   Licensed under GPLv3
+*****************************/
+
 #include <string>
 #include <iostream>
 #include <ostream>

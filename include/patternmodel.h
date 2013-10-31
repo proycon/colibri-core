@@ -1,6 +1,17 @@
 #ifndef PATTERNMODEL_H
 #define PATTERNMODEL_H
 
+/*****************************
+* Colibri Core
+*   by Maarten van Gompel
+*   Centre for Language Studies
+*   Radboud University Nijmegen
+*
+*   http://proycon.github.io/colibri-core
+*   
+*   Licensed under GPLv3
+*****************************/
+
 #include "pattern.h"
 #include "classencoder.h"
 #include "algorithms.h"

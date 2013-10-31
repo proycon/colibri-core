@@ -1,3 +1,11 @@
+/*****************************
+* Colibri Core
+*   by Maarten van Gompel
+*   Centre for Language Studies
+*   Radboud University Nijmegen
+*
+*   Licensed under GPLv3
+*****************************/
 #include <fstream>
 #include <iostream>
 #include <string>

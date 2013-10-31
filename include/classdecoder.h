@@ -1,5 +1,15 @@
 #ifndef CLASSDECODER_H
 #define CLASSDECODER_H
+/*****************************
+* Colibri Core
+*   by Maarten van Gompel
+*   Centre for Language Studies
+*   Radboud University Nijmegen
+*
+*   http://proycon.github.io/colibri-core
+*   
+*   Licensed under GPLv3
+*****************************/
 
 #include <unordered_map>
 #include <string>

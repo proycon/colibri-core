@@ -4,6 +4,16 @@
 #include "getopt.h"
 #include <common.h>
 
+/*****************************
+* Colibri Core
+*   by Maarten van Gompel
+*   Centre for Language Studies
+*   Radboud University Nijmegen
+*
+*   http://proycon.github.io/colibri-core
+*   
+*   Licensed under GPLv3
+*****************************/
 using namespace std;
 
 void usage() {
