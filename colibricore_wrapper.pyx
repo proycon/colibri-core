@@ -434,7 +434,7 @@ cdef class UnindexedPatternModel:
         self.data.printmodel(&cout, deref(decoder.thisptr) )
 
     cpdef train(self, str filename, PatternModelOptions options):
-        self.data.train(filename,options.coptions)
+        self.data.train(filename.encode('utf-8'),options.coptions)
 
     cpdef report(self):
         self.data.report(&cout)
