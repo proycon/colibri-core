@@ -208,6 +208,54 @@ cdef extern from "patternmodel.h":
         t_relationmap getskipcontent(Pattern & pattern)
 
 
+    cdef cppclass IndexedPatternModel[MapType]:
+        cppclass iterator:
+            pair[Pattern,IndexedData] & operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        iterator begin() nogil
+        iterator end() nogil
+        PatternModel() nogil
+        int types() nogil
+        int tokens() nogil
+        int type() nogil
+        int version() nogil
+        int maxlength() nogil
+        int minlength() nogil
+        int occurrencecount(Pattern&) nogil
+        int coveragecount(Pattern&) nogil
+        float coverage(Pattern&) nogil
+        float frequency(Pattern&) nogil
+
+        void train(string filename, PatternModelOptions options)
+
+        int totaloccurrencesingroup(int category, int n)
+        int totalpatternsingroup(int category, int n)
+        int totaltokensingroup(int category, int n)
+        int totalwordtypesingroup(int category, int n)
+
+        void insert(Pattern&, IndexedData& value) nogil
+        bool has(Pattern&) nogil
+        int size() nogil
+        IndexedData& operator[](Pattern&) nogil
+        iterator erase(Pattern&) nogil
+        int prune(int threshold, int n) nogil
+        iterator find(Pattern&) nogil
+        void load(string, PatternModelOptions) nogil
+        void write(string) nogil
+        void printmodel(ostream*, ClassDecoder&) nogil
+        void printpattern(ostream*, ClassDecoder&, Pattern&) nogil
+        void report(ostream*) nogil
+        void histogram(ostream*) nogil
+        void outputrelations(Pattern&,ClassDecoder&, ostream*)
+
+        t_relationmap getsubchildren(Pattern & pattern)
+        t_relationmap getsubparents(Pattern & pattern)
+        t_relationmap getleftneighbours(Pattern & pattern)
+        t_relationmap getrightneighbours(Pattern & pattern)
+        t_relationmap getskipcontent(Pattern & pattern)
+
 #    cdef cppclass NGramData(AnyGramData):
 #        cppset[CorpusReference] refs
 #        int count()

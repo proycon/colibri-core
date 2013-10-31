@@ -173,3 +173,27 @@ unindexedmodel.write(outputfilename);
 
 print("Loading unindexed corpus")
 unindexedmodel = colibricore.UnindexedPatternModel("/tmp/data.colibri.patternmodel")
+
+
+options = colibricore.PatternModelOptions()
+options.DOREVERSEINDEX = True
+options.DOSKIPGRAMS_EXHAUSTIVE = False
+options.DOSKIPGRAMS = True
+print("Building indexed model")
+indexedmodel = colibricore.IndexedPatternModel()
+indexedmodel.train("/tmp/hamlet.colibri.dat",options)
+
+print("Found ", len(indexedmodel), " patterns, " , indexedmodel.types()," types, " , indexedmodel.tokens(), " tokens")
+indexedmodel.printmodel(decoder);
+print("REPORT:")
+indexedmodel.report();
+print("HISTOGRAM:")
+indexedmodel.histogram();
+
+outputfilename = "/tmp/data.colibri.indexedpatternmodel"
+print("Writing to file")
+indexedmodel.write(outputfilename);
+
+print("Loading indexed corpus")
+indexedmodel = colibricore.IndexedPatternModel("/tmp/data.colibri.indexedpatternmodel")
+

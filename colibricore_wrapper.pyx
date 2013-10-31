@@ -3,7 +3,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
@@ -221,7 +221,7 @@ cdef class IndexedData:
 
 
 cdef class IndexedPatternModel:
-    cdef cPatternModel[cIndexedData,cIndexedDataHandler,cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]] data
+    cdef cIndexedPatternModel[cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]] data
 
     def __len__(self):
         return self.data.size()
@@ -306,17 +306,22 @@ cdef class IndexedPatternModel:
             yield tuple(pattern,value)
             inc(it)
 
-    cpdef load(self, str filename, threshold=2, doskipgrams=False, maxlength=99, minskiptypes=2):
-        cdef cPatternModelOptions options
-        options.MINTOKENS = threshold
-        options.DOSKIPGRAMS = doskipgrams
-        options.MAXLENGTH = maxlength
-        options.MINSKIPTYPES = minskiptypes
-        options.DOREVERSEINDEX = True
-        self.data.load(filename, options)
+    def __init__(self, str filename = "",PatternModelOptions options = None):
+        if filename:
+            if not options:
+                options = PatternModelOptions()
+            self.load(filename,options)
+
+    def load(self, str filename, PatternModelOptions options=None):
+        if not options:
+            options = PatternModelOptions()
+        self.data.load(filename.encode('utf-8'), options.coptions)
 
     cpdef write(self, str filename):
-        self.write(filename)
+        self.data.write(filename.encode('utf-8'))
+
+    cpdef train(self, str filename, PatternModelOptions options):
+        self.data.train(filename.encode('utf-8'),options.coptions)
 
     cpdef printmodel(self,ClassDecoder decoder):
         self.data.printmodel(&cout, deref(decoder.thisptr) )
@@ -332,6 +337,72 @@ cdef class IndexedPatternModel:
 
     cpdef prune(self, int threshold, int n=0):
         self.data.prune(threshold, n)
+
+    def getsubchildren(self, Pattern pattern):
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubchildren(pattern.cpattern)
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
+
+        cdef cPattern cpattern
+        cdef int value
+        while it != relations.end():
+            cpattern = deref(it).first
+            value = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield tuple(pattern,value)
+            inc(it)
+
+    def getsubparents(self, Pattern pattern):
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubparents(pattern.cpattern)
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
+        cdef cPattern cpattern
+        cdef int value
+        while it != relations.end():
+            cpattern = deref(it).first
+            value = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield tuple(pattern,value)
+            inc(it)
+
+    def getleftneighbours(self, Pattern pattern):
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern)
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
+        cdef cPattern cpattern
+        cdef int value
+        while it != relations.end():
+            cpattern = deref(it).first
+            value = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield tuple(pattern,value)
+            inc(it)
+
+    def getrightneighbours(self, Pattern pattern):
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern)
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
+        cdef cPattern cpattern
+        cdef int value
+        while it != relations.end():
+            cpattern = deref(it).first
+            value = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield tuple(pattern,value)
+            inc(it)
+
+    def getskipcontent(self, Pattern pattern):
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getskipcontent(pattern.cpattern)
+        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
+        cdef cPattern cpattern
+        cdef int value
+        while it != relations.end():
+            cpattern = deref(it).first
+            value = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield tuple(pattern,value)
+            inc(it)
 
 cdef class UnindexedPatternModel:
     cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]] data
@@ -420,8 +491,6 @@ cdef class UnindexedPatternModel:
                 options = PatternModelOptions()
             self.load(filename,options)
 
-
-
     def load(self, str filename, PatternModelOptions options=None):
         if not options:
             options = PatternModelOptions()
@@ -448,71 +517,6 @@ cdef class UnindexedPatternModel:
     cpdef prune(self, int threshold, int n=0):
         self.data.prune(threshold, n)
 
-    def getsubchildren(self, Pattern pattern):
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubchildren(pattern.cpattern)
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
-
-        cdef cPattern cpattern
-        cdef int value
-        while it != relations.end():
-            cpattern = deref(it).first
-            value = deref(it).second
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield tuple(pattern,value)
-            inc(it)
-
-    def getsubparents(self, Pattern pattern):
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubparents(pattern.cpattern)
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
-        cdef cPattern cpattern
-        cdef int value
-        while it != relations.end():
-            cpattern = deref(it).first
-            value = deref(it).second
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield tuple(pattern,value)
-            inc(it)
-
-    def getleftneighbours(self, Pattern pattern):
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern)
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
-        cdef cPattern cpattern
-        cdef int value
-        while it != relations.end():
-            cpattern = deref(it).first
-            value = deref(it).second
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield tuple(pattern,value)
-            inc(it)
-
-    def getrightneighbours(self, Pattern pattern):
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern)
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
-        cdef cPattern cpattern
-        cdef int value
-        while it != relations.end():
-            cpattern = deref(it).first
-            value = deref(it).second
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield tuple(pattern,value)
-            inc(it)
-
-    def getskipcontent(self, Pattern pattern):
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getskipcontent(pattern.cpattern)
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
-        cdef cPattern cpattern
-        cdef int value
-        while it != relations.end():
-            cpattern = deref(it).first
-            value = deref(it).second
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield tuple(pattern,value)
-            inc(it)
 
 #    def reverseindex(self, int index):
 #        #cdef vector[const pycolibri_classes.EncAnyGram *] v = self.thisptr.reverse_index[index]
@@ -546,6 +550,8 @@ cdef class PatternModelOptions:
             self.coptions.DEBUG = value
         elif key == 'QUIET':
             self.coptions.QUIET = value
+        else:
+            raise KeyError
 
     def __getattr__(self,key):
         if key == 'MINTOKENS':
@@ -564,3 +570,5 @@ cdef class PatternModelOptions:
             return self.coptions.DEBUG
         elif key == 'QUIET':
             return self.coptions.QUIET
+        else:
+            raise KeyError
