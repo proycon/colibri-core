@@ -148,6 +148,9 @@ with open('/tmp/hamlet.txt','w',encoding='utf-8') as f:
 print("Class encoding corpus...")
 os.system("colibri-classencode /tmp/hamlet.txt");
 
+print("Loading new decoder")
+decoder = colibricore.ClassDecoder("/tmp/hamlet.colibri.cls")
+
 options = colibricore.PatternModelOptions()
 options.DOREVERSEINDEX = True
 options.DOSKIPGRAMS_EXHAUSTIVE = True
@@ -174,6 +177,14 @@ unindexedmodel.write(outputfilename);
 print("Loading unindexed corpus")
 unindexedmodel = colibricore.UnindexedPatternModel("/tmp/data.colibri.patternmodel")
 
+print("iterating over all patterns")
+for pattern in unindexedmodel:
+    print(pattern.tostring(decoder))
+
+print("iterating over all patterns and values")
+for pattern, value in unindexedmodel.items():
+    print(pattern.tostring(decoder), value)
+
 
 options = colibricore.PatternModelOptions()
 options.DOREVERSEINDEX = True
@@ -197,3 +208,6 @@ indexedmodel.write(outputfilename);
 print("Loading indexed corpus")
 indexedmodel = colibricore.IndexedPatternModel("/tmp/data.colibri.indexedpatternmodel")
 
+print("iterating over all patterns and values")
+for pattern, value in indexedmodel.items():
+    print(pattern.tostring(decoder), len(value))

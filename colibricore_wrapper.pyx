@@ -213,7 +213,7 @@ cdef class IndexedData:
         cdef cIndexedData.iterator it = self.data.begin()
         while it != self.data.end():
             ref  = deref(it)
-            yield tuple(ref.sentence, ref.token)
+            yield (ref.sentence, ref.token)
             inc(it)
 
     def __len__(self):
@@ -295,6 +295,16 @@ cdef class IndexedPatternModel:
     def __iter__(self):
         cdef cPatternModel[cIndexedData,cIndexedDataHandler,cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]].iterator it = self.data.begin()
         cdef cPattern cpattern
+        while it != self.data.end():
+            cpattern = deref(it).first
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield pattern
+            inc(it)
+
+    def items(self):
+        cdef cPatternModel[cIndexedData,cIndexedDataHandler,cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]].iterator it = self.data.begin()
+        cdef cPattern cpattern
         cdef cIndexedData cvalue
         while it != self.data.end():
             cpattern = deref(it).first
@@ -303,7 +313,7 @@ cdef class IndexedPatternModel:
             pattern.bind(cpattern)
             value = IndexedData()
             value.bind(cvalue)
-            yield tuple(pattern,value)
+            yield (pattern,value)
             inc(it)
 
     def __init__(self, str filename = "",PatternModelOptions options = None):
@@ -349,7 +359,7 @@ cdef class IndexedPatternModel:
             value = deref(it).second
             pattern = Pattern()
             pattern.bind(cpattern)
-            yield tuple(pattern,value)
+            yield (pattern,value)
             inc(it)
 
     def getsubparents(self, Pattern pattern):
@@ -362,7 +372,7 @@ cdef class IndexedPatternModel:
             value = deref(it).second
             pattern = Pattern()
             pattern.bind(cpattern)
-            yield tuple(pattern,value)
+            yield (pattern,value)
             inc(it)
 
     def getleftneighbours(self, Pattern pattern):
@@ -375,7 +385,7 @@ cdef class IndexedPatternModel:
             value = deref(it).second
             pattern = Pattern()
             pattern.bind(cpattern)
-            yield tuple(pattern,value)
+            yield (pattern,value)
             inc(it)
 
     def getrightneighbours(self, Pattern pattern):
@@ -388,7 +398,7 @@ cdef class IndexedPatternModel:
             value = deref(it).second
             pattern = Pattern()
             pattern.bind(cpattern)
-            yield tuple(pattern,value)
+            yield (pattern,value)
             inc(it)
 
     def getskipcontent(self, Pattern pattern):
@@ -401,7 +411,7 @@ cdef class IndexedPatternModel:
             value = deref(it).second
             pattern = Pattern()
             pattern.bind(cpattern)
-            yield tuple(pattern,value)
+            yield (pattern,value)
             inc(it)
 
 cdef class UnindexedPatternModel:
@@ -476,13 +486,23 @@ cdef class UnindexedPatternModel:
     def __iter__(self):
         cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]].iterator it = self.data.begin()
         cdef cPattern cpattern
+        while it != self.data.end():
+            cpattern = deref(it).first
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield pattern
+            inc(it)
+
+    def items(self):
+        cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]].iterator it = self.data.begin()
+        cdef cPattern cpattern
         cdef int value
         while it != self.data.end():
             cpattern = deref(it).first
             value = deref(it).second
             pattern = Pattern()
             pattern.bind(cpattern)
-            yield tuple(pattern,value)
+            yield (pattern,value)
             inc(it)
 
     def __init__(self, str filename = "",PatternModelOptions options = None):
