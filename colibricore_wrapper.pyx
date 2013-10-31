@@ -414,6 +414,12 @@ cdef class UnindexedPatternModel:
             yield tuple(pattern,value)
             inc(it)
 
+    def __init__(self, str filename = "",threshold=2, doskipgrams=False, maxlength=99, minskiptypes=2):
+        if filename:
+            self.load(filename,threshold, doskipgrams, maxlength, minskiptypes)
+
+
+
     cpdef load(self, str filename, threshold=2, doskipgrams=False, maxlength=99, minskiptypes=2):
         cdef cPatternModelOptions options
         options.MINTOKENS = threshold
@@ -428,6 +434,9 @@ cdef class UnindexedPatternModel:
 
     cpdef printmodel(self,ClassDecoder decoder):
         self.data.printmodel(&cout, deref(decoder.thisptr) )
+
+    cpdef train(self, str filename, PatternModelOptions options):
+        self.data.train(filename,options.coptions)
 
     cpdef report(self):
         self.data.report(&cout)

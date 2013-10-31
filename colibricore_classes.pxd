@@ -179,6 +179,8 @@ cdef extern from "patternmodel.h":
         float coverage(Pattern&) nogil
         float frequency(Pattern&) nogil
 
+        void train(string filename, PatternModelOptions options)
+
         int totaloccurrencesingroup(int category, int n)
         int totalpatternsingroup(int category, int n)
         int totaltokensingroup(int category, int n)
