@@ -482,22 +482,6 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
 
 };
 
-//using PatternSet as value in a PatternMap requires a special valuehandler:
-class PatternSetValueHandler: public AbstractValueHandler<PatternSet<>> {
-    const static bool indexed = false;
-    void read(std::istream * in, PatternSet<> & value) {
-        value.read(in);
-    }
-    void write(std::ostream * out, PatternSet<> & value) {
-        value.write(out);
-    }
-    virtual std::string tostring(PatternSet<> & value) {
-        return ""; //NOT IMPLEMENTED! TODO
-    }
-    int count(PatternSet<> & value) const {
-        return value.size();
-    }
-};
 
 typedef std::set<Pattern> t_orderedpatternset;
 
@@ -689,6 +673,29 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
     }
 };
 
+
+//using a PatternStore as value in a PatternMap requires a special valuehandler:
+template<class PatternStoreType>
+class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
+    const static bool indexed = false;
+    void read(std::istream * in,  PatternStoreType & value) {
+        value.read(in);
+    }
+    void write(std::ostream * out,  PatternStoreType & value) {
+        value.write(out);
+    }
+    virtual std::string tostring(  PatternStoreType & value) {
+        std::cerr << "PatternStoreValueHandler::tostring() is not supported" << std::endl;
+        throw InternalError();
+    }
+    int count( PatternStoreType & value) const {
+        return value.size();
+    }
+    void add( PatternStoreType * value, const IndexReference & ref ) const {
+        std::cerr << "PatternStoreValueHandler::add() is not supported" << std::endl;
+        throw InternalError();
+    }
+};
 
 //TODO: Implement a real Trie, conserving more memory
 
