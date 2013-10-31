@@ -1,3 +1,13 @@
+#*****************************
+# Colibri Core
+#   by Maarten van Gompel
+#   Centre for Language Studies
+#   Radboud University Nijmegen
+#
+#   http://proycon.github.io/colibri-core
+#
+#   Licensed under GPLv3
+#****************************/
 from libcpp.string cimport string
 from libcpp.set cimport set as stdset
 from libcpp.map cimport map as stdmap

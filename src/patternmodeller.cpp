@@ -4,6 +4,8 @@
 *   Centre for Language Studies
 *   Radboud University Nijmegen
 *
+*   http://proycon.github.io/colibri-core
+*   
 *   Licensed under GPLv3
 *****************************/
 #include <fstream>

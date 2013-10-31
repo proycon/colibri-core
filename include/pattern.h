@@ -241,8 +241,8 @@ class IndexReference {
 
 /***********************************************************************************/
 
-//Class for reading an entire (class encoded) corpus into memory, providing an
-//index by IndexReference
+//Class for reading an entire (class encoded) corpus into memory, providing a
+//reverse index by IndexReference
 //TODO: implement
 class IndexedCorpus {
     protected:
