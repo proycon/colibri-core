@@ -338,6 +338,8 @@ cdef class PatternDict_float: #maps Patterns to uint32
     @include colibricore_patterndict.pxi
 
 cdef class IndexedPatternModel:
+    """Indexed Pattern Model"""
+
     cdef cIndexedPatternModel[cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]] data
 
     @include colibricore_patternmodel.pxi
@@ -356,6 +358,7 @@ cdef class IndexedPatternModel:
 
 
     def __iter__(self):
+        """Iterate over all patterns in this model"""
         cdef cPatternModel[cIndexedData,cIndexedDataHandler,cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]].iterator it = self.data.begin()
         cdef cPattern cpattern
         while it != self.data.end():
@@ -366,6 +369,7 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def items(self):
+        """Iterate over all patterns and their index data (IndexedData instances) in this model"""
         cdef cPatternModel[cIndexedData,cIndexedDataHandler,cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]].iterator it = self.data.begin()
         cdef cPattern cpattern
         cdef cIndexedData cvalue
@@ -381,10 +385,12 @@ cdef class IndexedPatternModel:
 
 
     cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
+        """Compute and output all relations for the specified pattern"""
         self.data.outputrelations(pattern.cpattern,deref(decoder.thisptr),&cout)
 
 
     def getsubchildren(self, Pattern pattern):
+        """Get subsumption children for the specified pattern"""
         if not isinstance(pattern, Pattern):
             raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubchildren(pattern.cpattern)
@@ -401,6 +407,7 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def getsubparents(self, Pattern pattern):
+        """Get subsumption parents for the specified pattern"""
         if not isinstance(pattern, Pattern):
             raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubparents(pattern.cpattern)
@@ -416,6 +423,7 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def getleftneighbours(self, Pattern pattern):
+        """Get left neighbours for the specified pattern"""
         if not isinstance(pattern, Pattern):
             raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern)
@@ -431,6 +439,7 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def getrightneighbours(self, Pattern pattern):
+        """Get right neighbours for the specified pattern"""
         if not isinstance(pattern, Pattern):
             raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern)
@@ -446,6 +455,7 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def getskipcontent(self, Pattern pattern):
+        """Get skip content for the specified pattern"""
         if not isinstance(pattern, Pattern):
             raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getskipcontent(pattern.cpattern)
@@ -461,6 +471,7 @@ cdef class IndexedPatternModel:
             inc(it)
 
 cdef class UnindexedPatternModel:
+    """Unindexed Pattern Model, less flexible and powerful than its indexed counterpart, but smaller memory footprint"""
     cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]] data
     cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]].iterator it
 
@@ -476,6 +487,7 @@ cdef class UnindexedPatternModel:
             raise KeyError
 
     def items(self):
+        """Iterate over all patterns and their occurrence count in this model"""
         it = self.data.begin()
         cdef cPattern cpattern
         cdef int value
@@ -488,24 +500,21 @@ cdef class UnindexedPatternModel:
             inc(it)
 
 
-    cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
-        self.data.outputrelations(pattern.cpattern,deref(decoder.thisptr),&cout)
 
-
-
-#    def reverseindex(self, int index):
-#        #cdef vector[const pycolibri_classes.EncAnyGram *] v = self.thisptr.reverse_index[index]
-#        cdef vector[const pycolibri_classes.EncAnyGram*] v = self.thisptr.get_reverse_index(index)
-#        cdef vector[const pycolibri_classes.EncAnyGram *].iterator it = v.begin()
-#        while it != v.end():
-#            anygram  = <pycolibri_classes.EncAnyGram*> deref(it)
-#            pattern = Pattern()
-#            pattern.bind(anygram)
-#            yield pattern
-#            inc(it)
 
 
 cdef class PatternModelOptions:
+    """Options for Pattern model, you can get and set the following attributes:
+
+    * MINTOKENS - The token threshold, patterns with an occurrence below this will be pruned
+    * MAXLENGTH - Maximum pattern length
+    * DOSKIPGRAMS - Compute skipgrams?
+    * DOSKIPGRAMS_EXHAUSTIVE - Compute skipgrams exhaustively?
+    * MINSKIPTYPES - Minimum amount of different skip content types
+    * DOREVERSEINDEX - Build reverse index? (default: True)
+    * DEBUG
+    * QUIET (default: False)
+    """
     cdef cPatternModelOptions coptions
 
     def __setattr__(self,key, value):
