@@ -274,6 +274,7 @@ cdef class Pattern:
 
 
 cdef class IndexedData:
+    """IndexedData is essentially a set of indexes in the form of (sentence,token) tuples, sentence is generally 1-indexed, token is always 0-indexed. It is used by Indexed Pattern Models to keep track of exact occurrences of all the patterns. Use len() to if you're merely interested in the number of occurrences, rather than their exact wherabouts."""
 
     cdef cIndexedData data
 
@@ -282,12 +283,14 @@ cdef class IndexedData:
 
 
     def __contains__(self, item):
+        """Tests if the specified (sentence,token) tuple is in the set"""
         if not isinstance(item, tuple) or len(item) != 2:
             raise ValueError("Item should be a 2-tuple (sentence,token)")
         cdef cIndexReference ref = cIndexReference(item[0], item[1])
         return self.data.has(ref)
 
     def __iter__(self):
+        """Iterate over all (sentence,token) tuples in the set"""
         cdef cIndexReference ref
         cdef cIndexedData.iterator it = self.data.begin()
         while it != self.data.end():
@@ -296,6 +299,7 @@ cdef class IndexedData:
             inc(it)
 
     def __len__(self):
+        """Returns the number of occurrences, i.e. the length of the set"""
         return self.data.size()
 
     def __int__(self):
