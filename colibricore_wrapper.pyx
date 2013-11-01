@@ -204,6 +204,9 @@ cdef class Pattern:
             for pattern in self.ngrams(n):
                 yield pattern
 
+
+
+
 cdef class IndexedData:
 
     cdef cIndexedData data
@@ -231,6 +234,28 @@ cdef class IndexedData:
 
     def __int__(self):
         return self.data.size()
+
+cdef class PatternInt32Map: #maps Patterns to uint32
+    cdef cPatternMap[uint32_t, cBaseValueHandler[uint32_t],uint64_t] data
+
+    def __len__(self):
+        return self.data.size()
+
+    cpdef has(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
+        return self.data.has(pattern.cpattern)
+
+    def __contains__(self, pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
+        return self.has(pattern)
+
+    def __getitem__(self, pattern):
+        if not isinstance(pattern, Pattern):
+            return ValueError("Expected instance of Pattern")
+        return self.getdata(pattern)
+
 
 
 cdef class IndexedPatternModel:

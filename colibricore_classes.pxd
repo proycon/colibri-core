@@ -58,8 +58,7 @@ cdef extern from "pattern.h":
         iterator end() nogil
         PatternMap() nogil
         void insert(Pattern&, ValueType& value) nogil
-        void has(Pattern&) nogil
-        int size() nogil
+        bool has(Pattern&) nogil
         ValueType& operator[](Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
@@ -76,8 +75,7 @@ cdef extern from "pattern.h":
         iterator end() nogil
         OrderedPatternMap() nogil
         void insert(Pattern&, ValueType& value) nogil
-        void has(Pattern&) nogil
-        int size() nogil
+        bool has(Pattern&) nogil
         ValueType& operator[](Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
@@ -93,8 +91,7 @@ cdef extern from "pattern.h":
         iterator end() nogil
         PatternSet() nogil
         void insert(Pattern&) nogil
-        void has(Pattern&) nogil
-        int size() nogil
+        bool has(Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
 
@@ -109,7 +106,7 @@ cdef extern from "pattern.h":
         iterator end() nogil
         PatternSet() nogil
         void insert(Pattern&) nogil
-        void has(Pattern&) nogil
+        bool has(Pattern&) nogil
         int size() nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
