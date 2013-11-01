@@ -14,7 +14,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
@@ -302,87 +302,45 @@ cdef class IndexedData:
         return self.data.size()
 
 
+cdef class PatternSet:
+    """This is a simple low-level set that contains Pattern instances"""
+    cdef cPatternSet[uint] data
+    @include colibricore_patternset.pxi
+
 
 cdef class PatternDict_int32: #maps Patterns to uint32
     """This is a simple low-level dictionary that takes Pattern instances as keys, and integer (max 32 bit) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
 
-    cdef cPatternMap[uint32_t, cBaseValueHandler[uint32_t],uint64_t] data
+    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint] data
+    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint].iterator it
+    cdef uint32_t value
 
     @include colibricore_patterndict.pxi
 
 
+cdef class PatternDict_int: #maps Patterns to uint32
+    """This is a simple low-level dictionary that takes Pattern instances as keys, and integer (64 bit) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
+
+    cdef cPatternMap[uint,cBaseValueHandler[uint],uint] data
+    cdef cPatternMap[uint,cBaseValueHandler[uint],uint].iterator it
+    cdef int value
+
+    @include colibricore_patterndict.pxi
+
+
+cdef class PatternDict_float: #maps Patterns to uint32
+    """This is a simple low-level dictionary that takes Pattern instances as keys, and float (double) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
+
+    cdef cPatternMap[float,cBaseValueHandler[float],uint] data
+    cdef cPatternMap[float,cBaseValueHandler[float],uint].iterator it
+    cdef float value
+
+    @include colibricore_patterndict.pxi
 
 cdef class IndexedPatternModel:
     cdef cIndexedPatternModel[cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]] data
 
-    def __len__(self):
-        return self.data.size()
-
-    def types(self):
-        return self.data.types()
-
-    def tokens(self):
-        return self.data.tokens()
-
-    def minlength(self):
-        return self.data.minlength()
-
-    def maxlength(self):
-        return self.data.maxlength()
-
-    def type(self):
-        return self.data.type()
-
-    def version(self):
-        return self.data.version()
-
-    def occurrencecount(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.data.occurrencecount(pattern.cpattern)
-
-    def coveragecount(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.data.coveragecount(pattern.cpattern)
-
-    def coverage(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.data.coverage(pattern.cpattern)
-
-    def frequency(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.data.coverage(pattern.cpattern)
-
-
-    def totaloccurrencesingroup(self, int category=0, int n=0):
-        return self.data.totaloccurrencesingroup(category,n)
-
-    def totalpatternsingroup(self, int category=0, int n=0):
-        return self.data.totalpatternsingroup(category,n)
-
-    def totaltokensingroup(self, int category=0, int n=0):
-        return self.data.totaltokensingroup(category,n)
-
-    def totalwordtypesingroup(self, int category=0, int n=0):
-        return self.data.totalwordtypesingroup(category,n)
-
-    cpdef has(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.data.has(pattern.cpattern)
-
-    def __contains__(self, pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.has(pattern)
-
-    def __getitem__(self, pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.getdata(pattern)
+    @include colibricore_patternmodel.pxi
 
     cdef getdata(self, Pattern pattern):
         if not isinstance(pattern, Pattern):
@@ -421,37 +379,10 @@ cdef class IndexedPatternModel:
             yield (pattern,value)
             inc(it)
 
-    def __init__(self, str filename = "",PatternModelOptions options = None):
-        if filename:
-            if not options:
-                options = PatternModelOptions()
-            self.load(filename,options)
-
-    def load(self, str filename, PatternModelOptions options=None):
-        if not options:
-            options = PatternModelOptions()
-        self.data.load(filename.encode('utf-8'), options.coptions)
-
-    cpdef write(self, str filename):
-        self.data.write(filename.encode('utf-8'))
-
-    cpdef train(self, str filename, PatternModelOptions options):
-        self.data.train(filename.encode('utf-8'),options.coptions)
-
-    cpdef printmodel(self,ClassDecoder decoder):
-        self.data.printmodel(&cout, deref(decoder.thisptr) )
-
-    cpdef report(self):
-        self.data.report(&cout)
-
-    cpdef histogram(self):
-        self.data.report(&cout)
 
     cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
         self.data.outputrelations(pattern.cpattern,deref(decoder.thisptr),&cout)
 
-    cpdef prune(self, int threshold, int n=0):
-        self.data.prune(threshold, n)
 
     def getsubchildren(self, Pattern pattern):
         if not isinstance(pattern, Pattern):
@@ -531,75 +462,9 @@ cdef class IndexedPatternModel:
 
 cdef class UnindexedPatternModel:
     cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]] data
+    cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]].iterator it
 
-    def __len__(self):
-        return self.data.size()
-
-    def types(self):
-        return self.data.types()
-
-    def tokens(self):
-        return self.data.tokens()
-
-    def minlength(self):
-        return self.data.minlength()
-
-    def maxlength(self):
-        return self.data.maxlength()
-
-    def type(self):
-        return self.data.type()
-
-    def version(self):
-        return self.data.version()
-
-    def occurrencecount(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.data.occurrencecount(pattern.cpattern)
-
-    def coveragecount(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.data.coveragecount(pattern.cpattern)
-
-    def coverage(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.data.coverage(pattern.cpattern)
-
-    def frequency(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.data.coverage(pattern.cpattern)
-
-
-    def totaloccurrencesingroup(self, int category=0, int n=0):
-        return self.data.totaloccurrencesingroup(category,n)
-
-    def totalpatternsingroup(self, int category=0, int n=0):
-        return self.data.totalpatternsingroup(category,n)
-
-    def totaltokensingroup(self, int category=0, int n=0):
-        return self.data.totaltokensingroup(category,n)
-
-    def totalwordtypesingroup(self, int category=0, int n=0):
-        return self.data.totalwordtypesingroup(category,n)
-
-    cdef has(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.data.has(pattern.cpattern)
-
-    def __contains__(self, pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.has(pattern)
-
-    def __getitem__(self, pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.getdata(pattern)
+    @include colibricore_patternmodel.pxi
 
     cpdef getdata(self, Pattern pattern):
         if not isinstance(pattern, Pattern):
@@ -610,19 +475,8 @@ cdef class UnindexedPatternModel:
         else:
             raise KeyError
 
-
-    def __iter__(self):
-        cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]].iterator it = self.data.begin()
-        cdef cPattern cpattern
-        while it != self.data.end():
-            cpattern = deref(it).first
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield pattern
-            inc(it)
-
     def items(self):
-        cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]].iterator it = self.data.begin()
+        it = self.data.begin()
         cdef cPattern cpattern
         cdef int value
         while it != self.data.end():
@@ -633,37 +487,10 @@ cdef class UnindexedPatternModel:
             yield (pattern,value)
             inc(it)
 
-    def __init__(self, str filename = "",PatternModelOptions options = None):
-        if filename:
-            if not options:
-                options = PatternModelOptions()
-            self.load(filename,options)
-
-    def load(self, str filename, PatternModelOptions options=None):
-        if not options:
-            options = PatternModelOptions()
-        self.data.load(filename.encode('utf-8'), options.coptions)
-
-    cpdef write(self, str filename):
-        self.data.write(filename.encode('utf-8'))
-
-    cpdef printmodel(self,ClassDecoder decoder):
-        self.data.printmodel(&cout, deref(decoder.thisptr) )
-
-    cpdef train(self, str filename, PatternModelOptions options):
-        self.data.train(filename.encode('utf-8'),options.coptions)
-
-    cpdef report(self):
-        self.data.report(&cout)
-
-    cpdef histogram(self):
-        self.data.report(&cout)
 
     cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
         self.data.outputrelations(pattern.cpattern,deref(decoder.thisptr),&cout)
 
-    cpdef prune(self, int threshold, int n=0):
-        self.data.prune(threshold, n)
 
 
 #    def reverseindex(self, int index):
