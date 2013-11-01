@@ -1,3 +1,4 @@
+#embedsignature=True
 #*****************************
 # Colibri Core
 #   by Maarten van Gompel
@@ -20,11 +21,14 @@ from libcpp.map cimport map as stdmap
 from libcpp.utility cimport pair
 
 class Category:
+    """Pattern Category"""
     NGRAM=1
     SKIPGRAM=2
     FLEXGRAM=3
 
 cdef class ClassEncoder:
+    """The class encoder allows patterns to be built from their string representation. Load in a class file and invoke the ``buildpattern()`` method"""
+
     cdef cClassEncoder *thisptr
 
     def __cinit__(self):
@@ -37,9 +41,21 @@ cdef class ClassEncoder:
         del self.thisptr
 
     def __len__(self):
+        """Returns the total number of classes"""
         return self.thisptr.size()
 
     def buildpattern(self, str text, bool allowunknown=True, bool autoaddunknown=False):
+        """Builds a pattern: converts a string representation into a Pattern
+
+        :param text: The actual text of the pattern
+        :type text: str
+        :param allowunknown: Encode unknown classes as 'unknown', a single class for all, rather than failing with an exception if a word type is unseen (bool, default=False)
+        :type allowunknown: bool
+        :param autoaddunknown: Automatically add unknown classes to the model (bool, default=False)
+        :type autoaddunknown: bool
+        :rtype: Pattern
+        """
+
         c_pattern = self.thisptr.buildpattern(text.encode('utf-8'), allowunknown, autoaddunknown)
         pattern = Pattern()
         pattern.bind(c_pattern)
@@ -47,6 +63,8 @@ cdef class ClassEncoder:
 
 
 cdef class ClassDecoder:
+    """The Class Decoder allows Patterns to be decoded back to their string representation. An instance of ClassDecoder is passed to Pattern.tostring()"""
+
     cdef cClassDecoder *thisptr
 
     def __cinit__(self):
@@ -59,10 +77,12 @@ cdef class ClassDecoder:
         del self.thisptr
 
     def __len__(self):
+        """Returns the total number of classes"""
         return self.thisptr.size()
 
 
 cdef class Pattern:
+    """The Pattern class contains an ngram, skipgram or flexgram, and allows a wide variety of actions to be performed on it. It is stored in a memory-efficient fashion and facilitating fast operation and comparison"""
 
     cdef cPattern cpattern
 
@@ -73,17 +93,32 @@ cdef class Pattern:
         self.cpattern = cpattern
 
     def tostring(self, ClassDecoder decoder):
+        """Convert a Pattern back to a str
+        :param decoder: the class decoder to use
+        :type decoder: ClassDecoder
+        :rtype: str
+        """
+
         return str(self.cpattern.tostring(deref(decoder.thisptr)),'utf-8')
 
     def __contains__(self, Pattern pattern):
+        """Check if the specified pattern occurs within this larger pattern"""
         cdef bool r
         r = self.cpattern.contains(pattern.cpattern)
         return r
 
     def __len__(self):
+        """Returns the length of the pattern in words/tokens::
+
+            len(pattern)
+        """
         return self.cpattern.n()
 
     def __copy__(self):
+        """Produces a copy of the pattern (deep)::
+
+            pattern2 = copy(pattern)
+        """
         cdef cPattern c_pattern
         c_pattern = cPattern(self.cpattern) #copy constructor
         newpattern = Pattern()
@@ -91,6 +126,10 @@ cdef class Pattern:
         return newpattern
 
     def __deepcopy__(self):
+        """Produces a copy of the pattern (deep)::
+
+            pattern2 = copy(pattern)
+        """
         cdef cPattern c_pattern
         c_pattern = cPattern(self.cpattern) #copy constructor
         newpattern = Pattern()
@@ -104,12 +143,25 @@ cdef class Pattern:
         return newpattern
 
     def __add__(self, Pattern other):
+        """Concatenate two patterns together, forming a larger one::
+
+                pattern3 = pattern1 + pattern2
+        """
         return self.concat(other)
 
     def __getitem__(self, item):
+        """Retrieves a word/token from the pattern::
+
+            unigram = pattern[index]
+
+        Or retrieves a subpattern::
+
+            subpattern = pattern[begin:end]
+        """
+
         cdef cPattern c_pattern
         if isinstance(item, slice):
-            c_pattern = cPattern(self.cpattern, item.start, item.stop)
+            c_pattern = cPattern(self.cpattern, item.start, item.stop-item.start)
             newpattern = Pattern()
             newpattern.bind(c_pattern)
             return newpattern
@@ -120,22 +172,28 @@ cdef class Pattern:
             return newpattern
 
     def __iter__(self):
+        """Iterates over all words/tokens in this pattern"""
         for i in range(0, len(self)):
             yield self[i]
 
     def bytesize(self):
+        """Returns the number of bytes used to encode this pattern in memory"""
         return self.cpattern.bytesize()
 
     def skipcount(self):
+        """Returns the number of gaps in this pattern"""
         return self.cpattern.skipcount()
 
     def category(self):
+        """Returns the category of this pattern, Category.NGRAM (1), Category.SKIPGRAM (2), or Category.FLEXGRAM (3)"""
         return self.cpattern.category()
 
     def __hash__(self):
+        """Returns the hashed value for this pattern"""
         return self.cpattern.hash()
 
     def __richcmp__(Pattern self, Pattern other, int op):
+        """Allows comparisons of two patterns using the usual operators, <, > , <=, <=, =="""
         if op == 2: # ==
             return self.cpattern == other.cpattern
         elif op == 0: #<
@@ -157,7 +215,8 @@ cdef class Pattern:
         newpattern.bind(newcpattern)
         return newpattern
 
-    def ngrams(self,int n=0):
+    def ngrams(self,int n):
+        """Generator iterating over all ngrams of a particular size that are enclosed within this pattern. Despite the name, this may also return skipgrams!"""
         cdef vector[cPattern] result
         self.cpattern.ngrams(result, n)
         cdef cPattern cngram
@@ -170,6 +229,7 @@ cdef class Pattern:
             inc(it)
 
     def parts(self):
+        """Generating iterating over the consecutive non-gappy parts in a skipgram of flexgram"""
         cdef vector[cPattern] result
         self.cpattern.parts(result)
         cdef cPattern cngram
@@ -182,6 +242,7 @@ cdef class Pattern:
             inc(it)
 
     def gaps(self):
+        """Generator iterating over the gaps in a skipgram or flexgram, return a tuple (begin,length) for each. For flexgrams, the minimum length (1) is always returned."""
         cdef vector[pair[int,int]] result
         self.cpattern.gaps(result)
         cdef vector[pair[int,int]].iterator it = result.begin()
@@ -192,12 +253,17 @@ cdef class Pattern:
             inc(it)
 
     def toflexgram(self):
+        """Converts a skipgram to a flexgram
+
+        :rtype: Pattern
+        """
         cdef cPattern newcpattern = self.cpattern.toflexgram()
         newpattern = Pattern()
         newpattern.bind(newcpattern)
         return newpattern
 
     def subngrams(self,int minn=0,int maxn=9):
+        """Generator iterating over all ngrams of all sizes that are enclosed within this pattern. Despite the name, this may also return skipgrams!"""
         minn = max(1,minn)
         maxn = min(maxn, len(self) -1 )
         for n in range(minn,maxn+1):
@@ -235,31 +301,15 @@ cdef class IndexedData:
     def __int__(self):
         return self.data.size()
 
-cdef class PatternInt32Map: #maps Patterns to uint32
+
+
+cdef class PatternDict_int32: #maps Patterns to uint32
+    """This is a simple low-level dictionary that takes Pattern instances as keys, and integer (max 32 bit) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
+
     cdef cPatternMap[uint32_t, cBaseValueHandler[uint32_t],uint64_t] data
 
-    def __len__(self):
-        return self.data.size()
+    @include colibricore_patterndict.pxi
 
-    cpdef has(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.data.has(pattern.cpattern)
-
-    def __contains__(self, pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.has(pattern)
-
-    def __getitem__(self, pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        return self.getdata(pattern)
-
-    def __setitem__(self, pattern, int value):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
-        self[pattern] = value
 
 
 cdef class IndexedPatternModel:
