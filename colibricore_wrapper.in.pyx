@@ -94,6 +94,7 @@ cdef class Pattern:
 
     def tostring(self, ClassDecoder decoder):
         """Convert a Pattern back to a str
+
         :param decoder: the class decoder to use
         :type decoder: ClassDecoder
         :rtype: str
@@ -232,6 +233,7 @@ cdef class Pattern:
 
     def ngrams(self,int n):
         """Generator iterating over all ngrams of a particular size that are enclosed within this pattern. Despite the name, this may also return skipgrams!
+
         :param n: The desired size to obtain
         :type n: int
         :rtype: generator over Pattern instances
@@ -249,6 +251,7 @@ cdef class Pattern:
 
     def parts(self):
         """Generating iterating over the consecutive non-gappy parts in a skipgram of flexgram
+
         :rtype: generator over Pattern instances
         """
         cdef vector[cPattern] result
@@ -264,6 +267,7 @@ cdef class Pattern:
 
     def gaps(self):
         """Generator iterating over the gaps in a skipgram or flexgram, return a tuple (begin,length) for each. For flexgrams, the minimum length (1) is always returned.
+
         :rtype: generator over (begin, length) tuples
         """
         cdef vector[pair[int,int]] result
@@ -342,7 +346,7 @@ cdef class PatternSet:
 
 
 cdef class PatternDict_int32: #maps Patterns to uint32
-    """This is a simple low-level dictionary that takes Pattern instances as keys, and integer (max 32 bit) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
+    """This is a simple low-level dictionary that takes Pattern instances as keys, and integer (max 32 bit, unsigned) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
 
     cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint] data
     cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint].iterator it
@@ -350,9 +354,19 @@ cdef class PatternDict_int32: #maps Patterns to uint32
 
     @include colibricore_patterndict.pxi
 
+    def __setitem__(self, pattern, uint32_t v):
+        """Set the value for a pattern in the dictionary
+
+        :param pattern: the pattern
+        :param value: its value
+        """
+        if not isinstance(pattern, Pattern):
+            raise ValueError("Expected instance of Pattern")
+        self[pattern] = v
+
 
 cdef class PatternDict_int: #maps Patterns to uint32
-    """This is a simple low-level dictionary that takes Pattern instances as keys, and integer (64 bit) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
+    """This is a simple low-level dictionary that takes Pattern instances as keys, and integer (unsigned 64 bit) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
 
     cdef cPatternMap[uint,cBaseValueHandler[uint],uint] data
     cdef cPatternMap[uint,cBaseValueHandler[uint],uint].iterator it
@@ -360,6 +374,15 @@ cdef class PatternDict_int: #maps Patterns to uint32
 
     @include colibricore_patterndict.pxi
 
+    def __setitem__(self, pattern, int v):
+        """Set the value for a pattern in the dictionary
+
+        :param pattern: the pattern
+        :param value: its value
+        """
+        if not isinstance(pattern, Pattern):
+            raise ValueError("Expected instance of Pattern")
+        self[pattern] = v
 
 cdef class PatternDict_float: #maps Patterns to uint32
     """This is a simple low-level dictionary that takes Pattern instances as keys, and float (double) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
@@ -369,6 +392,17 @@ cdef class PatternDict_float: #maps Patterns to uint32
     cdef float value
 
     @include colibricore_patterndict.pxi
+    
+    def __setitem__(self, pattern, float v):
+        """Set the value for a pattern in the dictionary
+
+        :param pattern: the pattern
+        :param value: its value
+        """
+        if not isinstance(pattern, Pattern):
+            raise ValueError("Expected instance of Pattern")
+        self[pattern] = v
+
 
 cdef class IndexedPatternModel:
     """Indexed Pattern Model"""

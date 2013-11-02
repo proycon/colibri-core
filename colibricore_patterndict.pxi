@@ -26,16 +26,15 @@ def __iter__(self):
         inc(it)
 
 def __getitem__(self, pattern):
-    """Retrieve the value for a pattern in the dictionary"""
+    """Retrieve the value for a pattern in the dictionary
+    
+    :param pattern: A pattern
+    :type pattern: Pattern
+    """
     if not isinstance(pattern, Pattern):
         raise ValueError("Expected instance of Pattern")
     return self.getdata(pattern)
 
-def __setitem__(self, pattern, int value):
-    """Set the value for a pattern in the dictionary"""
-    if not isinstance(pattern, Pattern):
-        raise ValueError("Expected instance of Pattern")
-    self[pattern] = value
 
 
 def items(self):

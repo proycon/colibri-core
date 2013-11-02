@@ -30,7 +30,11 @@ def __iter__(self):
         inc(it)
 
 def add(self, Pattern pattern):
-    """Adds a pattern to the set"""
+    """Adds a pattern to the set
+
+    :param pattern: The pattern to add
+    :type pattern: Pattern
+    """
     if not isinstance(pattern, Pattern):
         raise ValueError("Expected instance of Pattern")
     self.data.insert(pattern.cpattern)
