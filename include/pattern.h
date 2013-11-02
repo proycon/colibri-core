@@ -177,7 +177,7 @@ class Pattern {
      /**
       * Return a single token (not a byte!). index < size().
       */
-     Pattern operator [](int index) { return Pattern(*this, index,1); } 
+     Pattern operator [](int index) const { return Pattern(*this, index,1); } 
 
      /**
       * Compute a hash value for this pattern
@@ -387,6 +387,7 @@ class IndexedCorpus {
         IndexedCorpus(std::istream *in);
         IndexedCorpus(std::string filename);
         
+        void load(std::istream *in);
         typedef std::map<IndexReference,Pattern>::iterator iterator;
         typedef std::map<IndexReference,Pattern>::const_iterator const_iterator;
 
@@ -405,9 +406,9 @@ class IndexedCorpus {
 
         Pattern operator [](const IndexReference ref) { return data[ref]; } 
 
-        Pattern getpattern(IndexReference begin, int length); //TODO: implement
-        
-        std::vector<IndexReference> findmatches(const Pattern & pattern); //not as efficient as a pattern model obviously, TODO: implement
+        Pattern getpattern(IndexReference begin, int length);
+         
+        std::vector<IndexReference> findmatches(const Pattern & pattern); //by far not as efficient as a pattern model obviously
 };
 
 /************* ValueHandler for reading/serialising basic types ********************/

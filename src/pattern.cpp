@@ -819,3 +819,74 @@ Pattern Pattern::addflexgaps(std::vector<std::pair<int,int> > & gaps) const {
     }
     return pattern;
 }
+
+IndexedCorpus::IndexedCorpus(std::istream *in){
+    this->load(in);
+}
+
+IndexedCorpus::IndexedCorpus(std::string filename){
+    std::ifstream * in = new std::ifstream(filename.c_str());
+    if (!in->good()) {
+        std::cerr << "ERROR: Unable to load file " << filename << std::endl;
+        throw InternalError();
+    }
+    this->load( (std::istream *) in);
+    in->close();
+    delete in;
+}
+
+
+void IndexedCorpus::load(std::istream *in) {
+    int sentence = 0;
+    while (!in->eof()) {
+        Pattern line = Pattern(in);
+        sentence++;
+        if (in->eof()) break;
+        int linesize = line.size();
+        for (int i = 0; i < linesize; i++) {
+            const Pattern unigram = line[i];
+            const IndexReference ref = IndexReference(sentence,i);
+            data[ref] = unigram;
+        }
+    }
+}
+
+
+Pattern IndexedCorpus::getpattern(IndexReference begin, int length) { 
+    Pattern pattern;
+    for (int i = 0; i < length; i++) {
+        IndexReference ref = begin + i;
+        iterator iter = data.find(ref);
+        if (iter != data.end()) {
+            const Pattern unigram = iter->second;
+            pattern  = pattern + unigram;
+        } else {
+            std::cerr << "ERROR: Specified index does not exist"<< std::endl;
+            throw InternalError();
+        }
+    }
+    return pattern;
+}
+
+std::vector<IndexReference> IndexedCorpus::findmatches(const Pattern & pattern) {
+    //far more inefficient than a pattrn model obviously
+    std::vector<IndexReference> result;
+    const int _n = pattern.size();
+    if (_n == 0) return result;
+
+    IndexReference ref;
+    int i = 0;
+    Pattern matchunigram = pattern[i];
+    for (iterator iter = data.begin(); iter != data.end(); iter++) {
+        Pattern unigram = iter->second;
+        if (matchunigram == unigram) {
+            if (i ==0) ref = iter->first;
+            i++;
+            if (i == _n) {
+                result.push_back(ref);
+            }
+            matchunigram = pattern[i];
+        }
+    }
+    return result;
+}
