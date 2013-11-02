@@ -464,6 +464,11 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <tt class="descname">SKIPGRAM</tt><em class="property"> = 2</em><a class="headerlink" href="#colibricore.Category.SKIPGRAM" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="colibricore.Category.__module__">
+<tt class="descname">__module__</tt><em class="property"> = 'colibricore'</em><a class="headerlink" href="#colibricore.Category.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -471,6 +476,17 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">ClassDecoder</tt><a class="headerlink" href="#colibricore.ClassDecoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>The Class Decoder allows Patterns to be decoded back to their string representation. An instance of ClassDecoder is passed to Pattern.tostring()</p>
+<dl class="attribute">
+<dt id="colibricore.ClassDecoder.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.ClassDecoder.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of classes</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.ClassDecoder.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.ClassDecoder.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -478,6 +494,17 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">ClassEncoder</tt><a class="headerlink" href="#colibricore.ClassEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>The class encoder allows patterns to be built from their string representation. Load in a class file and invoke the <tt class="docutils literal"><span class="pre">buildpattern()</span></tt> method</p>
+<dl class="attribute">
+<dt id="colibricore.ClassEncoder.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.ClassEncoder.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of classes</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.ClassEncoder.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.ClassEncoder.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="colibricore.ClassEncoder.buildpattern">
 <tt class="descname">buildpattern</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.ClassEncoder.buildpattern" title="Permalink to this definition">¶</a></dt>
@@ -507,6 +534,46 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">IndexedData</tt><a class="headerlink" href="#colibricore.IndexedData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>IndexedData is essentially a set of indexes in the form of (sentence,token) tuples, sentence is generally 1-indexed, token is always 0-indexed. It is used by Indexed Pattern Models to keep track of exact occurrences of all the patterns. Use len() to if you&#8217;re merely interested in the number of occurrences, rather than their exact wherabouts.</p>
+<dl class="attribute">
+<dt id="colibricore.IndexedData.__contains__">
+<tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.IndexedData.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the specified (sentence,token) tuple is in the set</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.IndexedData.__int__">
+<tt class="descname">__int__</tt><a class="headerlink" href="#colibricore.IndexedData.__int__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__int__() &lt;==&gt; int(x)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.IndexedData.__iter__">
+<tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.IndexedData.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all (sentence,token) tuples in the set</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.IndexedData.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.IndexedData.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of occurrences, i.e. the length of the set</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.IndexedData.__long__">
+<tt class="descname">__long__</tt><a class="headerlink" href="#colibricore.IndexedData.__long__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__long__() &lt;==&gt; long(x)</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.IndexedData.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.IndexedData.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.IndexedData.__pyx_vtable__">
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x391d060&gt;</em><a class="headerlink" href="#colibricore.IndexedData.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -514,6 +581,46 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">IndexedPatternModel</tt><a class="headerlink" href="#colibricore.IndexedPatternModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Indexed Pattern Model</p>
+<dl class="attribute">
+<dt id="colibricore.IndexedPatternModel.__contains__">
+<tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.IndexedPatternModel.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a pattern is in the model</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.IndexedPatternModel.__getitem__">
+<tt class="descname">__getitem__</tt><a class="headerlink" href="#colibricore.IndexedPatternModel.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the value for the pattern</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.IndexedPatternModel.__init__">
+<tt class="descname">__init__</tt><a class="headerlink" href="#colibricore.IndexedPatternModel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise a pattern model. Either an empty one or loading from file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.IndexedPatternModel.__iter__">
+<tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.IndexedPatternModel.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all patterns in this model</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.IndexedPatternModel.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.IndexedPatternModel.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of distinct patterns in the model</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.IndexedPatternModel.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.IndexedPatternModel.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.IndexedPatternModel.__pyx_vtable__">
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x391d270&gt;</em><a class="headerlink" href="#colibricore.IndexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.coverage">
 <tt class="descname">coverage</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.coverage" title="Permalink to this definition">¶</a></dt>
@@ -697,6 +804,117 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">Pattern</tt><a class="headerlink" href="#colibricore.Pattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>The Pattern class contains an ngram, skipgram or flexgram, and allows a wide variety of actions to be performed on it. It is stored in a memory-efficient fashion and facilitating fast operation and comparison</p>
+<dl class="attribute">
+<dt id="colibricore.Pattern.__add__">
+<tt class="descname">__add__</tt><a class="headerlink" href="#colibricore.Pattern.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate two patterns together, forming a larger one:</p>
+<p>pattern3 = pattern1 + pattern2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__contains__">
+<tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.Pattern.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the specified pattern occurs within this larger pattern</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.Pattern.__copy__">
+<tt class="descname">__copy__</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.__copy__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produces a copy of the pattern (deep):</p>
+<p>pattern2 = copy(pattern)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.Pattern.__deepcopy__">
+<tt class="descname">__deepcopy__</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.__deepcopy__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produces a copy of the pattern (deep):</p>
+<p>pattern2 = copy(pattern)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__eq__">
+<tt class="descname">__eq__</tt><a class="headerlink" href="#colibricore.Pattern.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__eq__(y) &lt;==&gt; x==y</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__ge__">
+<tt class="descname">__ge__</tt><a class="headerlink" href="#colibricore.Pattern.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__ge__(y) &lt;==&gt; x&gt;=y</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__getitem__">
+<tt class="descname">__getitem__</tt><a class="headerlink" href="#colibricore.Pattern.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves a word/token from the pattern:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">unigram</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Or retrieves a subpattern:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">subpattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="n">begin</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__gt__">
+<tt class="descname">__gt__</tt><a class="headerlink" href="#colibricore.Pattern.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__gt__(y) &lt;==&gt; x&gt;y</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__hash__">
+<tt class="descname">__hash__</tt><a class="headerlink" href="#colibricore.Pattern.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the hashed value for this pattern</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__iter__">
+<tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.Pattern.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates over all words/tokens in this pattern</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__le__">
+<tt class="descname">__le__</tt><a class="headerlink" href="#colibricore.Pattern.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__le__(y) &lt;==&gt; x&lt;=y</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.Pattern.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the length of the pattern in words/tokens:</p>
+<p>len(pattern)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__lt__">
+<tt class="descname">__lt__</tt><a class="headerlink" href="#colibricore.Pattern.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__lt__(y) &lt;==&gt; x&lt;y</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__ne__">
+<tt class="descname">__ne__</tt><a class="headerlink" href="#colibricore.Pattern.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__ne__(y) &lt;==&gt; x!=y</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.Pattern.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.Pattern.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__pyx_vtable__">
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x391d030&gt;</em><a class="headerlink" href="#colibricore.Pattern.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Pattern.__radd__">
+<tt class="descname">__radd__</tt><a class="headerlink" href="#colibricore.Pattern.__radd__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__radd__(y) &lt;==&gt; y+x</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="colibricore.Pattern.bytesize">
 <tt class="descname">bytesize</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.bytesize" title="Permalink to this definition">¶</a></dt>
@@ -774,6 +992,52 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternDict_float</tt><a class="headerlink" href="#colibricore.PatternDict_float" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>This is a simple low-level dictionary that takes Pattern instances as keys, and float (double) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead.</p>
+<dl class="attribute">
+<dt id="colibricore.PatternDict_float.__contains__">
+<tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.PatternDict_float.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the pattern is in the dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_float.__delitem__">
+<tt class="descname">__delitem__</tt><a class="headerlink" href="#colibricore.PatternDict_float.__delitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__delitem__(y) &lt;==&gt; del x[y]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_float.__getitem__">
+<tt class="descname">__getitem__</tt><a class="headerlink" href="#colibricore.PatternDict_float.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the value for a pattern in the dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_float.__iter__">
+<tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.PatternDict_float.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all patterns in the dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_float.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.PatternDict_float.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total number of patterns in the dictionary</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.PatternDict_float.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.PatternDict_float.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_float.__pyx_vtable__">
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x391d180&gt;</em><a class="headerlink" href="#colibricore.PatternDict_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_float.__setitem__">
+<tt class="descname">__setitem__</tt><a class="headerlink" href="#colibricore.PatternDict_float.__setitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value for a pattern in the dictionary</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="colibricore.PatternDict_float.has">
 <tt class="descname">has</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternDict_float.has" title="Permalink to this definition">¶</a></dt>
@@ -792,6 +1056,52 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternDict_int</tt><a class="headerlink" href="#colibricore.PatternDict_int" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>This is a simple low-level dictionary that takes Pattern instances as keys, and integer (64 bit) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead.</p>
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int.__contains__">
+<tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.PatternDict_int.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the pattern is in the dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int.__delitem__">
+<tt class="descname">__delitem__</tt><a class="headerlink" href="#colibricore.PatternDict_int.__delitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__delitem__(y) &lt;==&gt; del x[y]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int.__getitem__">
+<tt class="descname">__getitem__</tt><a class="headerlink" href="#colibricore.PatternDict_int.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the value for a pattern in the dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int.__iter__">
+<tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.PatternDict_int.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all patterns in the dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.PatternDict_int.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total number of patterns in the dictionary</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.PatternDict_int.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.PatternDict_int.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int.__pyx_vtable__">
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x391d150&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int.__setitem__">
+<tt class="descname">__setitem__</tt><a class="headerlink" href="#colibricore.PatternDict_int.__setitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value for a pattern in the dictionary</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="colibricore.PatternDict_int.has">
 <tt class="descname">has</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternDict_int.has" title="Permalink to this definition">¶</a></dt>
@@ -810,6 +1120,52 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternDict_int32</tt><a class="headerlink" href="#colibricore.PatternDict_int32" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>This is a simple low-level dictionary that takes Pattern instances as keys, and integer (max 32 bit) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead.</p>
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int32.__contains__">
+<tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.PatternDict_int32.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the pattern is in the dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int32.__delitem__">
+<tt class="descname">__delitem__</tt><a class="headerlink" href="#colibricore.PatternDict_int32.__delitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__delitem__(y) &lt;==&gt; del x[y]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int32.__getitem__">
+<tt class="descname">__getitem__</tt><a class="headerlink" href="#colibricore.PatternDict_int32.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the value for a pattern in the dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int32.__iter__">
+<tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.PatternDict_int32.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all patterns in the dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int32.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.PatternDict_int32.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total number of patterns in the dictionary</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.PatternDict_int32.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.PatternDict_int32.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int32.__pyx_vtable__">
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x391d120&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternDict_int32.__setitem__">
+<tt class="descname">__setitem__</tt><a class="headerlink" href="#colibricore.PatternDict_int32.__setitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value for a pattern in the dictionary</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="colibricore.PatternDict_int32.has">
 <tt class="descname">has</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternDict_int32.has" title="Permalink to this definition">¶</a></dt>
@@ -838,6 +1194,34 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <li>DEBUG</li>
 <li>QUIET (default: False)</li>
 </ul>
+<dl class="attribute">
+<dt id="colibricore.PatternModelOptions.__delattr__">
+<tt class="descname">__delattr__</tt><a class="headerlink" href="#colibricore.PatternModelOptions.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__delattr__(&#8216;name&#8217;) &lt;==&gt; del x.name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternModelOptions.__getattr__">
+<tt class="descname">__getattr__</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternModelOptions.__getattr__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternModelOptions.__getattribute__">
+<tt class="descname">__getattribute__</tt><a class="headerlink" href="#colibricore.PatternModelOptions.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__getattribute__(&#8216;name&#8217;) &lt;==&gt; x.name</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.PatternModelOptions.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.PatternModelOptions.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternModelOptions.__setattr__">
+<tt class="descname">__setattr__</tt><a class="headerlink" href="#colibricore.PatternModelOptions.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__setattr__(&#8216;name&#8217;, value) &lt;==&gt; x.name = value</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -845,6 +1229,34 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternSet</tt><a class="headerlink" href="#colibricore.PatternSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>This is a simple low-level set that contains Pattern instances</p>
+<dl class="attribute">
+<dt id="colibricore.PatternSet.__contains__">
+<tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.PatternSet.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the pattern is in the dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternSet.__iter__">
+<tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.PatternSet.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all patterns in the dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternSet.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.PatternSet.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total number of patterns in the dictionary</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.PatternSet.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.PatternSet.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternSet.__pyx_vtable__">
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x391d0c0&gt;</em><a class="headerlink" href="#colibricore.PatternSet.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="colibricore.PatternSet.add">
 <tt class="descname">add</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternSet.add" title="Permalink to this definition">¶</a></dt>
@@ -863,6 +1275,46 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">UnindexedPatternModel</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Unindexed Pattern Model, less flexible and powerful than its indexed counterpart, but smaller memory footprint</p>
+<dl class="attribute">
+<dt id="colibricore.UnindexedPatternModel.__contains__">
+<tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a pattern is in the model</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.UnindexedPatternModel.__getitem__">
+<tt class="descname">__getitem__</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the value for the pattern</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.UnindexedPatternModel.__init__">
+<tt class="descname">__init__</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise a pattern model. Either an empty one or loading from file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.UnindexedPatternModel.__iter__">
+<tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates over all patterns in the model</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.UnindexedPatternModel.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of distinct patterns in the model</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.UnindexedPatternModel.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.UnindexedPatternModel.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.UnindexedPatternModel.__pyx_vtable__">
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x391d2a0&gt;</em><a class="headerlink" href="#colibricore.UnindexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.coverage">
 <tt class="descname">coverage</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.coverage" title="Permalink to this definition">¶</a></dt>

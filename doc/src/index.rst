@@ -469,6 +469,7 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 .. automodule:: colibricore
    :members:
    :undoc-members:
+   :special-members:
    :show-inheritance:
 
 
