@@ -458,7 +458,12 @@ possible parsers can distinguish the numbers for the queried pattern itself from
     * **Relation Frequency** -- The number of times pattern 1 and pattern 2 occur in this relationas a fraction of all relations of this type
     * **Count 2** -- The absolute number of occurrences of pattern 2 in the model
 
-    
+
+Architecture Overview
+=======================
+
+.. image: arch.png
+
 Python API Reference
 =======================
 
