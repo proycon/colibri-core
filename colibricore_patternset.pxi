@@ -23,3 +23,8 @@ def __iter__(self):
         pattern.bind(cpattern)
         yield pattern
         inc(it)
+
+def add(self, Pattern pattern):
+    if not isinstance(pattern, Pattern):
+        raise ValueError("Expected instance of Pattern")
+    self.data.insert(pattern.cpattern)
