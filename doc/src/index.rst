@@ -460,7 +460,7 @@ possible parsers can distinguish the numbers for the queried pattern itself from
 
     
 Python API Reference
-===================
+=======================
 
 Colibri Core offers both a C++ API as well as a Python API. It exposes all of
 the functionality, and beyond, of the tools outlined above. The Python API is

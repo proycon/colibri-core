@@ -34,6 +34,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li><a href="#">Colibri Core 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -442,6 +445,571 @@ possible parsers can distinguish the numbers for the queried pattern itself from
 <p>Colibri Core offers both a C++ API as well as a Python API. It exposes all of
 the functionality, and beyond, of the tools outlined above. The Python API is
 more limited than the C++ API, yet still offers most higher-level functionality.</p>
+<span class="target" id="module-colibricore"></span><dl class="class">
+<dt id="colibricore.Category">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">Category</tt><a class="headerlink" href="#colibricore.Category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pattern Category</p>
+<dl class="attribute">
+<dt id="colibricore.Category.FLEXGRAM">
+<tt class="descname">FLEXGRAM</tt><em class="property"> = 3</em><a class="headerlink" href="#colibricore.Category.FLEXGRAM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Category.NGRAM">
+<tt class="descname">NGRAM</tt><em class="property"> = 1</em><a class="headerlink" href="#colibricore.Category.NGRAM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.Category.SKIPGRAM">
+<tt class="descname">SKIPGRAM</tt><em class="property"> = 2</em><a class="headerlink" href="#colibricore.Category.SKIPGRAM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.ClassDecoder">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">ClassDecoder</tt><a class="headerlink" href="#colibricore.ClassDecoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The Class Decoder allows Patterns to be decoded back to their string representation. An instance of ClassDecoder is passed to Pattern.tostring()</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.ClassEncoder">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">ClassEncoder</tt><a class="headerlink" href="#colibricore.ClassEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The class encoder allows patterns to be built from their string representation. Load in a class file and invoke the <tt class="docutils literal"><span class="pre">buildpattern()</span></tt> method</p>
+<dl class="method">
+<dt id="colibricore.ClassEncoder.buildpattern">
+<tt class="descname">buildpattern</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.ClassEncoder.buildpattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a pattern: converts a string representation into a Pattern</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> (<em>str</em>) &#8211; The actual text of the pattern</li>
+<li><strong>allowunknown</strong> (<em>bool</em>) &#8211; Encode unknown classes as &#8216;unknown&#8217;, a single class for all, rather than failing with an exception if a word type is unseen (bool, default=False)</li>
+<li><strong>autoaddunknown</strong> (<em>bool</em>) &#8211; Automatically add unknown classes to the model (bool, default=False)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Pattern</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.IndexedData">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">IndexedData</tt><a class="headerlink" href="#colibricore.IndexedData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>IndexedData is essentially a set of indexes in the form of (sentence,token) tuples, sentence is generally 1-indexed, token is always 0-indexed. It is used by Indexed Pattern Models to keep track of exact occurrences of all the patterns. Use len() to if you&#8217;re merely interested in the number of occurrences, rather than their exact wherabouts.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.IndexedPatternModel">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">IndexedPatternModel</tt><a class="headerlink" href="#colibricore.IndexedPatternModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Indexed Pattern Model</p>
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.coverage">
+<tt class="descname">coverage</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.coverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of tokens all instances of the specified pattern cover in the training data, as a fraction of the total amount of tokens</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.coveragecount">
+<tt class="descname">coveragecount</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.coveragecount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of tokens all instances of the specified pattern cover in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.frequency">
+<tt class="descname">frequency</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the frequency of the pattern within its category (ngram/skipgram/flexgram) and exact size class. For a bigram it will thus return the bigram frequency.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.getleftneighbours">
+<tt class="descname">getleftneighbours</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getleftneighbours" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get left neighbours for the specified pattern</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.getrightneighbours">
+<tt class="descname">getrightneighbours</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getrightneighbours" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get right neighbours for the specified pattern</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.getskipcontent">
+<tt class="descname">getskipcontent</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getskipcontent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get skip content for the specified pattern</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.getsubchildren">
+<tt class="descname">getsubchildren</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getsubchildren" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get subsumption children for the specified pattern</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.getsubparents">
+<tt class="descname">getsubparents</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getsubparents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get subsumption parents for the specified pattern</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.histogram">
+<tt class="descname">histogram</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a histogram to stdout</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.items">
+<tt class="descname">items</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all patterns and their index data (IndexedData instances) in this model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a patternmodel from file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.maxlength">
+<tt class="descname">maxlength</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.maxlength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the maximum pattern length in the model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.minlength">
+<tt class="descname">minlength</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.minlength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the minimum pattern length in the model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.occurrencecount">
+<tt class="descname">occurrencecount</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.occurrencecount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of times the specified pattern occurs in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.outputrelations">
+<tt class="descname">outputrelations</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.outputrelations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute and output all relations for the specified pattern</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.printmodel">
+<tt class="descname">printmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.printmodel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the entire pattern model to stdout, a detailed overview</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.prune">
+<tt class="descname">prune</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.prune" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prune all patterns occurring below the threshold.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; prune only patterns of the specified size, use 0 (default) for no size limitation</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.report">
+<tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a detailed statistical report to stdout</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.tokens">
+<tt class="descname">tokens</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of tokens in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.totaloccurrencesingroup">
+<tt class="descname">totaloccurrencesingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.totaloccurrencesingroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of occurrences in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total occurrence count over all skipgrams.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.totalpatternsingroup">
+<tt class="descname">totalpatternsingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.totalpatternsingroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of distinct patterns in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of distrinct skipgrams.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.totaltokensingroup">
+<tt class="descname">totaltokensingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.totaltokensingroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of covered tokens in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of covered tokens over all skipgrams.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.totalwordtypesingroup">
+<tt class="descname">totalwordtypesingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.totalwordtypesingroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of covered word types (unigram types) in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of covered word types over all skipgrams.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.train">
+<tt class="descname">train</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id3"><span class="problematic" id="id4">*</span></a>.colibri.dat file)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.type">
+<tt class="descname">type</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the model type (10 = UNINDEXED, 20 = INDEXED)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.types">
+<tt class="descname">types</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of distinct word types in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.version">
+<tt class="descname">version</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the model type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.write">
+<tt class="descname">write</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a patternmodel to file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.Pattern">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">Pattern</tt><a class="headerlink" href="#colibricore.Pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The Pattern class contains an ngram, skipgram or flexgram, and allows a wide variety of actions to be performed on it. It is stored in a memory-efficient fashion and facilitating fast operation and comparison</p>
+<dl class="method">
+<dt id="colibricore.Pattern.bytesize">
+<tt class="descname">bytesize</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.bytesize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of bytes used to encode this pattern in memory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.Pattern.category">
+<tt class="descname">category</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the category of this pattern, Category.NGRAM (1), Category.SKIPGRAM (2), or Category.FLEXGRAM (3)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.Pattern.concat">
+<tt class="descname">concat</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.concat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.Pattern.gaps">
+<tt class="descname">gaps</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.gaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator iterating over the gaps in a skipgram or flexgram, return a tuple (begin,length) for each. For flexgrams, the minimum length (1) is always returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.Pattern.ngrams">
+<tt class="descname">ngrams</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.ngrams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator iterating over all ngrams of a particular size that are enclosed within this pattern. Despite the name, this may also return skipgrams!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.Pattern.parts">
+<tt class="descname">parts</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.parts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generating iterating over the consecutive non-gappy parts in a skipgram of flexgram</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.Pattern.skipcount">
+<tt class="descname">skipcount</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.skipcount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of gaps in this pattern</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.Pattern.subngrams">
+<tt class="descname">subngrams</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.subngrams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator iterating over all ngrams of all sizes that are enclosed within this pattern. Despite the name, this may also return skipgrams!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.Pattern.toflexgram">
+<tt class="descname">toflexgram</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.toflexgram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a skipgram to a flexgram</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Pattern</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.Pattern.tostring">
+<tt class="descname">tostring</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.tostring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Pattern back to a str
+:param decoder: the class decoder to use
+:type decoder: ClassDecoder
+:rtype: str</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.PatternDict_float">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternDict_float</tt><a class="headerlink" href="#colibricore.PatternDict_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This is a simple low-level dictionary that takes Pattern instances as keys, and float (double) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead.</p>
+<dl class="method">
+<dt id="colibricore.PatternDict_float.has">
+<tt class="descname">has</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternDict_float.has" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternDict_float.items">
+<tt class="descname">items</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternDict_float.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all patterns and their values in the dictionary</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.PatternDict_int">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternDict_int</tt><a class="headerlink" href="#colibricore.PatternDict_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This is a simple low-level dictionary that takes Pattern instances as keys, and integer (64 bit) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead.</p>
+<dl class="method">
+<dt id="colibricore.PatternDict_int.has">
+<tt class="descname">has</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternDict_int.has" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternDict_int.items">
+<tt class="descname">items</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternDict_int.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all patterns and their values in the dictionary</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.PatternDict_int32">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternDict_int32</tt><a class="headerlink" href="#colibricore.PatternDict_int32" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This is a simple low-level dictionary that takes Pattern instances as keys, and integer (max 32 bit) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead.</p>
+<dl class="method">
+<dt id="colibricore.PatternDict_int32.has">
+<tt class="descname">has</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternDict_int32.has" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternDict_int32.items">
+<tt class="descname">items</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternDict_int32.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all patterns and their values in the dictionary</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.PatternModelOptions">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternModelOptions</tt><a class="headerlink" href="#colibricore.PatternModelOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Options for Pattern model, you can get and set the following attributes:</p>
+<ul class="simple">
+<li>MINTOKENS - The token threshold, patterns with an occurrence below this will be pruned</li>
+<li>MAXLENGTH - Maximum pattern length</li>
+<li>DOSKIPGRAMS - Compute skipgrams?</li>
+<li>DOSKIPGRAMS_EXHAUSTIVE - Compute skipgrams exhaustively?</li>
+<li>MINSKIPTYPES - Minimum amount of different skip content types</li>
+<li>DOREVERSEINDEX - Build reverse index? (default: True)</li>
+<li>DEBUG</li>
+<li>QUIET (default: False)</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.PatternSet">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternSet</tt><a class="headerlink" href="#colibricore.PatternSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This is a simple low-level set that contains Pattern instances</p>
+<dl class="method">
+<dt id="colibricore.PatternSet.add">
+<tt class="descname">add</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternSet.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a pattern to the set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternSet.has">
+<tt class="descname">has</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternSet.has" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.UnindexedPatternModel">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">UnindexedPatternModel</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Unindexed Pattern Model, less flexible and powerful than its indexed counterpart, but smaller memory footprint</p>
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.coverage">
+<tt class="descname">coverage</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.coverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of tokens all instances of the specified pattern cover in the training data, as a fraction of the total amount of tokens</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.coveragecount">
+<tt class="descname">coveragecount</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.coveragecount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of tokens all instances of the specified pattern cover in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.frequency">
+<tt class="descname">frequency</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the frequency of the pattern within its category (ngram/skipgram/flexgram) and exact size class. For a bigram it will thus return the bigram frequency.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.getdata">
+<tt class="descname">getdata</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.getdata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.histogram">
+<tt class="descname">histogram</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a histogram to stdout</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.items">
+<tt class="descname">items</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all patterns and their occurrence count in this model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a patternmodel from file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.maxlength">
+<tt class="descname">maxlength</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.maxlength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the maximum pattern length in the model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.minlength">
+<tt class="descname">minlength</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.minlength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the minimum pattern length in the model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.occurrencecount">
+<tt class="descname">occurrencecount</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.occurrencecount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of times the specified pattern occurs in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.printmodel">
+<tt class="descname">printmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.printmodel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the entire pattern model to stdout, a detailed overview</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.prune">
+<tt class="descname">prune</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.prune" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prune all patterns occurring below the threshold.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; prune only patterns of the specified size, use 0 (default) for no size limitation</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.report">
+<tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a detailed statistical report to stdout</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.tokens">
+<tt class="descname">tokens</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of tokens in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.totaloccurrencesingroup">
+<tt class="descname">totaloccurrencesingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.totaloccurrencesingroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of occurrences in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total occurrence count over all skipgrams.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.totalpatternsingroup">
+<tt class="descname">totalpatternsingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.totalpatternsingroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of distinct patterns in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of distrinct skipgrams.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.totaltokensingroup">
+<tt class="descname">totaltokensingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.totaltokensingroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of covered tokens in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of covered tokens over all skipgrams.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.totalwordtypesingroup">
+<tt class="descname">totalwordtypesingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.totalwordtypesingroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of covered word types (unigram types) in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of covered word types over all skipgrams.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.train">
+<tt class="descname">train</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id5"><span class="problematic" id="id6">*</span></a>.colibri.dat file)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.type">
+<tt class="descname">type</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the model type (10 = UNINDEXED, 20 = INDEXED)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.types">
+<tt class="descname">types</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of distinct word types in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.version">
+<tt class="descname">version</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the model type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.write">
+<tt class="descname">write</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a patternmodel to file</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
@@ -510,6 +1078,9 @@ more limited than the C++ API, yet still offers most higher-level functionality.
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li><a href="#">Colibri Core 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
