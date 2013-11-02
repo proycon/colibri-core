@@ -82,7 +82,7 @@ cdef class ClassDecoder:
 
 
 cdef class Pattern:
-    """The Pattern class contains an ngram, skipgram or flexgram, and allows a wide variety of actions to be performed on it. It is stored in a memory-efficient fashion and facilitating fast operation and comparison"""
+    """The Pattern class contains an ngram, skipgram or flexgram, and allows a wide variety of actions to be performed on it. It is stored in a memory-efficient fashion and facilitating fast operation and comparison. Use ClassEncoder.buildpattern to build a pattern."""
 
     cdef cPattern cpattern
 
@@ -102,7 +102,16 @@ cdef class Pattern:
         return str(self.cpattern.tostring(deref(decoder.thisptr)),'utf-8')
 
     def __contains__(self, Pattern pattern):
-        """Check if the specified pattern occurs within this larger pattern"""
+        """Check if the specified pattern occurs within this larger pattern.
+        
+        :param pattern: the subpattern to look for
+        :type pattern: Pattern
+        :rtype: bool
+
+        Example::
+
+            subpattern in pattern
+        """
         cdef bool r
         r = self.cpattern.contains(pattern.cpattern)
         return r
@@ -157,6 +166,10 @@ cdef class Pattern:
         Or retrieves a subpattern::
 
             subpattern = pattern[begin:end]
+
+
+        :param item: an index or slice
+        :rtype: a Pattern instance
         """
 
         cdef cPattern c_pattern
@@ -185,7 +198,9 @@ cdef class Pattern:
         return self.cpattern.skipcount()
 
     def category(self):
-        """Returns the category of this pattern, Category.NGRAM (1), Category.SKIPGRAM (2), or Category.FLEXGRAM (3)"""
+        """Returns the category of this pattern
+        :rtype: Category.NGRAM (1), Category.SKIPGRAM (2), or Category.FLEXGRAM (3)
+        """
         return self.cpattern.category()
 
     def __hash__(self):
@@ -216,7 +231,11 @@ cdef class Pattern:
         return newpattern
 
     def ngrams(self,int n):
-        """Generator iterating over all ngrams of a particular size that are enclosed within this pattern. Despite the name, this may also return skipgrams!"""
+        """Generator iterating over all ngrams of a particular size that are enclosed within this pattern. Despite the name, this may also return skipgrams!
+        :param n: The desired size to obtain
+        :type n: int
+        :rtype: generator over Pattern instances
+        """
         cdef vector[cPattern] result
         self.cpattern.ngrams(result, n)
         cdef cPattern cngram
@@ -229,7 +248,9 @@ cdef class Pattern:
             inc(it)
 
     def parts(self):
-        """Generating iterating over the consecutive non-gappy parts in a skipgram of flexgram"""
+        """Generating iterating over the consecutive non-gappy parts in a skipgram of flexgram
+        :rtype: generator over Pattern instances
+        """
         cdef vector[cPattern] result
         self.cpattern.parts(result)
         cdef cPattern cngram
@@ -242,7 +263,9 @@ cdef class Pattern:
             inc(it)
 
     def gaps(self):
-        """Generator iterating over the gaps in a skipgram or flexgram, return a tuple (begin,length) for each. For flexgrams, the minimum length (1) is always returned."""
+        """Generator iterating over the gaps in a skipgram or flexgram, return a tuple (begin,length) for each. For flexgrams, the minimum length (1) is always returned.
+        :rtype: generator over (begin, length) tuples
+        """
         cdef vector[pair[int,int]] result
         self.cpattern.gaps(result)
         cdef vector[pair[int,int]].iterator it = result.begin()
@@ -262,8 +285,14 @@ cdef class Pattern:
         newpattern.bind(newcpattern)
         return newpattern
 
-    def subngrams(self,int minn=0,int maxn=9):
-        """Generator iterating over all ngrams of all sizes that are enclosed within this pattern. Despite the name, this may also return skipgrams!"""
+    def subngrams(self,int minn=1,int maxn=9):
+        """Generator iterating over all ngrams of all sizes that are enclosed within this pattern. Despite the name, this may also return skipgrams!
+        :param minn: minimum length (default 1)
+        :type minn: int
+        :param maxn: maximum length (default unlimited)
+        :type maxn: int
+        :rtype: generator over Pattern instances
+        """
         minn = max(1,minn)
         maxn = min(maxn, len(self) -1 )
         for n in range(minn,maxn+1):
@@ -389,12 +418,22 @@ cdef class IndexedPatternModel:
 
 
     cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
-        """Compute and output all relations for the specified pattern"""
+        """Compute and output (to stdout) all relations for the specified pattern:
+        
+        :param pattern: The pattern to output relations for
+        :type pattern: Pattern
+        :param decoder: The class decoder
+        :type decoder: ClassDecoder
+        """
         self.data.outputrelations(pattern.cpattern,deref(decoder.thisptr),&cout)
 
 
     def getsubchildren(self, Pattern pattern):
-        """Get subsumption children for the specified pattern"""
+        """Get subsumption children for the specified pattern
+        :param pattern: The pattern
+        :type pattern: Pattern
+        :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
+        """
         if not isinstance(pattern, Pattern):
             raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubchildren(pattern.cpattern)
@@ -411,7 +450,11 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def getsubparents(self, Pattern pattern):
-        """Get subsumption parents for the specified pattern"""
+        """Get subsumption parents for the specified pattern
+        :param pattern: The pattern
+        :type pattern: Pattern
+        :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
+        """
         if not isinstance(pattern, Pattern):
             raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubparents(pattern.cpattern)
@@ -427,7 +470,11 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def getleftneighbours(self, Pattern pattern):
-        """Get left neighbours for the specified pattern"""
+        """Get left neighbours for the specified pattern
+        :param pattern: The pattern
+        :type pattern: Pattern
+        :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
+        """
         if not isinstance(pattern, Pattern):
             raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern)
@@ -443,7 +490,11 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def getrightneighbours(self, Pattern pattern):
-        """Get right neighbours for the specified pattern"""
+        """Get right neighbours for the specified pattern
+        :param pattern: The pattern
+        :type pattern: Pattern
+        :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
+        """
         if not isinstance(pattern, Pattern):
             raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern)
@@ -459,7 +510,11 @@ cdef class IndexedPatternModel:
             inc(it)
 
     def getskipcontent(self, Pattern pattern):
-        """Get skip content for the specified pattern"""
+        """Get skip content for the specified pattern
+        :param pattern: The pattern
+        :type pattern: Pattern
+        :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
+        """
         if not isinstance(pattern, Pattern):
             raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getskipcontent(pattern.cpattern)
@@ -518,8 +573,16 @@ cdef class PatternModelOptions:
     * DOREVERSEINDEX - Build reverse index? (default: True)
     * DEBUG
     * QUIET (default: False)
+
+    These can also be passed at keyword arguments to the constructor, in a case insensitive fashion::
+
+        options = PatternModelOptions(mintokens=3)
     """
     cdef cPatternModelOptions coptions
+
+    def __init__(self, **kwargs):
+        for kwarg, value in kwargs.items():
+            setattr(self,kwarg.upper(), value)
 
     def __setattr__(self,key, value):
         if key == 'MINTOKENS':

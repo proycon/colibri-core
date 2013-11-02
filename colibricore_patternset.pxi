@@ -8,7 +8,12 @@ cpdef has(self, Pattern pattern):
     return self.data.has(pattern.cpattern)
 
 def __contains__(self, pattern):
-    """Test if the pattern is in the dictionary"""
+    """Test if the pattern is in the dictionary
+    
+    :param pattern: A pattern
+    :type pattern: Pattern
+    :rtype: bool
+    """
     if not isinstance(pattern, Pattern):
         raise ValueError("Expected instance of Pattern")
     return self.has(pattern)
