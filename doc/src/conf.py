@@ -239,4 +239,7 @@ texinfo_documents = [
 #texinfo_domain_indices = True
 
 # How to display URL addresses: 'footnote', 'no', or 'inline'.
+
 #texinfo_show_urls = 'footnote'
+
+autoclass_content = 'both'
