@@ -243,3 +243,4 @@ texinfo_documents = [
 #texinfo_show_urls = 'footnote'
 
 autoclass_content = 'both'
+embedsignature=True
