@@ -30,9 +30,14 @@
 
 const int MAINPATTERNBUFFERSIZE = 40960;
 
-//Pattern categories
+/**
+ * Pattern categories
+ */
 enum PatternCategory {
-    UNKNOWNPATTERN = 0, NGRAM = 1, SKIPGRAM = 2, FLEXGRAM = 3
+    UNKNOWNPATTERN = 0, /**< not used */
+    NGRAM = 1, /**< For ngrams, i.e. patterns without gaps */
+    SKIPGRAM = 2, /**< For skipgrams, i.e. patterns with fixed-width gaps */
+    FLEXGRAM = 3, /**< For flexgrams, i.e. patterns with dynamic-width gaps */
 };
 
 //Not really used much yet, but reserved for encoding structural markup
@@ -71,22 +76,58 @@ int reader_passmarker(const unsigned char c, std::istream * in);
 
 
 
-/*
- * This is the main pattern class
- * */
+/**
+ * Pattern class
+ * Represents a pattern (ngram, skipgram or flexgram), encoded in a
+ * memory-saving fashion. Allows numerous operations.
+ */
 class Pattern {
     protected:
      void reader_marker(unsigned char * _data, std::istream * in);
     public:
-     unsigned char * data; //holds the variable-width byte representation, terminated by \0 (ENDMARKER)
+     unsigned char * data; /**< This array holds the variable-width byte representation, it is always terminated by \0 (ENDMARKER) */
 
-     Pattern() { data = new unsigned char[1]; data[0] = ENDMARKER; } //empty constructor (still consumes 1 byte though)
-     Pattern(const unsigned char* dataref, const int size); //low-level constructor
-     Pattern(const Pattern& ref, int begin, int length); //slice constructor
-     Pattern(const Pattern& ref); //copy constructor
-     Pattern(std::istream * in); //read from binary file constructor
+     /**
+      * Default/empty Pattern constructor. Creates an empty pattern. Still consumes one
+      * byte (the end-marker)
+      */
+     Pattern() { data = new unsigned char[1]; data[0] = ENDMARKER; }
+
+     /**
+      * Low-level pattern constructor from character array. The size is in
+      * bytes and never includes the end-marker. 
+      * @param dataref Reference data, must be properly class-encoded
+      * @param size The size (without \0 end marker!) to copy from dataref
+      */
+     Pattern(const unsigned char* dataref, const int size); 
+
+     /**
+      * Slice constructor for Pattern
+      * @param ref Reference pattern
+      * @param begin Index of the first token to copy (0-indexed)
+      * @param length Number of tokens to copy
+      */
+     Pattern(const Pattern& ref, int begin, int length); 
+
+     /**
+      * Copy constructor for Pattern
+      * @param ref Reference pattern
+      */
+     Pattern(const Pattern& ref);
+
+     /**
+      * Read Pattern from input stream (in binary form)
+      * @param in The input stream
+      */
+     Pattern(std::istream * in); 
+
      ~Pattern();
 
+
+     /**
+      * Pattern constructor consisting of only a fixed-size gap
+      * @param size The size of the gap
+      */
      Pattern(int size) {
          //pattern consisting only of fixed skips
          data = new unsigned char[size+1];
@@ -94,23 +135,69 @@ class Pattern {
          data[size] = ENDMARKER;
      }
 
-     void write(std::ostream * out) const; //write binary output
+     /**
+      * Write Pattern to output stream (in binary form)
+      * @param out The output stream
+      */
+     void write(std::ostream * out) const; 
 
-     const size_t n() const; //return the size of the pattern in tokens (will count flex gaps gaps as size 1)
-     const size_t bytesize() const; //return the size of the pattern (in bytes)
-     const size_t size() const { return n(); } // alias
-     const unsigned int skipcount() const; //return the number of skips
+     /**
+      * return the size of the pattern in tokens (will count flex gaps gaps as size 1)
+      */
+     const size_t n() const;
+
+
+     /**
+      * return the size of the pattern (in bytes), this does not include the
+      * final \0 end-marker.
+      */
+     const size_t bytesize() const; 
+     
+     /**
+      * return the size of the pattern in tokens (will count flex gaps gaps as size 1)
+      */
+     const size_t size() const { return n(); } 
+
+
+     /**
+      * return the number of skips in this pattern
+      */
+     const unsigned int skipcount() const;
+
+     /**
+      * Returns the category of this pattern (value from enum PatternCategory)
+      */
      const PatternCategory category() const;
+
+
      const StructureType type() const;
      const bool isskipgram() const { return category() == SKIPGRAM; }
      const bool isflexgram() const { return category() == FLEXGRAM; }
      
-     Pattern operator [](int index) { return Pattern(*this, index,1); } //return single token, not byte!! use with n(), not with size()
+     /**
+      * Return a single token (not a byte!). index < size().
+      */
+     Pattern operator [](int index) { return Pattern(*this, index,1); } 
 
+     /**
+      * Compute a hash value for this pattern
+      */
      const size_t hash(bool stripmarkers = false) const;
 
+     /**
+      * Converts this pattern back into its string representation, using a
+      * classdecoder
+      */
      std::string tostring(ClassDecoder& classdecoder) const; //pattern to string (decode)
+
+     /**
+      * alias for tostring()
+      */
      std::string decode(ClassDecoder& classdecoder) const { return tostring(classdecoder); } //alias
+
+     /**
+      * Debug function outputting the classes in this pattern to stderr
+      */
      bool out() const;
 
      bool operator==(const Pattern & other) const;
@@ -125,21 +212,67 @@ class Pattern {
 
      Pattern operator +(const Pattern&) const;
 
-     int find(const Pattern & pattern) const; //returns the index, -1 if not found 
-     bool contains(const Pattern & pattern) const; //does the pattern contain the smaller pattern?
-     bool instanceof(const Pattern & skipgram) const; //Is this a full instantiation of the skipgram?
+     /**
+      * Finds the specified subpattern in the this pattern. Returns the index
+      * at which it is found, or -1 if it is not found at all.
+      */
+     int find(const Pattern & subpattern) const; 
+
+     /**
+      * Test whether the pattern contains the specified subpattern.
+      */
+     bool contains(const Pattern & subpattern) const; //does the pattern contain the smaller pattern?
+   
+     /**
+      * Tests whether the pattern is an instantiation of the specified skipgram
+      */
+     bool instanceof(const Pattern & skipgram) const; 
     
 
-     int ngrams(std::vector<Pattern> & container, const int n) const; //return multiple ngrams
+     /**
+      * Adds all patterns (not just ngrams) of size n that are contained within the pattern to
+      * container. Does not extract skipgrams that are not directly present in
+      * the pattern.
+      */
+     int ngrams(std::vector<Pattern> & container, const int n) const; 
+
+     /**
+      * Adds all patterns (not just ngrams) of all sizes that are contained within the pattern to
+      * container. Does not extract skipgrams that are not directly present in
+      * the pattern.
+      */
      int subngrams(std::vector<Pattern> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
 
+     /**
+      * Adds all pairs of all patterns (not just ngrams) of size n that are
+      * contained within the pattern, with the token offset at which they were
+      * found,  to container.  Does not extract skipgrams that are not directly
+      * present in the pattern.
+      */
      int ngrams(std::vector<std::pair<Pattern,int>> & container, const int n) const; //return multiple ngrams
+
+     /**
+      * Adds all pairs of all patterns (not just ngrams) that are
+      * contained within the pattern, with the token offset at which they were
+      * found,  to container.  Does not extract skipgrams that are not directly
+      * present in the pattern.
+      */
      int subngrams(std::vector<std::pair<Pattern,int>> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
 
-     int parts(std::vector<Pattern> & container) const; //find all the parts of a skipgram, parts are the portions that are not skips... Thus 'to be {*} not {*} be' has three parts 
-     int parts(std::vector<std::pair<int,int> > & container) const; //same as above, but return (begin,length) pairs instead of patterns
+     /**
+      * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container... Thus 'to be {*} not {*} be' has three parts 
+      */
+     int parts(std::vector<Pattern> & container) const; 
+     
+     /**
+      * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container as begin,length pairs... Thus 'to be {*} not {*} be' has three parts 
+      */
+     int parts(std::vector<std::pair<int,int> > & container) const; 
 
-     int gaps(std::vector<std::pair<int,int> > & container) const; //returns the positions (begin, length) of the gaps in a skipgram
+     /**
+      * Finds all the gaps of a skipgram or flexgram., parts are the portions that are not skips and adds them to container as begin,length pairs... Thus 'to be {*} not {*} be' has three parts. The gap-length of a flexgram will always be its minimum length one.
+      */
+     int gaps(std::vector<std::pair<int,int> > & container) const; 
 
      Pattern extractskipcontent(Pattern & instance) const; //given a pattern and an instance, extract a pattern from the instance that would fill the gaps
 
@@ -147,7 +280,10 @@ class Pattern {
      Pattern addskips(std::vector<std::pair<int,int> > & gaps) const;
      Pattern addflexgaps(std::vector<std::pair<int,int> > & gaps) const;
 
-     Pattern toflexgram() const; //converts a skipgram into a flexgram, ngrams just come out unchanged
+     /**
+      * converts a skipgram into a flexgram, ngrams just come out unchanged
+      */
+     Pattern toflexgram() const;
 
      bool isgap(int i) const; //is the word at this position a gap?
 

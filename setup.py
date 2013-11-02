@@ -2,6 +2,10 @@
 from distutils.core import setup, Extension
 from Cython.Distutils import build_ext
 import glob
+import os
+
+from os.path import expanduser
+HOMEDIR = expanduser("~")
 
 #cython's include is sucky unfortunately :( We'll have our own:
 for filename in glob.glob("*.in.pyx"):
@@ -21,8 +25,8 @@ for filename in glob.glob("*.in.pyx"):
 extensions = [ Extension("colibricore",
                 ["unordered_map.pxd", "colibricore_classes.pxd", "colibricore_wrapper.pyx"],
                 language='c++',
-                include_dirs=['/home/proycon/local/include/colibri-core/', '/home/proycon/local/include/','/usr/include/', '/usr/include/libxml2','/usr/local/include/' ],
-                library_dirs=['/home/proycon/local/lib/','/usr/lib','/usr/local/lib'],
+                include_dirs=[HOMEDIR + '/local/include/colibri-core/', HOMEDIR + '/local/include/','/usr/include/', '/usr/include/libxml2','/usr/local/include/' ],
+                library_dirs=[HOMEDIR + '/local/lib/','/usr/lib','/usr/local/lib'],
                 libraries=['colibricore'],
                 extra_compile_args=['--std=c++0x'],
                 pyrex_gdb=True
