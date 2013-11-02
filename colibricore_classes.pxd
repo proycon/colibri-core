@@ -122,6 +122,21 @@ cdef extern from "pattern.h":
         iterator find(Pattern&) nogil
 
 
+    cdef cppclass IndexedCorpus:
+        cppclass iterator:
+            pair[IndexReference,Pattern] & operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        IndexedCorpus(string) nogil
+        bool has(IndexReference&) nogil
+        Pattern getpattern(IndexReference&,int) nogil
+        vector[Pattern] findmatches(Pattern&) nogil
+
 cdef extern from "classdecoder.h":
     cdef cppclass ClassDecoder:
         ClassDecoder(string) except +
