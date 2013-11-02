@@ -468,8 +468,9 @@ Python API Reference
 =======================
 
 Colibri Core offers both a C++ API as well as a Python API. It exposes all of
-the functionality, and beyond, of the tools outlined above. The Python API is
-more limited than the C++ API, yet still offers most higher-level functionality.
+the functionality, and beyond, of the tools outlined above. The Python API
+binds with the C++ code, and although it is more limited than the C++ API, it
+still offers most higher-level functionality.
 
 .. automodule:: colibricore
    :members:
