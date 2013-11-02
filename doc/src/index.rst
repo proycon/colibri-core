@@ -462,7 +462,7 @@ possible parsers can distinguish the numbers for the queried pattern itself from
 Architecture Overview
 =======================
 
-.. image: arch.png
+.. image:: arch.png
 
 Python API Reference
 =======================
