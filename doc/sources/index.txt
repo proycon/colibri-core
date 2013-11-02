@@ -458,8 +458,34 @@ possible parsers can distinguish the numbers for the queried pattern itself from
     * **Relation Frequency** -- The number of times pattern 1 and pattern 2 occur in this relationas a fraction of all relations of this type
     * **Count 2** -- The absolute number of occurrences of pattern 2 in the model
 
-Library Reference
+    
+Python API Reference
 ===================
 
-(todo)
+Colibri Core offers both a C++ API as well as a Python API. It exposes all of
+the functionality, and beyond, of the tools outlined above. The Python API is
+more limited than the C++ API, yet still offers most higher-level functionality.
+
+.. automodule:: colibricore
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
