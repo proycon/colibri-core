@@ -571,7 +571,7 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 
 <dl class="attribute">
 <dt id="colibricore.IndexedData.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3d1f060&gt;</em><a class="headerlink" href="#colibricore.IndexedData.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x2fff030&gt;</em><a class="headerlink" href="#colibricore.IndexedData.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -581,23 +581,45 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">IndexedPatternModel</tt><a class="headerlink" href="#colibricore.IndexedPatternModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Indexed Pattern Model</p>
-<p>Initialise a pattern model. Either an empty one or loading from file</p>
+<p>Initialise a pattern model. Either an empty one or loading from file. 
+:param filename: The name of the file to load, must be a valid colibri patternmodel file
+:type filename: str
+:param options: An instance of PatternModelOptions, containing the options used for loading
+:type options: PatternModelOptions</p>
 <dl class="attribute">
 <dt id="colibricore.IndexedPatternModel.__contains__">
 <tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.IndexedPatternModel.__contains__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests if a pattern is in the model</p>
+<dd><p>Tests if a pattern is in the model:
+:param pattern: A pattern
+:type pattern: Pattern
+:rtype: bool</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pattern</span> <span class="ow">in</span> <span class="n">patternmodel</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="colibricore.IndexedPatternModel.__getitem__">
 <tt class="descname">__getitem__</tt><a class="headerlink" href="#colibricore.IndexedPatternModel.__getitem__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the value for the pattern</p>
+<dd><p>Retrieves the value for the pattern
+:param pattern: A pattern
+:type pattern: Pattern
+:rtype: int (for Unindexed Models), IndexData (for Indexed models)</p>
+<p>Example (unindexed model):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">occurrences</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="n">pattern</span><span class="p">]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="colibricore.IndexedPatternModel.__init__">
 <tt class="descname">__init__</tt><a class="headerlink" href="#colibricore.IndexedPatternModel.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialise a pattern model. Either an empty one or loading from file</p>
+<dd><p>Initialise a pattern model. Either an empty one or loading from file. 
+:param filename: The name of the file to load, must be a valid colibri patternmodel file
+:type filename: str
+:param options: An instance of PatternModelOptions, containing the options used for loading
+:type options: PatternModelOptions</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -619,55 +641,79 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 
 <dl class="attribute">
 <dt id="colibricore.IndexedPatternModel.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3d1f270&gt;</em><a class="headerlink" href="#colibricore.IndexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x2fff240&gt;</em><a class="headerlink" href="#colibricore.IndexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.coverage">
 <tt class="descname">coverage</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.coverage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of tokens all instances of the specified pattern cover in the training data, as a fraction of the total amount of tokens</p>
+<dd><p>Returns the number of tokens all instances of the specified pattern cover in the training data, as a fraction of the total amount of tokens
+:param pattern: A pattern
+:type pattern: Pattern
+:rtype: float</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.coveragecount">
 <tt class="descname">coveragecount</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.coveragecount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of tokens all instances of the specified pattern cover in the training data</p>
+<dd><p>Returns the number of tokens all instances of the specified pattern cover in the training data
+:param pattern: A pattern
+:type pattern: Pattern
+:rtype: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.frequency">
 <tt class="descname">frequency</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.frequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the frequency of the pattern within its category (ngram/skipgram/flexgram) and exact size class. For a bigram it will thus return the bigram frequency.</p>
+<dd><p>Returns the frequency of the pattern within its category (ngram/skipgram/flexgram) and exact size class. For a bigram it will thus return the bigram frequency.
+:param pattern: A pattern
+:type pattern: Pattern
+:rtype: float</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.getleftneighbours">
 <tt class="descname">getleftneighbours</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getleftneighbours" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get left neighbours for the specified pattern</p>
+<dd><p>Get left neighbours for the specified pattern
+:param pattern: The pattern
+:type pattern: Pattern
+:rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.getrightneighbours">
 <tt class="descname">getrightneighbours</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getrightneighbours" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get right neighbours for the specified pattern</p>
+<dd><p>Get right neighbours for the specified pattern
+:param pattern: The pattern
+:type pattern: Pattern
+:rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.getskipcontent">
 <tt class="descname">getskipcontent</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getskipcontent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get skip content for the specified pattern</p>
+<dd><p>Get skip content for the specified pattern
+:param pattern: The pattern
+:type pattern: Pattern
+:rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.getsubchildren">
 <tt class="descname">getsubchildren</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getsubchildren" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get subsumption children for the specified pattern</p>
+<dd><p>Get subsumption children for the specified pattern
+:param pattern: The pattern
+:type pattern: Pattern
+:rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.getsubparents">
 <tt class="descname">getsubparents</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getsubparents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get subsumption parents for the specified pattern</p>
+<dd><p>Get subsumption parents for the specified pattern
+:param pattern: The pattern
+:type pattern: Pattern
+:rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship</p>
 </dd></dl>
 
 <dl class="method">
@@ -685,7 +731,11 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.load">
 <tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a patternmodel from file</p>
+<dd><p>Load a patternmodel from file
+:param filename: The name of the file to load, must be a valid colibri patternmodel file
+:type filename: str
+:param options: An instance of PatternModelOptions, containing the options used for loading
+:type options: PatternModelOptions</p>
 </dd></dl>
 
 <dl class="method">
@@ -703,19 +753,36 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.occurrencecount">
 <tt class="descname">occurrencecount</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.occurrencecount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of times the specified pattern occurs in the training data</p>
+<dd><p>Returns the number of times the specified pattern occurs in the training data
+:param pattern: A pattern
+:type pattern: Pattern
+:rtype: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.outputrelations">
 <tt class="descname">outputrelations</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.outputrelations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute and output all relations for the specified pattern</p>
+<dd><p>Compute and output (to stdout) all relations for the specified pattern:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pattern</strong> (<em>Pattern</em>) &#8211; The pattern to output relations for</li>
+<li><strong>decoder</strong> (<em>ClassDecoder</em>) &#8211; The class decoder</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.printmodel">
 <tt class="descname">printmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.printmodel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the entire pattern model to stdout, a detailed overview</p>
+<dd><p>Print the entire pattern model to stdout, a detailed overview
+:param decoder: The class decoder
+:type decoder: ClassDecoder</p>
 </dd></dl>
 
 <dl class="method">
@@ -726,7 +793,11 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; prune only patterns of the specified size, use 0 (default) for no size limitation</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>threshold</strong> (<em>int</em>) &#8211; the threshold value (minimum number of occurrences)</li>
+<li><strong>n</strong> (<em>int</em>) &#8211; prune only patterns of the specified size, use 0 (default) for no size limitation</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -747,31 +818,55 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.totaloccurrencesingroup">
 <tt class="descname">totaloccurrencesingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.totaloccurrencesingroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the total number of occurrences in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total occurrence count over all skipgrams.</p>
+<dd><p>Returns the total number of occurrences in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total occurrence count over all skipgrams.
+:param category: The category constraint (Category.NGRAM, Category.SKIPGRAM, Category.FLEXGRAM or 0 for no-constraint, default)
+:type category: int
+:param n: The size constraint (0= no constraint, default)
+:type n: int
+:rtype: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.totalpatternsingroup">
 <tt class="descname">totalpatternsingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.totalpatternsingroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the total number of distinct patterns in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of distrinct skipgrams.</p>
+<dd><p>Returns the total number of distinct patterns in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of distrinct skipgrams.
+:param category: The category constraint (Category.NGRAM, Category.SKIPGRAM, Category.FLEXGRAM or 0 for no-constraint, default)
+:type category: int
+:param n: The size constraint (0= no constraint, default)
+:type n: int
+:rtype: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.totaltokensingroup">
 <tt class="descname">totaltokensingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.totaltokensingroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the total number of covered tokens in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of covered tokens over all skipgrams.</p>
+<dd><p>Returns the total number of covered tokens in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of covered tokens over all skipgrams.
+:param category: The category constraint (Category.NGRAM, Category.SKIPGRAM, Category.FLEXGRAM or 0 for no-constraint, default)
+:type category: int
+:param n: The size constraint (0= no constraint, default)
+:type n: int
+:rtype: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.totalwordtypesingroup">
 <tt class="descname">totalwordtypesingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.totalwordtypesingroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the total number of covered word types (unigram types) in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of covered word types over all skipgrams.</p>
+<dd><p>Returns the total number of covered word types (unigram types) in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of covered word types over all skipgrams.
+:param category: The category constraint (Category.NGRAM, Category.SKIPGRAM, Category.FLEXGRAM or 0 for no-constraint, default)
+:type category: int
+:param n: The size constraint (0= no constraint, default)
+:type n: int
+:rtype: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.train">
 <tt class="descname">train</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id3"><span class="problematic" id="id4">*</span></a>.colibri.dat file)</p>
+<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id3"><span class="problematic" id="id4">*</span></a>.colibri.dat file)
+:param filename: The name of the file to load, must be a valid colibri.dat file
+:type filename: str
+:param options: An instance of PatternModelOptions, containing the options used for loading
+:type options: PatternModelOptions</p>
 </dd></dl>
 
 <dl class="method">
@@ -795,7 +890,9 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.write">
 <tt class="descname">write</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a patternmodel to file</p>
+<dd><p>Write a patternmodel to file
+:param filename: The name of the file to write to
+:type filename: str</p>
 </dd></dl>
 
 </dd></dl>
@@ -804,7 +901,7 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dt id="colibricore.Pattern">
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">Pattern</tt><a class="headerlink" href="#colibricore.Pattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>The Pattern class contains an ngram, skipgram or flexgram, and allows a wide variety of actions to be performed on it. It is stored in a memory-efficient fashion and facilitating fast operation and comparison</p>
+<p>The Pattern class contains an ngram, skipgram or flexgram, and allows a wide variety of actions to be performed on it. It is stored in a memory-efficient fashion and facilitating fast operation and comparison. Use ClassEncoder.buildpattern to build a pattern.</p>
 <dl class="attribute">
 <dt id="colibricore.Pattern.__add__">
 <tt class="descname">__add__</tt><a class="headerlink" href="#colibricore.Pattern.__add__" title="Permalink to this definition">¶</a></dt>
@@ -815,7 +912,21 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dl class="attribute">
 <dt id="colibricore.Pattern.__contains__">
 <tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.Pattern.__contains__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the specified pattern occurs within this larger pattern</p>
+<dd><p>Check if the specified pattern occurs within this larger pattern.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pattern</strong> (<em>Pattern</em>) &#8211; the subpattern to look for</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">subpattern</span> <span class="ow">in</span> <span class="n">pattern</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -855,6 +966,16 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <div class="highlight-python"><div class="highlight"><pre><span class="n">subpattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="n">begin</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
 </pre></div>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>item</strong> &#8211; an index or slice</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">a Pattern instance</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -907,7 +1028,7 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 
 <dl class="attribute">
 <dt id="colibricore.Pattern.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3d1f030&gt;</em><a class="headerlink" href="#colibricore.Pattern.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x2e88fc0&gt;</em><a class="headerlink" href="#colibricore.Pattern.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -925,7 +1046,8 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dl class="method">
 <dt id="colibricore.Pattern.category">
 <tt class="descname">category</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the category of this pattern, Category.NGRAM (1), Category.SKIPGRAM (2), or Category.FLEXGRAM (3)</p>
+<dd><p>Returns the category of this pattern
+:rtype: Category.NGRAM (1), Category.SKIPGRAM (2), or Category.FLEXGRAM (3)</p>
 </dd></dl>
 
 <dl class="method">
@@ -936,19 +1058,24 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dl class="method">
 <dt id="colibricore.Pattern.gaps">
 <tt class="descname">gaps</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.gaps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator iterating over the gaps in a skipgram or flexgram, return a tuple (begin,length) for each. For flexgrams, the minimum length (1) is always returned.</p>
+<dd><p>Generator iterating over the gaps in a skipgram or flexgram, return a tuple (begin,length) for each. For flexgrams, the minimum length (1) is always returned.
+:rtype: generator over (begin, length) tuples</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.Pattern.ngrams">
 <tt class="descname">ngrams</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.ngrams" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator iterating over all ngrams of a particular size that are enclosed within this pattern. Despite the name, this may also return skipgrams!</p>
+<dd><p>Generator iterating over all ngrams of a particular size that are enclosed within this pattern. Despite the name, this may also return skipgrams!
+:param n: The desired size to obtain
+:type n: int
+:rtype: generator over Pattern instances</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.Pattern.parts">
 <tt class="descname">parts</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.parts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generating iterating over the consecutive non-gappy parts in a skipgram of flexgram</p>
+<dd><p>Generating iterating over the consecutive non-gappy parts in a skipgram of flexgram
+:rtype: generator over Pattern instances</p>
 </dd></dl>
 
 <dl class="method">
@@ -960,7 +1087,12 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dl class="method">
 <dt id="colibricore.Pattern.subngrams">
 <tt class="descname">subngrams</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.subngrams" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator iterating over all ngrams of all sizes that are enclosed within this pattern. Despite the name, this may also return skipgrams!</p>
+<dd><p>Generator iterating over all ngrams of all sizes that are enclosed within this pattern. Despite the name, this may also return skipgrams!
+:param minn: minimum length (default 1)
+:type minn: int
+:param maxn: maximum length (default unlimited)
+:type maxn: int
+:rtype: generator over Pattern instances</p>
 </dd></dl>
 
 <dl class="method">
@@ -1030,7 +1162,7 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 
 <dl class="attribute">
 <dt id="colibricore.PatternDict_float.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3d1f180&gt;</em><a class="headerlink" href="#colibricore.PatternDict_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x2fff150&gt;</em><a class="headerlink" href="#colibricore.PatternDict_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1094,7 +1226,7 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 
 <dl class="attribute">
 <dt id="colibricore.PatternDict_int.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3d1f150&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x2fff120&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1158,7 +1290,7 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 
 <dl class="attribute">
 <dt id="colibricore.PatternDict_int32.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3d1f120&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x2fff0f0&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1195,6 +1327,10 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <li>DEBUG</li>
 <li>QUIET (default: False)</li>
 </ul>
+<p>These can also be passed at keyword arguments to the constructor, in a case insensitive fashion:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">options</span> <span class="o">=</span> <span class="n">PatternModelOptions</span><span class="p">(</span><span class="n">mintokens</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="attribute">
 <dt id="colibricore.PatternModelOptions.__delattr__">
 <tt class="descname">__delattr__</tt><a class="headerlink" href="#colibricore.PatternModelOptions.__delattr__" title="Permalink to this definition">¶</a></dt>
@@ -1210,6 +1346,12 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dt id="colibricore.PatternModelOptions.__getattribute__">
 <tt class="descname">__getattribute__</tt><a class="headerlink" href="#colibricore.PatternModelOptions.__getattribute__" title="Permalink to this definition">¶</a></dt>
 <dd><p>x.__getattribute__(&#8216;name&#8217;) &lt;==&gt; x.name</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternModelOptions.__init__">
+<tt class="descname">__init__</tt><a class="headerlink" href="#colibricore.PatternModelOptions.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
 </dd></dl>
 
 <dl class="staticmethod">
@@ -1234,6 +1376,16 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dt id="colibricore.PatternSet.__contains__">
 <tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.PatternSet.__contains__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test if the pattern is in the dictionary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pattern</strong> (<em>Pattern</em>) &#8211; A pattern</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -1255,7 +1407,7 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 
 <dl class="attribute">
 <dt id="colibricore.PatternSet.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3d1f0c0&gt;</em><a class="headerlink" href="#colibricore.PatternSet.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x2fff090&gt;</em><a class="headerlink" href="#colibricore.PatternSet.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1276,29 +1428,56 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">UnindexedPatternModel</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Unindexed Pattern Model, less flexible and powerful than its indexed counterpart, but smaller memory footprint</p>
-<p>Initialise a pattern model. Either an empty one or loading from file</p>
+<p>Initialise a pattern model. Either an empty one or loading from file. 
+:param filename: The name of the file to load, must be a valid colibri patternmodel file
+:type filename: str
+:param options: An instance of PatternModelOptions, containing the options used for loading
+:type options: PatternModelOptions</p>
 <dl class="attribute">
 <dt id="colibricore.UnindexedPatternModel.__contains__">
 <tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel.__contains__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests if a pattern is in the model</p>
+<dd><p>Tests if a pattern is in the model:
+:param pattern: A pattern
+:type pattern: Pattern
+:rtype: bool</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pattern</span> <span class="ow">in</span> <span class="n">patternmodel</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="colibricore.UnindexedPatternModel.__getitem__">
 <tt class="descname">__getitem__</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel.__getitem__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the value for the pattern</p>
+<dd><p>Retrieves the value for the pattern
+:param pattern: A pattern
+:type pattern: Pattern
+:rtype: int (for Unindexed Models), IndexData (for Indexed models)</p>
+<p>Example (unindexed model):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">occurrences</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="n">pattern</span><span class="p">]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="colibricore.UnindexedPatternModel.__init__">
 <tt class="descname">__init__</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialise a pattern model. Either an empty one or loading from file</p>
+<dd><p>Initialise a pattern model. Either an empty one or loading from file. 
+:param filename: The name of the file to load, must be a valid colibri patternmodel file
+:type filename: str
+:param options: An instance of PatternModelOptions, containing the options used for loading
+:type options: PatternModelOptions</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="colibricore.UnindexedPatternModel.__iter__">
 <tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel.__iter__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Iterates over all patterns in the model</p>
+<dd><p>Iterates over all patterns in the model.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">classdecoder</span><span class="p">))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -1314,25 +1493,34 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 
 <dl class="attribute">
 <dt id="colibricore.UnindexedPatternModel.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3d1f2a0&gt;</em><a class="headerlink" href="#colibricore.UnindexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x2fff270&gt;</em><a class="headerlink" href="#colibricore.UnindexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.coverage">
 <tt class="descname">coverage</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.coverage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of tokens all instances of the specified pattern cover in the training data, as a fraction of the total amount of tokens</p>
+<dd><p>Returns the number of tokens all instances of the specified pattern cover in the training data, as a fraction of the total amount of tokens
+:param pattern: A pattern
+:type pattern: Pattern
+:rtype: float</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.coveragecount">
 <tt class="descname">coveragecount</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.coveragecount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of tokens all instances of the specified pattern cover in the training data</p>
+<dd><p>Returns the number of tokens all instances of the specified pattern cover in the training data
+:param pattern: A pattern
+:type pattern: Pattern
+:rtype: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.frequency">
 <tt class="descname">frequency</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.frequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the frequency of the pattern within its category (ngram/skipgram/flexgram) and exact size class. For a bigram it will thus return the bigram frequency.</p>
+<dd><p>Returns the frequency of the pattern within its category (ngram/skipgram/flexgram) and exact size class. For a bigram it will thus return the bigram frequency.
+:param pattern: A pattern
+:type pattern: Pattern
+:rtype: float</p>
 </dd></dl>
 
 <dl class="method">
@@ -1355,7 +1543,11 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.load">
 <tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a patternmodel from file</p>
+<dd><p>Load a patternmodel from file
+:param filename: The name of the file to load, must be a valid colibri patternmodel file
+:type filename: str
+:param options: An instance of PatternModelOptions, containing the options used for loading
+:type options: PatternModelOptions</p>
 </dd></dl>
 
 <dl class="method">
@@ -1373,13 +1565,18 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.occurrencecount">
 <tt class="descname">occurrencecount</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.occurrencecount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of times the specified pattern occurs in the training data</p>
+<dd><p>Returns the number of times the specified pattern occurs in the training data
+:param pattern: A pattern
+:type pattern: Pattern
+:rtype: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.printmodel">
 <tt class="descname">printmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.printmodel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the entire pattern model to stdout, a detailed overview</p>
+<dd><p>Print the entire pattern model to stdout, a detailed overview
+:param decoder: The class decoder
+:type decoder: ClassDecoder</p>
 </dd></dl>
 
 <dl class="method">
@@ -1390,7 +1587,11 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; prune only patterns of the specified size, use 0 (default) for no size limitation</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>threshold</strong> (<em>int</em>) &#8211; the threshold value (minimum number of occurrences)</li>
+<li><strong>n</strong> (<em>int</em>) &#8211; prune only patterns of the specified size, use 0 (default) for no size limitation</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -1411,31 +1612,55 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.totaloccurrencesingroup">
 <tt class="descname">totaloccurrencesingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.totaloccurrencesingroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the total number of occurrences in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total occurrence count over all skipgrams.</p>
+<dd><p>Returns the total number of occurrences in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total occurrence count over all skipgrams.
+:param category: The category constraint (Category.NGRAM, Category.SKIPGRAM, Category.FLEXGRAM or 0 for no-constraint, default)
+:type category: int
+:param n: The size constraint (0= no constraint, default)
+:type n: int
+:rtype: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.totalpatternsingroup">
 <tt class="descname">totalpatternsingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.totalpatternsingroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the total number of distinct patterns in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of distrinct skipgrams.</p>
+<dd><p>Returns the total number of distinct patterns in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of distrinct skipgrams.
+:param category: The category constraint (Category.NGRAM, Category.SKIPGRAM, Category.FLEXGRAM or 0 for no-constraint, default)
+:type category: int
+:param n: The size constraint (0= no constraint, default)
+:type n: int
+:rtype: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.totaltokensingroup">
 <tt class="descname">totaltokensingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.totaltokensingroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the total number of covered tokens in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of covered tokens over all skipgrams.</p>
+<dd><p>Returns the total number of covered tokens in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of covered tokens over all skipgrams.
+:param category: The category constraint (Category.NGRAM, Category.SKIPGRAM, Category.FLEXGRAM or 0 for no-constraint, default)
+:type category: int
+:param n: The size constraint (0= no constraint, default)
+:type n: int
+:rtype: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.totalwordtypesingroup">
 <tt class="descname">totalwordtypesingroup</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.totalwordtypesingroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the total number of covered word types (unigram types) in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of covered word types over all skipgrams.</p>
+<dd><p>Returns the total number of covered word types (unigram types) in the specified group, within the specified category and/or size class, you can set either to zero (default) to consider all. Example, category=Category.SKIPGRAM and n=0 would consider give the total number of covered word types over all skipgrams.
+:param category: The category constraint (Category.NGRAM, Category.SKIPGRAM, Category.FLEXGRAM or 0 for no-constraint, default)
+:type category: int
+:param n: The size constraint (0= no constraint, default)
+:type n: int
+:rtype: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.train">
 <tt class="descname">train</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id5"><span class="problematic" id="id6">*</span></a>.colibri.dat file)</p>
+<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id5"><span class="problematic" id="id6">*</span></a>.colibri.dat file)
+:param filename: The name of the file to load, must be a valid colibri.dat file
+:type filename: str
+:param options: An instance of PatternModelOptions, containing the options used for loading
+:type options: PatternModelOptions</p>
 </dd></dl>
 
 <dl class="method">
@@ -1459,7 +1684,9 @@ more limited than the C++ API, yet still offers most higher-level functionality.
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.write">
 <tt class="descname">write</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a patternmodel to file</p>
+<dd><p>Write a patternmodel to file
+:param filename: The name of the file to write to
+:type filename: str</p>
 </dd></dl>
 
 </dd></dl>
