@@ -132,10 +132,13 @@ cdef extern from "pattern.h":
         size_t size() nogil
         iterator begin() nogil
         iterator end() nogil
-        IndexedCorpus(string) nogil
+        IndexedCorpus() nogil
+        void load(string) nogil
         bool has(IndexReference&) nogil
         Pattern getpattern(IndexReference&,int) nogil
-        vector[Pattern] findmatches(Pattern&) nogil
+        vector[IndexReference] findmatches(Pattern&,int) nogil
+        Pattern& operator[](IndexReference&) nogil
+
 
 cdef extern from "classdecoder.h":
     cdef cppclass ClassDecoder:

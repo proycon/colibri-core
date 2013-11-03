@@ -14,7 +14,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator,IndexedCorpus as cIndexedCorpus
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
@@ -657,3 +657,111 @@ cdef class PatternModelOptions:
             return self.coptions.QUIET
         else:
             raise KeyError
+
+cdef class IndexedCorpus:
+    """An indexed version of a corpus, reads an entire corpus (colibri.dat file) in memory"""
+    cdef cIndexedCorpus data
+
+    def __init__(self, str filename):
+        """:param filename: The name of the colibri.dat file to load"""
+        self.data.load(filename.encode('utf-8'))
+
+    def __len__(self):
+        """Return the total number of tokens in the corpus"""
+        return self.data.size()
+
+    cdef has(self,tuple item):
+        cdef int sentence = item[0]
+        cdef int token = item[1]
+        cdef cIndexReference ref = cIndexReference(sentence,token)
+        return self.data.has(ref)
+
+
+    cdef get(self,tuple item):
+        cdef int sentence = item[0]
+        cdef int token = item[1]
+        cdef cIndexReference ref = cIndexReference(sentence,token)
+        cdef cPattern cpattern
+        cpattern = self.data[ref]
+        pattern = Pattern()
+        pattern.bind(cpattern)
+        return pattern
+
+    cdef getslice(self,tuple start, tuple stop):
+        cdef int startsentence = start[0]
+        cdef int starttoken = start[1]
+        cdef cIndexReference startref = cIndexReference(startsentence,starttoken)
+        cdef int stopsentence = stop[0]
+        cdef int stoptoken = stop[1]
+        cdef cIndexReference stopref = cIndexReference(stopsentence,stoptoken)
+        cdef cPattern cpattern = self.data.getpattern(startref, stopref.token - startref.token)
+        pattern = Pattern()
+        pattern.bind(cpattern)
+        return pattern
+
+    def __contains__(self, indexreference):
+        """Test if the indexreference, a (sentence,tokenoffset) tuple is in the corpus. This is a much slower lookup than using a pattern model!!"""
+        if not isinstance(indexreference, tuple):
+            raise ValueError("Expected tuple")
+        return self.has(indexreference)
+
+    def __iter__(self):
+        """Iterate over all indexes in the corpus, generator over (sentence, tokenoffset) tuples"""
+        it = self.data.begin()
+        cdef cPattern cpattern
+        cdef cIndexReference ref
+        while it != self.data.end():
+            ref = deref(it).first
+            yield (ref.sentence, ref.token)
+            inc(it)
+
+    def __getitem__(self, item):
+        """Retrieve the token Pattern given a (sentence, tokenoffset) tuple """
+        if isinstance(item, slice):
+            start = item.start
+            stop = item.stop
+            if not isinstance(start, tuple):
+                raise ValueError("Expected tuple for start of slice")
+            if not isinstance(stop, tuple):
+                raise ValueError("Expected tuple for end of slice")
+            if start.sentence != stop.sentence:
+                raise ValueError("Slices only supported within the same sentence")
+            return self.getslice(start, stop)
+        else:
+            if not isinstance(item, tuple):
+                raise ValueError("Expected tuple")
+            return self.get(item)
+
+
+    def items(self):
+        """Iterate over all indexes and their unigram patterns. Yields ((sentence,tokenoffset), unigrampattern) tuples"""
+        it = self.data.begin()
+        cdef cPattern cpattern
+        cdef cIndexReference ref
+        while it != self.data.end():
+            cpattern = deref(it).second
+            ref = deref(it).first
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield ( (ref.sentence, ref.token), pattern )
+            inc(it)
+
+    def findmatches(self, Pattern pattern, int maxmatches=0):
+        """Generator over the indexes in the corpus where this pattern is found. Note that this is much slower than using the reverse index on an IndexedPatternModel!!!
+
+        :param pattern: The pattern to find
+        :type pattern: Pattern
+        :param maxmatches: The maximum number of patterns to return (0 = unlimited)
+        :type maxmatches: int 
+        :rtype: generator over (sentence, tokenoffset) tuples
+        """
+
+        cdef vector[cIndexReference] matches
+        cdef vector[cIndexReference].iterator it
+        cdef cIndexReference ref
+        matches = self.data.findmatches(pattern.cpattern, maxmatches)
+        it = matches.begin()
+        while it != matches.end():
+            ref = deref(it)
+            yield (ref.sentence, ref.token)
+

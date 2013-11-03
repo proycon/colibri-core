@@ -825,14 +825,7 @@ IndexedCorpus::IndexedCorpus(std::istream *in){
 }
 
 IndexedCorpus::IndexedCorpus(std::string filename){
-    std::ifstream * in = new std::ifstream(filename.c_str());
-    if (!in->good()) {
-        std::cerr << "ERROR: Unable to load file " << filename << std::endl;
-        throw InternalError();
-    }
-    this->load( (std::istream *) in);
-    in->close();
-    delete in;
+    this->load(filename);
 }
 
 
@@ -852,6 +845,17 @@ void IndexedCorpus::load(std::istream *in) {
 }
 
 
+void IndexedCorpus::load(std::string filename) {
+    std::ifstream * in = new std::ifstream(filename.c_str());
+    if (!in->good()) {
+        std::cerr << "ERROR: Unable to load file " << filename << std::endl;
+        throw InternalError();
+    }
+    this->load( (std::istream *) in);
+    in->close();
+    delete in;
+}
+
 Pattern IndexedCorpus::getpattern(IndexReference begin, int length) { 
     Pattern pattern;
     for (int i = 0; i < length; i++) {
@@ -868,7 +872,7 @@ Pattern IndexedCorpus::getpattern(IndexReference begin, int length) {
     return pattern;
 }
 
-std::vector<IndexReference> IndexedCorpus::findmatches(const Pattern & pattern) {
+std::vector<IndexReference> IndexedCorpus::findmatches(const Pattern & pattern, int maxmatches) {
     //far more inefficient than a pattrn model obviously
     std::vector<IndexReference> result;
     const int _n = pattern.size();
@@ -884,6 +888,7 @@ std::vector<IndexReference> IndexedCorpus::findmatches(const Pattern & pattern) 
             i++;
             if (i == _n) {
                 result.push_back(ref);
+                if ((maxmatches != 0) && (result.size() == maxmatches)) break;
             }
             matchunigram = pattern[i];
         }

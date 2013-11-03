@@ -384,10 +384,12 @@ class IndexedCorpus {
     protected:
         std::map<IndexReference,Pattern> data; //tokens
     public:
+        IndexedCorpus() {};
         IndexedCorpus(std::istream *in);
         IndexedCorpus(std::string filename);
         
         void load(std::istream *in);
+        void load(std::string filename);
         typedef std::map<IndexReference,Pattern>::iterator iterator;
         typedef std::map<IndexReference,Pattern>::const_iterator const_iterator;
 
@@ -408,7 +410,7 @@ class IndexedCorpus {
 
         Pattern getpattern(IndexReference begin, int length);
          
-        std::vector<IndexReference> findmatches(const Pattern & pattern); //by far not as efficient as a pattern model obviously
+        std::vector<IndexReference> findmatches(const Pattern & pattern, int maxmatches=0); //by far not as efficient as a pattern model obviously
 };
 
 /************* ValueHandler for reading/serialising basic types ********************/
