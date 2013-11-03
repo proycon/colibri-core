@@ -549,6 +549,19 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
        
 
+        std::vector<Pattern> getreverseindex(IndexReference ref) {
+            //Auxiliary function
+            std::vector<Pattern> result;
+            if (this->reverseindex.count(ref)) {
+                for (std::multimap<IndexReference,Pattern>::iterator it = this->reverseindex.lower_bound(ref); it != this->reverseindex.upper_bound(ref); it++) {
+                    const Pattern pattern = it->second;
+                    result.push_back(pattern);
+
+                }
+            }
+            return result;
+        }
+
         void computestats() {
             cache_categories.clear();
             cache_n.clear();

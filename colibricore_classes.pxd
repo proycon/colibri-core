@@ -275,6 +275,8 @@ cdef extern from "patternmodel.h":
         void histogram(ostream*) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
 
+        vector[Pattern] getreverseindex(IndexReference&)
+
         t_relationmap getsubchildren(Pattern & pattern)
         t_relationmap getsubparents(Pattern & pattern)
         t_relationmap getleftneighbours(Pattern & pattern)

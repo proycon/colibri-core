@@ -104,7 +104,7 @@ cdef class Pattern:
 
     def __contains__(self, Pattern pattern):
         """Check if the specified pattern occurs within this larger pattern.
-        
+
         :param pattern: the subpattern to look for
         :type pattern: Pattern
         :rtype: bool
@@ -392,7 +392,7 @@ cdef class PatternDict_float: #maps Patterns to uint32
     cdef float value
 
     @include colibricore_patterndict.pxi
-    
+
     def __setitem__(self, pattern, float v):
         """Set the value for a pattern in the dictionary
 
@@ -451,9 +451,30 @@ cdef class IndexedPatternModel:
             inc(it)
 
 
+    def reverseindex(self, indexreference):
+        """Generator over all patterns occurring at the specified index reference
+
+        :param indexreference: a (sentence, tokenoffset) tuple
+        """
+
+        if not isinstance(indexreference, tuple) or not len(indexreference) == 2:
+            raise ValueError("Expected tuple")
+
+        cdef int sentence = indexreference[0]
+        cdef int token = indexreference[1]
+        cdef cIndexReference ref = cIndexReference(sentence, token)
+        cdef vector[cPattern] results = self.data.getreverseindex(ref)
+        cdef vector[cPattern].iterator it = results.begin()
+        cdef cPattern cpattern
+        while it != results.end():
+            cpattern = deref(it)
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield pattern
+
     cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
         """Compute and output (to stdout) all relations for the specified pattern:
-        
+
         :param pattern: The pattern to output relations for
         :type pattern: Pattern
         :param decoder: The class decoder
@@ -752,7 +773,7 @@ cdef class IndexedCorpus:
         :param pattern: The pattern to find
         :type pattern: Pattern
         :param maxmatches: The maximum number of patterns to return (0 = unlimited)
-        :type maxmatches: int 
+        :type maxmatches: int
         :rtype: generator over (sentence, tokenoffset) tuples
         """
 
