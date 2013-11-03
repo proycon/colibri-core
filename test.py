@@ -152,6 +152,18 @@ print("Loading new decoder")
 decoder = colibricore.ClassDecoder("/tmp/hamlet.colibri.cls")
 encoder = colibricore.ClassEncoder("/tmp/hamlet.colibri.cls")
 
+print("Loading corpus as IndexedCorpus")
+corpus = colibricore.IndexedCorpus("/tmp/hamlet.colibri.dat")
+print("Total number of tokens: ", len(corpus));
+firstword = corpus[(1,0)] ;
+print("First word: ", firstword.tostring(decoder))
+needle = encoder.buildpattern("fair Ophelia");
+for match in corpus.findmatches(needle):
+    print( "'fair Ophelia' found at ", match)
+
+
+print()
+
 options = colibricore.PatternModelOptions()
 options.DOREVERSEINDEX = True
 options.DOSKIPGRAMS_EXHAUSTIVE = True

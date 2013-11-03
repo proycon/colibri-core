@@ -785,4 +785,5 @@ cdef class IndexedCorpus:
         while it != matches.end():
             ref = deref(it)
             yield (ref.sentence, ref.token)
+            inc(it)
 

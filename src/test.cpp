@@ -493,6 +493,23 @@ int main( int argc, char *argv[] ) {
         system("colibri-classdecode -c /tmp/hamlet.colibri.cls -f /tmp/hamlet.colibri.dat");
 
 
+
+        cerr << "Loading class decoders/encoders" << endl;
+        const string classfile = "/tmp/hamlet.colibri.cls";
+        ClassDecoder classdecoder = ClassDecoder(classfile);
+        ClassEncoder classencoder = ClassEncoder(classfile);
+
+        cerr << "Loading corpus as IndexedCorpus" << endl;
+        IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
+        cerr << "Total number of tokens: " << corpus.size() << endl;
+        Pattern firstword = corpus[IndexReference(1,0)] ;
+        cerr << "First word:  " << firstword.tostring(classdecoder) << endl;
+        Pattern needle = classencoder.buildpattern(string("fair Ophelia"));
+        vector<IndexReference> matches = corpus.findmatches(needle);
+        cerr << "'fair Ophelia' found at " << matches[0].tostring() << endl;
+        cerr << endl;
+
+
         PatternModelOptions options;
         options.DOREVERSEINDEX = true;
         options.DOSKIPGRAMS_EXHAUSTIVE = true;
@@ -500,9 +517,6 @@ int main( int argc, char *argv[] ) {
 
         cerr << "Building unindexed model" << endl;
         PatternModel<uint32_t> unindexedmodel;
-        const string classfile = "/tmp/hamlet.colibri.cls";
-        ClassDecoder classdecoder = ClassDecoder(classfile);
-        ClassEncoder classencoder = ClassEncoder(classfile);
 
         cerr << endl;
         std::string infilename = "/tmp/hamlet.colibri.dat";

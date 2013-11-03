@@ -51,7 +51,7 @@ class ClassEncoder {
     void encodefile(const std::string &, const std::string &, bool allowunknown, bool autoaddunknown=false, bool append=false);
     std::vector<unsigned int> encodeseq(const std::vector<std::string> & seq);
     
-    Pattern buildpattern(const std::string &, bool allowunknown, bool autoaddunknown = false); 
+    Pattern buildpattern(const std::string, bool allowunknown=false, bool autoaddunknown = false); 
  
     void add(std::string, unsigned int cls);
     
