@@ -48,6 +48,14 @@ ClassEncoder::ClassEncoder(const string & filename) {
        highestclass = 0; 
        bosclass = 3;
        eosclass = 4;
+       load(filename);
+}
+
+void ClassEncoder::load(const string & filename) {
+       unknownclass = 2;
+       highestclass = 0; 
+       bosclass = 3;
+       eosclass = 4;
        
 	   ifstream IN;
 	   IN.open( filename.c_str() );    

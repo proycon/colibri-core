@@ -25,7 +25,9 @@ class ClassDecoder {
      unsigned int highestclass;
     public:
     
+    ClassDecoder();
     ClassDecoder(const std::string & filename);
+    void load(const std::string & filename);
     
     std::vector<std::string> decodeseq(const std::vector<int> & seq);
     

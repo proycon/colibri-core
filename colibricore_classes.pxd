@@ -149,14 +149,18 @@ cdef extern from "pattern.h":
 
 cdef extern from "classdecoder.h":
     cdef cppclass ClassDecoder:
-        ClassDecoder(string) except +
-        int size()
+        ClassDecoder() nogil except +
+        ClassDecoder(string) nogil except +
+        void load(string) nogil
+        int size() nogil
 
 cdef extern from "classencoder.h":
     cdef cppclass ClassEncoder:
-        ClassEncoder(string) except +
-        int size()
-        Pattern buildpattern(string , bool allowunknown, bool autoaddunknown)
+        ClassEncoder() nogil except +
+        ClassEncoder(string) nogil except +
+        void load(string) nogil
+        int size() nogil
+        Pattern buildpattern(string , bool allowunknown, bool autoaddunknown) nogil
 
 cdef extern from "patternmodel.h":
     cdef cppclass IndexedData:

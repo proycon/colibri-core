@@ -24,7 +24,23 @@ unsigned int bytestoint(const unsigned char* a, const int l) {
 }
 
 
+ClassDecoder::ClassDecoder() {
+       unknownclass = 2;
+       highestclass = 0;
+       bosclass = 3;
+       eosclass = 4;
+}
+
 ClassDecoder::ClassDecoder(const string & filename) {
+       unknownclass = 2;
+       highestclass = 0;
+       bosclass = 3;
+       eosclass = 4;
+       load(filename);
+}
+
+
+void ClassDecoder::load(const string & filename) {
        unknownclass = 2;
        highestclass = 0;
        bosclass = 3;

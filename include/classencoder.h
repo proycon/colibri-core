@@ -41,6 +41,7 @@ class ClassEncoder {
     public:
     ClassEncoder();
     ClassEncoder(const std::string &); //load an existing classer
+    void load(const std::string &); //load an existing classer
     void build(const std::string & filename); //build a class from this dataset
     void build(std::vector<std::string> & files); //build a class from this dataset
     

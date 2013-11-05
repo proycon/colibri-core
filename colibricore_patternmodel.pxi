@@ -211,7 +211,7 @@ cpdef printmodel(self,ClassDecoder decoder):
     :param decoder: The class decoder
     :type decoder: ClassDecoder
     """
-    self.data.printmodel(&cout, deref(decoder.thisptr) )
+    self.data.printmodel(&cout, decoder.data )
 
 cpdef train(self, str filename, PatternModelOptions options):
     """Train the patternmodel on the specified corpus data (a *.colibri.dat file)

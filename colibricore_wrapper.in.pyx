@@ -29,20 +29,14 @@ class Category:
 cdef class ClassEncoder:
     """The class encoder allows patterns to be built from their string representation. Load in a class file and invoke the ``buildpattern()`` method"""
 
-    cdef cClassEncoder *thisptr
+    cdef cClassEncoder data
 
-    def __cinit__(self):
-        self.thisptr = NULL
-
-    def __cinit__(self, str filename):
-        self.thisptr = new cClassEncoder(filename.encode('utf-8'))
-
-    def __dealloc__(self):
-        del self.thisptr
+    def __init__(self, str filename):
+        self.data.load(filename.encode('utf-8'))
 
     def __len__(self):
         """Returns the total number of classes"""
-        return self.thisptr.size()
+        return self.data.size()
 
     def buildpattern(self, str text, bool allowunknown=True, bool autoaddunknown=False):
         """Builds a pattern: converts a string representation into a Pattern
@@ -56,7 +50,7 @@ cdef class ClassEncoder:
         :rtype: Pattern
         """
 
-        c_pattern = self.thisptr.buildpattern(text.encode('utf-8'), allowunknown, autoaddunknown)
+        c_pattern = self.data.buildpattern(text.encode('utf-8'), allowunknown, autoaddunknown)
         pattern = Pattern()
         pattern.bind(c_pattern)
         return pattern
@@ -65,20 +59,14 @@ cdef class ClassEncoder:
 cdef class ClassDecoder:
     """The Class Decoder allows Patterns to be decoded back to their string representation. An instance of ClassDecoder is passed to Pattern.tostring()"""
 
-    cdef cClassDecoder *thisptr
+    cdef cClassDecoder data #it's not actually a pointer anymore..
 
-    def __cinit__(self):
-        self.thisptr = NULL
-
-    def __cinit__(self, str filename):
-        self.thisptr = new cClassDecoder(filename.encode('utf-8'))
-
-    def __dealloc__(self):
-        del self.thisptr
+    def __init__(self, str filename):
+        self.data.load(filename.encode('utf-8'))
 
     def __len__(self):
         """Returns the total number of classes"""
-        return self.thisptr.size()
+        return self.data.size()
 
 
 cdef class Pattern:
@@ -92,19 +80,19 @@ cdef class Pattern:
     cdef bind(self, cPattern cpattern):
         self.cpattern = cpattern
 
-    cdef bindbegin(self):
+    def bindbegin(self):
         self.cpattern = cBEGINPATTERN
 
-    cdef bindend(self):
+    def bindend(self):
         self.cpattern = cENDPATTERN
 
-    cdef bindunk(self):
+    def bindunk(self):
         self.cpattern = cUNKPATTERN
 
-    cdef bindskip(self):
+    def bindskip(self):
         self.cpattern = cSKIPPATTERN
 
-    cdef bindflex(self):
+    def bindflex(self):
         self.cpattern = cFLEXPATTERN
 
     def tostring(self, ClassDecoder decoder):
@@ -115,7 +103,7 @@ cdef class Pattern:
         :rtype: str
         """
 
-        return str(self.cpattern.tostring(deref(decoder.thisptr)),'utf-8')
+        return str(self.cpattern.tostring(decoder.data),'utf-8')
 
     def __contains__(self, Pattern pattern):
         """Check if the specified pattern occurs within this larger pattern.
@@ -195,7 +183,7 @@ cdef class Pattern:
             newpattern.bind(c_pattern)
             return newpattern
         else:
-            c_pattern = cPattern(self.cpattern, item.start, item.start+1)
+            c_pattern = cPattern(self.cpattern, item, item+1)
             newpattern = Pattern()
             newpattern.bind(c_pattern)
             return newpattern
@@ -495,7 +483,7 @@ cdef class IndexedPatternModel:
         :param decoder: The class decoder
         :type decoder: ClassDecoder
         """
-        self.data.outputrelations(pattern.cpattern,deref(decoder.thisptr),&cout)
+        self.data.outputrelations(pattern.cpattern,decoder.data,&cout)
 
 
     def getsubchildren(self, Pattern pattern):
