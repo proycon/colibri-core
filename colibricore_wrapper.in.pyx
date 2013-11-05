@@ -14,7 +14,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator,IndexedCorpus as cIndexedCorpus
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator,IndexedCorpus as cIndexedCorpus, BEGINPATTERN as cBEGINPATTERN, ENDPATTERN as cENDPATTERN, SKIPPATTERN as cSKIPPATTERN, FLEXPATTERN as cFLEXPATTERN, UNKPATTERN as cUNKPATTERN
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
@@ -91,6 +91,21 @@ cdef class Pattern:
 
     cdef bind(self, cPattern cpattern):
         self.cpattern = cpattern
+
+    cdef bindbegin(self):
+        self.cpattern = cBEGINPATTERN
+
+    cdef bindend(self):
+        self.cpattern = cENDPATTERN
+
+    cdef bindunk(self):
+        self.cpattern = cUNKPATTERN
+
+    cdef bindskip(self):
+        self.cpattern = cSKIPPATTERN
+
+    cdef bindflex(self):
+        self.cpattern = cFLEXPATTERN
 
     def tostring(self, ClassDecoder decoder):
         """Convert a Pattern back to a str
@@ -787,3 +802,14 @@ cdef class IndexedCorpus:
             yield (ref.sentence, ref.token)
             inc(it)
 
+
+BEGINPATTERN = Pattern()
+BEGINPATTERN.bindbegin()
+ENDPATTERN = Pattern()
+ENDPATTERN.bindend()
+UNKPATTERN = Pattern()
+UNKPATTERN.bindunk()
+SKIPPATTERN = Pattern()
+SKIPPATTERN.bindskip()
+FLEXPATTERN = Pattern()
+FLEXPATTERN.bindflex()

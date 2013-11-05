@@ -139,6 +139,12 @@ cdef extern from "pattern.h":
         vector[IndexReference] findmatches(Pattern&,int) nogil
         Pattern& operator[](IndexReference&) nogil
 
+    extern Pattern SKIPPATTERN
+    extern Pattern FLEXPATTERN
+    extern Pattern BEGINPATTERN
+    extern Pattern ENDPATTERN
+    extern Pattern UNKPATTERN
+
 
 cdef extern from "classdecoder.h":
     cdef cppclass ClassDecoder:
