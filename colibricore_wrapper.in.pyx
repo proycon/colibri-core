@@ -802,6 +802,9 @@ cdef class IndexedCorpus:
             yield (ref.sentence, ref.token)
             inc(it)
 
+    def sentencelength(self,int sentence):
+        return self.data.sentencelength(sentence)
+
 
 BEGINPATTERN = Pattern()
 BEGINPATTERN.bindbegin()

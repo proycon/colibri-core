@@ -138,6 +138,7 @@ cdef extern from "pattern.h":
         Pattern getpattern(IndexReference&,int) nogil
         vector[IndexReference] findmatches(Pattern&,int) nogil
         Pattern& operator[](IndexReference&) nogil
+        int sentencelength(int) nogil
 
     extern Pattern SKIPPATTERN
     extern Pattern FLEXPATTERN

@@ -895,3 +895,12 @@ std::vector<IndexReference> IndexedCorpus::findmatches(const Pattern & pattern, 
     }
     return result;
 }
+
+int IndexedCorpus::sentencelength(int sentence)  {
+    IndexReference ref = IndexReference(sentence, 0);
+    int length = 0;
+    for (iterator iter = data.find(ref); iter != data.end(); iter++) {
+        length++;
+    }
+    return length;
+}

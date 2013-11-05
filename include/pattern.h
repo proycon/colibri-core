@@ -417,6 +417,8 @@ class IndexedCorpus {
         Pattern getpattern(IndexReference begin, int length);
          
         std::vector<IndexReference> findmatches(const Pattern & pattern, int maxmatches=0); //by far not as efficient as a pattern model obviously
+
+        int sentencelength(int sentence); 
 };
 
 /************* ValueHandler for reading/serialising basic types ********************/
