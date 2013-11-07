@@ -14,7 +14,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator,IndexedCorpus as cIndexedCorpus, BEGINPATTERN as cBEGINPATTERN, ENDPATTERN as cENDPATTERN, SKIPPATTERN as cSKIPPATTERN, FLEXPATTERN as cFLEXPATTERN, UNKPATTERN as cUNKPATTERN
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator,IndexedCorpus as cIndexedCorpus, BEGINPATTERN as cBEGINPATTERN, ENDPATTERN as cENDPATTERN, SKIPPATTERN as cSKIPPATTERN, FLEXPATTERN as cFLEXPATTERN, UNKPATTERN as cUNKPATTERN, AlignedPatternMap as cAlignedPatternMap
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
@@ -351,61 +351,212 @@ cdef class PatternSet:
 cdef class PatternDict_int32: #maps Patterns to uint32
     """This is a simple low-level dictionary that takes Pattern instances as keys, and integer (max 32 bit, unsigned) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
 
-    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint] data
-    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint].iterator it
+    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t] data
+    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it
     cdef uint32_t value
 
     @include colibricore_patterndict.pxi
 
-    def __setitem__(self, pattern, uint32_t v):
+    def __setitem__(self, Pattern pattern, uint32_t v):
         """Set the value for a pattern in the dictionary
 
         :param pattern: the pattern
         :param value: its value
         """
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
         self[pattern] = v
 
+    cdef bind(self, cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t] newdata):
+        self.data = newdata
 
-cdef class PatternDict_int: #maps Patterns to uint32
+
+
+cdef class SmallPatternDict_int32: #maps Patterns to uint32
+    """This is a simple low-level dictionary that takes Pattern instances as keys, and integer (max 32 bit, unsigned) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead. This is a Small version taht allows at most 65536 patterns."""
+
+    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint16_t] data
+    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint16_t].iterator it
+    cdef uint32_t value
+
+    @include colibricore_patterndict.pxi
+
+    def __setitem__(self, Pattern pattern, uint32_t v):
+        """Set the value for a pattern in the dictionary
+
+        :param pattern: the pattern
+        :param value: its value
+        """
+        self[pattern] = v
+
+    cdef bind(self, cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint16_t] newdata):
+        self.data = newdata
+
+
+cdef class TinyPatternDict_int32: #maps Patterns to uint32
+    """This is a simple low-level dictionary that takes Pattern instances as keys, and integer (max 32 bit, unsigned) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead. This is a tiny version that allow only up to 256 patterns."""
+
+    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint8_t] data
+    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint8_t].iterator it
+    cdef uint32_t value
+
+    @include colibricore_patterndict.pxi
+
+    def __setitem__(self, Pattern pattern, uint32_t v):
+        """Set the value for a pattern in the dictionary
+
+        :param pattern: the pattern
+        :param value: its value
+        """
+        self[pattern] = v
+
+    cdef bind(self, cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint8_t] newdata):
+        self.data = newdata
+
+cdef class PatternDict_int: #maps Patterns to uint64
     """This is a simple low-level dictionary that takes Pattern instances as keys, and integer (unsigned 64 bit) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
 
-    cdef cPatternMap[uint,cBaseValueHandler[uint],uint] data
-    cdef cPatternMap[uint,cBaseValueHandler[uint],uint].iterator it
+    cdef cPatternMap[uint,cBaseValueHandler[uint],uint32_t] data
+    cdef cPatternMap[uint,cBaseValueHandler[uint],uint32_t].iterator it
     cdef int value
 
     @include colibricore_patterndict.pxi
 
-    def __setitem__(self, pattern, int v):
+    def __setitem__(self, Pattern pattern, int v):
         """Set the value for a pattern in the dictionary
 
         :param pattern: the pattern
         :param value: its value
         """
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
         self[pattern] = v
 
-cdef class PatternDict_float: #maps Patterns to uint32
+cdef class PatternDict_float: #maps Patterns to float
     """This is a simple low-level dictionary that takes Pattern instances as keys, and float (double) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
 
-    cdef cPatternMap[float,cBaseValueHandler[float],uint] data
-    cdef cPatternMap[float,cBaseValueHandler[float],uint].iterator it
+    cdef cPatternMap[float,cBaseValueHandler[float],uint32_t] data
+    cdef cPatternMap[float,cBaseValueHandler[float],uint32_t].iterator it
     cdef float value
 
     @include colibricore_patterndict.pxi
 
-    def __setitem__(self, pattern, float v):
+    def __setitem__(self, Pattern pattern, float v):
         """Set the value for a pattern in the dictionary
 
         :param pattern: the pattern
         :param value: its value
         """
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
         self[pattern] = v
 
+
+cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (nested dicts)
+    """This is a simple low-level dictionary that takes Pattern instances as keys, and integer (unsigned 64 bit) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
+
+    cdef cAlignedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t] data
+    cdef cAlignedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it
+    cdef int value
+
+
+    def __len__(self):
+        """Return the total number of patterns in the dictionary. If you want the length for a particular pattern, use childcount(pattern)"""
+        return self.data.size()
+
+    def childcount(self, Pattern pattern):
+        """Returns the number of children for the specified pattern. Use children(pattern) to iterate over them."""
+        return self.data[pattern.cpattern].size()
+
+    cpdef has(self, Pattern pattern):
+        return self.data.has(pattern.cpattern)
+
+    cpdef haspair(self, Pattern pattern, Pattern pattern2):
+        if not self.data.has(pattern.cpattern):
+            return False
+        else:
+            return self.data[pattern.cpattern].has(pattern2.cpattern)
+
+    def __contains__(self, item):
+        """Test if the pattern or the combination of patterns is in the aligned dictionary::
+
+                pattern in aligneddict
+
+            Or:
+
+                (pattern1,pattern2) in aligneddict
+
+            """
+        if isinstance(item, tuple):
+            if len(item) != 2:
+                raise ValueError("Expected instance of Pattern or two-tuple of Patterns")
+            elif not isinstance(item[0], Pattern) or not isinstance(item[1], Pattern):
+                raise ValueError("Expected instance of Pattern or two-tuple of Patterns")
+            return self.haspair(item[0], item[1])
+        elif not isinstance(item, Pattern):
+            raise ValueError("Expected instance of Pattern or two-tuple of Patterns")
+            return self.has(item)
+
+    def __iter__(self):
+        """Iterate over all patterns in the dictionary. If you want to iterate over pattern pairs, use pairs() instead, to iterate over the children for a specific pattern, use children()"""
+        it = self.data.begin()
+        cdef cPattern cpattern
+        while it != self.data.end():
+            cpattern = deref(it).first
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield pattern
+            inc(it)
+
+
+    #def children(self, Pattern pattern):
+    #    """Iterate over all patterns in the dictionary. If you want to iterate over pattern pairs, use pairs() instead"""
+    #    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it2
+    #    it2 = self.data[pattern.cpattern].begin()
+    #    cdef cPattern cpattern
+    #    while it2 != self.data.end():
+    #        cpattern = deref(it2).first
+    #        pattern = Pattern()
+    #        pattern.bind(cpattern)
+    #        yield pattern
+    #        inc(it2)
+
+
+
+
+
+
+    #cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t]& _getmap(self, Pattern pattern):
+    #    if not isinstance(pattern, Pattern):
+    #        raise ValueError("Expected instance of Pattern")
+    #
+    #     if not self.has(pattern):
+    #        self.data[pattern.cpattern]
+    #
+    #    return self.data.getdata(pattern)
+
+
+    cpdef getpair(self, Pattern pattern, Pattern pattern2):
+        return self.data[pattern.cpattern][pattern2.cpattern]
+
+
+    def __getitem__(self, item):
+        """Retrieve the item, item is a two-tuple of Pattern instances.
+
+             aligneddict[(pattern1,pattern2)]
+
+
+        :param item: A two tuple of Pattern instances
+        """
+        if isinstance(item, tuple):
+            if len(item) != 2:
+                raise ValueError("Expected instance of Pattern or two-tuple of Patterns")
+            elif not isinstance(item[0], Pattern) or not isinstance(item[1], Pattern):
+                raise ValueError("Expected instance of Pattern or two-tuple of Patterns")
+            return self.getpair(item[0], item[1])
+        elif isinstance(item, Pattern):
+            return None #TODO!!!
+        else:
+            raise ValueError("Expected instance of Pattern or two-tuple of Patterns")
+
+
+
+
+    #items is not implemented deliberately
 
 cdef class IndexedPatternModel:
     """Indexed Pattern Model"""
@@ -415,8 +566,6 @@ cdef class IndexedPatternModel:
     @include colibricore_patternmodel.pxi
 
     cdef getdata(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
         cdef cIndexedData cvalue
         if pattern in self:
             cvalue = self.data[pattern.cpattern]
@@ -492,8 +641,6 @@ cdef class IndexedPatternModel:
         :type pattern: Pattern
         :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
         """
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubchildren(pattern.cpattern)
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
 
@@ -513,8 +660,6 @@ cdef class IndexedPatternModel:
         :type pattern: Pattern
         :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
         """
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubparents(pattern.cpattern)
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
         cdef cPattern cpattern
@@ -533,8 +678,6 @@ cdef class IndexedPatternModel:
         :type pattern: Pattern
         :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
         """
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern)
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
         cdef cPattern cpattern
@@ -553,8 +696,6 @@ cdef class IndexedPatternModel:
         :type pattern: Pattern
         :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
         """
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern)
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
         cdef cPattern cpattern
@@ -573,8 +714,6 @@ cdef class IndexedPatternModel:
         :type pattern: Pattern
         :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
         """
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getskipcontent(pattern.cpattern)
         cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
         cdef cPattern cpattern
@@ -595,8 +734,6 @@ cdef class UnindexedPatternModel:
     @include colibricore_patternmodel.pxi
 
     cpdef getdata(self, Pattern pattern):
-        if not isinstance(pattern, Pattern):
-            raise ValueError("Expected instance of Pattern")
         cdef cIndexedData cvalue
         if pattern in self:
             return self.data[pattern.cpattern]
@@ -723,10 +860,8 @@ cdef class IndexedCorpus:
         pattern.bind(cpattern)
         return pattern
 
-    def __contains__(self, indexreference):
+    def __contains__(self, tuple indexreference):
         """Test if the indexreference, a (sentence,tokenoffset) tuple is in the corpus. This is a much slower lookup than using a pattern model!!"""
-        if not isinstance(indexreference, tuple):
-            raise ValueError("Expected tuple")
         return self.has(indexreference)
 
     def __iter__(self):
@@ -792,6 +927,7 @@ cdef class IndexedCorpus:
 
     def sentencelength(self,int sentence):
         return self.data.sentencelength(sentence)
+
 
 
 BEGINPATTERN = Pattern()

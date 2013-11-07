@@ -824,6 +824,7 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
 //using a PatternStore as value in a PatternMap requires a special valuehandler:
 template<class PatternStoreType>
 class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
+  public:
     const static bool indexed = false;
     void read(std::istream * in,  PatternStoreType & value) {
         value.read(in);

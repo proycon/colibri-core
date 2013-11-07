@@ -4,14 +4,10 @@ def __len__(self):
     return self.data.size()
 
 cpdef has(self, Pattern pattern):
-    if not isinstance(pattern, Pattern):
-        raise ValueError("Expected instance of Pattern")
     return self.data.has(pattern.cpattern)
 
-def __contains__(self, pattern):
+def __contains__(self, Pattern pattern):
     """Test if the pattern is in the dictionary"""
-    if not isinstance(pattern, Pattern):
-        raise ValueError("Expected instance of Pattern")
     return self.has(pattern)
 
 def __iter__(self):
@@ -25,15 +21,13 @@ def __iter__(self):
         yield pattern
         inc(it)
 
-def __getitem__(self, pattern):
+def __getitem__(self, Pattern pattern):
     """Retrieve the value for a pattern in the dictionary
     
     :param pattern: A pattern
     :type pattern: Pattern
     """
-    if not isinstance(pattern, Pattern):
-        raise ValueError("Expected instance of Pattern")
-    return self.getdata(pattern)
+    return self.data[pattern.cpattern]
 
 
 
