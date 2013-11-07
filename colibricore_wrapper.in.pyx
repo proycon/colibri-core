@@ -365,7 +365,7 @@ cdef class PatternDict_int32: #maps Patterns to uint32
         """
         self[pattern] = v
 
-    cdef bind(self, cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t] newdata):
+    cdef bind(self, cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t]& newdata):
         self.data = newdata
 
 
@@ -387,7 +387,7 @@ cdef class SmallPatternDict_int32: #maps Patterns to uint32
         """
         self[pattern] = v
 
-    cdef bind(self, cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint16_t] newdata):
+    cdef bind(self, cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint16_t]& newdata):
         self.data = newdata
 
 
@@ -408,7 +408,7 @@ cdef class TinyPatternDict_int32: #maps Patterns to uint32
         """
         self[pattern] = v
 
-    cdef bind(self, cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint8_t] newdata):
+    cdef bind(self, cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint8_t]& newdata):
         self.data = newdata
 
 cdef class PatternDict_int: #maps Patterns to uint64
@@ -520,14 +520,17 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
 
 
 
-    #cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t]& _getmap(self, Pattern pattern):
-    #    if not isinstance(pattern, Pattern):
-    #        raise ValueError("Expected instance of Pattern")
-    #
-    #     if not self.has(pattern):
-    #        self.data[pattern.cpattern]
-    #
-    #    return self.data.getdata(pattern)
+    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t] * getmap(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            raise ValueError("Expected instance of Pattern")
+
+        if not self.has(pattern):
+           self.data[pattern.cpattern]
+
+        cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t] * m = &(self.data[pattern.cpattern])
+        return m
+
+
 
 
     cpdef getpair(self, Pattern pattern, Pattern pattern2):
@@ -542,6 +545,8 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
 
         :param item: A two tuple of Pattern instances
         """
+        cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t] * mapdata
+
         if isinstance(item, tuple):
             if len(item) != 2:
                 raise ValueError("Expected instance of Pattern or two-tuple of Patterns")
@@ -549,7 +554,10 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
                 raise ValueError("Expected instance of Pattern or two-tuple of Patterns")
             return self.getpair(item[0], item[1])
         elif isinstance(item, Pattern):
-            return None #TODO!!!
+            mapdata = self.getmap(item[0])
+            d = PatternDict_int32()
+            d.bind(deref(mapdata))
+            return d
         else:
             raise ValueError("Expected instance of Pattern or two-tuple of Patterns")
 
