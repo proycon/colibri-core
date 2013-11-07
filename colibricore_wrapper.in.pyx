@@ -503,17 +503,17 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
             inc(it)
 
 
-    #def children(self, Pattern pattern):
-    #    """Iterate over all patterns in the dictionary. If you want to iterate over pattern pairs, use pairs() instead"""
-    #    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it2
-    #    it2 = self.data[pattern.cpattern].begin()
-    #    cdef cPattern cpattern
-    #    while it2 != self.data.end():
-    #        cpattern = deref(it2).first
-    #        pattern = Pattern()
-    #        pattern.bind(cpattern)
-    #        yield pattern
-    #        inc(it2)
+    def children(self, Pattern pattern):
+        """Iterate over all patterns in the dictionary. If you want to iterate over pattern pairs, use pairs() instead"""
+        cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it2
+        it2 = self.data[pattern.cpattern].begin()
+        cdef cPattern cpattern
+        while it2 != self.data[pattern.cpattern].end():
+            cpattern = deref(it2).first
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield pattern
+            inc(it2)
 
 
 
