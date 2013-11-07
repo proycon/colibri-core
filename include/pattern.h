@@ -844,6 +844,15 @@ class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
     }
 };
 
+template<class ValueType,class ValueHandler, class NestedSizeType = uint16_t >
+class AlignedPatternMap: public PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>> > {
+    public:
+        typedef PatternMap<ValueType,ValueHandler,NestedSizeType> valuetype;
+        typedef typename PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>> >::iterator iterator;
+        typedef typename PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>> >::const_iterator const_iterator;
+};
+
+
 //TODO: Implement a real Trie, conserving more memory
 
 

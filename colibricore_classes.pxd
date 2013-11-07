@@ -140,6 +140,22 @@ cdef extern from "pattern.h":
         Pattern& operator[](IndexReference&) nogil
         int sentencelength(int) nogil
 
+    cdef cppclass AlignedPatternMap[ValueType, ValueHandler, NestedSizeType]:
+        cppclass iterator:
+            pair[Pattern,PatternMap[ValueType,ValueHandler,NestedSizeType]]& operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        AlignedPatternMap() nogil
+        void insert(Pattern&, PatternMap[ValueType,ValueHandler,NestedSizeType]& value) nogil
+        bool has(Pattern&) nogil
+        PatternMap[ValueType,ValueHandler,NestedSizeType]& operator[](Pattern&) nogil
+        iterator erase(Pattern&) nogil
+        iterator find(Pattern&) nogil
+
     extern Pattern SKIPPATTERN
     extern Pattern FLEXPATTERN
     extern Pattern BEGINPATTERN
