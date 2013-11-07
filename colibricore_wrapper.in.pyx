@@ -515,9 +515,27 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
             inc(it2)
 
 
-
-
-
+    def items(self):
+        """Iterate over all pattern pairs and their values in the dictionary. Yields (pattern1,pattern2,value) tuples"""
+        cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it2
+        cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it2nd
+        cdef int value
+        it = self.data.begin()
+        cdef cPattern cpattern
+        while it != self.data.end():
+            cpattern = deref(it).first
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            it2 = self.data[pattern.cpattern].begin()
+            it2end = self.data[pattern.cpattern].end()
+            while it2 != it2end:
+                cpattern = deref(it2).first
+                pattern2 = Pattern()
+                pattern2.bind(cpattern)
+                value = deref(it2).second
+                yield pattern, pattern2, value
+                inc(it2)
+            inc(it)
 
     cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t] * getmap(self, Pattern pattern):
         if not isinstance(pattern, Pattern):
