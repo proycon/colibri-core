@@ -25,6 +25,7 @@ print("Size: ", len(ngram))
 print("Bytesize: ", ngram.bytesize())
 print("Category==NGRAM", (ngram.category() == colibricore.Category.NGRAM) )
 print("Hash: ", hash(ngram))
+print("Raw bytes: ", repr(bytes(ngram)))
 
 
 print("Slicing ngram")

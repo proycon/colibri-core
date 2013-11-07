@@ -199,6 +199,7 @@ class Pattern {
       * Debug function outputting the classes in this pattern to stderr
       */
      bool out() const;
+     std::vector<int> tovector() const;
 
      bool operator==(const Pattern & other) const;
      bool operator!=(const Pattern & other) const;
@@ -296,6 +297,9 @@ class Pattern {
 
      Pattern addcontext(const Pattern & leftcontext, const Pattern & rightcontext) const;    
      void mask(std::vector<bool> & container) const; //returns a boolean mask of the skipgram (0 = gap(encapsulation) , 1 = skipgram coverage)
+
+     //sets an entirely new value
+     void set(const unsigned char* dataref, const int size); 
 };
 
 const unsigned char tmp_skipmarker = SKIPMARKER;

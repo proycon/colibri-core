@@ -326,6 +326,32 @@ bool Pattern::out() const {
     return false;
 }
 
+vector<int> Pattern::tovector() const { 
+    vector<int> v;
+    int i = 0;
+    do {
+        const unsigned char c = data[i];
+        if (c == ENDMARKER) {
+            //end marker
+            cerr << endl;
+            return v;
+        } else if (c < 128) {
+            //we have a size
+            v.push_back(bytestoint(data + i + 1, c));
+            i += c + 1;
+        } else if ((c == SKIPMARKER) || (c == FLEXMARKER)) {
+            //FLEXMARKER is counted as 1, the minimum fill
+            v.push_back(c);
+            i++;
+        } else {
+            //we have another marker
+            v.push_back(c);
+            i++;
+        }
+    } while (1);
+    return v;
+}
+
 void readanddiscardpattern(std::istream * in) {
     unsigned char c;
     do {
@@ -402,6 +428,32 @@ Pattern::Pattern(const unsigned char * dataref, const int _size) {
     }
     data[j++] = ENDMARKER;
 
+}
+
+
+void Pattern::set(const unsigned char * dataref, const int _size) {
+    if (data != NULL) {
+        delete[] data;
+        data = NULL;
+    }
+    data = new unsigned char[_size];
+    int j = 0;
+    for (int i = 0; i < _size; i++) {
+        data[j++] = dataref[i];
+        unsigned char c = dataref[i];
+        if (c == 0) {
+            break;
+        } else if (c < 128) {
+            int end = i + c;
+            do {
+                i++;
+                data[j++] = dataref[i];
+            } while (i < end);
+        }
+
+
+    }
+    data[j++] = ENDMARKER;
 }
 
 Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructor

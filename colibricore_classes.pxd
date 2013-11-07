@@ -26,6 +26,7 @@ cdef extern from "<iostream>" namespace "std":
 
 cdef extern from "pattern.h":
     cdef cppclass Pattern:
+        unsigned char * data
         Pattern() nogil
         Pattern(Pattern&, int,int) nogil
         Pattern(Pattern&) nogil
@@ -45,6 +46,8 @@ cdef extern from "pattern.h":
         int subngrams(vector[Pattern] container,int minn=0,int maxn=9) nogil
         bool contains(Pattern&) nogil
         Pattern toflexgram() nogil
+        vector[int] tovector() nogil
+        set(unsigned char *,int ) nogil
 
     cdef cppclass IndexReference:
         IndexReference()

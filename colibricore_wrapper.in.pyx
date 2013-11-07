@@ -307,8 +307,24 @@ cdef class Pattern:
             for pattern in self.ngrams(n):
                 yield pattern
 
+    def tolist(self):
+        """Returns a list representing the raw classes in the pattern"""
+        cdef vector[int] state = self.cpattern.tovector()
+        return state
 
+    def __bytes__(self):
+        cdef int s = self.bytesize()
+        cdef bytes b = self.cpattern.data[:s]
+        return b
 
+    def __getstate__(self):
+        cdef int s = self.bytesize()
+        cdef bytes b = self.cpattern.data[:s]
+        return b
+
+    def __setstate__(self, bytes byterep):
+        cdef unsigned char * cdata = byterep
+        self.data.set(cdata, len(byterep))
 
 cdef class IndexedData:
     """IndexedData is essentially a set of indexes in the form of (sentence,token) tuples, sentence is generally 1-indexed, token is always 0-indexed. It is used by Indexed Pattern Models to keep track of exact occurrences of all the patterns. Use len() to if you're merely interested in the number of occurrences, rather than their exact wherabouts."""
