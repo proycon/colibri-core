@@ -536,6 +536,14 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                 valuehandler.write(out, iter->second);
             }
         }
+        
+        virtual void write(std::string filename) {
+            std::ofstream * out = new std::ofstream(filename.c_str());
+            this->write(out);
+            out->close();
+            delete out;
+        }
+
 
         template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler>
         void read(std::istream * in, int MINTOKENS=0) {
@@ -554,6 +562,14 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                         insert(p,convertedvalue);
                 }
             }
+        }
+
+        template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler>
+        void read(std::string filename,int MINTOKENS=0) {
+            std::ifstream * in = new std::ifstream(filename.c_str());
+            this->read<ReadValueType,ReadValueHandler>(in);
+            in->close();
+            delete in;
         }
 };
 
