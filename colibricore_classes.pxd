@@ -47,7 +47,7 @@ cdef extern from "pattern.h":
         bool contains(Pattern&) nogil
         Pattern toflexgram() nogil
         vector[int] tovector() nogil
-        set(unsigned char *,int ) nogil
+        void set(unsigned char *,int ) nogil
 
     cdef cppclass IndexReference:
         IndexReference()

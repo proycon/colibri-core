@@ -5,6 +5,7 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 import os
 import sys
 from copy import copy
+import pickle
 
 try:
     import colibricore
@@ -41,6 +42,15 @@ print("Equality check")
 assert( ngram == ngram3 )
 
 
+print("Picking n-gram:")
+pickled = pickle.dumps(ngram)
+
+print("Unpicking n-gram:")
+unpickledngram = pickle.loads(pickled)
+
+
+print("Equality check")
+assert( ngram == unpickledngram )
 
 print("Subgrams of ngram:")
 for subngram in ngram.subngrams():
