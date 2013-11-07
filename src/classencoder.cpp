@@ -1,4 +1,4 @@
-#include ".h"
+#include "classencoder.h"
 #include <fstream>
 #include <cmath>
 #include <iostream>
