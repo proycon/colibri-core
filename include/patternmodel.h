@@ -127,7 +127,7 @@ class PatternModelOptions {
         bool DEBUG;
 
         PatternModelOptions() {
-            MINTOKENS = 2;
+            MINTOKENS = -1; //defaults to 2 for building, 1 for loading
             MAXLENGTH = 100;
 
             MINSKIPTYPES = 2;
@@ -199,7 +199,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
         }
-        PatternModel<ValueType,ValueHandler,MapType>(std::istream *f, const PatternModelOptions options) { //load from file
+        PatternModel<ValueType,ValueHandler,MapType>(std::istream *f, PatternModelOptions options) { //load from file
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -271,7 +271,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             this->postread(options);
         }
         
-        virtual void train(std::istream * in , const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
+        virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
+            if (options.MINTOKENS == -1) options.MINTOKENS = 2;
             uint32_t sentence = 0;
             std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
             if (!in->good()) {
@@ -365,7 +366,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
-        virtual int computeskipgrams(const Pattern & pattern, const PatternModelOptions & options, std::map<int, std::vector< std::vector< std::pair<int,int>>>> & gapconf, const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, const bool exhaustive = false) {
+        virtual int computeskipgrams(const Pattern & pattern, PatternModelOptions  options, std::map<int, std::vector< std::vector< std::pair<int,int>>>> & gapconf, const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, const bool exhaustive = false) {
+            if (options.MINTOKENS == -1) options.MINTOKENS = 2;
             //internal function for computing skipgrams for a single pattern
             int foundskipgrams = 0;
             const int n = pattern.n();
@@ -963,7 +965,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
 
-    virtual void trainskipgrams(const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
+    virtual void trainskipgrams(PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
+        if (options.MINTOKENS == -1) options.MINTOKENS = 2;
         this->cache_grouptotal.clear(); //forces recomputation of statistics
         std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
         for (int n = 3; n <= options.MAXLENGTH; n++) {
