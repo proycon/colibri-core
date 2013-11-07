@@ -1,4 +1,4 @@
-#include "classencoder.h"
+#include ".h"
 #include <fstream>
 #include <cmath>
 #include <iostream>
@@ -323,10 +323,10 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	    string line = "";
 	    for (size_t i = 0; i < wl; i++) {
             folia::Word * word = words[i];
-	        if ((!line.empty()) && (word->parent() != prevparent) && (i< wl -1)) {
+	        if ((!line.empty()) && (word->parent() != prevparent)) {
 	            outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);     
 	            if (outputsize > 0) OUT.write((const char *) outputbuffer, outputsize);
-          	    OUT.write(&zero, sizeof(char)); //write separator
+          	    OUT.write(&zero, sizeof(char)); //newline
           	    linenum++;        
           	    line = "";
 	        }
@@ -339,7 +339,10 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
         } 
         if (!line.empty()) {
             outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);     
-	        if (outputsize > 0) OUT.write((const char *) outputbuffer, outputsize);
+	        if (outputsize > 0) {
+                OUT.write((const char *) outputbuffer, outputsize);
+          	    OUT.write(&zero, sizeof(char)); //newline
+            }
         }
 	    cerr << "Encoded " << linenum << " lines" << endl;
 	    OUT.close();
