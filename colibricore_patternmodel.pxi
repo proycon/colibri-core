@@ -197,6 +197,10 @@ def load(self, str filename, PatternModelOptions options=None):
         options = PatternModelOptions()
     self.data.load(filename.encode('utf-8'), options.coptions)
 
+def read(self, str filename, PatternModelOptions options=None):
+    """Alias for load"""
+    self.load(filename, options)
+
 cpdef write(self, str filename):
     """Write a patternmodel to file
 
