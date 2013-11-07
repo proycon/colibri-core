@@ -564,13 +564,13 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
             }
         }
 
-        template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler>
-        void read(std::string filename,int MINTOKENS=0) {
+        void read(std::string filename,int MINTOKENS=0) { //no templates for this one, easier on python/cython
             std::ifstream * in = new std::ifstream(filename.c_str());
-            this->read<ReadValueType,ReadValueHandler>(in);
+            this->read<ValueType,ValueHandler>(in);
             in->close();
             delete in;
         }
+
 };
 
 

@@ -19,6 +19,7 @@ from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
 from libcpp.utility cimport pair
+import os.path
 
 class Category:
     """Pattern Category"""
@@ -591,8 +592,18 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
             raise ValueError("Expected two-tuple of Patterns")
 
 
+    def read(self, str filename):
+        if os.path.exists(filename):
+            self.data.read(filename)
+        else:
+            raise FileNotFoundError
 
-    #items is not implemented deliberately
+    def write(self, str filename):
+        if os.path.exists(filename):
+            self.data.read(filename)
+        else:
+            raise FileNotFoundError
+
 
 cdef class IndexedPatternModel:
     """Indexed Pattern Model"""

@@ -72,7 +72,8 @@ cdef extern from "pattern.h":
         ValueType& operator[](Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
-
+        void read(string filename) nogil
+        void write(string filename) nogil
 
     cdef cppclass OrderedPatternMap[ValueType,ValueHandler,ReadWriteSizeType]:
         cppclass iterator:
@@ -89,6 +90,8 @@ cdef extern from "pattern.h":
         ValueType& operator[](Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
+        void read(string filename) nogil
+        void write(string filename) nogil
 
     cdef cppclass PatternSet[ReadWriteSizeType]:
         cppclass iterator:
@@ -104,6 +107,8 @@ cdef extern from "pattern.h":
         bool has(Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
+        void read(string filename) nogil
+        void write(string filename) nogil
 
     cdef cppclass OrderedPatternSet[ReadWriteSizeType]:
         cppclass iterator:
@@ -120,6 +125,8 @@ cdef extern from "pattern.h":
         int size() nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
+        void read(string filename) nogil
+        void write(string filename) nogil
 
 
     cdef cppclass IndexedCorpus:
@@ -155,6 +162,8 @@ cdef extern from "pattern.h":
         PatternMap[ValueType,ValueHandler,NestedSizeType]& operator[](Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
+        void read(string filename) nogil
+        void write(string filename) nogil
 
     extern Pattern SKIPPATTERN
     extern Pattern FLEXPATTERN

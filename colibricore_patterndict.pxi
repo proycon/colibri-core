@@ -42,3 +42,16 @@ def items(self):
         pattern.bind(cpattern)
         yield (pattern,value)
         inc(it)
+
+
+def read(self, str filename):
+    if os.path.exists(filename):
+        self.data.read(filename)
+    else:
+        raise FileNotFoundError
+
+def write(self, str filename):
+    if os.path.exists(filename):
+        self.data.read(filename)
+    else:
+        raise FileNotFoundError
