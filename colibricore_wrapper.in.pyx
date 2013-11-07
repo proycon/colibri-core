@@ -451,7 +451,6 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
 
     cdef cAlignedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t] data
     cdef cAlignedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it
-    cdef int value
 
 
     def __len__(self):
@@ -536,6 +535,8 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
     cpdef getpair(self, Pattern pattern, Pattern pattern2):
         return self.data[pattern.cpattern][pattern2.cpattern]
 
+    cpdef setpair(self, Pattern pattern, Pattern pattern2, uint32_t value):
+        self.data[pattern.cpattern][pattern2.cpattern] = value
 
     def __getitem__(self, item):
         """Retrieve the item, item is a two-tuple of Pattern instances.
@@ -561,6 +562,15 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
         else:
             raise ValueError("Expected instance of Pattern or two-tuple of Patterns")
 
+    def __setitem__(self, item, value):
+        if isinstance(item, tuple):
+            if len(item) != 2:
+                raise ValueError("Expected two-tuple of Patterns")
+            elif not isinstance(item[0], Pattern) or not isinstance(item[1], Pattern):
+                raise ValueError("Expected two-tuple of Patterns")
+            self.setpair(item[0], item[1], value)
+        else:
+            raise ValueError("Expected two-tuple of Patterns")
 
 
 
