@@ -408,26 +408,11 @@ Pattern::Pattern(std::istream * in) {
 
 
 Pattern::Pattern(const unsigned char * dataref, const int _size) {
-
-    data = new unsigned char[_size];
-    int j = 0;
+    data = new unsigned char[_size+1];
     for (int i = 0; i < _size; i++) {
-        data[j++] = dataref[i];
-        unsigned char c = dataref[i];
-        if (c == 0) {
-            break;
-        } else if (c < 128) {
-            int end = i + c;
-            do {
-                i++;
-                data[j++] = dataref[i];
-            } while (i < end);
-        }
-
-
+        data[i] = dataref[i];
     }
-    data[j++] = ENDMARKER;
-
+    data[_size] = ENDMARKER;
 }
 
 
@@ -436,24 +421,11 @@ void Pattern::set(const unsigned char * dataref, const int _size) {
         delete[] data;
         data = NULL;
     }
-    data = new unsigned char[_size];
-    int j = 0;
+    data = new unsigned char[_size+1];
     for (int i = 0; i < _size; i++) {
-        data[j++] = dataref[i];
-        unsigned char c = dataref[i];
-        if (c == 0) {
-            break;
-        } else if (c < 128) {
-            int end = i + c;
-            do {
-                i++;
-                data[j++] = dataref[i];
-            } while (i < end);
-        }
-
-
+        data[i] = dataref[i];
     }
-    data[j++] = ENDMARKER;
+    data[_size] = ENDMARKER;
 }
 
 Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructor
@@ -549,6 +521,9 @@ Pattern & Pattern::operator =(const Pattern other) { //(note: argument passed by
     if (data != NULL) {
         delete[] data;
         data = NULL;
+    } else if (data == other.data) {
+        //nothing to do
+        return *this;
     }
     
     //set new data

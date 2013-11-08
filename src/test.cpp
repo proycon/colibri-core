@@ -27,6 +27,21 @@ int main( int argc, char *argv[] ) {
 	//string classfile = argv[1];
 	
     {
+        /*
+        {
+            //DEBUG ZONE
+            const string classfile = "osub12-ru.colibri.cls";
+            ClassEncoder classencoder = ClassEncoder(classfile);
+            const string s = "fin fin fin fin fin fin";
+            Pattern ngram = classencoder.buildpattern(s);
+            ngram.out();
+            cerr << "n=" << ngram.n() << endl;
+            ngram + ngram;
+            //exit(0);
+        }
+        */
+        
+        
         string classfile = "/tmp/colibritest";    
         ofstream f;
         f.open(classfile.c_str(), ios::out);

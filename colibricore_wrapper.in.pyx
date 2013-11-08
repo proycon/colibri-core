@@ -51,9 +51,9 @@ cdef class ClassEncoder:
         :rtype: Pattern
         """
 
-        c_pattern = self.data.buildpattern(text.encode('utf-8'), allowunknown, autoaddunknown)
+        cdef cPattern cpattern = self.data.buildpattern(text.encode('utf-8'), allowunknown, autoaddunknown)
         pattern = Pattern()
-        pattern.bind(c_pattern)
+        pattern.bind(cpattern)
         return pattern
 
 
@@ -78,7 +78,7 @@ cdef class Pattern:
     cdef cPattern getcpattern(self):
         return self.cpattern
 
-    cdef bind(self, cPattern cpattern):
+    cdef bind(self, cPattern& cpattern):
         self.cpattern = cpattern
 
     def bindbegin(self):
