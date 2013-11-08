@@ -615,10 +615,7 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
             raise IOError
 
     def write(self, str filename):
-        if os.path.exists(filename):
-            self.data.write(filename)
-        else:
-            raise IOError
+        self.data.write(filename)
 
 
 cdef class IndexedPatternModel:

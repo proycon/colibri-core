@@ -51,7 +51,4 @@ def read(self, str filename):
         raise IOError
 
 def write(self, str filename):
-    if os.path.exists(filename):
-        self.data.write(filename)
-    else:
-        raise IOError
+    self.data.write(filename)
