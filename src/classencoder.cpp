@@ -281,13 +281,28 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
 }
 
 
-Pattern ClassEncoder::buildpattern(const std::string querystring, bool allowunknown,  bool autoaddunknown) {
-	unsigned char buffer[65536];
-	char buffersize = encodestring(querystring, buffer, allowunknown, autoaddunknown);
-    Pattern pattern = Pattern(buffer,buffersize); 
+const int buildbuffersize = 65536;
+unsigned char buildbuffer[buildbuffersize];
+Pattern ClassEncoder::buildpattern(const std::string querystring, bool allowunknown,  bool autoaddunknown) { //not thread-safe
+	int buffersize = encodestring(querystring, buildbuffer, allowunknown, autoaddunknown);
+    if (buffersize > buildbuffersize) {
+        cerr << "INTERNAL ERROR: Exceeded buildpattern buffer size" << endl;
+        exit(2);
+    }
+    Pattern pattern = Pattern(buildbuffer,buffersize); 
 	return pattern;
 }
 
+Pattern ClassEncoder::buildpattern_safe(const std::string querystring, bool allowunknown,  bool autoaddunknown) { //thread-safe
+    unsigned char buffer[buildbuffersize];
+	int buffersize = encodestring(querystring, buffer, allowunknown, autoaddunknown);
+    if (buffersize > buildbuffersize) {
+        cerr << "INTERNAL ERROR: Exceeded buildpattern buffer size" << endl;
+        exit(2);
+    }
+    Pattern pattern = Pattern(buffer,buffersize); 
+	return pattern;
+}
 
 void ClassEncoder::add(std::string s, unsigned int cls) {
     classes[s] = cls;
