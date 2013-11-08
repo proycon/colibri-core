@@ -52,6 +52,6 @@ def read(self, str filename):
 
 def write(self, str filename):
     if os.path.exists(filename):
-        self.data.read(filename)
+        self.data.write(filename)
     else:
         raise IOError
