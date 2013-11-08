@@ -48,10 +48,10 @@ def read(self, str filename):
     if os.path.exists(filename):
         self.data.read(filename)
     else:
-        raise FileNotFoundError
+        raise IOError
 
 def write(self, str filename):
     if os.path.exists(filename):
         self.data.read(filename)
     else:
-        raise FileNotFoundError
+        raise IOError
