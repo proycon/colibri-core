@@ -637,172 +637,22 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
 
 
 cdef class IndexedPatternModel:
-    """Indexed Pattern Model"""
+    """Indexed Pattern Model. Implemented using a hash map (dictionary)"""
 
     cdef cIndexedPatternModel[cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]] data
+    cdef cPatternModel[cIndexedData,cIndexedDataHandler,cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]].iterator it
 
     @include colibricore_patternmodel.pxi
+    @include colibricore_indexedpatternmodel.pxi
 
-    cdef getdata(self, Pattern pattern):
-        cdef cIndexedData cvalue
-        if pattern in self:
-            cvalue = self.data[pattern.cpattern]
-            value = IndexedData()
-            value.bind(cvalue)
-            return value
-        else:
-            raise KeyError
-
-
-    def __iter__(self):
-        """Iterate over all patterns in this model"""
-        cdef cPatternModel[cIndexedData,cIndexedDataHandler,cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]].iterator it = self.data.begin()
-        cdef cPattern cpattern
-        while it != self.data.end():
-            cpattern = deref(it).first
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield pattern
-            inc(it)
-
-    def items(self):
-        """Iterate over all patterns and their index data (IndexedData instances) in this model"""
-        cdef cPatternModel[cIndexedData,cIndexedDataHandler,cPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]].iterator it = self.data.begin()
-        cdef cPattern cpattern
-        cdef cIndexedData cvalue
-        while it != self.data.end():
-            cpattern = deref(it).first
-            cvalue = deref(it).second
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            value = IndexedData()
-            value.bind(cvalue)
-            yield (pattern,value)
-            inc(it)
-
-
-    def reverseindex(self, indexreference):
-        """Generator over all patterns occurring at the specified index reference
-
-        :param indexreference: a (sentence, tokenoffset) tuple
-        """
-
-        if not isinstance(indexreference, tuple) or not len(indexreference) == 2:
-            raise ValueError("Expected tuple")
-
-        cdef int sentence = indexreference[0]
-        cdef int token = indexreference[1]
-        cdef cIndexReference ref = cIndexReference(sentence, token)
-        cdef vector[cPattern] results = self.data.getreverseindex(ref)
-        cdef vector[cPattern].iterator it = results.begin()
-        cdef cPattern cpattern
-        while it != results.end():
-            cpattern = deref(it)
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield pattern
-
-    cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
-        """Compute and output (to stdout) all relations for the specified pattern:
-
-        :param pattern: The pattern to output relations for
-        :type pattern: Pattern
-        :param decoder: The class decoder
-        :type decoder: ClassDecoder
-        """
-        self.data.outputrelations(pattern.cpattern,decoder.data,&cout)
-
-
-    def getsubchildren(self, Pattern pattern):
-        """Get subsumption children for the specified pattern
-        :param pattern: The pattern
-        :type pattern: Pattern
-        :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
-        """
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubchildren(pattern.cpattern)
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
-
-        cdef cPattern cpattern
-        cdef int value
-        while it != relations.end():
-            cpattern = deref(it).first
-            value = deref(it).second
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield (pattern,value)
-            inc(it)
-
-    def getsubparents(self, Pattern pattern):
-        """Get subsumption parents for the specified pattern
-        :param pattern: The pattern
-        :type pattern: Pattern
-        :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
-        """
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubparents(pattern.cpattern)
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
-        cdef cPattern cpattern
-        cdef int value
-        while it != relations.end():
-            cpattern = deref(it).first
-            value = deref(it).second
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield (pattern,value)
-            inc(it)
-
-    def getleftneighbours(self, Pattern pattern):
-        """Get left neighbours for the specified pattern
-        :param pattern: The pattern
-        :type pattern: Pattern
-        :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
-        """
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern)
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
-        cdef cPattern cpattern
-        cdef int value
-        while it != relations.end():
-            cpattern = deref(it).first
-            value = deref(it).second
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield (pattern,value)
-            inc(it)
-
-    def getrightneighbours(self, Pattern pattern):
-        """Get right neighbours for the specified pattern
-        :param pattern: The pattern
-        :type pattern: Pattern
-        :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
-        """
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern)
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
-        cdef cPattern cpattern
-        cdef int value
-        while it != relations.end():
-            cpattern = deref(it).first
-            value = deref(it).second
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield (pattern,value)
-            inc(it)
-
-    def getskipcontent(self, Pattern pattern):
-        """Get skip content for the specified pattern
-        :param pattern: The pattern
-        :type pattern: Pattern
-        :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
-        """
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getskipcontent(pattern.cpattern)
-        cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator it = relations.begin()
-        cdef cPattern cpattern
-        cdef int value
-        while it != relations.end():
-            cpattern = deref(it).first
-            value = deref(it).second
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield (pattern,value)
-            inc(it)
+#cdef class OrderedIndexedPatternModel:
+#    """Indexed Pattern Model. Implemented using an ordered map"""
+#
+#    cdef cIndexedPatternModel[cOrderedPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]] data
+#    cdef cOrderedPatternModel[cIndexedData,cIndexedDataHandler,cOrderedPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]].iterator it
+#
+#    include colibricore_patternmodel.pxi
+#    include colibricore_indexedpatternmodel.pxi
 
 cdef class UnindexedPatternModel:
     """Unindexed Pattern Model, less flexible and powerful than its indexed counterpart, but smaller memory footprint"""
@@ -810,29 +660,7 @@ cdef class UnindexedPatternModel:
     cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]].iterator it
 
     @include colibricore_patternmodel.pxi
-
-    cpdef getdata(self, Pattern pattern):
-        cdef cIndexedData cvalue
-        if pattern in self:
-            return self.data[pattern.cpattern]
-        else:
-            raise KeyError
-
-    def items(self):
-        """Iterate over all patterns and their occurrence count in this model"""
-        it = self.data.begin()
-        cdef cPattern cpattern
-        cdef int value
-        while it != self.data.end():
-            cpattern = deref(it).first
-            value = deref(it).second
-            pattern = Pattern()
-            pattern.bind(cpattern)
-            yield (pattern,value)
-            inc(it)
-
-
-
+    @include colibricore_unindexedpatternmodel.pxi
 
 
 cdef class PatternModelOptions:
