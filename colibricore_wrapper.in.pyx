@@ -610,12 +610,12 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
 
     def read(self, str filename):
         if os.path.exists(filename):
-            self.data.read(filename)
+            self.data.read(filename.encode('utf-8'))
         else:
             raise IOError
 
     def write(self, str filename):
-        self.data.write(filename)
+        self.data.write(filename.encode('utf-8'))
 
 
 cdef class IndexedPatternModel:
