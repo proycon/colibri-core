@@ -56,6 +56,23 @@ cdef class ClassEncoder:
         pattern.bind(cpattern)
         return pattern
 
+    def build(self, str filename): #build a class from this dataset
+        """Builds a class encoder from a plain-text corpus (utf-8)"""
+        if os.path.exists(filename):
+            self.data.build(filename.encode('utf-8'))
+        else:
+            raise IOError("File " + filename + " does not exist")
+
+    def encodefile(self, str sourcefile, str targetfile, bool allowunknown=True): #apply the encoder to a file
+        """Encodes the specified sourcefile according to the classer (as targetfile)"""
+        if os.path.exists(sourcefile):
+            self.data.encodefile(sourcefile.encode('utf-8'), targetfile.encode('utf-8'),allowunknown)
+        else:
+            raise IOError("File " + sourcefile + " does not exist")
+
+    def save(self, str filename):
+        self.data.save(filename.encode('utf-8'))
+
 
 cdef class ClassDecoder:
     """The Class Decoder allows Patterns to be decoded back to their string representation. An instance of ClassDecoder is passed to Pattern.tostring()"""
