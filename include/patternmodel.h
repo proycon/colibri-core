@@ -282,12 +282,19 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
 
             if (!options.QUIET) std::cerr << "Training patternmodel" << std::endl;
-            for (int n = 1; n <= options.MAXLENGTH; n++) {
+            int maxlength;
+            for (int n = 1; n <= options.MAXLENGTH; n++) { 
                 int foundngrams = 0;
                 int foundskipgrams = 0;
                 in->clear();
                 in->seekg(0);
-                if (!options.QUIET) std::cerr << "Counting " << n << "-grams" << std::endl; 
+                if (!options.QUIET) {
+                    if (options.MINTOKENS > 1) {
+                        std::cerr << "Counting " << n << "-grams" << std::endl; 
+                    } else {
+                        std::cerr << "Counting *all* n-grams (occurrence threshold=1)" << std::endl; 
+                    }
+                }
 
                 if ((options.DOSKIPGRAMS_EXHAUSTIVE) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
                 
@@ -298,7 +305,11 @@ class PatternModel: public MapType, public PatternModelInterface {
                     if (in->eof()) break;
                     if (n==1) totaltokens += line.size();
                     std::vector<std::pair<Pattern,int>> ngrams;
-                    line.ngrams(ngrams, n);
+                    if (options.MINTOKENS > 1) {
+                        line.ngrams(ngrams, n);
+                    } else if (options.MINTOKENS == 1) {
+                        line.subngrams(ngrams,1,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1, no need to look back anyway, only one iteration over corpus
+                    }
 
                     for (std::vector<std::pair<Pattern,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
                         const Pattern pattern = iter->first;
@@ -306,7 +317,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                         if (pattern.category() == NGRAM) { //should be the only option in decent corpus input
                             const IndexReference ref = IndexReference(sentence, iter->second);
                             bool found = true;
-                            if (n > 1) {
+                            if ((n > 1) && (options.MINTOKENS > 1)) {
                                 //check if sub-parts were counted
                                 std::vector<Pattern> subngrams;
                                 pattern.ngrams(subngrams,n-1);
@@ -325,7 +336,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 if (options.DOREVERSEINDEX) {
                                     reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
                                 }
-                            } else if ((n >= 3) && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
+                            } else if (((n >= 3) || (options.MINTOKENS == 1)) && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
                                 foundskipgrams += this->computeskipgrams(pattern, options, gapconf, &ref, NULL, constrainbymodel, true);
                             }
 
@@ -352,6 +363,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     pruned += prunedextra;
                 }
                 if (!options.QUIET) std::cerr << "...total kept: " << (foundngrams + foundskipgrams) - pruned << std::endl;
+                if (options.MINTOKENS == 1) break; //no need for further n iterations, we did all in one pass since there's no point in looking back
             }
             if (options.DOSKIPGRAMS && !options.DOSKIPGRAMS_EXHAUSTIVE) {
                 this->trainskipgrams(options, constrainbymodel);

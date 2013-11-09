@@ -25,7 +25,7 @@ def end(data):
     begintime, beginmem = data
     d = datetime.now() - begintime
     memd = getmem() - beginmem
-    print("--> Duration: " + str(d.total_seconds()) + "s -- Memory: " + str(memd) + "MB\n")
+    print("--> Duration: " + str(d.total_seconds()) + "s -- Memory: " + str(round(memd,2)) + "MB\n")
 
 def main():
     try:
@@ -95,18 +95,43 @@ def main():
     decoder = colibricore.ClassDecoder(classfile)
     end(b)
 
-    print("Extracting and counting n-grams (up to 8-grams) with UnindexedPatternModel (without reverse index)")
+    print("Extracting and counting ALL n-grams (up to 8-grams, threshold=1) with UnindexedPatternModel (without reverse index)")
     model = colibricore.UnindexedPatternModel()
     options = colibricore.PatternModelOptions(mintokens=1,maxlength=8,doreverseindex=False)
     b = begin()
     model.train(datafile, options)
     end(b)
-    print("\t(Found " + str(len(model)) + " ngrams)")
 
     print("Saving model")
     b = begin()
     model.write(modelfile)
     end(b)
+
+
+
+    print("Extracting and counting aLL n-grams (up to 8-grams,threshold=1) with UnindexedPatternModel (with reverse index)")
+    model = colibricore.UnindexedPatternModel()
+    options = colibricore.PatternModelOptions(mintokens=1,maxlength=8,doreverseindex=True)
+    b = begin()
+    model.train(datafile, options)
+    end(b)
+
+
+    print("Extracting and counting ALL n-grams (up to 8-grams,threshold=1) with IndexedPatternModel (with reverse index)")
+    model = colibricore.IndexedPatternModel()
+    options = colibricore.PatternModelOptions(mintokens=1,maxlength=8)
+    b = begin()
+    model.train(datafile, options)
+    end(b)
+
+
+    print("Extracting and counting n-grams with treshold 2 (up to 8-grams) with IndexedPatternModel (with reverse index)")
+    model = colibricore.IndexedPatternModel()
+    options = colibricore.PatternModelOptions(mintokens=2,maxlength=8)
+    b = begin()
+    model.train(datafile, options)
+    end(b)
+
 
 if __name__ == '__main__':
     main()
