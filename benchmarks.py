@@ -9,7 +9,9 @@ from collections import defaultdict
 from pynlpl.textprocessors import MultiWindower
 import colibricore
 import psutil
-
+import gc
+import time
+import resource
 
 def getmem():
     # return the memory usage in MB
@@ -17,7 +19,16 @@ def getmem():
     mem = process.get_memory_info()[0] / float(2 ** 20)
     return mem
 
+def getmem2():
+    rusage_denom = 1024.
+    if sys.platform == 'darwin':
+        # ... it seems that in OSX the output is different units ...
+        rusage_denom = rusage_denom * rusage_denom
+    mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / rusage_denom
+    return mem
+
 def begin():
+    gc.collect()
     return datetime.now(), getmem()
 
 
@@ -25,6 +36,7 @@ def end(data):
     begintime, beginmem = data
     d = datetime.now() - begintime
     memd = getmem() - beginmem
+    gc.collect()
     print("--> Duration: " + str(d.total_seconds()) + "s -- Memory: " + str(round(memd,2)) + "MB\n")
 
 def main():
@@ -107,9 +119,17 @@ def main():
     model.write(modelfile)
     end(b)
 
+    del model
+
+    print("Extracting and counting ALL n-grams (up to 8-grams, threshold=2) with UnindexedPatternModel (without reverse index)")
+    model = colibricore.UnindexedPatternModel()
+    options = colibricore.PatternModelOptions(mintokens=2,maxlength=8,doreverseindex=False)
+    b = begin()
+    model.train(datafile, options)
+    end(b)
 
 
-    print("Extracting and counting aLL n-grams (up to 8-grams,threshold=1) with UnindexedPatternModel (with reverse index)")
+    print("Extracting and counting ALL n-grams (up to 8-grams,threshold=1) with UnindexedPatternModel (with reverse index)")
     model = colibricore.UnindexedPatternModel()
     options = colibricore.PatternModelOptions(mintokens=1,maxlength=8,doreverseindex=True)
     b = begin()
@@ -124,7 +144,7 @@ def main():
     model.train(datafile, options)
     end(b)
 
-
+    del model
     print("Extracting and counting n-grams with treshold 2 (up to 8-grams) with IndexedPatternModel (with reverse index)")
     model = colibricore.IndexedPatternModel()
     options = colibricore.PatternModelOptions(mintokens=2,maxlength=8)
