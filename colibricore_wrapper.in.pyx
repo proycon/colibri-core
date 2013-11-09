@@ -32,8 +32,9 @@ cdef class ClassEncoder:
 
     cdef cClassEncoder data
 
-    def __init__(self, str filename):
-        self.data.load(filename.encode('utf-8'))
+    def __init__(self, str filename=None):
+        if filename:
+            self.data.load(filename.encode('utf-8'))
 
     def __len__(self):
         """Returns the total number of classes"""
