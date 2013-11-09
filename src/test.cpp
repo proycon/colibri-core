@@ -448,9 +448,26 @@ int main( int argc, char *argv[] ) {
         cerr << "Integrity check for skipgram? " ; test(skipgram == skipgram_read) ;
 
 
+        
+        PatternMap<uint32_t> map1;
+        map1[ngram] = 1;
+        map1[dynskipgram5] = 2;
+        cerr << "Integrity for PatternMap" ; test(map1.size() == 2);
+        cerr << "Integrity for PatternMap" ; test(map1[ngram] == 1);
+        cerr << "Integrity for PatternMap" ; test(map1[dynskipgram5] == 2);
+        cerr << "Saving patternmap" << endl; 
+        map1.write("/tmp/patternmap.tmp");
 
+
+        PatternMap<uint32_t> map2;
+        cerr << "Loading patternmap" << endl; 
+        map2.read("/tmp/patternmap.tmp");
+        cerr << "Integrity for PatternMap" ; test(map2.size() == 2);
+        cerr << "Integrity for PatternMap" ; test(map2[ngram] == 1);
+        cerr << "Integrity for PatternMap" ; test(map2[dynskipgram5] == 2);
 
         }
+        
         { 
 
         string rawcorpusfile = "/tmp/hamlet.txt";
@@ -643,6 +660,9 @@ int main( int argc, char *argv[] ) {
         indexedmodel.print(&std::cerr, classdecoder);
         cerr << "Outputting report again, now with flexgrams" << endl;
         indexedmodel.report(&std::cerr);
+
+    }
+    {
 
     }
 }
