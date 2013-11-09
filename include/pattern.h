@@ -441,6 +441,7 @@ class IndexedCorpus {
 template<class ValueType>
 class AbstractValueHandler {
    public:
+    virtual std::string id() { return "AbstractValueHandler"; }
     virtual void read(std::istream * in, ValueType & value)=0; //read value from input stream (binary)
     virtual void write(std::ostream * out, ValueType & value)=0; //write value to output stream (binary)
     virtual std::string tostring(ValueType & value)=0; //convert value to string)
@@ -454,6 +455,7 @@ class AbstractValueHandler {
 template<class ValueType>
 class BaseValueHandler: public AbstractValueHandler<ValueType> {
    public:
+    virtual std::string id() { return "BaseValueHandler"; }
     const static bool indexed = false;
     void read(std::istream * in, ValueType & v) {
         in->read( (char*) &v, sizeof(ValueType)); 
@@ -508,7 +510,7 @@ class PatternStore {
 /************* Abstract datatype for all kinds of maps ********************/
 
 
-template<class ContainerType, class ValueType, class ValueHandler=BaseValueHandler<ValueType>,class ReadWriteSizeType = uint32_t>
+template<class ContainerType, class ValueType, class ValueHandler,class ReadWriteSizeType = uint32_t>
 class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> { 
      protected:
         ValueHandler valuehandler;
@@ -537,10 +539,10 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
         virtual void write(std::ostream * out) {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
-            for (iterator iter = begin(); iter != end(); iter++) {
+            for (iterator iter = this->begin(); iter != this->end(); iter++) {
                 Pattern p = iter->first;
                 p.write(out);
-                valuehandler.write(out, iter->second);
+                this->valuehandler.write(out, iter->second);
             }
         }
         
@@ -566,7 +568,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                 if (readvaluehandler.count(readvalue) >= MINTOKENS) {
                         ValueType convertedvalue;
                         readvaluehandler.convertto(readvalue, convertedvalue); 
-                        insert(p,convertedvalue);
+                        this->insert(p,convertedvalue);
                 }
             }
         }
@@ -813,6 +815,7 @@ template<class T,size_t N,int countindex = 0>
 class ArrayValueHandler: public AbstractValueHandler<T> {
    public:
     const static bool indexed = false;
+    virtual std::string id() { return "ArrayValueHandler"; }
     void read(std::istream * in, std::array<T,N> & a) {
         for (int i = 0; i < N; i++) {
             T v;
@@ -849,10 +852,13 @@ template<class PatternStoreType>
 class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
   public:
     const static bool indexed = false;
+    virtual std::string id() { return "PatternStoreValueHandler"; }
     void read(std::istream * in,  PatternStoreType & value) {
+        std::cerr << "reading subnode" << std::endl;
         value.read(in);
     }
     void write(std::ostream * out,  PatternStoreType & value) {
+        std::cerr << "writing subnode" << std::endl;
         value.write(out);
     }
     virtual std::string tostring(  PatternStoreType & value) {
@@ -869,11 +875,12 @@ class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
 };
 
 template<class ValueType,class ValueHandler=BaseValueHandler<ValueType>, class NestedSizeType = uint16_t >
-class AlignedPatternMap: public PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>> > {
+class AlignedPatternMap: public PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>>, uint64_t > {
     public:
         typedef PatternMap<ValueType,ValueHandler,NestedSizeType> valuetype;
-        typedef typename PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>> >::iterator iterator;
-        typedef typename PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>> >::const_iterator const_iterator;
+        typedef typename PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>>, uint64_t >::iterator iterator;
+        typedef typename PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>>, uint64_t >::const_iterator const_iterator;
+
 };
 
 

@@ -473,12 +473,12 @@ int main( int argc, char *argv[] ) {
         cerr << "Integrity for AlignedPatternMap" ; test(amap1[ngram][ngram] == 1);
         cerr << "Integrity for AlignedPatternMap" ; test(amap1[dynskipgram5][dynskipgram5] == 2);
         cerr << "Saving AlignedPatternMap" << endl; 
-        map1.write("/tmp/alignedpatternmap.tmp");
+        amap1.write("/tmp/alignedpatternmap.tmp");
 
 
         AlignedPatternMap<uint32_t> amap2;
         cerr << "Loading alignedpatternmap" << endl; 
-        map2.read("/tmp/alignedpatternmap.tmp");
+        amap2.read("/tmp/alignedpatternmap.tmp");
         cerr << "Integrity for AlignedPatternMap" ; test(amap2.size() == 2);
         cerr << "Integrity for AlignedPatternMap" ; test(amap2[ngram][ngram] == 1);
         cerr << "Integrity for AlignedPatternMap" ; test(amap2[dynskipgram5][dynskipgram5] == 2);

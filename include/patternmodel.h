@@ -73,6 +73,7 @@ class IndexedData {
 class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
    public:
     const static bool indexed = true;
+    virtual std::string id() { return "PatternStoreValueHandler"; }
     void read(std::istream * in, IndexedData & v) {
         uint32_t c;
         in->read((char*) &c, sizeof(uint32_t));
