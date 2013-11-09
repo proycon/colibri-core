@@ -854,11 +854,9 @@ class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
     const static bool indexed = false;
     virtual std::string id() { return "PatternStoreValueHandler"; }
     void read(std::istream * in,  PatternStoreType & value) {
-        std::cerr << "reading subnode" << std::endl;
         value.read(in);
     }
     void write(std::ostream * out,  PatternStoreType & value) {
-        std::cerr << "writing subnode" << std::endl;
         value.write(out);
     }
     virtual std::string tostring(  PatternStoreType & value) {
