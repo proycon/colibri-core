@@ -868,7 +868,7 @@ class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
     }
 };
 
-template<class ValueType,class ValueHandler, class NestedSizeType = uint16_t >
+template<class ValueType,class ValueHandler=BaseValueHandler<ValueType>, class NestedSizeType = uint16_t >
 class AlignedPatternMap: public PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>> > {
     public:
         typedef PatternMap<ValueType,ValueHandler,NestedSizeType> valuetype;
