@@ -124,7 +124,7 @@ def main():
 
     if begintest < endtest:
         print("Running tests " , begintest, " to ", endtest)
-        for testnum in range(begintest, max(endtest+1,8)):
+        for testnum in range(begintest, min(endtest+1,9)):
             os.system("python3 " + sys.argv[0] + " x" + str(testnum) + " "+ textfile + " " + tmpdir)
 
     else:
@@ -203,6 +203,16 @@ def main():
             model.train(datafile, options)
             end(b)
             savemodel(model,modelfile)
+
+        elif testnum == 8:
+            print("Extracting and counting ALL n-grams (up to 8-grams, threshold=1) with OrderedUnindexedPatternModel (without reverse index)")
+            model = colibricore.OrderedUnindexedPatternModel()
+            options = colibricore.PatternModelOptions(mintokens=1,maxlength=8,doreverseindex=False)
+            b = begin()
+            model.train(datafile, options)
+            end(b)
+            savemodel(model,modelfile)
+            del model
 
         else:
             print("No such test",file=sys.stderr)

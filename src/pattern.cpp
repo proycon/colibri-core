@@ -373,7 +373,7 @@ void readanddiscardpattern(std::istream * in) {
 Pattern::Pattern(std::istream * in) {
     int i = 0;
     int readingdata = 0;
-    unsigned char c;
+    unsigned char c = 0;
     do {
         if (in->good()) {
             in->read( (char* ) &c, sizeof(char));
@@ -579,14 +579,9 @@ bool Pattern::contains(const Pattern & pattern) const {
 int Pattern::ngrams(vector<Pattern> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
     const int _n = this->n();
     if (n > _n) return 0;
-
-    
     int found = 0;
-
-    
     for (int i = 0; i < (_n - n) + 1; i++) {
-        Pattern pattern = Pattern(*this,i,n);
-        container.push_back( pattern );
+        container.push_back(  Pattern(*this,i,n));
         found++;
     }
     return found;
@@ -596,14 +591,10 @@ int Pattern::ngrams(vector<Pattern> & container, const int n) const { //return m
 int Pattern::ngrams(vector<pair<Pattern,int>> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
     const int _n = this->n();
     if (n > _n) return 0;
-
     
     int found = 0;
-
-    
     for (int i = 0; i < (_n - n); i++) {
-        Pattern pattern = Pattern(*this,i,n);
-        container.push_back( pair<Pattern,int>(pattern,i) );
+        container.push_back( pair<Pattern,int>(Pattern(*this,i,n),i) );
         found++;
     }
     return found;

@@ -492,7 +492,6 @@ class PatternStore {
         
         virtual size_t size() const =0; 
         
-        virtual const Pattern * getpointer(const Pattern &) =0; //get the pattern in the store, or NULL if it does not exist
         
         typedef typename ContainerType::iterator iterator;
         typedef typename ContainerType::const_iterator const_iterator;
@@ -525,7 +524,6 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
         
         virtual size_t size() const =0; 
         
-        virtual const Pattern * getpointer(const Pattern &) =0; //get the pattern in the store, or NULL if it does not exist
         
         virtual ValueType & operator [](const Pattern & pattern)=0;
         
@@ -625,14 +623,6 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
         bool erase(const Pattern & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
 
-        const Pattern * getpointer(const Pattern & pattern) { //get the pattern in the store, or NULL if it does not exist
-            iterator iter = find(pattern);
-            if (iter == end()) {
-                return NULL;
-            } else {
-                return &(*iter);
-            }
-        }
 
         void write(std::ostream * out) {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
@@ -689,14 +679,6 @@ class OrderedPatternSet: public PatternStore<t_orderedpatternset,ReadWriteSizeTy
         bool erase(const Pattern & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
 
-        const Pattern * getpointer(const Pattern & pattern) { //get the pattern in the store, or NULL if it does not exist
-            iterator iter = find(pattern);
-            if (iter == end()) {
-                return NULL;
-            } else {
-                return &(*iter);
-            }
-        }
         
         void write(std::ostream * out) {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
@@ -754,14 +736,6 @@ class PatternMap: public PatternMapStore<std::unordered_map<const Pattern,ValueT
         bool erase(const Pattern & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
 
-        const Pattern * getpointer(const Pattern & pattern) { //get the pattern in the store, or NULL if it does not exist
-            iterator iter = find(pattern);
-            if (iter == end()) {
-                return NULL;
-            } else {
-                return &(iter->first);
-            }
-        }
 };
 
 
@@ -783,7 +757,7 @@ class OrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType
 
         size_t size() const { return data.size(); } 
 
-        ValueType operator [](const Pattern & pattern) { return data[pattern]; } 
+        ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
         
         typedef typename std::map<const Pattern,ValueType>::iterator iterator;
         typedef typename std::map<const Pattern,ValueType>::const_iterator const_iterator;
@@ -799,15 +773,8 @@ class OrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType
 
         bool erase(const Pattern & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
+        
 
-        const Pattern * getpointer(const Pattern & pattern) { //get the pattern in the store, or NULL if it does not exist
-            iterator iter = find(pattern);
-            if (iter == end()) {
-                return NULL;
-            } else {
-                return &(*iter);
-            }
-        }
 };
 
 

@@ -14,7 +14,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator,IndexedCorpus as cIndexedCorpus, BEGINPATTERN as cBEGINPATTERN, ENDPATTERN as cENDPATTERN, SKIPPATTERN as cSKIPPATTERN, FLEXPATTERN as cFLEXPATTERN, UNKPATTERN as cUNKPATTERN, AlignedPatternMap as cAlignedPatternMap
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, OrderedPatternMap as cOrderedPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator,IndexedCorpus as cIndexedCorpus, BEGINPATTERN as cBEGINPATTERN, ENDPATTERN as cENDPATTERN, SKIPPATTERN as cSKIPPATTERN, FLEXPATTERN as cFLEXPATTERN, UNKPATTERN as cUNKPATTERN, AlignedPatternMap as cAlignedPatternMap
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
@@ -645,14 +645,14 @@ cdef class IndexedPatternModel:
     @include colibricore_patternmodel.pxi
     @include colibricore_indexedpatternmodel.pxi
 
-#cdef class OrderedIndexedPatternModel:
-#    """Indexed Pattern Model. Implemented using an ordered map"""
-#
-#    cdef cIndexedPatternModel[cOrderedPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]] data
-#    cdef cOrderedPatternModel[cIndexedData,cIndexedDataHandler,cOrderedPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]].iterator it
-#
-#    include colibricore_patternmodel.pxi
-#    include colibricore_indexedpatternmodel.pxi
+cdef class OrderedIndexedPatternModel:
+    """Indexed Pattern Model. Implemented using an ordered map"""
+
+    cdef cIndexedPatternModel[cOrderedPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]] data
+    cdef cPatternModel[cIndexedData,cIndexedDataHandler,cOrderedPatternMap[cIndexedData,cIndexedDataHandler,uint64_t]].iterator it
+
+    @include colibricore_patternmodel.pxi
+    @include colibricore_indexedpatternmodel.pxi
 
 cdef class UnindexedPatternModel:
     """Unindexed Pattern Model, less flexible and powerful than its indexed counterpart, but smaller memory footprint"""
@@ -662,6 +662,14 @@ cdef class UnindexedPatternModel:
     @include colibricore_patternmodel.pxi
     @include colibricore_unindexedpatternmodel.pxi
 
+
+cdef class OrderedUnindexedPatternModel:
+    """Unindexed Pattern Model, implemented using an ordered map, less flexible and powerful than its indexed counterpart, but smaller memory footprint"""
+    cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cOrderedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]] data
+    cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cOrderedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]].iterator it
+
+    @include colibricore_patternmodel.pxi
+    @include colibricore_unindexedpatternmodel.pxi
 
 cdef class PatternModelOptions:
     """Options for Pattern model, you can get and set the following attributes:

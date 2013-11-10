@@ -197,6 +197,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
+            minn = 999;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
         }
@@ -204,6 +205,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
+            minn = 999;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             this->load(f,options);
@@ -213,6 +215,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
+            minn = 999;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;

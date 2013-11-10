@@ -27,19 +27,26 @@ int main( int argc, char *argv[] ) {
 	//string classfile = argv[1];
 	
     {
-        /*
+        
         {
             //DEBUG ZONE
-            const string classfile = "osub12-ru.colibri.cls";
-            ClassEncoder classencoder = ClassEncoder(classfile);
-            const string s = "fin fin fin fin fin fin";
-            Pattern ngram = classencoder.buildpattern(s);
-            ngram.out();
-            cerr << "n=" << ngram.n() << endl;
-            ngram + ngram;
-            //exit(0);
+            PatternModelOptions options;
+            options.DOREVERSEINDEX = false;
+            options.DOSKIPGRAMS_EXHAUSTIVE = false;
+            options.DOSKIPGRAMS = false ;
+            options.MINTOKENS = 1;
+            options.MAXLENGTH = 8;
+
+            cerr << "Building unindexed model" << endl;
+            PatternModel<uint32_t> unindexedmodel;
+
+            cerr << endl;
+            std::string infilename = "/tmp/republic.txt.colibri.dat";
+            unindexedmodel.train(infilename, options);
+            cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
+            exit(0);
         }
-        */
+       
         
         
         string classfile = "/tmp/colibritest";    
@@ -677,6 +684,16 @@ int main( int argc, char *argv[] ) {
         cerr << "Outputting report again, now with flexgrams" << endl;
         indexedmodel.report(&std::cerr);
 
+
+        options.DOREVERSEINDEX = false;
+        options.DOSKIPGRAMS_EXHAUSTIVE = false;
+        options.DOSKIPGRAMS = false ;
+        cerr << "Building unindexed model using ordered patternmap" << endl;
+        PatternModel<uint32_t,BaseValueHandler<uint32_t>,OrderedPatternMap<uint32_t,BaseValueHandler<uint32_t>>> unindexedmodel3;
+
+        cerr << endl;
+        unindexedmodel3.train(infilename, options);
+        cerr << "Found " << unindexedmodel3.size() << " patterns, " << unindexedmodel3.types() << " types, " << unindexedmodel3.tokens() << " tokens" << endl;
     }
     {
 
