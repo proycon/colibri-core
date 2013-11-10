@@ -290,7 +290,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             std::vector<Pattern> subngrams;
             bool found;
             IndexReference ref;
-            int prevfoundngrams = 0;
+            int prevsize = 0;
             for (int n = 1; n <= options.MAXLENGTH; n++) { 
                 int foundngrams = 0;
                 int foundskipgrams = 0;
@@ -335,7 +335,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             }
                         }
                         if (found) {
-                            ValueType * data = getdata(iter->first);
+                            ValueType * data = getdata(iter->first, true);
                             add(iter->first, data, ref );
                             if (options.DOREVERSEINDEX) {
                                 reverseindex.insert(std::pair<IndexReference,Pattern>(ref,iter->first));
@@ -347,8 +347,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
 
                 
-                foundngrams = this->size() - foundskipgrams - prevfoundngrams;
-                prevfoundngrams = foundngrams;
+                foundngrams = this->size() - foundskipgrams - prevsize;
         
                 if (foundngrams) {
                     if (n > this->maxn) this->maxn = n;
@@ -359,7 +358,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
                 if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngrams...";
                 if (foundskipgrams && !options.QUIET) std::cerr << foundskipgrams << " skipgram occurrences...";
-                if (n == 1) totaltypes += this->size(); //total unigrams, also those not in model
+                if ((options.MINTOKENS > 1) && (n == 1)) totaltypes += this->size(); //total unigrams, also those not in model
                 int pruned = this->prune(options.MINTOKENS,n);
                 if (!options.QUIET) std::cerr << "pruned " << pruned;
                 if (foundskipgrams) {
@@ -369,6 +368,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
                 if (!options.QUIET) std::cerr << "...total kept: " << (foundngrams + foundskipgrams) - pruned << std::endl;
                 if (options.MINTOKENS == 1) break; //no need for further n iterations, we did all in one pass since there's no point in looking back
+                prevsize = this->size();
             }
             if (options.DOSKIPGRAMS && !options.DOSKIPGRAMS_EXHAUSTIVE) {
                 this->trainskipgrams(options, constrainbymodel);
@@ -475,7 +475,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (skipgram_valid) {
                     if (options.DEBUG) std::cerr << "  counted!" << std::endl;
                     if (!has(skipgram)) foundskipgrams++;
-                    ValueType * data = this->getdata(skipgram);
+                    ValueType * data = this->getdata(skipgram,true);
                     if (singleref != NULL) {
                         add(skipgram, data, *singleref ); //counts the actual skipgram, will add it to the model
                         if (options.DOREVERSEINDEX) {
@@ -543,12 +543,14 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
         
-        virtual ValueType * getdata(const Pattern & pattern) { 
+        virtual ValueType * getdata(const Pattern & pattern, bool makeifnew=false) { 
             typename MapType::iterator iter = this->find(pattern);
-            if (iter == this->end()) {
-                return NULL;
-            } else {
+            if (iter != this->end()) {
                 return &(iter->second); 
+            } else if (makeifnew) {
+                return &((*this)[pattern]);
+            } else {
+                return NULL;
             }
         }
         
@@ -677,8 +679,8 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         virtual void add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
             if (value == NULL) {
-                (*this)[pattern]; //creates the data point if it didn't exist yet
-                value = getdata(pattern);
+                std::cerr << "Add() value is NULL!" << std::endl;
+                throw InternalError();
             }
             this->valuehandler.add(value, ref);
         }

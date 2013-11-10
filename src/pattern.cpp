@@ -22,7 +22,7 @@ const PatternCategory datacategory(const unsigned char * data, int maxbytes = 0)
     PatternCategory category = NGRAM;
     int i = 0;
     do {
-        if (i >= maxbytes) return category;
+        if ((maxbytes > 0) && (i >= maxbytes)) return category;
         const unsigned char c = data[i];
         if (c == ENDMARKER) {
             //end marker
