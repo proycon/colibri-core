@@ -248,6 +248,7 @@ class Pattern {
       * the pattern.
       */
      int subngrams(std::vector<Pattern> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
+     int subngrams(std::vector<PatternPointer> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
 
      /**
       * Adds all pairs of all patterns (not just ngrams) of size n that are
@@ -256,6 +257,7 @@ class Pattern {
       * present in the pattern.
       */
      int ngrams(std::vector<std::pair<Pattern,int>> & container, const int n) const; //return multiple ngrams
+     int ngrams(std::vector<std::pair<PatternPointer,int>> & container, const int n) const; //return multiple ngrams
 
      /**
       * Adds all pairs of all patterns (not just ngrams) that are
@@ -264,6 +266,7 @@ class Pattern {
       * present in the pattern.
       */
      int subngrams(std::vector<std::pair<Pattern,int>> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
+     int subngrams(std::vector<std::pair<PatternPointer,int>> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
 
      /**
       * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container... Thus 'to be {*} not {*} be' has three parts 
@@ -340,6 +343,8 @@ class PatternPointer {
      const size_t bytesize() const { return bytes; }
      const size_t size() const { return n(); }
      
+     const PatternCategory category() const;
+
      std::string tostring(ClassDecoder& classdecoder) const; //pattern to string (decode)
      bool out() const;
      

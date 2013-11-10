@@ -286,6 +286,9 @@ class PatternModel: public MapType, public PatternModelInterface {
 
             if (!options.QUIET) std::cerr << "Training patternmodel" << std::endl;
             int maxlength;
+            std::vector<std::pair<Pattern,int>> ngrams;
+            std::vector<Pattern> subngrams;
+            bool found;
             for (int n = 1; n <= options.MAXLENGTH; n++) { 
                 int foundngrams = 0;
                 int foundskipgrams = 0;
@@ -307,7 +310,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     sentence++;
                     if (in->eof()) break;
                     if (n==1) totaltokens += line.size();
-                    std::vector<std::pair<Pattern,int>> ngrams;
+                    ngrams.clear();
                     if (options.MINTOKENS > 1) {
                         line.ngrams(ngrams, n);
                     } else if (options.MINTOKENS == 1) {
@@ -315,35 +318,30 @@ class PatternModel: public MapType, public PatternModelInterface {
                     }
 
                     for (std::vector<std::pair<Pattern,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
-                        const Pattern pattern = iter->first;
-                        if ((constrainbymodel != NULL) && (!constrainbymodel->has(pattern))) continue;
-                        if (pattern.category() == NGRAM) { //should be the only option in decent corpus input
-                            const IndexReference ref = IndexReference(sentence, iter->second);
-                            bool found = true;
-                            if ((n > 1) && (options.MINTOKENS > 1)) {
-                                //check if sub-parts were counted
-                                std::vector<Pattern> subngrams;
-                                pattern.ngrams(subngrams,n-1);
-                                for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                                    const Pattern subpattern = *iter2;
-                                    if ((subpattern.category() == NGRAM) && (!this->has(subpattern))) {
-                                        found = false;
-                                        break;
-                                    }
+                        if ((constrainbymodel != NULL) && (!constrainbymodel->has(iter->first))) continue;
+                        const IndexReference ref = IndexReference(sentence, iter->second);
+                        found = true;
+                        if ((n > 1) && (options.MINTOKENS > 1)) {
+                            //check if sub-parts were counted
+                            subngrams.clear();
+                            iter->first.ngrams(subngrams,n-1);
+                            for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                if (!this->has(*iter2)) {
+                                    found = false;
+                                    break;
                                 }
                             }
-                            if (found) {
-                                if (!has(pattern)) foundngrams++;
-                                ValueType * data = getdata(pattern);
-                                add(pattern, data, ref );
-                                if (options.DOREVERSEINDEX) {
-                                    reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
-                                }
-                            } else if (((n >= 3) || (options.MINTOKENS == 1)) && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
-                                foundskipgrams += this->computeskipgrams(pattern, options, gapconf, &ref, NULL, constrainbymodel, true);
+                        }
+                        if (found) {
+                            if (!has(iter->first)) foundngrams++;
+                            ValueType * data = getdata(iter->first);
+                            add(iter->first, data, ref );
+                            if (options.DOREVERSEINDEX) {
+                                reverseindex.insert(std::pair<IndexReference,Pattern>(ref,iter->first));
                             }
-
-                        }           
+                        } else if (((n >= 3) || (options.MINTOKENS == 1)) && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
+                            foundskipgrams += this->computeskipgrams(iter->first, options, gapconf, &ref, NULL, constrainbymodel, true);
+                        }
                     }
                 }
 

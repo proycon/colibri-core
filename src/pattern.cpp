@@ -18,11 +18,11 @@ using namespace std;
 
 unsigned char mainpatternbuffer[MAINPATTERNBUFFERSIZE+1];
 
-const PatternCategory Pattern::category() const {
+const PatternCategory datacategory(const unsigned char * data, int maxbytes = 0) {
     PatternCategory category = NGRAM;
-
     int i = 0;
     do {
+        if (i >= maxbytes) return category;
         const unsigned char c = data[i];
         if (c == ENDMARKER) {
             //end marker
@@ -39,6 +39,13 @@ const PatternCategory Pattern::category() const {
     } while (1);
 }
 
+const PatternCategory Pattern::category() const {
+    return datacategory(data);
+}
+
+const PatternCategory PatternPointer::category() const {
+    return datacategory(data, bytes);
+}
 
 
 const size_t Pattern::bytesize() const {
@@ -718,6 +725,17 @@ int Pattern::ngrams(vector<pair<Pattern,int>> & container, const int n) const { 
     return found;
 }   
 
+int Pattern::ngrams(vector<pair<PatternPointer,int>> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
+    const int _n = this->n();
+    if (n > _n) return 0;
+    
+    int found = 0;
+    for (int i = 0; i < (_n - n); i++) {
+        container.push_back( pair<PatternPointer,int>(PatternPointer(*this,i,n),i) );
+        found++;
+    }
+    return found;
+}   
 int Pattern::subngrams(vector<Pattern> & container, int minn, int maxn) const { //also includes skipgrams!
     const int _n = n();
     if (maxn > _n-1) maxn = _n-1;
@@ -729,7 +747,29 @@ int Pattern::subngrams(vector<Pattern> & container, int minn, int maxn) const { 
     return found;
 }
 
+int Pattern::subngrams(vector<PatternPointer> & container, int minn, int maxn) const { //also includes skipgrams!
+    const int _n = n();
+    if (maxn > _n-1) maxn = _n-1;
+    if (minn > _n-1) return 0;
+    int found = 0;
+    for (int i = minn; i <= maxn; i++) {
+        found += ngrams(container, i);
+    }
+    return found;
+}
+
 int Pattern::subngrams(vector<pair<Pattern,int>> & container, int minn, int maxn) const { //also includes skipgrams!
+    const int _n = n();
+    if (maxn > _n-1) maxn = _n-1;
+    if (minn > _n-1) return 0;
+    int found = 0;
+    for (int i = minn; i <= maxn; i++) {
+        found += ngrams(container, i);
+    }
+    return found;
+}
+
+int Pattern::subngrams(vector<pair<PatternPointer,int>> & container, int minn, int maxn) const { //also includes skipgrams!
     const int _n = n();
     if (maxn > _n-1) maxn = _n-1;
     if (minn > _n-1) return 0;

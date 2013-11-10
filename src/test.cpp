@@ -7,6 +7,7 @@
 #include <classdecoder.cpp>
 #include <pattern.h>
 #include <patternmodel.h>
+#include <ctime>
 
 
 using namespace std;
@@ -42,7 +43,9 @@ int main( int argc, char *argv[] ) {
 
             cerr << endl;
             std::string infilename = "/tmp/republic.txt.colibri.dat";
+            const clock_t begin_time = clock();
             unindexedmodel.train(infilename, options);
+            cerr << "Duration: " << float( clock() - begin_time ) /  CLOCKS_PER_SEC << " s" << endl;
             cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
             exit(0);
         }
