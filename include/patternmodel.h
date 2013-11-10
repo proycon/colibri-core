@@ -289,6 +289,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             std::vector<std::pair<Pattern,int>> ngrams;
             std::vector<Pattern> subngrams;
             bool found;
+            IndexReference ref;
+            int prevfoundngrams = 0;
             for (int n = 1; n <= options.MAXLENGTH; n++) { 
                 int foundngrams = 0;
                 int foundskipgrams = 0;
@@ -319,7 +321,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                     for (std::vector<std::pair<Pattern,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
                         if ((constrainbymodel != NULL) && (!constrainbymodel->has(iter->first))) continue;
-                        const IndexReference ref = IndexReference(sentence, iter->second);
+                        ref = IndexReference(sentence, iter->second);
                         found = true;
                         if ((n > 1) && (options.MINTOKENS > 1)) {
                             //check if sub-parts were counted
@@ -333,7 +335,6 @@ class PatternModel: public MapType, public PatternModelInterface {
                             }
                         }
                         if (found) {
-                            if (!has(iter->first)) foundngrams++;
                             ValueType * data = getdata(iter->first);
                             add(iter->first, data, ref );
                             if (options.DOREVERSEINDEX) {
@@ -345,7 +346,10 @@ class PatternModel: public MapType, public PatternModelInterface {
                     }
                 }
 
-
+                
+                foundngrams = this->size() - foundskipgrams - prevfoundngrams;
+                prevfoundngrams = foundngrams;
+        
                 if (foundngrams) {
                     if (n > this->maxn) this->maxn = n;
                     if (n < this->minn) this->minn = n;
