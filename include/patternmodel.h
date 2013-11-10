@@ -153,6 +153,7 @@ class PatternModelInterface {
         virtual int getmodeltype() const=0;
         virtual int getmodelversion() const=0;
         virtual bool has(const Pattern &) const =0;
+        virtual bool has(const PatternPointer &) const =0;
         virtual size_t size() const =0; 
         virtual int occurrencecount(const Pattern & pattern)=0;
         virtual double frequency(const Pattern &) =0;
@@ -236,6 +237,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             return MapType::size();
         }
         virtual bool has(const Pattern & pattern) const {
+            return MapType::has(pattern);
+        }
+        virtual bool has(const PatternPointer & pattern) const {
             return MapType::has(pattern);
         }
         

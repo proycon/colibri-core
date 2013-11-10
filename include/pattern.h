@@ -542,6 +542,7 @@ class PatternStore {
         virtual void insert(const Pattern & pattern)=0; //might be a noop in some implementations that require a value
 
         virtual bool has(const Pattern &) const =0;
+        virtual bool has(const PatternPointer &) const =0;
         virtual bool erase(const Pattern &) =0;
         
         virtual size_t size() const =0; 
@@ -574,6 +575,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
         virtual void insert(const Pattern & pattern, ValueType & value)=0;
 
         virtual bool has(const Pattern &) const =0;
+        virtual bool has(const PatternPointer &) const =0;
         virtual bool erase(const Pattern &) =0;
         
         virtual size_t size() const =0; 
@@ -659,6 +661,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
         }
 
         bool has(const Pattern & pattern) const { return data.count(pattern); }
+        bool has(const PatternPointer & pattern) const { return data.count(Pattern(pattern)); }
         size_t size() const { return data.size(); } 
 
 
@@ -716,6 +719,7 @@ class OrderedPatternSet: public PatternStore<t_orderedpatternset,ReadWriteSizeTy
         }
 
         bool has(const Pattern & pattern) const { return data.count(pattern); }
+        bool has(const PatternPointer & pattern) const { return data.count(Pattern(pattern)); }
         size_t size() const { return data.size(); } 
 
         typedef t_orderedpatternset::iterator iterator;
@@ -770,6 +774,7 @@ class PatternMap: public PatternMapStore<std::unordered_map<const Pattern,ValueT
         void insert(const Pattern & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
         
         bool has(const Pattern & pattern) const { return data.count(pattern); }
+        bool has(const PatternPointer & pattern) const { return data.count(Pattern(pattern)); }
 
         size_t size() const { return data.size(); } 
 
@@ -808,6 +813,7 @@ class OrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType
         void insert(const Pattern & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType
 
         bool has(const Pattern & pattern) const { return data.count(pattern); }
+        bool has(const PatternPointer & pattern) const { return data.count(Pattern(pattern)); }
 
         size_t size() const { return data.size(); } 
 
