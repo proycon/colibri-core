@@ -582,6 +582,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
         
         
         virtual ValueType & operator [](const Pattern & pattern)=0;
+        virtual ValueType & operator [](const PatternPointer & pattern)=0;
         
         typedef typename ContainerType::iterator iterator;
         typedef typename ContainerType::const_iterator const_iterator;
@@ -779,6 +780,7 @@ class PatternMap: public PatternMapStore<std::unordered_map<const Pattern,ValueT
         size_t size() const { return data.size(); } 
 
         ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
+        ValueType& operator [](const PatternPointer & pattern) { return data[Pattern(pattern)]; } 
         
         typedef typename std::unordered_map<const Pattern,ValueType>::iterator iterator;
         typedef typename std::unordered_map<const Pattern,ValueType>::const_iterator const_iterator;
@@ -818,6 +820,7 @@ class OrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType
         size_t size() const { return data.size(); } 
 
         ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
+        ValueType& operator [](const PatternPointer & pattern) { return data[Pattern(pattern)]; } 
         
         typedef typename std::map<const Pattern,ValueType>::iterator iterator;
         typedef typename std::map<const Pattern,ValueType>::const_iterator const_iterator;

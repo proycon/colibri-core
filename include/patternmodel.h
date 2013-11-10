@@ -558,6 +558,18 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
         
+        virtual ValueType * getdata(const PatternPointer & patternpointer, bool makeifnew=false) { 
+            const Pattern pattern = Pattern(patternpointer);
+            typename MapType::iterator iter = this->find(pattern);
+            if (iter != this->end()) {
+                return &(iter->second); 
+            } else if (makeifnew) {
+                return &((*this)[pattern]);
+            } else {
+                return NULL;
+            }
+        }
+
         int types() const { return totaltypes; }
         int tokens() const { return totaltokens; }
 
@@ -954,6 +966,17 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
+    IndexedData * getdata(const PatternPointer & patternpointer, bool makeifnew=false) { 
+        const Pattern pattern = Pattern(patternpointer);
+        typename MapType::iterator iter = this->find(pattern);
+        if (iter != this->end()) {
+            return &(iter->second); 
+        } else if (makeifnew) {
+            return &((*this)[pattern]);
+        } else {
+            return NULL;
+        }
+    }
     
     void print(std::ostream * out, ClassDecoder & decoder) {
         *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY\tREFERENCES" << std::endl;
