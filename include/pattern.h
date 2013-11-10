@@ -62,7 +62,9 @@ enum Markers { // <128 size
     BEGINDIVMARKER = 252,
     ENDDIVMARKER = 251,
     HEADERMARKER = 250,
-    
+   
+
+
     FLEXMARKER = 129,
     SKIPMARKER = 128,
 };
@@ -74,7 +76,7 @@ enum Markers { // <128 size
 void readanddiscardpattern(std::istream * in);
 int reader_passmarker(const unsigned char c, std::istream * in); 
 
-
+class PatternPointer;
 
 /**
  * Pattern class
@@ -86,7 +88,7 @@ class Pattern {
      void reader_marker(unsigned char * _data, std::istream * in);
     public:
      unsigned char * data; /**< This array holds the variable-width byte representation, it is always terminated by \0 (ENDMARKER) */
-
+     
      /**
       * Default/empty Pattern constructor. Creates an empty pattern. Still consumes one
       * byte (the end-marker)
@@ -108,12 +110,14 @@ class Pattern {
       * @param length Number of tokens to copy
       */
      Pattern(const Pattern& ref, int begin, int length); 
+     Pattern(const PatternPointer& ref,int begin, int length);
 
      /**
       * Copy constructor for Pattern
       * @param ref Reference pattern
       */
      Pattern(const Pattern& ref);
+     Pattern(const PatternPointer& ref);
 
      /**
       * Read Pattern from input stream (in binary form)
@@ -236,6 +240,7 @@ class Pattern {
       * the pattern.
       */
      int ngrams(std::vector<Pattern> & container, const int n) const; 
+     int ngrams(std::vector<PatternPointer> & container, const int n) const; 
 
      /**
       * Adds all patterns (not just ngrams) of all sizes that are contained within the pattern to
@@ -300,6 +305,50 @@ class Pattern {
 
      //sets an entirely new value
      void set(const unsigned char* dataref, const int size); 
+};
+
+
+class PatternPointer {
+    public:
+     unsigned char * data; /** Pointer to Pattern data */
+     unsigned char bytes; //number of bytes
+    
+     PatternPointer(unsigned char* dataref, const int bytesize) {
+         data = dataref;
+         bytes = bytesize;
+     }
+
+     PatternPointer(const Pattern * ref) {
+         data = ref->data;
+         bytes = ref->bytesize();
+     }
+     PatternPointer(const PatternPointer& ref) {
+         data = ref.data;
+         bytes = ref.bytes;
+     }
+     PatternPointer & operator =(const PatternPointer other) {
+         data = other.data;
+         bytes = other.bytes;
+         // by convention, always return *this (for chaining)
+         return *this;
+     }
+
+     PatternPointer(const PatternPointer&, int,int);
+     PatternPointer(const Pattern&, int,int);
+
+     const size_t n() const;
+     const size_t bytesize() const { return bytes; }
+     const size_t size() const { return n(); }
+     
+     std::string tostring(ClassDecoder& classdecoder) const; //pattern to string (decode)
+     bool out() const;
+     
+     bool operator==(const PatternPointer & other) const {
+         return ((data == other.data) && (bytes == other.bytes));
+     }
+     bool operator!=(const PatternPointer & other) const { return !(*this == other); }
+
+
 };
 
 const unsigned char tmp_skipmarker = SKIPMARKER;

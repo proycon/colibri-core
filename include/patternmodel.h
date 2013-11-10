@@ -930,16 +930,17 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     void add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
         if (value == NULL) {
-            (*this)[pattern]; //creates the data point if it didn't exist yet
-            value = getdata(pattern);
+            value = getdata(pattern,true);
         }
         this->valuehandler.add(value, ref);
     }
     
-    IndexedData * getdata(const Pattern & pattern)  { 
+    IndexedData * getdata(const Pattern & pattern, bool makeifnew=false)  { 
         typename MapType::iterator iter = this->find(pattern);
         if (iter != this->end()) {
             return &(iter->second); 
+        } else if (makeifnew) {
+            return &((*this)[pattern]);
         } else {
             return NULL;
         }

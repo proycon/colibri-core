@@ -60,14 +60,14 @@ const size_t Pattern::bytesize() const {
     } while (1);
 }
 
-
-
-const size_t Pattern::n() const {
+const size_t datasize(unsigned char * data, int maxbytes = 0) {
     //return the size of the pattern (in tokens)
-
     int i = 0;
     int n = 0;
     do {
+        if ((maxbytes > 0) && (maxbytes == i)) {
+            return n;
+        }
         const unsigned char c = data[i];
         if (c == ENDMARKER) {
             //end marker
@@ -86,6 +86,15 @@ const size_t Pattern::n() const {
         }
     } while (1);
 }
+
+const size_t Pattern::n() const {
+    return datasize(data);
+}
+
+const size_t PatternPointer::n() const {
+    return datasize(data, bytes);
+}
+
 
 bool Pattern::isgap(int index) const { //is the word at this position a gap?
     //return the size of the pattern (in tokens)
@@ -252,13 +261,19 @@ void Pattern::write(ostream * out) const {
     }
 }
 
-std::string Pattern::tostring(ClassDecoder& classdecoder) const {
-
-
+std::string datatostring(unsigned char * data, ClassDecoder& classdecoder, int maxbytes = 0) {
     std::string result = ""; 
     int i = 0;
     int gapsize = 0;
     do {
+        if ((maxbytes > 0) && (i == maxbytes)) {
+            if (gapsize > 0) {
+                if (!result.empty()) result += " ";
+                result += std::string("{*") + to_string(gapsize) + std::string("*}");                
+                gapsize = 0;
+            }
+            return result;
+        }
         const unsigned char c = data[i];
         if (c == ENDMARKER) {
             //end marker
@@ -298,7 +313,16 @@ std::string Pattern::tostring(ClassDecoder& classdecoder) const {
     return result;  
 }
 
-bool Pattern::out() const { 
+
+std::string Pattern::tostring(ClassDecoder& classdecoder) const {
+    return datatostring(data, classdecoder);
+}
+
+std::string PatternPointer::tostring(ClassDecoder& classdecoder) const {
+    return datatostring(data, classdecoder, bytes);
+}
+
+bool dataout(unsigned char * data, int maxbytes = 0) {
     int i = 0;
     do {
         const unsigned char c = data[i];
@@ -324,6 +348,14 @@ bool Pattern::out() const {
         }
     } while (1);
     return false;
+}
+
+bool Pattern::out() const { 
+    return dataout(data);
+}
+
+bool PatternPointer::out() const { 
+    return dataout(data, bytes);
 }
 
 vector<int> Pattern::tovector() const { 
@@ -428,6 +460,7 @@ void Pattern::set(const unsigned char * dataref, const int _size) {
     data[_size] = ENDMARKER;
 }
 
+
 Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructor
     //to be computed in bytes
     int begin_b = 0;
@@ -466,6 +499,73 @@ Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructo
 }
 
 
+PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //slice constructor
+    //to be computed in bytes
+    int begin_b = 0;
+    int length_b = 0;
+
+    int i = 0;
+    int n = 0;
+    do {
+        const unsigned char c = ref.data[i];
+        
+        if ((n - begin == length) || (c == ENDMARKER)) {
+            length_b = i - begin_b;
+            break;
+        } else if (c < 128) {
+            //we have a size
+            i += c + 1;
+            n++;
+            if (n == begin) begin_b = i;
+        } else if ((c == SKIPMARKER) || (c == FLEXMARKER)) {
+            i++;
+            n++;
+            if (n == begin) begin_b = i;
+        } else {
+            //we have another marker
+            i++;
+        }
+    } while (1);
+
+    data = ref.data + begin_b;
+    bytes = length_b;
+}
+
+
+
+PatternPointer::PatternPointer(const PatternPointer& ref, int begin, int length) { //slice constructor
+    //to be computed in bytes
+    int begin_b = 0;
+    int length_b = 0;
+
+    int i = 0;
+    int n = 0;
+    do {
+        if (i >= ref.bytes) break;
+        const unsigned char c = ref.data[i];
+        
+        if ((n - begin == length) || (c == ENDMARKER)) {
+            length_b = i - begin_b;
+            break;
+        } else if (c < 128) {
+            //we have a size
+            i += c + 1;
+            n++;
+            if (n == begin) begin_b = i;
+        } else if ((c == SKIPMARKER) || (c == FLEXMARKER)) {
+            i++;
+            n++;
+            if (n == begin) begin_b = i;
+        } else {
+            //we have another marker
+            i++;
+        }
+    } while (1);
+
+    data = ref.data + begin_b;
+    bytes = length_b;
+}
+
 Pattern::Pattern(const Pattern& ref) { //copy constructor
     const int s = ref.bytesize();
     data = new unsigned char[s + 1];
@@ -473,6 +573,14 @@ Pattern::Pattern(const Pattern& ref) { //copy constructor
         data[i] = ref.data[i];
     }
     data[s] = ENDMARKER;
+}
+
+Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
+    data = new unsigned char[ref.bytesize() + 1];
+    for (int i = 0; i < ref.bytesize(); i++) {
+        data[i] = ref.data[i];
+    }
+    data[ref.bytesize()] = ENDMARKER;
 }
 
 Pattern::~Pattern() {
@@ -587,6 +695,16 @@ int Pattern::ngrams(vector<Pattern> & container, const int n) const { //return m
     return found;
 }   
 
+int Pattern::ngrams(vector<PatternPointer> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
+    const int _n = this->n();
+    if (n > _n) return 0;
+    int found = 0;
+    for (int i = 0; i < (_n - n) + 1; i++) {
+        container.push_back(  PatternPointer(*this,i,n));
+        found++;
+    }
+    return found;
+}   
 
 int Pattern::ngrams(vector<pair<Pattern,int>> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
     const int _n = this->n();
