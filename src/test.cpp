@@ -29,7 +29,7 @@ int main( int argc, char *argv[] ) {
 	
     {
         
-        /*
+        
         {
             //DEBUG ZONE
             PatternModelOptions options;
@@ -39,7 +39,27 @@ int main( int argc, char *argv[] ) {
             options.MINTOKENS = 1;
             options.MAXLENGTH = 8;
 
-            cerr << "Building unindexed model" << endl;
+            cerr << "Building unindexed model (t1)" << endl;
+            PatternModel<uint32_t> unindexedmodel;
+
+            cerr << endl;
+            std::string infilename = "/tmp/republic.txt.colibri.dat";
+            const clock_t begin_time = clock();
+            unindexedmodel.train(infilename, options);
+            cerr << "Duration: " << float( clock() - begin_time ) /  CLOCKS_PER_SEC << " s" << endl;
+            cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
+        }
+      
+        {
+            //DEBUG ZONE
+            PatternModelOptions options;
+            options.DOREVERSEINDEX = false;
+            options.DOSKIPGRAMS_EXHAUSTIVE = false;
+            options.DOSKIPGRAMS = false ;
+            options.MINTOKENS = 2;
+            options.MAXLENGTH = 8;
+
+            cerr << "Building unindexed model (t2)" << endl;
             PatternModel<uint32_t> unindexedmodel;
 
             cerr << endl;
@@ -50,7 +70,6 @@ int main( int argc, char *argv[] ) {
             cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
             exit(0);
         }
-       */
         
         
         string classfile = "/tmp/colibritest";    
