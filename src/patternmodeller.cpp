@@ -342,6 +342,11 @@ int main( int argc, char *argv[] ) {
             options.DOREVERSEINDEX = false;
         }
     }
+    
+    if ((inputmodeltype == INDEXEDPATTERNMODEL) && (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) && (!DOFLEXFROMSKIP) && (!DOPRINT) & (!DOQUERIER) && (!DOREPORT) && (!DORELATIONS) && (querypatterns.empty())) {
+        options.DOREVERSEINDEX = false; //no need for reverse index
+        cerr << "(Notice: reverse index disabled to speed up processing)" << endl;
+    }
 
     if (inputmodeltype == INDEXEDPATTERNMODEL) {
         cerr << "Loading indexed pattern model " << inputmodelfile << " as input model..."<<endl;
