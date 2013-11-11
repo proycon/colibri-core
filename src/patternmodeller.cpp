@@ -182,8 +182,8 @@ int main( int argc, char *argv[] ) {
     
     
     PatternModelOptions options;
-    options.DOREVERSEINDEX = true;  //TODO: make configurable?
 
+    options.DOREVERSEINDEX = true;  //will be set to false later for unindexedpattern models without skipgrams
     int outputmodeltype = INDEXEDPATTERNMODEL;
     bool DOQUERIER = false;
     bool DOREPORT = false;
@@ -301,6 +301,7 @@ int main( int argc, char *argv[] ) {
     }
 
 
+
     ClassDecoder * classdecoder = NULL;
     ClassEncoder * classencoder = NULL;
 
@@ -332,10 +333,14 @@ int main( int argc, char *argv[] ) {
     }
 
 
-    if ( (options.DOSKIPGRAMS) && ((outputmodeltype == UNINDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNMODEL))) {
-        cerr << "NOTE: Skipgram generation on unindexed pattern models can only be done exhaustively! This generated lots of skipgrams and is far less memory efficient than with indexed models." << endl;
-        options.DOSKIPGRAMS_EXHAUSTIVE = true;
-        options.DOSKIPGRAMS = false;
+    if ( ((outputmodeltype == UNINDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNMODEL))) {
+        if (options.DOSKIPGRAMS) {
+            cerr << "NOTE: Skipgram generation on unindexed pattern models can only be done exhaustively! This generated lots of skipgrams and is far less memory efficient than with indexed models." << endl;
+            options.DOSKIPGRAMS_EXHAUSTIVE = true;
+            options.DOSKIPGRAMS = false;
+        } else {
+            options.DOREVERSEINDEX = false;
+        }
     }
 
     if (inputmodeltype == INDEXEDPATTERNMODEL) {
@@ -373,8 +378,8 @@ int main( int argc, char *argv[] ) {
         if (!inputmodelfile2.empty()) prunebymodel(inputmodel, inputmodelfile2, inputmodeltype2, options);
 
 
-        if (options.DOSKIPGRAMS || options.DOSKIPGRAMS_EXHAUSTIVE) {
-            cerr << "WARNING: Can not compute skipgrams on unindexed models after initial model training!" << endl;
+        if (options.DOSKIPGRAMS || options.DOSKIPGRAMS_EXHAUSTIVE || DOFLEXFROMSKIP){
+            cerr << "WARNING: Can not compute skipgrams/flexgrams on unindexed models after initial model training!" << endl;
         }
 
         if (!outputmodelfile.empty()) {
