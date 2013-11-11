@@ -346,6 +346,7 @@ class PatternPointer {
      const PatternCategory category() const;
 
      std::string tostring(ClassDecoder& classdecoder) const; //pattern to string (decode)
+     std::string decode(ClassDecoder& classdecoder) const { return tostring(classdecoder); } //pattern to string (decode)
      bool out() const;
      
      bool operator==(const PatternPointer & other) const {
@@ -354,6 +355,10 @@ class PatternPointer {
      bool operator!=(const PatternPointer & other) const { return !(*this == other); }
 
 
+     int ngrams(std::vector<PatternPointer> & container, const int n) const; 
+     int subngrams(std::vector<PatternPointer> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
+     int ngrams(std::vector<std::pair<PatternPointer,int>> & container, const int n) const; //return multiple ngrams
+     int subngrams(std::vector<std::pair<PatternPointer,int>> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
 };
 
 const unsigned char tmp_skipmarker = SKIPMARKER;

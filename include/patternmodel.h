@@ -290,8 +290,8 @@ class PatternModel: public MapType, public PatternModelInterface {
 
             if (!options.QUIET) std::cerr << "Training patternmodel" << std::endl;
             int maxlength;
-            std::vector<std::pair<Pattern,int>> ngrams;
-            std::vector<Pattern> subngrams;
+            std::vector<std::pair<PatternPointer,int>> ngrams;
+            std::vector<PatternPointer> subngrams;
             bool found;
             IndexReference ref;
             int prevsize = 0;
@@ -323,7 +323,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                         line.subngrams(ngrams,1,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1, no need to look back anyway, only one iteration over corpus
                     }
 
-                    for (std::vector<std::pair<Pattern,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
+                    for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
                         if ((constrainbymodel != NULL) && (!constrainbymodel->has(iter->first))) continue;
                         ref = IndexReference(sentence, iter->second);
                         found = true;
@@ -331,18 +331,23 @@ class PatternModel: public MapType, public PatternModelInterface {
                             //check if sub-parts were counted
                             subngrams.clear();
                             iter->first.ngrams(subngrams,n-1);
-                            for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                                if (!this->has(*iter2)) {
+                            for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                if (!this->has(*iter2)) { //fails here?
+                                    //std::cerr << "NOT FOUND: " << std::endl;
+                                    //iter2->out();
+                                    //std::cerr << "size=" << iter2->size() << std::endl;
+                                    //std::cerr << "bytesize=" << iter2->bytesize() << std::endl;
                                     found = false;
                                     break;
                                 }
                             }
                         }
                         if (found) {
-                            ValueType * data = getdata(iter->first, true);
-                            add(iter->first, data, ref );
+                            const Pattern pattern = Pattern(iter->first);
+                            ValueType * data = getdata(pattern, true);
+                            add(pattern, data, ref );
                             if (options.DOREVERSEINDEX) {
-                                reverseindex.insert(std::pair<IndexReference,Pattern>(ref,iter->first));
+                                reverseindex.insert(std::pair<IndexReference,Pattern>(ref,pattern));
                             }
                         } else if (((n >= 3) || (options.MINTOKENS == 1)) && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
                             foundskipgrams += this->computeskipgrams(iter->first, options, gapconf, &ref, NULL, constrainbymodel, true);
@@ -700,6 +705,13 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
             this->valuehandler.add(value, ref);
         }
+        virtual void add(const PatternPointer & pattern, ValueType * value, const IndexReference & ref) {
+            if (value == NULL) {
+                std::cerr << "Add() value is NULL!" << std::endl;
+                throw InternalError();
+            }
+            this->valuehandler.add(value, ref);
+        }
 
         int prune(int threshold,int _n=0) {
             int pruned = 0;
@@ -951,6 +963,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     void add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
         if (value == NULL) {
             value = getdata(pattern,true);
+        }
+        this->valuehandler.add(value, ref);
+    }
+    void add(const PatternPointer & patternpointer, IndexedData * value, const IndexReference & ref) {
+        if (value == NULL) {
+            value = getdata(Pattern(patternpointer),true);
         }
         this->valuehandler.add(value, ref);
     }

@@ -29,7 +29,7 @@ int main( int argc, char *argv[] ) {
 	
     {
         
-        
+       /* 
         {
             //DEBUG ZONE
             PatternModelOptions options;
@@ -70,6 +70,7 @@ int main( int argc, char *argv[] ) {
             cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
             exit(0);
         }
+        */
         
         
         string classfile = "/tmp/colibritest";    
@@ -152,6 +153,30 @@ int main( int argc, char *argv[] ) {
         
         string substring5 = "to";     	
         Pattern subngram5 = encoder.buildpattern(substring5, true);
+
+        cerr << "----------------------------------------------------" << endl;
+        cerr << "Pattern Pointer tests" << endl;
+        PatternPointer pngram = PatternPointer(&ngram);
+        Pattern derefngram = Pattern(pngram);
+        cerr << "Testing equivalence after pointer construction and derefence"; test(ngram == derefngram);
+
+        cerr << "Subgrams of ngram #1 (as patternpointers): " << endl;
+        vector<PatternPointer> psubngrams;
+        pngram.subngrams(psubngrams);
+        for (vector<PatternPointer>::iterator iter2 = psubngrams.begin(); iter2 != psubngrams.end(); iter2++) {                
+            const PatternPointer psubngram = *iter2;
+            cout << "'" << psubngram.tostring(classdecoder) << "'" << endl;
+        }
+
+
+        cerr << "Subgrams of ngram #1 (as patternpointers, from pattern): " << endl;
+        vector<PatternPointer> psubngrams2;
+        ngram.subngrams(psubngrams2);
+        for (vector<PatternPointer>::iterator iter2 = psubngrams2.begin(); iter2 != psubngrams2.end(); iter2++) {                
+            const PatternPointer psubngram2 = *iter2;
+            cout << "'" << psubngram2.tostring(classdecoder) << "'" << endl;
+        }
+
 
         cerr << "----------------------------------------------------" << endl;
         cerr << "Ngram addition: " << endl;
