@@ -732,7 +732,7 @@ int Pattern::ngrams(vector<pair<Pattern,int>> & container, const int n) const { 
     if (n > _n) return 0;
     
     int found = 0;
-    for (int i = 0; i < (_n - n); i++) {
+    for (int i = 0; i < (_n - n)+1; i++) {
         container.push_back( pair<Pattern,int>(Pattern(*this,i,n),i) );
         found++;
     }
@@ -744,7 +744,7 @@ int Pattern::ngrams(vector<pair<PatternPointer,int>> & container, const int n) c
     if (n > _n) return 0;
     
     int found = 0;
-    for (int i = 0; i < (_n - n); i++) {
+    for (int i = 0; i < (_n - n)+1; i++) {
         container.push_back( pair<PatternPointer,int>(PatternPointer(*this,i,n),i) );
         found++;
     }
@@ -757,7 +757,7 @@ int PatternPointer::ngrams(vector<pair<PatternPointer,int>> & container, const i
     if (n > _n) return 0;
     
     int found = 0;
-    for (int i = 0; i < (_n - n); i++) {
+    for (int i = 0; i < (_n - n)+1; i++) {
         container.push_back( pair<PatternPointer,int>(PatternPointer(*this,i,n),i) );
         found++;
     }

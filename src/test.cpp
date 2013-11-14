@@ -122,6 +122,18 @@ int main( int argc, char *argv[] ) {
 
 
         cerr << "----------------------------------------------------" << endl;
+        cerr << "Tokens of ngram #1: " << endl;
+
+        
+        vector<Pattern> tokens;
+        ngram.ngrams(tokens,1);
+        cerr << "Testing correct size "; test(tokens.size() == 6);
+        for (vector<Pattern>::iterator iter2 = tokens.begin(); iter2 != tokens.end(); iter2++) {                
+            const Pattern subngram = *iter2;
+            cout << "'" << subngram.decode(classdecoder) << "'" << endl;
+        }
+
+        cerr << "----------------------------------------------------" << endl;
         cerr << "Subgrams of ngram #1: " << endl;
 
         
@@ -159,6 +171,15 @@ int main( int argc, char *argv[] ) {
         PatternPointer pngram = PatternPointer(&ngram);
         Pattern derefngram = Pattern(pngram);
         cerr << "Testing equivalence after pointer construction and derefence"; test(ngram == derefngram);
+
+        cerr << "Tokens of ngram #1 (as patternpointers): " << endl;
+        vector<PatternPointer> ptokens;
+        ngram.ngrams(ptokens,1);
+        cerr << "Testing correct size "; test(ptokens.size() == 6);
+        for (vector<PatternPointer>::iterator iter2 = ptokens.begin(); iter2 != ptokens.end(); iter2++) {                
+            const PatternPointer subngram = *iter2;
+            cout << "'" << subngram.decode(classdecoder) << "'" << endl;
+        }
 
         cerr << "Subgrams of ngram #1 (as patternpointers): " << endl;
         vector<PatternPointer> psubngrams;

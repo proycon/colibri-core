@@ -322,7 +322,6 @@ class PatternModel: public MapType, public PatternModelInterface {
                     } else if (options.MINTOKENS == 1) {
                         line.subngrams(ngrams,1,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1, no need to look back anyway, only one iteration over corpus
                     }
-
                     for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
                         if ((constrainbymodel != NULL) && (!constrainbymodel->has(iter->first))) continue;
                         ref = IndexReference(sentence, iter->second);
