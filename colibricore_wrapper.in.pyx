@@ -34,7 +34,10 @@ cdef class ClassEncoder:
 
     def __init__(self, str filename=None):
         if filename:
+            self.filename = filename
             self.data.load(filename.encode('utf-8'))
+        else:
+            self.filename = ""
 
     def __len__(self):
         """Returns the total number of classes"""
@@ -72,6 +75,8 @@ cdef class ClassEncoder:
             raise IOError("File " + sourcefile + " does not exist")
 
     def save(self, str filename):
+        if not self.filename:
+            self.filename = filename
         self.data.save(filename.encode('utf-8'))
 
 
@@ -81,11 +86,13 @@ cdef class ClassDecoder:
     cdef cClassDecoder data #it's not actually a pointer anymore..
 
     def __init__(self, str filename):
+        self.filename = filename
         self.data.load(filename.encode('utf-8'))
 
     def __len__(self):
         """Returns the total number of classes"""
         return self.data.size()
+
 
 
 cdef class Pattern:

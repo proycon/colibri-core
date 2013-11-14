@@ -8,7 +8,7 @@ from collections import defaultdict
 
 from pynlpl.textprocessors import MultiWindower,Windower
 import colibricore
-import psutil
+#import psutil
 import gc
 import time
 import resource
@@ -18,11 +18,11 @@ def colorf(color, x):
     return "\x1B[" + str(ansicolors[str(color)]) + "m" + x + "\x1B[0m"
 
 
-def getmem2():
-    # return the memory usage in MB
-    process = psutil.Process(os.getpid())
-    mem = process.get_memory_info()[0] / float(2 ** 20)
-    return mem
+#def getmem2():
+#    # return the memory usage in MB
+#    process = psutil.Process(os.getpid())
+#    mem = process.get_memory_info()[0] / float(2 ** 20)
+#    return mem
 
 def getmem():
     rusage_denom = 1024.
