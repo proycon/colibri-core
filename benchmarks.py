@@ -6,7 +6,7 @@ import sys
 import os.path
 from collections import defaultdict
 
-from pynlpl.textprocessors import MultiWindower
+from pynlpl.textprocessors import MultiWindower,Windower
 import colibricore
 import psutil
 import gc
@@ -124,7 +124,7 @@ def main():
 
     if begintest < endtest:
         print("Running tests " , begintest, " to ", endtest)
-        for testnum in range(begintest, min(endtest+1,9)):
+        for testnum in range(begintest, min(endtest+1,10)):
             os.system("python3 " + sys.argv[0] + " x" + str(testnum) + " "+ textfile + " " + tmpdir)
 
     else:
@@ -153,7 +153,27 @@ def main():
             end(b)
             savemodel(model,modelfile)
             del model
-        elif testnum == 3:
+
+        if testnum == 3:
+            linecount = 0
+            print("Extracting and counting n-grams (up to 8-grams, threshold=2, with look-back)  (Python defaultdict + Pynlpl Windower)")
+            ngrams=defaultdict(int)
+            b = begin()
+            for n in range(1,9):
+                with open(textfile,'r',encoding='utf-8') as f:
+                    for line in f:
+                        for ngram in Windower(line, n):
+                            docount = True
+                            if n>1:
+                                for subngram in Windower(ngram,n-1):
+                                    if not subngram in ngrams:
+                                        docount = False
+                                        break
+                            if docount:
+                                ngrams[ngram] += 1
+            end(b)
+            print("\t(Found " + str(len(ngrams)) + " ngrams)")
+        elif testnum == 4:
 
             print("Extracting and counting ALL n-grams (up to 8-grams, threshold=2) with UnindexedPatternModel (without reverse index)")
             model = colibricore.UnindexedPatternModel()
@@ -163,7 +183,7 @@ def main():
             end(b)
             savemodel(model,modelfile)
 
-        elif testnum == 4:
+        elif testnum == 5:
 
             print("Extracting and counting ALL n-grams (up to 8-grams,threshold=1) with UnindexedPatternModel (with reverse index)")
             model = colibricore.UnindexedPatternModel()
@@ -173,7 +193,7 @@ def main():
             end(b)
             savemodel(model,modelfile)
 
-        elif testnum == 5:
+        elif testnum == 6:
 
             print("Extracting and counting ALL n-grams (up to 8-grams,threshold=1) with IndexedPatternModel (with reverse index)")
             model = colibricore.IndexedPatternModel()
@@ -185,7 +205,7 @@ def main():
 
             del model
 
-        elif testnum == 6:
+        elif testnum == 7:
             print("Extracting and counting n-grams with treshold 2 (up to 8-grams) with IndexedPatternModel (with reverse index)")
             model = colibricore.IndexedPatternModel()
             options = colibricore.PatternModelOptions(mintokens=2,maxlength=8)
@@ -194,7 +214,7 @@ def main():
             end(b)
             savemodel(model,modelfile)
 
-        elif testnum == 7:
+        elif testnum == 8:
 
             print("Extracting and counting n-grams and skipgrams with treshold 2 (up to 8-grams) with IndexedPatternModel (with reverse index)")
             model = colibricore.IndexedPatternModel()
@@ -204,7 +224,7 @@ def main():
             end(b)
             savemodel(model,modelfile)
 
-        elif testnum == 8:
+        elif testnum == 9:
             print("Extracting and counting ALL n-grams (up to 8-grams, threshold=1) with OrderedUnindexedPatternModel (without reverse index)")
             model = colibricore.OrderedUnindexedPatternModel()
             options = colibricore.PatternModelOptions(mintokens=1,maxlength=8,doreverseindex=False)
@@ -213,6 +233,7 @@ def main():
             end(b)
             savemodel(model,modelfile)
             del model
+
 
         else:
             print("No such test",file=sys.stderr)
