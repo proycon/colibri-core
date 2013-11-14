@@ -28,7 +28,7 @@ void usage() {
     cerr << "\t-f [datafile]    Corpus data file" << endl;
     cerr << "\t-c [classfile]   Class file"<< endl;
     cerr << "\t-j [modelfile]   Joined input model. Result will be the *intersection* of this (training) model and the input model or constructed model." << endl;
-    cerr << " Building a model:  patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
+    cerr << " Building a model:  colibri-patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
     cerr << "\t-t <number>      Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
     cerr << "\t-u               Build an unindexed model (default is indexed)" << endl;    
     cerr << "\t-l <number>      Maximum pattern length (default: 100)" << endl;
@@ -36,7 +36,7 @@ void usage() {
     cerr << "\t-T <number>      Skip type threshold (for use with -s): only fixed skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, unindexed models always act as if fixed to 1). Also note that only types that occur above the occurrent threshold (-t) are counted here! Requires indexed models" << endl;
     cerr << "\t-S S             Compute dynamic-size skip-grams by abstracting over fixed-size skipgrams (implies -s)." << endl; 
     cerr << "\t-S <number>      Compute dynamic-size skip-grams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
-    cerr << " Viewing a model:  patternmodeller -i [modelfile] -c [classfile] -[PRHQ]" << endl;
+    cerr << " Viewing a model:  colibri-patternmodeller -i [modelfile] -c [classfile] -[PRHQ]" << endl;
     cerr << "\t-P               Print the entire model" << endl;
     cerr << "\t-R               Generate a (statistical/coverage) report" << endl;
     cerr << "\t-H               Generate a histogram" << endl;   
@@ -46,7 +46,7 @@ void usage() {
     cerr << "\t-C <threshold>   Compute and show co-occurrence counts above the specified threshold [-1,1] (normalised pointwise mutual information). Only for indexed models." << endl;
     //cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
-    cerr << "Editing a model:  patternmodeller -o [modelfile] -i [modelfile]" << endl;
+    cerr << "Editing a model:  colibri-patternmodeller -o [modelfile] -i [modelfile]" << endl;
     cerr << "\t-x               Delete all fixed-size skipgrams from the model" << endl;    
     cerr << "\t-X               Delete all dynamic-size skipgrams from the model" << endl;    
     cerr << "\t-N               Delete all ngrams from the model" << endl;    
