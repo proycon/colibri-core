@@ -274,6 +274,7 @@ cdef extern from "patternmodel.h":
         t_relationmap getleftneighbours(Pattern & pattern)
         t_relationmap getrightneighbours(Pattern & pattern)
         t_relationmap getskipcontent(Pattern & pattern)
+        t_relationmap gettemplates(Pattern & pattern)
 
 
     cdef cppclass IndexedPatternModel[MapType]:
@@ -325,6 +326,7 @@ cdef extern from "patternmodel.h":
         t_relationmap getleftneighbours(Pattern & pattern)
         t_relationmap getrightneighbours(Pattern & pattern)
         t_relationmap getskipcontent(Pattern & pattern)
+        t_relationmap gettemplates(Pattern & pattern)
 
 #    cdef cppclass NGramData(AnyGramData):
 #        cppset[CorpusReference] refs

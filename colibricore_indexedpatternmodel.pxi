@@ -159,3 +159,21 @@ def getskipcontent(self, Pattern pattern):
         pattern.bind(cpattern)
         yield (pattern,value)
         inc(relit)
+
+def gettemplates(self, Pattern pattern):
+    """Get skip content for the specified pattern
+    :param pattern: The pattern
+    :type pattern: Pattern
+    :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
+    """
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.gettemplates(pattern.cpattern)
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef cPattern cpattern
+    cdef int value
+    while relit != relations.end():
+        cpattern = deref(relit).first
+        value = deref(relit).second
+        pattern = Pattern()
+        pattern.bind(cpattern)
+        yield (pattern,value)
+        inc(relit)

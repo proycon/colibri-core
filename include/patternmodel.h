@@ -901,6 +901,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT) {} //does nothing for unindexed models
         virtual t_relationmap getsubchildren(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getsubparents(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap gettemplates(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getskipcontent(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getleftneighbours(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getrightneighbours(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
@@ -1129,6 +1130,40 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
         //std::cerr << "Total found " << skipcontent.size() << std::endl;
         return skipcontent;
+    }
+    
+    t_relationmap gettemplates(const Pattern & pattern) {
+        //returns patterns that are an abstraction of the specified pattern
+        //skipgrams
+        if (this->reverseindex.empty()) {
+            std::cerr << "ERROR: No reverse index present" << std::endl;
+            throw InternalError();
+        }
+
+        IndexedData * data = this->getdata(pattern);
+        if (data == NULL) {
+            std::cerr << "ERROR: No data found for pattern!" << std::endl;
+            throw InternalError();
+        }
+        
+        t_relationmap templates;
+
+
+        const int _n = pattern.n();
+        //search in forward index
+        for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
+            const IndexReference ref = *iter;
+
+            //search in reverse index
+            for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(ref); iter2 != this->reverseindex.upper_bound(ref); iter2++) {
+                const Pattern candidate = iter2->second;
+
+                if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == SKIPGRAM) ) {
+                    templates[candidate] += 1;
+                }
+            }
+        }
+        return templates;
     }
 
     t_relationmap getsubchildren(const Pattern & pattern) {
