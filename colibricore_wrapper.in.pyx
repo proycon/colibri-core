@@ -347,6 +347,12 @@ cdef class Pattern:
     def isgap(self, int index):
         return self.cpattern.isgap(index)
 
+    def isskipgram(self):
+        return self.cpattern.isskipgram()
+
+    def isflexgram(self):
+        return self.cpattern.isflexgram()
+
 cdef class IndexedData:
     """IndexedData is essentially a set of indexes in the form of (sentence,token) tuples, sentence is generally 1-indexed, token is always 0-indexed. It is used by Indexed Pattern Models to keep track of exact occurrences of all the patterns. Use len() to if you're merely interested in the number of occurrences, rather than their exact wherabouts."""
 

@@ -49,6 +49,8 @@ cdef extern from "pattern.h":
         vector[int] tovector() nogil
         void set(unsigned char *,int ) nogil
         bool isgap(int) nogil
+        bool isskipgram() nogil
+        bool isflexgram() nogil
 
     cdef cppclass IndexReference:
         IndexReference()
