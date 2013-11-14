@@ -48,6 +48,7 @@ cdef extern from "pattern.h":
         Pattern toflexgram() nogil
         vector[int] tovector() nogil
         void set(unsigned char *,int ) nogil
+        bool isgap(int) nogil
 
     cdef cppclass IndexReference:
         IndexReference()
