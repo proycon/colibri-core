@@ -22,7 +22,8 @@ def __iter__(self):
     """Iterate over all patterns in the dictionary"""
     it = self.data.begin()
     cdef cPattern cpattern
-    while it != self.data.end():
+    it_end = self.data.end()
+    while it != it_end:
         cpattern = deref(it)
         pattern = Pattern()
         pattern.bind(cpattern)

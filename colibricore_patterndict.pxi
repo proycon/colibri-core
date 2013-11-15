@@ -14,7 +14,8 @@ def __iter__(self):
     """Iterate over all patterns in the dictionary"""
     it = self.data.begin()
     cdef cPattern cpattern
-    while it != self.data.end():
+    it_end = self.data.end()
+    while it != it_end:
         cpattern = deref(it).first
         pattern = Pattern()
         pattern.bind(cpattern)
@@ -35,7 +36,8 @@ def items(self):
     """Iterate over all patterns and their values in the dictionary"""
     it = self.data.begin()
     cdef cPattern cpattern
-    while it != self.data.end():
+    it_end = self.data.end()
+    while it != it_end:
         cpattern = deref(it).first
         value = deref(it).second
         pattern = Pattern()

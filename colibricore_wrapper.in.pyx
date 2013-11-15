@@ -273,7 +273,8 @@ cdef class Pattern:
         self.cpattern.ngrams(result, n)
         cdef cPattern cngram
         cdef vector[cPattern].iterator it = result.begin()
-        while it != result.end():
+        cdef vector[cPattern].iterator it_end = result.end()
+        while it != it_end:
             cngram  = deref(it)
             ngram = Pattern()
             ngram.bind(cngram)
@@ -289,7 +290,8 @@ cdef class Pattern:
         self.cpattern.parts(result)
         cdef cPattern cngram
         cdef vector[cPattern].iterator it = result.begin()
-        while it != result.end():
+        cdef vector[cPattern].iterator it_end = result.end()
+        while it != it_end:
             cngram  = deref(it)
             ngram = Pattern()
             ngram.bind(cngram)
@@ -304,8 +306,9 @@ cdef class Pattern:
         cdef vector[pair[int,int]] result
         self.cpattern.gaps(result)
         cdef vector[pair[int,int]].iterator it = result.begin()
+        cdef vector[pair[int,int]].iterator it_end = result.end()
         cdef pair[int,int] p
-        while it != result.end():
+        while it != it_end:
             p  = deref(it)
             yield (p.first, p.second)
             inc(it)
@@ -382,7 +385,8 @@ cdef class IndexedData:
         """Iterate over all (sentence,token) tuples in the set"""
         cdef cIndexReference ref
         cdef cIndexedData.iterator it = self.data.begin()
-        while it != self.data.end():
+        cdef cIndexedData.iterator it_end = self.data.end()
+        while it != it_end:
             ref  = deref(it)
             yield (ref.sentence, ref.token)
             inc(it)
@@ -398,6 +402,8 @@ cdef class IndexedData:
 cdef class PatternSet:
     """This is a simple low-level set that contains Pattern instances"""
     cdef cPatternSet[uint] data
+    cdef cPatternSet[uint].iterator it
+    cdef cPatternSet[uint].iterator it_end
     @include colibricore_patternset.pxi
 
 
@@ -406,6 +412,7 @@ cdef class PatternDict_int32: #maps Patterns to uint32
 
     cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t] data
     cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it
+    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it_end
     cdef uint32_t value
 
     @include colibricore_patterndict.pxi
@@ -428,6 +435,7 @@ cdef class SmallPatternDict_int32: #maps Patterns to uint32
 
     cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint16_t] data
     cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint16_t].iterator it
+    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint16_t].iterator it_end
     cdef uint32_t value
 
     @include colibricore_patterndict.pxi
@@ -449,6 +457,7 @@ cdef class TinyPatternDict_int32: #maps Patterns to uint32
 
     cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint8_t] data
     cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint8_t].iterator it
+    cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint8_t].iterator it_end
     cdef uint32_t value
 
     @include colibricore_patterndict.pxi
@@ -469,6 +478,7 @@ cdef class PatternDict_int: #maps Patterns to uint64
 
     cdef cPatternMap[uint,cBaseValueHandler[uint],uint32_t] data
     cdef cPatternMap[uint,cBaseValueHandler[uint],uint32_t].iterator it
+    cdef cPatternMap[uint,cBaseValueHandler[uint],uint32_t].iterator it_end
     cdef int value
 
     @include colibricore_patterndict.pxi
@@ -486,6 +496,7 @@ cdef class PatternDict_float: #maps Patterns to float
 
     cdef cPatternMap[float,cBaseValueHandler[float],uint32_t] data
     cdef cPatternMap[float,cBaseValueHandler[float],uint32_t].iterator it
+    cdef cPatternMap[float,cBaseValueHandler[float],uint32_t].iterator it_end
     cdef float value
 
     @include colibricore_patterndict.pxi
@@ -504,6 +515,7 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
 
     cdef cAlignedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t] data
     cdef cAlignedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it
+    cdef cAlignedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it_end
 
 
     def __len__(self):
@@ -547,7 +559,8 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
         """Iterate over all patterns in the dictionary. If you want to iterate over pattern pairs, use pairs() instead, to iterate over the children for a specific pattern, use children()"""
         it = self.data.begin()
         cdef cPattern cpattern
-        while it != self.data.end():
+        it_end = self.data.end()
+        while it != it_end:
             cpattern = deref(it).first
             pattern = Pattern()
             pattern.bind(cpattern)
@@ -558,9 +571,11 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
     def children(self, Pattern pattern):
         """Iterate over all patterns in the dictionary. If you want to iterate over pattern pairs, use pairs() instead"""
         cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it2
-        it2 = self.data[pattern.cpattern].begin()
+        cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it2_end
         cdef cPattern cpattern
-        while it2 != self.data[pattern.cpattern].end():
+        it2 = self.data[pattern.cpattern].begin()
+        it2_end = self.data[pattern.cpattern].end()
+        while it2 != it2_end:
             cpattern = deref(it2).first
             pattern = Pattern()
             pattern.bind(cpattern)
@@ -571,11 +586,12 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
     def items(self):
         """Iterate over all pattern pairs and their values in the dictionary. Yields (pattern1,pattern2,value) tuples"""
         cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it2
-        cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it2nd
+        cdef cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t].iterator it2end
         cdef int value
         it = self.data.begin()
         cdef cPattern cpattern
-        while it != self.data.end():
+        it_end = self.data.end()
+        while it != it_end:
             cpattern = deref(it).first
             pattern = Pattern()
             pattern.bind(cpattern)
