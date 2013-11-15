@@ -1053,7 +1053,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             if (!options.QUIET) std::cerr << "pruned " << pruned;
             int prunedextra = this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, n);
             if (prunedextra && !options.QUIET) std::cerr << " plus " << prunedextra << " extra skipgrams..";
-            if (!options.QUIET) std::cerr << "...total kept: " <<  foundskipgrams << std::endl;
+            if (!options.QUIET) std::cerr << "...total kept: " <<  foundskipgrams - pruned - prunedextra << std::endl;
         }
     }
 
