@@ -763,6 +763,19 @@ int main( int argc, char *argv[] ) {
         cerr << endl;
         unindexedmodel3.train(infilename, options);
         cerr << "Found " << unindexedmodel3.size() << " patterns, " << unindexedmodel3.types() << " types, " << unindexedmodel3.tokens() << " tokens" << endl;
+
+
+        cerr << "Testing low-level PatternSet" << endl;
+        PatternSet<uint32_t> set;
+        for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
+            set.insert(iter->first);
+        }
+
+        //double inserts:
+        for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
+            set.insert(iter->first);
+        }
+
     }
     {
 
