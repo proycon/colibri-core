@@ -423,7 +423,7 @@ cdef class PatternDict_int32: #maps Patterns to uint32
         :param pattern: the pattern
         :param value: its value
         """
-        self[pattern] = v
+        self.data[pattern.cpattern] = v
 
     cdef bind(self, cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint32_t]& newdata):
         self.data = newdata
@@ -446,7 +446,7 @@ cdef class SmallPatternDict_int32: #maps Patterns to uint32
         :param pattern: the pattern
         :param value: its value
         """
-        self[pattern] = v
+        self.data[pattern.cpattern] = v
 
     cdef bind(self, cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint16_t]& newdata):
         self.data = newdata
@@ -468,7 +468,7 @@ cdef class TinyPatternDict_int32: #maps Patterns to uint32
         :param pattern: the pattern
         :param value: its value
         """
-        self[pattern] = v
+        self.data[pattern.cpattern] = v
 
     cdef bind(self, cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint8_t]& newdata):
         self.data = newdata
@@ -489,7 +489,7 @@ cdef class PatternDict_int: #maps Patterns to uint64
         :param pattern: the pattern
         :param value: its value
         """
-        self[pattern] = v
+        self.data[pattern.cpattern] = v
 
 cdef class PatternDict_float: #maps Patterns to float
     """This is a simple low-level dictionary that takes Pattern instances as keys, and float (double) as value. For complete pattern models, use IndexedPatternModel or UnindexPatternModel instead."""
@@ -507,7 +507,7 @@ cdef class PatternDict_float: #maps Patterns to float
         :param pattern: the pattern
         :param value: its value
         """
-        self[pattern] = v
+        self.data[pattern.cpattern] = v
 
 
 cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (nested dicts)
