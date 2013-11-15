@@ -161,7 +161,7 @@ def getskipcontent(self, Pattern pattern):
         inc(relit)
 
 def gettemplates(self, Pattern pattern):
-    """Get skip content for the specified pattern
+    """Get templates (abstracting skipgrams) for the specified pattern
     :param pattern: The pattern
     :type pattern: Pattern
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
