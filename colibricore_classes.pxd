@@ -263,20 +263,20 @@ cdef extern from "patternmodel.h":
         iterator erase(Pattern&) nogil
         int prune(int threshold, int n) nogil
         iterator find(Pattern&) nogil
-        void load(string, PatternModelOptions) nogil
-        void write(string) nogil
+        void load(string, PatternModelOptions) nogil except +IOError
+        void write(string) nogil except +IOError
         void printmodel(ostream*, ClassDecoder&) nogil
         void printpattern(ostream*, ClassDecoder&, Pattern&) nogil
         void report(ostream*) nogil
         void histogram(ostream*) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
 
-        t_relationmap getsubchildren(Pattern & pattern)
-        t_relationmap getsubparents(Pattern & pattern)
-        t_relationmap getleftneighbours(Pattern & pattern)
-        t_relationmap getrightneighbours(Pattern & pattern)
-        t_relationmap getskipcontent(Pattern & pattern)
-        t_relationmap gettemplates(Pattern & pattern)
+        t_relationmap getsubchildren(Pattern & pattern) except +KeyError
+        t_relationmap getsubparents(Pattern & pattern) except +KeyError
+        t_relationmap getleftneighbours(Pattern & pattern) except +KeyError
+        t_relationmap getrightneighbours(Pattern & pattern) except +KeyError
+        t_relationmap getskipcontent(Pattern & pattern) except +KeyError
+        t_relationmap gettemplates(Pattern & pattern) except +KeyError
 
 
     cdef cppclass IndexedPatternModel[MapType]:
@@ -313,8 +313,8 @@ cdef extern from "patternmodel.h":
         iterator erase(Pattern&) nogil
         int prune(int threshold, int n) nogil
         iterator find(Pattern&) nogil
-        void load(string, PatternModelOptions) nogil
-        void write(string) nogil
+        void load(string, PatternModelOptions) nogil except +IOError
+        void write(string) nogil except +IOError
         void printmodel(ostream*, ClassDecoder&) nogil
         void printpattern(ostream*, ClassDecoder&, Pattern&) nogil
         void report(ostream*) nogil
@@ -323,12 +323,12 @@ cdef extern from "patternmodel.h":
 
         vector[Pattern] getreverseindex(IndexReference&)
 
-        t_relationmap getsubchildren(Pattern & pattern)
-        t_relationmap getsubparents(Pattern & pattern)
-        t_relationmap getleftneighbours(Pattern & pattern)
-        t_relationmap getrightneighbours(Pattern & pattern)
-        t_relationmap getskipcontent(Pattern & pattern)
-        t_relationmap gettemplates(Pattern & pattern)
+        t_relationmap getsubchildren(Pattern & pattern) except +KeyError
+        t_relationmap getsubparents(Pattern & pattern) except +KeyError
+        t_relationmap getleftneighbours(Pattern & pattern) except +KeyError
+        t_relationmap getrightneighbours(Pattern & pattern) except +KeyError
+        t_relationmap getskipcontent(Pattern & pattern) except +KeyError
+        t_relationmap gettemplates(Pattern & pattern) except +KeyError
 
 #    cdef cppclass NGramData(AnyGramData):
 #        cppset[CorpusReference] refs

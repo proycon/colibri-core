@@ -32,6 +32,13 @@ enum ModelType {
 
 int getmodeltype(const std::string filename);
 
+class NoSuchPattern: public std::exception {
+  virtual const char* what() const throw()
+  {
+    return "Pattern not found in model";
+  }
+};
+
 
 class IndexedData {
    protected:
@@ -1142,8 +1149,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         IndexedData * data = this->getdata(pattern);
         if (data == NULL) {
-            std::cerr << "ERROR: No data found for pattern!" << std::endl;
-            throw InternalError();
+            throw NoSuchPattern();
         }
         
         t_relationmap templates;
@@ -1176,8 +1182,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         IndexedData * data = this->getdata(pattern);
         if (data == NULL) {
-            std::cerr << "ERROR: No data found for pattern!" << std::endl;
-            throw InternalError();
+            throw NoSuchPattern();
         }
 
         
@@ -1231,8 +1236,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         IndexedData * data = this->getdata(pattern);
         if (data == NULL) {
-            std::cerr << "ERROR: No data found for pattern!" << std::endl;
-            throw InternalError();
+            throw NoSuchPattern();
         }
         
         t_relationmap subsumes;
@@ -1279,8 +1283,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         IndexedData * data = this->getdata(pattern);
         if (data == NULL) {
-            std::cerr << "ERROR: No data found for pattern!" << std::endl;
-            throw InternalError();
+            throw NoSuchPattern();
         }
         
         t_relationmap neighbours;
@@ -1308,8 +1311,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         IndexedData * data = this->getdata(pattern);
         if (data == NULL) {
-            std::cerr << "ERROR: No data found for pattern!" << std::endl;
-            throw InternalError();
+            throw NoSuchPattern();
         }
         
         t_relationmap neighbours;
@@ -1385,8 +1387,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         IndexedData * data = this->getdata(pattern);
         if (data == NULL) {
-            std::cerr << "ERROR: No data found for pattern!" << std::endl;
-            throw InternalError();
+            throw NoSuchPattern();
         }
        
         const int _n = pattern.n();
@@ -1417,8 +1418,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         IndexedData * data = this->getdata(pattern);
         if (data == NULL) {
-            std::cerr << "ERROR: No data found for pattern!" << std::endl;
-            throw InternalError();
+            throw NoSuchPattern();
         }
        
         t_relationmap cooc;
@@ -1449,8 +1449,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         IndexedData * data = this->getdata(pattern);
         if (data == NULL) {
-            std::cerr << "ERROR: No data found for pattern!" << std::endl;
-            throw InternalError();
+            throw NoSuchPattern();
         }
        
         const int _n = pattern.n();
