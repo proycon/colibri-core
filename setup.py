@@ -36,4 +36,20 @@ setup(
     name = 'colibricore',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},
+    packages=['colibricoreX'],
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Topic :: Text Processing :: Linguistic",
+        "Programming Language :: Python :: 3",
+        "Operating System :: POSIX",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    ],
+    entry_points = {
+        'console_scripts': [
+            'colibri-webgraphview = colibricoreX.webgraphview:main',
+        ]
+    },
+
 )
