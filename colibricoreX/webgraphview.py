@@ -37,34 +37,28 @@ class Root:
         minedgesize = 1
         maxedgesize = 10
 
-        colors = {'center':'#ff0000', 'c': "#222" , 'p': "#222",'r': "#32883c" ,'l': "#32883c",'t': '#323288' }
-        extra = {'c': "arrow: 'target'",'p':"arrow: 'source'", 'l':  "arrow: 'source'" ,'r':  "arrow: 'target'", 't': "arrow: 'source'"}
+        colors = {'center':'#ff0000', 'c': "#222" , 'p': "#222",'r': "#32883c" ,'l': "#32883c",'t': '#323288','R':'#2e7469','L':'#2e7469' }
+        extra = {'c': "arrow: 'target'",'p':"arrow: 'source'", 'l':  "arrow: 'source'" ,'r':  "arrow: 'target'", 'L':  "arrow: 'source'" ,'R':  "arrow: 'target'", 't': "arrow: 'source'"}
 
         processrelations('c',self.patternmodel.getsubchildren, pattern, nodes, edges, self.classdecoder, colors, relationtypes)
         processrelations('p',self.patternmodel.getsubparents, pattern, nodes, edges, self.classdecoder,  colors,relationtypes)
         processrelations('l',self.patternmodel.getleftneighbours, pattern, nodes, edges, self.classdecoder,  colors,relationtypes)
         processrelations('r',self.patternmodel.getrightneighbours, pattern, nodes, edges,self.classdecoder,  colors,relationtypes)
         processrelations('t',self.patternmodel.gettemplates, pattern, nodes, edges,self.classdecoder,  colors,relationtypes)
+        #processrelations('L',self.patternmodel.getleftcooc, pattern, nodes, edges, self.classdecoder,  colors,relationtypes)
+        #processrelations('R',self.patternmodel.getrightcooc, pattern, nodes, edges,self.classdecoder,  colors,relationtypes)
 
         jscode = "var sigRoot = document.getElementById('graph');\nsigInst = sigma.init(sigRoot);"
         jscode += "sigInst.drawingProperties({ defaultLabelColor: '#222', defaultLabelSize: 14, defaultLabelHoverColor: '#000', labelThreshold: 6, font: 'Arial', edgeColor: 'source', defaultEdgeType: 'curve' });\n"
         jscode += "sigInst.graphProperties({ minNodeSize: " + str(minnodesize) + ", maxNodeSize: " + str(maxnodesize) + ", minEdgeSize: " + str(minedgesize) + ", maxEdgeSize: " + str(maxedgesize) + " });\n"
         jscode += "sigInst.mouseProperties({ maxRatio: 450, minRatio: .1, marginRatio: 1, zoomDelta: 0.1, dragDelta: 0.3, zoomMultiply: 1.5, inertia: 1.1 });\n"
-
+        jscode += "sigInst.bind('upnodes', function(event){  var q = event.content[0].substr(1); window.location.assign('/query/?pattern=' + q );});\n"
 
 
         for nodeid, p, count, type in nodes.values():
             s = safe(p.tostring(self.classdecoder))
-            size = count #add normalisation here!
+            size = count
             color = colors[type]
-            #if p == pattern:
-            #    color = "#ff0000"
-            #elif p.isskipgram():
-            #    color = "#0000ff"
-            #elif p.isflexgram():
-            #    color = "#00ff00"
-            #else:
-            #    color = "#000000"
 
             jscode += "sigInst.addNode('" +  nodeid + "',{label: '" + s + " (" + str(count) + ")', 'size':"+str(size)+",'cluster': '" + type + "', 'color': '" + color + "', 'x': Math.random(),'y': Math.random() });\n"
 
@@ -77,11 +71,11 @@ class Root:
                 e = ", " + extra[type]
             else:
                 e = ""
-            size = count #add normalisation here!
+            size = count
             jscode += "sigInst.addEdge('" + s_edgeid + "', '" +s_from  + "','" +s_to  + "' ,{'size':" + str(size) + ", 'color':'" + color + "'" + e + "});\n"
             jscode += "sigInst.draw();\n"
             jscode += "sigInst.startForceAtlas2();\n"
-            jscode += "window.setTimeout(function(){ sigInst.stopForceAtlas2();}, 5000);\n";
+            jscode += "window.setTimeout(function(){ sigInst.stopForceAtlas2();}, 3000);\n";
 
 
         jscode = "$(document).ready(function(){" + jscode + "});"
@@ -115,6 +109,7 @@ def main():
     parser = argparse.ArgumentParser(description="", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-i','--input', type=str,help="The Indexed Pattern Model to load", action='store',required=True)
     parser.add_argument('-c','--classfile', type=str,help="The class file", action='store',required=True)
+    parser.add_argument('-p','--port', type=int,help="Port", action='store',default=8080,required=False)
     args = parser.parse_args()
 
     print("Loading class encoder",file=sys.stderr)
@@ -126,7 +121,7 @@ def main():
 
     cherrypy.config.update({
         'server.socket_host': '0.0.0.0',
-        'server.socket_port': 8080,
+        'server.socket_port': args.port,
     })
     cherrypy.quickstart(Root(patternmodel, classdecoder, classencoder))
 
