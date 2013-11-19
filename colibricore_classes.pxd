@@ -223,6 +223,20 @@ cdef extern from "patternmodel.h":
         int add(IndexedData *, IndexReference&)
         str tostring(IndexedData&)
 
+
+    cdef cppclass PatternModelInterface:
+        int getmodeltype()
+        int getmodelversion()
+        bool has(const Pattern &)
+        size_t size()
+        int occurrencecount(Pattern & pattern)
+        double frequency(Pattern &)
+        int maxlength()
+        int minlength()
+        int types()
+        int tokens()
+
+
     ctypedef PatternMap[uint32_t,BaseValueHandler[uint32_t],uint64_t] t_relationmap
     ctypedef PatternMap[double,BaseValueHandler[double],uint64_t] t_relationmap_double
 
@@ -249,7 +263,8 @@ cdef extern from "patternmodel.h":
         float coverage(Pattern&) nogil
         float frequency(Pattern&) nogil
 
-        void train(string filename, PatternModelOptions options)
+        PatternModelInterface * getinterface() nogil
+        void train(string filename, PatternModelOptions options, PatternModelInterface *)
 
         int totaloccurrencesingroup(int category, int n)
         int totalpatternsingroup(int category, int n)
@@ -301,7 +316,9 @@ cdef extern from "patternmodel.h":
         float coverage(Pattern&) nogil
         float frequency(Pattern&) nogil
 
-        void train(string filename, PatternModelOptions options)
+        PatternModelInterface * getinterface() nogil
+        void train(string filename, PatternModelOptions options, PatternModelInterface *)
+
 
         int totaloccurrencesingroup(int category, int n)
         int totalpatternsingroup(int category, int n)
