@@ -220,7 +220,7 @@ cpdef printmodel(self,ClassDecoder decoder):
     """
     self.data.printmodel(&cout, decoder.data )
 
-cpdef train(self, str filename, PatternModelOptions options):
+cpdef train(self, str filename, PatternModelOptions options, constrainmodel = None):
     """Train the patternmodel on the specified corpus data (a *.colibri.dat file)
 
     :param filename: The name of the file to load, must be a valid colibri.dat file
@@ -228,7 +228,25 @@ cpdef train(self, str filename, PatternModelOptions options):
     :param options: An instance of PatternModelOptions, containing the options used for loading
     :type options: PatternModelOptions
     """
-    self.data.train(filename.encode('utf-8'),options.coptions)
+    if constrainmodel:
+        if isinstance(constrainmodel, IndexedPatternModel):
+            self.trainconstrainedbyindexedmodel(filename, options, constrainmodel)
+        elif isinstance(constrainmodel, UnindexedPatternModel):
+            self.trainconstrainedbyindexedmodel(filename, options, constrainmodel)
+        else:
+            raise ValueError("Invalid valid for constrainmodel") #TODO: build patternmodel on the fly from an iterable of patterns or lower level patternstorage
+    else:
+        self.data.train(filename.encode('utf-8'),options.coptions, NULL)
+
+cdef cPatternModelInterface* getinterface(self):
+    return self.data.getinterface()
+
+cdef trainconstrainedbyindexedmodel(self, str filename, PatternModelOptions options, IndexedPatternModel constrainmodel):
+    self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
+
+cdef trainconstrainedbyunindexedmodel(self, str filename, PatternModelOptions options, UnindexedPatternModel constrainmodel):
+    self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
+
 
 cpdef report(self):
     """Print a detailed statistical report to stdout"""
