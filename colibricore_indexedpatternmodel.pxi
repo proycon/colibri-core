@@ -58,6 +58,22 @@ def reverseindex(self, indexreference):
         yield pattern
         inc(resit)
 
+def reverseindex_bysentence(self, int sentence):
+    """Generator over all patterns occurring in the specified sentence
+
+    :param indexreference: a (sentence, tokenoffset) tuple
+    """
+
+    cdef vector[cPattern] results = self.data.getreverseindex_bysentence(sentence)
+    cdef vector[cPattern].iterator resit = results.begin()
+    cdef cPattern cpattern
+    while resit != results.end():
+        cpattern = deref(resit)
+        pattern = Pattern()
+        pattern.bind(cpattern)
+        yield pattern
+        inc(resit)
+
 cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
     """Compute and output (to stdout) all relations for the specified pattern:
 

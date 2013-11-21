@@ -615,6 +615,20 @@ class PatternModel: public MapType, public PatternModelInterface {
             return result;
         }
 
+        std::vector<Pattern> getreverseindex_bysentence(int sentence) {
+            //Auxiliary function
+            const IndexReference ref = IndexReference(sentence, 0);
+            std::vector<Pattern> result;
+            if (this->reverseindex.count(ref)) {
+                for (std::multimap<IndexReference,Pattern>::iterator it = this->reverseindex.lower_bound(ref); it != this->reverseindex.end(); it++) {
+                    if (it->first.sentence != sentence) break;
+                    const Pattern pattern = it->second;
+                    result.push_back(pattern);
+                }
+            }
+            return result;
+        }
+
         void computestats() {
             cache_categories.clear();
             cache_n.clear();
