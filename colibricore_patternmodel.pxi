@@ -2,6 +2,9 @@ def __len__(self):
     """Returns the total number of distinct patterns in the model"""
     return self.data.size()
 
+def __bool__(self):
+    return self.data.size() > 0
+
 def types(self):
     """Returns the total number of distinct word types in the training data"""
     return self.data.types()

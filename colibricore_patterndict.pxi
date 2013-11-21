@@ -1,4 +1,7 @@
 
+def __bool__(self):
+    return self.data.size() > 0
+
 def __len__(self):
     """Return the total number of patterns in the dictionary"""
     return self.data.size()

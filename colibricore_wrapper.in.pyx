@@ -148,6 +148,9 @@ cdef class Pattern:
         r = self.cpattern.contains(pattern.cpattern)
         return r
 
+    def __bool__(self):
+        return self.cpattern.n() > 0
+
     def __len__(self):
         """Returns the length of the pattern in words/tokens::
 
@@ -394,6 +397,9 @@ cdef class IndexedData:
     def __len__(self):
         """Returns the number of occurrences, i.e. the length of the set"""
         return self.data.size()
+
+    def __bool__(self):
+        return self.data.size() > 0
 
     def __int__(self):
         return self.data.size()
