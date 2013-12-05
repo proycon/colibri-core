@@ -24,7 +24,7 @@ def processrelations(type, func, pattern, nodes, edges, classdecoder, colors, re
 
     if secondorderedges:
         for p in tmpnodeset:
-            for p2, count in func(pattern2):
+            for p2, count in func(p):
                 if p2 in tmpnodeset:
                     nodeid= safe(type + p2.tostring(classdecoder))
                     edges.append( [nodeid, p, p2, type, count] )
