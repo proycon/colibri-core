@@ -149,6 +149,8 @@ def main():
         'server.socket_host': '0.0.0.0',
         'server.socket_port': args.port,
     })
+    def fake_wait_for_occupied_port(host, port): return
+    cherrypy.process.servers.wait_for_occupied_port = fake_wait_for_occupied_port
     cherrypy.quickstart(Root(patternmodel, classdecoder, classencoder))
 
 if __name__ == '__main__':
