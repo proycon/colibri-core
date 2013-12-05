@@ -10,7 +10,7 @@ def safe(s):
     return s.replace("'","`")
 
 
-def processrelations(type, func, pattern, nodes, edges, classdecoder, colors, relationtypes=""):
+def processrelations(type, func, pattern, nodes, edges, classdecoder, colors, relationtypes="",secondorderedges=True):
     if not relationtypes or type in relationtypes:
         for pattern2, count in func(pattern):
             nodeid= safe(type + pattern2.tostring(classdecoder))
@@ -18,6 +18,16 @@ def processrelations(type, func, pattern, nodes, edges, classdecoder, colors, re
                 nodes[nodeid] =  [nodeid, pattern2, count,type]
             edges.append( [nodeid, pattern, pattern2, type, count] )
 
+    tmpnodeset = set()
+    for _,p,_,_ in nodes.values():
+        tmpnodeset.add(p)
+
+    if secondorderedges:
+        for p in tmpnodeset:
+            for p2, count in func(pattern2):
+                if p2 in tmpnodeset:
+                    nodeid= safe(type + p2.tostring(classdecoder))
+                    edges.append( [nodeid, p, p2, type, count] )
 
 class Root:
     def __init__(self, patternmodel, classdecoder, classencoder):
