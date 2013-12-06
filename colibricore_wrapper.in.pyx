@@ -40,7 +40,7 @@ cdef class ClassEncoder:
         else:
             self._filename = ""
 
-    def filename():
+    def filename(self):
         return self._filename
 
     def __len__(self):
@@ -99,7 +99,7 @@ cdef class ClassDecoder:
         return self.data.size()
 
 
-    def filename():
+    def filename(self):
         return self._filename
 
 cdef class Pattern:
