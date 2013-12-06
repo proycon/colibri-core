@@ -31,13 +31,17 @@ cdef class ClassEncoder:
     """The class encoder allows patterns to be built from their string representation. Load in a class file and invoke the ``buildpattern()`` method"""
 
     cdef cClassEncoder data
+    cdef str _filename
 
     def __init__(self, str filename=None):
         if filename:
-            self.filename = filename
+            self._filename = filename
             self.data.load(filename.encode('utf-8'))
         else:
-            self.filename = ""
+            self._filename = ""
+
+    def filename():
+        return self._filename
 
     def __len__(self):
         """Returns the total number of classes"""
@@ -84,9 +88,10 @@ cdef class ClassDecoder:
     """The Class Decoder allows Patterns to be decoded back to their string representation. An instance of ClassDecoder is passed to Pattern.tostring()"""
 
     cdef cClassDecoder data #it's not actually a pointer anymore..
+    cdef str _filename
 
     def __init__(self, str filename):
-        self.filename = filename
+        self._filename = filename
         self.data.load(filename.encode('utf-8'))
 
     def __len__(self):
@@ -94,6 +99,8 @@ cdef class ClassDecoder:
         return self.data.size()
 
 
+    def filename():
+        return self._filename
 
 cdef class Pattern:
     """The Pattern class contains an ngram, skipgram or flexgram, and allows a wide variety of actions to be performed on it. It is stored in a memory-efficient fashion and facilitating fast operation and comparison. Use ClassEncoder.buildpattern to build a pattern."""
