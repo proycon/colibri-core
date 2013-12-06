@@ -31,7 +31,6 @@ cdef class ClassEncoder:
     """The class encoder allows patterns to be built from their string representation. Load in a class file and invoke the ``buildpattern()`` method"""
 
     cdef cClassEncoder data
-    cdef str filename
 
     def __init__(self, str filename=None):
         if filename:
@@ -85,7 +84,6 @@ cdef class ClassDecoder:
     """The Class Decoder allows Patterns to be decoded back to their string representation. An instance of ClassDecoder is passed to Pattern.tostring()"""
 
     cdef cClassDecoder data #it's not actually a pointer anymore..
-    cdef str filename
 
     def __init__(self, str filename):
         self.filename = filename
