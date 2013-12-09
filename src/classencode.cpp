@@ -17,7 +17,7 @@
 using namespace std;
 
 void usage() {
-    cerr << "Syntax: classencoder [ -c classmodel ] corpus [corpus2 etc..]" << endl;
+    cerr << "Syntax: colibri-classencode [ -c classmodel ] corpus [corpus2 etc..]" << endl;
     cerr << "Description: Encodes a corpus. If used with -c, encodes a corpus according to the specified pre-existing class model" << endl;
     cerr << "Options: -o    outputprefix for class file" << endl;
     cerr << "         -d    output directory, including trailing slash" << endl;
