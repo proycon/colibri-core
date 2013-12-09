@@ -842,7 +842,7 @@ cdef class IndexedCorpus:
                 raise ValueError("Expected tuple for start of slice")
             if not isinstance(stop, tuple):
                 raise ValueError("Expected tuple for end of slice")
-            if start.sentence != stop.sentence:
+            if start[0] != stop[0]:
                 raise ValueError("Slices only supported within the same sentence")
             return self.getslice(start, stop)
         else:
