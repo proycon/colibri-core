@@ -36,6 +36,7 @@ void usage() {
     cerr << "\t-T <number>      Skip type threshold (for use with -s): only fixed skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, unindexed models always act as if fixed to 1). Also note that only types that occur above the occurrent threshold (-t) are counted here! Requires indexed models" << endl;
     cerr << "\t-S S             Compute dynamic-size skip-grams by abstracting over fixed-size skipgrams (implies -s)." << endl; 
     cerr << "\t-S <number>      Compute dynamic-size skip-grams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
+    cerr << "\t-L               Input data file (-f) is a list of one pattern per line. No subgrams will be stored, implies -t 1" 
     cerr << " Viewing a model:  colibri-patternmodeller -i [modelfile] -c [classfile] -[PRHQ]" << endl;
     cerr << "\t-P               Print the entire model" << endl;
     cerr << "\t-R               Generate a (statistical/coverage) report" << endl;
@@ -199,7 +200,7 @@ int main( int argc, char *argv[] ) {
     bool DOREMOVEDYNAMICSKIPGRAMS = false;
     bool DOREMOVENGRAMS = false;
     char c;    
-    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:rGS:xXNC:")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:rGS:xXNC:L")) != -1)
         switch (c)
         {
         case 'c':
@@ -275,6 +276,9 @@ int main( int argc, char *argv[] ) {
         case 'N':
             DOREMOVENGRAMS = true;
             break;
+        case 'L':
+            options.DOPATTERNPERLINE = true;
+            break;
         case 'G':
             cerr << "Option -G NOT IMPLEMENTED YET!" << endl;
             exit(2);
@@ -300,7 +304,7 @@ int main( int argc, char *argv[] ) {
         exit(2);
     }
 
-
+    if (options.DOPATTERNPERLINE) options.MINTOKENS = 1;
 
     ClassDecoder * classdecoder = NULL;
     ClassEncoder * classencoder = NULL;

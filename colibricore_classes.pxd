@@ -217,6 +217,7 @@ cdef extern from "patternmodel.h":
         bool DOREVERSEINDEX
         bool DEBUG
         bool QUIET
+        bool DOPATTERNPERLINE
 
     cdef cppclass IndexedDataHandler:
         int count(IndexedData &)

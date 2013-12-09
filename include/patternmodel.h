@@ -129,6 +129,7 @@ class PatternModelOptions {
         int MINSKIPTYPES; 
 
         bool DOREVERSEINDEX;
+        bool DOPATTERNPERLINE;
 
 
         bool QUIET;
@@ -143,6 +144,7 @@ class PatternModelOptions {
             DOSKIPGRAMS_EXHAUSTIVE = false;
 
             DOREVERSEINDEX = true; //only for indexed models
+            DOPATTERNPERLINE = false;
 
             DEBUG = false;
             QUIET = false;
@@ -312,7 +314,9 @@ class PatternModel: public MapType, public PatternModelInterface {
                 in->clear();
                 in->seekg(0);
                 if (!options.QUIET) {
-                    if (options.MINTOKENS > 1) {
+                    if (options.DOPATTERNPERLINE) {
+                        std::cerr << "Counting patterns from list, one per line" << std::endl; 
+                    } else if (options.MINTOKENS > 1) {
                         std::cerr << "Counting " << n << "-grams" << std::endl; 
                     } else {
                         std::cerr << "Counting *all* n-grams (occurrence threshold=1)" << std::endl; 
@@ -328,16 +332,21 @@ class PatternModel: public MapType, public PatternModelInterface {
                     if (in->eof()) break;
                     if (n==1) totaltokens += line.size();
                     ngrams.clear();
-                    if (options.MINTOKENS > 1) {
-                        line.ngrams(ngrams, n);
-                    } else if (options.MINTOKENS == 1) {
-                        line.subngrams(ngrams,1,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1, no need to look back anyway, only one iteration over corpus
+                    if (options.DOPATTERNPERLINE) {
+                        if (line.size() > options.MAXTOKENS) continue;
+                        ngrams.push_back(line);
+                    } else {
+                        if (options.MINTOKENS > 1) {
+                            line.ngrams(ngrams, n);
+                        } else if (options.MINTOKENS == 1) {
+                            line.subngrams(ngrams,1,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1, no need to look back anyway, only one iteration over corpus
+                        }
                     }
                     for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
                         if ((constrainbymodel != NULL) && (!constrainbymodel->has(iter->first))) continue;
                         ref = IndexReference(sentence, iter->second);
                         found = true;
-                        if ((n > 1) && (options.MINTOKENS > 1)) {
+                        if ((n > 1) && (options.MINTOKENS > 1) && (!DOPATTERNPERLINE)) {
                             //check if sub-parts were counted
                             subngrams.clear();
                             iter->first.ngrams(subngrams,n-1);
