@@ -333,8 +333,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                     if (n==1) totaltokens += line.size();
                     ngrams.clear();
                     if (options.DOPATTERNPERLINE) {
-                        if (line.size() > options.MAXTOKENS) continue;
-                        ngrams.push_back(line);
+                        if (line.size() > options.MAXLENGTH) continue;
+                        ngrams.push_back(std::pair<PatternPointer,int>(PatternPointer(line),0));
                     } else {
                         if (options.MINTOKENS > 1) {
                             line.ngrams(ngrams, n);
@@ -346,7 +346,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                         if ((constrainbymodel != NULL) && (!constrainbymodel->has(iter->first))) continue;
                         ref = IndexReference(sentence, iter->second);
                         found = true;
-                        if ((n > 1) && (options.MINTOKENS > 1) && (!DOPATTERNPERLINE)) {
+                        if ((n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE)) {
                             //check if sub-parts were counted
                             subngrams.clear();
                             iter->first.ngrams(subngrams,n-1);
