@@ -139,7 +139,7 @@ Sometimes you want to encode new data using the same classes already used for an
 
 You can encode a dataset, here named ``testset.txt`` using an existing class file, ``trainset.colibri.cls``, as follows::
 
-   $ colibri-classencode -f testset.txt -c trainset.colibri.cls 
+   $ colibri-classencode -c trainset.colibri.cls testset.txt
 
 This will result in an encoded corpus ``testset.colibri.dat`` and an *extended* class file ``testset.colibri.cls``, which is a superset of the original ``trainset.cls``, adding only those classes that did not yet exist in the training data.
 
