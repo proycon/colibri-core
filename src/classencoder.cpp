@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <unordered_map>
+#include "bz2stream.h"
 
 /*****************************
 * Colibri Core
@@ -99,14 +100,29 @@ void ClassEncoder::load(const string & filename) {
 void ClassEncoder::processcorpus(const string & filename, unordered_map<string,int> & freqlist) {
 	   //compute frequency list of all words        
        ifstream IN;
-       IN.open( filename.c_str() );    
-       if (!(IN)) {
-           cerr << "File does not exist: " << filename << endl;
-           exit(3);
-       }       
-        while (IN.good()) {
+	   if (filename.rfind(".bz2") != string::npos) {
+            IN.open( filename.c_str(), ios::in | ios::binary );    
+            if (!(IN)) {
+                cerr << "File does not exist: " << filename << endl;
+                exit(3);
+            }       
+            bz2istream * decompressor = new bz2istream(IN.rdbuf());
+            processcorpus((istream*) decompressor,freqlist);
+       } else {
+            IN.open( filename.c_str() );    
+            if (!(IN)) {
+                cerr << "File does not exist: " << filename << endl;
+                exit(3);
+            }       
+            processcorpus(&IN, freqlist);
+       }
+       IN.close();
+}
+
+void ClassEncoder::processcorpus(istream * IN , unordered_map<string,int> & freqlist) {
+        while (IN->good()) {
           string line;
-          getline(IN, line);         
+          getline(*IN, line);         
           int begin = 0;
           const int s = line.size();
           for (int i = 0; i < s; i++) {
@@ -123,9 +139,7 @@ void ClassEncoder::processcorpus(const string & filename, unordered_map<string,i
               
           }
         }        
-        IN.close();       
 }
-
 
 #ifdef WITHFOLIA
 void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<string,int> & freqlist) {
@@ -171,7 +185,7 @@ void ClassEncoder::build(const string & filename) {
             exit(2);
             #endif
 	    } else {
-	        processcorpus(filename, freqlist);
+	        processcorpus(filename, freqlist); //also handles bz2
 	    }
         buildclasses(freqlist);
 }
@@ -191,7 +205,7 @@ void ClassEncoder::build(vector<string> & files) {
                 exit(2);
                 #endif
 	        } else {
-	            processcorpus(filename, freqlist);
+	            processcorpus(filename, freqlist); //also handles bz2
 	        }
 	        
 	    } 	    	    
@@ -313,7 +327,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
     const char zero = 0;
     const char one = 1;
 	    
-    if ((inputfilename.rfind(".xml") != string::npos) ||  (inputfilename.rfind(".bz2") != string::npos) ||  (inputfilename.rfind(".gz") != string::npos)) {
+    if ((inputfilename.rfind(".xml") != string::npos) ||  (inputfilename.rfind(".xml.bz2") != string::npos) ||  (inputfilename.rfind(".xml.gz") != string::npos)) {
         #ifdef WITHFOLIA
         //FoLiA
         folia::Document doc;
@@ -371,22 +385,42 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	        OUT.open(outputfilename.c_str(), ios::app | ios::binary);
 	    } else {
 	        OUT.open(outputfilename.c_str(), ios::out | ios::binary);
-	    }	
-	    IN.open(inputfilename.c_str());
-	    unsigned char outputbuffer[65536];
-	    int outputsize ;
-	    unsigned int linenum = 0;
-	    while (IN.good()) {	
-          string line = "";
-          getline(IN, line);
-          if (!IN.good()) break;
-          linenum++;
-          outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
-          OUT.write((const char *) outputbuffer, outputsize);                        
-          OUT.write(&zero, sizeof(char)); //newline          
+	    }
+        if (inputfilename.rfind(".bz2") != string::npos) {
+            IN.open(inputfilename.c_str(), ios::in | ios::binary);
+            if (!IN) {
+                cerr << "No such file: " << inputfilename << endl;
+            }
+            bz2istream * decompressor = new bz2istream(IN.rdbuf());
+            encodefile((istream*) decompressor, (ostream*) &OUT, allowunknown, autoaddunknown);
+            delete decompressor;
+        } else {
+            IN.open(inputfilename.c_str());
+            if (!IN) {
+                cerr << "No such file: " << inputfilename << endl;
+            }
+            encodefile((istream*) &IN, (ostream*) &OUT, allowunknown, autoaddunknown);
         }
-        cerr << "Encoded " << linenum << " lines" << endl;
 	    IN.close();
 	    OUT.close();
 	}
 }
+
+void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown) {
+    const char zero = 0;
+    const char one = 1;
+    unsigned char outputbuffer[65536];
+    int outputsize ;
+    unsigned int linenum = 0;
+    while (IN->good()) {	
+        string line = "";
+        getline(*IN, line);
+        if (!IN->good()) break;
+        linenum++;
+        outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
+        OUT->write((const char *) outputbuffer, outputsize);                        
+        OUT->write(&zero, sizeof(char)); //newline          
+    }
+    cerr << "Encoded " << linenum << " lines" << endl;
+}
+
