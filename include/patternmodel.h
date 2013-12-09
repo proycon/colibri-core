@@ -21,8 +21,7 @@
 #include <map>
 #include <set>
 #include <sstream>
-
-
+#include "bz2stream.h"
 
 
 enum ModelType {
@@ -405,10 +404,18 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
         virtual void train(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL) {
-            std::ifstream * in = new std::ifstream(filename.c_str());
-            this->train((std::istream*) in, options, constrainbymodel);
-            in->close();
-            delete in;
+            if ((filename.size() > 3) && (filename.substr(filename.size()-3) == ".bz2")) {
+                std::ifstream * in = new std::ifstream(filename.c_str(), std::ios::in|std::ios::binary);
+                bz2istream * decompressor = new bz2istream(in->rdbuf());
+                this->train( (std::istream*) decompressor, options, constrainbymodel);
+                delete decompressor;
+                delete in;
+            } else {
+                std::ifstream * in = new std::ifstream(filename.c_str());
+                this->train((std::istream*) in, options, constrainbymodel);
+                in->close();
+                delete in;
+            }
         }
 
 
