@@ -334,7 +334,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     ngrams.clear();
                     if (options.DOPATTERNPERLINE) {
                         if (line.size() > options.MAXLENGTH) continue;
-                        ngrams.push_back(std::pair<PatternPointer,int>(PatternPointer(line),0));
+                        ngrams.push_back(std::pair<PatternPointer,int>(PatternPointer(&line),0));
                     } else {
                         if (options.MINTOKENS > 1) {
                             line.ngrams(ngrams, n);
