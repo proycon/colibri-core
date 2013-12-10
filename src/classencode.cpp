@@ -17,8 +17,15 @@
 using namespace std;
 
 void usage() {
-    cerr << "Syntax: classencoder [ -c classmodel ] corpus [corpus2 etc..]" << endl;
+    cerr << "Syntax: colibri-classencode [ -c classmodel ] corpus [corpus2 etc..]" << endl;
     cerr << "Description: Encodes a corpus. If used with -c, encodes a corpus according to the specified pre-existing class model" << endl;
+    cerr << "The corpus file should be in one of the following formats:" << endl;
+    cerr << " - plain text, preferably tokenised (tokens space delimited)" << endl;
+    cerr << "   one sentence per line, unix newlines, encoding agnostic." << endl;
+    cerr << " - as above, but bzip2 compressed (bz2 extension)" << endl;
+#ifdef WITHFO
+    cerr << " - FoLiA XML (xml extension)" << endl;
+#endif
     cerr << "Options: -o    outputprefix for class file" << endl;
     cerr << "         -d    output directory, including trailing slash" << endl;
     cerr << "         -l    read input filenames from list-file (one filename per line)" << endl;
@@ -101,6 +108,7 @@ int main( int argc, char *argv[] ) {
         
     if (outputprefix.empty()) {
         outputprefix = corpusfile;
+        strip_extension(outputprefix,"bz2");     
         strip_extension(outputprefix,"xml");     
         strip_extension(outputprefix,"txt");    
     }
@@ -132,6 +140,7 @@ int main( int argc, char *argv[] ) {
         if (unified) {
             outfile = outputprefix;
         } else {
+            strip_extension(outfile,"bz2");
             strip_extension(outfile,"txt");
             strip_extension(outfile,"xml");
         }

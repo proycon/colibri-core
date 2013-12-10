@@ -25,7 +25,13 @@ void usage() {
     cerr << "Input/output options:" << endl;
     cerr << "\t-i [modelfile]   Input model" << endl;
     cerr << "\t-o [modelfile]   Output model" << endl;
-    cerr << "\t-f [datafile]    Corpus data file" << endl;
+    cerr << "\t-f [datafile]    Corpus data file. The following formats are supported:" << endl;
+    cerr << "\t                   - plain text, preferably tokenised (tokens space delimited)" << endl;
+    cerr << "\t                     one sentence per line, unix newlines, encoding agnostic." << endl;
+    cerr << "\t                   - as above, but bzip2 compressed (bz2 extension)" << endl;
+#ifdef WITHFOLIA
+    cerr << "\t                   - FoLiA XML (xml extension)" << endl;
+#endif
     cerr << "\t-c [classfile]   Class file"<< endl;
     cerr << "\t-j [modelfile]   Joined input model. Result will be the *intersection* of this (training) model and the input model or constructed model." << endl;
     cerr << " Building a model:  colibri-patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;

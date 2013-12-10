@@ -16,7 +16,7 @@
 using namespace std;
 
 void usage() {
-    cerr << "Syntax: classdecoder -f encoded-corpus -c class-file" << endl;
+    cerr << "Syntax: colibri-classdecode -f encoded-corpus -c class-file" << endl;
     cerr << "Descriptions: Decodes an encoded corpus" << endl;
     cerr << "Options:" << endl;
     cerr << "\t-s 	start line number (default: 0)" << endl;

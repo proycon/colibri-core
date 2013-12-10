@@ -35,6 +35,7 @@ class ClassEncoder {
      unsigned int highestclass;
      void buildclasses(std::unordered_map<std::string,int> freqlist);
      void processcorpus(const std::string & filename, std::unordered_map<std::string,int> & freqlist);
+     void processcorpus(std::istream * , std::unordered_map<std::string,int> & freqlist);
      #ifdef WITHFOLIA
      void processfoliacorpus(const std::string & filename, std::unordered_map<std::string,int> & freqlist);
      #endif
@@ -50,6 +51,7 @@ class ClassEncoder {
 
     int encodestring(const std::string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown=false);
     void encodefile(const std::string &, const std::string &, bool allowunknown, bool autoaddunknown=false, bool append=false);
+    void encodefile(std::istream * IN, std::ostream * OUT, bool allowunknown, bool autoaddunknown);
     std::vector<unsigned int> encodeseq(const std::vector<std::string> & seq);
     
     Pattern buildpattern(const std::string, bool allowunknown=false, bool autoaddunknown = false);  //not thread-safe

@@ -4,7 +4,7 @@
 # $URL: https://ilk.uvt.nl/svn/sources/ucto/trunk/configure.ac $
 
 AC_PREREQ([2.67])
-AC_INIT([colibri-core],[0.4.1],[proycon@anaproy.nl])
+AC_INIT([colibri-core],[0.4.2],[proycon@anaproy.nl])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADER([config.h])
@@ -78,8 +78,18 @@ AS_IF([test "x$with_folia" = "xyes"], [
 ])
 
 
-# Checks for library functions.
+#AC_ARG_WITH(ticcutils,
+#       [  --with-ticcutils=DIR       use ticcutils installed in <DIR>; 
+#               note that you can install ticcutils in a non-default directory with
+#               ./configure --prefix=<DIR> in the ticcutils installation directory],
+#       [PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$withval/lib/pkgconfig"],
+#       [PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$prefix/lib/pkgconfig"])
+##  AC_MSG_NOTICE( [pkg-config search path: $PKG_CONFIG_PATH] )
+#PKG_CHECK_MODULES([ticcutils], [ticcutils >= 0.5] )
+#CXXFLAGS="$CXXFLAGS $ticcutils_CFLAGS"
+#LIBS="$ticcutils_LIBS $LIBS"
 
+# Checks for library functions.
 AC_CONFIG_FILES([
   colibri-core.pc
   Makefile
