@@ -302,7 +302,8 @@ class PatternModel: public MapType, public PatternModelInterface {
 
             if (!options.QUIET) {
                 std::cerr << "Training patternmodel";
-                if (constrainbymodel != NULL) std::cerr << ", constrained by training model";
+                if (constrainbymodel != NULL) std::cerr << ", constrained by another model";
+                std::cerr << ", occurrence threshold:" << options.MINTOKENS;
                 std::cerr << std::endl; 
             }
             int maxlength;
