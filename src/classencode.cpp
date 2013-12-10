@@ -158,8 +158,9 @@ int main( int argc, char *argv[] ) {
         	prefixedoutfile = outputdirectoryprefix + "/" + barename;
         }
 
+        cerr << "Encoding corpus " << corpusfiles[i] << " to " << prefixedoutfile << ".colibri.dat" << endl;
         classencoder.encodefile(corpusfiles[i], prefixedoutfile + ".colibri.dat", allowunknown, extend, unified);
-        cerr << "Encoded corpus " << corpusfiles[i] << " in " << prefixedoutfile << ".colibri.dat" << endl;
+        cerr << "...Done" << endl;
     }
 
     if ((classencoder.gethighestclass() > highestclass)) {
