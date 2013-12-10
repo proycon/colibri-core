@@ -1126,6 +1126,7 @@ int IndexedCorpus::sentencelength(int sentence)  {
     IndexReference ref = IndexReference(sentence, 0);
     int length = 0;
     for (iterator iter = data.find(ref); iter != data.end(); iter++) {
+        if (iter->first.sentence != ref.sentence) return length;
         length++;
     }
     return length;
