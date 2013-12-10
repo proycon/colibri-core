@@ -268,7 +268,7 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
   	        			cerr << "ERROR: Unknown word '" << word << "', does not occur in model" << endl;
   	        			return 0;         
 	  	        	} else {
-	  	        		cerr << "WARNING: Unknown word '" << word << "', does not occur in model. Replacing with placeholder" << endl;
+	  	        		//cerr << "WARNING: Unknown word '" << word << "', does not occur in model. Replacing with placeholder" << endl;
 	  	        		cls = unknownclass;	
 	  	        	}    	
           	    } else {
