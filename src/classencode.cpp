@@ -141,25 +141,21 @@ int main( int argc, char *argv[] ) {
     int highestclass = classencoder.gethighestclass();
     for (size_t i = 0; i < corpusfiles.size(); i++) {
         string outfile = corpusfiles[i];
-        if (unified) {
-            outfile = outputprefix;
-        } else {
-            strip_extension(outfile,"bz2");
-            strip_extension(outfile,"txt");
-            strip_extension(outfile,"xml");
+        if (outfile.find_last_of("/") == string::npos) {
+            outfile = outfile.substr(outfile.find_last_of("/")+1);
         }
+        if (unified) outfile = outputprefix;
+        strip_extension(outfile,"bz2");
+        strip_extension(outfile,"txt");
+        strip_extension(outfile,"xml");
 
-
-
-        string prefixedoutfile = outfile;
         if(outputdirectoryprefix.compare("")) // output directory given
         {
-        	std::string barename = outfile.substr(outfile.find_last_of("/") + 1, outfile.length());
-        	prefixedoutfile = outputdirectoryprefix + "/" + barename;
+            outfile = outputdirectoryprefix + "/" + outfile;
         }
 
-        cerr << "Encoding corpus " << corpusfiles[i] << " to " << prefixedoutfile << ".colibri.dat" << endl;
-        classencoder.encodefile(corpusfiles[i], prefixedoutfile + ".colibri.dat", allowunknown, extend, unified);
+        cerr << "Encoding corpus " << corpusfiles[i] << " to " << outfile << ".colibri.dat" << endl;
+        classencoder.encodefile(corpusfiles[i], outfile + ".colibri.dat", allowunknown, extend, unified);
         cerr << "...Done" << endl;
     }
 
