@@ -300,7 +300,11 @@ class PatternModel: public MapType, public PatternModelInterface {
                 throw InternalError();
             }
 
-            if (!options.QUIET) std::cerr << "Training patternmodel" << std::endl;
+            if (!options.QUIET) {
+                std::cerr << "Training patternmodel";
+                if (constrainbymodel != NULL) std::cerr << ", constrained by training model";
+                std::cerr << std::endl; 
+            }
             int maxlength;
             std::vector<std::pair<PatternPointer,int>> ngrams;
             std::vector<PatternPointer> subngrams;
@@ -318,7 +322,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     } else if (options.MINTOKENS > 1) {
                         std::cerr << "Counting " << n << "-grams" << std::endl; 
                     } else {
-                        std::cerr << "Counting *all* n-grams (occurrence threshold=1)" << std::endl; 
+                        std::cerr << "Counting *all* n-grams (occurrence threshold=1)" << std::endl;
                     }
                 }
 
