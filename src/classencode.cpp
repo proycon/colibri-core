@@ -110,7 +110,7 @@ int main( int argc, char *argv[] ) {
         if (corpusfile.find_last_of("/") == string::npos) {
             outputprefix = corpusfile;
         } else {
-            outputprefix = corpusfile.substr(corpusfile.find_last_of("/")+1)
+            outputprefix = corpusfile.substr(corpusfile.find_last_of("/")+1);
         }
         strip_extension(outputprefix,"bz2");     
         strip_extension(outputprefix,"xml");     
