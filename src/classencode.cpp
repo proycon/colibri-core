@@ -141,7 +141,7 @@ int main( int argc, char *argv[] ) {
     int highestclass = classencoder.gethighestclass();
     for (size_t i = 0; i < corpusfiles.size(); i++) {
         string outfile = corpusfiles[i];
-        if (outfile.find_last_of("/") == string::npos) {
+        if (outfile.find_last_of("/") != string::npos) {
             outfile = outfile.substr(outfile.find_last_of("/")+1);
         }
         if (unified) outfile = outputprefix;
