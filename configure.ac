@@ -24,6 +24,10 @@ fi
 AC_LANG([C++])
 AX_CXX_COMPILE_STDCXX_11([ext])
 
+AC_CHECK_HEADERS([bzlib.h],
+                [LIBS="$LIBS -lbz2"],
+                [AC_MSG_ERROR([libbz2-dev not found])] )
+
 if $cxx_flags_were_set; then
   CXXFLAGS=$CXXFLAGS
 fi
