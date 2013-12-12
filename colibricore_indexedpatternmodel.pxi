@@ -9,6 +9,21 @@ cdef getdata(self, Pattern pattern):
         raise KeyError
 
 
+cpdef add(self, Pattern pattern, indices):
+    """Add a pattern to the indexed model
+    :param pattern: The pattern to add
+    :type pattern: Pattern
+    :param indices: list (or other iterable) of 2-tuples specifying the (sentence,index) of each occurrence of the pattern
+    """
+
+    cdef cIndexedData * cvalue
+    cvalue = &(self.data[pattern.cpattern])
+    cdef cIndexReference ref
+    for sentence,token in indices:
+        ref.sentence = <int> sentence
+        ref.token = <int> token
+    self.data.add(pattern.cpattern, cvalue, ref)
+
 def __iter__(self):
     """Iterate over all patterns in this model"""
     it = self.data.begin()

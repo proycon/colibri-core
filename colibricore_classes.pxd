@@ -263,6 +263,7 @@ cdef extern from "patternmodel.h":
         int coveragecount(Pattern&) nogil
         float coverage(Pattern&) nogil
         float frequency(Pattern&) nogil
+        void add(Pattern&, ValueType*, IndexReference&)
 
         PatternModelInterface * getinterface() nogil
         void train(string filename, PatternModelOptions options, PatternModelInterface *)
@@ -340,6 +341,8 @@ cdef extern from "patternmodel.h":
         void report(ostream*) nogil
         void histogram(ostream*) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
+
+        void add(Pattern&, IndexedData*, IndexReference&)
 
         vector[Pattern] getreverseindex(IndexReference&)
         vector[Pattern] getreverseindex_bysentence(int)
