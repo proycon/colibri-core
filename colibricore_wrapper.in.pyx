@@ -892,6 +892,23 @@ cdef class IndexedCorpus:
             yield (ref.sentence, ref.token)
             inc(it)
 
+
+    def sentences():
+        prevsentence = None
+        sentencedata = []
+        for (sentence,token), pattern in self.items():
+            if sentence != prevsentence:
+                if prevsentence not is None:
+                    yield sentencedata
+                sentencedata = []
+                prevsentence = sentence
+
+            sentence.append(pattern)
+
+        if prevsentence not is None: #don't forget last one
+            yield sentencedata
+
+
     def sentencelength(self,int sentence):
         return self.data.sentencelength(sentence)
 
