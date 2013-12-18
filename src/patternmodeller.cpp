@@ -413,10 +413,12 @@ int main( int argc, char *argv[] ) {
     } else {
         //operations without input model
         PatternModelInterface * constrainbymodel = NULL;
-        if (inputmodeltype2 == INDEXEDPATTERNMODEL) {
-            constrainbymodel = new IndexedPatternModel<>(inputmodelfile2, options);
-        } else if (inputmodeltype2 != INDEXEDPATTERNMODEL) {
-            constrainbymodel = new PatternModel<uint32_t>(inputmodelfile2, options);
+        if (!inputmodelfile2.empty()) {
+            if (inputmodeltype2 == INDEXEDPATTERNMODEL) {
+                constrainbymodel = new IndexedPatternModel<>(inputmodelfile2, options);
+            } else if (inputmodeltype2 != INDEXEDPATTERNMODEL) {
+                constrainbymodel = new PatternModel<uint32_t>(inputmodelfile2, options);
+            }
         }
 
 
