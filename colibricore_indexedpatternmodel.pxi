@@ -51,6 +51,7 @@ def items(self):
         inc(it)
 
 
+
 def reverseindex(self, indexreference):
     """Generator over all patterns occurring at the specified index reference
 
@@ -80,8 +81,29 @@ def covered(self, indexreference):
     cdef int sentence = indexreference[0]
     cdef int token = indexreference[1]
     cdef cIndexReference ref = cIndexReference(sentence, token)
+    cdef cIndexReference ref2
     cdef vector[cPattern] results = self.data.getreverseindex(ref)
-    return not results.empty()
+    cdef vector[cPattern] results2
+    cdef vector[cPattern].iterator resit
+    cdef cPattern cpattern
+    if not results.empty():
+        return True
+    else:
+        for i in range(1, token+1):
+            if token-i >= 0:
+                ref2 = cIndexReference(sentence, token-i)
+                results2 = self.data.getreverseindex(ref2)
+                resit = results2.begin()
+                while resit != results.end():
+                    cpattern = deref(resit)
+                    if cpattern.n() >= token+1:
+                        return True
+        return False
+
+
+
+
+
 
 def reverseindex_bysentence(self, int sentence):
     """Generator over all patterns occurring in the specified sentence
