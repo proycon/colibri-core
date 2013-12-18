@@ -893,19 +893,19 @@ cdef class IndexedCorpus:
             inc(it)
 
 
-    def sentences():
+    def sentences(self):
         prevsentence = None
         sentencedata = []
         for (sentence,token), pattern in self.items():
             if sentence != prevsentence:
-                if prevsentence not is None:
+                if not (prevsentence is None):
                     yield sentencedata
                 sentencedata = []
                 prevsentence = sentence
 
             sentence.append(pattern)
 
-        if prevsentence not is None: #don't forget last one
+        if not (prevsentence is None): #don't forget last one
             yield sentencedata
 
 

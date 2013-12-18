@@ -73,6 +73,16 @@ def reverseindex(self, indexreference):
         yield pattern
         inc(resit)
 
+
+def covered(self, indexreference):
+    if not isinstance(indexreference, tuple) or not len(indexreference) == 2:
+        raise ValueError("Expected tuple")
+    cdef int sentence = indexreference[0]
+    cdef int token = indexreference[1]
+    cdef cIndexReference ref = cIndexReference(sentence, token)
+    cdef vector[cPattern] results = self.data.getreverseindex(ref)
+    return not results.empty()
+
 def reverseindex_bysentence(self, int sentence):
     """Generator over all patterns occurring in the specified sentence
 
