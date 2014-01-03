@@ -241,10 +241,10 @@ cpdef train(self, str filename, PatternModelOptions options, constrainmodel = No
 cdef cPatternModelInterface* getinterface(self):
     return self.data.getinterface()
 
-cdef trainconstrainedbyindexedmodel(self, str filename, PatternModelOptions options, IndexedPatternModel constrainmodel):
+cpdef trainconstrainedbyindexedmodel(self, str filename, PatternModelOptions options, IndexedPatternModel constrainmodel):
     self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
 
-cdef trainconstrainedbyunindexedmodel(self, str filename, PatternModelOptions options, UnindexedPatternModel constrainmodel):
+cpdef trainconstrainedbyunindexedmodel(self, str filename, PatternModelOptions options, UnindexedPatternModel constrainmodel):
     self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
 
 
