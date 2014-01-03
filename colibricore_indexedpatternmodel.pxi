@@ -92,7 +92,9 @@ def covered(self, indexreference):
         for i in range(1, token+1):
             if token-i >= 0:
                 ref2 = cIndexReference(sentence, token-i)
+                print("Getting reverse index")
                 results2 = self.data.getreverseindex(ref2)
+                print("Got " + str(len(results2)))
                 resit = results2.begin()
                 while resit != results2.end():
                     cpattern = deref(resit)
