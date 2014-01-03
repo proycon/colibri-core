@@ -903,7 +903,7 @@ cdef class IndexedCorpus:
                 sentencedata = []
                 prevsentence = sentence
 
-            sentence.append(pattern)
+            sentencedata.append(pattern)
 
         if not (prevsentence is None): #don't forget last one
             yield sentencedata
