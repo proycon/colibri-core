@@ -421,7 +421,7 @@ Pattern::Pattern(std::istream * in) {
             throw InternalError();
         }
         if (i >= MAINPATTERNBUFFERSIZE) {
-            std::cerr << "ERROR: Pattern(): Patternbuffer size exceeded, exceptionally large pattern, must be invalid" << std::endl;
+            std::cerr << "ERROR: Pattern(): Patternbuffer size exceeded, exceptionally large pattern, must be invalid. Are you sure you are reading a valid *.colibri.dat file and not plain text?" << std::endl;
             throw InternalError();
         }
         mainpatternbuffer[i++] = c;

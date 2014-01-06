@@ -47,7 +47,7 @@ int main( int argc, char *argv[] ) {
     string tmpfilename;
     
     char c;    
-    while ((c = getopt(argc, argv, "f:h:c:o:d:ul:eU")) != -1) {
+    while ((c = getopt(argc, argv, "f:hc:o:d:ul:eU")) != -1) {
         switch (c)
         {
         case 'f': //keep for backward compatibility
