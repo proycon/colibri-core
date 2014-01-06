@@ -242,6 +242,7 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
           	  } else {
 			   	word  = string(line.begin() + begin, line.begin() + i + 1);
           	  }
+              word = trim(word, " \t\n\r\b"); //trim whitespace, control characters
           	  begin = i+1;
           	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
           	    unsigned int cls;
