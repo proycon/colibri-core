@@ -916,6 +916,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 for (std::set<int>::iterator itern = cache_n.begin(); itern != cache_n.end(); itern++) {
                     const int n = *itern;
                     if (cache_grouptotalpatterns[c].count(n)) {
+                        //category
                         if (c == 0) {
                             *OUT << std::setw(10) << "all";
                         } else if (c == NGRAM) {
@@ -925,17 +926,23 @@ class PatternModel: public MapType, public PatternModelInterface {
                         } else if (c == FLEXGRAM) {
                             *OUT << std::setw(10) << "flexgram";
                         }
+                        //size
                         if (n == 0) {
                             *OUT << std::setw(10) << "all";
                         } else {
                             *OUT << std::setw(10) << n;
                         }
+                        //patterns
                         *OUT << std::setw(10) << cache_grouptotalpatterns[c][n];
                         if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) {
+                            //tokens
                             *OUT << std::setw(10) << cache_grouptotaltokens[c][n];
+                            //coverage
                             *OUT << std::setw(10) << cache_grouptotaltokens[c][n] / (double) this->tokens();
                         }
+                        //types
                         *OUT << std::setw(10) << cache_grouptotalwordtypes[c][n];
+                        //occurrences
                         *OUT << std::setw(12) << cache_grouptotal[c][n] << std::endl;;
                     }
                 }
@@ -1398,7 +1405,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); 
                 while (iter != this->end()) {
                     const Pattern pattern = iter->first;                        
-                    if (((*itern == 0) || ((int) pattern.n() == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
+                    const int n = pattern.n();
+                    if (((*itern == 0) || (n == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
                         std::vector<Pattern> unigrams;
                         pattern.ngrams(unigrams, 1);
                         for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
@@ -1407,7 +1415,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         }
                         IndexedData * data = this->getdata(pattern);
                         for (IndexedData::iterator dataiter = data->begin(); dataiter != data->end(); dataiter++) {
-                            tokens.insert(*dataiter);
+                            for (int i = 0; i < pattern.n(); i++) {
+                                tokens.insert(*dataiter + 1);
+                            }
                         }
                     }
                     iter++;
