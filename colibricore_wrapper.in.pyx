@@ -36,7 +36,10 @@ cdef class ClassEncoder:
     def __init__(self, str filename=None):
         if filename:
             self._filename = filename
-            self.data.load(filename.encode('utf-8'))
+            if os.path.exists(filename):
+                self.data.load(filename.encode('utf-8'))
+            else:
+                raise IOError("File " + filename + " does not exist")
         else:
             self._filename = ""
 
@@ -100,7 +103,10 @@ cdef class ClassDecoder:
 
     def __init__(self, str filename):
         self._filename = filename
-        self.data.load(filename.encode('utf-8'))
+        if os.path.exists(filename):
+            self.data.load(filename.encode('utf-8'))
+        else:
+            raise IOError("No such file: " + filename)
 
     def __len__(self):
         """Returns the total number of classes"""
