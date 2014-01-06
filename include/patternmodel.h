@@ -1415,8 +1415,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         }
                         IndexedData * data = this->getdata(pattern);
                         for (IndexedData::iterator dataiter = data->begin(); dataiter != data->end(); dataiter++) {
+                            //take into account all tokens 
                             for (int i = 0; i < pattern.n(); i++) {
-                                tokens.insert(*dataiter + 1);
+                                tokens.insert(*dataiter + i);
                             }
                         }
                     }
