@@ -14,7 +14,7 @@ except ImportError:
     raise
 
 with open("/tmp/colibritest",'w') as f:
-    f.write("2\tbe\n3\tTo\n4\tto\n5\tor\n6\tnot\n73477272\tblah\n")
+    f.write("5\tbe\n6\tTo\n7\tto\n8\tor\n9\tnot\n73477272\tblah\n")
 
 decoder = colibricore.ClassDecoder("/tmp/colibritest")
 encoder = colibricore.ClassEncoder("/tmp/colibritest")

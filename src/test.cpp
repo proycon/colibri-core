@@ -73,17 +73,12 @@ int main( int argc, char *argv[] ) {
         */
         
        
-        {
-            ClassDecoder classdecoder = ClassDecoder();
-            cerr << "Decoding beginpattern: " << BEGINPATTERN.tostring(classdecoder) << endl;
-            cerr << "Decoding endpattern: " << ENDPATTERN.tostring(classdecoder) << endl;
-        }
 
 
         string classfile = "/tmp/colibritest";    
         ofstream f;
         f.open(classfile.c_str(), ios::out);
-        f << "2\tbe\n3\tTo\n4\tto\n5\tor\n6\tnot\n73477272\tblah\n";            
+        f << "5\tbe\n6\tTo\n7\tto\n8\tor\n9\tnot\n73477272\tblah\n";            
         f.close();
 
         
@@ -109,6 +104,14 @@ int main( int argc, char *argv[] ) {
         ngram.out();
 
         
+        {
+            ClassDecoder classdecoder2 = ClassDecoder();
+            cerr << "Decoding beginpattern: " << BEGINPATTERN.tostring(classdecoder2) << endl;
+            cerr << "Decoding endpattern: " << ENDPATTERN.tostring(classdecoder2) << endl;
+
+            cerr << "Decoding non-existing classes (should return UNKNOWNS):" << ngram.tostring(classdecoder2) << endl;
+
+        }
         cerr << "----------------------------------------------------" << endl;
         cerr << "Copy constructor" << endl;
         Pattern ngramcopy = Pattern(ngram);
