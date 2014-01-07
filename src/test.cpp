@@ -72,7 +72,14 @@ int main( int argc, char *argv[] ) {
         }
         */
         
-        
+       
+        {
+            ClassDecoder classdecoder = ClassDecoder();
+            cerr << "Decoding beginpattern: " << BEGINPATTERN.tostring(classdecoder) << endl;
+            cerr << "Decoding endpattern: " << ENDPATTERN.tostring(classdecoder) << endl;
+        }
+
+
         string classfile = "/tmp/colibritest";    
         ofstream f;
         f.open(classfile.c_str(), ios::out);
