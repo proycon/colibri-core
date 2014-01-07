@@ -29,13 +29,12 @@ ClassDecoder::ClassDecoder() {
        highestclass = 0;
        bosclass = 3;
        eosclass = 4;
+       classes[unknownclass] = "{UNKNOWN}";
+       classes[bosclass] = "{BEGIN}";
+       classes[eosclass] = "{END}";
 }
 
 ClassDecoder::ClassDecoder(const string & filename) {
-       unknownclass = 2;
-       highestclass = 0;
-       bosclass = 3;
-       eosclass = 4;
        load(filename);
 }
 

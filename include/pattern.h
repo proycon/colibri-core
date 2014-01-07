@@ -371,9 +371,9 @@ static const unsigned char * tmp_bos = (const unsigned char *) "\1\3";
 static const unsigned char * tmp_eos = (const unsigned char *) "\1\4";
 const Pattern SKIPPATTERN = Pattern(&tmp_skipmarker,1);
 const Pattern FLEXPATTERN = Pattern(&tmp_flexmarker,1);
-const Pattern BEGINPATTERN = Pattern((const unsigned char *) &tmp_bos,2);
-const Pattern ENDPATTERN = Pattern((const unsigned  char *) &tmp_eos,2);
-const Pattern UNKPATTERN = Pattern((const unsigned char* ) &tmp_unk,2);
+static const Pattern BEGINPATTERN = Pattern((const unsigned char *) tmp_bos,2);
+static const Pattern ENDPATTERN = Pattern((const unsigned  char *) tmp_eos,2);
+static const Pattern UNKPATTERN = Pattern((const unsigned char* ) tmp_unk,2);
 
 namespace std {
 
