@@ -621,7 +621,13 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             //std::cerr << "Reading " << (int) s << " patterns" << std::endl;
             for (ReadWriteSizeType i = 0; i < s; i++) {
-                Pattern p = Pattern(in);
+                Pattern p;
+                try {
+                    p = Pattern(in);
+                } catch (std::exception &e) {
+                    std::cerr << "ERROR: Exception occurred after at pattern " << (i+1) << " of " << s << std::endl;
+                    throw InternalError();
+                }
                 ReadValueType readvalue;
                 //std::cerr << "Read pattern: " << std::endl;
                 readvaluehandler.read(in, readvalue);
