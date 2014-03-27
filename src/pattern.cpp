@@ -432,7 +432,12 @@ Pattern::Pattern(std::istream * in) {
                 break;
             } else if (c < 128) {
                 //we have a size
-                readingdata = c;
+                if (c == 0) {
+                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible!" << std::endl;
+                    throw InternalError();
+                } else {
+                    readingdata = c;
+                }
             }
         }
     } while (1);
