@@ -625,7 +625,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                 try {
                     p = Pattern(in);
                 } catch (std::exception &e) {
-                    std::cerr << "ERROR: Exception occurred after at pattern " << (i+1) << " of " << s << std::endl;
+                    std::cerr << "ERROR: Exception occurred at pattern " << (i+1) << " of " << s << std::endl;
                     throw InternalError();
                 }
                 ReadValueType readvalue;
