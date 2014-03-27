@@ -301,7 +301,11 @@ std::string datatostring(unsigned char * data, ClassDecoder& classdecoder, int m
             //cerr << (int) c << ":" << (int) *(data+i + 1) << ":" << (int) data[i+1] << ":" << cls << endl;
             i += c + 1;
             if (!result.empty()) result += " ";
-            result += classdecoder[cls];
+            if (classdecoder.hasclass(cls)) {
+                result += classdecoder[cls];
+            } else {
+                result += "{UNKNOWN}";
+            }
         } else if (c == SKIPMARKER) {
             gapsize++;
             i++;

@@ -29,13 +29,12 @@ ClassDecoder::ClassDecoder() {
        highestclass = 0;
        bosclass = 3;
        eosclass = 4;
+       classes[unknownclass] = "{UNKNOWN}";
+       classes[bosclass] = "{BEGIN}";
+       classes[eosclass] = "{END}";
 }
 
 ClassDecoder::ClassDecoder(const string & filename) {
-       unknownclass = 2;
-       highestclass = 0;
-       bosclass = 3;
-       eosclass = 4;
        load(filename);
 }
 
@@ -45,7 +44,11 @@ void ClassDecoder::load(const string & filename) {
        highestclass = 0;
        bosclass = 3;
        eosclass = 4;
-       
+
+       classes[unknownclass] = "{UNKNOWN}";
+       classes[bosclass] = "{BEGIN}";
+       classes[eosclass] = "{END}";
+
        ifstream *IN =  new ifstream( filename.c_str() );    
        if (!(*IN)) {
            cerr << "File does not exist: " << filename << endl;
@@ -60,7 +63,6 @@ void ClassDecoder::load(const string & filename) {
                   unsigned int cls = (unsigned int) atoi(cls_s.c_str());
                   const string word = string(line.begin() + i + 1, line.end());
                   classes[cls] = word;
-                  if (cls == 2) unknownclass = 0;                
                   if (cls > highestclass) highestclass = cls;
                   //cerr << "CLASS=" << cls << " WORD=" << word << endl;
               }
@@ -69,16 +71,6 @@ void ClassDecoder::load(const string & filename) {
         }        
         IN->close();  
         delete IN;
-        
-        if (unknownclass == 0) {
-            highestclass++;
-            unknownclass = highestclass;
-        } else {
-            classes[unknownclass] = "{UNKNOWN}";
-            classes[bosclass] = "{BEGIN}";
-            classes[eosclass] = "{END}";
-        }      
-          
 }
 
         

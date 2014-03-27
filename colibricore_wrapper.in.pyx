@@ -101,12 +101,15 @@ cdef class ClassDecoder:
     cdef cClassDecoder data #it's not actually a pointer anymore..
     cdef str _filename
 
-    def __init__(self, str filename):
-        self._filename = filename
-        if os.path.exists(filename):
-            self.data.load(filename.encode('utf-8'))
+    def __init__(self, str filename=None):
+        if filename:
+            self._filename = filename
+            if os.path.exists(filename):
+                self.data.load(filename.encode('utf-8'))
+            else:
+                raise IOError("No such file: " + filename)
         else:
-            raise IOError("No such file: " + filename)
+            self._filename = ""
 
     def __len__(self):
         """Returns the total number of classes"""
