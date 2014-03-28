@@ -109,7 +109,7 @@ def covered(self, indexreference):
 def reverseindex_bysentence(self, int sentence):
     """Generator over all patterns occurring in the specified sentence
 
-    :param indexreference: a (sentence, tokenoffset) tuple
+    :param sentence: a sentence number
     """
 
     cdef vector[cPattern] results = self.data.getreverseindex_bysentence(sentence)

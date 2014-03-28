@@ -334,6 +334,10 @@ class PatternModel: public MapType, public PatternModelInterface {
                     Pattern line = Pattern(in);
                     sentence++;
                     if (in->eof()) break;
+                    if (line.size() == 0) {
+                        std::cerr << "Warning: sentence " << sentence << " is an empty line...skipping" << endl;
+                        continue;
+                    }
                     if (n==1) totaltokens += line.size();
                     ngrams.clear();
                     if (options.DOPATTERNPERLINE) {
