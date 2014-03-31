@@ -38,10 +38,10 @@ void usage() {
     cerr << "\t-t <number>      Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
     cerr << "\t-u               Build an unindexed model (default is indexed)" << endl;    
     cerr << "\t-l <number>      Maximum pattern length (default: 100)" << endl;
-    cerr << "\t-s               Compute fixed-size skip-grams (costs extra memory and time)" << endl;    
-    cerr << "\t-T <number>      Skip type threshold (for use with -s): only fixed skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, unindexed models always act as if fixed to 1). Also note that only types that occur above the occurrent threshold (-t) are counted here! Requires indexed models" << endl;
-    cerr << "\t-S S             Compute dynamic-size skip-grams by abstracting over fixed-size skipgrams (implies -s)." << endl; 
-    cerr << "\t-S <number>      Compute dynamic-size skip-grams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
+    cerr << "\t-s               Compute skipgrams (costs extra memory and time)" << endl;    
+    cerr << "\t-T <number>      Skip type threshold (for use with -s): only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, unindexed models always act as if fixed to 1). Also note that only types that occur above the occurrent threshold (-t) are counted here! Requires indexed models" << endl;
+    cerr << "\t-S S             Compute flexgrams by abstracting over skipgrams (implies -s)." << endl; 
+    cerr << "\t-S <number>      Compute flexgrams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
     cerr << "\t-L               Input data file (-f) is a list of one pattern per line. No subgrams will be stored, implies -t 1" <<endl;
     cerr << " Viewing a model:  colibri-patternmodeller -i [modelfile] -c [classfile] -[PRHQ]" << endl;
     cerr << "\t-P               Print the entire model" << endl;
@@ -54,10 +54,10 @@ void usage() {
     //cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
     cerr << "Editing a model:  colibri-patternmodeller -o [modelfile] -i [modelfile]" << endl;
-    cerr << "\t-x               Delete all fixed-size skipgrams from the model" << endl;    
-    cerr << "\t-X               Delete all dynamic-size skipgrams from the model" << endl;    
+    cerr << "\t-x               Delete all skipgrams from the model" << endl;    
+    cerr << "\t-X               Delete all flexgrams from the model" << endl;    
     cerr << "\t-N               Delete all ngrams from the model" << endl;    
-    cerr << "\tOptions -tlT can be used to filter the model, -u can be used to remove the index, -j can be used to take the intersection with another model, -S to compute and add dynamic width-skipgrams" << endl;
+    cerr << "\tOptions -tlT can be used to filter the model, -u can be used to remove the index, -j can be used to take the intersection with another model, -S to compute and add flexgrams" << endl;
     cerr << "Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
 }
 
