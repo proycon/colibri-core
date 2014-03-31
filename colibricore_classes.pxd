@@ -218,6 +218,9 @@ cdef extern from "patternmodel.h":
         bool DEBUG
         bool QUIET
         bool DOPATTERNPERLINE
+        bool DOREMOVENGRAMS
+        bool DOREMOVESKIPGRAMS
+        bool DOREMOVEFLEXGRAMS
 
     cdef cppclass IndexedDataHandler:
         int count(IndexedData &)

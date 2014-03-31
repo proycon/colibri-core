@@ -768,6 +768,14 @@ cdef class PatternModelOptions:
             self.coptions.MINSKIPTYPES = value
         elif key == 'DOREVERSEINDEX':
             self.coptions.DOREVERSEINDEX = value
+        elif key == 'DOPATTERNPERLINE':
+            self.coptions.DOPATTERNPERLINE = value
+        elif key == 'DOREMOVENGRAMS':
+            self.coptions.DOREMOVENGRAMS = value
+        elif key == 'DOREMOVESKIPGRAMS':
+            self.coptions.DOREMOVESKIPGRAMS = value
+        elif key == 'DOREMOVEFLEXGRAMS':
+            self.coptions.DOREMOVEFLEXGRAMS = value
         elif key == 'DEBUG':
             self.coptions.DEBUG = value
         elif key == 'QUIET':
@@ -788,6 +796,14 @@ cdef class PatternModelOptions:
             return self.coptions.MINSKIPTYPES
         elif key == 'DOREVERSEINDEX':
             return self.coptions.DOREVERSEINDEX
+        elif key == 'DOPATTERNPERLINE':
+            return self.coptions.DOPATTERNPERLINE
+        elif key == 'DOREMOVENGRAMS':
+            return self.coptions.DOREMOVENGRAMS
+        elif key == 'DOREMOVESKIPGRAMS':
+            return self.coptions.DOREMOVESKIPGRAMS
+        elif key == 'DOREMOVEFLEXGRAMS':
+            return self.coptions.DOREMOVEFLEXGRAMS
         elif key == 'DEBUG':
             return self.coptions.DEBUG
         elif key == 'QUIET':

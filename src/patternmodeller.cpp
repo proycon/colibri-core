@@ -51,13 +51,14 @@ void usage() {
     cerr << "\t-q               Query a pattern (may be specified multiple times!)" << endl; 
     cerr << "\t-r               Compute and show relationships for the specified patterns (use with -q or -Q). Relationships are: subsumptions, neigbours, skipcontent. Only for indexed models." << endl; 
     cerr << "\t-C <threshold>   Compute and show co-occurrence counts above the specified threshold [-1,1] (normalised pointwise mutual information). Only for indexed models." << endl;
+    cerr << "\t-m <number>      Minimum pattern length (default: 1)" << endl;
     //cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
     cerr << "Editing a model:  colibri-patternmodeller -o [modelfile] -i [modelfile]" << endl;
     cerr << "\t-x               Delete all skipgrams from the model" << endl;    
     cerr << "\t-X               Delete all flexgrams from the model" << endl;    
     cerr << "\t-N               Delete all ngrams from the model" << endl;    
-    cerr << "\tOptions -tlT can be used to filter the model, -u can be used to remove the index, -j can be used to take the intersection with another model, -S to compute and add flexgrams" << endl;
+    cerr << "\tOptions -tlTm can be used to filter the model, -u can be used to remove the index, -j can be used to take the intersection with another model, -S to compute and add flexgrams" << endl;
     cerr << "Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
 }
 
@@ -202,9 +203,6 @@ int main( int argc, char *argv[] ) {
     bool DOFLEXFROMCOOC = false;
     double COOCTHRESHOLD = 0;
     bool DOCOOC = false;
-    bool DOREMOVEFIXEDSKIPGRAMS = false;
-    bool DOREMOVEDYNAMICSKIPGRAMS = false;
-    bool DOREMOVENGRAMS = false;
     char c;    
     while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:rGS:xXNC:L")) != -1)
         switch (c)
@@ -274,13 +272,13 @@ int main( int argc, char *argv[] ) {
             COOCTHRESHOLD = atof(optarg);
             break;
         case 'x':
-            DOREMOVEFIXEDSKIPGRAMS = true;
+            options.DOREMOVESKIPGRAMS = true;
             break;
         case 'X':
-            DOREMOVEDYNAMICSKIPGRAMS = true;
+            options.DOREMOVEFLEXGRAMS = true;
             break;
         case 'N':
-            DOREMOVENGRAMS = true;
+            options.DOREMOVENGRAMS = true;
             break;
         case 'L':
             options.DOPATTERNPERLINE = true;

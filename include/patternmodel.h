@@ -121,6 +121,7 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
 class PatternModelOptions {
     public:
         int MINTOKENS;
+        int MINLENGTH;
         int MAXLENGTH;
         
         bool DOSKIPGRAMS;
@@ -130,12 +131,16 @@ class PatternModelOptions {
         bool DOREVERSEINDEX;
         bool DOPATTERNPERLINE;
 
+        bool DOREMOVENGRAMS;
+        bool DOREMOVESKIPGRAMS;
+        bool DOREMOVEFLEXGRAMS;
 
         bool QUIET;
         bool DEBUG;
 
         PatternModelOptions() {
             MINTOKENS = -1; //defaults to 2 for building, 1 for loading
+            MINLENGTH = 1;
             MAXLENGTH = 100;
 
             MINSKIPTYPES = 2;
@@ -144,6 +149,10 @@ class PatternModelOptions {
 
             DOREVERSEINDEX = true; //only for indexed models
             DOPATTERNPERLINE = false;
+
+            DOREMOVENGRAMS = false;
+            DOREMOVESKIPGRAMS = false;
+            DOREMOVEFLEXGRAMS = false;
 
             DEBUG = false;
             QUIET = false;
@@ -277,12 +286,12 @@ class PatternModel: public MapType, public PatternModelInterface {
 
             if ((model_type == INDEXEDPATTERNMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) {
                 //reading indexed pattern model as unindexed, ok:
-                 MapType::template read<IndexedData,IndexedDataHandler>(f, options.MINTOKENS);
+                 MapType::template read<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
             } else if ((model_type == UNINDEXEDPATTERNMODEL) && (this->getmodeltype() == INDEXEDPATTERNMODEL)) {
-                std::cerr << "ERROR: PAttern model is unindexed, unable to read as indexed" << std::endl;
+                std::cerr << "ERROR: Pattern model is unindexed, unable to read as indexed" << std::endl;
                 throw InternalError();
             } else {
-                 MapType::template read(f, options.MINTOKENS); //read PatternStore
+                 MapType::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS); //read PatternStore
             }
             this->postread(options);
         }

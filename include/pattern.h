@@ -615,7 +615,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
 
 
         template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler>
-        void read(std::istream * in, int MINTOKENS=0) {
+        void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
@@ -628,20 +628,27 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                     std::cerr << "ERROR: Exception occurred at pattern " << (i+1) << " of " << s << std::endl;
                     throw InternalError();
                 }
-                ReadValueType readvalue;
-                //std::cerr << "Read pattern: " << std::endl;
-                readvaluehandler.read(in, readvalue);
-                if (readvaluehandler.count(readvalue) >= MINTOKENS) {
-                        ValueType convertedvalue;
-                        readvaluehandler.convertto(readvalue, convertedvalue); 
-                        this->insert(p,convertedvalue);
+                if (!DONGRAMS || !DOSKIPGRAMS || !DOFLEXGRAMS) {
+                    const PatternCategory c = p.category();
+                    if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
+                }
+                const int n = p.size();
+                if (n >= MINLENGTH && n <= MAXLENGTH)  {
+                    ReadValueType readvalue;
+                    //std::cerr << "Read pattern: " << std::endl;
+                    readvaluehandler.read(in, readvalue);
+                    if (readvaluehandler.count(readvalue) >= MINTOKENS) {
+                            ValueType convertedvalue;
+                            readvaluehandler.convertto(readvalue, convertedvalue); 
+                            this->insert(p,convertedvalue);
+                    }
                 }
             }
         }
 
-        void read(std::string filename,int MINTOKENS=0) { //no templates for this one, easier on python/cython
+        void read(std::string filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) { //no templates for this one, easier on python/cython
             std::ifstream * in = new std::ifstream(filename.c_str());
-            this->read<ValueType,ValueHandler>(in);
+            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS);
             in->close();
             delete in;
         }
@@ -702,12 +709,19 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
             }
         }
 
-        void read(std::istream * in) {
+        void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             for (unsigned int i = 0; i < s; i++) {
                 Pattern p = Pattern(in);
-                insert(p);
+                if (!DONGRAMS || !DOSKIPGRAMS || !DOFLEXGRAMS) {
+                    const PatternCategory c = p.category();
+                    if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
+                }
+                const int n = p.size();
+                if (n >= MINLENGTH && n <= MAXLENGTH)  {
+                    insert(p);
+                }
             }
         }
 
@@ -759,12 +773,19 @@ class OrderedPatternSet: public PatternStore<t_orderedpatternset,ReadWriteSizeTy
             }
         }
 
-        void read(std::istream * in) {
+        void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             for (unsigned int i = 0; i < s; i++) {
                 Pattern p = Pattern(in);
-                insert(p);
+                if (!DONGRAMS || !DOSKIPGRAMS || !DOFLEXGRAMS) {
+                    const PatternCategory c = p.category();
+                    if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
+                }
+                const int n = p.size();
+                if (n >= MINLENGTH && n <= MAXLENGTH)  {
+                    insert(p);
+                }
             }
         }
 
