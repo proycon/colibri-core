@@ -58,7 +58,7 @@ void usage() {
     cerr << "\t-x               Delete all skipgrams from the model" << endl;    
     cerr << "\t-X               Delete all flexgrams from the model" << endl;    
     cerr << "\t-N               Delete all ngrams from the model" << endl;    
-    cerr << "\tOptions -tlTm can be used to filter the model, -u can be used to remove the index, -j can be used to take the intersection with another model, -S to compute and add flexgrams" << endl;
+    cerr << "\tOptions -tlTmxXN can be used to filter the model, -u can be used to remove the index, -j can be used to take the intersection with another model, -S to compute and add flexgrams" << endl;
     cerr << "Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
 }
 
