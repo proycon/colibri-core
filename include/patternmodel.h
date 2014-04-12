@@ -423,7 +423,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     sentence++;
                     if (in->eof()) break;
                     if (line.size() == 0) {
-                        std::cerr << "Warning: sentence " << sentence << " is an empty line...skipping" << std::endl;
+                        //std::cerr << "Warning: sentence " << sentence << " is an empty line...skipping" << std::endl;
                         continue;
                     }
                     if (n==1) totaltokens += line.size();
