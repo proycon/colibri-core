@@ -916,8 +916,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                 totalkeybs += pattern.bytesize();
                 totalvaluebs += sizeof(ValueType); 
             }            
-            *OUT << "Total key bytesize (patterns): " << totalkeybs << std::endl;
-            *OUT << "Total value bytesize (counts/index): " << totalvaluebs << std::endl;
+            *OUT << "Total key bytesize (patterns): " << totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
+            *OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
 
             int ri_totalkeybs = 0;
             int ri_totalvaluebs = 0;
@@ -925,8 +925,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                 ri_totalkeybs += sizeof(iter->first.sentence) + sizeof(iter->first.token);
                 ri_totalvaluebs += iter->second.bytesize();
             }
-            *OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << std::endl;
-            *OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << std::endl;
+            *OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
+            *OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
 
             *OUT << "Total bytesize (without overhead): " << (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs) << std::endl;
         }
