@@ -353,7 +353,7 @@ int main( int argc, char *argv[] ) {
 
         bool didsomething = false;
         if ((inputmodelfile.empty()) && (corpusfile.empty())) {
-            cerr << "ERROR: No input model (-i) or corpus data file specified (-f), specify at least one." << classfile << endl;
+            cerr << "ERROR: No input model (-i) or corpus data file specified (-f), specify at least one. Issue colibri-patternmodeller -h for extensive usage options" << classfile << endl;
             exit(2);
         }
 
