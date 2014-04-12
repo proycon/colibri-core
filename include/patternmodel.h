@@ -894,6 +894,32 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
 
+        void info(std::ostream * OUT) {
+            if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
+                *OUT << "Type: indexed" << std::endl;
+            } else if (this->getmodeltype() == UNINDEXEDPATTERNMODEL) {
+                *OUT << "Type: unindexed" << std::endl;
+            } else {
+                //should never happen
+                *OUT << "Type: unknown" << std::endl;
+            }
+            *OUT << "Tokens: " << this->totaltokens << std::endl;
+            *OUT << "Types: " << this->totaltypes << std::endl;
+            *OUT << "Min n: " << this->minn << std::endl;
+            *OUT << "Max n: " << this->maxn << std::endl;
+            *OUT << "References in reverse index: " << this->reverseindex.size() << std::endl;
+            int totalpatternbytesize = 0;
+            int totaldatabytesize = 0;
+            for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
+                const Pattern pattern = iter->first;   
+                totalpatternbytesize += pattern.bytesize();
+                totaldatabytesize += sizeof(ValueType); 
+            }
+            *OUT << "Total pattern bytesize: " << totalpatternbytesize << std::endl;
+            *OUT << "Total data bytesize: " << totaldatabytesize << std::endl;
+            *OUT << "Total bytesize (without overhead): " << (totalpatternbytesize + totaldatabytesize) << std::endl;
+        }
+
         void report(std::ostream * OUT) {
             if ((cache_grouptotaltokens.empty()) && (!this->data.empty())) {
                 std::cerr << "Computing statistics..." << std::endl;
@@ -1062,6 +1088,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
     
+
+
+
+
     void print(std::ostream * out, ClassDecoder & decoder) {
         *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY\tREFERENCES" << std::endl;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {

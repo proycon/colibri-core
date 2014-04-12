@@ -106,8 +106,8 @@ class Root:
 
         html = "<html><head><title>Colibri PatternGraphView</title>"
         html += "<meta charset=\"utf-8\">"
-        html += "<script src=\"http://sigmajs.org/js/sigma.min.js\"></script>"
-        html += "<script src=\"http://sigmajs.org/js/sigma.forceatlas2.js\"></script>"
+        html += "<script src=\"http://sigmajs.org/assets/js/sigma.min.js\"></script>"
+        #html += "<script src=\"http://sigmajs.org/js/sigma.forceatlas2.js\"></script>"
         html += "<script src=\"http://code.jquery.com/jquery-1.10.1.min.js\"></script>"
         html += "</head>"
         html += "<script type=\"text/javascript\">" + jscode + "</script>"
@@ -121,8 +121,8 @@ class Root:
     def index(self):
         html = "<html><head><title>Colibri PatternGraphView</title>"
         html += "<meta charset=\"utf-8\">"
-        html += "<script src=\"http://sigmajs.org/js/sigma.min.js\"></script>"
-        html += "<script src=\"http://sigmajs.org/js/sigma.forceatlas2.js\"></script>"
+        html += "<script src=\"http://sigmajs.org/assets/js/sigma.min.js\"></script>"
+        #html += "<script src=\"http://sigmajs.org/js/sigma.forceatlas2.js\"></script>"
         html += "<script src=\"http://code.jquery.com/jquery-1.10.1.min.js\"></script>"
         html += "</head>"
         html += "<body><div id=\"graph\"></div><form action=\"/query/\" method=\"post\"><input name=\"pattern\" /><input type=\"submit\"></form></body></html>";

@@ -47,6 +47,7 @@ void usage() {
     cerr << "\t-P               Print the entire model" << endl;
     cerr << "\t-R               Generate a (statistical/coverage) report" << endl;
     cerr << "\t-H               Generate a histogram" << endl;   
+    cerr << "\t-I               Storage information" << endl;   
     cerr << "\t-Q               Start interactive query mode, allows for pattern lookup against the loaded model (input from standard input)" << endl; 
     cerr << "\t-q               Query a pattern (may be specified multiple times!)" << endl; 
     cerr << "\t-r               Compute and show relationships for the specified patterns (use with -q or -Q). Relationships are: subsumptions, neigbours, skipcontent. Only for indexed models." << endl; 
@@ -135,7 +136,7 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
 
 
 template<class ModelType = IndexedPatternModel<>>
-bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations, bool cooc, double coocthreshold = 0.1) {
+bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations, bool info, bool cooc, double coocthreshold = 0.1) {
     if (print) {
         if (classdecoder == NULL) {
             cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
@@ -159,7 +160,10 @@ bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
             querymodel<ModelType>(model, classencoder, classdecoder, relations); 
         }
     }
-    return (print || report || histogram || query);
+    if (info) {
+        model.info(&cout);
+    }
+    return (print || report || histogram || query || info);
 }
 
 template<class A,class B,class C>
@@ -198,13 +202,14 @@ int main( int argc, char *argv[] ) {
     bool DOHISTOGRAM = false;
     bool DOPRINT = false;
     bool DORELATIONS = false;
+    bool DOINFO = false;
     bool DEBUG = false;
     bool DOFLEXFROMSKIP = false;
     bool DOFLEXFROMCOOC = false;
     double COOCTHRESHOLD = 0;
     bool DOCOOC = false;
     char c;    
-    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:rGS:xXNC:L")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:rGS:xXNIC:L")) != -1)
         switch (c)
         {
         case 'c':
@@ -282,6 +287,9 @@ int main( int argc, char *argv[] ) {
             break;
         case 'L':
             options.DOPATTERNPERLINE = true;
+            break;
+        case 'I':
+            DOINFO = true;
             break;
         case 'G':
             cerr << "Option -G NOT IMPLEMENTED YET!" << endl;
@@ -377,7 +385,7 @@ int main( int argc, char *argv[] ) {
             didsomething = true;
             inputmodel.write(outputmodelfile);
         }
-        didsomething = viewmodel<IndexedPatternModel<>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOCOOC) || didsomething; 
+        didsomething = viewmodel<IndexedPatternModel<>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOCOOC) || didsomething; 
         if (!querypatterns.empty()) {
             didsomething = true;
             processquerypatterns<IndexedPatternModel<>>(inputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
@@ -399,7 +407,7 @@ int main( int argc, char *argv[] ) {
             didsomething = true;
             inputmodel.write(outputmodelfile);
         }
-        didsomething = viewmodel<PatternModel<uint32_t>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOCOOC) || didsomething; 
+        didsomething = viewmodel<PatternModel<uint32_t>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS , DOINFO, DOCOOC) || didsomething; 
         if (!querypatterns.empty()) {
             didsomething = true;
             processquerypatterns<PatternModel<uint32_t>>(inputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
@@ -439,7 +447,7 @@ int main( int argc, char *argv[] ) {
                 outputmodel.write(outputmodelfile);
                 didsomething = true;
             }
-            didsomething = viewmodel<IndexedPatternModel<>>(outputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS,DOCOOC) || didsomething; 
+            didsomething = viewmodel<IndexedPatternModel<>>(outputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS,DOCOOC, DOINFO) || didsomething; 
             if (!querypatterns.empty()) {
                 didsomething = true;
                 processquerypatterns<IndexedPatternModel<>>(outputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
@@ -459,7 +467,7 @@ int main( int argc, char *argv[] ) {
                 outputmodel.write(outputmodelfile);
                 didsomething = true;
             }
-            didsomething = viewmodel<PatternModel<uint32_t>>(outputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS,DOCOOC) || didsomething; 
+            didsomething = viewmodel<PatternModel<uint32_t>>(outputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO,DOCOOC) || didsomething; 
             if (!querypatterns.empty()) {
                 didsomething = true;
                 processquerypatterns<PatternModel<uint32_t>>(outputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
