@@ -903,21 +903,32 @@ class PatternModel: public MapType, public PatternModelInterface {
                 //should never happen
                 *OUT << "Type: unknown" << std::endl;
             }
-            *OUT << "Tokens: " << this->totaltokens << std::endl;
-            *OUT << "Types: " << this->totaltypes << std::endl;
+            *OUT << "Total tokens: " << this->totaltokens << std::endl;
+            *OUT << "Total types: " << this->totaltypes << std::endl;
+            *OUT << "Types loaded: " << this->size() << std::endl;
             *OUT << "Min n: " << this->minn << std::endl;
             *OUT << "Max n: " << this->maxn << std::endl;
             *OUT << "References in reverse index: " << this->reverseindex.size() << std::endl;
-            int totalpatternbytesize = 0;
-            int totaldatabytesize = 0;
+            int totalkeybs = 0;
+            int totalvaluebs = 0;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;   
-                totalpatternbytesize += pattern.bytesize();
-                totaldatabytesize += sizeof(ValueType); 
+                totalkeybs += pattern.bytesize();
+                totalvaluebs += sizeof(ValueType); 
+            }            
+            *OUT << "Total key bytesize (patterns): " << totalkeybs << std::endl;
+            *OUT << "Total value bytesize (counts/index): " << totalvaluebs << std::endl;
+
+            int ri_totalkeybs = 0;
+            int ri_totalvaluebs = 0;
+            for (std::multimap<IndexReference,Pattern>::iterator iter = this->reverseindex.begin(); iter != this->reverseindex.end(); iter++) {
+                ri_totalkeybs += sizeof(iter->first.sentence) + sizeof(iter->first.token);
+                ri_totalvaluebs += iter->second.bytesize();
             }
-            *OUT << "Total pattern bytesize: " << totalpatternbytesize << std::endl;
-            *OUT << "Total data bytesize: " << totaldatabytesize << std::endl;
-            *OUT << "Total bytesize (without overhead): " << (totalpatternbytesize + totaldatabytesize) << std::endl;
+            *OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << std::endl;
+            *OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << std::endl;
+
+            *OUT << "Total bytesize (without overhead): " << (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs) << std::endl;
         }
 
         void report(std::ostream * OUT) {
