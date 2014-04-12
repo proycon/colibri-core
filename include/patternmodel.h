@@ -917,7 +917,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 totalvaluebs += sizeof(ValueType); 
             }            
             *OUT << "Total key bytesize (patterns): " << totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
-            *OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
+            *OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
 
             int ri_totalkeybs = 0;
             int ri_totalvaluebs = 0;
@@ -1126,7 +1126,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             totalvaluebs += iter->second.size() * (4+2); //sentence + token; 
         }            
         *OUT << "Total key bytesize (patterns): " << totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
-        *OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
+        *OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
 
         int ri_totalkeybs = 0;
         int ri_totalvaluebs = 0;
