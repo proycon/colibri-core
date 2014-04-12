@@ -534,7 +534,8 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     void add(ValueType * value, const IndexReference & ref ) const {
         *value = *value + 1;
     }
-    //virtual void convertto(ValueType & source, IndexedData & target ) const { }; //this doesn't convert either, it returns a totally EMPTY indexeddata, allowing unindexed models to be read as indexed, but losing all counts!
+    void convertto(ValueType & source, ValueType & target ) const { if (&source != &target) target = source; }; //this doesn't really convert as source and target are same type, but it is required!
+    void convertto(ValueType & source, IndexedData & target ) const { }; //this doesn't convert either, it returns a totally EMPTY indexeddata, allowing unindexed models to be read as indexed, but losing all counts!
 };
 
 
