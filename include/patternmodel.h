@@ -928,7 +928,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
             *OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
 
-            *OUT << "Total bytesize (without overhead): " << (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs) << std::endl;
+            const int t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
+            *OUT << "Total bytesize (without overhead): " << t << std::endl;
         }
 
         void report(std::ostream * OUT) {
