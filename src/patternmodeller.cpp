@@ -288,6 +288,7 @@ int main( int argc, char *argv[] ) {
             break;
         case 'I':
             DOINPLACEREBUILD = true;
+            break;
         case 'V':
             DOINFO = true;
             break;
@@ -354,7 +355,7 @@ int main( int argc, char *argv[] ) {
 
         bool didsomething = false;
         if ((inputmodelfile.empty()) && (corpusfile.empty())) {
-            cerr << "ERROR: No input model (-i) or corpus data file specified (-f), specify at least one." << classfile << endl;
+            cerr << "ERROR: No input model (-i) or corpus data file specified (-f), specify at least one. Issue colibri-patternmodeller -h for extensive usage options" << classfile << endl;
             exit(2);
         }
 
@@ -410,6 +411,7 @@ int main( int argc, char *argv[] ) {
 
 
         if (DOINPLACEREBUILD) {
+            cerr << "In-place rebuild (-I) enabled" << corpusfile <<endl;
 
             if (corpusfile.empty()) {
                 cerr << "ERROR: Corpus data file (-f) must be specified when -I is set!." << classfile << endl;
@@ -489,6 +491,7 @@ int main( int argc, char *argv[] ) {
             }
             
             if (!outputmodelfile.empty()) {
+                cerr << "Writing model to " << outputmodelfile << endl;
                 didsomething = true;
                 inputmodel.write(outputmodelfile);
             }
@@ -515,6 +518,7 @@ int main( int argc, char *argv[] ) {
             }
 
             if (!outputmodelfile.empty()) {
+                cerr << "Writing model to " << outputmodelfile << endl;
                 didsomething = true;
                 inputmodel.write(outputmodelfile);
             }
