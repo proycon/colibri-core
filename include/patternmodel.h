@@ -892,6 +892,10 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         template<class ValueType2,class ValueHandler2,class MapType2>
         int prunebymodel(PatternModel<ValueType2,ValueHandler2,MapType2> & secondmodel) {
+            //is not used by default when working with constraint models
+            //anymore, is directly processing during loading instead
+            //
+            //this is still useful if you have two models in memory though
             int pruned = 0;
             typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); 
             while(iter != this->end()) { 
