@@ -287,6 +287,7 @@ int main( int argc, char *argv[] ) {
             break;
         case 'I':
             DOINPLACEREBUILD = true;
+            break;
         case 'V':
             DOINFO = true;
             break;
@@ -409,6 +410,7 @@ int main( int argc, char *argv[] ) {
 
 
         if (DOINPLACEREBUILD) {
+            cerr << "In-place rebuild (-I) enabled" << corpusfile <<endl;
 
             if (corpusfile.empty()) {
                 cerr << "ERROR: Corpus data file (-f) must be specified when -I is set!." << classfile << endl;
@@ -488,6 +490,7 @@ int main( int argc, char *argv[] ) {
             }
             
             if (!outputmodelfile.empty()) {
+                cerr << "Writing model to " << outputmodelfile << endl;
                 didsomething = true;
                 inputmodel.write(outputmodelfile);
             }
@@ -514,6 +517,7 @@ int main( int argc, char *argv[] ) {
             }
 
             if (!outputmodelfile.empty()) {
+                cerr << "Writing model to " << outputmodelfile << endl;
                 didsomething = true;
                 inputmodel.write(outputmodelfile);
             }
