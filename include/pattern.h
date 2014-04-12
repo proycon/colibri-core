@@ -489,6 +489,9 @@ class IndexedCorpus {
 
 /************* ValueHandler for reading/serialising basic types ********************/
 
+//forward declaration for later
+class IndexedData;
+
 /*
  * Value handler deal are interfaces to the values in Pattern Maps. They are
  * used to abstract from the actual value data type and provide some common
@@ -531,7 +534,91 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     void add(ValueType * value, const IndexReference & ref ) const {
         *value = *value + 1;
     }
+    //virtual void convertto(ValueType & source, IndexedData & target ) const { }; //this doesn't convert either, it returns a totally EMPTY indexeddata, allowing unindexed models to be read as indexed, but losing all counts!
 };
+
+
+/************* ValueHandler for reading/serialising indexed types ********************/
+
+
+class IndexedData {
+   protected:
+    std::set<IndexReference> data;
+   public:
+    IndexedData() {};
+    IndexedData(std::istream * in);
+    void write(std::ostream * out) const; 
+    
+    bool has(const IndexReference & ref) const { return data.count(ref); }
+    int count() const { return data.size(); }
+
+    void insert(IndexReference ref) { data.insert(ref); }
+    size_t size() const { return data.size(); }
+
+    typedef std::set<IndexReference>::iterator iterator;
+    typedef std::set<IndexReference>::const_iterator const_iterator;
+    
+    iterator begin() { return data.begin(); }
+    const_iterator begin() const { return data.begin(); }
+
+    iterator end() { return data.end(); }
+    const_iterator end() const { return data.end(); }
+
+    iterator find(const IndexReference & ref) { return data.find(ref); }
+    const_iterator find(const IndexReference & ref) const { return data.find(ref); }    
+
+    std::set<int> sentences() const {
+        std::set<int> sentences;
+        for (iterator iter = this->begin(); iter != this->end(); iter++) {
+            const IndexReference ref = *iter;
+            sentences.insert(ref.sentence); 
+        }
+        return sentences;
+    }
+    friend class IndexedDataHandler;
+};
+
+class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
+   public:
+    const static bool indexed = true;
+    virtual std::string id() { return "PatternStoreValueHandler"; }
+    void read(std::istream * in, IndexedData & v) {
+        uint32_t c;
+        in->read((char*) &c, sizeof(uint32_t));
+        for (unsigned int i = 0; i < c; i++) {
+            IndexReference ref = IndexReference(in);
+            v.insert(ref);
+        }
+    }
+    void write(std::ostream * out, IndexedData & value) {
+        const uint32_t c = value.count();
+        out->write((char*) &c, sizeof(uint32_t));
+        for (std::set<IndexReference>::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
+            iter->write(out);
+        }
+    }
+    virtual std::string tostring(IndexedData & value) {
+        std::string s = "";
+        for (std::set<IndexReference>::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
+            if (!s.empty()) s += " ";
+            s += iter->tostring();
+        }
+        return s;
+    }
+    int count(IndexedData & value) const {
+        return value.data.size();
+    }
+    void add(IndexedData * value, const IndexReference & ref ) const {
+        if (value == NULL) {
+            std::cerr << "ValueHandler: Value is NULL!" << std::endl;
+            throw InternalError();
+        }
+        value->insert(ref);
+    }
+    void convertto(IndexedData & source , IndexedData & target) const { if (&source != &target) target = source;  }; //noop
+    void convertto(IndexedData & value, unsigned int & convertedvalue) const { convertedvalue = value.count(); };
+};
+
 
 /************* Base abstract container for pattern storage  ********************/
 

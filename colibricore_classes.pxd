@@ -171,6 +171,18 @@ cdef extern from "pattern.h":
         void read(string filename) nogil
         void write(string filename) nogil
 
+    cdef cppclass IndexedData:
+        cppclass iterator:
+            IndexReference& operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        bool has(IndexReference& ref)
+
+
     extern Pattern SKIPPATTERN
     extern Pattern FLEXPATTERN
     extern Pattern BEGINPATTERN
@@ -197,17 +209,6 @@ cdef extern from "classencoder.h":
         Pattern buildpattern(string, bool allowunknown, bool autoaddunknown) nogil
 
 cdef extern from "patternmodel.h":
-    cdef cppclass IndexedData:
-        cppclass iterator:
-            IndexReference& operator*() nogil
-            iterator operator++() nogil
-            bint operator==(iterator) nogil
-            bint operator!=(iterator) nogil
-        size_t size() nogil
-        iterator begin() nogil
-        iterator end() nogil
-        bool has(IndexReference& ref)
-
     cdef cppclass PatternModelOptions:
         int MINTOKENS
         int MAXLENGTH
