@@ -156,6 +156,23 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             model_version = this->getmodelversion();
             this->load(f,options);
         }
+        PatternSetModel(const std::string filename, const PatternModelOptions options) { //load from file
+            totaltokens = 0;
+            totaltypes = 0;
+            maxn = 0;
+            minn = 999;
+            model_type = this->getmodeltype();
+            model_version = this->getmodelversion();
+            if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
+            std::ifstream * in = new std::ifstream(filename.c_str());
+            if (!in->good()) {
+                std::cerr << "ERROR: Unable to load file " << filename << std::endl;
+                throw InternalError();
+            }
+            this->load( (std::istream *) in, options);
+            in->close();
+            delete in;
+        }
         virtual int getmodeltype() const { return PATTERNSETMODEL; }
         virtual int getmodelversion() const { return 1; }
 
@@ -211,6 +228,22 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         PatternModelInterface * getinterface() {
             return (PatternModelInterface*) this;
         }
+
+        //these are useless in set context, they always return 0
+        virtual int occurrencecount(const Pattern & pattern) { return 0;  }
+        virtual double frequency(const Pattern &) { return 0; }
+
+        typedef typename PatternSet<uint64_t>::iterator iterator;
+        typedef typename PatternSet<uint64_t>::const_iterator const_iterator;        
+
+        virtual int maxlength() const { return maxn; };
+        virtual int minlength() const { return minn; };
+        
+        int types() const { return totaltypes; }
+        int tokens() const { return totaltokens; }
+
+        unsigned char type() const { return model_type; }
+        unsigned char version() const { return model_version; }
 };
 
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class MapType = PatternMap<ValueType, BaseValueHandler<ValueType>>>

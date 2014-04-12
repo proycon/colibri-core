@@ -433,11 +433,13 @@ int main( int argc, char *argv[] ) {
         constrainoptions.DOREVERSEINDEX = false;
         constrainoptions.DOREMOVEINDEX = false;
         if (!inputmodelfile2.empty()) {
-            if (inputmodeltype2 == INDEXEDPATTERNMODEL) {
-                constrainbymodel = new IndexedPatternModel<>(inputmodelfile2, constrainoptions);
+            constrainbymodel = new PatternSetModel(inputmodelfile2, constrainoptions);
+            /*if (inputmodeltype2 == INDEXEDPATTERNMODEL) {
+                //constrainbymodel = new IndexedPatternModel<>(inputmodelfile2, constrainoptions);
+                constrainbymodel = new PatternSetModel(inputmodelfile2, constrainoptions);
             } else if (inputmodeltype2 != INDEXEDPATTERNMODEL) {
                 constrainbymodel = new PatternModel<uint32_t>(inputmodelfile2, constrainoptions);
-            }
+            }*/
         }
 
 
