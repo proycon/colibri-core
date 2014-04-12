@@ -348,15 +348,17 @@ int main( int argc, char *argv[] ) {
         }
     }
     
-    int inputmodeltype2 = 0;
-    if (!inputmodelfile2.empty()) {
-        inputmodeltype2 = getmodeltype(inputmodelfile2);
-        if ((inputmodeltype2 == INDEXEDPATTERNMODEL) && (outputmodeltype == UNINDEXEDPATTERNMODEL)) {
-            cerr << "Indexed joint model will be read as unindexed because -u was set" << endl;
-            inputmodeltype2 = UNINDEXEDPATTERNMODEL; //will read indexed models as unindexed automatically
-        }
-    }
 
+    //operations without input model
+    PatternModelInterface * constrainbymodel = NULL;
+    PatternModelOptions constrainoptions = PatternModelOptions(options);
+    //indices not at all needed to constrain, don't load (saves memory)
+    constrainoptions.DOREVERSEINDEX = false;
+    constrainoptions.DOREMOVEINDEX = false;
+    if (!inputmodelfile2.empty()) {
+        cerr << "Loading constraint model (aka training/intersection model)" << endl;
+        constrainbymodel = new PatternSetModel(inputmodelfile2, constrainoptions);
+    }
 
     if ( ((outputmodeltype == UNINDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNMODEL))) {
         if (options.DOSKIPGRAMS) {
@@ -375,9 +377,13 @@ int main( int argc, char *argv[] ) {
 
     if (inputmodeltype == INDEXEDPATTERNMODEL) {
         cerr << "Loading indexed pattern model " << inputmodelfile << " as input model..."<<endl;
-        IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options);
-        if (!inputmodelfile2.empty()) prunebymodel(inputmodel, inputmodelfile2, inputmodeltype2, options);
+        IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options, constrainbymodel);
         inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
+        if (constrainbymodel) {
+            cerr << "Unloading constraint model" << endl;
+            delete constrainbymodel;
+            constrainbymodel = NULL;
+        }
 
         if (options.DOSKIPGRAMS) {
             cerr << "Computing skipgrams" << endl;
@@ -403,9 +409,13 @@ int main( int argc, char *argv[] ) {
         
     } else if (inputmodeltype == UNINDEXEDPATTERNMODEL) {
         cerr << "Loading unindexed pattern model " << inputmodelfile << " as input model..."<<endl;
-        PatternModel<uint32_t> inputmodel = PatternModel<uint32_t>(inputmodelfile, options);
+        PatternModel<uint32_t> inputmodel = PatternModel<uint32_t>(inputmodelfile, options, constrainbymodel);
+        if (constrainbymodel) {
+            cerr << "Unloading constraint model" << endl;
+            delete constrainbymodel;
+            constrainbymodel = NULL;
+        }
 
-        if (!inputmodelfile2.empty()) prunebymodel(inputmodel, inputmodelfile2, inputmodeltype2, options);
 
 
         if (options.DOSKIPGRAMS || options.DOSKIPGRAMS_EXHAUSTIVE || DOFLEXFROMSKIP){
@@ -426,15 +436,6 @@ int main( int argc, char *argv[] ) {
         cerr << "ERROR: Input model is not a valid colibri pattern model" << endl;
         exit(2);
     } else {
-        //operations without input model
-        PatternModelInterface * constrainbymodel = NULL;
-        PatternModelOptions constrainoptions = PatternModelOptions(options);
-        //indices not at all needed to constrain, don't load (saves memory)
-        constrainoptions.DOREVERSEINDEX = false;
-        constrainoptions.DOREMOVEINDEX = false;
-        if (!inputmodelfile2.empty()) {
-            constrainbymodel = new PatternSetModel(inputmodelfile2, constrainoptions);
-        }
 
 
         if (outputmodeltype == INDEXEDPATTERNMODEL) {
@@ -443,6 +444,12 @@ int main( int argc, char *argv[] ) {
                 //build new model from corpus
                 cerr << "Building new indexed model from  " << corpusfile <<endl;
                 outputmodel.train(corpusfile, options, constrainbymodel);
+            }
+            
+            if (constrainbymodel) {
+                cerr << "Unloading constraint model" << endl;
+                delete constrainbymodel;
+                constrainbymodel = NULL;
             }
 
             if (DOFLEXFROMSKIP) {
@@ -467,6 +474,11 @@ int main( int argc, char *argv[] ) {
                 //build new model from corpus
                 cerr << "Building new unindexed model from  " << corpusfile <<endl;
                 outputmodel.train(corpusfile, options, constrainbymodel);
+            }
+            if (constrainbymodel) {
+                cerr << "Unloading constraint model" << endl;
+                delete constrainbymodel;
+                constrainbymodel = NULL;
             }
             if (DOFLEXFROMSKIP) {
                 cerr << "WARNING: Can not compute flexgrams form skipgrams on unindexed models!" << endl;

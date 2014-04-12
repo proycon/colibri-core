@@ -113,19 +113,26 @@ typedef PatternMap<uint32_t> t_relationmap;
 typedef PatternMap<double> t_relationmap_double;
 
 //basic read-only interface for pattern models, abstract base class.
-class PatternModelInterface {
+class PatternModelInterface: public PatternStoreInterface {
     public:
         virtual int getmodeltype() const=0;
         virtual int getmodelversion() const=0;
-        virtual bool has(const Pattern &) const =0;
-        virtual bool has(const PatternPointer &) const =0;
-        virtual size_t size() const =0; 
+        
+        //these are already in PatternStoreInterface:
+            //virtual bool has(const Pattern &) const =0;
+            //virtual bool has(const PatternPointer &) const =0;
+            //virtual size_t size() const =0; 
+
         virtual int occurrencecount(const Pattern & pattern)=0;
         virtual double frequency(const Pattern &) =0;
         virtual int maxlength() const=0;
         virtual int minlength() const=0;
         virtual int types() const=0;
         virtual int tokens() const=0;
+
+        virtual PatternStoreInterface * getstoreinterface() {
+            return (PatternStoreInterface*) this;
+        };
 };
 
 //A pattern model based on an unordered set, does not hold data, only patterns
@@ -147,16 +154,16 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
         }
-        PatternSetModel(std::istream *f, PatternModelOptions options) { //load from file
+        PatternSetModel(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
             minn = 999;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
-            this->load(f,options);
+            this->load(f,options, constrainmodel);
         }
-        PatternSetModel(const std::string filename, const PatternModelOptions options) { //load from file
+        PatternSetModel(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -169,7 +176,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( (std::istream *) in, options);
+            this->load( (std::istream *) in, options, constrainmodel);
             in->close();
             delete in;
         }
@@ -186,19 +193,19 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             return PatternSet<uint64_t>::has(pattern);
         }
         
-        virtual void load(std::string filename, const PatternModelOptions options) {
+        virtual void load(std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
             if (!in->good()) {
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( (std::istream *) in, options);
+            this->load( (std::istream *) in, options, constrainmodel);
             in->close();
             delete in;
         }
 
-        virtual void load(std::istream * f, const PatternModelOptions options) { //load from file
+        virtual void load(std::istream * f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             char null;
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
@@ -210,15 +217,18 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             f->read( (char*) &totaltokens, sizeof(uint64_t));        
             f->read( (char*) &totaltypes, sizeof(uint64_t)); 
 
+            PatternStoreInterface * constrainstore = NULL;
+            if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
+
             if (model_type == PATTERNSETMODEL) {
                 //reading set
-                PatternSet<uint64_t>::read(f, options.MINLENGTH, options.MAXLENGTH, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS); //read PatternStore
+                PatternSet<uint64_t>::read(f, options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS); //read PatternStore
             } else if (model_type == INDEXEDPATTERNMODEL) {
                 //reading from indexed pattern model, ok:
-                 PatternSet<uint64_t>::template readmap<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
+                 PatternSet<uint64_t>::template readmap<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
             } else if (model_type == UNINDEXEDPATTERNMODEL)  {
                 //reading from unindexed pattern model, ok:
-                 PatternSet<uint64_t>::template readmap<uint32_t,BaseValueHandler<uint32_t>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
+                 PatternSet<uint64_t>::template readmap<uint32_t,BaseValueHandler<uint32_t>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
             } else {
                 std::cerr << "ERROR: Unknown model type" << std::endl;
                 throw InternalError();
@@ -285,17 +295,17 @@ class PatternModel: public MapType, public PatternModelInterface {
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
         }
-        PatternModel<ValueType,ValueHandler,MapType>(std::istream *f, PatternModelOptions options) { //load from file
+        PatternModel<ValueType,ValueHandler,MapType>(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
             minn = 999;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
-            this->load(f,options);
+            this->load(f,options,constrainmodel);
         }
 
-        PatternModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options) { //load from file
+        PatternModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -308,7 +318,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( (std::istream *) in, options);
+            this->load( (std::istream *) in, options, constrainmodel);
             in->close();
             delete in;
         }
@@ -326,19 +336,19 @@ class PatternModel: public MapType, public PatternModelInterface {
             return MapType::has(pattern);
         }
         
-        virtual void load(std::string filename, const PatternModelOptions options) {
+        virtual void load(std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
             if (!in->good()) {
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( (std::istream *) in, options);
+            this->load( (std::istream *) in, options, constrainmodel);
             in->close();
             delete in;
         }
 
-        virtual void load(std::istream * f, const PatternModelOptions options) { //load from file
+        virtual void load(std::istream * f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             char null;
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
@@ -350,14 +360,17 @@ class PatternModel: public MapType, public PatternModelInterface {
             f->read( (char*) &totaltokens, sizeof(uint64_t));        
             f->read( (char*) &totaltypes, sizeof(uint64_t)); 
 
+            PatternStoreInterface * constrainstore = NULL;
+            if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
+
             if ((model_type == INDEXEDPATTERNMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) {
                 //reading indexed pattern model as unindexed, ok:
-                 MapType::template read<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
+                 MapType::template read<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
             } else if ((model_type == UNINDEXEDPATTERNMODEL) && (this->getmodeltype() == INDEXEDPATTERNMODEL)) {
                 //reading unindexed model as indexed, this will load the patterns but lose all the counts
-                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
+                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
             } else {
-                 MapType::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS); //read PatternStore
+                 MapType::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS); //read PatternStore
             }
             this->postread(options);
         }
@@ -1111,17 +1124,17 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
     }
-    IndexedPatternModel<MapType>(std::istream *f, const PatternModelOptions options):  PatternModel<IndexedData,IndexedDataHandler,MapType>(){ //load from file
+    IndexedPatternModel<MapType>(std::istream *f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL):  PatternModel<IndexedData,IndexedDataHandler,MapType>(){ //load from file
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
-        this->load(f,options);
+        this->load(f,options, constrainmodel);
     }
 
-    IndexedPatternModel<MapType>(const std::string filename, const PatternModelOptions options): PatternModel<IndexedData,IndexedDataHandler,MapType>() { //load from file
+    IndexedPatternModel<MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType>() { //load from file
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
         std::ifstream * in = new std::ifstream(filename.c_str());
-        this->load( (std::istream *) in, options);
+        this->load( (std::istream *) in, options, constrainmodel);
         in->close();
         delete in;
     }

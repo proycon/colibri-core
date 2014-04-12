@@ -623,10 +623,17 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
 
 /************* Base abstract container for pattern storage  ********************/
 
+class PatternStoreInterface {
+    public:
+        virtual bool has(const Pattern &) const =0;
+        virtual bool has(const PatternPointer &) const =0;
+        virtual size_t size() const =0; 
+};
+
 //This is an abstract class, all Pattern storage containers are derived from
 //this. ContainerType is the low-level container type used (an STL container such as set/map). ReadWriteSizeType influences only the maximum number of items that can be stored (2**64) in the container, as this will be represented in the very beginning of the binary file. No reason to change this unless the container is very deeply nested in others and contains only few items.
 template<class ContainerType,class ReadWriteSizeType = uint64_t>
-class PatternStore {
+class PatternStore: public PatternStoreInterface {
     public:
         PatternStore<ContainerType,ReadWriteSizeType>() {};
         ~PatternStore<ContainerType,ReadWriteSizeType>() {};
@@ -651,6 +658,9 @@ class PatternStore {
         virtual void write(std::ostream * out)=0;
         //virtual void read(std::istream * in, int MINTOKENS)=0;
 
+        virtual PatternStoreInterface * getstoreinterface() {
+            return (PatternStoreInterface*) this;
+        }
 };
 
 
@@ -703,7 +713,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
 
 
         template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler>
-        void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
+        void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
@@ -725,7 +735,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                     ReadValueType readvalue;
                     //std::cerr << "Read pattern: " << std::endl;
                     readvaluehandler.read(in, readvalue);
-                    if (readvaluehandler.count(readvalue) >= MINTOKENS) {
+                    if ((readvaluehandler.count(readvalue) >= MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
                             ValueType convertedvalue;
                             readvaluehandler.convertto(readvalue, convertedvalue); 
                             this->insert(p,convertedvalue);
@@ -734,9 +744,9 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
             }
         }
 
-        void read(std::string filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) { //no templates for this one, easier on python/cython
+        void read(std::string filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) { //no templates for this one, easier on python/cython
             std::ifstream * in = new std::ifstream(filename.c_str());
-            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS);
+            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS);
             in->close();
             delete in;
         }
@@ -797,7 +807,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
             }
         }
 
-        void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
+        void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             for (unsigned int i = 0; i < s; i++) {
@@ -807,14 +817,14 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
                     if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
                 }
                 const int n = p.size();
-                if (n >= MINLENGTH && n <= MAXLENGTH)  {
+                if ((n >= MINLENGTH && n <= MAXLENGTH) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
                     insert(p);
                 }
             }
         }
 
         template<class ReadValueType, class ReadValueHandler=BaseValueHandler<ReadValueType>>
-        void readmap(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
+        void readmap(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
@@ -836,7 +846,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
                     ReadValueType readvalue;
                     //std::cerr << "Read pattern: " << std::endl;
                     readvaluehandler.read(in, readvalue);
-                    if (readvaluehandler.count(readvalue) >= MINTOKENS) {
+                    if ((readvaluehandler.count(readvalue) >= MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
                         this->insert(p);
                     }
                 }
