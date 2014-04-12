@@ -35,7 +35,7 @@ void usage() {
     cerr << "\t-c [classfile]   Class file"<< endl;
     cerr << "\t-j [modelfile]   Joined input model. Result will be the *intersection* of this (training) model and the input model or constructed model." << endl;
     cerr << " Building a model:  colibri-patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
-    cerr << "\t-2               Enable two-stage building (for indexed models), takes longer but saves a lot of memory on large corpora!!" << endl;    
+    cerr << "\t-2               Enable two-stage building (for indexed models), takes longer but saves a lot of memory on large corpora! First builds an unindexed model and reuses that (via -I) to build an indexed model" << endl;    
     cerr << "\t-t <number>      Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
     cerr << "\t-u               Build an unindexed model (default is indexed)" << endl;    
     cerr << "\t-l <number>      Maximum pattern length (default: 100)" << endl;
@@ -44,12 +44,12 @@ void usage() {
     cerr << "\t-S S             Compute flexgrams by abstracting over skipgrams (implies -s)." << endl; 
     cerr << "\t-S <number>      Compute flexgrams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
     cerr << "\t-L               Input data file (-f) is a list of one pattern per line. No subgrams will be stored, implies -t 1" <<endl;
-    cerr << "\t-I               Build a new indexed model from a, possibly unindexed, input model (-i) and corpus data (-f). Uses memory-efficient in-place building, does not hold two models (unlike -j)" <<endl;
+    cerr << "\t-I               Builds a new model from a, possibly unindexed, input model (-i) and corpus data (-f).  Only patterns present in the input model will be present in the final model, regardless, even if more patterns are in the corpus data. This uses memory-efficient in-place building, and does not hold two models (unlike -j). This options allows to run a training model (-i) on new test data (-f), resulting in a new model (-o), which may be either indexed or unindexed (-u). This options also allows for building indexed models from unindexed models (given the same source corpus), and is used in two-stage building (-2)." <<endl;  
     cerr << " Viewing a model:  colibri-patternmodeller -i [modelfile] -c [classfile] -[PRHQ]" << endl;
     cerr << "\t-P               Print the entire model" << endl;
     cerr << "\t-R               Generate a (statistical/coverage) report" << endl;
     cerr << "\t-H               Generate a histogram" << endl;   
-    cerr << "\t-J               Storage information" << endl;   
+    cerr << "\t-V               Storage information" << endl;   
     cerr << "\t-Q               Start interactive query mode, allows for pattern lookup against the loaded model (input from standard input)" << endl; 
     cerr << "\t-q               Query a pattern (may be specified multiple times!)" << endl; 
     cerr << "\t-r               Compute and show relationships for the specified patterns (use with -q or -Q). Relationships are: subsumptions, neigbours, skipcontent. Only for indexed models." << endl; 
@@ -209,11 +209,11 @@ int main( int argc, char *argv[] ) {
     bool DOFLEXFROMSKIP = false;
     bool DOFLEXFROMCOOC = false;
     bool DOTWOSTAGE =false;
-    bool DONEWINDEX = false;
+    bool DOINPLACEREBUILD = false;
     double COOCTHRESHOLD = 0;
     bool DOCOOC = false;
     char c;    
-    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:rGS:xXNIIC:L2")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:rGS:xXNIVC:L2")) != -1)
         switch (c)
         {
         case 'c':
@@ -296,8 +296,8 @@ int main( int argc, char *argv[] ) {
             options.DOPATTERNPERLINE = true;
             break;
         case 'I':
-            DONEWINDEX = true;
-        case 'J':
+            DOINPLACEREBUILD = true;
+        case 'V':
             DOINFO = true;
             break;
         case 'G':
@@ -434,12 +434,6 @@ int main( int argc, char *argv[] ) {
         constrainoptions.DOREMOVEINDEX = false;
         if (!inputmodelfile2.empty()) {
             constrainbymodel = new PatternSetModel(inputmodelfile2, constrainoptions);
-            /*if (inputmodeltype2 == INDEXEDPATTERNMODEL) {
-                //constrainbymodel = new IndexedPatternModel<>(inputmodelfile2, constrainoptions);
-                constrainbymodel = new PatternSetModel(inputmodelfile2, constrainoptions);
-            } else if (inputmodeltype2 != INDEXEDPATTERNMODEL) {
-                constrainbymodel = new PatternModel<uint32_t>(inputmodelfile2, constrainoptions);
-            }*/
         }
 
 
