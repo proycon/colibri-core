@@ -33,7 +33,7 @@ void usage() {
     cerr << "\t                   - FoLiA XML (xml extension)" << endl;
 #endif
     cerr << "\t-c [classfile]   Class file"<< endl;
-    cerr << "\t-j [modelfile]   Joined input model. Result will be the *intersection* of this (training) model and the input model or constructed model." << endl;
+    cerr << "\t-j [modelfile]   Joined input model, i.e. constraint model/training model. Result will be the *intersection* of this (training) model and the input model or constructed model." << endl;
     cerr << " Building a model:  colibri-patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
     cerr << "\t-2               Enable two-stage building (for indexed models), takes longer but saves a lot of memory on large corpora! First builds an unindexed model and reuses that (via -I) to build an indexed model" << endl;    
     cerr << "\t-t <number>      Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
@@ -44,7 +44,7 @@ void usage() {
     cerr << "\t-S S             Compute flexgrams by abstracting over skipgrams (implies -s)." << endl; 
     cerr << "\t-S <number>      Compute flexgrams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
     cerr << "\t-L               Input data file (-f) is a list of one pattern per line. No subgrams will be stored, implies -t 1" <<endl;
-    cerr << "\t-I               Builds a new model from a, possibly unindexed, input model (-i) and corpus data (-f).  Only patterns present in the input model will be present in the final model, regardless, even if more patterns are in the corpus data. This uses memory-efficient in-place building, and does not hold two models (unlike -j). This options allows to run a training model (-i) on new test data (-f), resulting in a new model (-o), which may be either indexed or unindexed (-u). This options also allows for building indexed models from unindexed models (given the same source corpus), and is used in two-stage building (-2)." <<endl;  
+    cerr << "\t-I               Builds a new model from an input model (-i) and corpus data (-f).  Only patterns present in the input model will be present in the final model, making the input model the trining model and the corpus data the test data. This method uses memory-efficient in-place building, and does not hold two models (unlike -j). Input model (-i) and or output model (-o) may be indexed or unindexed (-u), this option also allows for constructing indexed models from unindexed models (given the same source corpus), and is used in two-stage building (-2)." <<endl;  
     cerr << " Viewing a model:  colibri-patternmodeller -i [modelfile] -c [classfile] -[PRHQ]" << endl;
     cerr << "\t-P               Print the entire model" << endl;
     cerr << "\t-R               Generate a (statistical/coverage) report" << endl;
@@ -168,16 +168,6 @@ bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
     return (print || report || histogram || query || info);
 }
 
-template<class A,class B,class C>
-void prunebymodel(PatternModel<A,B,C> & inputmodel, const std::string & inputmodelfile2, int inputmodeltype2, PatternModelOptions options) {
-    if (inputmodeltype2 == UNINDEXEDPATTERNMODEL) {
-        PatternModel<uint32_t> inputmodel2 = PatternModel<uint32_t>(inputmodelfile2, options);
-        inputmodel.prunebymodel(inputmodel2);
-    } else if (inputmodeltype2 == INDEXEDPATTERNMODEL) {
-        IndexedPatternModel<> inputmodel2 = IndexedPatternModel<>(inputmodelfile2, options);
-        inputmodel.prunebymodel(inputmodel2);
-    }
-}
 
 int main( int argc, char *argv[] ) {
     
@@ -375,7 +365,43 @@ int main( int argc, char *argv[] ) {
         cerr << "(Notice: reverse index disabled to speed up processing)" << endl;
     }
 
-    if (inputmodeltype == INDEXEDPATTERNMODEL) {
+
+    if (DOINPLACEREBUILD) {
+
+        if (corpusfile.empty()) {
+            cerr << "ERROR: Corpus data file (-f) must be specified when -I is set!." << classfile << endl;
+            exit(2);
+        }
+
+        if (outputmodeltypes == UNINDEXEDPATTERNMODEL) {
+            cerr << "Loading model " << inputmodelfile << " as unindexed pattern model..."<<endl;
+            PatternModel<uint32_t> inputmodel = PatternModel<uint32_t>(inputmodelfile, options, constrainbymodel);
+
+            if (constrainbymodel) {
+                cerr << "Unloading constraint model" << endl;
+                delete constrainbymodel;
+                constrainbymodel = NULL;
+            }
+
+                //build new model from corpus
+                cerr << "Building new indexed model from  " << corpusfile <<endl;
+                outputmodel.train(corpusfile, options, constrainbymodel);
+            }
+        } else if (outputmodeltype == INDEXEDPATTERNMODEL) {
+            cerr << "Loading model " << inputmodelfile << " as indexed pattern model..."<<endl;
+            IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options, constrainbymodel);
+
+            if (constrainbymodel) {
+                cerr << "Unloading constraint model" << endl;
+                delete constrainbymodel;
+                constrainbymodel = NULL;
+            }
+
+        }
+
+
+
+    } else if (inputmodeltype == INDEXEDPATTERNMODEL) {
         cerr << "Loading indexed pattern model " << inputmodelfile << " as input model..."<<endl;
         IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options, constrainbymodel);
         inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
