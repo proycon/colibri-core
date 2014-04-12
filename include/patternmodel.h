@@ -27,6 +27,7 @@
 enum ModelType {
 	UNINDEXEDPATTERNMODEL = 10, 
     INDEXEDPATTERNMODEL = 20,
+    PATTERNSETMODEL = 20,
 };
 
 int getmodeltype(const std::string filename);
@@ -54,6 +55,7 @@ class PatternModelOptions {
         bool DOREVERSEINDEX;
         bool DOPATTERNPERLINE;
 
+        bool DOREMOVEINDEX;
         bool DOREMOVENGRAMS;
         bool DOREMOVESKIPGRAMS;
         bool DOREMOVEFLEXGRAMS;
@@ -73,12 +75,35 @@ class PatternModelOptions {
             DOREVERSEINDEX = true; //only for indexed models
             DOPATTERNPERLINE = false;
 
+            DOREMOVEINDEX = false; //only for indexed models
             DOREMOVENGRAMS = false;
             DOREMOVESKIPGRAMS = false;
             DOREMOVEFLEXGRAMS = false;
 
             DEBUG = false;
             QUIET = false;
+        }
+
+        //copy constructor
+        PatternModelOptions(const PatternModelOptions & ref) {
+            MINTOKENS = ref.MINTOKENS; //defaults to 2 for building, 1 for loading
+            MINLENGTH = ref.MINLENGTH;
+            MAXLENGTH = ref.MAXLENGTH;
+
+            MINSKIPTYPES = ref.MINSKIPTYPES;
+            DOSKIPGRAMS = ref.DOSKIPGRAMS;
+            DOSKIPGRAMS_EXHAUSTIVE = ref.DOSKIPGRAMS_EXHAUSTIVE;
+
+            DOREVERSEINDEX = ref.DOREVERSEINDEX; //only for indexed models
+            DOPATTERNPERLINE = ref.DOPATTERNPERLINE;
+
+            DOREMOVEINDEX = ref.DOREMOVEINDEX; //only for indexed models
+            DOREMOVENGRAMS = ref.DOREMOVENGRAMS;
+            DOREMOVESKIPGRAMS = ref.DOREMOVESKIPGRAMS;
+            DOREMOVEFLEXGRAMS = ref.DOREMOVEFLEXGRAMS;
+
+            DEBUG = ref.DEBUG;
+            QUIET = ref.QUIET;
         }
 
 
@@ -101,6 +126,91 @@ class PatternModelInterface {
         virtual int minlength() const=0;
         virtual int types() const=0;
         virtual int tokens() const=0;
+};
+
+//A pattern model based on an unordered set, does not hold data, only patterns
+//Very suitable for loading constraint models.  (uint64 refers to max count)
+class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface {
+    protected:
+        unsigned char model_type;
+        unsigned char model_version;
+        uint64_t totaltokens; //INCLUDES TOKENS NOT COVERED BY THE MODEL!
+        uint64_t totaltypes; //TOTAL UNIGRAM TYPES, INCLUDING NOT COVERED BY THE MODEL!
+        int maxn; 
+        int minn; 
+    public:
+        PatternSetModel() {
+            totaltokens = 0;
+            totaltypes = 0;
+            maxn = 0;
+            minn = 999;
+            model_type = this->getmodeltype();
+            model_version = this->getmodelversion();
+        }
+        PatternSetModel(std::istream *f, PatternModelOptions options) { //load from file
+            totaltokens = 0;
+            totaltypes = 0;
+            maxn = 0;
+            minn = 999;
+            model_type = this->getmodeltype();
+            model_version = this->getmodelversion();
+            this->load(f,options);
+        }
+        virtual int getmodeltype() const { return PATTERNSETMODEL; }
+        virtual int getmodelversion() const { return 1; }
+
+        virtual size_t size() const {
+            return PatternSet<uint64_t>::size();
+        }
+        virtual bool has(const Pattern & pattern) const {
+            return PatternSet<uint64_t>::has(pattern);
+        }
+        virtual bool has(const PatternPointer & pattern) const {
+            return PatternSet<uint64_t>::has(pattern);
+        }
+        
+        virtual void load(std::string filename, const PatternModelOptions options) {
+            if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
+            std::ifstream * in = new std::ifstream(filename.c_str());
+            if (!in->good()) {
+                std::cerr << "ERROR: Unable to load file " << filename << std::endl;
+                throw InternalError();
+            }
+            this->load( (std::istream *) in, options);
+            in->close();
+            delete in;
+        }
+
+        virtual void load(std::istream * f, const PatternModelOptions options) { //load from file
+            char null;
+            f->read( (char*) &null, sizeof(char));        
+            f->read( (char*) &model_type, sizeof(char));        
+            f->read( (char*) &model_version, sizeof(char));        
+            if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) ))  {
+                std::cerr << "File is not a colibri model file (or a very old one)" << std::endl;
+                throw InternalError();
+            }
+            f->read( (char*) &totaltokens, sizeof(uint64_t));        
+            f->read( (char*) &totaltypes, sizeof(uint64_t)); 
+
+            if (model_type == PATTERNSETMODEL) {
+                //reading set
+                PatternSet<uint64_t>::read(f, options.MINLENGTH, options.MAXLENGTH, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS); //read PatternStore
+            } else if (model_type == INDEXEDPATTERNMODEL) {
+                //reading from indexed pattern model, ok:
+                 PatternSet<uint64_t>::template readmap<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
+            } else if (model_type == UNINDEXEDPATTERNMODEL)  {
+                //reading from unindexed pattern model, ok:
+                 PatternSet<uint64_t>::template readmap<uint32_t,BaseValueHandler<uint32_t>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
+            } else {
+                std::cerr << "ERROR: Unknown model type" << std::endl;
+                throw InternalError();
+            }
+        }
+
+        PatternModelInterface * getinterface() {
+            return (PatternModelInterface*) this;
+        }
 };
 
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class MapType = PatternMap<ValueType, BaseValueHandler<ValueType>>>

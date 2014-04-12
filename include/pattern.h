@@ -813,6 +813,35 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
             }
         }
 
+        template<class ReadValueType, class ReadValueHandler=BaseValueHandler<ReadValueType>>
+        void readmap(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
+            ReadValueHandler readvaluehandler = ReadValueHandler();
+            ReadWriteSizeType s; //read size:
+            in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            //std::cerr << "Reading " << (int) s << " patterns" << std::endl;
+            for (ReadWriteSizeType i = 0; i < s; i++) {
+                Pattern p;
+                try {
+                    p = Pattern(in);
+                } catch (std::exception &e) {
+                    std::cerr << "ERROR: Exception occurred at pattern " << (i+1) << " of " << s << std::endl;
+                    throw InternalError();
+                }
+                if (!DONGRAMS || !DOSKIPGRAMS || !DOFLEXGRAMS) {
+                    const PatternCategory c = p.category();
+                    if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
+                }
+                const int n = p.size();
+                if (n >= MINLENGTH && n <= MAXLENGTH)  {
+                    ReadValueType readvalue;
+                    //std::cerr << "Read pattern: " << std::endl;
+                    readvaluehandler.read(in, readvalue);
+                    if (readvaluehandler.count(readvalue) >= MINTOKENS) {
+                        this->insert(p);
+                    }
+                }
+            }
+        }
 };
 
 
