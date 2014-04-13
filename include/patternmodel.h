@@ -222,15 +222,12 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
 
             if (model_type == PATTERNSETMODEL) {
                 //reading set
-                std::cerr << "DEBUG: Reading from set" << std::endl;
                 PatternSet<uint64_t>::read(f, options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS); //read PatternStore
             } else if (model_type == INDEXEDPATTERNMODEL) {
                 //reading from indexed pattern model, ok:
-                std::cerr << "DEBUG: Reading from indexed" << std::endl;
                  PatternSet<uint64_t>::template readmap<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
             } else if (model_type == UNINDEXEDPATTERNMODEL)  {
                 //reading from unindexed pattern model, ok:
-                std::cerr << "DEBUG: Reading from unindexed" << std::endl;
                  PatternSet<uint64_t>::template readmap<uint32_t,BaseValueHandler<uint32_t>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
             } else {
                 std::cerr << "ERROR: Unknown model type" << std::endl;
