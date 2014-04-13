@@ -211,6 +211,7 @@ cdef extern from "classencoder.h":
 cdef extern from "patternmodel.h":
     cdef cppclass PatternModelOptions:
         int MINTOKENS
+        int MINLENGTH
         int MAXLENGTH
         bool DOSKIPGRAMS
         bool DOSKIPGRAMS_EXHAUSTIVE
@@ -222,6 +223,7 @@ cdef extern from "patternmodel.h":
         bool DOREMOVENGRAMS
         bool DOREMOVESKIPGRAMS
         bool DOREMOVEFLEXGRAMS
+        bool DORESET
 
     cdef cppclass IndexedDataHandler:
         int count(IndexedData &)

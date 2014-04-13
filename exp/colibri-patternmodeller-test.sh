@@ -53,3 +53,22 @@ if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 echo -e "\n\nTEST> Building unindexed model from indexed model (using -I)">&2
 colibri-patternmodeller -I -f republic.colibri.dat -i republic.colibri.unindexedpatternmodel -t 2 -l 10 -o republic.colibri.indexedpatternmodel.fromunindexed
 if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
+
+
+
+
+echo -e "\n\nTEST> Building indexed model on test data (using -I)">&2
+colibri-patternmodeller -I -f apology.colibri.dat -i republic.colibri.unindexedpatternmodel -t 2 -l 10 -o apology.colibri.indexedpatternmodel.fromunindexed.I
+if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
+
+echo -e "\n\nTEST> Building indexed model on test data (using -I)">&2
+colibri-patternmodeller -I -f apology.colibri.dat -i republic.colibri.unindexedpatternmodel -t 2 -l 10 -o apology.colibri.indexedpatternmodel.fromunindexed.I
+if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
+
+echo -e "\n\nTEST> Building unindexed model on test data (using -I)">&2
+colibri-patternmodeller -I -u -f apology.colibri.dat -i republic.colibri.unindexedpatternmodel -t 2 -l 10 -o apology.colibri.unindexedpatternmodel.fromunindexed.I
+if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
+
+echo -e "\n\nTEST> Building indexed model using Two-stage building">&2
+colibri-patternmodeller -2 -f republic.colibri.dat -t 2 -l 10 -o republic.colibri.indexedpatternmodel.2stage
+if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi

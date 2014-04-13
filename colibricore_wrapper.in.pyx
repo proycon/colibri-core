@@ -758,6 +758,8 @@ cdef class PatternModelOptions:
     def __setattr__(self,key, value):
         if key == 'MINTOKENS':
             self.coptions.MINTOKENS = value
+        elif key == 'MINLENGTH':
+            self.coptions.MINLENGTH = value
         elif key == 'MAXLENGTH':
             self.coptions.MAXLENGTH = value
         elif key == 'DOSKIPGRAMS':
@@ -776,6 +778,8 @@ cdef class PatternModelOptions:
             self.coptions.DOREMOVESKIPGRAMS = value
         elif key == 'DOREMOVEFLEXGRAMS':
             self.coptions.DOREMOVEFLEXGRAMS = value
+        elif key == 'DORESET':
+            self.coptions.DORESET = value
         elif key == 'DEBUG':
             self.coptions.DEBUG = value
         elif key == 'QUIET':
@@ -786,6 +790,8 @@ cdef class PatternModelOptions:
     def __getattr__(self,key):
         if key == 'MINTOKENS':
             return self.coptions.MINTOKENS
+        elif key == 'MINLENGTH':
+            return self.coptions.MINLENGTH
         elif key == 'MAXLENGTH':
             return self.coptions.MAXLENGTH
         elif key == 'DOSKIPGRAMS':
@@ -804,6 +810,8 @@ cdef class PatternModelOptions:
             return self.coptions.DOREMOVESKIPGRAMS
         elif key == 'DOREMOVEFLEXGRAMS':
             return self.coptions.DOREMOVEFLEXGRAMS
+        elif key == 'DORESET':
+            return self.coptions.DORESET
         elif key == 'DEBUG':
             return self.coptions.DEBUG
         elif key == 'QUIET':

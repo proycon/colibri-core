@@ -342,13 +342,13 @@ int main( int argc, char *argv[] ) {
             } else if (stage == 2) {
                 cerr << "********* STARTING STAGE 2/2: Building indexed patternmodel ******" << endl; 
                 DOINPLACEREBUILD = true;
-                inputmodelfile = outputmodelfile + ".stage1";
-                inputmodelfile2 = "";
                 //back to originals
                 outputmodelfile = cached_outputmodelfile;
                 outputmodeltype = INDEXEDPATTERNMODEL;
                 options.DOSKIPGRAMS = cached_DOSKIPGRAMS;
                 DOFLEXFROMCOOC = cached_DOFLEXFROMCOOC;
+                inputmodelfile = outputmodelfile + ".stage1";
+                inputmodelfile2 = "";
             }
         }
 
@@ -421,13 +421,16 @@ int main( int argc, char *argv[] ) {
 
             if (outputmodeltype == UNINDEXEDPATTERNMODEL) {
                 cerr << "Loading model " << inputmodelfile << " as unindexed pattern model..."<<endl;
-                PatternModel<uint32_t> model = PatternModel<uint32_t>(inputmodelfile, options, (PatternModelInterface*) constrainbymodel);
+                PatternModelOptions optionscopy = PatternModelOptions(options);
+                optionscopy.DORESET = true;
+                PatternModel<uint32_t> model = PatternModel<uint32_t>(inputmodelfile, optionscopy, (PatternModelInterface*) constrainbymodel);
 
                 if (constrainbymodel) {
                     cerr << "Unloading constraint model" << endl;
                     delete constrainbymodel;
                     constrainbymodel = NULL;
                 }
+
 
                 //build new model from corpus
                 cerr << "Building new indexed model from  " << corpusfile <<endl;
@@ -446,7 +449,9 @@ int main( int argc, char *argv[] ) {
                 didsomething = viewmodel<PatternModel<uint32_t>>(model, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOCOOC) || didsomething; 
             } else if (outputmodeltype == INDEXEDPATTERNMODEL) {
                 cerr << "Loading model " << inputmodelfile << " as indexed pattern model..."<<endl;
-                IndexedPatternModel<> model = IndexedPatternModel<>(inputmodelfile, options, (PatternModelInterface*) constrainbymodel);
+                PatternModelOptions optionscopy = PatternModelOptions(options);
+                optionscopy.DORESET = true;
+                IndexedPatternModel<> model = IndexedPatternModel<>(inputmodelfile, optionscopy, (PatternModelInterface*) constrainbymodel);
 
                 if (constrainbymodel) {
                     cerr << "Unloading constraint model" << endl;

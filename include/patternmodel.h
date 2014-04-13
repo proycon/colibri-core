@@ -59,6 +59,7 @@ class PatternModelOptions {
         bool DOREMOVENGRAMS;
         bool DOREMOVESKIPGRAMS;
         bool DOREMOVEFLEXGRAMS;
+        bool DORESET; //sets all counts to zero upon loading, clears indices
 
         bool QUIET;
         bool DEBUG;
@@ -74,6 +75,7 @@ class PatternModelOptions {
 
             DOREVERSEINDEX = true; //only for indexed models
             DOPATTERNPERLINE = false;
+            DORESET = false;
 
             DOREMOVEINDEX = false; //only for indexed models
             DOREMOVENGRAMS = false;
@@ -96,6 +98,7 @@ class PatternModelOptions {
 
             DOREVERSEINDEX = ref.DOREVERSEINDEX; //only for indexed models
             DOPATTERNPERLINE = ref.DOPATTERNPERLINE;
+            DORESET = ref.DORESET;
 
             DOREMOVEINDEX = ref.DOREMOVEINDEX; //only for indexed models
             DOREMOVENGRAMS = ref.DOREMOVENGRAMS;
@@ -365,12 +368,12 @@ class PatternModel: public MapType, public PatternModelInterface {
 
             if ((model_type == INDEXEDPATTERNMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) {
                 //reading indexed pattern model as unindexed, ok:
-                 MapType::template read<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
+                 MapType::template read<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET);
             } else if ((model_type == UNINDEXEDPATTERNMODEL) && (this->getmodeltype() == INDEXEDPATTERNMODEL)) {
                 //reading unindexed model as indexed, this will load the patterns but lose all the counts
-                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
+                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET);
             } else {
-                 MapType::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS); //read PatternStore
+                 MapType::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET); //read PatternStore
             }
             this->postread(options);
         }
