@@ -954,6 +954,20 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
 
+        virtual void printreverseindex(std::ostream * out, ClassDecoder & decoder) {
+            IndexReference prevref;
+            for (std::multimap<IndexReference,Pattern>::iterator iter = reverseindex.begin(); iter != reverseindex.end(); iter++) {
+                const IndexReference ref = iter->first;
+                const Pattern p = iter->second;
+                if (ref != prevref) {
+                    *out << "\n" << ref.tostring();
+                }
+                *out << "\t" << p.tostring(decoder); 
+                prevref = ref;
+            } 
+            *out << std::endl;
+        }
+
 
         void printmodel(std::ostream * out, ClassDecoder & decoder) { //an alias because cython can't deal with a method named print
             this->print(out, decoder); 
