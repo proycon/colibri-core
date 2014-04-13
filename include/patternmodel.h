@@ -289,6 +289,10 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (n < minn) minn = n;
             }
         }
+        virtual void posttrain(const PatternModelOptions options) {
+            //nothing to do here, indexed model specialised this function to
+            //sort indices
+        }
     public:
         PatternModel<ValueType,ValueHandler,MapType>() {
             totaltokens = 0;
@@ -513,6 +517,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (options.DOSKIPGRAMS && !options.DOSKIPGRAMS_EXHAUSTIVE) {
                 this->trainskipgrams(options, constrainbymodel);
             }
+            this->posttrain(options);
         }
 
 
@@ -630,7 +635,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             reverseindex.insert(std::pair<IndexReference,Pattern>(*singleref,skipgram));
                         }
                     } else if (multiplerefs != NULL) {
-                        for (IndexedData::iterator refiter =  multiplerefs->begin(); refiter != multiplerefs->end(); refiter++) {
+                        for (IndexedData::const_iterator refiter =  multiplerefs->begin(); refiter != multiplerefs->end(); refiter++) {
                             const IndexReference ref = *refiter;
                             add(skipgram, data, ref ); //counts the actual skipgram, will add it to the model
                             if (options.DOREVERSEINDEX) {
@@ -1133,6 +1138,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         this->reverseindex.insert(std::pair<IndexReference,Pattern>(ref,p));
                     }
                 }
+            }
+        }
+        virtual void posttrain(const PatternModelOptions options) {
+            std::cerr << "Sorting all indices" << std::endl;
+            for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+                iter->second.sort();
             }
         }
    public:

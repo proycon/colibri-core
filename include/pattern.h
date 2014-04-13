@@ -24,6 +24,7 @@
 #include <unordered_set>
 #include <iomanip> // contains setprecision()
 #include <exception>
+#include <algorithm>
 #include "common.h"
 #include "classdecoder.h"
 
@@ -544,20 +545,26 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
 
 class IndexedData {
    protected:
-    std::set<IndexReference> data;
+    std::vector<IndexReference> data;
    public:
-    IndexedData() {};
+    IndexedData() { };
     IndexedData(std::istream * in);
     void write(std::ostream * out) const; 
     
-    bool has(const IndexReference & ref) const { return data.count(ref); }
+    bool has(const IndexReference & ref, bool sorted = false) const { 
+        if (sorted) {
+            return std::binary_search(this->begin(), this->end(), ref);
+        } else {
+            return std::find(this->begin(), this->end(), ref) != this->end();
+        }
+    }
     int count() const { return data.size(); }
 
-    void insert(IndexReference ref) { data.insert(ref); }
+    void insert(IndexReference ref) { data.push_back(ref); }
     size_t size() const { return data.size(); }
 
-    typedef std::set<IndexReference>::iterator iterator;
-    typedef std::set<IndexReference>::const_iterator const_iterator;
+    typedef std::vector<IndexReference>::iterator iterator;
+    typedef std::vector<IndexReference>::const_iterator const_iterator;
     
     iterator begin() { return data.begin(); }
     const_iterator begin() const { return data.begin(); }
@@ -565,17 +572,33 @@ class IndexedData {
     iterator end() { return data.end(); }
     const_iterator end() const { return data.end(); }
 
-    iterator find(const IndexReference & ref) { return data.find(ref); }
-    const_iterator find(const IndexReference & ref) const { return data.find(ref); }    
+    iterator find(const IndexReference & ref) { return std::find(this->begin(), this->end(), ref); }
+    const_iterator find(const IndexReference & ref) const { return std::find(this->begin(), this->end(), ref); }    
 
     std::set<int> sentences() const {
         std::set<int> sentences;
-        for (iterator iter = this->begin(); iter != this->end(); iter++) {
+        for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
             const IndexReference ref = *iter;
             sentences.insert(ref.sentence); 
         }
         return sentences;
     }
+
+    std::set<IndexReference> set() const {
+        return std::set<IndexReference>(this->begin(), this->end() );
+    }
+
+    void sort() {
+        std::sort(this->begin(), this->end());
+    }
+
+    void reserve(size_t size) {
+        data.reserve(size);
+    }
+    void shrink_to_fit() {
+        data.shrink_to_fit();
+    }
+
     friend class IndexedDataHandler;
 };
 
@@ -586,21 +609,24 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
     void read(std::istream * in, IndexedData & v) {
         uint32_t c;
         in->read((char*) &c, sizeof(uint32_t));
+        v.reserve(c); //reserve space to optimise
         for (unsigned int i = 0; i < c; i++) {
             IndexReference ref = IndexReference(in);
             v.insert(ref);
         }
+        v.shrink_to_fit(); //try to keep vector as small as possible (slows insertions down a bit)
     }
     void write(std::ostream * out, IndexedData & value) {
         const uint32_t c = value.count();
         out->write((char*) &c, sizeof(uint32_t));
-        for (std::set<IndexReference>::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
+        //we already assume everything is nicely sorted!
+        for (IndexedData::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
             iter->write(out);
         }
     }
     virtual std::string tostring(IndexedData & value) {
         std::string s = "";
-        for (std::set<IndexReference>::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
+        for (IndexedData::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
             if (!s.empty()) s += " ";
             s += iter->tostring();
         }
