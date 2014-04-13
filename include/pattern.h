@@ -825,6 +825,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
 
         template<class ReadValueType, class ReadValueHandler=BaseValueHandler<ReadValueType>>
         void readmap(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
+            std::cerr << "DEBUG: In readmap" << std::endl;
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
@@ -847,6 +848,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
                     //std::cerr << "Read pattern: " << std::endl;
                     readvaluehandler.read(in, readvalue);
                     if ((readvaluehandler.count(readvalue) >= MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
+                        std::cerr << "DEBUG: Read a pattern, count: " << readvaluehandler.count(readvalue) << std::endl;
                         this->insert(p);
                     }
                 }
