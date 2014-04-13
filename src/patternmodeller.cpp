@@ -392,6 +392,7 @@ int main( int argc, char *argv[] ) {
         if (!inputmodelfile2.empty()) {
             cerr << "Loading constraint model (aka training/intersection model)" << endl;
             constrainbymodel = new PatternSetModel(inputmodelfile2, constrainoptions);
+            cerr << " (Contains " << constrainbymodel->size() << " patterns)" << endl;
         }
 
         if ( ((outputmodeltype == UNINDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNMODEL))) {

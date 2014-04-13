@@ -381,6 +381,10 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
             if (options.MINTOKENS == -1) options.MINTOKENS = 2;
+            if (constrainbymodel == this) {
+                totaltypes = 0;
+                totaltokens = 0;
+            }
             uint32_t sentence = 0;
             std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
             if (!in->good()) {
@@ -391,7 +395,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (!options.QUIET) {
                 std::cerr << "Training patternmodel";
                 if (constrainbymodel != NULL) std::cerr << ", constrained by another model";
-                std::cerr << ", occurrence threshold:" << options.MINTOKENS;
+                std::cerr << ", occurrence threshold: " << options.MINTOKENS;
                 std::cerr << std::endl; 
             }
             int maxlength;
@@ -408,6 +412,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (!options.QUIET) {
                     if (options.DOPATTERNPERLINE) {
                         std::cerr << "Counting patterns from list, one per line" << std::endl; 
+                    } else if (constrainbymodel != NULL) {
+                        std::cerr << "Counting n-grams that occur in constraint model" << std::endl;
                     } else if (options.MINTOKENS > 1) {
                         std::cerr << "Counting " << n << "-grams" << std::endl; 
                     } else {
@@ -419,39 +425,41 @@ class PatternModel: public MapType, public PatternModelInterface {
                 
                 sentence = 0; //reset
                 while (!in->eof()) {
+                    //read line
                     Pattern line = Pattern(in);
                     sentence++;
                     if (in->eof()) break;
                     if (line.size() == 0) {
-                        //std::cerr << "Warning: sentence " << sentence << " is an empty line...skipping" << std::endl;
+                        //skip empty lines
                         continue;
                     }
+                    //count total tokens
                     if (n==1) totaltokens += line.size();
+
                     ngrams.clear();
                     if (options.DOPATTERNPERLINE) {
                         if (line.size() > options.MAXLENGTH) continue;
                         ngrams.push_back(std::pair<PatternPointer,int>(PatternPointer(&line),0));
                     } else {
-                        if (options.MINTOKENS > 1) {
+                        if ((options.MINTOKENS > 1) && (constrainbymodel == NULL)) {
                             line.ngrams(ngrams, n);
-                        } else if (options.MINTOKENS == 1) {
-                            line.subngrams(ngrams,1,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1, no need to look back anyway, only one iteration over corpus
+                        } else {
+                            line.subngrams(ngrams,1,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1 or a constraint model is set, no need to look back anyway, only one iteration over corpus
                         }
                     }
+
                     for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
-                        if ((constrainbymodel != NULL) && (!constrainbymodel->has(iter->first))) continue;
+                        //check against constraint model
+                        if ((constrainbymodel != NULL) && (!constrainbymodel->has(iter->first))) continue; 
+
                         ref = IndexReference(sentence, iter->second);
                         found = true;
-                        if ((n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE)) {
+                        if ((n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) {
                             //check if sub-parts were counted
                             subngrams.clear();
                             iter->first.ngrams(subngrams,n-1);
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                                if (!this->has(*iter2)) { //fails here?
-                                    //std::cerr << "NOT FOUND: " << std::endl;
-                                    //iter2->out();
-                                    //std::cerr << "size=" << iter2->size() << std::endl;
-                                    //std::cerr << "bytesize=" << iter2->bytesize() << std::endl;
+                                if (!this->has(*iter2)) { 
                                     found = false;
                                     break;
                                 }
@@ -483,7 +491,12 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngrams...";
                 if (foundskipgrams && !options.QUIET) std::cerr << foundskipgrams << " skipgram occurrences...";
                 if ((options.MINTOKENS > 1) && (n == 1)) totaltypes += this->size(); //total unigrams, also those not in model
-                int pruned = this->prune(options.MINTOKENS,n);
+                int pruned;
+                if ((options.MINTOKENS == 1) || (constrainbymodel != NULL)) {
+                    pruned = this->prune(options.MINTOKENS,0); //prune regardless of size
+                } else {
+                    pruned = this->prune(options.MINTOKENS,n); //prue only in size-class
+                }
                 if (!options.QUIET) std::cerr << "pruned " << pruned;
                 if (foundskipgrams) {
                     int prunedextra = this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, n);
@@ -491,7 +504,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     pruned += prunedextra;
                 }
                 if (!options.QUIET) std::cerr << "...total kept: " << (foundngrams + foundskipgrams) - pruned << std::endl;
-                if (options.MINTOKENS == 1) break; //no need for further n iterations, we did all in one pass since there's no point in looking back
+                if ((options.MINTOKENS == 1) || (constrainbymodel != NULL)) break; //no need for further n iterations, we did all in one pass since there's no point in looking back
                 prevsize = this->size();
             }
             if (options.DOSKIPGRAMS && !options.DOSKIPGRAMS_EXHAUSTIVE) {
