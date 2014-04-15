@@ -14,7 +14,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, OrderedPatternMap as cOrderedPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator,IndexedCorpus as cIndexedCorpus, BEGINPATTERN as cBEGINPATTERN, ENDPATTERN as cENDPATTERN, SKIPPATTERN as cSKIPPATTERN, FLEXPATTERN as cFLEXPATTERN, UNKPATTERN as cUNKPATTERN, AlignedPatternMap as cAlignedPatternMap, PatternModelInterface as cPatternModelInterface
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, OrderedPatternMap as cOrderedPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternSetModel as cPatternSetModel, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator,IndexedCorpus as cIndexedCorpus, BEGINPATTERN as cBEGINPATTERN, ENDPATTERN as cENDPATTERN, SKIPPATTERN as cSKIPPATTERN, FLEXPATTERN as cFLEXPATTERN, UNKPATTERN as cUNKPATTERN, AlignedPatternMap as cAlignedPatternMap, PatternModelInterface as cPatternModelInterface
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
@@ -715,6 +715,11 @@ cdef class OrderedIndexedPatternModel:
 
     @include colibricore_patternmodel.pxi
     @include colibricore_indexedpatternmodel.pxi
+
+cdef class PatternSetModel:
+    cdef cPatternSetModel data
+
+    @include colibricore_patternset.pxi
 
 cdef class UnindexedPatternModel:
     """Unindexed Pattern Model, less flexible and powerful than its indexed counterpart, but smaller memory footprint"""

@@ -250,6 +250,26 @@ cdef extern from "patternmodel.h":
     ctypedef PatternMap[uint32_t,BaseValueHandler[uint32_t],uint64_t].iterator t_relationmap_iterator
     ctypedef PatternMap[double,BaseValueHandler[double],uint64_t].iterator t_relationmap_double_iterator
 
+
+    cdef cppclass PatternSetModel:
+        cppclass iterator:
+            Pattern & operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        iterator begin() nogil
+        iterator end() nogil
+
+        bool has(Pattern&) nogil
+        int size() nogil
+
+        int occurrencecount(Pattern&) nogil #always returns 0
+        float frequency(Pattern&) nogil
+
+        PatternModelInterface * getinterface() nogil
+
+        void insert(Pattern&) nogil
+
     cdef cppclass PatternModel[ValueType,ValueHandler,MapType]:
         cppclass iterator:
             pair[Pattern,ValueType] & operator*() nogil
