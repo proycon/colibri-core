@@ -61,7 +61,7 @@ void ClassEncoder::load(const string & filename) {
 	   ifstream IN;
 	   IN.open( filename.c_str() );    
        if (!(IN)) {
-           cerr << "File does not exist: " << filename << endl;
+           cerr << "ERROR: File does not exist: " << filename << endl;
            exit(3);
        }
         while (IN.good()) {
@@ -103,7 +103,7 @@ void ClassEncoder::processcorpus(const string & filename, unordered_map<string,i
 	   if (filename.rfind(".bz2") != string::npos) {
             IN.open( filename.c_str(), ios::in | ios::binary );    
             if (!(IN)) {
-                cerr << "File does not exist: " << filename << endl;
+                cerr << "ERROR: File does not exist: " << filename << endl;
                 exit(3);
             }       
             bz2istream * decompressor = new bz2istream(IN.rdbuf());
@@ -111,7 +111,7 @@ void ClassEncoder::processcorpus(const string & filename, unordered_map<string,i
        } else {
             IN.open( filename.c_str() );    
             if (!(IN)) {
-                cerr << "File does not exist: " << filename << endl;
+                cerr << "ERROR: File does not exist: " << filename << endl;
                 exit(3);
             }       
             processcorpus(&IN, freqlist);
@@ -191,12 +191,12 @@ void ClassEncoder::build(const string & filename) {
 }
 
 
-void ClassEncoder::build(vector<string> & files) {
+void ClassEncoder::build(vector<string> & files, bool quiet) {
 	    unordered_map<string,int> freqlist;
 	    	    
 	    for (vector<string>::iterator iter = files.begin(); iter != files.end(); iter++) {
 	        const string filename = *iter;
-	        cerr << "Processing " << filename << endl;
+	        if (!quiet) cerr << "Processing " << filename << endl;
 	        if (filename.rfind(".xml") != string::npos) {
                 #ifdef WITHFOLIA
                 processfoliacorpus(filename, freqlist);
@@ -324,7 +324,7 @@ void ClassEncoder::add(std::string s, unsigned int cls) {
     if (cls > highestclass) highestclass = cls;
 }
 
-void ClassEncoder::encodefile(const std::string & inputfilename, const std::string & outputfilename, bool allowunknown, bool autoaddunknown, bool append) {
+void ClassEncoder::encodefile(const std::string & inputfilename, const std::string & outputfilename, bool allowunknown, bool autoaddunknown, bool append, bool quiet) {
     const char zero = 0;
     const char one = 1;
 	    
@@ -374,7 +374,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
           	    OUT.write(&zero, sizeof(char)); //newline
             }
         }
-	    cerr << "Encoded " << linenum << " lines" << endl;
+	    if (!quiet) cerr << "Encoded " << linenum << " lines" << endl;
 	    OUT.close();
         #else
         cerr << "Colibri Core was not compiled with FoLiA support!" << endl;
@@ -391,23 +391,25 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
             IN.open(inputfilename.c_str(), ios::in | ios::binary);
             if (!IN) {
                 cerr << "No such file: " << inputfilename << endl;
+                exit(2);
             }
             bz2istream * decompressor = new bz2istream(IN.rdbuf());
-            encodefile((istream*) decompressor, (ostream*) &OUT, allowunknown, autoaddunknown);
+            encodefile((istream*) decompressor, (ostream*) &OUT, allowunknown, autoaddunknown, quiet);
             delete decompressor;
         } else {
             IN.open(inputfilename.c_str());
             if (!IN) {
                 cerr << "No such file: " << inputfilename << endl;
+                exit(2);
             }
-            encodefile((istream*) &IN, (ostream*) &OUT, allowunknown, autoaddunknown);
+            encodefile((istream*) &IN, (ostream*) &OUT, allowunknown, autoaddunknown, quiet);
         }
 	    IN.close();
 	    OUT.close();
 	}
 }
 
-void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown) {
+void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet) {
     const char zero = 0;
     const char one = 1;
     unsigned char outputbuffer[65536];
@@ -422,6 +424,6 @@ void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bo
         OUT->write((const char *) outputbuffer, outputsize);                        
         OUT->write(&zero, sizeof(char)); //newline          
     }
-    cerr << "Encoded " << linenum << " lines" << endl;
+    if (!quiet) cerr << "Encoded " << linenum << " lines" << endl;
 }
 

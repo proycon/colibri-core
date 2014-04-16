@@ -38,7 +38,7 @@ class ClassEncoder {
     ClassEncoder(const std::string &); //load an existing classer
     void load(const std::string &); //load an existing classer
     void build(const std::string & filename); //build a class from this dataset
-    void build(std::vector<std::string> & files); //build a class from this dataset
+    void build(std::vector<std::string> & files, bool quiet=false); //build a class from this dataset
     
     //auxiliary functions called by build: first do processcorpus() for each
     //corpus, then call buildclasses() once when done:
@@ -53,8 +53,9 @@ class ClassEncoder {
     
 
     int encodestring(const std::string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown=false);
-    void encodefile(const std::string &, const std::string &, bool allowunknown, bool autoaddunknown=false, bool append=false);
-    void encodefile(std::istream * IN, std::ostream * OUT, bool allowunknown, bool autoaddunknown);
+    void encodefile(const std::string &, const std::string &, bool allowunknown, bool autoaddunknown=false, bool append=false, bool quiet=false);
+    void encodefile(std::istream * IN, std::ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet=false);
+
     std::vector<unsigned int> encodeseq(const std::vector<std::string> & seq);
     
     Pattern buildpattern(const std::string, bool allowunknown=false, bool autoaddunknown = false);  //not thread-safe
