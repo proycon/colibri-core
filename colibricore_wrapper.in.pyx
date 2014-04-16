@@ -1054,9 +1054,10 @@ cdef class PatternAlignmentModel_float:
     def items(self):
         """Iterate over all patterns and PatternFeatureVectorMaps in this model"""
         it = self.data.begin()
+        it_end = self.data.end()
         cdef cPattern cpattern
         cdef cPatternFeatureVectorMap[double] cmap
-        while it != self.data.end():
+        while it != it_end:
             cpattern = deref(it).first
             cmap = deref(it).second
             pattern = Pattern()
@@ -1064,6 +1065,28 @@ cdef class PatternAlignmentModel_float:
             pmap = PatternFeatureVectorMap_float()
             pmap.bind(cmap)
             yield (pattern,pmap)
+            inc(it)
+
+    def triples(self):
+        """Iterate over sourcepattern, targetpattern, feature triples"""
+        it = self.data.begin()
+        it_end = self.data.end()
+        cdef cPattern cpattern
+        cdef cPatternFeatureVectorMap[double] cmap
+        while it != it_end:
+            cpattern = deref(it).first
+            cmap = deref(it).second
+            sourcepattern = Pattern()
+            sourcepattern.bind(cpattern)
+           
+            it2 = cmap.begin()
+            it2_end = cmap.end()
+            while it2 != it2_end:
+                cvec = deref(it2) 
+                targetpattern = Pattern()
+                targetpattern.bind(cvec.pattern)
+                yield (sourcepattern, targetpattern, cvec.data)
+                inc(it2)
             inc(it)
 
     cpdef add(self, Pattern pattern, Pattern pattern2, tuple l):
