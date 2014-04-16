@@ -7,6 +7,7 @@
 #include <classdecoder.cpp>
 #include <pattern.h>
 #include <patternmodel.h>
+#include <alignmodel.h>
 #include <ctime>
 
 
@@ -788,6 +789,19 @@ int main( int argc, char *argv[] ) {
 
     }
     {
+        const string classfile = "/tmp/hamlet.colibri.cls";
+        ClassDecoder classdecoder = ClassDecoder(classfile);
+        ClassEncoder classencoder = ClassEncoder(classfile);
+
+        string s = "To be or not to be";
+        Pattern p = classencoder.buildpattern(s);
+
+        cerr << "Creating a PatternAlignmentModel" << endl;
+        PatternAlignmentModel<double> alignmodel = PatternAlignmentModel<double>(); 
+        vector<double> v;
+        v.push_back(3.14);
+        alignmodel.add(p,p,v);
+
 
     }
 }

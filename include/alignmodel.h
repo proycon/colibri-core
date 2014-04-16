@@ -5,7 +5,7 @@
 
 
 template<class FeatureType>
-class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorVectorHandler>, public PatternModelInterface {
+class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>> {
     protected:
         //some duplication from PatternModel, but didn't want to inherit from
         //it, as too much is different
@@ -69,13 +69,13 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
         virtual int getmodelversion() const { return 1; }
 
         virtual size_t size() const {
-            return PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorVectorHandler>::size();
+            return PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::size();
         }
         virtual bool has(const Pattern & pattern) const {
-            return PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorVectorHandler>::has(pattern);
+            return PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::has(pattern);
         }
         virtual bool has(const PatternPointer & pattern) const {
-            return PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorVectorHandler>::has(pattern);
+            return PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::has(pattern);
         }
         
         virtual void load(std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
@@ -95,7 +95,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
             f->read( (char*) &model_version, sizeof(char));  
-            if ((null != 0) || ((model_type != PATTERNALIGNMENTMODEL ))  {
+            if ((null != 0) || (model_type != PATTERNALIGNMENTMODEL ))  {
                 std::cerr << "File is not a colibri alignment model file (did you try to load a different type of pattern model?)" << std::endl;
                 throw InternalError();
             }
@@ -105,7 +105,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             PatternStoreInterface * constrainstore = NULL;
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
-            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorVectorHandler>::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET); 
+            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET); 
             this->postread(options);
         }
 
@@ -132,8 +132,8 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             delete out;
         }
 
-        typedef typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorVectorHandler>::iterator iterator;
-        typedef typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorVectorHandler>::const_iterator const_iterator;        
+        typedef typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::iterator iterator;
+        typedef typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::const_iterator const_iterator;        
 
 
         virtual int maxlength() const { return maxn; };
@@ -144,7 +144,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
         }
         
         virtual PatternFeatureVectorMap<FeatureType> * getdata(const Pattern & pattern, bool makeifnew=false) { 
-            typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorVectorHandler>::iterator iter = this->find(pattern);
+            typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::iterator iter = this->find(pattern);
             if (iter != this->end()) {
                 return &(iter->second); 
             } else if (makeifnew) {
@@ -156,7 +156,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
         
         virtual PatternFeatureVectorMap<FeatureType> * getdata(const PatternPointer & patternpointer, bool makeifnew=false) { 
             const Pattern pattern = Pattern(patternpointer);
-            typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorVectorHandler>::iterator iter = this->find(pattern);
+            typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::iterator iter = this->find(pattern);
             if (iter != this->end()) {
                 return &(iter->second); 
             } else if (makeifnew) {
@@ -175,20 +175,27 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
 
 
         //(source,target) pair versions of has, getdata
-        virtual bool has(const Pattern & pattern, const Pattern & pattern2) const {
+        virtual bool has(const Pattern & pattern, const Pattern & pattern2) {
             return (this->has(pattern) && this->getdata(pattern)->has(pattern2));
         }
-        virtual bool has(const PatternPointer & patternpointer, const PatternPointer & patternpointer2) const {
+        virtual bool has(const PatternPointer & patternpointer, const PatternPointer & patternpointer2) {
             const Pattern pattern2 = Pattern(patternpointer2);
             return (this->has(patternpointer) && this->getdata(patternpointer)->has(pattern2));
         }
 
-        virtual PatternFeatureVector<FeatureType> * getdata(const Pattern & pattern, const Pattern & pattern2, makeifnew=false) { 
+        virtual PatternFeatureVector<FeatureType> * getdata(const Pattern & pattern, const Pattern & pattern2, bool makeifnew=false) { 
             PatternFeatureVectorMap<FeatureType> * data = this->getdata(pattern, makeifnew);
             if (data == NULL) return NULL;
             return data->getdata(pattern2, makeifnew);
         }
-        
+       
+        void add(const Pattern & pattern, const Pattern &pattern2, std::vector<FeatureType> & features) {
+            PatternFeatureVector<FeatureType> * d = getdata(pattern,pattern2,true);
+            d->clear();
+            for (typename std::vector<FeatureType>::iterator iter = features.begin(); iter != features.end(); iter++) {
+                d->push_back(*iter);
+            }
+        }
 
 };
 

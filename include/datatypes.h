@@ -202,6 +202,11 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
 
 
 
+
+
+
+
+
 template<class FeatureType>
 class PatternFeatureVector {
     public:
@@ -215,6 +220,7 @@ class PatternFeatureVector {
             pattern = ref.pattern;
             data = ref.data;
         };
+
         void read(std::istream * in) {
             this->pattern = Pattern(in);
             uint16_t c;
@@ -252,6 +258,12 @@ class PatternFeatureVector {
             return data[index];
         }
 
+        void clear() {
+            data.clear();
+        }
+        void push_back(FeatureType & f) {
+            data.push_back(f);
+        }
         void reserve(size_t size) {
             data.reserve(size);
         }
