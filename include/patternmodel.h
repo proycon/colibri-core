@@ -214,7 +214,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             f->read( (char*) &model_type, sizeof(char));        
             f->read( (char*) &model_version, sizeof(char));        
             if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) ))  {
-                std::cerr << "File is not a colibri model file (or a very old one)" << std::endl;
+                std::cerr << "ERROR: File is not a colibri model file (or a very old one)" << std::endl;
                 throw InternalError();
             }
             f->read( (char*) &totaltokens, sizeof(uint64_t));        
@@ -492,7 +492,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     if (n > this->maxn) this->maxn = n;
                     if (n < this->minn) this->minn = n;
                 } else {
-                    std::cerr << "None found" << std::endl;
+                    if (!options.QUIET) std::cerr << "None found" << std::endl;
                     break;
                 }
                 if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngrams...";

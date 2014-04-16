@@ -33,12 +33,6 @@ class ClassEncoder {
      unsigned int bosclass;
      unsigned int eosclass;
      unsigned int highestclass;
-     void buildclasses(std::unordered_map<std::string,int> freqlist);
-     void processcorpus(const std::string & filename, std::unordered_map<std::string,int> & freqlist);
-     void processcorpus(std::istream * , std::unordered_map<std::string,int> & freqlist);
-     #ifdef WITHFOLIA
-     void processfoliacorpus(const std::string & filename, std::unordered_map<std::string,int> & freqlist);
-     #endif
     public:
     ClassEncoder();
     ClassEncoder(const std::string &); //load an existing classer
@@ -46,6 +40,15 @@ class ClassEncoder {
     void build(const std::string & filename); //build a class from this dataset
     void build(std::vector<std::string> & files); //build a class from this dataset
     
+    //auxiliary functions called by build: first do processcorpus() for each
+    //corpus, then call buildclasses() once when done:
+    void buildclasses(std::unordered_map<std::string,int> freqlist);
+    void processcorpus(const std::string & filename, std::unordered_map<std::string,int> & freqlist);
+    void processcorpus(std::istream * , std::unordered_map<std::string,int> & freqlist);
+    #ifdef WITHFOLIA
+    void processfoliacorpus(const std::string & filename, std::unordered_map<std::string,int> & freqlist);
+    #endif
+
     std::unordered_map<unsigned int, std::string> added;
     
 
