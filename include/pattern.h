@@ -362,6 +362,9 @@ class PatternPointer {
      int subngrams(std::vector<std::pair<PatternPointer,int>> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
 };
 
+//We can only include datatype after Pattern has been defined, i.e. here:
+#include "datatypes.h"
+
 const unsigned char tmp_skipmarker = SKIPMARKER;
 const unsigned char tmp_flexmarker = FLEXMARKER;
 //const uint16_t tmp_unk = 0x0102; //0x01 0x02
@@ -406,48 +409,6 @@ namespace std {
 }
 
 
-/******************** IndexReference **************************/
-class IndexReference {
-    /* Reference to a position in the corpus */
-   public:
-    uint32_t sentence;
-    uint16_t token;
-    IndexReference() { sentence=0; token = 0; } 
-    IndexReference(uint32_t sentence, uint16_t token ) { this->sentence = sentence; this->token = token; }  
-    IndexReference(std::istream * in) {
-        in->read( (char*) &sentence, sizeof(uint32_t)); 
-        in->read( (char*) &token, sizeof(uint16_t)); 
-    }
-    IndexReference(const IndexReference& other) { //copy constructor
-        sentence = other.sentence;
-        token = other.token;
-    };     
-    void write(std::ostream * out) const {
-        out->write( (char*) &sentence, sizeof(uint32_t)); 
-        out->write( (char*) &token, sizeof(uint16_t)); 
-    }
-    bool operator< (const IndexReference& other) const {
-        if (sentence < other.sentence) {
-            return true;
-        } else if (sentence == other.sentence) {
-            return (token < other.token);
-        } else {
-            return false;
-        }
-    }
-    bool operator> (const IndexReference& other) const {
-        return other < *this;
-    }
-    bool operator==(const IndexReference &other) const { return ( (sentence == other.sentence) && (token == other.token)); };
-    bool operator!=(const IndexReference &other) const { return ( (sentence != other.sentence) || (token != other.token)); };
-    IndexReference operator+(const int other) const { return IndexReference(sentence, token+ other); };
-    
-    std::string tostring() const {
-        return std::to_string(sentence) + ":" + std::to_string(token);
-    }
-};
-
-
 /***********************************************************************************/
 
 //Class for reading an entire (class encoded) corpus into memory, providing a
@@ -486,164 +447,6 @@ class IndexedCorpus {
         std::vector<IndexReference> findmatches(const Pattern & pattern, int maxmatches=0); //by far not as efficient as a pattern model obviously
 
         int sentencelength(int sentence); 
-};
-
-/************* ValueHandler for reading/serialising basic types ********************/
-
-//forward declaration for later
-class IndexedData;
-
-/*
- * Value handler deal are interfaces to the values in Pattern Maps. They are
- * used to abstract from the actual value data type and provide some common
- * methods required for all values, as well at methods for serialisation
- * from/to binary file. All are derived from the abstract class
- * AbstractValueHandler
-*/
-
-template<class ValueType>
-class AbstractValueHandler {
-   public:
-    virtual std::string id() { return "AbstractValueHandler"; }
-    virtual void read(std::istream * in, ValueType & value)=0; //read value from input stream (binary)
-    virtual void write(std::ostream * out, ValueType & value)=0; //write value to output stream (binary)
-    virtual std::string tostring(ValueType & value)=0; //convert value to string)
-    virtual int count(ValueType & value) const =0; //what count does this value represent?
-    virtual void add(ValueType * value, const IndexReference & ref ) const=0; //add the indexreference to the value, will be called whenever a token is found during pattern building
-    virtual void convertto(ValueType & source, ValueType & target ) const { if (&source != &target) target = source; }; //this doesn't really convert as source and target are same type, but it is required!
-};
-
-// This templated class can be used for all numeric base types (such as int, uint16_t,
-// float, etc)
-template<class ValueType>
-class BaseValueHandler: public AbstractValueHandler<ValueType> {
-   public:
-    virtual std::string id() { return "BaseValueHandler"; }
-    const static bool indexed = false;
-    void read(std::istream * in, ValueType & v) {
-        in->read( (char*) &v, sizeof(ValueType)); 
-    }
-    void write(std::ostream * out, ValueType & value) {
-        out->write( (char*) &value, sizeof(ValueType));
-    }
-    virtual std::string tostring(ValueType & value) {
-        return tostring(value);
-    }
-    int count(ValueType & value) const {
-        return (int) value;
-    }
-    void add(ValueType * value, const IndexReference & ref ) const {
-        *value = *value + 1;
-    }
-    void convertto(ValueType & source, ValueType & target ) const { if (&source != &target) target = source; }; //this doesn't really convert as source and target are same type, but it is required!
-    void convertto(ValueType & source, IndexedData & target ) const { }; //this doesn't convert either, it returns a totally EMPTY indexeddata, allowing unindexed models to be read as indexed, but losing all counts!
-};
-
-
-/************* ValueHandler for reading/serialising indexed types ********************/
-
-
-class IndexedData {
-   protected:
-    std::vector<IndexReference> data;
-   public:
-    IndexedData() { };
-    IndexedData(std::istream * in);
-    void write(std::ostream * out) const; 
-    
-    bool has(const IndexReference & ref, bool sorted = false) const { 
-        if (sorted) {
-            return std::binary_search(this->begin(), this->end(), ref);
-        } else {
-            return std::find(this->begin(), this->end(), ref) != this->end();
-        }
-    }
-    int count() const { return data.size(); }
-
-    void insert(IndexReference ref) { data.push_back(ref); }
-    size_t size() const { return data.size(); }
-
-    typedef std::vector<IndexReference>::iterator iterator;
-    typedef std::vector<IndexReference>::const_iterator const_iterator;
-    
-    iterator begin() { return data.begin(); }
-    const_iterator begin() const { return data.begin(); }
-
-    iterator end() { return data.end(); }
-    const_iterator end() const { return data.end(); }
-
-    iterator find(const IndexReference & ref) { return std::find(this->begin(), this->end(), ref); }
-    const_iterator find(const IndexReference & ref) const { return std::find(this->begin(), this->end(), ref); }    
-
-    std::set<int> sentences() const {
-        std::set<int> sentences;
-        for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
-            const IndexReference ref = *iter;
-            sentences.insert(ref.sentence); 
-        }
-        return sentences;
-    }
-
-    std::set<IndexReference> set() const {
-        return std::set<IndexReference>(this->begin(), this->end() );
-    }
-
-    void sort() {
-        std::sort(this->begin(), this->end());
-    }
-
-    void reserve(size_t size) {
-        data.reserve(size);
-    }
-    void shrink_to_fit() {
-        data.shrink_to_fit();
-    }
-
-    friend class IndexedDataHandler;
-};
-
-class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
-   public:
-    const static bool indexed = true;
-    virtual std::string id() { return "PatternStoreValueHandler"; }
-    void read(std::istream * in, IndexedData & v) {
-        uint32_t c;
-        in->read((char*) &c, sizeof(uint32_t));
-        v.reserve(c); //reserve space to optimise
-        for (unsigned int i = 0; i < c; i++) {
-            IndexReference ref = IndexReference(in);
-            v.insert(ref);
-        }
-        v.shrink_to_fit(); //try to keep vector as small as possible (slows insertions down a bit)
-    }
-    void write(std::ostream * out, IndexedData & value) {
-        const uint32_t c = value.count();
-        out->write((char*) &c, sizeof(uint32_t));
-        //we already assume everything is nicely sorted!
-        for (IndexedData::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
-            iter->write(out);
-        }
-    }
-    virtual std::string tostring(IndexedData & value) {
-        std::string s = "";
-        for (IndexedData::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
-            if (!s.empty()) s += " ";
-            s += iter->tostring();
-        }
-        return s;
-    }
-    int count(IndexedData & value) const {
-        return value.data.size();
-    }
-    void add(IndexedData * value, const IndexReference & ref ) const {
-        if (value == NULL) {
-            std::cerr << "ValueHandler: Value is NULL!" << std::endl;
-            throw InternalError();
-        }
-        value->insert(ref);
-    }
-    void convertto(IndexedData & source , IndexedData & target) const { if (&source != &target) target = source;  }; //noop
-    void convertto(IndexedData & value, unsigned int & convertedvalue) const { convertedvalue = value.count(); };
 };
 
 
