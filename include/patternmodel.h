@@ -12,7 +12,7 @@
 *   Licensed under GPLv3
 *****************************/
 
-#include "pattern.h"
+#include "patternstore.h"
 #include "classencoder.h"
 #include "algorithms.h"
 #include <limits>

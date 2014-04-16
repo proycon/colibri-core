@@ -1,4 +1,5 @@
 #include "pattern.h"
+#include "patternstore.h"
 #include "SpookyV2.h" //spooky hash
 
 /*****************************

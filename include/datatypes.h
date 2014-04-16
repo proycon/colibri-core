@@ -1,6 +1,19 @@
 #ifndef COLIBRIDATATYPES_H
 #define COLIBRIDATATYPES_H
 
+#include <string>
+#include <iostream>
+#include <ostream>
+#include <istream>
+#include <vector>
+#include <set>
+#include <algorithm>
+#include "common.h"
+#include "pattern.h"
+#include "datatypes.h"
+#include "classdecoder.h"
+
+
 class IndexReference {
     /* Reference to a position in the corpus */
    public:

@@ -52,6 +52,8 @@ cdef extern from "pattern.h":
         bool isskipgram() nogil
         bool isflexgram() nogil
 
+
+cdef extern from "datatypes.h":
     cdef cppclass IndexReference:
         IndexReference()
         IndexReference(int,int)
@@ -63,6 +65,18 @@ cdef extern from "pattern.h":
         int add(T *, IndexReference&)
         str tostring(T&)
 
+    cdef cppclass IndexedData:
+        cppclass iterator:
+            IndexReference& operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        bool has(IndexReference& ref)
+
+cdef extern from "patternstore.h":
     cdef cppclass PatternMap[ValueType,ValueHandler,ReadWriteSizeType]:
         cppclass iterator:
             pair[Pattern,ValueType] & operator*() nogil
@@ -171,16 +185,6 @@ cdef extern from "pattern.h":
         void read(string filename) nogil
         void write(string filename) nogil
 
-    cdef cppclass IndexedData:
-        cppclass iterator:
-            IndexReference& operator*() nogil
-            iterator operator++() nogil
-            bint operator==(iterator) nogil
-            bint operator!=(iterator) nogil
-        size_t size() nogil
-        iterator begin() nogil
-        iterator end() nogil
-        bool has(IndexReference& ref)
 
 
     extern Pattern SKIPPATTERN
