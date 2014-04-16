@@ -14,7 +14,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, OrderedPatternMap as cOrderedPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternSetModel as cPatternSetModel, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator,IndexedCorpus as cIndexedCorpus, BEGINPATTERN as cBEGINPATTERN, ENDPATTERN as cENDPATTERN, SKIPPATTERN as cSKIPPATTERN, FLEXPATTERN as cFLEXPATTERN, UNKPATTERN as cUNKPATTERN, AlignedPatternMap as cAlignedPatternMap, PatternModelInterface as cPatternModelInterface
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, OrderedPatternMap as cOrderedPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternSetModel as cPatternSetModel, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator,IndexedCorpus as cIndexedCorpus, BEGINPATTERN as cBEGINPATTERN, ENDPATTERN as cENDPATTERN, SKIPPATTERN as cSKIPPATTERN, FLEXPATTERN as cFLEXPATTERN, UNKPATTERN as cUNKPATTERN, AlignedPatternMap as cAlignedPatternMap, PatternModelInterface as cPatternModelInterface, PatternFeatureVector as cPatternFeatureVector, PatternFeatureVectorMap as cPatternFeatureVectorMap, PatternAlignmentModel as cPatternAlignmentModel
 from unordered_map cimport unordered_map
 from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
@@ -951,6 +951,281 @@ cdef class IndexedCorpus:
         return self.data.sentencelength(sentence)
 
 
+
+
+
+cdef class PatternFeatureVectorMap_float:
+    cdef cPatternFeatureVectorMap[double] data
+    cdef cPatternFeatureVectorMap[double].iterator it
+
+    cdef bind(self, cPatternFeatureVectorMap[double] & cmap):
+        self.data = cmap
+
+    def __len__(self):
+        return self.data.size()
+    
+
+    def __bool__(self):
+        return self.data.size() > 0
+
+    cdef has(self, Pattern pattern):
+        return self.data.has(pattern.cpattern)
+
+    def __contains__(self, Pattern pattern):
+        return self.has(pattern)
+
+    cdef getdata(self, Pattern pattern):
+        cdef cPatternFeatureVector[double] * v = self.data.getdata(pattern.cpattern)
+        targetpattern = Pattern()
+        targetpattern.bind(v.pattern)
+        return (targetpattern, v.data)
+
+    def __getitem__(self, pattern):
+        if not isinstance(pattern,Pattern):
+            raise ValueError("Argument must be Pattern instance")
+        return self.getdata(pattern)
+
+    cpdef setdata(self, Pattern pattern, tuple features):
+        cdef cPatternFeatureVector[double] * v = self.data.getdata(pattern.cpattern)
+        v.data.clear()
+        for e in features:
+            if isinstance(e,float) or isinstance(e, int):
+                v.data.push_back(e)
+            else:
+                raise ValueError
+
+    def __setitem__(self, pattern, value):
+        if not isinstance(pattern,Pattern):
+            raise ValueError("Key must be Pattern instance")
+        if not isinstance(value,tuple) or all([ isinstance(x,float) or isinstance(x,int) for x in value]):
+            raise ValueError("Value must be tuple containing floats")
+        self.setdata(pattern, value)
+
+    def items(self):
+        cdef cPatternFeatureVector[double] v
+        cdef cPatternFeatureVectorMap[double].iterator it = self.data.begin()
+        cdef cPatternFeatureVectorMap[double].iterator it_end = self.data.end()
+        while it != it_end:
+            v  = deref(it)
+            pattern = Pattern()
+            pattern.bind(v.pattern)
+            yield (pattern, v.data)
+            inc(it)
+
+    def __iter__(self):
+        cdef cPatternFeatureVector[double] v
+        cdef cPatternFeatureVectorMap[double].iterator it = self.data.begin()
+        cdef cPatternFeatureVectorMap[double].iterator it_end = self.data.end()
+        while it != it_end:
+            v  = deref(it)
+            pattern = Pattern()
+            pattern.bind(v.pattern)
+            yield pattern
+            inc(it)
+
+
+
+
+cdef class PatternAlignmentModel_float:
+    """Unindexed Pattern Model, less flexible and powerful than its indexed counterpart, but smaller memory footprint"""
+    cdef cPatternAlignmentModel[double] data
+    cdef cPatternAlignmentModel[double].iterator it
+
+    cdef getdata(self, Pattern pattern):
+        cdef cPatternFeatureVectorMap[double] cmap
+        if pattern in self:        
+            cmap = deref(self.data.getdata(pattern.cpattern))
+            pmap = PatternFeatureVectorMap_float()
+            pmap.bind(cmap)
+            return pmap
+        else:
+            raise KeyError
+
+    cdef getdatatuple(self, Pattern pattern, Pattern pattern2):
+        cdef cPatternFeatureVector[double] * cvec
+        if self.data.has(pattern.cpattern, pattern2.cpattern):
+            cvec = self.data.getdata(pattern.cpattern, pattern2.cpattern)
+            p = Pattern()
+            p.bind(cvec.pattern)
+            return (p, cvec.data)
+        else:
+            raise KeyError
+
+    def items(self):
+        """Iterate over all patterns and PatternFeatureVectorMaps in this model"""
+        it = self.data.begin()
+        cdef cPattern cpattern
+        cdef cPatternFeatureVectorMap[double] cmap
+        while it != self.data.end():
+            cpattern = deref(it).first
+            cmap = deref(it).second
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            pmap = PatternFeatureVectorMap_float()
+            pmap.bind(cmap)
+            yield (pattern,pmap)
+            inc(it)
+
+    cpdef add(self, Pattern pattern, Pattern pattern2, tuple l):
+        """Add a pattern to the unindexed model
+        
+        :param pattern: The source pattern to add
+        :type pattern: Pattern
+        :param pattern: The target pattern to add
+        :type pattern: Pattern
+        :param l: Feature tuple (homogenously typed)
+        :type l: tuple (of floats)
+        :type count: int
+        """
+        cdef vector[double] v
+        for e in l:
+            if not isinstance(e, float) or not isinstance(e, int):
+                raise ValueError("Expected list with instances of double, got " + type(e))
+            v.push_back(e)
+
+        self.data.add(pattern.cpattern,pattern2.cpattern, v)
+
+    def __len__(self):
+        """Returns the total number of distinct patterns in the model"""
+        return self.data.size()
+
+    def __bool__(self):
+        return self.data.size() > 0
+
+    def types(self):
+        """Returns the total number of distinct word types in the training data"""
+        return self.data.types()
+
+    def tokens(self):
+        """Returns the total number of tokens in the training data"""
+        return self.data.tokens()
+
+    def minlength(self):
+        """Returns the minimum pattern length in the model"""
+        return self.data.minlength()
+
+    def maxlength(self):
+        """Returns the maximum pattern length in the model"""
+        return self.data.maxlength()
+
+    def type(self):
+        """Returns the model type (10 = UNINDEXED, 20 = INDEXED)"""
+        return self.data.type()
+
+    def version(self):
+        """Return the version of the model type"""
+        return self.data.version()
+
+    cdef has(self, Pattern pattern):
+        if not isinstance(pattern, Pattern):
+            raise ValueError("Expected instance of Pattern")
+        return self.data.has(pattern.cpattern)
+
+    cdef hastuple(self, Pattern pattern, Pattern pattern2):
+        if not isinstance(pattern, Pattern):
+            raise ValueError("Expected instance of Pattern")
+        return self.data.has(pattern.cpattern, pattern2.cpattern)
+
+    def __contains__(self, pattern):
+        """Tests if a pattern is in the model:
+
+        :param pattern: A pattern or a pair of patterns
+        :type pattern: Pattern or 2-tuple of patterns
+        :rtype: bool
+
+        Example::
+            
+            sourcepattern in alignmodel
+            (sourcepattern, targetpattern) in alignmodel
+        """
+        if isinstance(pattern, tuple):
+            if len(pattern) != 2 or not isinstance(pattern[0], Pattern) or not isinstance(pattern[1], Pattern):
+                raise ValueError("Expected instance of Pattern or 2-tuple of Patterns")
+            return self.hastuple(pattern[0], pattern[1])
+
+        if not isinstance(pattern, Pattern):
+            raise ValueError("Expected instance of Pattern or 2-tuple of Patterns")
+
+        return self.has(pattern)
+
+    def __getitem__(self, pattern):
+        """Retrieves the value for the pattern
+
+        :param pattern: A pattern
+        :type pattern: Pattern
+        :rtype: int (for Unindexed Models), IndexData (for Indexed models)
+
+        Example (unindexed model)::
+            
+            occurrences = model[pattern]
+        """
+        if isinstance(pattern, tuple):
+            if len(pattern) != 2 or not isinstance(pattern[0], Pattern) or not isinstance(pattern[1], Pattern):
+                raise ValueError("Expected instance of Pattern or 2-tuple of Patterns")
+            return self.getdatatuple(pattern[0], pattern[1])
+
+        if not isinstance(pattern, Pattern):
+            raise ValueError("Expected instance of Pattern or 2-tuple of Patterns")
+
+        return self.getdata(pattern)
+
+
+
+    def __iter__(self):
+        """Iterates over all source patterns in the model.
+        
+        Example::
+        
+            for sourcepattern in alignmodel:
+                print(pattern.tostring(classdecoder))
+
+        """
+        it = self.data.begin()
+        cdef cPattern cpattern
+        while it != self.data.end():
+            cpattern = deref(it).first
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield pattern
+            inc(it)
+
+    def __init__(self, str filename = "",PatternModelOptions options = None):
+        """Initialise an alignment model. Either an empty one or loading from file. 
+
+        :param filename: The name of the file to load, must be a valid colibri alignmodel file
+        :type filename: str
+        :param options: An instance of PatternModelOptions, containing the options used for loading
+        :type options: PatternModelOptions
+
+        """
+        if filename:
+            if not options:
+                options = PatternModelOptions()
+            self.load(filename,options)
+
+    def load(self, str filename, PatternModelOptions options=None):
+        """Load an alignment model from file
+
+        :param filename: The name of the file to load, must be a valid colibri alignmodel file
+        :type filename: str
+        :param options: An instance of PatternModelOptions, containing the options used for loading
+        :type options: PatternModelOptions
+        """
+        if not options:
+            options = PatternModelOptions()
+        self.data.load(filename.encode('utf-8'), options.coptions)
+
+    def read(self, str filename, PatternModelOptions options=None):
+        """Alias for load"""
+        self.load(filename, options)
+
+    cpdef write(self, str filename):
+        """Write an alignment model to file
+
+        :param filename: The name of the file to write to
+        :type filename: str
+        """
+        self.data.write(filename.encode('utf-8'))
 
 BEGINPATTERN = Pattern()
 BEGINPATTERN.bindbegin()

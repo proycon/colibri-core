@@ -81,6 +81,7 @@ cdef extern from "datatypes.h":
         bool has(IndexReference& ref)
 
     cdef cppclass PatternFeatureVector[T]:
+        vector[T] data
         Pattern pattern
         cppclass iterator:
             T& operator*() nogil
@@ -91,6 +92,8 @@ cdef extern from "datatypes.h":
         iterator begin() nogil
         iterator end() nogil
         T get(int) nogil
+        void clear() nogil
+        void push_back(T) nogil
 
 
     cdef cppclass PatternFeatureVectorMap[T]:
@@ -106,7 +109,7 @@ cdef extern from "datatypes.h":
         bool has(Pattern&) nogil
         iterator find(Pattern&) nogil
         void insert(PatternFeatureVector&)
-        T* getdata(Pattern&, bool makeifnew=False) nogil
+        PatternFeatureVector[T]* getdata(Pattern&, bool makeifnew=False) nogil
 
 
 cdef extern from "patternstore.h":
@@ -445,9 +448,9 @@ cdef extern from "alignmodel.h":
 
         int size() nogil
 
-        PatternFeatureVectorMap& operator[](Pattern&) nogil
-        PatternFeatureVectorMap* getdata(Pattern&, bool makeifnew=False) nogil
-        PatternFeatureVector* getdata(Pattern&, Pattern&, bool makeifnew=False) nogil
+        PatternFeatureVectorMap[double]& operator[](Pattern&) nogil
+        PatternFeatureVectorMap[double]* getdata(Pattern&, bool makeifnew=False) nogil
+        PatternFeatureVector[double]* getdata(Pattern&, Pattern&, bool makeifnew=False) nogil
 
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
