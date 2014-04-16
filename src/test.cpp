@@ -795,14 +795,31 @@ int main( int argc, char *argv[] ) {
 
         string s = "To be or not to be";
         Pattern p = classencoder.buildpattern(s);
+        string s2 = "that is the question";
+        Pattern p2 = classencoder.buildpattern(s2);
+    
+        {
+            cerr << "Creating a PatternAlignmentModel" << endl;
+            PatternAlignmentModel<double> alignmodel = PatternAlignmentModel<double>(); 
+            vector<double> v;
+            v.push_back(3.14);
+            alignmodel.add(p,p,v);
+            vector<double> v2;
+            v2.push_back(2.17);
+            v2.push_back(0.24);
+            alignmodel.add(p2,p2,v2);
 
-        cerr << "Creating a PatternAlignmentModel" << endl;
-        PatternAlignmentModel<double> alignmodel = PatternAlignmentModel<double>(); 
-        vector<double> v;
-        v.push_back(3.14);
-        alignmodel.add(p,p,v);
-
+            cerr << "Saving alignment model" << endl;
+            alignmodel.write("/tmp/hamlet.colibri.alignmodel");
+        }
+        {
+            cerr << "Loading PatternAlignmentModel" << endl;
+            PatternAlignmentModel<double> alignmodel = PatternAlignmentModel<double>();
+            alignmodel.load("/tmp/hamlet.colibri.alignmodel", PatternModelOptions()); 
+        }
 
     }
+
+
 }
 

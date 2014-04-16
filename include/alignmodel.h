@@ -122,7 +122,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             out->write( (char*) &v, sizeof(char));        
             out->write( (char*) &totaltokens, sizeof(uint64_t));        
             out->write( (char*) &totaltypes, sizeof(uint64_t)); 
-            write(out); //write PatternStore
+            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::write(out); //write PatternStore
         }
 
         void write(const std::string filename) {

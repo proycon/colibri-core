@@ -220,6 +220,10 @@ class PatternFeatureVector {
             pattern = ref.pattern;
             data = ref.data;
         };
+        PatternFeatureVector(std::istream * in) {
+            read(in);
+        }
+
 
         void read(std::istream * in) {
             this->pattern = Pattern(in);
@@ -370,7 +374,7 @@ class PatternFeatureVectorHandler: public AbstractValueHandler<PatternFeatureVec
 
     }
     void write(std::ostream * out, PatternFeatureVectorMap<FeatureType> & value) {
-        const uint16_t c = value.count();
+        const uint16_t c = value.size();
         out->write((char*) &c, sizeof(uint16_t));
         //we already assume everything is nicely sorted!
         for (typename PatternFeatureVectorMap<FeatureType>::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
