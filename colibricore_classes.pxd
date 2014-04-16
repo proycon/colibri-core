@@ -53,6 +53,10 @@ cdef extern from "pattern.h":
         bool isflexgram() nogil
 
 
+
+
+
+
 cdef extern from "datatypes.h":
     cdef cppclass IndexReference:
         IndexReference()
@@ -75,6 +79,35 @@ cdef extern from "datatypes.h":
         iterator begin() nogil
         iterator end() nogil
         bool has(IndexReference& ref)
+
+    cdef cppclass PatternFeatureVector[T]:
+        Pattern pattern
+        cppclass iterator:
+            T& operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        T get(int) nogil
+
+
+    cdef cppclass PatternFeatureVectorMap[T]:
+        PatternFeatureVectorMap() nogil
+        cppclass iterator:
+            PatternFeatureVector[T]& operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        bool has(Pattern&) nogil
+        iterator find(Pattern&) nogil
+        void insert(PatternFeatureVector&)
+        T* getdata(Pattern&, bool makeifnew=False) nogil
+
 
 cdef extern from "patternstore.h":
     cdef cppclass PatternMap[ValueType,ValueHandler,ReadWriteSizeType]:
@@ -386,20 +419,36 @@ cdef extern from "patternmodel.h":
         t_relationmap getleftcooc(Pattern & pattern) except +KeyError
         t_relationmap getrightcooc(Pattern & pattern) except +KeyError
 
-#    cdef cppclass NGramData(AnyGramData):
-#        cppset[CorpusReference] refs
-#        int count()
-#
-#    ctypedef vector[const EncAnyGram*] anygramvector
-#
-#    cdef cppclass IndexedPatternModel:
-#        IndexedPatternModel(string, bool, bool) except +
-#        bool exists(EncAnyGram*)
-#        unordered_map[EncNGram,NGramData] ngrams
-#        unordered_map[int, anygramvector] reverse_index
-#        int types()
-#        int tokens()
-#        int occurrencecount(EncAnyGram*) except +
-#        AnyGramData * getdata(EncAnyGram*)
-#        anygramvector get_reverse_index(int i)
+cdef extern from "alignmodel.h":
+    cdef cppclass PatternAlignmentModel[FeatureType]:
+        cppclass iterator:
+            pair[Pattern,PatternFeatureVectorMap[FeatureType]] & operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        iterator begin() nogil
+        iterator end() nogil
+        PatternAlignmentModel() nogil
+        int types() nogil
+        int tokens() nogil
+        int type() nogil
+        int version() nogil
+        int maxlength() nogil
+        int minlength() nogil
+        void add(Pattern&, Pattern&, vector[FeatureType]&)
+
+        PatternModelInterface * getinterface() nogil
+
+        void insert(Pattern&, PatternFeatureVectorMap[FeatureType]& value) nogil
+        bool has(Pattern&) nogil
+        bool has(Pattern&, Pattern&) nogil
+
+        int size() nogil
+
+        PatternFeatureVectorMap& operator[](Pattern&) nogil
+        iterator erase(Pattern&) nogil
+        iterator find(Pattern&) nogil
+
+        void load(string, PatternModelOptions) nogil except +IOError
+        void write(string) nogil except +IOError
 

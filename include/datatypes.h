@@ -271,7 +271,7 @@ class PatternFeatureVector {
         PatternFeatureVector<FeatureType>::iterator end() { return data.end(); }
         PatternFeatureVector<FeatureType>::const_iterator end() const { return data.end(); }
 
-        FeatureType feature(int index) {
+        FeatureType get(int index) {
             return data[index];
         }
 
