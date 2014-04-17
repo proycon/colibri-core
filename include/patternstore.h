@@ -155,6 +155,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            std::cerr << "Reading " << s << " patterns" << std::endl;
             //std::cerr << "Reading " << (int) s << " patterns" << std::endl;
             for (ReadWriteSizeType i = 0; i < s; i++) {
                 Pattern p;
@@ -169,10 +170,10 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                     if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
                 }
                 const int n = p.size();
+                ReadValueType readvalue;
+                //std::cerr << "Read pattern: " << std::endl;
+                readvaluehandler.read(in, readvalue);
                 if (n >= MINLENGTH && n <= MAXLENGTH)  {
-                    ReadValueType readvalue;
-                    //std::cerr << "Read pattern: " << std::endl;
-                    readvaluehandler.read(in, readvalue);
                     if ((readvaluehandler.count(readvalue) >= MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
                             ValueType convertedvalue;
                             if (!DORESET) readvaluehandler.convertto(readvalue, convertedvalue); 
@@ -280,10 +281,10 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
                     if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
                 }
                 const int n = p.size();
+                ReadValueType readvalue;
+                //std::cerr << "Read pattern: " << std::endl;
+                readvaluehandler.read(in, readvalue);
                 if (n >= MINLENGTH && n <= MAXLENGTH)  {
-                    ReadValueType readvalue;
-                    //std::cerr << "Read pattern: " << std::endl;
-                    readvaluehandler.read(in, readvalue);
                     if ((readvaluehandler.count(readvalue) >= MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
                         this->insert(p);
                     }
