@@ -963,7 +963,7 @@ cdef class PatternFeatureVectorMap_float:
 
     def __len__(self):
         return self.data.size()
-    
+
 
     def __bool__(self):
         return self.data.size() > 0
@@ -1033,7 +1033,7 @@ cdef class PatternAlignmentModel_float:
 
     cdef getdata(self, Pattern pattern):
         cdef cPatternFeatureVectorMap[double] cmap
-        if pattern in self:        
+        if pattern in self:
             cmap = deref(self.data.getdata(pattern.cpattern))
             pmap = PatternFeatureVectorMap_float()
             pmap.bind(cmap)
@@ -1041,13 +1041,16 @@ cdef class PatternAlignmentModel_float:
         else:
             raise KeyError
 
+    cdef getfeatures(self, cPatternFeatureVector[double] * cvec):
+        return cvec.data
+
     cdef getdatatuple(self, Pattern pattern, Pattern pattern2):
         cdef cPatternFeatureVector[double] * cvec
         if self.data.has(pattern.cpattern, pattern2.cpattern):
             cvec = self.data.getdata(pattern.cpattern, pattern2.cpattern)
             p = Pattern()
             p.bind(cvec.pattern)
-            return (p, cvec.data)
+            return (p, self.getfeatures(cvec))
         else:
             raise KeyError
 
@@ -1078,20 +1081,20 @@ cdef class PatternAlignmentModel_float:
             cmap = deref(it).second
             sourcepattern = Pattern()
             sourcepattern.bind(cpattern)
-           
+
             it2 = cmap.begin()
             it2_end = cmap.end()
             while it2 != it2_end:
-                cvec = deref(it2) 
+                cvec = deref(it2)
                 targetpattern = Pattern()
                 targetpattern.bind(cvec.pattern)
-                yield (sourcepattern, targetpattern, cvec.data)
+                yield (sourcepattern, targetpattern, self.getfeatures(&cvec) )
                 inc(it2)
             inc(it)
 
     cpdef add(self, Pattern pattern, Pattern pattern2, tuple l):
         """Add a pattern to the unindexed model
-        
+
         :param pattern: The source pattern to add
         :type pattern: Pattern
         :param pattern: The target pattern to add
@@ -1157,7 +1160,7 @@ cdef class PatternAlignmentModel_float:
         :rtype: bool
 
         Example::
-            
+
             sourcepattern in alignmodel
             (sourcepattern, targetpattern) in alignmodel
         """
@@ -1179,7 +1182,7 @@ cdef class PatternAlignmentModel_float:
         :rtype: int (for Unindexed Models), IndexData (for Indexed models)
 
         Example (unindexed model)::
-            
+
             occurrences = model[pattern]
         """
         if isinstance(pattern, tuple):
@@ -1196,9 +1199,9 @@ cdef class PatternAlignmentModel_float:
 
     def __iter__(self):
         """Iterates over all source patterns in the model.
-        
+
         Example::
-        
+
             for sourcepattern in alignmodel:
                 print(pattern.tostring(classdecoder))
 
@@ -1213,7 +1216,7 @@ cdef class PatternAlignmentModel_float:
             inc(it)
 
     def __init__(self, str filename = "",PatternModelOptions options = None):
-        """Initialise an alignment model. Either an empty one or loading from file. 
+        """Initialise an alignment model. Either an empty one or loading from file.
 
         :param filename: The name of the file to load, must be a valid colibri alignmodel file
         :type filename: str
