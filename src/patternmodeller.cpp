@@ -209,7 +209,7 @@ int main( int argc, char *argv[] ) {
     double COOCTHRESHOLD = 0;
     bool DOCOOC = false;
     char c;    
-    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:rGS:xXNIVC:L2Z")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:rGS:xXNIVC:L2Zm:")) != -1)
         switch (c)
         {
         case 'c':
@@ -238,6 +238,9 @@ int main( int argc, char *argv[] ) {
             break;
         case 'l':
             options.MAXLENGTH = atoi(optarg);            
+            break;
+        case 'm':
+            options.MINLENGTH = atoi(optarg);            
             break;
         case 's':
             options.DOSKIPGRAMS = true;
