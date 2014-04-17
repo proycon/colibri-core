@@ -1721,7 +1721,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
 
-    t_relationmap getcooc(const Pattern & pattern) { 
+    t_relationmap getcooc(const Pattern & pattern, bool bidirectional = true) { 
         if (this->reverseindex.empty()) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -1743,6 +1743,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             for (std::multimap<IndexReference,Pattern>::iterator iter2 = this->reverseindex.lower_bound(bos); iter2 != this->reverseindex.end(); iter2++) {
                 const IndexReference ref2 = iter2->first;
                 const Pattern neighbour = iter2->second;
+                if ((!bidirectional) && (neighbour < pattern)) continue;
                 const int _n2 = neighbour.n();
                 if ((ref2.token + _n2 < ref.token ) || (ref2.token > ref.token + _n)) {
                     cooc[neighbour]++;
@@ -1805,6 +1806,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
     void computenpmi( std::map<Pattern,t_relationmap_double> &  coocmap , double threshold, bool right=true, bool left=false) { 
+        //by default we do only right so we don't get double entries, cooc's
+        //will always appear in sequential order in the data
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;
             t_relationmap tmp;
@@ -1866,8 +1869,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {
         std::map<Pattern,t_relationmap_double> npmimap;
+        std::cerr << "Collecting patterns and computing NPMI..." << std::endl;
         computenpmi(npmimap, threshold); 
-        //we want the reverse,, so we can sort by co-occurrence
+
+        std::cerr << "Building inverse map..." << std::endl;
+        //we want the reverse, so we can sort by co-occurrence
         std::multimap<double,std::pair<Pattern,Pattern>> inversemap;
         std::map<Pattern,t_relationmap_double>::iterator iter = npmimap.begin();
         while (iter != npmimap.end()) {
