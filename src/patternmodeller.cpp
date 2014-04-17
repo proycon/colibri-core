@@ -237,7 +237,7 @@ int main( int argc, char *argv[] ) {
             options.MINSKIPTYPES = atoi(optarg);            
             break;
         case 'l':
-            options.MAXLENGTH = atoi(optarg);            
+            options.MAXLENGTH = atoi(optarg); 
             break;
         case 'm':
             options.MINLENGTH = atoi(optarg);            
@@ -416,11 +416,16 @@ int main( int argc, char *argv[] ) {
             }
         }
         
-        if ((inputmodeltype == INDEXEDPATTERNMODEL) && (!DOPRINTREVERSEINDEX) && (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) && (!DOFLEXFROMSKIP) && (!DOREPORT) && (!DORELATIONS) && (!DOCOOC) ) {
+        if ( (!DOPRINTREVERSEINDEX) && (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) && (!DOFLEXFROMSKIP) && (!DOREPORT) && (!DORELATIONS) && (!DOCOOC) ) {
             options.DOREVERSEINDEX = false; //no need for reverse index
-            cerr << "(Notice: reverse index disabled to speed up processing)" << endl;
+            if (inputmodeltype != UNINDEXEDPATTERNMODEL) {
+                cerr << "Reverse index: disabled";
+            }
+        } else {
+            cerr << "Reverse index: enabled";
         }
-
+ 
+            
 
         if (DOINPLACEREBUILD) {
             cerr << "In-place rebuild (-I) enabled" << corpusfile <<endl;
