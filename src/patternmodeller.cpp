@@ -413,7 +413,7 @@ int main( int argc, char *argv[] ) {
             }
         }
         
-        if ((inputmodeltype == INDEXEDPATTERNMODEL) && (!DOPRINTREVERSEINDEX) && (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) && (!DOFLEXFROMSKIP) && (!DOREPORT) && (!DORELATIONS) ) {
+        if ((inputmodeltype == INDEXEDPATTERNMODEL) && (!DOPRINTREVERSEINDEX) && (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) && (!DOFLEXFROMSKIP) && (!DOREPORT) && (!DORELATIONS) && (!DOCOOC) ) {
             options.DOREVERSEINDEX = false; //no need for reverse index
             cerr << "(Notice: reverse index disabled to speed up processing)" << endl;
         }
