@@ -414,17 +414,14 @@ int main( int argc, char *argv[] ) {
             } else {
                 options.DOREVERSEINDEX = false;
             }
-        }
-        
-        if ( (!DOPRINTREVERSEINDEX) && (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) && (!DOFLEXFROMSKIP) && (!DOREPORT) && (!DORELATIONS) && (!DOCOOC) ) {
-            options.DOREVERSEINDEX = false; //no need for reverse index
-            if (inputmodeltype != UNINDEXEDPATTERNMODEL) {
-                cerr << "Reverse index: disabled";
-            }
         } else {
-            cerr << "Reverse index: enabled";
+            if ( (!DOPRINTREVERSEINDEX) && (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) && (!DOFLEXFROMSKIP) && (!DOREPORT) && (!DORELATIONS) && (!DOCOOC) ) {
+                options.DOREVERSEINDEX = false; //no need for reverse index
+                cerr << "Reverse index: disabled" << endl;
+            } else {
+                cerr << "Reverse index: enabled" << endl;
+            }
         }
- 
             
 
         if (DOINPLACEREBUILD) {
