@@ -836,8 +836,11 @@ int main( int argc, char *argv[] ) {
         classencoder.processcorpus((istream*) &sscls, freqlist);
         classencoder.buildclasses(freqlist);
 
+        stringstream sstxt;
+        sstxt << poem;
+
         stringstream ssdat;
-        classencoder.encodefile((istream*) &sscls, (ostream*) &ssdat,false, false);
+        classencoder.encodefile((istream*) &sstxt, (ostream*) &ssdat,false, false);
 
             
 
