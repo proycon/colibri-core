@@ -331,11 +331,16 @@ int main( int argc, char *argv[] ) {
     bool cached_DOFLEXFROMCOOC = DOFLEXFROMCOOC;
 
     if (DOTWOSTAGE) {
-        stages = 2;
-        if (outputmodelfile.empty()) {
-            cerr << "ERROR: An output model file (-o) is mandatory for two-stage building!" << endl;
-            exit(2);
-        }
+       if (options.MINTOKENS == 1) {
+           cerr << "Two stage building was requested but has no value with -t 1 , disabling..." << endl;
+           DOTWOSTAGE = false;
+       } else {
+            stages = 2;
+            if (outputmodelfile.empty()) {
+                cerr << "ERROR: An output model file (-o) is mandatory for two-stage building!" << endl;
+                exit(2);
+            }
+       }
     }
 
 
