@@ -847,6 +847,8 @@ int main( int argc, char *argv[] ) {
         PatternModelOptions options;
         stringstream ss2;
         PatternModel<uint32_t> model = PatternModel<uint32_t>();
+        model.train((istream*) &ssdat, options);
+
         
         
 
