@@ -827,10 +827,15 @@ cdef class PatternModelOptions:
 cdef class IndexedCorpus:
     """An indexed version of a corpus, reads an entire corpus (colibri.dat file) in memory"""
     cdef cIndexedCorpus data
+    cdef str _filename
 
     def __init__(self, str filename):
         """:param filename: The name of the colibri.dat file to load"""
+        self._filename = filename
         self.data.load(filename.encode('utf-8'))
+
+    def filename(self):
+        return self._filename
 
     def __len__(self):
         """Return the total number of tokens in the corpus"""
@@ -1225,8 +1230,6 @@ cdef class PatternAlignmentModel_float:
 
         """
         if filename:
-            if not options:
-                options = PatternModelOptions()
             self.load(filename,options)
 
     def load(self, str filename, PatternModelOptions options=None):
