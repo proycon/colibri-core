@@ -1106,7 +1106,7 @@ cdef class PatternAlignmentModel_float:
         cdef vector[double] v
         for e in l:
             if not isinstance(e, float) or not isinstance(e, int):
-                raise ValueError("Expected list with instances of double, got " + type(e))
+                raise ValueError("Expected list with instances of double")
             v.push_back(e)
 
         self.data.add(pattern.cpattern,pattern2.cpattern, v)
