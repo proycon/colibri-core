@@ -1101,7 +1101,7 @@ Pattern IndexedCorpus::getpattern(IndexReference begin, int length) {
             const Pattern unigram = iter->second;
             pattern  = pattern + unigram;
         } else {
-            std::cerr << "ERROR: Specified index does not exist"<< std::endl;
+            std::cerr << "ERROR: Specified index " << begin.tostring() << " (length " << length << ") does not exist"<< std::endl;
             throw InternalError();
         }
     }

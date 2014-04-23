@@ -198,7 +198,7 @@ cdef extern from "patternstore.h":
         IndexedCorpus() nogil
         void load(string) nogil
         bool has(IndexReference&) nogil
-        Pattern getpattern(IndexReference&,int) nogil
+        Pattern getpattern(IndexReference&,int) nogil except +KeyError
         vector[IndexReference] findmatches(Pattern&,int) nogil
         Pattern& operator[](IndexReference&) nogil
         int sentencelength(int) nogil
