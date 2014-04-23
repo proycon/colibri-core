@@ -1053,9 +1053,7 @@ cdef class PatternAlignmentModel_float:
         cdef cPatternFeatureVector[double] * cvec
         if self.data.has(pattern.cpattern, pattern2.cpattern):
             cvec = self.data.getdata(pattern.cpattern, pattern2.cpattern)
-            p = Pattern()
-            p.bind(cvec.pattern)
-            return (p, self.getfeatures(cvec))
+            return self.getfeatures(cvec)
         else:
             raise KeyError
 
