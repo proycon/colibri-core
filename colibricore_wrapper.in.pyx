@@ -432,6 +432,7 @@ cdef class PatternSet:
     cdef cPatternSet[uint] data
     cdef cPatternSet[uint].iterator it
     cdef cPatternSet[uint].iterator it_end
+
     @include colibricore_patternset.pxi
 
 
