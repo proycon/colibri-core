@@ -310,6 +310,9 @@ cdef extern from "patternmodel.h":
 
         void insert(Pattern&) nogil
 
+        void load(string, PatternModelOptions) nogil except +IOError
+        void write(string) nogil except +IOError
+
     cdef cppclass PatternModel[ValueType,ValueHandler,MapType]:
         cppclass iterator:
             pair[Pattern,ValueType] & operator*() nogil

@@ -722,6 +722,44 @@ cdef class PatternSetModel:
 
     @include colibricore_patternset.pxi
 
+    def __init__(self, str filename = "",PatternModelOptions options = None):
+        """Initialise a pattern model. Either an empty one or loading from file.
+
+        :param filename: The name of the file to load, must be a valid colibri patternmodel file
+        :type filename: str
+        :param options: An instance of PatternModelOptions, containing the options used for loading
+        :type options: PatternModelOptions
+
+        """
+        if filename:
+            if not options:
+                options = PatternModelOptions()
+            self.load(filename,options)
+
+    def load(self, str filename, PatternModelOptions options=None):
+        """Load a patternmodel from file
+
+        :param filename: The name of the file to load, must be a valid colibri patternmodel file
+        :type filename: str
+        :param options: An instance of PatternModelOptions, containing the options used for loading
+        :type options: PatternModelOptions
+        """
+        if not options:
+            options = PatternModelOptions()
+        self.data.load(filename.encode('utf-8'), options.coptions)
+
+    def read(self, str filename, PatternModelOptions options=None):
+        """Alias for load"""
+        self.load(filename, options)
+
+cpdef write(self, str filename):
+    """Write a patternmodel to file
+
+    :param filename: The name of the file to write to
+    :type filename: str
+    """
+    self.data.write(filename.encode('utf-8'))
+
 cdef class UnindexedPatternModel:
     """Unindexed Pattern Model, less flexible and powerful than its indexed counterpart, but smaller memory footprint"""
     cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]] data
