@@ -116,7 +116,6 @@ class PatternModelOptions {
 
 typedef PatternMap<uint32_t> t_relationmap;
 typedef PatternMap<double> t_relationmap_double;
-typedef PatternMap<std::pair<double,uint32_t>> t_relationmap_doubleint;
 
 //basic read-only interface for pattern models, abstract base class.
 class PatternModelInterface: public PatternStoreInterface {
@@ -1163,6 +1162,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual t_relationmap_double getnpmi(const Pattern & pattern, double threshold) { return t_relationmap_double(); } //does nothing for unindexed models
         virtual int computeflexgrams_fromskipgrams() { return 0; }//does nothing for unindexed models
         virtual int computeflexgrams_fromcooc() {return 0; }//does nothing for unindexed models
+        virtual void outputcooc_npmi(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {}
         virtual void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {}
 };
 
@@ -1826,6 +1826,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
     void computenpmi( std::map<Pattern,t_relationmap_double> &  coocmap , double threshold, bool right=true, bool left=false) { 
+        //compute npmi co-occurrence for all patterns
+
         //by default we do only right so we don't get double entries, cooc's
         //will always appear in sequential order in the data
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -1846,9 +1848,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     } 
 
-    void computenpmi( std::map<Pattern,t_relationmap_doubleint> &  coocmap , double threshold, bool right=true, bool left=false) { 
-        //this version retains the absolute count
-
+    void computecooc( std::map<Pattern,t_relationmap> &  coocmap , double threshold, bool right=true, bool left=false) { 
+        //compute absolute co-occurrence for all patterns
+        //
         //by default we do only right so we don't get double entries, cooc's
         //will always appear in sequential order in the data
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -1860,11 +1862,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 tmp =  this->getleftcooc(pattern);
             } else if (left && right) {
                 tmp =  this->getcooc(pattern);
-            }
+            }            
             for (t_relationmap::iterator iter2 = tmp.begin(); iter2 != tmp.end(); iter2++) {
                 const Pattern pattern2 = iter2->first;
-                const double value = npmi(pattern,pattern2,iter2->second);
-                if (value >= threshold) coocmap[pattern][pattern2] = std::pair<double,double>(iter2->second, value);
+                const double value = iter2->second;
+                if (value >= threshold) coocmap[pattern][pattern2] = value;
             }
         }
     } 
@@ -1910,7 +1912,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return found;
     }
 
-    void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {
+    void outputcooc_npmi(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {
         std::map<Pattern,t_relationmap_double> npmimap;
         std::cerr << "Collecting patterns and computing NPMI..." << std::endl;
         computenpmi(npmimap, threshold); 
@@ -1934,34 +1936,30 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
-    void outputcooc_full(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {
-        //outputs absolute co-occurence information as well
 
-        std::map<Pattern,t_relationmap_doubleint> npmimap;
-        std::cerr << "Collecting patterns and computing NPMI..." << std::endl;
-        computenpmi(npmimap, threshold); 
+    void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {
+        std::map<Pattern,t_relationmap> coocmap;
+        std::cerr << "Collecting patterns and computing co-occurrence..." << std::endl;
+        computecooc(coocmap, threshold); 
 
         std::cerr << "Building inverse map..." << std::endl;
         //we want the reverse, so we can sort by co-occurrence
-        std::multimap<double,std::tuple<Pattern,Pattern,uint32_t>> inversemap;
-        std::map<Pattern,t_relationmap_doubleint>::iterator iter = npmimap.begin();
-        while (iter != npmimap.end()) {
-            for (t_relationmap_doubleint::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
-                inversemap.insert(std::pair<double,std::tuple<Pattern,Pattern,uint32_t>>(iter2->second.second, std::tuple<Pattern,Pattern,uint32_t>(iter->first, iter2->first, iter2->second.first)));
+        std::multimap<uint32_t,std::pair<Pattern,Pattern>> inversemap;
+        std::map<Pattern,t_relationmap>::iterator iter = coocmap.begin();
+        while (iter != coocmap.end()) {
+            for (t_relationmap::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
+                inversemap.insert(std::pair<uint32_t,std::pair<Pattern,Pattern>>(iter2->second, std::pair<Pattern,Pattern>(iter->first, iter2->first)));
             }
-            iter = npmimap.erase(iter);
+            iter = coocmap.erase(iter);
         }
 
-        *OUT << "Pattern1\tPattern2\tCo-occurrences\tNPMI" << std::endl;
-        for (std::multimap<double,std::tuple<Pattern,Pattern,uint32_t>>::reverse_iterator iter2 = inversemap.rbegin(); iter2 != inversemap.rend(); iter2++) {
-            const Pattern pattern1 = std::get<0>(iter2->second);
-            const Pattern pattern2 = std::get<1>(iter2->second);
-            const double npmi = iter2->first;
-            const double count = std::get<2>(iter2->second);
+        *OUT << "Pattern1\tPattern2\tCooc" << std::endl;
+        for (std::multimap<uint32_t,std::pair<Pattern,Pattern>>::reverse_iterator iter2 = inversemap.rbegin(); iter2 != inversemap.rend(); iter2++) {
+            const Pattern pattern1 = iter2->second.first;
+            const Pattern pattern2 = iter2->second.second;
             *OUT << pattern1.tostring(classdecoder) << "\t" << pattern2.tostring(classdecoder) << "\t" << iter2->first << std::endl;
         }
     }
-
 
     int flexgramsize(const Pattern & pattern, IndexReference begin) {
         //attempt to find the flexgram size for the given begin position,
