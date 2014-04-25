@@ -1068,26 +1068,26 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Min n: " << this->minn << std::endl;
             *OUT << "Max n: " << this->maxn << std::endl;
             *OUT << "References in reverse index: " << this->reverseindex.size() << std::endl;
-            uint64_t totalkeybs = 0;
-            uint64_t totalvaluebs = 0;
+            size_t totalkeybs = 0;
+            size_t totalvaluebs = 0;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;   
                 totalkeybs += pattern.bytesize();
                 totalvaluebs += sizeof(ValueType); 
             }            
-            *OUT << "Total key bytesize (patterns): " << totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
-            *OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
+            *OUT << "Total key bytesize (patterns): " << (unsigned int) totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
+            *OUT << "Total value bytesize (counts/index): " << (unsigned int) totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
 
-            uint64_t ri_totalkeybs = 0;
-            uint64_t ri_totalvaluebs = 0;
+            size_t ri_totalkeybs = 0;
+            size_t ri_totalvaluebs = 0;
             for (std::multimap<IndexReference,Pattern>::iterator iter = this->reverseindex.begin(); iter != this->reverseindex.end(); iter++) {
                 ri_totalkeybs += sizeof(iter->first.sentence) + sizeof(iter->first.token);
                 ri_totalvaluebs += iter->second.bytesize();
             }
-            *OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
-            *OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
+            *OUT << "Total key bytesize in reverse index (references): " << (unsigned int) ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
+            *OUT << "Total value bytesize in reverse index (patterns): " << (unsigned int) ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
 
-            const uint64_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
+            const size_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
             *OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
         }
 
