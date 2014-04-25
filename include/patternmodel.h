@@ -141,6 +141,15 @@ class PatternModelInterface: public PatternStoreInterface {
 };
 
 
+/*
+typedef std::pair<IndexReference,PatternPointer> 
+
+
+class ReverseIndex {
+    public:
+        std::multimap<IndexReference,Pattern> reverseindex; 
+}
+*/
 
 
 //A pattern model based on an unordered set, does not hold data, only patterns
@@ -1059,8 +1068,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Min n: " << this->minn << std::endl;
             *OUT << "Max n: " << this->maxn << std::endl;
             *OUT << "References in reverse index: " << this->reverseindex.size() << std::endl;
-            int totalkeybs = 0;
-            int totalvaluebs = 0;
+            uint64_t totalkeybs = 0;
+            uint64_t totalvaluebs = 0;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;   
                 totalkeybs += pattern.bytesize();
@@ -1069,8 +1078,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Total key bytesize (patterns): " << totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
             *OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
 
-            int ri_totalkeybs = 0;
-            int ri_totalvaluebs = 0;
+            uint64_t ri_totalkeybs = 0;
+            uint64_t ri_totalvaluebs = 0;
             for (std::multimap<IndexReference,Pattern>::iterator iter = this->reverseindex.begin(); iter != this->reverseindex.end(); iter++) {
                 ri_totalkeybs += sizeof(iter->first.sentence) + sizeof(iter->first.token);
                 ri_totalvaluebs += iter->second.bytesize();
@@ -1078,7 +1087,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
             *OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
 
-            const int t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
+            const uint64_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
             *OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
         }
 
@@ -1973,7 +1982,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         bool strictbegin = true;
         std::multimap<int, IndexReference> partmatches;
         int i = 0;
-        for (std::multimap<Pattern,IndexReference>::iterator iter = this->reverseindex.lower_bound(begin); iter != this->reversindex.end(); iter++) {            
+        for (std::multimap<Pattern,IndexReference>::iterator iter = this->reverseindex.lower_bound(begin); iter != this->reverseindex.end(); iter++) {            
             const Pattern part = iter->first;
             IndexReference ref = iter->second;
             if (ref.sentence > begin.sentence) break;
