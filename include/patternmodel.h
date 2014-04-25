@@ -246,6 +246,25 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             }
         }
 
+        void write(std::ostream * out) {
+            const char null = 0;
+            out->write( (char*) &null, sizeof(char));       
+            unsigned char t = this->getmodeltype();
+            out->write( (char*) &t, sizeof(char));        
+            unsigned char v = this->getmodelversion();
+            out->write( (char*) &v, sizeof(char));        
+            out->write( (char*) &totaltokens, sizeof(uint64_t));        
+            out->write( (char*) &totaltypes, sizeof(uint64_t)); 
+            PatternSet<uint64_t>::write(out); //write
+        }
+
+        void write(const std::string filename) {
+            std::ofstream * out = new std::ofstream(filename.c_str());
+            this->write(out);
+            out->close();
+            delete out;
+        }
+
         PatternModelInterface * getinterface() {
             return (PatternModelInterface*) this;
         }

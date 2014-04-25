@@ -752,6 +752,14 @@ cdef class PatternSetModel:
         """Alias for load"""
         self.load(filename, options)
 
+    def write(self, str filename):
+        """Write a patternmodel to file
+
+        :param filename: The name of the file to write to
+        :type filename: str
+        """
+        self.data.write(filename.encode('utf-8'))
+
 cpdef write(self, str filename):
     """Write a patternmodel to file
 
