@@ -158,7 +158,7 @@ bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
         model.histogram(&cout);
     }
     if (cooc) {
-        model.outputcooc(&cout, *classdecoder,coocthreshold);
+        model.outputcooc_full(&cout, *classdecoder,coocthreshold);
    }
     if (query) {
         if (classencoder == NULL) {
