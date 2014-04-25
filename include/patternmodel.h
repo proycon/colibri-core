@@ -1068,6 +1068,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Min n: " << this->minn << std::endl;
             *OUT << "Max n: " << this->maxn << std::endl;
             *OUT << "References in reverse index: " << this->reverseindex.size() << std::endl;
+            *OUT << "Size of ValueType: " << sizeof(ValueType) << " byte" << std::endl;
             size_t totalkeybs = 0;
             size_t totalvaluebs = 0;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
