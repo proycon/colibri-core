@@ -174,7 +174,7 @@ bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
     if (info) {
         model.info(&cout);
     }
-    return (print || report || histogram || query || info);
+    return (print || report || histogram || query || info || cooc || printreverseindex);
 }
 
 

@@ -114,6 +114,7 @@ class IndexedCorpus {
         }
 
         size_t size() const { return data.size(); } 
+        bool empty() const { return data.empty(); }
 
         PatternPointer operator [](const IndexReference ref) { 
             iterator found = this->find(ref);
@@ -129,6 +130,15 @@ class IndexedCorpus {
         std::vector<IndexReference> findmatches(const Pattern & pattern, int maxmatches=0); //by far not as efficient as a pattern model obviously
 
         int sentencelength(int sentence); 
+
+        void push_back(const IndexReference ref, const Pattern & pattern) {
+            data.push_back(IndexPattern(ref,pattern));
+        }
+
+        void sort() {
+            //sort data (in-place)
+            std::sort(data.begin(), data.end());
+        }
 };
 
 

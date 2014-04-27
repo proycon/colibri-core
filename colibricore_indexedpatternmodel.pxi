@@ -112,14 +112,15 @@ def reverseindex_bysentence(self, int sentence):
     :param sentence: a sentence number
     """
 
-    cdef vector[cPattern] results = self.data.getreverseindex_bysentence(sentence)
-    cdef vector[cPattern].iterator resit = results.begin()
+    cdef vector[pair[cIndexReference,cPattern]] results = self.data.getreverseindex_bysentence(sentence)
+    cdef vector[pair[cIndexReference,cPattern]].iterator resit = results.begin()
+    cdef pair[cIndexReference,cPattern] p
     cdef cPattern cpattern
     while resit != results.end():
-        cpattern = deref(resit)
+        p = deref(resit)
         pattern = Pattern()
-        pattern.bind(cpattern)
-        yield pattern
+        pattern.bind(p.second)
+        yield (p.first.sentence, p.first.token), pattern
         inc(resit)
 
 cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
