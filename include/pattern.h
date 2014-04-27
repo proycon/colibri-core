@@ -156,7 +156,7 @@ class Pattern {
       * return the size of the pattern (in bytes), this does not include the
       * final \0 end-marker.
       */
-     const size_t bytesize() const; 
+     virtual const size_t bytesize() const; 
      
      /**
       * return the size of the pattern in tokens (will count flex gaps gaps as size 1)

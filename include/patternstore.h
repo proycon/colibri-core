@@ -21,14 +21,34 @@
 
 /***********************************************************************************/
 
+class Corpus: public Pattern {
+    //Raw corpus data, for PatternPointer to point to
+    protected:
+        size_t _bytesize;
+    public:
+        virtual const size_t bytesize() const {
+            return _bytesize;
+        }
+        Corpus(): Pattern() {
+            _bytesize = 0;
+        }
+        Corpus(std::istream * in): Pattern(in) {
+            _bytesize = Pattern::bytesize();
+        }
+};
+
 class IndexPattern { 
     public:
         IndexReference ref;
-        Pattern pattern;
+        PatternPointer pattern;
     
-        IndexPattern(const IndexReference & ref, const Pattern & pattern) {
+        IndexPattern(const IndexReference & ref, const PatternPointer & pattern) {
             this->ref = ref;
             this->pattern = pattern;
+        }
+        IndexPattern(const IndexReference & ref, const Pattern & pattern) {
+            this->ref = ref;
+            this->pattern = PatternPointer(pattern);
         }
         IndexPattern(const IndexReference & ref) {
             this->ref = ref;
@@ -55,6 +75,7 @@ class IndexPattern {
             return (this->ref > other);
         }
 };
+
 
 //Class for reading an entire (class encoded) corpus into memory, providing a
 //reverse index by IndexReference
@@ -94,7 +115,7 @@ class IndexedCorpus {
 
         size_t size() const { return data.size(); } 
 
-        Pattern operator [](const IndexReference ref) { 
+        PatternPointer operator [](const IndexReference ref) { 
             iterator found = this->find(ref);
             if (found != this->end()) {
                 return found->pattern;
@@ -103,7 +124,7 @@ class IndexedCorpus {
             throw InternalError();
         } 
 
-        Pattern getpattern(IndexReference begin, int length);
+        PatternPointer getpattern(IndexReference begin, int length);
          
         std::vector<IndexReference> findmatches(const Pattern & pattern, int maxmatches=0); //by far not as efficient as a pattern model obviously
 
