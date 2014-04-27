@@ -40,7 +40,8 @@ class Corpus: public Pattern {
 class IndexPattern { 
     public:
         IndexReference ref;
-        PatternPointer pattern;
+        uint32_t cls;
+        //PatternPointer pattern;
     
         IndexPattern(const IndexReference & ref, const PatternPointer & pattern) {
             this->ref = ref;

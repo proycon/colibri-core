@@ -78,6 +78,7 @@ void readanddiscardpattern(std::istream * in);
 int reader_passmarker(const unsigned char c, std::istream * in); 
 
 class PatternPointer;
+}
 
 /**
  * Pattern class
@@ -310,6 +311,18 @@ class Pattern {
      //sets an entirely new value
      void set(const unsigned char* dataref, const int size); 
 };
+
+class PatternPool {
+    public:
+        uint32_t * data;
+        uint32_t length; 
+}
+
+class PatternPointer {
+    public:
+        uint32_t offset
+        unsigned char length;
+}
 
 
 class PatternPointer {
