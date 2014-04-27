@@ -1296,7 +1296,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }            
         *OUT << "Total key bytesize (patterns): " << totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
         *OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
-        *OUT << "Mean index length: " << (indexlengthsum / (float) this->size()) << std::endl;
+        *OUT << "Mean index length (ttr): " << (indexlengthsum / (float) this->size()) << std::endl;
 
         unsigned int ri_totalkeybs = 0;
         unsigned int ri_totalvaluebs = 0;
