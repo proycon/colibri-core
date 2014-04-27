@@ -32,6 +32,12 @@ enum ModelType {
     PATTERNALIGNMENTMODEL = 40,
 };
 
+enum ReverseIndexType {
+    NONE = 0,
+    QUICK = 1,
+    COMPACT = 2,
+};
+
 int getmodeltype(const std::string filename);
 
 class NoSuchPattern: public std::exception {
@@ -146,11 +152,24 @@ typedef std::pair<IndexReference,PatternPointer>
 
 
 class ReverseIndex {
+    protected:
+        std::multimap<IndexReference,Pattern> quick; //quick but bigger reverse index
+        std::vector<std::pair<IndexReference,Pattern>> compact;  //compact but slower reverse index
     public:
-        std::multimap<IndexReference,Pattern> reverseindex; 
+        ReverseIndexType type;
+
+        ReverseIndex(ReverseIndexType type) {
+            this->type = type;
+        }
+
+        void sort() {
+            if (type == COMPACT) {
+                //sort
+            }
+        }
+
 }
 */
-
 
 //A pattern model based on an unordered set, does not hold data, only patterns
 //Very suitable for loading constraint models.  (uint64 refers to max count)
@@ -1078,6 +1097,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             }            
             *OUT << "Total key bytesize (patterns): " <<  totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
             *OUT << "Total value bytesize (counts/index): " <<  totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
+            *OUT << "Mean key bytesize: " << (totalkeybs / (float) this->size()) << std::endl;
+            *OUT << "Mean value bytesize: " << (totalvaluebs / (float) this->size()) << std::endl;
 
             unsigned int ri_totalkeybs = 0;
             unsigned int ri_totalvaluebs = 0;
@@ -1291,11 +1312,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         for (typename IndexedPatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;   
             totalkeybs += pattern.bytesize();
-            totalvaluebs += iter->second.size() * (4+2); //sentence + token; 
+            totalvaluebs += iter->second.size() * sizeof(IndexReference); //sentence + token; 
             indexlengthsum += iter->second.size();
         }            
         *OUT << "Total key bytesize (patterns): " << totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
         *OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
+        *OUT << "Mean key bytesize: " << (totalkeybs / (float) this->size()) << std::endl;
+        *OUT << "Mean value bytesize: " << (totalvaluebs / (float) this->size()) << std::endl;
         *OUT << "Mean index length (ttr): " << (indexlengthsum / (float) this->size()) << std::endl;
 
         unsigned int ri_totalkeybs = 0;
