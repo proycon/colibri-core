@@ -12,6 +12,9 @@
 *   Licensed under GPLv3
 *****************************/
 
+
+//TODO: Reverse index currently does not hold skipgrams/flexgrams
+
 #include "patternstore.h"
 #include "classencoder.h"
 #include "algorithms.h"
