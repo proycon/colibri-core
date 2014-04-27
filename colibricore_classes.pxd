@@ -417,7 +417,7 @@ cdef extern from "patternmodel.h":
         void add(Pattern&, IndexedData*, IndexReference&)
 
         vector[Pattern] getreverseindex(IndexReference&)
-        #vector[Pattern] getreverseindex_bysentence(int)
+        vector[pair[IndexReference,Pattern]] getreverseindex_bysentence(int)
 
         t_relationmap getsubchildren(Pattern & pattern) except +KeyError
         t_relationmap getsubparents(Pattern & pattern) except +KeyError
