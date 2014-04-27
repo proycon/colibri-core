@@ -1056,6 +1056,8 @@ Pattern Pattern::addflexgaps(std::vector<std::pair<int,int> > & gaps) const {
     return pattern;
 }
 
+
+
 IndexedCorpus::IndexedCorpus(std::istream *in){
     this->load(in);
 }
@@ -1075,9 +1077,10 @@ void IndexedCorpus::load(std::istream *in) {
         for (int i = 0; i < linesize; i++) {
             const Pattern unigram = line[i];
             const IndexReference ref = IndexReference(sentence,i);
-            data[ref] = unigram;
+            data.push_back(IndexPattern(ref,unigram));
         }
     }
+    data.shrink_to_fit();
 }
 
 
@@ -1093,17 +1096,21 @@ void IndexedCorpus::load(std::string filename) {
 }
 
 Pattern IndexedCorpus::getpattern(IndexReference begin, int length) { 
-    Pattern pattern;
-    for (int i = 0; i < length; i++) {
-        IndexReference ref = begin + i;
-        iterator iter = data.find(ref);
-        if (iter != data.end()) {
-            const Pattern unigram = iter->second;
-            pattern  = pattern + unigram;
-        } else {
-            std::cerr << "ERROR: Specified index " << begin.tostring() << " (length " << length << ") does not exist"<< std::endl;
+    iterator iter = this->find(begin);
+    if (iter == this->end()) {
+        std::cerr << "ERROR: Specified index " << begin.tostring() << " does not exist"<< std::endl;
+        throw InternalError();
+    }
+    Pattern pattern = iter->pattern;
+    for (int i = 1; i < length; i++) {
+        iter++;
+        //end check and sanity check, IndexedCorpus may contain gaps:
+        if ((iter == this->end()) || (iter->ref != begin + i)) {
+            std::cerr << "ERROR: Specified index " << begin.tostring() << " (at offset " << i << ") does not exist"<< std::endl;
             throw InternalError();
         }
+        const Pattern unigram = iter->pattern;
+        pattern  = pattern + unigram;
     }
     return pattern;
 }
@@ -1117,10 +1124,10 @@ std::vector<IndexReference> IndexedCorpus::findmatches(const Pattern & pattern, 
     IndexReference ref;
     int i = 0;
     Pattern matchunigram = pattern[i];
-    for (iterator iter = data.begin(); iter != data.end(); iter++) {
-        Pattern unigram = iter->second;
+    for (iterator iter = this->begin(); iter != this->end(); iter++) {
+        Pattern unigram = iter->pattern;
         if (matchunigram == unigram) {
-            if (i ==0) ref = iter->first;
+            if (i ==0) ref = iter->ref;
             i++;
             if (i == _n) {
                 result.push_back(ref);
@@ -1135,8 +1142,8 @@ std::vector<IndexReference> IndexedCorpus::findmatches(const Pattern & pattern, 
 int IndexedCorpus::sentencelength(int sentence)  {
     IndexReference ref = IndexReference(sentence, 0);
     int length = 0;
-    for (iterator iter = data.find(ref); iter != data.end(); iter++) {
-        if (iter->first.sentence != ref.sentence) return length;
+    for (iterator iter = this->find(ref); iter != this->end(); iter++) {
+        if (iter->ref.sentence != ref.sentence) return length;
         length++;
     }
     return length;

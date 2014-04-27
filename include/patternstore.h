@@ -21,11 +21,47 @@
 
 /***********************************************************************************/
 
+class IndexPattern { 
+    public:
+        IndexReference ref;
+        Pattern pattern;
+    
+        IndexPattern(const IndexReference & ref, const Pattern & pattern) {
+            this->ref = ref;
+            this->pattern = pattern;
+        }
+        IndexPattern(const IndexReference & ref) {
+            this->ref = ref;
+        }
+
+        //Will match only the reference part (the key), unsuitable for use in
+        //containers where one reference is ambiguous! Designed for
+        //IndexedCorpus (unigrams)
+        bool operator==(const IndexPattern &other) const { return (this->ref == other.ref); };
+        bool operator==(const IndexReference &other) const { return (this->ref == other); };
+        bool operator!=(const IndexPattern &other) const { return (this->ref != other.ref); };
+        bool operator!=(const IndexReference &other) const { return (this->ref != other); };
+
+        bool operator< (const IndexPattern& other) const {
+            return (this->ref < other.ref);
+        }
+        bool operator< (const IndexReference& other) const {
+            return (this->ref < other);
+        }
+        bool operator> (const IndexPattern& other) const {
+            return (this->ref > other.ref);
+        }
+        bool operator> (const IndexReference& other) const {
+            return (this->ref > other);
+        }
+};
+
 //Class for reading an entire (class encoded) corpus into memory, providing a
 //reverse index by IndexReference
 class IndexedCorpus {
     protected:
-        std::map<IndexReference,Pattern> data; //tokens
+        //std::map<IndexReference,Pattern> data; //tokens
+        std::vector<IndexPattern> data;
     public:
         IndexedCorpus() {};
         IndexedCorpus(std::istream *in);
@@ -33,8 +69,11 @@ class IndexedCorpus {
         
         void load(std::istream *in);
         void load(std::string filename);
-        typedef std::map<IndexReference,Pattern>::iterator iterator;
-        typedef std::map<IndexReference,Pattern>::const_iterator const_iterator;
+        //typedef std::map<IndexReference,Pattern>::iterator iterator;
+        //typedef std::map<IndexReference,Pattern>::const_iterator const_iterator;
+        typedef std::vector<IndexPattern>::iterator iterator;
+        typedef std::vector<IndexPattern>::const_iterator const_iterator;
+        
 
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
@@ -42,14 +81,27 @@ class IndexedCorpus {
         iterator end() { return data.end(); }
         const_iterator end() const { return data.end(); }
 
-        iterator find(const IndexReference ref) { return data.find(ref); }
-        const_iterator find(const IndexReference ref) const { return data.find(ref); }
+        iterator find(const IndexReference ref) {
+            return std::lower_bound(this->begin(), this->end(), IndexPattern(ref) ); //does binary search
+        }
+        const_iterator find(const IndexReference ref) const {
+            return std::lower_bound(this->begin(), this->end(), IndexPattern(ref) ); //does binary search
+        }
         
-        bool has(const IndexReference ref) const { return data.count(ref); }
+        bool has(const IndexReference ref) const {
+            return std::binary_search(this->begin(), this->end(), IndexPattern(ref) );
+        }
 
         size_t size() const { return data.size(); } 
 
-        Pattern operator [](const IndexReference ref) { return data[ref]; } 
+        Pattern operator [](const IndexReference ref) { 
+            iterator found = this->find(ref);
+            if (found != this->end()) {
+                return found->pattern;
+            }
+            std::cerr << "ERROR: Index " << ref.sentence << ":" << ref.token << " not found in IndexedCorpus! " << std::endl;
+            throw InternalError();
+        } 
 
         Pattern getpattern(IndexReference begin, int length);
          

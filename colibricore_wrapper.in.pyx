@@ -927,7 +927,7 @@ cdef class IndexedCorpus:
         cdef cPattern cpattern
         cdef cIndexReference ref
         while it != self.data.end():
-            ref = deref(it).first
+            ref = deref(it).ref
             yield (ref.sentence, ref.token)
             inc(it)
 
@@ -955,8 +955,8 @@ cdef class IndexedCorpus:
         cdef cPattern cpattern
         cdef cIndexReference ref
         while it != self.data.end():
-            cpattern = deref(it).second
-            ref = deref(it).first
+            cpattern = deref(it).pattern
+            ref = deref(it).ref
             pattern = Pattern()
             pattern.bind(cpattern)
             yield ( (ref.sentence, ref.token), pattern )
