@@ -1087,12 +1087,13 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Min n: " << this->minn << std::endl;
             *OUT << "Max n: " << this->maxn << std::endl;
             *OUT << "References in reverse index: " << this->reverseindex.size() << std::endl;
+            *OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
             *OUT << "Size of ValueType: " << sizeof(ValueType) << " byte" << std::endl;
             unsigned int totalkeybs = 0;
             unsigned int totalvaluebs = 0;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;   
-                totalkeybs += pattern.bytesize();
+                totalkeybs += sizeof(Pattern) + pattern.bytesize();
                 totalvaluebs += sizeof(ValueType); 
             }            
             *OUT << "Total key bytesize (patterns): " <<  totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
@@ -1306,12 +1307,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         *OUT << "Min n: " << this->minn << std::endl;
         *OUT << "Max n: " << this->maxn << std::endl;
         *OUT << "References in reverse index: " << this->reverseindex.size() << std::endl;
+        *OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
         unsigned int totalkeybs = 0;
         unsigned int totalvaluebs = 0;
         unsigned int indexlengthsum = 0;
         for (typename IndexedPatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;   
-            totalkeybs += pattern.bytesize();
+            totalkeybs += sizeof(Pattern) + pattern.bytesize();
             totalvaluebs += iter->second.size() * sizeof(IndexReference); //sentence + token; 
             indexlengthsum += iter->second.size();
         }            
