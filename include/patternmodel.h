@@ -1236,6 +1236,7 @@ template<class MapType = PatternMap<IndexedData,IndexedDataHandler>>
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType> {
     protected:
         virtual void postread(const PatternModelOptions options) {
+            if (!options.QUIET) std::cerr << "Building reverse index" << std::endl;
             for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern p = iter->first;
                 const int n = p.n();
@@ -1250,10 +1251,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                     }
                 }
             }
+            if (!options.QUIET) std::cerr << "Sorting reverse index..." << std::endl;
             this->reverseindex.sort();
         }
         virtual void posttrain(const PatternModelOptions options) {
-            std::cerr << "Sorting all indices" << std::endl;
+            if (!options.QUIET) std::cerr << "Sorting all indices..." << std::endl;
             for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
                 iter->second.sort();
             }
