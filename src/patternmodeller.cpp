@@ -439,8 +439,8 @@ int main( int argc, char *argv[] ) {
                 options.DOREVERSEINDEX = false; //no need for reverse index
                 cerr << "Reverse index: disabled" << endl;
             } else {
-                cerr << "Reverse index: enabled" << endl;
                 if (!reverseindexfile.empty()) {
+                    cerr << "Loading corpus data for reverse index" << endl;
                     std::ifstream * f = new ifstream(reverseindexfile.c_str());
                     if (!f->good()) {
                         cerr << "Can't open corpus data file for Reverse index: " << endl;
@@ -449,6 +449,7 @@ int main( int argc, char *argv[] ) {
                     reverseindex = new IndexedCorpus(f);
                     f->close();
                 }
+                cerr << "Reverse index: enabled" << endl;
             }
         }
             
