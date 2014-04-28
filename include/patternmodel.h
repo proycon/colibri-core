@@ -306,7 +306,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         int minn; 
         
         //std::multimap<IndexReference,Pattern> reverseindex; 
-        IndexedCorpus reverseindex;
+        IndexedCorpus * reverseindex;
 
         std::set<int> cache_categories;
         std::set<int> cache_n;
@@ -337,6 +337,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             minn = 999;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
+            this->reverseindex = NULL;
         }
         PatternModel<ValueType,ValueHandler,MapType>(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             totaltokens = 0;
@@ -346,15 +347,18 @@ class PatternModel: public MapType, public PatternModelInterface {
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             this->load(f,options,constrainmodel);
+            this->reverseindex = NULL;
         }
 
         PatternModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+            //IndexedPatternModel will overload this
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
             minn = 999;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
+            this->reverseindex = NULL;
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
             if (!in->good()) {
@@ -517,8 +521,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                             const Pattern pattern = Pattern(iter->first);
                             ValueType * data = getdata(pattern, true);
                             add(pattern, data, ref );
-                            if ((options.DOREVERSEINDEX) && (n == 1)) {
-                               reverseindex.push_back(ref, pattern); //TODO: make patternpointer
+                            if ((options.DOREVERSEINDEX) && (n == 1) && (reverseindex != NULL)) {
+                               reverseindex->push_back(ref, pattern); //TODO: make patternpointer
                             }
                         } else if (((n >= 3) || (options.MINTOKENS == 1)) && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
                             foundskipgrams += this->computeskipgrams(iter->first, options, gapconf, &ref, NULL, constrainbymodel, true);
@@ -774,12 +778,13 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::vector<Pattern> getreverseindex(IndexReference ref) {
             //Auxiliary function
             std::vector<Pattern> result;
-            const int sl = this->reverseindex.sentencelength(ref.sentence);
+            if (!this->reverseindex) return result;
+            const int sl = this->reverseindex->sentencelength(ref.sentence);
             //std::cerr << "DEBUG: getreverseindex sentencelength(" << ref.sentence << ")=" << sl << std::endl;
             for (int i = 1; i <= sl; i++) {
                 try {
                     //std::cerr << "DEBUG: getreverseindex getpattern " << ref.tostring() << " + " << i << std::endl;
-                    Pattern ngram = this->reverseindex.getpattern(ref,i);
+                    Pattern ngram = this->reverseindex->getpattern(ref,i);
                     if (this->has(ngram)) {
                         result.push_back(ngram);
                     }
@@ -807,7 +812,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::vector<std::pair<IndexReference,Pattern>> getreverseindex_bysentence(int sentence) {
             //Auxiliary function
             std::vector<std::pair<IndexReference,Pattern>> result;
-            for (int i = 0; i < this->reverseindex.sentencelength(sentence); i++) {
+            for (int i = 0; i < this->reverseindex->sentencelength(sentence); i++) {
                 const IndexReference ref = IndexReference(sentence, i);
                 std::vector<Pattern> tmpresult =  this->getreverseindex(ref);
                 for (std::vector<Pattern>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
@@ -821,7 +826,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::vector<std::pair<IndexReference,Pattern>> getreverseindex_right(const IndexReference ref) {
             //Auxiliary function
             std::vector<std::pair<IndexReference,Pattern>> result;
-            for (int i = ref.token+1; i < this->reverseindex.sentencelength(ref.sentence); i++) {
+            for (int i = ref.token+1; i < this->reverseindex->sentencelength(ref.sentence); i++) {
                 const IndexReference ref2 = IndexReference(ref.sentence, i);
                 std::vector<Pattern> tmpresult =  this->getreverseindex(ref);
                 for (std::vector<Pattern>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
@@ -1039,7 +1044,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
         virtual void printreverseindex(std::ostream * out, ClassDecoder & decoder) {
-            for (IndexedCorpus::iterator iter = reverseindex.begin(); iter != reverseindex.end(); iter++) {
+            if (!this->reverseindex) return;
+            for (IndexedCorpus::iterator iter = reverseindex->begin(); iter != reverseindex->end(); iter++) {
                 const IndexReference ref = iter->ref;
                 std::vector<Pattern> rindex = this->getreverseindex(ref);
                 *out << ref.tostring();
@@ -1110,7 +1116,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Types patterns loaded: " << this->size() << std::endl;
             *OUT << "Min n: " << this->minn << std::endl;
             *OUT << "Max n: " << this->maxn << std::endl;
-            *OUT << "References in reverse index: " << this->reverseindex.size() << std::endl;
+            *OUT << "References in reverse index: " << this->reverseindex->size() << std::endl;
             *OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
             *OUT << "Size of ValueType: " << sizeof(ValueType) << " byte" << std::endl;
             unsigned int totalkeybs = 0;
@@ -1127,7 +1133,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
             unsigned int ri_totalkeybs = 0;
             unsigned int ri_totalvaluebs = 0;
-            for (IndexedCorpus::iterator iter = this->reverseindex.begin(); iter != this->reverseindex.end(); iter++) {
+            for (IndexedCorpus::iterator iter = this->reverseindex->begin(); iter != this->reverseindex->end(); iter++) {
                 ri_totalkeybs += sizeof(iter->ref.sentence) + sizeof(iter->ref.token);
                 ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
             }
@@ -1227,24 +1233,27 @@ class PatternModel: public MapType, public PatternModelInterface {
 template<class MapType = PatternMap<IndexedData,IndexedDataHandler>> 
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType> {
     protected:
+        bool externalreverseindex; //true if reverse index was loaded externally and passed to the model (implies it won't be destroyed when the model is)
         virtual void postread(const PatternModelOptions options) {
-            if (!options.QUIET) std::cerr << "Building reverse index" << std::endl;
-            for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
-                const Pattern p = iter->first;
-                const int n = p.n();
-                if (n > this->maxn) this->maxn = n;
-                if (n < this->minn) this->minn = n;
-                if ((n == 1) && (options.DOREVERSEINDEX)) {
-                    IndexedData * data = this->getdata(p);
-                    //construct the reverse index
-                    for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
-                        const IndexReference ref = *iter2;
-                        this->reverseindex.push_back(ref,p);
+            if ((this->reverseindex) && (this->reverseindex->empty())) {
+                if (!options.QUIET) std::cerr << "Building reverse index" << std::endl;
+                for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+                    const Pattern p = iter->first;
+                    const int n = p.n();
+                    if (n > this->maxn) this->maxn = n;
+                    if (n < this->minn) this->minn = n;
+                    if ((n == 1) && (options.DOREVERSEINDEX)) {
+                        IndexedData * data = this->getdata(p);
+                        //construct the reverse index
+                        for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
+                            const IndexReference ref = *iter2;
+                            this->reverseindex->push_back(ref,p);
+                        }
                     }
                 }
+                if (!options.QUIET) std::cerr << "Sorting reverse index..." << std::endl;
+                this->reverseindex->sort();
             }
-            if (!options.QUIET) std::cerr << "Sorting reverse index..." << std::endl;
-            this->reverseindex.sort();
         }
         virtual void posttrain(const PatternModelOptions options) {
             if (!options.QUIET) std::cerr << "Sorting all indices..." << std::endl;
@@ -1260,21 +1269,45 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     IndexedPatternModel<MapType>(): PatternModel<IndexedData,IndexedDataHandler,MapType>() {
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
+        this->reverseindex = new IndexedCorpus();
+        this->externalreverseindex = false;
     }
-    IndexedPatternModel<MapType>(std::istream *f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL):  PatternModel<IndexedData,IndexedDataHandler,MapType>(){ //load from file
+    IndexedPatternModel<MapType>(std::istream *f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<IndexedData,IndexedDataHandler,MapType>(){ //load from file
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
+        if (corpus) {
+            this->reverseindex = corpus;
+            this->externalreverseindex = true;
+        } else {
+            this->externalreverseindex = false;
+            this->reverseindex = new IndexedCorpus();
+        }
         this->load(f,options, constrainmodel);
     }
 
-    IndexedPatternModel<MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType>() { //load from file
+    IndexedPatternModel<MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType>() { //load from file
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
+        if (corpus) {
+            this->reverseindex = corpus;
+            this->externalreverseindex = true;
+        } else {
+            this->externalreverseindex = false;
+            this->reverseindex = new IndexedCorpus();
+        }
         std::ifstream * in = new std::ifstream(filename.c_str());
         this->load( (std::istream *) in, options, constrainmodel);
         in->close();
         delete in;
     }
+
+    ~IndexedPatternModel<MapType>() {
+        if ((this->reverseindex != NULL) && (!this->externalreverseindex)) {
+            delete this->reverseindex;
+            this->reverseindex = NULL;
+        }
+    }
+
 
     int getmodeltype() const { return INDEXEDPATTERNMODEL; }
     int getmodelversion() const { return 1;} 
@@ -1333,7 +1366,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         *OUT << "Types patterns loaded: " << this->size() << std::endl;
         *OUT << "Min n: " << this->minn << std::endl;
         *OUT << "Max n: " << this->maxn << std::endl;
-        *OUT << "References in reverse index: " << this->reverseindex.size() << std::endl;
+        *OUT << "References in reverse index: " << this->reverseindex->size() << std::endl;
         *OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
         unsigned int totalkeybs = 0;
         unsigned int totalvaluebs = 0;
@@ -1352,7 +1385,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         unsigned int ri_totalkeybs = 0;
         unsigned int ri_totalvaluebs = 0;
-        for (IndexedCorpus::iterator iter = this->reverseindex.begin(); iter != this->reverseindex.end(); iter++) {
+        for (IndexedCorpus::iterator iter = this->reverseindex->begin(); iter != this->reverseindex->end(); iter++) {
             ri_totalkeybs += sizeof(iter->ref.sentence) + sizeof(iter->ref.token);
             ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
         }
@@ -1426,7 +1459,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
     Pattern getpatternfromtoken(IndexReference ref) {
-            return this->reverseindex[ref];
+        return this->reverseindex->getpattern(ref,1);
     }
     
 
@@ -1498,7 +1531,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     t_relationmap gettemplates(const Pattern & pattern) {
         //returns patterns that are an abstraction of the specified pattern
         //skipgrams
-        if (this->reverseindex.empty()) {
+        if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
         }
@@ -1532,7 +1565,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     t_relationmap getsubchildren(const Pattern & pattern) {
         //returns patterns that are subsumed by the specified pattern (i.e.
         //smaller patterns)
-        if (this->reverseindex.empty()) {
+        if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
         }
@@ -1586,7 +1619,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     t_relationmap getsubparents(const Pattern & pattern) {
         //returns patterns that subsume the specified pattern (i.e. larger
         //patterns)
-        if (this->reverseindex.empty()) {
+        if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
         }
@@ -1632,7 +1665,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
     t_relationmap getleftneighbours(const Pattern & pattern) {
-        if (this->reverseindex.empty()) {
+        if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
         }
@@ -1660,7 +1693,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
     t_relationmap getrightneighbours(const Pattern & pattern) {
-        if (this->reverseindex.empty()) {
+        if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
         }
@@ -1742,7 +1775,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
     t_relationmap getrightcooc(const Pattern & pattern, IndexedData * matches = NULL) { 
-        if (this->reverseindex.empty()) {
+        if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
         }
@@ -1774,7 +1807,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
     t_relationmap getleftcooc(const Pattern & pattern) { 
-        if (this->reverseindex.empty()) {
+        if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
         }
@@ -1804,7 +1837,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
     t_relationmap getcooc(const Pattern & pattern, bool bidirectional = true) { 
-        if (this->reverseindex.empty()) {
+        if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
         }
