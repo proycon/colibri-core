@@ -1505,7 +1505,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         try {
                             Pattern  p = this->getpatternfromtoken(ref + i);
                             skipcontent_atref = skipcontent_atref +  p;
-                        } catch (const InternalError &e) { //when token does not exist
+                        } catch (const KeyError &e) { //when token does not exist
                             notoken=true; break;
                         }
                     }
