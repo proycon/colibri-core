@@ -1251,7 +1251,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     protected:
         virtual void postread(const PatternModelOptions options) {
             if ((this->reverseindex) && (this->reverseindex->empty())) {
-                if (!options.QUIET) std::cerr << "Building reverse index" << std::endl;
+                if (!options.QUIET) std::cerr << "Building reverse index... (Consider preloading a reverse index to skip this (-r) )" << std::endl;
                 for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
                     const Pattern p = iter->first;
                     const int n = p.n();
@@ -1266,7 +1266,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         }
                     }
                 }
-                if (!options.QUIET) std::cerr << "Sorting reverse index..." << std::endl;
+                if (!options.QUIET) std::cerr << "Sorting reverse index... (Consider preloading a reverse index to skip this (-r) )" << std::endl;
                 this->reverseindex->sort();
             }
         }

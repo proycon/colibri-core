@@ -81,6 +81,7 @@ void processquerypattern(ModelType & model, ClassDecoder * classdecoder, const P
 
 template<class ModelType = IndexedPatternModel<>>
 void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, vector<string> & querypatterns, bool dorelations) {
+    cerr << "Processing " << querypatterns.size() << " queries" << endl;
     const bool allowunknown = true;
     unsigned char buffer[65536];
     for (vector<string>::iterator iter = querypatterns.begin(); iter != querypatterns.end(); iter++) {
@@ -143,6 +144,8 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
 
 template<class ModelType = IndexedPatternModel<>>
 bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold = 0.1) {
+    cerr << "Generating desired views...";
+
     if (print) {
         if (classdecoder == NULL) {
             cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
