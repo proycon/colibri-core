@@ -330,16 +330,20 @@ class PatternModel: public MapType, public PatternModelInterface {
             //sort indices
         }
     public:
-        PatternModel<ValueType,ValueHandler,MapType>() {
+        PatternModel<ValueType,ValueHandler,MapType>(IndexedCorpus * corpus = NULL) {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
             minn = 999;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
-            this->reverseindex = NULL;
+            if (corpus) {
+                this->reverseindex = corpus;
+            } else {
+                this->reverseindex = NULL;
+            }
         }
-        PatternModel<ValueType,ValueHandler,MapType>(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        PatternModel<ValueType,ValueHandler,MapType>(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) { //load from file
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -347,10 +351,14 @@ class PatternModel: public MapType, public PatternModelInterface {
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             this->load(f,options,constrainmodel);
-            this->reverseindex = NULL;
+            if (corpus) {
+                this->reverseindex = corpus;
+            } else {
+                this->reverseindex = NULL;
+            }
         }
 
-        PatternModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        PatternModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) { //load from file
             //IndexedPatternModel will overload this
             totaltokens = 0;
             totaltypes = 0;
@@ -358,7 +366,11 @@ class PatternModel: public MapType, public PatternModelInterface {
             minn = 999;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
-            this->reverseindex = NULL;
+            if (corpus) {
+                this->reverseindex = corpus;
+            } else {
+                this->reverseindex = NULL;
+            }
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
             if (!in->good()) {
@@ -1266,12 +1278,18 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
        
-    IndexedPatternModel<MapType>(): PatternModel<IndexedData,IndexedDataHandler,MapType>() {
+    IndexedPatternModel<MapType>(IndexedCorpus * corpus = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType>() {
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
-        this->reverseindex = new IndexedCorpus();
-        this->externalreverseindex = false;
+        if (corpus) {
+            this->reverseindex = corpus;
+            this->externalreverseindex = true;
+        } else {
+            this->reverseindex = new IndexedCorpus();
+            this->externalreverseindex = false;
+        }
     }
+
     IndexedPatternModel<MapType>(std::istream *f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<IndexedData,IndexedDataHandler,MapType>(){ //load from file
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
