@@ -306,8 +306,6 @@ class PatternModel: public MapType, public PatternModelInterface {
         int minn; 
         
         //std::multimap<IndexReference,Pattern> reverseindex; 
-        IndexedCorpus * reverseindex;
-
         std::set<int> cache_categories;
         std::set<int> cache_n;
         std::map<int,std::map<int,int>> cache_grouptotal; //total occurrences (used for frequency computation, within a group)
@@ -330,6 +328,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             //sort indices
         }
     public:
+        IndexedCorpus * reverseindex;
+        bool externalreverseindex; //true if reverse index was loaded externally and passed to the model (implies it won't be destroyed when the model is) //only used by IndexedPatternModel but stored here to ease things for cython
+
         PatternModel<ValueType,ValueHandler,MapType>(IndexedCorpus * corpus = NULL) {
             totaltokens = 0;
             totaltypes = 0;
@@ -342,6 +343,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             } else {
                 this->reverseindex = NULL;
             }
+            this->externalreverseindex = true;
         }
         PatternModel<ValueType,ValueHandler,MapType>(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) { //load from file
             totaltokens = 0;
@@ -356,6 +358,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             } else {
                 this->reverseindex = NULL;
             }
+            this->externalreverseindex = true;
         }
 
         PatternModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) { //load from file
@@ -371,6 +374,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             } else {
                 this->reverseindex = NULL;
             }
+            this->externalreverseindex = true;
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
             if (!in->good()) {
@@ -1245,7 +1249,6 @@ class PatternModel: public MapType, public PatternModelInterface {
 template<class MapType = PatternMap<IndexedData,IndexedDataHandler>> 
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType> {
     protected:
-        bool externalreverseindex; //true if reverse index was loaded externally and passed to the model (implies it won't be destroyed when the model is)
         virtual void postread(const PatternModelOptions options) {
             if ((this->reverseindex) && (this->reverseindex->empty())) {
                 if (!options.QUIET) std::cerr << "Building reverse index" << std::endl;

@@ -428,7 +428,7 @@ int main( int argc, char *argv[] ) {
 
         if ( ((outputmodeltype == UNINDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNMODEL))) {
             if (options.DOSKIPGRAMS) {
-                cerr << "NOTE: Skipgram generation on unindexed pattern models can only be done exhaustively! This generated lots of skipgrams and is far less memory efficient than with indexed models." << endl;
+                cerr << "NOTE: Skipgram generation on unindexed pattern models can only be done exhaustively! This generates lots of skipgrams and is far less memory efficient than with indexed models." << endl;
                 options.DOSKIPGRAMS_EXHAUSTIVE = true;
                 options.DOSKIPGRAMS = false;
             } else {

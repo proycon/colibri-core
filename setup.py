@@ -34,7 +34,7 @@ extensions = [ Extension("colibricore",
 
 setup(
     name = 'colibricore',
-    version = '0.5.1',
+    version = '0.5.2',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},
     packages=['colibricoreX'],

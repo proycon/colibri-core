@@ -174,7 +174,7 @@ def __iter__(self):
         yield pattern
         inc(it)
 
-def __init__(self, str filename = "",PatternModelOptions options = None):
+def __init__(self, str filename = "",PatternModelOptions options = None, constrainmodel = None, reverseindex = None):
     """Initialise a pattern model. Either an empty one or loading from file. 
 
     :param filename: The name of the file to load, must be a valid colibri patternmodel file
@@ -183,13 +183,16 @@ def __init__(self, str filename = "",PatternModelOptions options = None):
     :type options: PatternModelOptions
 
     """
+    if reverseindex:
+        self.loadreverseindex(reverseindex)
+
     if filename:
         if not options:
             options = PatternModelOptions()
-        self.load(filename,options)
+        self.load(filename,options, constrainmodel)
 
-def load(self, str filename, PatternModelOptions options=None):
-    """Load a patternmodel from file
+def load(self, str filename, PatternModelOptions options=None, constrainmodel = None):
+    """Load a patternmodel from file. 
 
     :param filename: The name of the file to load, must be a valid colibri patternmodel file
     :type filename: str
@@ -198,7 +201,30 @@ def load(self, str filename, PatternModelOptions options=None):
     """
     if not options:
         options = PatternModelOptions()
-    self.data.load(filename.encode('utf-8'), options.coptions)
+
+
+    if isinstance(constrainmodel, IndexedPatternModel):
+        self.loadconstrainedbyindexedmodel(filename,options, constrainmodel)
+    elif isinstance(constrainmodel, UnindexedPatternModel):
+        self.loadconstrainedbyunindexedmodel(filename,options, constrainmodel)
+    elif isinstance(constrainmodel, UnindexedPatternModel):
+        self.loadconstrainedbysetmodel(filename,options, constrainmodel)
+    else:
+        self.data.load(filename.encode('utf-8'), options.coptions, NULL)
+
+def loadreverseindex(self, IndexedCorpus reverseindex):
+    self.data.reverseindex = &(reverseindex.data)
+    self.data.externalreverseindex = True
+
+
+cpdef loadconstrainedbyindexedmodel(self, str filename, PatternModelOptions options, IndexedPatternModel constrainmodel):
+    self.data.load(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
+
+cpdef loadconstrainedbyunindexedmodel(self, str filename, PatternModelOptions options, UnindexedPatternModel constrainmodel):
+    self.data.load(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
+
+cpdef loadconstrainedbysetmodel(self, str filename, PatternModelOptions options, PatternSetModel constrainmodel):
+    self.data.load(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
 
 def read(self, str filename, PatternModelOptions options=None):
     """Alias for load"""
@@ -233,6 +259,8 @@ cpdef train(self, str filename, PatternModelOptions options, constrainmodel = No
             self.trainconstrainedbyindexedmodel(filename, options, constrainmodel)
         elif isinstance(constrainmodel, UnindexedPatternModel):
             self.trainconstrainedbyindexedmodel(filename, options, constrainmodel)
+        elif isinstance(constrainmodel, PatternSetModel):
+            self.trainconstrainedbypatternsetmodel(filename, options, constrainmodel)
         else:
             raise ValueError("Invalid valid for constrainmodel") #TODO: build patternmodel on the fly from an iterable of patterns or lower level patternstorage
     else:
@@ -247,6 +275,8 @@ cpdef trainconstrainedbyindexedmodel(self, str filename, PatternModelOptions opt
 cpdef trainconstrainedbyunindexedmodel(self, str filename, PatternModelOptions options, UnindexedPatternModel constrainmodel):
     self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
 
+cpdef trainconstrainedbypatternsetmodel(self, str filename, PatternModelOptions options, PatternSetModel constrainmodel):
+    self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
 
 cpdef report(self):
     """Print a detailed statistical report to stdout"""
@@ -265,3 +295,25 @@ cpdef prune(self, int threshold, int n=0):
     :type n: int
     """
     self.data.prune(threshold, n)
+
+def reverseindex(self, indexreference):
+    """Generator over all patterns occurring at the specified index reference
+
+    :param indexreference: a (sentence, tokenoffset) tuple
+    """
+
+    if not isinstance(indexreference, tuple) or not len(indexreference) == 2:
+        raise ValueError("Expected tuple")
+
+    cdef int sentence = indexreference[0]
+    cdef int token = indexreference[1]
+    cdef cIndexReference ref = cIndexReference(sentence, token)
+    cdef vector[cPattern] results = self.data.getreverseindex(ref)
+    cdef vector[cPattern].iterator resit = results.begin()
+    cdef cPattern cpattern
+    while resit != results.end():
+        cpattern = deref(resit)
+        pattern = Pattern()
+        pattern.bind(cpattern)
+        yield pattern
+        inc(resit)

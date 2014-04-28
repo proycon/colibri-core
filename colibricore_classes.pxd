@@ -337,6 +337,9 @@ cdef extern from "patternmodel.h":
         float frequency(Pattern&) nogil
         void add(Pattern&, ValueType*, IndexReference&)
 
+        IndexedCorpus * reverseindex
+        bool externalreverseindex
+
         PatternModelInterface * getinterface() nogil
         void train(string filename, PatternModelOptions options, PatternModelInterface *)
 
@@ -352,7 +355,7 @@ cdef extern from "patternmodel.h":
         iterator erase(Pattern&) nogil
         int prune(int threshold, int n) nogil
         iterator find(Pattern&) nogil
-        void load(string, PatternModelOptions) nogil except +IOError
+        void load(string, PatternModelOptions, PatternModelInterface*) nogil except +IOError
         void write(string) nogil except +IOError
         void printmodel(ostream*, ClassDecoder&) nogil
         void printpattern(ostream*, ClassDecoder&, Pattern&) nogil
@@ -369,6 +372,8 @@ cdef extern from "patternmodel.h":
         t_relationmap getleftcooc(Pattern & pattern) except +KeyError
         t_relationmap getrightcooc(Pattern & pattern) except +KeyError
 
+        vector[Pattern] getreverseindex(IndexReference&)
+        vector[pair[IndexReference,Pattern]] getreverseindex_bysentence(int)
 
     cdef cppclass IndexedPatternModel[MapType]:
         cppclass iterator:
@@ -393,6 +398,8 @@ cdef extern from "patternmodel.h":
         PatternModelInterface * getinterface() nogil
         void train(string filename, PatternModelOptions options, PatternModelInterface *)
 
+        IndexedCorpus * reverseindex
+        bool externalreverseindex
 
         int totaloccurrencesingroup(int category, int n)
         int totalpatternsingroup(int category, int n)
@@ -406,7 +413,7 @@ cdef extern from "patternmodel.h":
         iterator erase(Pattern&) nogil
         int prune(int threshold, int n) nogil
         iterator find(Pattern&) nogil
-        void load(string, PatternModelOptions) nogil except +IOError
+        void load(string, PatternModelOptions, PatternModelInterface* ) nogil except +IOError
         void write(string) nogil except +IOError
         void printmodel(ostream*, ClassDecoder&) nogil
         void printpattern(ostream*, ClassDecoder&, Pattern&) nogil

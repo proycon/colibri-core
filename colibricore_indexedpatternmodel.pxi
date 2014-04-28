@@ -52,27 +52,6 @@ def items(self):
 
 
 
-def reverseindex(self, indexreference):
-    """Generator over all patterns occurring at the specified index reference
-
-    :param indexreference: a (sentence, tokenoffset) tuple
-    """
-
-    if not isinstance(indexreference, tuple) or not len(indexreference) == 2:
-        raise ValueError("Expected tuple")
-
-    cdef int sentence = indexreference[0]
-    cdef int token = indexreference[1]
-    cdef cIndexReference ref = cIndexReference(sentence, token)
-    cdef vector[cPattern] results = self.data.getreverseindex(ref)
-    cdef vector[cPattern].iterator resit = results.begin()
-    cdef cPattern cpattern
-    while resit != results.end():
-        cpattern = deref(resit)
-        pattern = Pattern()
-        pattern.bind(cpattern)
-        yield pattern
-        inc(resit)
 
 
 def covered(self, indexreference):

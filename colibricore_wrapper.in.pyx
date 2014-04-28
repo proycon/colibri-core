@@ -722,6 +722,9 @@ cdef class PatternSetModel:
 
     @include colibricore_patternset.pxi
 
+    cdef cPatternModelInterface* getinterface(self):
+        return self.data.getinterface()
+
     def __init__(self, str filename = "",PatternModelOptions options = None):
         """Initialise a pattern model. Either an empty one or loading from file.
 
