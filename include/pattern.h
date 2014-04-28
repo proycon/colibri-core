@@ -31,6 +31,7 @@
 
 const int MAINPATTERNBUFFERSIZE = 40960;
 
+
 /**
  * Pattern categories
  */
@@ -125,6 +126,7 @@ class Pattern {
       * @param in The input stream
       */
      Pattern(std::istream * in); 
+
 
      ~Pattern();
 
@@ -407,6 +409,7 @@ namespace std {
 }
 
 
+unsigned char * inttopatterndata(unsigned char * buffer,unsigned int cls);
 
 
 #endif

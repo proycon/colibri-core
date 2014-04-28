@@ -37,6 +37,8 @@ unsigned char * inttobytes(unsigned int cls, int & length) {
 	return byterep;    
 }
 
+
+
 ClassEncoder::ClassEncoder() {
     unknownclass = 2;
     bosclass = 3;

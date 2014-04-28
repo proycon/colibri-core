@@ -18,20 +18,37 @@
 #include "pattern.h"
 #include "datatypes.h"
 #include "classdecoder.h"
+#include "classencoder.h"
 
 /***********************************************************************************/
 
 class IndexPattern { 
     public:
         IndexReference ref;
-        Pattern pattern;
+        uint32_t cls;
     
         IndexPattern(const IndexReference & ref, const Pattern & pattern) {
             this->ref = ref;
-            this->pattern = pattern;
+            //grab only the first class
+            unsigned char size = pattern.data[0];
+            this->cls = bytestoint(pattern.data + 1, size);
+        }
+        IndexPattern(const IndexReference & ref, uint32_t cls) {
+            this->ref = ref;
+            this->cls = cls;
         }
         IndexPattern(const IndexReference & ref) {
             this->ref = ref;
+            this->cls = 0;
+        }
+
+        Pattern pattern() {
+            unsigned char * buffer = new unsigned char[16]; //small buffer, but cls can't be too big anyhow
+            unsigned char * data = inttopatterndata(buffer, (unsigned int) cls);
+            const int bsize = data-buffer; //pointer arithmetic
+            Pattern p = Pattern(buffer, bsize);
+            delete[] buffer;
+            return p;
         }
 
         //Will match only the reference part (the key), unsuitable for use in
@@ -81,32 +98,33 @@ class IndexedCorpus {
         iterator end() { return data.end(); }
         const_iterator end() const { return data.end(); }
 
-        iterator find(const IndexReference ref) {
+        iterator find(const IndexReference & ref) {
             return std::lower_bound(this->begin(), this->end(), IndexPattern(ref) ); //does binary search
         }
-        const_iterator find(const IndexReference ref) const {
+        const_iterator find(const IndexReference & ref) const {
             return std::lower_bound(this->begin(), this->end(), IndexPattern(ref) ); //does binary search
         }
         
-        bool has(const IndexReference ref) const {
+        bool has(const IndexReference & ref) const {
             return std::binary_search(this->begin(), this->end(), IndexPattern(ref) );
         }
 
         size_t size() const { return data.size(); } 
         bool empty() const { return data.empty(); }
 
-        Pattern operator [](const IndexReference ref) { 
+
+        uint32_t operator [](const IndexReference ref) { 
             iterator found = this->find(ref);
             if (found != this->end()) {
-                return found->pattern;
+                return found->cls;
+            } else {
+                return 0; //no such index
             }
-            std::cerr << "ERROR: Index " << ref.sentence << ":" << ref.token << " not found in IndexedCorpus! " << std::endl;
-            throw InternalError();
         } 
 
-        Pattern getpattern(IndexReference begin, int length);
+        Pattern getpattern(const IndexReference & begin, int length=1);
          
-        std::vector<IndexReference> findmatches(const Pattern & pattern, int maxmatches=0); //by far not as efficient as a pattern model obviously
+        std::vector<IndexReference> findpattern(const Pattern & pattern, int maxmatches=0); //by far not as efficient as a pattern model obviously
 
         int sentencelength(int sentence); 
 

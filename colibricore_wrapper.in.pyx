@@ -900,7 +900,7 @@ cdef class IndexedCorpus:
         cdef int token = item[1]
         cdef cIndexReference ref = cIndexReference(sentence,token)
         cdef cPattern cpattern
-        cpattern = self.data[ref]
+        cpattern = self.data.getpattern(ref,1)
         pattern = Pattern()
         pattern.bind(cpattern)
         return pattern
@@ -955,15 +955,15 @@ cdef class IndexedCorpus:
         cdef cPattern cpattern
         cdef cIndexReference ref
         while it != self.data.end():
-            cpattern = deref(it).pattern
+            cpattern = deref(it).pattern()
             ref = deref(it).ref
             pattern = Pattern()
             pattern.bind(cpattern)
             yield ( (ref.sentence, ref.token), pattern )
             inc(it)
 
-    def findmatches(self, Pattern pattern, int maxmatches=0):
-        """Generator over the indexes in the corpus where this pattern is found. Note that this is much slower than using the reverse index on an IndexedPatternModel!!!
+    def findpattern(self, Pattern pattern, int maxmatches=0):
+        """Generator over the indexes in the corpus where this pattern is found. Note that this is much slower than using the forward index on an IndexedPatternModel!!!
 
         :param pattern: The pattern to find
         :type pattern: Pattern
@@ -975,7 +975,7 @@ cdef class IndexedCorpus:
         cdef vector[cIndexReference] matches
         cdef vector[cIndexReference].iterator it
         cdef cIndexReference ref
-        matches = self.data.findmatches(pattern.cpattern, maxmatches)
+        matches = self.data.findpattern(pattern.cpattern, maxmatches)
         it = matches.begin()
         while it != matches.end():
             ref = deref(it)

@@ -186,7 +186,7 @@ cdef extern from "patternstore.h":
 
     cdef cppclass IndexPattern:
         IndexReference ref
-        Pattern pattern
+        Pattern pattern()
 
     cdef cppclass IndexedCorpus:
         cppclass iterator:
@@ -202,8 +202,8 @@ cdef extern from "patternstore.h":
         void load(string) nogil
         bool has(IndexReference&) nogil
         Pattern getpattern(IndexReference&,int) nogil except +KeyError
-        vector[IndexReference] findmatches(Pattern&,int) nogil
-        Pattern& operator[](IndexReference&) nogil except +KeyError
+        vector[IndexReference] findpattern(Pattern&,int) nogil
+        int operator[](IndexReference&) nogil except +KeyError
         int sentencelength(int) nogil
 
     cdef cppclass AlignedPatternMap[ValueType, ValueHandler, NestedSizeType]:

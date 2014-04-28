@@ -19,6 +19,24 @@ using namespace std;
 
 unsigned char mainpatternbuffer[MAINPATTERNBUFFERSIZE+1];
 
+unsigned char * inttopatterndata(unsigned char * buffer,unsigned int cls) {
+    //can be chained, encodes length byte (unlike inttobytes)
+	unsigned int cls2 = cls;
+	unsigned char length = 0;
+	do {
+		cls2 = cls2 / 256;
+		length++;
+	} while (cls2 > 0);
+	int i = 0;
+    buffer[i++] = length;
+    do {
+    	int r = cls % 256;
+    	buffer[i++] = (unsigned char) r;
+    	cls = cls / 256;
+    } while (cls > 0);
+	return buffer + i;    
+}
+
 const PatternCategory datacategory(const unsigned char * data, int maxbytes = 0) {
     PatternCategory category = NGRAM;
     int i = 0;
@@ -1095,27 +1113,30 @@ void IndexedCorpus::load(std::string filename) {
     delete in;
 }
 
-Pattern IndexedCorpus::getpattern(IndexReference begin, int length) { 
+Pattern IndexedCorpus::getpattern(const IndexReference & begin, int length) { 
+    //warning: will segfault if mainpatternbuffer overflows!!
     iterator iter = this->find(begin);
-    if (iter == this->end()) {
-        std::cerr << "ERROR: Specified index " << begin.tostring() << " does not exist"<< std::endl;
-        throw InternalError();
-    }
-    Pattern pattern = iter->pattern;
-    for (int i = 1; i < length; i++) {
-        iter++;
-        //end check and sanity check, IndexedCorpus may contain gaps:
+    unsigned char * buffer = mainpatternbuffer;
+    int i = 0;
+    while (i < length) {
         if ((iter == this->end()) || (iter->ref != begin + i)) {
-            std::cerr << "ERROR: Specified index " << begin.tostring() << " (at offset " << i << ") does not exist"<< std::endl;
-            throw InternalError();
+            //std::cerr << "ERROR: Specified index " << (begin + i).tostring() << " (pivot " << begin.tostring() << ", offset " << i << ") does not exist"<< std::endl;
+            throw KeyError();
         }
-        const Pattern unigram = iter->pattern;
-        pattern  = pattern + unigram;
+        //cerr << "DEBUG: ref=" << iter->ref.tostring() << " class=" << iter->cls << std::endl;
+        buffer = inttopatterndata(buffer, iter->cls);
+        i++;
+        iter++;
     }
-    return pattern;
+    if (buffer == mainpatternbuffer) {
+        //std::cerr << "ERROR: Specified index " << begin.tostring() << " does not exist"<< std::endl;
+        throw KeyError();
+    }
+    unsigned char buffersize = buffer - mainpatternbuffer; //pointer arithmetic
+    return Pattern(mainpatternbuffer, buffersize);
 }
 
-std::vector<IndexReference> IndexedCorpus::findmatches(const Pattern & pattern, int maxmatches) {
+std::vector<IndexReference> IndexedCorpus::findpattern(const Pattern & pattern, int maxmatches) {
     //far more inefficient than a pattrn model obviously
     std::vector<IndexReference> result;
     const int _n = pattern.size();
@@ -1123,9 +1144,11 @@ std::vector<IndexReference> IndexedCorpus::findmatches(const Pattern & pattern, 
 
     IndexReference ref;
     int i = 0;
+    bool moved = false;
     Pattern matchunigram = pattern[i];
     for (iterator iter = this->begin(); iter != this->end(); iter++) {
-        Pattern unigram = iter->pattern;
+        Pattern unigram = iter->pattern(); 
+        iter->pattern().out();
         if (matchunigram == unigram) {
             if (i ==0) ref = iter->ref;
             i++;
@@ -1134,6 +1157,11 @@ std::vector<IndexReference> IndexedCorpus::findmatches(const Pattern & pattern, 
                 if ((maxmatches != 0) && (result.size() == maxmatches)) break;
             }
             matchunigram = pattern[i];
+            moved = true;
+        } else {
+            i = 0;
+            if (moved) matchunigram = pattern[i];
+            moved = false;
         }
     }
     return result;
