@@ -1872,7 +1872,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
 
-    t_relationmap getcooc(const Pattern & pattern, bool bidirectional = true) { 
+    t_relationmap getcooc(const Pattern & pattern, bool ordersignificant = true) { 
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -1895,7 +1895,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             for (std::vector<std::pair<IndexReference,Pattern>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                 const IndexReference ref2 = iter2->first;
                 const Pattern neighbour = iter2->second;
-                if ((!bidirectional) && (neighbour < pattern)) continue;
+                if ((!ordersignificant) && (neighbour < pattern)) continue;
                 const int _n2 = neighbour.n();
                 if ((ref2.token + _n2 < ref.token ) || (ref2.token > ref.token + _n)) {
                     cooc[neighbour]++;
@@ -1957,7 +1957,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
 
-    void computenpmi( std::map<Pattern,t_relationmap_double> &  coocmap , double threshold, bool right=true, bool left=false) { 
+    void computenpmi( std::map<Pattern,t_relationmap_double> &  coocmap , double threshold, bool right=true, bool left=true) { 
         //compute npmi co-occurrence for all patterns
 
         //by default we do only right so we don't get double entries, cooc's
@@ -1969,8 +1969,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 tmp =  this->getrightcooc(pattern);
             } else if ((left)&&(!right)) {
                 tmp =  this->getleftcooc(pattern);
-            } else if (left && right) {
-                tmp =  this->getcooc(pattern);
+            } else if (left && right) { //order not relevant, output will be sorted to prevent duplicates
+                tmp =  this->getcooc(pattern, false);
             }
             for (t_relationmap::iterator iter2 = tmp.begin(); iter2 != tmp.end(); iter2++) {
                 const Pattern pattern2 = iter2->first;
@@ -1980,7 +1980,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     } 
 
-    void computecooc( std::map<Pattern,t_relationmap> &  coocmap , double threshold, bool right=true, bool left=false) { 
+    void computecooc( std::map<Pattern,t_relationmap> &  coocmap , double threshold, bool right=true, bool left=true) { 
         //compute absolute co-occurrence for all patterns
         //
         //by default we do only right so we don't get double entries, cooc's
@@ -1992,8 +1992,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 tmp =  this->getrightcooc(pattern);
             } else if ((left)&&(!right)) {
                 tmp =  this->getleftcooc(pattern);
-            } else if (left && right) {
-                tmp =  this->getcooc(pattern);
+            } else if (left && right) { //order not relevant, output will be sorted to prevent duplicated
+                tmp =  this->getcooc(pattern, false);
             }            
             for (t_relationmap::iterator iter2 = tmp.begin(); iter2 != tmp.end(); iter2++) {
                 const Pattern pattern2 = iter2->first;
