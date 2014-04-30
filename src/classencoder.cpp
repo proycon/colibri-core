@@ -310,6 +310,8 @@ Pattern ClassEncoder::buildpattern(const std::string querystring, bool allowunkn
 	return pattern;
 }
 
+
+
 Pattern ClassEncoder::buildpattern_safe(const std::string querystring, bool allowunknown,  bool autoaddunknown) { //thread-safe
     unsigned char buffer[buildbuffersize];
 	int buffersize = encodestring(querystring, buffer, allowunknown, autoaddunknown);
@@ -320,6 +322,7 @@ Pattern ClassEncoder::buildpattern_safe(const std::string querystring, bool allo
     Pattern pattern = Pattern(buffer,buffersize); 
 	return pattern;
 }
+
 
 void ClassEncoder::add(std::string s, unsigned int cls) {
     classes[s] = cls;

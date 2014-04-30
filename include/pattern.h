@@ -124,8 +124,9 @@ class Pattern {
      /**
       * Read Pattern from input stream (in binary form)
       * @param in The input stream
+      * @param ignoreeol Ignore end of line markers and read on until the end of the file, storing corpus data in one pattern
       */
-     Pattern(std::istream * in); 
+     Pattern(std::istream * in, bool ignoreeol = false); 
 
 
      ~Pattern();
@@ -313,6 +314,8 @@ class Pattern {
      void set(const unsigned char* dataref, const int size); 
 };
 
+
+Pattern patternfromfile(const std::string & filename); //helper function to read pattern from file, mostly for Cython
 
 class PatternPointer {
     public:

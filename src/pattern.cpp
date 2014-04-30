@@ -432,7 +432,7 @@ void readanddiscardpattern(std::istream * in) {
 
 
 
-Pattern::Pattern(std::istream * in) {
+Pattern::Pattern(std::istream * in, bool ignoreeol) {
     int i = 0;
     int readingdata = 0;
     unsigned char c = 0;
@@ -440,8 +440,12 @@ Pattern::Pattern(std::istream * in) {
         if (in->good()) {
             in->read( (char* ) &c, sizeof(char));
         } else {
-            std::cerr << "ERROR: Invalid pattern data, unexpected end of file" << std::endl;
-            throw InternalError();
+            if (ignoreeol) {
+                break;
+            } else {
+                std::cerr << "ERROR: Invalid pattern data, unexpected end of file" << std::endl;
+                throw InternalError();
+            }
         }
         if (i >= MAINPATTERNBUFFERSIZE) {
             std::cerr << "ERROR: Pattern(): Patternbuffer size exceeded, exceptionally large pattern, must be invalid. Are you sure you are reading a valid *.colibri.dat file and not plain text?" << std::endl;
@@ -452,7 +456,7 @@ Pattern::Pattern(std::istream * in) {
             readingdata--;
         } else {
             if (c == ENDMARKER) {
-                break;
+                if (!ignoreeol) break;
             } else if (c < 128) {
                 //we have a size
                 if (c == 0) {
@@ -1167,7 +1171,7 @@ std::vector<IndexReference> IndexedCorpus::findpattern(const Pattern & pattern, 
     return result;
 }
 
-int IndexedCorpus::sentencelength(int sentence)  {
+int IndexedCorpus::sentencelength(int sentence) {
     IndexReference ref = IndexReference(sentence, 0);
     int length = 0;
     for (iterator iter = this->find(ref); iter != this->end(); iter++) {
@@ -1175,4 +1179,27 @@ int IndexedCorpus::sentencelength(int sentence)  {
         length++;
     }
     return length;
+}
+
+unsigned int IndexedCorpus::sentences() {
+    int max = 0;
+    for (iterator iter = this->begin(); iter != this->end(); iter++) {
+        if (iter->ref.sentence > max) max = iter->ref.sentence;
+    }
+    return max;
+}
+
+Pattern IndexedCorpus::getsentence(int sentence) { 
+    return getpattern(IndexReference(sentence,0), sentencelength(sentence));
+}
+
+Pattern patternfromfile(const std::string & filename) {//helper function to read pattern from file, mostly for Cython
+    std::ifstream * in = new std::ifstream(filename.c_str());
+    if (!in->good()) {
+        std::cerr << "ERROR: Unable to load file " << filename << std::endl;
+        throw InternalError();
+    }
+    Pattern p = Pattern( (std::istream *) in, true);
+    in->close();
+    delete in;
 }

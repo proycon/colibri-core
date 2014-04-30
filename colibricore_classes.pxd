@@ -52,8 +52,7 @@ cdef extern from "pattern.h":
         bool isskipgram() nogil
         bool isflexgram() nogil
 
-
-
+    Pattern patternfromfile(const string&)
 
 
 

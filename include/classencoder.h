@@ -60,6 +60,7 @@ class ClassEncoder {
     
     Pattern buildpattern(const std::string, bool allowunknown=false, bool autoaddunknown = false);  //not thread-safe
     Pattern buildpattern_safe(const std::string, bool allowunknown=false, bool autoaddunknown = false);  //thread-safe
+
  
     void add(std::string, unsigned int cls);
     
