@@ -787,7 +787,7 @@ class PatternModel: public MapType, public PatternModelInterface {
            return this->occurrencecount(key) * key.size();
         }
         double coverage(const Pattern & key) {
-            return this->coveragecount(key) / this->tokens();
+            return this->coveragecount(key) / (double) this->tokens();
         }
        
 

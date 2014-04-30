@@ -295,27 +295,35 @@ cdef class Pattern:
         newpattern.bind(newcpattern)
         return newpattern
 
-    def ngrams(self,int n=0 ):
-        """Generator iterating over all ngrams of a particular size that are enclosed within this pattern. Despite the name, this may also return skipgrams!
+    def ngrams(self,int n=0, int maxn=0 ):
+        """Generator iterating over all ngrams of a particular size (or range thereof) that are enclosed within this pattern. Despite the name, this may also return skipgrams!
 
-        :param n: The desired size to obtain
+        :param n: The desired size to obtain, if unspecified (0), will extract all ngrams
         :type n: int
+        :param maxn: If larger than n, will extract ngrams in the specified n range
+        :type maxn: int
         :rtype: generator over Pattern instances
         """
+
         if n == 0:
             return self.subngrams()
+        elif maxn >= n:
+            return self.subngrams(n,maxn)
         else:
-            cdef vector[cPattern] result
-            self.cpattern.ngrams(result, n)
-            cdef cPattern cngram
-            cdef vector[cPattern].iterator it = result.begin()
-            cdef vector[cPattern].iterator it_end = result.end()
-            while it != it_end:
-                cngram  = deref(it)
-                ngram = Pattern()
-                ngram.bind(cngram)
-                yield ngram
-                inc(it)
+            return self._ngrams_aux(n)
+
+    def _ngrams_aux(self,int n):
+        cdef vector[cPattern] result
+        self.cpattern.ngrams(result, n)
+        cdef cPattern cngram
+        cdef vector[cPattern].iterator it = result.begin()
+        cdef vector[cPattern].iterator it_end = result.end()
+        while it != it_end:
+            cngram  = deref(it)
+            ngram = Pattern()
+            ngram.bind(cngram)
+            yield ngram
+            inc(it)
 
     def parts(self):
         """Generating iterating over the consecutive non-gappy parts in a skipgram of flexgram
