@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -10,21 +8,21 @@
     
     <title>Colibri Documentation &mdash; Colibri Core 0.1 documentation</title>
     
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/underscore.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Colibri Core 0.1 documentation" href="#" /> 
   </head>
   <body>
@@ -54,14 +52,31 @@
 </div>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>Colibri Core is a set of tools as well as a C++ and Python library for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. At the core is the tool <tt class="docutils literal"><span class="pre">colibri-patternmodeller</span></tt> which allows you to build, view, manipulate and query pattern models.</p>
+<p>Colibri Core is software, consisting of command line tools as well as programming libraries. to quickly and efficiently count and extract patterns from large corpus data, to extract various statistics on the extracted patterns, and to compute relations between the extracted patterns. The employed notion of pattern or construction encompasses the following categories:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>n-gram</strong> &#8211; n consecutive words</li>
+<li><strong>skipgram</strong> &#8211; An abstract pattern of predetermined length with one or multiple gaps (of specific size).</li>
+<li><strong>flexgram</strong> &#8211; An abstract pattern without predetermined length, with one or more gaps.</li>
+</ul>
+</div></blockquote>
+<p>N-gram extraction may seem fairly trivial at first, with a few lines in your favourite scripting language, you can move a simple sliding window of size <em>n</em> over your corpus and store the results in some kind of hashmap. This trivial approach however makes an unnecessarily high demand on memory resources, this often becomes prohibitive if unleashed on large corpora. Colibri Core tries to minimise these space requirements in several ways:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>Binary representation</strong> &#8211; Each word type is assigned a numeric class, which is encoded in a compact binary format in which highly frequent classes take less space than less frequent classes. Colibri core always uses this representation rather than a full string representation, both on disk and in memory.</li>
+<li><strong>Informed counting</strong> &#8211; Counting is performed more intelligently by iteratively processing the corpus in several passes and quickly discarding patterns that won&#8217;t reach the desired occurrence threshold.</li>
+</ul>
+</div></blockquote>
+<p>Skipgram and flexgram extraction are computationally more demanding but have been implemented with similar optimisations. Skipgrams are computed by abstracting over n-grams, and flexgrams in turn are computed either by abstracting over skipgrams, or directly from n-grams on the basis of co-occurrence information (mutual pointwise information). When patterns have been extracted, along with their counts and or index references to original corpus data, they form a so-called <em>pattern model</em>.</p>
+<p>At the heart of Colibri Core lies the tool <tt class="docutils literal"><span class="pre">colibri-patternmodeller</span></tt> which allows you to build, view, manipulate and query pattern models.</p>
 <p>The Colibri software is developed in the scope of the Ph.D. research project <strong>Constructions as Linguistic Bridges</strong>. This research examines the identification and extraction of aligned constructions or patterns across natural languages, and the usage of such constructions in Machine Translation. The aligned constructions are not identified on the basis of an extensive and explicitly defined grammar or expert database of linguistic knowledge, but rather are implicitly distilled from large amounts of example data. Our notion of constructions is broad and transcends the idea of words or variable-length phrases.</p>
 <p>This documentation will illustrate how to work with the various tools and the library of colibri, as well as elaborate on the implementation of certain key aspects of the software.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>Colibri is hosted on <a class="reference external" href="http://github.com/proycon/colibri-core/">github</a> and should be retrieved through the versioning control system <tt class="docutils literal"><span class="pre">git</span></tt>. Provided git is installed on your system, this is done as follows:</p>
-<div class="highlight-python"><pre>$ git clone http://github.com/proycon/colibri-core.git</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ git clone http://github.com/proycon/colibri-core.git
+</pre></div>
 </div>
 <p>You need to compile the software, if you want FoLiA support you will need to first to install the following dependency. By default FoLiA support is disabled.</p>
 <blockquote>
@@ -70,19 +85,34 @@
 </ul>
 </div></blockquote>
 <p>In addition to the C/C++ compiler (<tt class="docutils literal"><span class="pre">gcc</span></tt>), the build process for colibri makes use of <tt class="docutils literal"><span class="pre">autoconf</span></tt> and <tt class="docutils literal"><span class="pre">automake</span></tt>. Make sure these are installed on your system. Also install the package <tt class="docutils literal"><span class="pre">autoconf-archive</span></tt> if available on your distribution. Colibri can now be compiled and installed:</p>
-<div class="highlight-python"><pre>$ cd colibri
+<div class="highlight-python"><div class="highlight"><pre>$ cd colibri
 $ bash bootstrap
 $ ./configure [--with-folia --with-folia-path=/path/to/libfolia]
 $ make
-$ make install</pre>
+$ make install
+</pre></div>
 </div>
 <p>You can optionally pass a prefix if you want to install colibri in a different location:</p>
-<div class="highlight-python"><pre>$ ./configure --prefix=/usr/local/</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ ./configure --prefix=/usr/local/
+</pre></div>
+</div>
+<p>To install the Colibri Core Python library, you require Python 3 or higher with Cython 0.19 or above. On Debian/Ubuntu systems you will find these in the packages
+<tt class="docutils literal"><span class="pre">python3</span></tt> and <tt class="docutils literal"><span class="pre">cython3</span></tt>. To compile and install the Python library, issue
+the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python3 ./setup.py install
+</pre></div>
+</div>
+<p>If you want to install in a customised non-global location, use <tt class="docutils literal"><span class="pre">--prefix</span></tt>
+along with <tt class="docutils literal"><span class="pre">--include-dirs</span></tt> and <tt class="docutils literal"><span class="pre">--library-dirs</span></tt> to point to where the
+C++ headers and the library are installed:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python3 ./setup.py build_ext --include-dirs=/path/to/include/colibri-core  --library-dirs=/path/to/lib/  install --prefix=/path/to/somewhere/
+</pre></div>
 </div>
 <div class="section" id="keeping-colibri-up-to-date">
 <h3>Keeping colibri up to date<a class="headerlink" href="#keeping-colibri-up-to-date" title="Permalink to this headline">¶</a></h3>
 <p>Colibri is always under heavy development. Update your colibri copy by issuing a git pull:</p>
-<div class="highlight-python"><pre>$ git pull</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ git pull
+</pre></div>
 </div>
 <p>And then recompile as per the above instructions.</p>
 </div>
@@ -97,23 +127,26 @@ $ make install</pre>
 <h3>Introduction<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>Computation on large datasets begs for solutions to keep memory consumption
 manageable. Colibri requires that input corpora are converted into a compressed
-binary form. In this form each word-type in the corpus is represented by a
-numeric class. Highly frequent word-types get assigned low class numbers and
-less frequent word-types get higher class numbers. The class is represented in
-a dynamic-width byte-array, rather than a fixed-width integer.Patterns are
-encoded per word, each word starts with a size marker of one byte indicating the number of bytes
-are used for that word. The specified number of bytes that follow encode the
-word class. Instead of a size marker, byte values of 128 and above are reserved for special markers,
-such as encoding gaps and structural data. Finally, the pattern as a whole is
-ended by a null byte.</p>
+binary form. The vocabulary of the corpus is converted to integer form, i.e.
+each word-type in the corpus is represented by a numeric class. Highly frequent
+word-types get assigned low class numbers and less frequent word-types get
+higher class numbers. The class is represented in a dynamic-width byte-array,
+rather than a fixed-width integer. Patterns are encoded per word, each word
+starts with a size marker of one byte indicating the number of bytes are used
+for that word. The specified number of bytes that follow encode the word class.
+Instead of a size marker, byte values of 128 and above are reserved for special
+markers, such as encoding gaps and structural data. Finally, the pattern as a
+whole is ended by a null byte.</p>
 <p>All internal computations of all tools in colibri proceed on this internal
 representation rather than actual textual strings, keeping running time shorter
 and memory footprint significantly smaller.</p>
 </div>
 <div class="section" id="class-encoding-your-corpus">
 <h3>Class-encoding your corpus<a class="headerlink" href="#class-encoding-your-corpus" title="Permalink to this headline">¶</a></h3>
-<p>When working with colibri, you first want to <strong>class encode</strong> your corpus. This is done by the program <tt class="docutils literal"><span class="pre">colibri-classencode</span></tt>. It takes as input a <em>tokenised</em> monolingual corpus in plain text format, containing <em>one sentence per line</em>. Each line should be delimited by a single newline character (unix line endings). Colibri is completely agnostic when it comes to the character encoding of the input. Given a corpus file <tt class="docutils literal"><span class="pre">yourcorpus</span></tt>, class encoding is done as follows:</p>
-<div class="highlight-python"><pre>$ colibri-classencode yourcorpus</pre>
+<p>When working with colibri, you first want to <strong>class encode</strong> your corpus. This is done by the program <tt class="docutils literal"><span class="pre">colibri-classencode</span></tt>. It takes as input a <em>tokenised</em> monolingual corpus in plain text format, containing <em>one sentence per line</em>, as a line is the only structural unit Colibri works with, extracted patterns will never cross line boundaries. Each line should be delimited by a single newline character (unix line endings). If you desire another structural unit (such as for example a tweet, or a paragraph), simply make sure each is on one line.</p>
+<p>Colibri is completely agnostic when it comes to the character encoding of the input. Given a corpus file <tt class="docutils literal"><span class="pre">yourcorpus</span></tt>, class encoding is done as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode yourcorpus
+</pre></div>
 </div>
 <p>This results in two files:</p>
 <blockquote>
@@ -123,39 +156,47 @@ and memory footprint significantly smaller.</p>
 </ul>
 </div></blockquote>
 <p>If your corpus is not tokenised yet, you can consider using the tokeniser <a class="reference external" href="http://ilk.uvt.nl/ucto">ucto</a> (not part of colibri), this will also do sentence detection and output one line per sentence:</p>
-<div class="highlight-python"><pre>$ ucto -L en -n untokenisedcorpus.txt &gt; tokenisedcorpus.txt</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ ucto -L en -n untokenisedcorpus.txt &gt; tokenisedcorpus.txt
+</pre></div>
 </div>
 <p>The above sample is for English (<tt class="docutils literal"><span class="pre">-L</span> <span class="pre">en</span></tt>), several other languages are also supported.</p>
 <p>In addition to this plain text input. The class encoder also supports <em>FoLiA XML</em> (<a class="reference external" href="http://proycon.github.com/folia">folia website</a>) if you compiled with FoLiA support, make sure such files end with the extension <tt class="docutils literal"><span class="pre">xml</span></tt> and they will be automatically interpreted as FoLiA XML:</p>
-<div class="highlight-python"><pre>$ colibri-classencode yourcorpus.xml</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode yourcorpus.xml
+</pre></div>
 </div>
-<p>It is possible to encode multiple corpus files similtaneously, but generating a joined class file:</p>
-<div class="highlight-python"><pre>$ colibri-classencode yourcorpus1 yourcorpus2</pre>
+<p>The class file is the vocabulary of your corpus, it simply maps word strings to integer. You must always ensure that whenever you are working with multiple models, and you want to compare them, to use the exact same class file. It is possible to encode multiple corpus files similtaneously,  generating a joined class file:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode yourcorpus1.txt yourcorpus2.txt
+</pre></div>
 </div>
 <p>This results in <tt class="docutils literal"><span class="pre">yourcorpus1.colibri.cls</span></tt> and <tt class="docutils literal"><span class="pre">yourcorpus1.colibri.dat</span></tt> and <tt class="docutils literal"><span class="pre">yourcorpus2.colibri.dat</span></tt>. The class file spans both despite the name. An explicit name can be passed with the <tt class="docutils literal"><span class="pre">-o</span></tt> flag. It is also possible to encode multiple corpora in a single unified file by passing the <tt class="docutils literal"><span class="pre">-u</span></tt> flag. This is often desired if you want to train a pattern model on all the joined data:</p>
-<div class="highlight-python"><pre>$ colibri-classencode -o out -u yourcorpus1 yourcorpus2</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode -o out -u yourcorpus1.txt yourcorpus2.txt
+</pre></div>
 </div>
-<p>This will produce <tt class="docutils literal"><span class="pre">out.colibri.dat</span></tt> and <tt class="docutils literal"><span class="pre">out.colibri.cls</span></tt>.</p>
-<p>If you want to specify a large number of files, you can use the <tt class="docutils literal"><span class="pre">-l</span></tt> flag and specify a filename from which all input filenames will be read, one per line.</p>
+<p>This will produce <tt class="docutils literal"><span class="pre">out.colibri.dat</span></tt> and <tt class="docutils literal"><span class="pre">out.colibri.cls</span></tt>. You can use the <tt class="docutils literal"><span class="pre">-l</span></tt> option to read input filenames from file instead of command line arguments (one filename per line).</p>
+<p>If you have a pre-existing class file you can load it with the <tt class="docutils literal"><span class="pre">-c</span></tt> flag, and use it to encode new data:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode -c yourcorpus1.colibri.cls yourcorpus2.txt
+</pre></div>
+</div>
+<p>This will produce a <tt class="docutils literal"><span class="pre">yourcorpus2.colibri.dat</span></tt>, provided that all of the word types already existed in <tt class="docutils literal"><span class="pre">yourcorpus1.colibri.cls</span></tt> (which usually is not the case, in which case an error will be shown.
+To circumvent this error you have to specify how to deal with unknown words. There are two ways; the <tt class="docutils literal"><span class="pre">-U</span></tt> flag will encode all unknown word as a single word class dedicated to the task, whereas the <tt class="docutils literal"><span class="pre">-e</span></tt> flag will <em>extend</em> the specified class file with any new classes found. It has to be noted that this extension method spoils the optimal compression as classes are no longer strictly sorted by frequency. If you can all needed data in one go, then that is always preferred.</p>
+<p>This setup, however, is often seen in a train/test paradigm:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode -f testset.txt -c trainset.colibri.cls -e
+</pre></div>
+</div>
+<p>This will result in an encoded corpus <tt class="docutils literal"><span class="pre">testset.colibri.dat</span></tt> and an <em>extended</em> class file <tt class="docutils literal"><span class="pre">testset.colibri.cls</span></tt>, which is a superset of the original <tt class="docutils literal"><span class="pre">trainset.cls</span></tt>, adding only those classes that did not yet exist in the training data.</p>
 </div>
 <div class="section" id="class-decoding-your-corpus">
 <h3>Class-decoding your corpus<a class="headerlink" href="#class-decoding-your-corpus" title="Permalink to this headline">¶</a></h3>
-<p>Given an encoded corpus and a class file, the original corpus can always be reconstructed. This we call <em>class decoding</em> and is done using the <tt class="docutils literal"><span class="pre">colibri-classdecode</span></tt> program:</p>
-<div class="highlight-python"><pre>$ colibri-classdecode -f yourcorpus.colibri.dat -c yourcorpus.colibri.cls</pre>
+<p>Given an encoded corpus and a class file, the original corpus can always be reconstructed (unless the <tt class="docutils literal"><span class="pre">-U</span></tt> option was used in encoding to allow unknown words). This we call <em>class decoding</em> and is done using the <tt class="docutils literal"><span class="pre">colibri-classdecode</span></tt> program:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-classdecode -f yourcorpus.colibri.dat -c yourcorpus.colibri.cls
+</pre></div>
 </div>
 <p>Partial decoding can be done by specifying start and end line numbers using the
 flags <tt class="docutils literal"><span class="pre">-s</span></tt> and <tt class="docutils literal"><span class="pre">-e</span></tt> respectively.</p>
 <p>Output will be to <tt class="docutils literal"><span class="pre">stdout</span></tt>, you can redirect it to a file as follows:</p>
-<div class="highlight-python"><pre>$ colibri-classdecode -f yourcorpus.colibri.dat -c yourcorpus.colibri.cls &gt; yourcorpus.txt</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-classdecode -f yourcorpus.colibri.dat -c yourcorpus.colibri.cls &gt; yourcorpus.txt
+</pre></div>
 </div>
-</div>
-<div class="section" id="class-encoding-with-existing-classes">
-<h3>Class-encoding with existing classes<a class="headerlink" href="#class-encoding-with-existing-classes" title="Permalink to this headline">¶</a></h3>
-<p>Sometimes you want to encode new data using the same classes already used for another data set. For instance when comparing corpora, it is vital that the same classes are used, i.e. that identical words are assigned identical numerical classes. This also applies when you are working with a training set and a separate test set, or are otherwise interested in a comparative analysis between two comparable datasets. The initial class file is built on the training set, and it can be reused to encode the test set:</p>
-<p>You can encode a dataset, here named <tt class="docutils literal"><span class="pre">testset.txt</span></tt> using an existing class file, <tt class="docutils literal"><span class="pre">trainset.colibri.cls</span></tt>, as follows:</p>
-<div class="highlight-python"><pre>$ colibri-classencode -c trainset.colibri.cls testset.txt</pre>
-</div>
-<p>This will result in an encoded corpus <tt class="docutils literal"><span class="pre">testset.colibri.dat</span></tt> and an <em>extended</em> class file <tt class="docutils literal"><span class="pre">testset.colibri.cls</span></tt>, which is a superset of the original <tt class="docutils literal"><span class="pre">trainset.cls</span></tt>, adding only those classes that did not yet exist in the training data.</p>
 </div>
 </div>
 <div class="section" id="pattern-modeller">
@@ -182,7 +223,7 @@ to the more naive approach of immediately storing all in a hashmap, as it
 prevents the storing of lots of patterns not making the threshold by discarding
 them at an earlier stage.</p>
 <p>At the beginning of each iteration of n, all possible ways in which any n-gram
-of size n can contain gaps is computed. When an n-gram is found, various
+of size <em>n</em> can contain gaps is computed. When an n-gram is found, various
 skip-grams are tried in accordance with these gap configurations. This is
 accomplished by &#8216;punching holes&#8217; in the n-gram, resulting in a skip-gram. If
 all consecutive parts of this skip-gram were counted during previous iterations
@@ -209,14 +250,16 @@ Always specify the output file using the <tt class="docutils literal"><span clas
 is specified with parameter <tt class="docutils literal"><span class="pre">-t</span></tt>, patterns occuring less will not be counted.
 The default value is two.  The maximum value for n, i.e. the maximum
 n-gram/skipgram size, can be restricted using the parameter <tt class="docutils literal"><span class="pre">-l</span></tt>.:</p>
-<div class="highlight-python"><pre>$ colibri-patternmodeller -f yourcorpus.dat -t 10 -o yourcorpus.colibri.indexedpatternmodel</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -f yourcorpus.dat -t 10 -o yourcorpus.colibri.indexedpatternmodel
+</pre></div>
 </div>
 <p>This outputted model <tt class="docutils literal"><span class="pre">yourcorpus.colibri.indexedpatternmodel</span></tt> is stored in a
 binary format. To print it into a human readable presentation it needs to be
 decoded. The <tt class="docutils literal"><span class="pre">colibri-patternmodeller</span></tt> program can do this by specifying an
 input model using the <tt class="docutils literal"><span class="pre">-i</span></tt> flag, the class file using the <tt class="docutils literal"><span class="pre">-c</span></tt> parameter,
 and the desired action to print it all using <tt class="docutils literal"><span class="pre">-P</span></tt>:</p>
-<div class="highlight-python"><pre>$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -c yourcorpus.colibri.cls -P</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -c yourcorpus.colibri.cls -P
+</pre></div>
 </div>
 <p>Optionally, instead of or in addition to outputting a model to file using
 <tt class="docutils literal"><span class="pre">-o</span></tt>, you can also print it directly with <tt class="docutils literal"><span class="pre">-P</span></tt>.</p>
@@ -224,14 +267,15 @@ and the desired action to print it all using <tt class="docutils literal"><span 
 reserved for the header. This facilitates easy parsing as you can just load it
 into any software accepting CSV files, such as spreadsheets. An excerpt
 follows:</p>
-<div class="highlight-python"><pre>PATTERN     COUNT   TOKENS  COVERAGE        CATEGORY        SIZE    FREQUENCY       REFERENCES
+<div class="highlight-python"><div class="highlight"><pre>PATTERN     COUNT   TOKENS  COVERAGE        CATEGORY        SIZE    FREQUENCY       REFERENCES
 For 2       2       0.0059  ngram   1       0.0121  11:0 15:0
 death       2       2       0.0059  ngram   1       0.0121  11:5 23:7
 who 2       2       0.0059  ngram   1       0.0121  15:1 21:5
 .   4       4       0.0118  ngram   1       0.0242  5:6 9:4 10:6 13:4
 be  4       4       0.0118  ngram   1       0.0242  1:1 1:5 9:2 35:3
 flee        2       2       0.0059  ngram   1       0.0121  36:1 36:5
-not to      4       8       0.0235  ngram   2       0.1538  1:3 36:3 37:3 38:3</pre>
+not to      4       8       0.0235  ngram   2       0.1538  1:3 36:3 37:3 38:3
+</pre></div>
 </div>
 <p>The various columns are:</p>
 <ul class="simple">
@@ -239,13 +283,16 @@ not to      4       8       0.0235  ngram   2       0.1538  1:3 36:3 37:3 38:3</
 <li><strong>Occurrence count</strong> - The absolute number of times this pattern occurs</li>
 <li><strong>Tokens</strong> - The absolute number of tokens in the corpus that this pattern covers. Computed as <tt class="docutils literal"><span class="pre">occurrencecount</span> <span class="pre">*</span> <span class="pre">n</span></tt>.</li>
 <li><strong>Coverage</strong> - The number of covered tokens, as a fraction of the total number of tokens.</li>
-<li><strong>Category</strong> - The type of pattern.</li>
+<li><strong>Category</strong> - The type of pattern (ngram, skipgram or flexgram).</li>
 <li><strong>Size</strong> - The length of the n-gram or skipgram in words/tokens.</li>
 <li><strong>Frequency</strong> - The frequency of the pattern <em>within its category and
 size class</em>, so for an ngram of size two, the frequency indicates the
 frequency amongst all bigrams.</li>
 <li><strong>References</strong> - A space-delimited list of indices in the corpus that correspond to a occurrence of this pattern. Indices are in the form <tt class="docutils literal"><span class="pre">sentence:token</span></tt> where sentence starts at one and token starts at zero. This column is only available for indexed models.</li>
 </ul>
+</div>
+<div class="section" id="creating-a-pattern-model-with-skipgrams-and-or-flexgrams">
+<h3>Creating a pattern model with skipgrams and/or flexgrams<a class="headerlink" href="#creating-a-pattern-model-with-skipgrams-and-or-flexgrams" title="Permalink to this headline">¶</a></h3>
 <p>The pattern model created in the previous example did not yet include skip-grams, these have to be explicitly enabled with the <tt class="docutils literal"><span class="pre">-s</span></tt> flag. When this is used, another options becomes available for consideration:</p>
 <ul class="simple">
 <li><tt class="docutils literal"><span class="pre">-T</span> <span class="pre">[value]</span></tt> - Only skipgrams that have at least this many different types
@@ -253,7 +300,8 @@ as skip content, i.e. possible options filling the gaps, will be considered.
 The default is set to two.</li>
 </ul>
 <p>Here is an example of generating an indexed pattern model including skipgrams:</p>
-<div class="highlight-python"><pre>$ colibri-patternmodeller -f yourcorpus.colibri.dat -t 10 -s -T 3 -o yourcorpus.colibri.indexedpatternmodel</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -f yourcorpus.colibri.dat -t 10 -s -T 3 -o yourcorpus.colibri.indexedpatternmodel
+</pre></div>
 </div>
 <p>If you want to generate unindexed models, simply add the flag <tt class="docutils literal"><span class="pre">-u</span></tt>. Do note
 that for unindexed models the parameter <tt class="docutils literal"><span class="pre">-T</span></tt> has no effect, it will extract
@@ -262,17 +310,52 @@ skpigrams, you&#8217;re best off with an indexed model. Note that indexed models
 always be read and printed in an unindexed way (with the <tt class="docutils literal"><span class="pre">-u</span></tt> flag); but
 unindexed models can not be read in an indexed way, as they simply lack
 indices:</p>
-<div class="highlight-python"><pre>$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -c yourcorpus.colibri.cls -u -P
-$ colibri-patternmodeller -i yourcorpus.colibri.unindexedpatternmodel -c yourcorpus.colibri.cls -u -P</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -c yourcorpus.colibri.cls -u -P
+$ colibri-patternmodeller -i yourcorpus.colibri.unindexedpatternmodel -c yourcorpus.colibri.cls -u -P
+</pre></div>
+</div>
+<p>Flexgrams, non-consecutive patterns in which the gap (only one in the current implementation) is of dynamic width, can be generated in one of two ways:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Extract flexgrams by abstracting from skipgrams: use the <tt class="docutils literal"><span class="pre">-S</span> <span class="pre">S</span></tt> flag.</li>
+<li>Extract flexgrams directly from n-gram co-occurence: use the <tt class="docutils literal"><span class="pre">-S</span>
+<span class="pre">[threshold]</span></tt> flag, where the threshold is expressed as normalised pointwise mutual
+information [-1,1].</li>
+</ul>
+</div></blockquote>
+<p>The skipgram approach has the advantage of allowing you to rely on the <tt class="docutils literal"><span class="pre">-T</span></tt>
+threshold, but comes with the disadvantage of having a maximum span. The
+co-occurrence approach allows for flexgrams over larger distances. Both methods
+come at the cost of more memory, especially the former method.</p>
+<p>Neither skipgrams nor flexgrams will cross the line boundary of the original
+corpus data, so ensure your data is segmented into lines suitable for your
+purposes in the encoding stage.</p>
+</div>
+<div class="section" id="two-stage-building">
+<h3>Two-stage building<a class="headerlink" href="#two-stage-building" title="Permalink to this headline">¶</a></h3>
+<p>Generating an indexed pattern model takes considerably more memory than an
+unindexed model, as instead of mere counts, all indices have to be retained.</p>
+<p>The creation of a pattern models progresses through stages of counting and
+pruning. When construction of an indexed model with an occurrence threshold of
+2 or higher reaches the limits of your system&#8217;s memory capacity, then two-stage building
+<em>may</em> offer a solution.</p>
+<p>Two-stage building first constructs an unindexed model (demanding less memory),
+and subsequently loads this model and searches the corpus for indices for all
+patterns in the model. Whilst this method is more time-consuming, it prevents
+the memory bump (after counting, prior to pruning) that normal one-stage
+building of indexed models have. Two-stage building is enabled using the <tt class="docutils literal"><span class="pre">-2</span></tt> flag:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -2 -f yourcorpus.colibri.dat -t 10 -s -T 3 -o yourcorpus.colibri.indexedpatternmodel
+</pre></div>
 </div>
 </div>
 <div class="section" id="statistical-reports-and-histograms">
 <h3>Statistical reports and histograms<a class="headerlink" href="#statistical-reports-and-histograms" title="Permalink to this headline">¶</a></h3>
 <p>If you have a pattern model, you can generate a statistical report which includes information on the number of occurrences and number of types for patterns, grouped for n-grams or skipgrams for a specific value of <em>n</em>. A report is generated using the <tt class="docutils literal"><span class="pre">-R</span></tt> flag, the input model is specified using <tt class="docutils literal"><span class="pre">-i</span></tt>:</p>
-<div class="highlight-python"><pre>$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -R</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -R
+</pre></div>
 </div>
 <p>Example output:</p>
-<div class="highlight-python"><pre>REPORT
+<div class="highlight-python"><div class="highlight"><pre>REPORT
 ----------------------------------
                             PATTERNS    TOKENS  COVERAGE     TYPES
 Total:                             -       340         -       177
@@ -297,7 +380,8 @@ Covered:                          69       165    0.4853        41
   skipgram       all         7         7    0.0206         6          28
   skipgram         3         2         7    0.0206         4           7
   skipgram         4         2         4    0.0118         4           8
-  skipgram         5         3         5    0.0147         5          13</pre>
+  skipgram         5         3         5    0.0147         5          13
+</pre></div>
 </div>
 <p>Some explanation is in order to correctly interpret this data. There are three
 columns:</p>
@@ -315,10 +399,11 @@ the group. Used as a basis for computing frequency.</li>
 </div></blockquote>
 <p>Pattern models store how many of the tokens and types in the original corpus were covered. Tokens and types not covered did not make the set thresholds. Make sure to use indexed models if you want accurate coverage data.</p>
 <p>Similarly, a histogram can also be generated, using the <tt class="docutils literal"><span class="pre">-H</span></tt> flag:</p>
-<div class="highlight-python"><pre>$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -H</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -H
+</pre></div>
 </div>
 <p>Example output:</p>
-<div class="highlight-python"><pre>OCCURRENCES   PATTERNS
+<div class="highlight-python"><div class="highlight"><pre>OCCURRENCES   PATTERNS
 2   39
 3   5
 4   13
@@ -329,19 +414,32 @@ the group. Used as a basis for computing frequency.</li>
 10  1
 13  1
 14  1
-15  1</pre>
+15  1
+</pre></div>
 </div>
 </div>
 <div class="section" id="filtering-models">
 <h3>Filtering models<a class="headerlink" href="#filtering-models" title="Permalink to this headline">¶</a></h3>
 <p>Patterns models can be read with <tt class="docutils literal"><span class="pre">-i</span></tt> and filtered by setting stricter thresholds prior to printing, reporting or outputting to file. An example:</p>
-<div class="highlight-python"><pre>$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -t 20 -T 10 -o yourcorpus_filtered.colibri.indexedpatternmodel -P</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -t 20 -T 10 -o yourcorpus_filtered.colibri.indexedpatternmodel -P
+</pre></div>
 </div>
+<p>You can also filter pattern models by intersecting with another pattern model
+using the <tt class="docutils literal"><span class="pre">-j</span></tt> option. This only works when both are built on
+the same class file:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -j yourcorpus2.colibri.indexedpatternmodel -o yourcorpus_filtered.colibri.indexedpatternmodel
+</pre></div>
+</div>
+<p>The output pattern model will contain only those patterns that were present in
+both the input model (<tt class="docutils literal"><span class="pre">-i</span></tt>) as well as the constraining model (<tt class="docutils literal"><span class="pre">-j</span></tt>), which may be
+either indexed or unindexed regardless of the input model; it will
+always contain the counts/indices from the input model.</p>
 </div>
 <div class="section" id="training-and-testing-coverage">
 <h3>Training and testing coverage<a class="headerlink" href="#training-and-testing-coverage" title="Permalink to this headline">¶</a></h3>
 <p>An important quality of pattern models lies in the fact that pattern models can
-be compared. More specifically, you can train a pattern model on a corpus and
+be compared, provided they use comparable vocabulary, i.e. are based on the same
+class file.  More specifically, you can train a pattern model on a corpus and
 test it on another corpus, which yields another pattern model containing only
 those patterns that occur in both training and test data. The difference in
 count, frequency and coverage can then be easily be compared. You build such a
@@ -358,14 +456,39 @@ with testing on another corpus:</p>
 <dt>Testing::</dt>
 <dd>$ colibri-patternmodeller -f testset.colibri.dat -j trainset.indexedpatternmodel.colibri -o testset.colibri.indexedpatternmodel</dd>
 </dl>
+<p>or (more memory efficient):</p>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -f testset.colibri.dat -I trainset.indexedpatternmodel.colibri -o testset.colibri.indexedpatternmodel
+</pre></div>
+</div>
 <p>This results in a model <tt class="docutils literal"><span class="pre">testset.colibri.indexedpatternmodel</span></tt> that only contains patterns that also occur in the specified training model.</p>
 <p>Such an intersection of models can also be created at any later stage using
-<tt class="docutils literal"><span class="pre">-i</span></tt> and <tt class="docutils literal"><span class="pre">-j</span></tt>.</p>
+<tt class="docutils literal"><span class="pre">-i</span></tt> and <tt class="docutils literal"><span class="pre">-j</span></tt>, as shown in the previous section.</p>
+</div>
+<div class="section" id="reverse-index">
+<h3>Reverse index<a class="headerlink" href="#reverse-index" title="Permalink to this headline">¶</a></h3>
+<p>Indexed pattern models have a what is called a <em>forward index</em>. For each
+pattern, all of the positions, <tt class="docutils literal"><span class="pre">(sentence,token)</span></tt>, at which a token of the
+pattern can be found, is held. In Colibri-core, sentences always start at 1, whereas
+tokens start at 0.</p>
+<p>A reverse index is a mapping of references of the type <tt class="docutils literal"><span class="pre">(sentence,token)</span></tt> to a set of all the
+patterns that <em>begin</em> at that location. Such a reverse index can be constructed
+from the forward index of an indexed pattern model, or it can be explicitly
+given by simply passing the original corpus data to the model, which makes
+reverse indices available even for unindexed models. Explicitly providing a
+reverse index makes loading a model faster (especially on larger models), but at
+the cost of higher memory usage, especially in case of sparse models.</p>
+<p>Passing corpus data for the reverse index to colibri-patternmodeller is done
+using the <tt class="docutils literal"><span class="pre">-r</span></tt> flag, and the full reverse index can be displayed using the <tt class="docutils literal"><span class="pre">-Z</span></tt> flag:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller  -i yourcorpus.indexedpatternmodel.colibri -r yourcorpus.colibri.dat -c yourcorpus.colibri.cls -Z
+</pre></div>
+</div>
+<p>Indexes and/or reverse indexes are required for various purposes, one of which
+is the extraction of relations and co-occurrence information.</p>
 </div>
 <div class="section" id="query-mode">
 <h3>Query mode<a class="headerlink" href="#query-mode" title="Permalink to this headline">¶</a></h3>
 <p>The pattern modeller has query mode which allows you to quickly extract patterns from test sentences or fragments thereof. The query mode is invoked by loading a pattern model (<tt class="docutils literal"><span class="pre">-i</span></tt>), a class file (<tt class="docutils literal"><span class="pre">-c</span></tt>) and the <tt class="docutils literal"><span class="pre">-Q</span></tt> flag. The query mode can be run interactively as it takes input from <tt class="docutils literal"><span class="pre">stdin</span></tt>, one <em>tokenised</em> sentence per line. The following example illustrates this, the sentence <em>&#8220;To be or not to be&#8221;</em> was typed as input:</p>
-<div class="highlight-python"><pre>$ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -Q
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -Q
 Loading class decoder from file /tmp/hamlet.colibri.cls
 Loading class encoder from file /tmp/hamlet.colibri.cls
 Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
@@ -379,7 +502,8 @@ Type ctrl-D to quit, type X to switch between exact mode and extensive mode (def
 1:4 to      13              13      0.0382353       ngram   1       0.0787879   1:4 2:6 4:1 5:10 6:7 8:4 9:1 9:8 10:4 27:2 36:4 37:4 38:4
 1:2 or not  4               8       0.0235294       ngram   2       0.153846    1:2 36:2 37:2 38:2
 1:3 not to  4               8       0.0235294       ngram   2       0.153846    1:3 36:3 37:3 38:3
-1:2 or not to       4               12      0.0352941       ngram   3       0.333333    1:2 36:2 37:2 38:2</pre>
+1:2 or not to       4               12      0.0352941       ngram   3       0.333333    1:2 36:2 37:2 38:2
+</pre></div>
 </div>
 <p>The output starts with an index in the format <tt class="docutils literal"><span class="pre">sentence:token</span></tt>, specifying
 where the pattern found was found in your input. The next columns are the same
@@ -392,11 +516,12 @@ the modes.</p>
 <tt class="docutils literal"><span class="pre">-q</span></tt> in which you specify the pattern you want to query as argument on the command
 line. Multiple patterns can be specified by repeating the <tt class="docutils literal"><span class="pre">-q</span></tt> flag. This
 mode always behaves according to exact mode:</p>
-<div class="highlight-python"><pre>$ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q "to be"
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q &quot;to be&quot;
 Loading class decoder from file /tmp/hamlet.colibri.cls
 Loading class encoder from file /tmp/hamlet.colibri.cls
 Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
-to be       2               4       0.0117647       ngram   2       0.0769231   1:4 9:1</pre>
+to be       2               4       0.0117647       ngram   2       0.0769231   1:4 9:1
+</pre></div>
 </div>
 </div>
 <div class="section" id="pattern-relations">
@@ -409,10 +534,10 @@ to be       2               4       0.0117647       ngram   2       0.0769231   
 patterns that instantiate them <tt class="docutils literal"><span class="pre">to</span> <span class="pre">be</span> <span class="pre">{*1*}</span> <span class="pre">not</span> <span class="pre">{*1*}</span> <span class="pre">be</span></tt> is instantiated
 by <tt class="docutils literal"><span class="pre">to</span> <span class="pre">{*1*}</span> <span class="pre">or</span></tt>, also referred to as the skip content.</li>
 </ul>
-<p>You can all of these extract relations using the <tt class="docutils literal"><span class="pre">-r</span></tt> flag, which is to be
+<p>You can all of these extract relations using the <tt class="docutils literal"><span class="pre">-g</span></tt> flag, which is to be
 used in combination with the query mode <tt class="docutils literal"><span class="pre">-Q</span></tt> or <tt class="docutils literal"><span class="pre">-q</span></tt>. Consider the
 following sample:</p>
-<div class="highlight-python"><pre>$ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q "to be" -r
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q &quot;to be&quot; -g
 Loading class decoder from file /tmp/hamlet.colibri.cls
 Loading class encoder from file /tmp/hamlet.colibri.cls
 Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
@@ -424,7 +549,8 @@ to be       2               4       0.0117647       ngram   2       0.0769231   
     to be   RIGHT-NEIGHBOUR-OF      To {*1*} or not 1       0.25    4
     to be   RIGHT-NEIGHBOUR-OF      To {*2*} not    1       0.25    4
     to be   RIGHT-NEIGHBOUR-OF      not     1       0.25    5
-    to be   RIGHT-NEIGHBOUR-OF      or not  1       0.25    4</pre>
+    to be   RIGHT-NEIGHBOUR-OF      or not  1       0.25    4
+</pre></div>
 </div>
 <p>The following columns are reported, all are indented with a single tab so
 possible parsers can distinguish the numbers for the queried pattern itself from the relationships with other patterns.</p>
@@ -439,18 +565,43 @@ possible parsers can distinguish the numbers for the queried pattern itself from
 </ul>
 </div></blockquote>
 </div>
+<div class="section" id="co-occurrence">
+<h3>Co-occurrence<a class="headerlink" href="#co-occurrence" title="Permalink to this headline">¶</a></h3>
+<p>Co-occurrence in Colibri-Core measures which patterns co-occur on the same line
+(i.e. usually corresponding to a sentence or whatever structural unit you
+decided upon when encoding your corpus). Co-occurrence is another relation in
+addition to the ones described in the previous section.</p>
+<p>The degree of co-occurrence can be expressed as either an absolute occurrence
+number (<tt class="docutils literal"><span class="pre">-C</span></tt>), for a normalised mutual pointwise information (<tt class="docutils literal"><span class="pre">-Y</span></tt>). Both
+flags take a threshold, setting the threshold too low, specially for npmi, may
+cause very high memory usage. The following syntax would show all patterns that
+occur at least five times in the same sentence. Note that the order of the
+pattern pairs does not matter; if there are two patterns X and Y then result X
+Y or Y X would be the same, yet only one of them is included in the output to
+prevent duplicating information:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -C 5
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="architecture-overview">
 <h2>Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permalink to this headline">¶</a></h2>
-<img alt="images/arch.png" src="images/arch.png" />
+<img alt="_images/arch.png" src="_images/arch.png" />
 </div>
-<div class="section" id="python-api-reference">
-<h2>Python API Reference<a class="headerlink" href="#python-api-reference" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="python-tutorial">
+<h2>Python Tutorial<a class="headerlink" href="#python-tutorial" title="Permalink to this headline">¶</a></h2>
 <p>Colibri Core offers both a C++ API as well as a Python API. It exposes all of
 the functionality, and beyond, of the tools outlined above. The Python API
 binds with the C++ code, and although it is more limited than the C++ API, it
-still offers most higher-level functionality.</p>
-<span class="target" id="module-colibricore"></span><dl class="class">
+still offers most higher-level functionality. The Colibri Core binding between C++ and
+Python is written in Cython.</p>
+<p>A Python tutorial for Colibri Core is available in the form of an IPython
+Notebook, meaning that you can interactively run it and play with it.</p>
+<p>A static read-only version can be found here:</p>
+</div>
+<div class="section" id="module-colibricore">
+<span id="python-api-reference"></span><h2>Python API Reference<a class="headerlink" href="#module-colibricore" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
 <dt id="colibricore.AlignedPatternDict_int32">
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">AlignedPatternDict_int32</tt><a class="headerlink" href="#colibricore.AlignedPatternDict_int32" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
@@ -508,7 +659,7 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.AlignedPatternDict_int32.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5e10&gt;</em><a class="headerlink" href="#colibricore.AlignedPatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34db70&gt;</em><a class="headerlink" href="#colibricore.AlignedPatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -621,6 +772,11 @@ still offers most higher-level functionality.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="colibricore.ClassDecoder.decodefile">
+<tt class="descname">decodefile</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.ClassDecoder.decodefile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="colibricore.ClassDecoder.filename">
 <tt class="descname">filename</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.ClassDecoder.filename" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -681,6 +837,19 @@ still offers most higher-level functionality.</p>
 <dt id="colibricore.ClassEncoder.encodefile">
 <tt class="descname">encodefile</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.ClassEncoder.encodefile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encodes the specified sourcefile according to the classer (as targetfile)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sourcefile</strong> (<em>str</em>) &#8211; Source filename</li>
+<li><strong>targetfile</strong> &#8211; Target filename</li>
+<li><strong>allowunknown</strong> (<em>bool</em>) &#8211; Encode unknown classes as &#8216;unknown&#8217;, a single class for all, rather than failing with an exception if a word type is unseen (bool, default=False)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -752,13 +921,18 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.IndexedCorpus.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3af7060&gt;</em><a class="headerlink" href="#colibricore.IndexedCorpus.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34de10&gt;</em><a class="headerlink" href="#colibricore.IndexedCorpus.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="colibricore.IndexedCorpus.findmatches">
-<tt class="descname">findmatches</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedCorpus.findmatches" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator over the indexes in the corpus where this pattern is found. Note that this is much slower than using the reverse index on an IndexedPatternModel!!!</p>
+<dt id="colibricore.IndexedCorpus.filename">
+<tt class="descname">filename</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedCorpus.filename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedCorpus.findpattern">
+<tt class="descname">findpattern</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedCorpus.findpattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over the indexes in the corpus where this pattern is found. Note that this is much slower than using the forward index on an IndexedPatternModel!!!</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -785,6 +959,11 @@ still offers most higher-level functionality.</p>
 <dl class="method">
 <dt id="colibricore.IndexedCorpus.sentencelength">
 <tt class="descname">sentencelength</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedCorpus.sentencelength" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedCorpus.sentences">
+<tt class="descname">sentences</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedCorpus.sentences" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -837,7 +1016,7 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.IndexedData.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5c30&gt;</em><a class="headerlink" href="#colibricore.IndexedData.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34d990&gt;</em><a class="headerlink" href="#colibricore.IndexedData.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -943,8 +1122,17 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.IndexedPatternModel.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5f30&gt;</em><a class="headerlink" href="#colibricore.IndexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34dcc0&gt;</em><a class="headerlink" href="#colibricore.IndexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.add">
+<tt class="descname">add</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a pattern to the indexed model
+:param pattern: The pattern to add
+:type pattern: Pattern
+:param indices: list (or other iterable) of 2-tuples specifying the (sentence,index) of each occurrence of the pattern</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.coverage">
@@ -977,6 +1165,11 @@ still offers most higher-level functionality.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.covered">
+<tt class="descname">covered</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.covered" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.frequency">
@@ -1081,7 +1274,7 @@ still offers most higher-level functionality.</p>
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.load">
 <tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a patternmodel from file</p>
+<dd><p>Load a patternmodel from file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1095,6 +1288,26 @@ still offers most higher-level functionality.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.loadconstrainedbyindexedmodel">
+<tt class="descname">loadconstrainedbyindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.loadconstrainedbyindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.loadconstrainedbysetmodel">
+<tt class="descname">loadconstrainedbysetmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.loadconstrainedbysetmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.loadconstrainedbyunindexedmodel">
+<tt class="descname">loadconstrainedbyunindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.loadconstrainedbyunindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.loadreverseindex">
+<tt class="descname">loadreverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.loadreverseindex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.maxlength">
@@ -1208,7 +1421,7 @@ still offers most higher-level functionality.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexreference</strong> &#8211; a (sentence, tokenoffset) tuple</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sentence</strong> &#8211; a sentence number</td>
 </tr>
 </tbody>
 </table>
@@ -1321,6 +1534,21 @@ still offers most higher-level functionality.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.trainconstrainedbyindexedmodel">
+<tt class="descname">trainconstrainedbyindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.trainconstrainedbyindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.trainconstrainedbypatternsetmodel">
+<tt class="descname">trainconstrainedbypatternsetmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.trainconstrainedbypatternsetmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.trainconstrainedbyunindexedmodel">
+<tt class="descname">trainconstrainedbyunindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.trainconstrainedbyunindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.type">
@@ -1457,8 +1685,17 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.OrderedIndexedPatternModel.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5f60&gt;</em><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34dcf0&gt;</em><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.add">
+<tt class="descname">add</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a pattern to the indexed model
+:param pattern: The pattern to add
+:type pattern: Pattern
+:param indices: list (or other iterable) of 2-tuples specifying the (sentence,index) of each occurrence of the pattern</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="colibricore.OrderedIndexedPatternModel.coverage">
@@ -1491,6 +1728,11 @@ still offers most higher-level functionality.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.covered">
+<tt class="descname">covered</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.covered" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="colibricore.OrderedIndexedPatternModel.frequency">
@@ -1595,7 +1837,7 @@ still offers most higher-level functionality.</p>
 <dl class="method">
 <dt id="colibricore.OrderedIndexedPatternModel.load">
 <tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a patternmodel from file</p>
+<dd><p>Load a patternmodel from file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1609,6 +1851,26 @@ still offers most higher-level functionality.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.loadconstrainedbyindexedmodel">
+<tt class="descname">loadconstrainedbyindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.loadconstrainedbyindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.loadconstrainedbysetmodel">
+<tt class="descname">loadconstrainedbysetmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.loadconstrainedbysetmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.loadconstrainedbyunindexedmodel">
+<tt class="descname">loadconstrainedbyunindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.loadconstrainedbyunindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.loadreverseindex">
+<tt class="descname">loadreverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.loadreverseindex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="colibricore.OrderedIndexedPatternModel.maxlength">
@@ -1722,7 +1984,7 @@ still offers most higher-level functionality.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexreference</strong> &#8211; a (sentence, tokenoffset) tuple</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sentence</strong> &#8211; a sentence number</td>
 </tr>
 </tbody>
 </table>
@@ -1835,6 +2097,21 @@ still offers most higher-level functionality.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.trainconstrainedbyindexedmodel">
+<tt class="descname">trainconstrainedbyindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.trainconstrainedbyindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.trainconstrainedbypatternsetmodel">
+<tt class="descname">trainconstrainedbypatternsetmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.trainconstrainedbypatternsetmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.trainconstrainedbyunindexedmodel">
+<tt class="descname">trainconstrainedbyunindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.trainconstrainedbyunindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="colibricore.OrderedIndexedPatternModel.type">
@@ -1976,8 +2253,26 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.OrderedUnindexedPatternModel.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5fc0&gt;</em><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34dd80&gt;</em><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.add">
+<tt class="descname">add</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a pattern to the unindexed model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pattern</strong> (<em>Pattern</em>) &#8211; The pattern to add</li>
+<li><strong>count</strong> (<em>int</em>) &#8211; The number of occurrences</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="colibricore.OrderedUnindexedPatternModel.coverage">
@@ -2047,7 +2342,7 @@ still offers most higher-level functionality.</p>
 <dl class="method">
 <dt id="colibricore.OrderedUnindexedPatternModel.load">
 <tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a patternmodel from file</p>
+<dd><p>Load a patternmodel from file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2061,6 +2356,26 @@ still offers most higher-level functionality.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.loadconstrainedbyindexedmodel">
+<tt class="descname">loadconstrainedbyindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.loadconstrainedbyindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.loadconstrainedbysetmodel">
+<tt class="descname">loadconstrainedbysetmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.loadconstrainedbysetmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.loadconstrainedbyunindexedmodel">
+<tt class="descname">loadconstrainedbyunindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.loadconstrainedbyunindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.loadreverseindex">
+<tt class="descname">loadreverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.loadreverseindex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="colibricore.OrderedUnindexedPatternModel.maxlength">
@@ -2132,6 +2447,20 @@ still offers most higher-level functionality.</p>
 <dt id="colibricore.OrderedUnindexedPatternModel.report">
 <tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print a detailed statistical report to stdout</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.reverseindex">
+<tt class="descname">reverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.reverseindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over all patterns occurring at the specified index reference</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexreference</strong> &#8211; a (sentence, tokenoffset) tuple</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -2241,6 +2570,21 @@ still offers most higher-level functionality.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.trainconstrainedbyindexedmodel">
+<tt class="descname">trainconstrainedbyindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.trainconstrainedbyindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.trainconstrainedbypatternsetmodel">
+<tt class="descname">trainconstrainedbypatternsetmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.trainconstrainedbypatternsetmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.trainconstrainedbyunindexedmodel">
+<tt class="descname">trainconstrainedbyunindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.trainconstrainedbyunindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="colibricore.OrderedUnindexedPatternModel.type">
@@ -2423,7 +2767,7 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.Pattern.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5c00&gt;</em><a class="headerlink" href="#colibricore.Pattern.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34d960&gt;</em><a class="headerlink" href="#colibricore.Pattern.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2512,14 +2856,19 @@ still offers most higher-level functionality.</p>
 <dl class="method">
 <dt id="colibricore.Pattern.ngrams">
 <tt class="descname">ngrams</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.Pattern.ngrams" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator iterating over all ngrams of a particular size that are enclosed within this pattern. Despite the name, this may also return skipgrams!</p>
+<dd><p>Generator iterating over all ngrams of a particular size (or range thereof) that are enclosed within this pattern. Despite the name, this may also return skipgrams!</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; The desired size to obtain</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n</strong> (<em>int</em>) &#8211; The desired size to obtain, if unspecified (0), will extract all ngrams</li>
+<li><strong>maxn</strong> (<em>int</em>) &#8211; If larger than n, will extract ngrams in the specified n range</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">generator over Pattern instances</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">generator over Pattern instances</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -2595,6 +2944,223 @@ still offers most higher-level functionality.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="colibricore.PatternAlignmentModel_float">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternAlignmentModel_float</tt><a class="headerlink" href="#colibricore.PatternAlignmentModel_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Unindexed Pattern Model, less flexible and powerful than its indexed counterpart, but smaller memory footprint</p>
+<p>Initialise an alignment model. Either an empty one or loading from file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211; The name of the file to load, must be a valid colibri alignmodel file</li>
+<li><strong>options</strong> (<em>PatternModelOptions</em>) &#8211; An instance of PatternModelOptions, containing the options used for loading</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="colibricore.PatternAlignmentModel_float.__contains__">
+<tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a pattern is in the model:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pattern</strong> (<em>Pattern or 2-tuple of patterns</em>) &#8211; A pattern or a pair of patterns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sourcepattern</span> <span class="ow">in</span> <span class="n">alignmodel</span>
+<span class="p">(</span><span class="n">sourcepattern</span><span class="p">,</span> <span class="n">targetpattern</span><span class="p">)</span> <span class="ow">in</span> <span class="n">alignmodel</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternAlignmentModel_float.__getitem__">
+<tt class="descname">__getitem__</tt><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the value for the pattern</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pattern</strong> (<em>Pattern</em>) &#8211; A pattern</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int (for Unindexed Models), IndexData (for Indexed models)</td>
+</tr>
+</tbody>
+</table>
+<p>Example (unindexed model):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">occurrences</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="n">pattern</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternAlignmentModel_float.__init__">
+<tt class="descname">__init__</tt><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise an alignment model. Either an empty one or loading from file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211; The name of the file to load, must be a valid colibri alignmodel file</li>
+<li><strong>options</strong> (<em>PatternModelOptions</em>) &#8211; An instance of PatternModelOptions, containing the options used for loading</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternAlignmentModel_float.__iter__">
+<tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates over all source patterns in the model.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">sourcepattern</span> <span class="ow">in</span> <span class="n">alignmodel</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">classdecoder</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternAlignmentModel_float.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of distinct patterns in the model</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.PatternAlignmentModel_float.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.PatternAlignmentModel_float.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternAlignmentModel_float.__nonzero__">
+<tt class="descname">__nonzero__</tt><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.__nonzero__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__nonzero__() &lt;==&gt; x != 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternAlignmentModel_float.__pyx_vtable__">
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34dea0&gt;</em><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternAlignmentModel_float.add">
+<tt class="descname">add</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a pattern to the unindexed model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pattern</strong> (<em>Pattern</em>) &#8211; The source pattern to add</li>
+<li><strong>pattern</strong> &#8211; The target pattern to add</li>
+<li><strong>l</strong> (<em>tuple (of floats)</em>) &#8211; Feature tuple (homogenously typed)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternAlignmentModel_float.items">
+<tt class="descname">items</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all patterns and PatternFeatureVectorMaps in this model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternAlignmentModel_float.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an alignment model from file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211; The name of the file to load, must be a valid colibri alignmodel file</li>
+<li><strong>options</strong> (<em>PatternModelOptions</em>) &#8211; An instance of PatternModelOptions, containing the options used for loading</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternAlignmentModel_float.maxlength">
+<tt class="descname">maxlength</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.maxlength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the maximum pattern length in the model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternAlignmentModel_float.minlength">
+<tt class="descname">minlength</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.minlength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the minimum pattern length in the model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternAlignmentModel_float.read">
+<tt class="descname">read</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for load</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternAlignmentModel_float.tokens">
+<tt class="descname">tokens</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of tokens in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternAlignmentModel_float.triples">
+<tt class="descname">triples</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.triples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over sourcepattern, targetpattern, feature triples</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternAlignmentModel_float.type">
+<tt class="descname">type</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the model type (10 = UNINDEXED, 20 = INDEXED)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternAlignmentModel_float.types">
+<tt class="descname">types</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of distinct word types in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternAlignmentModel_float.version">
+<tt class="descname">version</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the model type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternAlignmentModel_float.write">
+<tt class="descname">write</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an alignment model to file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) &#8211; The name of the file to write to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="colibricore.PatternDict_float">
 <em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternDict_float</tt><a class="headerlink" href="#colibricore.PatternDict_float" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
@@ -2650,7 +3216,7 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.PatternDict_float.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5db0&gt;</em><a class="headerlink" href="#colibricore.PatternDict_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34db10&gt;</em><a class="headerlink" href="#colibricore.PatternDict_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2750,7 +3316,7 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.PatternDict_int.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5d80&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34dae0&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2850,7 +3416,7 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.PatternDict_int32.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5cf0&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34da50&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2890,6 +3456,74 @@ still offers most higher-level functionality.</p>
 <dl class="method">
 <dt id="colibricore.PatternDict_int32.write">
 <tt class="descname">write</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternDict_int32.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.PatternFeatureVectorMap_float">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternFeatureVectorMap_float</tt><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="attribute">
+<dt id="colibricore.PatternFeatureVectorMap_float.__contains__">
+<tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__contains__(y) &lt;==&gt; y in x</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternFeatureVectorMap_float.__delitem__">
+<tt class="descname">__delitem__</tt><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.__delitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__delitem__(y) &lt;==&gt; del x[y]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternFeatureVectorMap_float.__getitem__">
+<tt class="descname">__getitem__</tt><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__getitem__(y) &lt;==&gt; x[y]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternFeatureVectorMap_float.__iter__">
+<tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__iter__() &lt;==&gt; iter(x)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternFeatureVectorMap_float.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__len__() &lt;==&gt; len(x)</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.PatternFeatureVectorMap_float.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternFeatureVectorMap_float.__nonzero__">
+<tt class="descname">__nonzero__</tt><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.__nonzero__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__nonzero__() &lt;==&gt; x != 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternFeatureVectorMap_float.__pyx_vtable__">
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34de40&gt;</em><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternFeatureVectorMap_float.__setitem__">
+<tt class="descname">__setitem__</tt><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.__setitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__setitem__(i, y) &lt;==&gt; x[i]=y</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternFeatureVectorMap_float.items">
+<tt class="descname">items</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.items" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternFeatureVectorMap_float.setdata">
+<tt class="descname">setdata</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.setdata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2995,7 +3629,7 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.PatternSet.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5c90&gt;</em><a class="headerlink" href="#colibricore.PatternSet.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34d9f0&gt;</em><a class="headerlink" href="#colibricore.PatternSet.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3016,6 +3650,144 @@ still offers most higher-level functionality.</p>
 <dt id="colibricore.PatternSet.has">
 <tt class="descname">has</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternSet.has" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colibricore.PatternSetModel">
+<em class="property">class </em><tt class="descclassname">colibricore.</tt><tt class="descname">PatternSetModel</tt><a class="headerlink" href="#colibricore.PatternSetModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Initialise a pattern model. Either an empty one or loading from file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211; The name of the file to load, must be a valid colibri patternmodel file</li>
+<li><strong>options</strong> (<em>PatternModelOptions</em>) &#8211; An instance of PatternModelOptions, containing the options used for loading</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="colibricore.PatternSetModel.__contains__">
+<tt class="descname">__contains__</tt><a class="headerlink" href="#colibricore.PatternSetModel.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the pattern is in the dictionary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pattern</strong> (<em>Pattern</em>) &#8211; A pattern</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternSetModel.__init__">
+<tt class="descname">__init__</tt><a class="headerlink" href="#colibricore.PatternSetModel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise a pattern model. Either an empty one or loading from file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211; The name of the file to load, must be a valid colibri patternmodel file</li>
+<li><strong>options</strong> (<em>PatternModelOptions</em>) &#8211; An instance of PatternModelOptions, containing the options used for loading</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternSetModel.__iter__">
+<tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.PatternSetModel.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all patterns in the dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternSetModel.__len__">
+<tt class="descname">__len__</tt><a class="headerlink" href="#colibricore.PatternSetModel.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total number of patterns in the dictionary</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="colibricore.PatternSetModel.__new__">
+<em class="property">static </em><tt class="descname">__new__</tt><big>(</big><em>S</em>, <em>...</em><big>)</big> &rarr; a new object with type S, a subtype of T<a class="headerlink" href="#colibricore.PatternSetModel.__new__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternSetModel.__nonzero__">
+<tt class="descname">__nonzero__</tt><a class="headerlink" href="#colibricore.PatternSetModel.__nonzero__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__nonzero__() &lt;==&gt; x != 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="colibricore.PatternSetModel.__pyx_vtable__">
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34dd20&gt;</em><a class="headerlink" href="#colibricore.PatternSetModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternSetModel.add">
+<tt class="descname">add</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternSetModel.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a pattern to the set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pattern</strong> (<em>Pattern</em>) &#8211; The pattern to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternSetModel.has">
+<tt class="descname">has</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternSetModel.has" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternSetModel.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternSetModel.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a patternmodel from file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211; The name of the file to load, must be a valid colibri patternmodel file</li>
+<li><strong>options</strong> (<em>PatternModelOptions</em>) &#8211; An instance of PatternModelOptions, containing the options used for loading</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternSetModel.read">
+<tt class="descname">read</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternSetModel.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for load</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.PatternSetModel.write">
+<tt class="descname">write</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.PatternSetModel.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a patternmodel to file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) &#8211; The name of the file to write to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -3075,7 +3847,7 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.SmallPatternDict_int32.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5d20&gt;</em><a class="headerlink" href="#colibricore.SmallPatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34da80&gt;</em><a class="headerlink" href="#colibricore.SmallPatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3175,7 +3947,7 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.TinyPatternDict_int32.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5d50&gt;</em><a class="headerlink" href="#colibricore.TinyPatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34dab0&gt;</em><a class="headerlink" href="#colibricore.TinyPatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3325,8 +4097,26 @@ still offers most higher-level functionality.</p>
 
 <dl class="attribute">
 <dt id="colibricore.UnindexedPatternModel.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x3ae5f90&gt;</em><a class="headerlink" href="#colibricore.UnindexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f146c34dd50&gt;</em><a class="headerlink" href="#colibricore.UnindexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.add">
+<tt class="descname">add</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a pattern to the unindexed model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pattern</strong> (<em>Pattern</em>) &#8211; The pattern to add</li>
+<li><strong>count</strong> (<em>int</em>) &#8211; The number of occurrences</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.coverage">
@@ -3396,7 +4186,7 @@ still offers most higher-level functionality.</p>
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.load">
 <tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a patternmodel from file</p>
+<dd><p>Load a patternmodel from file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -3410,6 +4200,26 @@ still offers most higher-level functionality.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.loadconstrainedbyindexedmodel">
+<tt class="descname">loadconstrainedbyindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.loadconstrainedbyindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.loadconstrainedbysetmodel">
+<tt class="descname">loadconstrainedbysetmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.loadconstrainedbysetmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.loadconstrainedbyunindexedmodel">
+<tt class="descname">loadconstrainedbyunindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.loadconstrainedbyunindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.loadreverseindex">
+<tt class="descname">loadreverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.loadreverseindex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.maxlength">
@@ -3481,6 +4291,20 @@ still offers most higher-level functionality.</p>
 <dt id="colibricore.UnindexedPatternModel.report">
 <tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print a detailed statistical report to stdout</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.reverseindex">
+<tt class="descname">reverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.reverseindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over all patterns occurring at the specified index reference</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexreference</strong> &#8211; a (sentence, tokenoffset) tuple</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -3592,6 +4416,21 @@ still offers most higher-level functionality.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="colibricore.UnindexedPatternModel.trainconstrainedbyindexedmodel">
+<tt class="descname">trainconstrainedbyindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.trainconstrainedbyindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.trainconstrainedbypatternsetmodel">
+<tt class="descname">trainconstrainedbypatternsetmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.trainconstrainedbypatternsetmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.trainconstrainedbyunindexedmodel">
+<tt class="descname">trainconstrainedbyunindexedmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.trainconstrainedbyunindexedmodel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="colibricore.UnindexedPatternModel.type">
 <tt class="descname">type</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the model type (10 = UNINDEXED, 20 = INDEXED)</p>
@@ -3625,6 +4464,26 @@ still offers most higher-level functionality.</p>
 
 </dd></dl>
 
+<dl class="function">
+<dt id="colibricore.patternfromfile">
+<tt class="descclassname">colibricore.</tt><tt class="descname">patternfromfile</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.patternfromfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a single pattern from corpus data, will ignore any newlines. You may want to use IndexedCorpus instead.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="colibricore.write">
+<tt class="descclassname">colibricore.</tt><tt class="descname">write</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a patternmodel to file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) &#8211; The name of the file to write to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 </div>
 
@@ -3647,28 +4506,32 @@ still offers most higher-level functionality.</p>
 <li><a class="reference internal" href="#id1">Introduction</a></li>
 <li><a class="reference internal" href="#class-encoding-your-corpus">Class-encoding your corpus</a></li>
 <li><a class="reference internal" href="#class-decoding-your-corpus">Class-decoding your corpus</a></li>
-<li><a class="reference internal" href="#class-encoding-with-existing-classes">Class-encoding with existing classes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#pattern-modeller">Pattern Modeller</a><ul>
 <li><a class="reference internal" href="#id2">Introduction</a></li>
 <li><a class="reference internal" href="#creating-a-pattern-model">Creating a pattern model</a></li>
+<li><a class="reference internal" href="#creating-a-pattern-model-with-skipgrams-and-or-flexgrams">Creating a pattern model with skipgrams and/or flexgrams</a></li>
+<li><a class="reference internal" href="#two-stage-building">Two-stage building</a></li>
 <li><a class="reference internal" href="#statistical-reports-and-histograms">Statistical reports and histograms</a></li>
 <li><a class="reference internal" href="#filtering-models">Filtering models</a></li>
 <li><a class="reference internal" href="#training-and-testing-coverage">Training and testing coverage</a></li>
+<li><a class="reference internal" href="#reverse-index">Reverse index</a></li>
 <li><a class="reference internal" href="#query-mode">Query mode</a></li>
 <li><a class="reference internal" href="#pattern-relations">Pattern Relations</a></li>
+<li><a class="reference internal" href="#co-occurrence">Co-occurrence</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#architecture-overview">Architecture Overview</a></li>
-<li><a class="reference internal" href="#python-api-reference">Python API Reference</a></li>
+<li><a class="reference internal" href="#python-tutorial">Python Tutorial</a></li>
+<li><a class="reference internal" href="#module-colibricore">Python API Reference</a></li>
 </ul>
 </li>
 </ul>
 
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="sources/index.txt"
+    <li><a href="_sources/index.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -3702,7 +4565,7 @@ still offers most higher-level functionality.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2013, Maarten van Gompel.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>
