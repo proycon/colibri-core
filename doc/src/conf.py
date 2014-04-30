@@ -25,7 +25,7 @@ import sys, os
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.pngmath','sphinxtogithub']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.pngmath','sphinxtogithub']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -239,4 +239,8 @@ texinfo_documents = [
 #texinfo_domain_indices = True
 
 # How to display URL addresses: 'footnote', 'no', or 'inline'.
+
 #texinfo_show_urls = 'footnote'
+
+autoclass_content = 'both'
+embedsignature=True
