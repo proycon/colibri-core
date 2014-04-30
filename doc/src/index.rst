@@ -15,7 +15,19 @@ Introduction
 ===================
 
 
-Colibri Core is a set of tools as well as a C++ and Python library for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. At the core is the tool ``colibri-patternmodeller`` which allows you to build, view, manipulate and query pattern models.
+Colibri Core is software, consisting of command line tools as well as programming libraries. to quickly and efficiently count and extract patterns from large corpus data, to extract various statistics on the extracted patterns, and to compute relations between the extracted patterns. The employed notion of pattern or construction encompasses the following categories:
+
+ * **n-gram** -- n consecutive words
+ * **skipgram** -- An abstract pattern of predetermined length with one or multiple gaps (of specific size).
+ * **flexgram** -- An abstract pattern without predetermined length, with one or more gaps.
+
+N-gram extraction may seem fairly trivial at first, with a few lines in your favourite scripting language, you can move a simple sliding window of size *n* over your corpus and store the results in some kind of hashmap. This trivial approach however makes an unnecessarily high demand on memory resources, this often becomes prohibitive if unleashed on large corpora. Colibri Core tries to minimise these space requirements in several ways:
+
+ * **Binary representation** -- Each word type is assigned a numeric class, which is encoded in a compact binary format in which highly frequent classes take less space than less frequent classes. Colibri core always uses this representation rather than a full string representation, both on disk and in memory.
+ * **Informed counting** -- Counting is performed more intelligently by iteratively processing the corpus in several passes and quickly discarding patterns that won't reach the desired occurrence threshold.
+Skipgram and flexgram extraction are computationally more demanding but have been implemented with similar optimisations. Skipgrams are computed by abstracting over n-grams, and flexgrams in turn are computed either by abstracting over skipgrams, or directly from n-grams on the basis of co-occurrence information (mutual pointwise information). When patterns have been extracted, along with their counts and or index references to original corpus data, they form a so-called *pattern model*.
+
+At the heart of Colibri Core lies the tool ``colibri-patternmodeller`` which allows you to build, view, manipulate and query pattern models. 
 
 The Colibri software is developed in the scope of the Ph.D. research project **Constructions as Linguistic Bridges**. This research examines the identification and extraction of aligned constructions or patterns across natural languages, and the usage of such constructions in Machine Translation. The aligned constructions are not identified on the basis of an extensive and explicitly defined grammar or expert database of linguistic knowledge, but rather are implicitly distilled from large amounts of example data. Our notion of constructions is broad and transcends the idea of words or variable-length phrases.
 
@@ -43,7 +55,20 @@ In addition to the C/C++ compiler (``gcc``), the build process for colibri makes
 You can optionally pass a prefix if you want to install colibri in a different location::
 
   $ ./configure --prefix=/usr/local/
-  
+
+To install the Colibri Core Python library, you require Python 3 or higher with Cython 0.19 or above. On Debian/Ubuntu systems you will find these in the packages
+``python3`` and ``cython3``. To compile and install the Python library, issue
+the following command::
+
+  $ python3 ./setup.py install
+
+If you want to install in a customised non-global location, use ``--prefix``
+along with ``--include-dirs`` and ``--library-dirs`` to point to where the
+C++ headers and the library are installed::
+
+  $ python3 ./setup.py build_ext --include-dirs=/path/to/include/colibri-core  --library-dirs=/path/to/lib/  install --prefix=/path/to/somewhere/
+
+
  
 Keeping colibri up to date
 -----------------------------
@@ -59,6 +84,7 @@ General usage instructions
 
 Colibri consist of various programs, each of which will output an extensive overview of available parameters if the parameter ``-h`` is passed. Each program is designed for a specialised purpose, with specific input and output formats. It is often needed to call multiple programs in succession to obtain the final analysis or model you desire. 
 
+
 Corpus Class Encoding
 ================================
 
@@ -67,15 +93,16 @@ Introduction
 
 Computation on large datasets begs for solutions to keep memory consumption
 manageable. Colibri requires that input corpora are converted into a compressed
-binary form. In this form each word-type in the corpus is represented by a
-numeric class. Highly frequent word-types get assigned low class numbers and
-less frequent word-types get higher class numbers. The class is represented in
-a dynamic-width byte-array, rather than a fixed-width integer.Patterns are
-encoded per word, each word starts with a size marker of one byte indicating the number of bytes
-are used for that word. The specified number of bytes that follow encode the
-word class. Instead of a size marker, byte values of 128 and above are reserved for special markers,
-such as encoding gaps and structural data. Finally, the pattern as a whole is
-ended by a null byte.
+binary form. The vocabulary of the corpus is converted to integer form, i.e.
+each word-type in the corpus is represented by a numeric class. Highly frequent
+word-types get assigned low class numbers and less frequent word-types get
+higher class numbers. The class is represented in a dynamic-width byte-array,
+rather than a fixed-width integer. Patterns are encoded per word, each word
+starts with a size marker of one byte indicating the number of bytes are used
+for that word. The specified number of bytes that follow encode the word class.
+Instead of a size marker, byte values of 128 and above are reserved for special
+markers, such as encoding gaps and structural data. Finally, the pattern as a
+whole is ended by a null byte.
 
 All internal computations of all tools in colibri proceed on this internal
 representation rather than actual textual strings, keeping running time shorter
@@ -84,7 +111,9 @@ and memory footprint significantly smaller.
 Class-encoding your corpus
 -----------------------------------
 
-When working with colibri, you first want to **class encode** your corpus. This is done by the program ``colibri-classencode``. It takes as input a *tokenised* monolingual corpus in plain text format, containing *one sentence per line*. Each line should be delimited by a single newline character (unix line endings). Colibri is completely agnostic when it comes to the character encoding of the input. Given a corpus file ``yourcorpus``, class encoding is done as follows::
+When working with colibri, you first want to **class encode** your corpus. This is done by the program ``colibri-classencode``. It takes as input a *tokenised* monolingual corpus in plain text format, containing *one sentence per line*, as a line is the only structural unit Colibri works with, extracted patterns will never cross line boundaries. Each line should be delimited by a single newline character (unix line endings). If you desire another structural unit (such as for example a tweet, or a paragraph), simply make sure each is on one line. 
+
+Colibri is completely agnostic when it comes to the character encoding of the input. Given a corpus file ``yourcorpus``, class encoding is done as follows::
 
 	$ colibri-classencode yourcorpus
 
@@ -104,23 +133,33 @@ In addition to this plain text input. The class encoder also supports *FoLiA XML
 	$ colibri-classencode yourcorpus.xml
 	
 
-It is possible to encode multiple corpus files similtaneously, but generating a joined class file::
+The class file is the vocabulary of your corpus, it simply maps word strings to integer. You must always ensure that whenever you are working with multiple models, and you want to compare them, to use the exact same class file. It is possible to encode multiple corpus files similtaneously,  generating a joined class file::
 
-	$ colibri-classencode yourcorpus1 yourcorpus2
+	$ colibri-classencode yourcorpus1.txt yourcorpus2.txt
 	
 This results in ``yourcorpus1.colibri.cls`` and ``yourcorpus1.colibri.dat`` and ``yourcorpus2.colibri.dat``. The class file spans both despite the name. An explicit name can be passed with the ``-o`` flag. It is also possible to encode multiple corpora in a single unified file by passing the ``-u`` flag. This is often desired if you want to train a pattern model on all the joined data::
 
-	$ colibri-classencode -o out -u yourcorpus1 yourcorpus2
+	$ colibri-classencode -o out -u yourcorpus1.txt yourcorpus2.txt
 
-This will produce ``out.colibri.dat`` and ``out.colibri.cls``.
+This will produce ``out.colibri.dat`` and ``out.colibri.cls``. You can use the ``-l`` option to read input filenames from file instead of command line arguments (one filename per line).
 
+If you have a pre-existing class file you can load it with the ``-c`` flag, and use it to encode new data::
 
-If you want to specify a large number of files, you can use the ``-l`` flag and specify a filename from which all input filenames will be read, one per line.
+    $ colibri-classencode -c yourcorpus1.colibri.cls yourcorpus2.txt
+
+This will produce a ``yourcorpus2.colibri.dat``, provided that all of the word types already existed in ``yourcorpus1.colibri.cls`` (which usually is not the case, in which case an error will be shown. 
+To circumvent this error you have to specify how to deal with unknown words. There are two ways; the ``-U`` flag will encode all unknown word as a single word class dedicated to the task, whereas the ``-e`` flag will *extend* the specified class file with any new classes found. It has to be noted that this extension method spoils the optimal compression as classes are no longer strictly sorted by frequency. If you can all needed data in one go, then that is always preferred.
+
+This setup, however, is often seen in a train/test paradigm::
+
+   $ colibri-classencode -f testset.txt -c trainset.colibri.cls -e 
+
+This will result in an encoded corpus ``testset.colibri.dat`` and an *extended* class file ``testset.colibri.cls``, which is a superset of the original ``trainset.cls``, adding only those classes that did not yet exist in the training data.
 
 Class-decoding your corpus
 ------------------------------
 
-Given an encoded corpus and a class file, the original corpus can always be reconstructed. This we call *class decoding* and is done using the ``colibri-classdecode`` program::
+Given an encoded corpus and a class file, the original corpus can always be reconstructed (unless the ``-U`` option was used in encoding to allow unknown words). This we call *class decoding* and is done using the ``colibri-classdecode`` program::
    
  $ colibri-classdecode -f yourcorpus.colibri.dat -c yourcorpus.colibri.cls
 
@@ -130,18 +169,6 @@ flags ``-s`` and ``-e`` respectively.
 Output will be to ``stdout``, you can redirect it to a file as follows::
 
  $ colibri-classdecode -f yourcorpus.colibri.dat -c yourcorpus.colibri.cls > yourcorpus.txt
-
-.. _classencodetraintest:
-Class-encoding with existing classes
-----------------------------------------
-
-Sometimes you want to encode new data using the same classes already used for another data set. For instance when comparing corpora, it is vital that the same classes are used, i.e. that identical words are assigned identical numerical classes. This also applies when you are working with a training set and a separate test set, or are otherwise interested in a comparative analysis between two comparable datasets. The initial class file is built on the training set, and it can be reused to encode the test set:
-
-You can encode a dataset, here named ``testset.txt`` using an existing class file, ``trainset.colibri.cls``, as follows::
-
-   $ colibri-classencode -f testset.txt -c trainset.colibri.cls 
-
-This will result in an encoded corpus ``testset.colibri.dat`` and an *extended* class file ``testset.colibri.cls``, which is a superset of the original ``trainset.cls``, adding only those classes that did not yet exist in the training data.
 
 
 Pattern Modeller
