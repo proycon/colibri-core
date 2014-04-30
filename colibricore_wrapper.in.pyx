@@ -243,7 +243,7 @@ cdef class Pattern:
             return newpattern
         else:
             if item < 0:
-                item = len(pattern) + item
+                item = len(self) + item
             c_pattern = cPattern(self.cpattern, item, 1)
             newpattern = Pattern()
             newpattern.bind(c_pattern)
@@ -295,24 +295,27 @@ cdef class Pattern:
         newpattern.bind(newcpattern)
         return newpattern
 
-    def ngrams(self,int n):
+    def ngrams(self,int n=0 ):
         """Generator iterating over all ngrams of a particular size that are enclosed within this pattern. Despite the name, this may also return skipgrams!
 
         :param n: The desired size to obtain
         :type n: int
         :rtype: generator over Pattern instances
         """
-        cdef vector[cPattern] result
-        self.cpattern.ngrams(result, n)
-        cdef cPattern cngram
-        cdef vector[cPattern].iterator it = result.begin()
-        cdef vector[cPattern].iterator it_end = result.end()
-        while it != it_end:
-            cngram  = deref(it)
-            ngram = Pattern()
-            ngram.bind(cngram)
-            yield ngram
-            inc(it)
+        if n == 0:
+            return self.subngrams()
+        else:
+            cdef vector[cPattern] result
+            self.cpattern.ngrams(result, n)
+            cdef cPattern cngram
+            cdef vector[cPattern].iterator it = result.begin()
+            cdef vector[cPattern].iterator it_end = result.end()
+            while it != it_end:
+                cngram  = deref(it)
+                ngram = Pattern()
+                ngram.bind(cngram)
+                yield ngram
+                inc(it)
 
     def parts(self):
         """Generating iterating over the consecutive non-gappy parts in a skipgram of flexgram
@@ -356,7 +359,7 @@ cdef class Pattern:
         newpattern.bind(newcpattern)
         return newpattern
 
-    def subngrams(self,int minn=1,int maxn=9):
+    def subngrams(self,int minn=1,int maxn=99):
         """Generator iterating over all ngrams of all sizes that are enclosed within this pattern. Despite the name, this may also return skipgrams!
         :param minn: minimum length (default 1)
         :type minn: int
