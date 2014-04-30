@@ -31,7 +31,8 @@ class ClassDecoder {
     
     std::vector<std::string> decodeseq(const std::vector<int> & seq);
     
-    void decodefile(const std::string & filename, unsigned int start = 0, unsigned int end = 0);
+    void decodefile(const std::string & filename, std::ostream*,  unsigned int start = 0, unsigned int end = 0, bool quiet=false);
+    std::string decodefiletostring(const std::string & filename,  unsigned int start = 0, unsigned int end = 0, bool quiet=true);
     
     int size() const {
         return classes.size();

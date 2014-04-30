@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cmath>
 #include <iostream>
+#include <sstream>
 
 /*****************************
 * Colibri Core
@@ -114,7 +115,7 @@ string decodestring(const unsigned char * data, unsigned char datasize) {
 } */
 
 
-void ClassDecoder::decodefile(const string & filename, unsigned int start, unsigned int end) {
+void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsigned int start, unsigned int end, bool quiet) {
     unsigned char buffer[1024]; //bit large, only for one token
     ifstream *IN = new ifstream(filename.c_str()); //, ios::in | ios::binary);
     unsigned int linenumber = 1;
@@ -125,7 +126,7 @@ void ClassDecoder::decodefile(const string & filename, unsigned int start, unsig
         if (!IN->good()) break;
         if (c == 0) { //endmarker
             if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
-                cout << endl;
+                *out << endl;
             }
             linenumber++;
             first = true;
@@ -135,25 +136,30 @@ void ClassDecoder::decodefile(const string & filename, unsigned int start, unsig
             if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
                 int cls = bytestoint(buffer, (int) c);
                 if (!first) cout << " ";
-                cout << classes[cls];
+                *out << classes[cls];
                 first = false;
             }
         } else if (c == 128) {
             if (!first) cout << " ";
-            cout << "{?}";
+            *out << "{?}";
             first = false;
         } else if (c == 129) {
             if (!first) cout << " ";
-            cout << "{*}";
+            *out << "{*}";
             first = false;
         }
     }
     IN->close();
     linenumber--;
-    cerr << "Processed " << linenumber  << " lines" << endl;               
+    if (!quiet) cerr << "Processed " << linenumber  << " lines" << endl;               
 } 
 	
 
+string ClassDecoder::decodefiletostring(const string & filename,   unsigned int start, unsigned int end, bool quiet) {
+    std::ostringstream ss;
+    decodefile(filename, (ostream*) &ss, start, end, quiet);
+    return ss.str();
+}
 
 const int countwords(const unsigned char* data, const int l) {
 	if (l == 0) return 0;	
