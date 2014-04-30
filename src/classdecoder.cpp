@@ -135,16 +135,16 @@ void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsi
             IN->read( (char*) buffer, c);
             if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
                 int cls = bytestoint(buffer, (int) c);
-                if (!first) cout << " ";
+                if (!first) *out << " ";
                 *out << classes[cls];
                 first = false;
             }
         } else if (c == 128) {
-            if (!first) cout << " ";
+            if (!first) *out << " ";
             *out << "{?}";
             first = false;
         } else if (c == 129) {
-            if (!first) cout << " ";
+            if (!first) *out << " ";
             *out << "{*}";
             first = false;
         }
