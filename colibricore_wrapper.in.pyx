@@ -118,7 +118,7 @@ cdef class ClassDecoder:
 
     def decodefile(self, str filename):
         if os.path.exists(filename):
-            return self.data.decodefiletostring(filename.encode('utf-8'))
+            return str(self.data.decodefiletostring(filename.encode('utf-8')),'utf-8')
         else:
             raise IOError("File " + filename + " does not exist")
 
