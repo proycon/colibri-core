@@ -144,7 +144,7 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
 
 template<class ModelType = IndexedPatternModel<>>
 bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold = 0.1) {
-    cerr << "Generating desired views...";
+    cerr << "Generating desired views..." << endl;
 
     if (print) {
         if (classdecoder == NULL) {
