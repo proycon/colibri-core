@@ -242,6 +242,8 @@ cdef class Pattern:
             newpattern.bind(c_pattern)
             return newpattern
         else:
+            if item < 0:
+                item = len(pattern) + item
             c_pattern = cPattern(self.cpattern, item, 1)
             newpattern = Pattern()
             newpattern.bind(c_pattern)
