@@ -239,7 +239,7 @@ cdef extern from "classdecoder.h":
         ClassDecoder(string) nogil except +
         void load(string) nogil
         int size() nogil
-        string decodefiletostring(string,  int, int, bool quiet = False)
+        string decodefiletostring(string,  int begin = 0, int end = 0, bool quiet = False) nogil
 
 cdef extern from "classencoder.h":
     cdef cppclass ClassEncoder:

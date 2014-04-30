@@ -155,7 +155,7 @@ void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsi
 } 
 	
 
-string ClassDecoder::decodefiletostring(const string & filename,   unsigned int start, unsigned int end, bool quiet) {
+std::string ClassDecoder::decodefiletostring(const std::string & filename,   unsigned int start, unsigned int end, bool quiet) {
     std::ostringstream ss;
     decodefile(filename, (ostream*) &ss, start, end, quiet);
     return ss.str();
