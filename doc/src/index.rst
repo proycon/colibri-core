@@ -25,6 +25,7 @@ N-gram extraction may seem fairly trivial at first, with a few lines in your fav
 
  * **Binary representation** -- Each word type is assigned a numeric class, which is encoded in a compact binary format in which highly frequent classes take less space than less frequent classes. Colibri core always uses this representation rather than a full string representation, both on disk and in memory.
  * **Informed counting** -- Counting is performed more intelligently by iteratively processing the corpus in several passes and quickly discarding patterns that won't reach the desired occurrence threshold.
+
 Skipgram and flexgram extraction are computationally more demanding but have been implemented with similar optimisations. Skipgrams are computed by abstracting over n-grams, and flexgrams in turn are computed either by abstracting over skipgrams, or directly from n-grams on the basis of co-occurrence information (mutual pointwise information). When patterns have been extracted, along with their counts and or index references to original corpus data, they form a so-called *pattern model*.
 
 At the heart of Colibri Core lies the tool ``colibri-patternmodeller`` which allows you to build, view, manipulate and query pattern models. 
@@ -200,7 +201,7 @@ prevents the storing of lots of patterns not making the threshold by discarding
 them at an earlier stage. 
 
 At the beginning of each iteration of n, all possible ways in which any n-gram
-of size n can contain gaps is computed. When an n-gram is found, various
+of size *n* can contain gaps is computed. When an n-gram is found, various
 skip-grams are tried in accordance with these gap configurations. This is
 accomplished by 'punching holes' in the n-gram, resulting in a skip-gram. If
 all consecutive parts of this skip-gram were counted during previous iterations
@@ -267,13 +268,16 @@ The various columns are:
 * **Occurrence count** - The absolute number of times this pattern occurs
 * **Tokens** - The absolute number of tokens in the corpus that this pattern covers. Computed as ``occurrencecount * n``. 
 * **Coverage** - The number of covered tokens, as a fraction of the total number of tokens.
-* **Category** - The type of pattern.
+* **Category** - The type of pattern (ngram, skipgram or flexgram).
 * **Size** - The length of the n-gram or skipgram in words/tokens.
 * **Frequency** - The frequency of the pattern *within its category and
   size class*, so for an ngram of size two, the frequency indicates the
   frequency amongst all bigrams.
 * **References** - A space-delimited list of indices in the corpus that correspond to a occurrence of this pattern. Indices are in the form ``sentence:token`` where sentence starts at one and token starts at zero. This column is only available for indexed models.
  
+Creating a pattern model with skipgrams and/or flexgrams
+----------------------------------------------------------
+
 The pattern model created in the previous example did not yet include skip-grams, these have to be explicitly enabled with the ``-s`` flag. When this is used, another options becomes available for consideration:
 
 * ``-T [value]`` - Only skipgrams that have at least this many different types
@@ -294,6 +298,41 @@ indices::
 
 	$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -c yourcorpus.colibri.cls -u -P
 	$ colibri-patternmodeller -i yourcorpus.colibri.unindexedpatternmodel -c yourcorpus.colibri.cls -u -P
+
+Flexgrams, non-consecutive patterns in which the gap (only one in the current implementation) is of dynamic width, can be generated in one of two ways:
+
+ * Extract flexgrams by abstracting from skipgrams: use the ``-S S`` flag.
+ * Extract flexgrams directly from n-gram co-occurence: use the ``-S
+   [threshold]`` flag, where the threshold is expressed as normalised pointwise mutual
+   information [-1,1]. 
+
+The skipgram approach has the advantage of allowing you to rely on the ``-T``
+threshold, but comes with the disadvantage of having a maximum span. The
+co-occurrence approach allows for flexgrams over larger distances. Both methods
+come at the cost of more memory, especially the former method.
+
+Neither skipgrams nor flexgrams will cross the line boundary of the original
+corpus data, so ensure your data is segmented into lines suitable for your
+purposes in the encoding stage.
+
+Two-stage building
+-----------------------
+
+Generating an indexed pattern model takes considerably more memory than an
+unindexed model, as instead of mere counts, all indices have to be retained. 
+
+The creation of a pattern models progresses through stages of counting and
+pruning. When construction of an indexed model with an occurrence threshold of
+2 or higher reaches the limits of your system's memory capacity, then two-stage building
+*may* offer a solution. 
+
+Two-stage building first constructs an unindexed model (demanding less memory),
+and subsequently loads this model and searches the corpus for indices for all
+patterns in the model. Whilst this method is more time-consuming, it prevents
+the memory bump (after counting, prior to pruning) that normal one-stage
+building of indexed models have. Two-stage building is enabled using the ``-2`` flag::
+
+	$ colibri-patternmodeller -2 -f yourcorpus.colibri.dat -t 10 -s -T 3 -o yourcorpus.colibri.indexedpatternmodel
 
 
 Statistical reports and histograms
@@ -373,12 +412,24 @@ Patterns models can be read with ``-i`` and filtered by setting stricter thresho
 
     $ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -t 20 -T 10 -o yourcorpus_filtered.colibri.indexedpatternmodel -P
 
+You can also filter pattern models by intersecting with another pattern model
+using the ``-j`` option. This only works when both are built on
+the same class file::
+
+    $ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -j yourcorpus2.colibri.indexedpatternmodel -o yourcorpus_filtered.colibri.indexedpatternmodel
+
+The output pattern model will contain only those patterns that were present in
+both the input model (``-i``) as well as the constraining model (``-j``), which may be
+either indexed or unindexed regardless of the input model; it will
+always contain the counts/indices from the input model.
+
 
 Training and testing coverage
 --------------------------------
 
 An important quality of pattern models lies in the fact that pattern models can
-be compared. More specifically, you can train a pattern model on a corpus and
+be compared, provided they use comparable vocabulary, i.e. are based on the same
+class file.  More specifically, you can train a pattern model on a corpus and
 test it on another corpus, which yields another pattern model containing only
 those patterns that occur in both training and test data. The difference in
 count, frequency and coverage can then be easily be compared. You build such a
@@ -395,13 +446,40 @@ with testing on another corpus:
 Testing::
    $ colibri-patternmodeller -f testset.colibri.dat -j trainset.indexedpatternmodel.colibri -o testset.colibri.indexedpatternmodel
 
+or (more memory efficient)::
+
+   $ colibri-patternmodeller -f testset.colibri.dat -I trainset.indexedpatternmodel.colibri -o testset.colibri.indexedpatternmodel
+
 This results in a model ``testset.colibri.indexedpatternmodel`` that only contains patterns that also occur in the specified training model. 
 
 Such an intersection of models can also be created at any later stage using
-``-i`` and ``-j``.
+``-i`` and ``-j``, as shown in the previous section.
 
 
+Reverse index
+-----------------
 
+Indexed pattern models have a what is called a *forward index*. For each
+pattern, all of the positions, ``(sentence,token)``, at which a token of the
+pattern can be found, is held. In Colibri-core, sentences always start at 1, whereas
+tokens start at 0. 
+
+A reverse index is a mapping of references of the type ``(sentence,token)`` to a set of all the
+patterns that *begin* at that location. Such a reverse index can be constructed
+from the forward index of an indexed pattern model, or it can be explicitly
+given by simply passing the original corpus data to the model, which makes
+reverse indices available even for unindexed models. Explicitly providing a
+reverse index makes loading a model faster (especially on larger models), but at
+the cost of higher memory usage, especially in case of sparse models.
+
+Passing corpus data for the reverse index to colibri-patternmodeller is done
+using the ``-r`` flag, and the full reverse index can be displayed using the ``-Z`` flag::
+
+   $ colibri-patternmodeller  -i yourcorpus.indexedpatternmodel.colibri -r yourcorpus.colibri.dat -c yourcorpus.colibri.cls -Z
+
+
+Indexes and/or reverse indexes are required for various purposes, one of which
+is the extraction of relations and co-occurrence information.
 
 
 Query mode
@@ -457,11 +535,11 @@ A pattern model contains a wide variety of patterns; the relationships between t
   patterns that instantiate them ``to be {*1*} not {*1*} be`` is instantiated
   by ``to {*1*} or``, also referred to as the skip content.
 
-You can all of these extract relations using the ``-r`` flag, which is to be
+You can all of these extract relations using the ``-g`` flag, which is to be
 used in combination with the query mode ``-Q`` or ``-q``. Consider the
 following sample::
 
-    $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q "to be" -r  
+    $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q "to be" -g  
     Loading class decoder from file /tmp/hamlet.colibri.cls
     Loading class encoder from file /tmp/hamlet.colibri.cls
     Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
@@ -485,19 +563,54 @@ possible parsers can distinguish the numbers for the queried pattern itself from
     * **Relation Frequency** -- The number of times pattern 1 and pattern 2 occur in this relationas a fraction of all relations of this type
     * **Count 2** -- The absolute number of occurrences of pattern 2 in the model
 
+Co-occurrence 
+--------------------
+
+Co-occurrence in Colibri-Core measures which patterns co-occur on the same line
+(i.e. usually corresponding to a sentence or whatever structural unit you
+decided upon when encoding your corpus). Co-occurrence is another relation in
+addition to the ones described in the previous section.
+
+The degree of co-occurrence can be expressed as either an absolute occurrence
+number (``-C``), for a normalised mutual pointwise information (``-Y``). Both
+flags take a threshold, setting the threshold too low, specially for npmi, may
+cause very high memory usage. The following syntax would show all patterns that
+occur at least five times in the same sentence. Note that the order of the
+pattern pairs does not matter; if there are two patterns X and Y then result X
+Y or Y X would be the same, yet only one of them is included in the output to
+prevent duplicating information::
+
+  $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -C 5 
+
+
+
 
 Architecture Overview
 =======================
 
 .. image:: arch.png
 
-Python API Reference
+
+Python Tutorial
 =======================
 
 Colibri Core offers both a C++ API as well as a Python API. It exposes all of
 the functionality, and beyond, of the tools outlined above. The Python API
 binds with the C++ code, and although it is more limited than the C++ API, it
-still offers most higher-level functionality.
+still offers most higher-level functionality. The Colibri Core binding between C++ and
+Python is written in Cython.
+
+A Python tutorial for Colibri Core is available in the form of an IPython
+Notebook, meaning that you can interactively run it and play with it. 
+
+
+A static read-only version can be found here:
+
+
+Python API Reference
+=======================
+
+
 
 .. automodule:: colibricore
    :members:
