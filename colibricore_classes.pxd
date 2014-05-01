@@ -367,14 +367,16 @@ cdef extern from "patternmodel.h":
         unsigned int topthreshold(int,int,int) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
 
-        t_relationmap getsubchildren(Pattern & pattern) except +KeyError
-        t_relationmap getsubparents(Pattern & pattern) except +KeyError
-        t_relationmap getleftneighbours(Pattern & pattern) except +KeyError
-        t_relationmap getrightneighbours(Pattern & pattern) except +KeyError
+        t_relationmap getsubchildren(Pattern & pattern, int occurrencethreshold, int category, int size) except +KeyError
+        t_relationmap getsubparents(Pattern & pattern, int occurrencethreshold, int category, int size) except +KeyError
+        t_relationmap getleftneighbours(Pattern & pattern, int occurrencethreshold, int category, int size) except +KeyError
+        t_relationmap getrightneighbours(Pattern & pattern, int occurrencethreshold, int category, int size) except +KeyError
         t_relationmap getskipcontent(Pattern & pattern) except +KeyError
-        t_relationmap gettemplates(Pattern & pattern) except +KeyError
-        t_relationmap getleftcooc(Pattern & pattern) except +KeyError
-        t_relationmap getrightcooc(Pattern & pattern) except +KeyError
+        t_relationmap gettemplates(Pattern & pattern, int occurrencethreshold) except +KeyError
+        t_relationmap getinstances(Pattern & pattern, int occurrencethreshold) except +KeyError
+        t_relationmap getcooc(Pattern & pattern,  int occurrencethreshold, int category, int size) except +KeyError
+        t_relationmap getleftcooc(Pattern & pattern, int occurrencethreshold, int category, int size) except +KeyError
+        t_relationmap getrightcooc(Pattern & pattern, int occurrencethreshold, int category, int size) except +KeyError
 
         vector[Pattern] getreverseindex(IndexReference&)
         vector[pair[IndexReference,Pattern]] getreverseindex_bysentence(int)
@@ -432,14 +434,16 @@ cdef extern from "patternmodel.h":
         vector[Pattern] getreverseindex(IndexReference&)
         vector[pair[IndexReference,Pattern]] getreverseindex_bysentence(int)
 
-        t_relationmap getsubchildren(Pattern & pattern) except +KeyError
-        t_relationmap getsubparents(Pattern & pattern) except +KeyError
-        t_relationmap getleftneighbours(Pattern & pattern) except +KeyError
-        t_relationmap getrightneighbours(Pattern & pattern) except +KeyError
+        t_relationmap getsubchildren(Pattern & pattern, int occurrencethreshold, int category, int size) except +KeyError
+        t_relationmap getsubparents(Pattern & pattern, int occurrencethreshold, int category, int size) except +KeyError
+        t_relationmap getleftneighbours(Pattern & pattern, int occurrencethreshold, int category, int size) except +KeyError
+        t_relationmap getrightneighbours(Pattern & pattern, int occurrencethreshold, int category, int size) except +KeyError
         t_relationmap getskipcontent(Pattern & pattern) except +KeyError
-        t_relationmap gettemplates(Pattern & pattern) except +KeyError
-        t_relationmap getleftcooc(Pattern & pattern) except +KeyError
-        t_relationmap getrightcooc(Pattern & pattern) except +KeyError
+        t_relationmap gettemplates(Pattern & pattern, int occurrencethreshold) except +KeyError
+        t_relationmap getinstances(Pattern & pattern, int occurrencethreshold) except +KeyError
+        t_relationmap getcooc(Pattern & pattern,  int occurrencethreshold, int category, int size) except +KeyError
+        t_relationmap getleftcooc(Pattern & pattern, int occurrencethreshold, int category, int size) except +KeyError
+        t_relationmap getrightcooc(Pattern & pattern, int occurrencethreshold, int category, int size) except +KeyError
 
 cdef extern from "alignmodel.h":
     cdef cppclass PatternAlignmentModel[FeatureType]:

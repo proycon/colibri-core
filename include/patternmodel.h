@@ -1270,12 +1270,13 @@ class PatternModel: public MapType, public PatternModelInterface {
         
 
         virtual void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT) {} //does nothing for unindexed models
-        virtual t_relationmap getsubchildren(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getsubparents(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap gettemplates(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getsubchildren(const Pattern & pattern,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getsubparents(const Pattern & pattern,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap gettemplates(const Pattern & pattern,int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getinstances(const Pattern & pattern,int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getskipcontent(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getleftneighbours(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getrightneighbours(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getleftneighbours(const Pattern & pattern,int = 0, int = 0,int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getrightneighbours(const Pattern & pattern,int = 0, int = 0,int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap_double getnpmi(const Pattern & pattern, double threshold) { return t_relationmap_double(); } //does nothing for unindexed models
         virtual int computeflexgrams_fromskipgrams() { return 0; }//does nothing for unindexed models
         virtual int computeflexgrams_fromcooc() {return 0; }//does nothing for unindexed models
@@ -1601,7 +1602,22 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return skipcontent;
     }
     
-    t_relationmap gettemplates(const Pattern & pattern) {
+    void prunerelations(t_relationmap & relations, int occurrencethreshold) {
+        //prune relations below the specified occurrence threshold
+        t_relationmap::iterator eraseiter;
+        t_relationmap::iterator iter = relations.begin();
+        while (iter != relations.end()) {
+            if (iter->second < occurrencethreshold) {
+                eraseiter = iter;
+                iter++;
+                relations.erase(eraseiter);
+            } else {
+                iter++;
+            }
+        }
+    }
+
+    t_relationmap gettemplates(const Pattern & pattern, int occurrencethreshold = 0) {
         //returns patterns that are an abstraction of the specified pattern
         //skipgrams
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
@@ -1627,15 +1643,50 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             for (std::vector<Pattern>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                 const Pattern candidate = *iter2;
 
-                if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == SKIPGRAM) ) {
+                if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == SKIPGRAM)  && ((occurrencethreshold == 0) || (this->occurrencecount(pattern) >= occurrencethreshold)) ) {
                     templates[candidate] += 1;
                 }
             }
         }
+        if (occurrencethreshold > 0) this->prunerelations(templates, occurrencethreshold);
         return templates;
     }
 
-    t_relationmap getsubchildren(const Pattern & pattern) {
+    t_relationmap getinstances(const Pattern & pattern, int occurrencethreshold = 0) {
+        //returns patterns that instantiate the specified pattern
+        if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
+            std::cerr << "ERROR: No reverse index present" << std::endl;
+            throw InternalError();
+        }
+
+        IndexedData * data = this->getdata(pattern);
+        if (data == NULL) {
+            throw NoSuchPattern();
+        }
+        
+        t_relationmap instances;
+
+
+        const int _n = pattern.n();
+        //search in forward index
+        for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
+            const IndexReference ref = *iter;
+
+            //search in reverse index
+            std::vector<Pattern> rindex = this->getreverseindex(ref);
+            for (std::vector<Pattern>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
+                const Pattern candidate = *iter2;
+
+                if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == NGRAM) && ((occurrencethreshold == 0) || (this->occurrencecount(pattern) >= occurrencethreshold))  ) {
+                    instances[candidate] += 1;
+                }
+            }
+        }
+        if (occurrencethreshold > 0) this->prunerelations(instances, occurrencethreshold);
+        return instances;
+    }
+
+    t_relationmap getsubchildren(const Pattern & pattern, int occurrencethreshold = 0, int category = 0, int size = 0) {
         //returns patterns that are subsumed by the specified pattern (i.e.
         //smaller patterns)
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
@@ -1669,7 +1720,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                     const Pattern candidate = *iter2;
                     //std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << ", bs=" << candidate.bytesize() <<  std::endl;
                     //candidate.out();
-                    if (((int) candidate.n() <= maxsubn) && (candidate != pattern)) {
+                    if (((int) candidate.n() <= maxsubn) && (candidate != pattern)
+                        && ((occurrencethreshold == 0) || (this->occurrencecount(candidate) >= occurrencethreshold))
+                        && ((category == 0) || (candidate.category() >= category))
+                        && ((size == 0) || (candidate.n() >= size))
+                        ) {
                         if ((isfixedskipgram) || (candidate.category() == SKIPGRAM)) { //MAYBE TODO: I may check too much now... could be more efficient? 
                             //candidate may not have skips in places where the larger
                             //pattern does not
@@ -1686,10 +1741,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 }
             }
         }
+        if (occurrencethreshold > 0) this->prunerelations(subchildren, occurrencethreshold);
         return subchildren;
     }
 
-    t_relationmap getsubparents(const Pattern & pattern) {
+    t_relationmap getsubparents(const Pattern & pattern, int occurrencethreshold = 0, int category = 0, int size = 0) {
         //returns patterns that subsume the specified pattern (i.e. larger
         //patterns)
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
@@ -1717,7 +1773,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
                 int minsubsize = _n + (ref.token - iter2->first.token);
 
-                if (((int) candidate.n() >= minsubsize)  && (candidate != pattern)) {
+                if (((int) candidate.n() >= minsubsize)  && (candidate != pattern)
+                        && ((occurrencethreshold == 0) || (this->occurrencecount(candidate) >= occurrencethreshold))
+                        && ((category == 0) || (candidate.category() >= category))
+                        && ((size == 0) || (candidate.n() >= size))
+                    ) {
                     if ((candidate.category() == SKIPGRAM) || (pattern.category() == SKIPGRAM))  {//MAYBE TODO: I may check too much now... could be more efficient? 
                         //instance may not have skips in places where the larger
                         //candidate pattern does not
@@ -1733,11 +1793,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 }
             }
         }
+        if (occurrencethreshold > 0) this->prunerelations(subsumes, occurrencethreshold);
         return subsumes;
     }
 
 
-    t_relationmap getleftneighbours(const Pattern & pattern) {
+    t_relationmap getleftneighbours(const Pattern & pattern, int occurrencethreshold = 0, int category = 0, int size = 0) {
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -1757,15 +1818,20 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             for (std::vector<std::pair<IndexReference,Pattern>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                 const IndexReference ref2 = iter2->first;
                 const Pattern neighbour = iter2->second;
-                if (ref2.token + neighbour.n() == ref.token) {
+                if ((ref2.token + neighbour.n() == ref.token)
+                        && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+                        && ((category == 0) || (neighbour.category() >= category))
+                        && ((size == 0) || (neighbour.n() >= size))
+                    ){
                     neighbours[neighbour]++;
                 } else if ((ref2.token > ref.token) || (ref2.sentence > ref.sentence)) break;
             }
         }
+        if (occurrencethreshold > 0) this->prunerelations(neighbours, occurrencethreshold);
         return neighbours;
     }
 
-    t_relationmap getrightneighbours(const Pattern & pattern) {
+    t_relationmap getrightneighbours(const Pattern & pattern, int occurrencethreshold = 0, int category = 0, int size = 0) {
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -1785,9 +1851,14 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             std::vector<Pattern> rindex = this->getreverseindex(ref);
             for (std::vector<Pattern>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                 const Pattern neighbour = *iter2;
-                neighbours[neighbour]++;
+                if ( ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+                        && ((category == 0) || (neighbour.category() >= category))
+                        && ((size == 0) || (neighbour.n() >= size)) ) {
+                    neighbours[neighbour]++;
+                }
             }
         }
+        if (occurrencethreshold > 0) this->prunerelations(neighbours, occurrencethreshold);
         return neighbours;
     }
 
@@ -1847,7 +1918,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
-    t_relationmap getrightcooc(const Pattern & pattern, IndexedData * matches = NULL) { 
+    t_relationmap getrightcooc(const Pattern & pattern, int occurrencethreshold = 0, int category = 0, int size = 0,IndexedData * matches = NULL) { 
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -1869,17 +1940,22 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             for (std::vector<std::pair<IndexReference,Pattern>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                 const IndexReference ref2 = iter2->first;
                 const Pattern neighbour = iter2->second;
-                if (ref2.token > ref.token + _n) {
+                if ( (ref2.token > ref.token + _n) 
+                        && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+                        && ((category == 0) || (neighbour.category() >= category))
+                        && ((size == 0) || (neighbour.n() >= size))
+                     ) {
                     cooc[neighbour]++;
                     if (matches != NULL) matches->insert(ref2);
                 } 
             }
         }
+        if (occurrencethreshold > 0) this->prunerelations(cooc, occurrencethreshold);
         return cooc;
     }
 
 
-    t_relationmap getleftcooc(const Pattern & pattern) { 
+    t_relationmap getleftcooc(const Pattern & pattern, int occurrencethreshold = 0, int category = 0, int size = 0) { 
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -1900,16 +1976,21 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const IndexReference ref2 = iter2->first;
                 const Pattern neighbour = iter2->second;
                 const int _n = neighbour.n();
-                if (ref2.token + _n < ref.token ) {
+                if ( (ref2.token + _n < ref.token ) 
+                        && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+                        && ((category == 0) || (neighbour.category() >= category))
+                        && ((size == 0) || (neighbour.n() >= size))
+                    ) {
                     cooc[neighbour]++;
                 } 
             }
         }
+        if (occurrencethreshold > 0) this->prunerelations(cooc, occurrencethreshold);
         return cooc;
     }
 
 
-    t_relationmap getcooc(const Pattern & pattern, bool ordersignificant = true) { 
+    t_relationmap getcooc(const Pattern & pattern, int occurrencethreshold = 0, int category = 0, int size = 0,bool ordersignificant = false) { 
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -1932,13 +2013,18 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             for (std::vector<std::pair<IndexReference,Pattern>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                 const IndexReference ref2 = iter2->first;
                 const Pattern neighbour = iter2->second;
-                if ((!ordersignificant) && (neighbour < pattern)) continue;
+                if ((ordersignificant) && (neighbour < pattern)) continue;
                 const int _n2 = neighbour.n();
-                if ((ref2.token + _n2 < ref.token ) || (ref2.token > ref.token + _n)) {
+                if ( ((ref2.token + _n2 < ref.token ) || (ref2.token > ref.token + _n)) 
+                        && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+                        && ((category == 0) || (neighbour.category() >= category))
+                        && ((size == 0) || (neighbour.n() >= size))
+                    ) {
                     cooc[neighbour]++;
                 } 
             }
         }
+        if (occurrencethreshold > 0) this->prunerelations(cooc, occurrencethreshold);
         return cooc;
     }
 
@@ -2006,8 +2092,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 tmp =  this->getrightcooc(pattern);
             } else if ((left)&&(!right)) {
                 tmp =  this->getleftcooc(pattern);
-            } else if (left && right) { //order not relevant, output will be sorted to prevent duplicates
-                tmp =  this->getcooc(pattern, false);
+            } else if (left && right) { //order not relevant
+                tmp =  this->getcooc(pattern);
             }
             for (t_relationmap::iterator iter2 = tmp.begin(); iter2 != tmp.end(); iter2++) {
                 const Pattern pattern2 = iter2->first;
@@ -2017,7 +2103,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     } 
 
-    void computecooc( std::map<Pattern,t_relationmap> &  coocmap , double threshold, bool right=true, bool left=true) { 
+    void computecooc( std::map<Pattern,t_relationmap> &  coocmap , int threshold, bool right=true, bool left=true) { 
         //compute absolute co-occurrence for all patterns
         //
         //by default we do only right so we don't get double entries, cooc's
@@ -2026,11 +2112,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const Pattern pattern = iter->first;
             t_relationmap tmp;
             if ((right)&&(!left)) {
-                tmp =  this->getrightcooc(pattern);
+                tmp =  this->getrightcooc(pattern, threshold);
             } else if ((left)&&(!right)) {
-                tmp =  this->getleftcooc(pattern);
-            } else if (left && right) { //order not relevant, output will be sorted to prevent duplicated
-                tmp =  this->getcooc(pattern, false);
+                tmp =  this->getleftcooc(pattern, threshold);
+            } else if (left && right) { //order not relevant
+                tmp =  this->getcooc(pattern, threshold);
             }            
             for (t_relationmap::iterator iter2 = tmp.begin(); iter2 != tmp.end(); iter2++) {
                 const Pattern pattern2 = iter2->first;
@@ -2067,7 +2153,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;
             IndexedData matches;
-            t_relationmap tmp =  this->getrightcooc(pattern, &matches);
+            t_relationmap tmp =  this->getrightcooc(pattern, 0,0,0, &matches);
             for (t_relationmap::iterator iter2 = tmp.begin(); iter2 != tmp.end(); iter2++) {
                 const Pattern pattern2 = iter2->first;
                 const double value = npmi(pattern,pattern2,iter2->second);

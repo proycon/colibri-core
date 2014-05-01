@@ -97,13 +97,18 @@ cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
     self.data.outputrelations(pattern.cpattern,decoder.data,&cout)
 
 
-def getsubchildren(self, Pattern pattern):
+def getsubchildren(self, Pattern pattern, int occurrencethreshold = 0, int category = 0, int size = 0):
     """Get subsumption children for the specified pattern
     :param pattern: The pattern
     :type pattern: Pattern
+    :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+    :type occurrencethreshold: int
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param size: Constrain by patterns of the specified size
+    :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubchildren(pattern.cpattern)
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubchildren(pattern.cpattern, occurrencethreshold, category, size)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
 
     cdef cPattern cpattern
@@ -116,13 +121,18 @@ def getsubchildren(self, Pattern pattern):
         yield (pattern,value)
         inc(relit)
 
-def getsubparents(self, Pattern pattern):
+def getsubparents(self, Pattern pattern, int occurrencethreshold = 0, int category = 0, int size = 0):
     """Get subsumption parents for the specified pattern
     :param pattern: The pattern
     :type pattern: Pattern
+    :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+    :type occurrencethreshold: int
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param size: Constrain by patterns of the specified size
+    :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubparents(pattern.cpattern)
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubparents(pattern.cpattern, occurrencethreshold, category, size)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef int value
@@ -134,13 +144,18 @@ def getsubparents(self, Pattern pattern):
         yield (pattern,value)
         inc(relit)
 
-def getleftneighbours(self, Pattern pattern):
+def getleftneighbours(self, Pattern pattern, int occurrencethreshold = 0, int category = 0, int size = 0):
     """Get left neighbours for the specified pattern
     :param pattern: The pattern
     :type pattern: Pattern
+    :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+    :type occurrencethreshold: int
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param size: Constrain by patterns of the specified size
+    :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern)
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern, occurrencethreshold, category, size)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef int value
@@ -152,13 +167,18 @@ def getleftneighbours(self, Pattern pattern):
         yield (pattern,value)
         inc(relit)
 
-def getrightneighbours(self, Pattern pattern):
+def getrightneighbours(self, Pattern pattern, int occurrencethreshold = 0, int category = 0, int size = 0):
     """Get right neighbours for the specified pattern
     :param pattern: The pattern
     :type pattern: Pattern
+    :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+    :type occurrencethreshold: int
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param size: Constrain by patterns of the specified size
+    :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern)
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern, occurrencethreshold, category, size)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef int value
@@ -188,13 +208,15 @@ def getskipcontent(self, Pattern pattern):
         yield (pattern,value)
         inc(relit)
 
-def gettemplates(self, Pattern pattern):
+def gettemplates(self, Pattern pattern, int occurrencethreshold = 0):
     """Get templates (abstracting skipgrams) for the specified pattern
     :param pattern: The pattern
     :type pattern: Pattern
+    :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+    :type occurrencethreshold: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.gettemplates(pattern.cpattern)
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.gettemplates(pattern.cpattern, occurrencethreshold)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef int value
@@ -206,13 +228,15 @@ def gettemplates(self, Pattern pattern):
         yield (pattern,value)
         inc(relit)
 
-def getleftcooc(self, Pattern pattern):
-    """Get left-side co-occurrences for the specified pattern
+def getinstances(self, Pattern pattern, int occurrencethreshold = 0):
+    """Get templates (abstracting skipgrams) for the specified pattern
     :param pattern: The pattern
     :type pattern: Pattern
+    :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+    :type occurrencethreshold: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftcooc(pattern.cpattern)
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getinstances(pattern.cpattern, occurrencethreshold)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef int value
@@ -224,13 +248,64 @@ def getleftcooc(self, Pattern pattern):
         yield (pattern,value)
         inc(relit)
 
-def getrightcooc(self, Pattern pattern):
+def getcooc(self, Pattern pattern,  int occurrencethreshold = 0, int category = 0, int size = 0):
     """Get left-side co-occurrences for the specified pattern
     :param pattern: The pattern
     :type pattern: Pattern
+    :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+    :type occurrencethreshold: int
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param size: Constrain by patterns of the specified size
+    :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightcooc(pattern.cpattern)
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getcooc(pattern.cpattern, occurrencethreshold, category, size)
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef cPattern cpattern
+    cdef int value
+    while relit != relations.end():
+        cpattern = deref(relit).first
+        value = deref(relit).second
+        pattern = Pattern()
+        pattern.bind(cpattern)
+        yield (pattern,value)
+        inc(relit)
+
+def getleftcooc(self, Pattern pattern, int occurrencethreshold = 0, int category = 0, int size = 0):
+    """Get left-side co-occurrences for the specified pattern
+    :param pattern: The pattern
+    :type pattern: Pattern
+    :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+    :type occurrencethreshold: int
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param size: Constrain by patterns of the specified size
+    :type size: int
+    :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
+    """
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftcooc(pattern.cpattern, occurrencethreshold, category, size)
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef cPattern cpattern
+    cdef int value
+    while relit != relations.end():
+        cpattern = deref(relit).first
+        value = deref(relit).second
+        pattern = Pattern()
+        pattern.bind(cpattern)
+        yield (pattern,value)
+        inc(relit)
+
+def getrightcooc(self, Pattern pattern, int occurrencethreshold = 0, int category = 0, int size = 0):
+    """Get left-side co-occurrences for the specified pattern
+    :param pattern: The pattern
+    :type pattern: Pattern
+    :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+    :type occurrencethreshold: int
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param size: Constrain by patterns of the specified size
+    :type size: int
+    :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
+    """
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightcooc(pattern.cpattern, occurrencethreshold, category, size)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef int value
