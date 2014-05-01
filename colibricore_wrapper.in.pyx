@@ -911,12 +911,14 @@ cdef class IndexedCorpus:
     cdef bool unload
 
 
-    def __init__(self, str filename):
+    def __init__(self, str filename=""):
         """:param filename: The name of the colibri.dat file to load"""
         self._filename = filename
         self.data = new cIndexedCorpus()
-        self.data.load(filename.encode('utf-8'))
+        if filename:
+            self.data.load(filename.encode('utf-8'))
         self.unload = True
+
 
     cdef bind(self, cIndexedCorpus * d, unload=False):
         if self.data != NULL and self.unload:
