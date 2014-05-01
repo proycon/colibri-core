@@ -354,7 +354,7 @@ cdef extern from "patternmodel.h":
         bool has(Pattern&) nogil
         int size() nogil
         ValueType& operator[](Pattern&) nogil
-        iterator erase(Pattern&) nogil
+        bool erase(Pattern&) nogil
         int prune(int threshold, int n) nogil
         iterator find(Pattern&) nogil
         void load(string, PatternModelOptions, PatternModelInterface*) nogil except +IOError
@@ -416,7 +416,7 @@ cdef extern from "patternmodel.h":
         bool has(Pattern&) nogil
         int size() nogil
         IndexedData& operator[](Pattern&) nogil
-        iterator erase(Pattern&) nogil
+        bool erase(Pattern&) nogil
         int prune(int threshold, int n) nogil
         iterator find(Pattern&) nogil
         void load(string, PatternModelOptions, PatternModelInterface* ) nogil except +IOError
