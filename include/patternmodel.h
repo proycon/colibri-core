@@ -1258,6 +1258,21 @@ template<class MapType = PatternMap<IndexedData,IndexedDataHandler>>
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType> {
     protected:
         virtual void postread(const PatternModelOptions options) {
+            buildreverseindex(options); //will only act if options.DOREVERSEINDEX is set
+        }
+        virtual void posttrain(const PatternModelOptions options) {
+            if (!options.QUIET) std::cerr << "Sorting all indices..." << std::endl;
+            for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+                iter->second.sort();
+            }
+            buildreverseindex(options);//will only act if options.DOREVERSEINDEX is set
+
+        }
+   public:
+        void buildreverseindex(const PatternModelOptions options) {
+            //build reverse index, requires options.DOREVERSEINDEX to be set or
+            //won't act. Also won't build a reverse index if one is loaded
+            //already
             if ((this->reverseindex) && (this->reverseindex->empty())) {
                 if (!options.QUIET) std::cerr << "Building reverse index... (Consider preloading a reverse index to skip this (-r) )" << std::endl;
                 for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -1278,15 +1293,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 this->reverseindex->sort();
             }
         }
-        virtual void posttrain(const PatternModelOptions options) {
-            if (!options.QUIET) std::cerr << "Sorting all indices..." << std::endl;
-            for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
-                iter->second.sort();
-            }
-        }
-   public:
-
-
 
        
     IndexedPatternModel<MapType>(IndexedCorpus * corpus = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType>() {
