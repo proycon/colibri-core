@@ -205,6 +205,7 @@ cdef extern from "patternstore.h":
         int operator[](IndexReference&) nogil except +KeyError
         int sentencelength(int) nogil
         int sentences() nogil
+        Pattern getsentence(int) nogil except +KeyError
 
     cdef cppclass AlignedPatternMap[ValueType, ValueHandler, NestedSizeType]:
         cppclass iterator:
@@ -361,7 +362,9 @@ cdef extern from "patternmodel.h":
         void printmodel(ostream*, ClassDecoder&) nogil
         void printpattern(ostream*, ClassDecoder&, Pattern&) nogil
         void report(ostream*) nogil
+        void histogram(stdmap[int,int] & hist, unsigned int threshold, unsigned int cap,int,int)
         void histogram(ostream*) nogil
+        unsigned int topthreshold(int,int,int) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
 
         t_relationmap getsubchildren(Pattern & pattern) except +KeyError
@@ -420,6 +423,8 @@ cdef extern from "patternmodel.h":
         void printpattern(ostream*, ClassDecoder&, Pattern&) nogil
         void report(ostream*) nogil
         void histogram(ostream*) nogil
+        void histogram(stdmap[int,int] & hist, unsigned int threshold , unsigned int cap,int,int )
+        unsigned int topthreshold(int,int,int) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
 
         void add(Pattern&, IndexedData*, IndexReference&)

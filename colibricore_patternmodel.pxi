@@ -157,7 +157,7 @@ def __getitem__(self, pattern):
 
 
 def __iter__(self):
-    """Iterates over all patterns in the model.
+    """Iterates over all patterns in the model. Also consider using the filter() or top() methods if they suit your needs, as they will be faster than doing it manually.
     
     Example::
     
@@ -282,9 +282,11 @@ cpdef report(self):
     """Print a detailed statistical report to stdout"""
     self.data.report(&cout)
 
-cpdef histogram(self):
+cpdef printhistogram(self):
     """Print a histogram to stdout"""
-    self.data.report(&cout)
+    self.data.histogram(&cout)
+
+
 
 cpdef prune(self, int threshold, int n=0):
     """Prune all patterns occurring below the threshold.
@@ -343,3 +345,39 @@ def getreverseindex_bysentence(self, int sentence):
         pattern.bind(p.second)
         yield (p.first.sentence, p.first.token), pattern
         inc(resit)
+
+
+def histogram(self, unsigned int threshold=0, unsigned int cap=0, int category = 0, int size = 0):
+    """Generator over a histogram of occurrence count data, produces (occurrencecount, frequency) tuples. A minimum threshold may be configured, or a cap on total number of occurrences may be specified (to get only the top occurrences). The histogram can be constrained by category and/or pattern size (if set to >0 values)"""
+    cdef stdmap[int,int] hist
+    cdef stdmap[int,int].iterator it
+    self.data.histogram(hist,threshold,cap, category, size)
+    it = hist.begin()  
+    while it != hist.end():
+        yield deref(it).first, deref(it).second
+        inc(it)
+
+
+def top(self, int amount, int category = 0, int size = 0):
+    """Generator over the top [amount] most occurring patterns (of specified category and size if set to values above 0). This is faster than iterating manually! Will return (pattern, occurrencecount) tuples (unsorted). Note that this may return less than the specified amount of patterns if there are multiple patterns with the same occurrence count in its tail. """
+
+    cdef unsigned int smallest = self.data.topthreshold(amount, category, size)
+    return self.filter(smallest, category, size)
+            
+    
+
+def filter(self, unsigned int threshold, int category = 0, int size = 0):
+    """Generator over patterns occurring over the set occurrence threshold (and of specified category and size if set to values above 0). This is faster than iterating and filtering manually! Will return (pattern, occurrencecount) tuples (unsorted)""" 
+    cdef unsigned int count
+    it = self.data.begin()
+    cdef cPattern cpattern
+    while it != self.data.end():
+        cpattern = deref(it).first
+        inc(it)
+        if ((category > 0) and (cpattern.category() != category)) or (size > 0) and (size != cpattern.n()): 
+            continue
+        count = self.data.occurrencecount(cpattern)
+        if count >= threshold: 
+            pattern = Pattern()
+            pattern.bind(cpattern)
+            yield pattern, count

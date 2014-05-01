@@ -20,6 +20,7 @@ from libc.stdint cimport *
 from libcpp.map cimport map as stdmap
 from libcpp.utility cimport pair
 import os.path
+from collections import Counter
 
 class Category:
     """Pattern Category"""
@@ -910,6 +911,8 @@ cdef class IndexedCorpus:
     cdef str _filename
     cdef bool unload
 
+    cdef object frommodel #allow assigning python model from which we take the reverse index, to prevent the python garbage collector collecting the model when we are still alive
+
 
     def __init__(self, str filename=""):
         """:param filename: The name of the colibri.dat file to load"""
@@ -1032,23 +1035,26 @@ cdef class IndexedCorpus:
             inc(it)
 
 
+    def sentencecount(self):
+        """Returns the number of sentencecount. ( The C++ equivalent is called sentences() ) """
+        return self.data.sentences()
+    
+
+    def getsentence(self, int i):
+        """Get the specified sentence as a pattern, raises KeyError when the sentence, or tokens therein, does not exist"""
+        cdef cPattern cpattern = self.data.getsentence(i)
+        pattern = Pattern()
+        pattern.bind(cpattern)
+        return pattern
+
     def sentences(self):
-        prevsentence = None
-        sentencedata = []
-        for (sentence,token), pattern in self.items():
-            if sentence != prevsentence:
-                if not (prevsentence is None):
-                    yield sentencedata
-                sentencedata = []
-                prevsentence = sentence
-
-            sentencedata.append(pattern)
-
-        if not (prevsentence is None): #don't forget last one
-            yield sentencedata
-
+        """Iterates over all sentences, returning each as a pattern"""
+        cdef int sentencecount = self.data.sentences()
+        for i in range(1, sentencecount+1):
+            yield self.getsentence(i)
 
     def sentencelength(self,int sentence):
+        """Returns the length of the specified sentences, raises KeyError when it doesn't exist"""
         return self.data.sentencelength(sentence)
 
 

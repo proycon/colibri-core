@@ -960,6 +960,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             return this->occurrencecount(pattern) / (double) totaloccurrencesingroup(pattern.category(),pattern.n());
         }
 
+
+
         virtual void add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
             if (value == NULL) {
                 std::cerr << "Add() value is NULL!" << std::endl;
@@ -1103,13 +1105,42 @@ class PatternModel: public MapType, public PatternModelInterface {
             return this->print(out,decoder,pattern,endline);
         }
 
-        void histogram(std::ostream * OUT) {
-            std::map<int,int> hist;
+
+        void histogram(std::map<int,int> & hist, unsigned int threshold = 0, unsigned int cap = 0, int category = 0, int size = 0) {
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
+                if (((category != 0) && (pattern.category() != category)) || (size != 0) && (size != pattern.size())) continue;
                 int c = this->occurrencecount(pattern);
-                hist[c]++;
+                if (c >= threshold) hist[c]++;
+            }  
+            if (cap > 0) {
+                unsigned int sum = 0;
+                std::map<int,int>::reverse_iterator iter = hist.rbegin();
+                while ((sum < cap) && (iter != hist.rend())) {
+                    iter++;
+                    sum += iter->second; 
+                }
+                //delete everything else
+                hist.erase(iter.base(), hist.end());  
             }
+        }
+
+        unsigned int topthreshold(int amount, int category=0, int size=0) {
+            //compute occurrence threshold that holds the top $amount occurrences
+            std::map<int,int> hist;
+            histogram(hist, 0, amount, category, size);
+            std::map<int,int>::reverse_iterator iter = hist.rbegin();
+            if (iter != hist.rend()) {
+                return iter->first;
+            } else {
+                return 0;
+            }
+        }
+
+
+        void histogram(std::ostream * OUT, unsigned int threshold = 0, unsigned int cap = 0) {
+            std::map<int,int> hist;
+            histogram(hist);
             *OUT << "HISTOGRAM" << std::endl;
             *OUT << "------------------------------" << std::endl;
             *OUT << "OCCURRENCES\tPATTERNS" << std::endl;
