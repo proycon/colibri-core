@@ -51,6 +51,7 @@ cdef extern from "pattern.h":
         bool isgap(int) nogil
         bool isskipgram() nogil
         bool isflexgram() nogil
+        Pattern reverse() nogil
 
     Pattern patternfromfile(const string&)
 

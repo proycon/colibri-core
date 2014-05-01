@@ -187,6 +187,7 @@ cdef class Pattern:
         r = self.cpattern.contains(pattern.cpattern)
         return r
 
+
     def __bool__(self):
         return self.cpattern.n() > 0
 
@@ -299,6 +300,12 @@ cdef class Pattern:
             return (self.cpattern == other.cpattern) or (self.cpattern > other.cpattern)
 
 
+    def reverse(self):
+        """Reverse the pattern (all the words will be in reverse order)"""
+        cdef cPattern newcpattern = self.cpattern.reverse()
+        newpattern = Pattern()
+        newpattern.bind(newcpattern)
+        return newpattern
 
     cdef Pattern add(Pattern self, Pattern other):
         cdef cPattern newcpattern = self.cpattern + other.cpattern
