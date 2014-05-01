@@ -596,8 +596,8 @@ binds with the C++ code, and although it is more limited than the C++ API, it
 still offers most higher-level functionality. The Colibri Core binding between C++ and
 Python is written in Cython.</p>
 <p>A Python tutorial for Colibri Core is available in the form of an IPython
-Notebook, meaning that you can interactively run it and play with it.</p>
-<p>A static read-only version can be found here:</p>
+Notebook, meaning that you can interactively run it and play with. You can the
+static, read-only, version here: [../colibricore-python-tutorial.html].</p>
 </div>
 <div class="section" id="module-colibricore">
 <span id="python-api-reference"></span><h2>Python API Reference<a class="headerlink" href="#module-colibricore" title="Permalink to this headline">¶</a></h2>
@@ -659,7 +659,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.AlignedPatternDict_int32.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f5639292150&gt;</em><a class="headerlink" href="#colibricore.AlignedPatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4edc00&gt;</em><a class="headerlink" href="#colibricore.AlignedPatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -921,7 +921,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.IndexedCorpus.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f56392923f0&gt;</em><a class="headerlink" href="#colibricore.IndexedCorpus.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4edf30&gt;</em><a class="headerlink" href="#colibricore.IndexedCorpus.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -951,20 +951,34 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="colibricore.IndexedCorpus.getsentence">
+<tt class="descname">getsentence</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedCorpus.getsentence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the specified sentence as a pattern, raises KeyError when the sentence, or tokens therein, does not exist</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.IndexedCorpus.items">
 <tt class="descname">items</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedCorpus.items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate over all indexes and their unigram patterns. Yields ((sentence,tokenoffset), unigrampattern) tuples</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="colibricore.IndexedCorpus.sentencecount">
+<tt class="descname">sentencecount</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedCorpus.sentencecount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of sentencecount. ( The C++ equivalent is called sentences() )</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.IndexedCorpus.sentencelength">
 <tt class="descname">sentencelength</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedCorpus.sentencelength" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the length of the specified sentences, raises KeyError when it doesn&#8217;t exist</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedCorpus.sentences">
 <tt class="descname">sentences</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedCorpus.sentences" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Iterates over all sentences, returning each as a pattern</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1016,7 +1030,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.IndexedData.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f5639234c00&gt;</em><a class="headerlink" href="#colibricore.IndexedData.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4eda20&gt;</em><a class="headerlink" href="#colibricore.IndexedData.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1122,7 +1136,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.IndexedPatternModel.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f56392922a0&gt;</em><a class="headerlink" href="#colibricore.IndexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4edde0&gt;</em><a class="headerlink" href="#colibricore.IndexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1172,6 +1186,12 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="colibricore.IndexedPatternModel.filter">
+<tt class="descname">filter</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over patterns occurring over the set occurrence threshold (and of specified category and size if set to values above 0). This is faster than iterating and filtering manually! Will return (pattern, occurrencecount) tuples (unsorted)</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.IndexedPatternModel.frequency">
 <tt class="descname">frequency</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.frequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the frequency of the pattern within its category (ngram/skipgram/flexgram) and exact size class. For a bigram it will thus return the bigram frequency.</p>
@@ -1188,11 +1208,41 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="colibricore.IndexedPatternModel.getcooc">
+<tt class="descname">getcooc</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getcooc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get left-side co-occurrences for the specified pattern
+:param pattern: The pattern
+:type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
+:rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.getinstances">
+<tt class="descname">getinstances</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getinstances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get templates (abstracting skipgrams) for the specified pattern
+:param pattern: The pattern
+:type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.IndexedPatternModel.getleftcooc">
 <tt class="descname">getleftcooc</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getleftcooc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get left-side co-occurrences for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship</p>
 </dd></dl>
 
@@ -1202,7 +1252,40 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd><p>Get left neighbours for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.getreverseindex">
+<tt class="descname">getreverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getreverseindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over all patterns occurring at the specified index reference</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexreference</strong> &#8211; a (sentence, tokenoffset) tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.getreverseindex_bysentence">
+<tt class="descname">getreverseindex_bysentence</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.getreverseindex_bysentence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over all patterns occurring in the specified sentence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sentence</strong> &#8211; a sentence number</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1211,6 +1294,11 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd><p>Get left-side co-occurrences for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship</p>
 </dd></dl>
 
@@ -1220,6 +1308,11 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd><p>Get right neighbours for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship</p>
 </dd></dl>
 
@@ -1238,6 +1331,11 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd><p>Get subsumption children for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship</p>
 </dd></dl>
 
@@ -1247,6 +1345,11 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd><p>Get subsumption parents for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship</p>
 </dd></dl>
 
@@ -1256,13 +1359,15 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd><p>Get templates (abstracting skipgrams) for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.histogram">
 <tt class="descname">histogram</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.histogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print a histogram to stdout</p>
+<dd><p>Generator over a histogram of occurrence count data, produces (occurrencecount, frequency) tuples. A minimum threshold may be configured, or a cap on total number of occurrences may be specified (to get only the top occurrences). The histogram can be constrained by category and/or pattern size (if set to &gt;0 values)</p>
 </dd></dl>
 
 <dl class="method">
@@ -1356,6 +1461,12 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="colibricore.IndexedPatternModel.printhistogram">
+<tt class="descname">printhistogram</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.printhistogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a histogram to stdout</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.IndexedPatternModel.printmodel">
 <tt class="descname">printmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.printmodel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print the entire pattern model to stdout, a detailed overview</p>
@@ -1402,35 +1513,19 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.reverseindex">
 <tt class="descname">reverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.reverseindex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator over all patterns occurring at the specified index reference</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexreference</strong> &#8211; a (sentence, tokenoffset) tuple</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="colibricore.IndexedPatternModel.reverseindex_bysentence">
-<tt class="descname">reverseindex_bysentence</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.reverseindex_bysentence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator over all patterns occurring in the specified sentence</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sentence</strong> &#8211; a sentence number</td>
-</tr>
-</tbody>
-</table>
+<dd><p>Returns the reverseindex associated with the model, this will be an instance of IndexedCorpus. Use getreversindex( (sentence, token) ) instead if you want to query the reverse index.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.tokens">
 <tt class="descname">tokens</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.tokens" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the total number of tokens in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.IndexedPatternModel.top">
+<tt class="descname">top</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.IndexedPatternModel.top" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over the top [amount] most occurring patterns (of specified category and size if set to values above 0). This is faster than iterating manually! Will return (pattern, occurrencecount) tuples (unsorted). Note that this may return less than the specified amount of patterns if there are multiple patterns with the same occurrence count in its tail.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1685,7 +1780,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.OrderedIndexedPatternModel.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f56392922d0&gt;</em><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4ede10&gt;</em><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1735,6 +1830,12 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.filter">
+<tt class="descname">filter</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over patterns occurring over the set occurrence threshold (and of specified category and size if set to values above 0). This is faster than iterating and filtering manually! Will return (pattern, occurrencecount) tuples (unsorted)</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.OrderedIndexedPatternModel.frequency">
 <tt class="descname">frequency</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.frequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the frequency of the pattern within its category (ngram/skipgram/flexgram) and exact size class. For a bigram it will thus return the bigram frequency.</p>
@@ -1751,11 +1852,41 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.getcooc">
+<tt class="descname">getcooc</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.getcooc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get left-side co-occurrences for the specified pattern
+:param pattern: The pattern
+:type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
+:rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.getinstances">
+<tt class="descname">getinstances</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.getinstances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get templates (abstracting skipgrams) for the specified pattern
+:param pattern: The pattern
+:type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.OrderedIndexedPatternModel.getleftcooc">
 <tt class="descname">getleftcooc</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.getleftcooc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get left-side co-occurrences for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship</p>
 </dd></dl>
 
@@ -1765,7 +1896,40 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd><p>Get left neighbours for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.getreverseindex">
+<tt class="descname">getreverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.getreverseindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over all patterns occurring at the specified index reference</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexreference</strong> &#8211; a (sentence, tokenoffset) tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.getreverseindex_bysentence">
+<tt class="descname">getreverseindex_bysentence</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.getreverseindex_bysentence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over all patterns occurring in the specified sentence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sentence</strong> &#8211; a sentence number</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1774,6 +1938,11 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd><p>Get left-side co-occurrences for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship</p>
 </dd></dl>
 
@@ -1783,6 +1952,11 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd><p>Get right neighbours for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship</p>
 </dd></dl>
 
@@ -1801,6 +1975,11 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd><p>Get subsumption children for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship</p>
 </dd></dl>
 
@@ -1810,6 +1989,11 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd><p>Get subsumption parents for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
+:param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+:param size: Constrain by patterns of the specified size
+:type size: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship</p>
 </dd></dl>
 
@@ -1819,13 +2003,15 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd><p>Get templates (abstracting skipgrams) for the specified pattern
 :param pattern: The pattern
 :type pattern: Pattern
+:param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
+:type occurrencethreshold: int
 :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.OrderedIndexedPatternModel.histogram">
 <tt class="descname">histogram</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.histogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print a histogram to stdout</p>
+<dd><p>Generator over a histogram of occurrence count data, produces (occurrencecount, frequency) tuples. A minimum threshold may be configured, or a cap on total number of occurrences may be specified (to get only the top occurrences). The histogram can be constrained by category and/or pattern size (if set to &gt;0 values)</p>
 </dd></dl>
 
 <dl class="method">
@@ -1919,6 +2105,12 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.printhistogram">
+<tt class="descname">printhistogram</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.printhistogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a histogram to stdout</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.OrderedIndexedPatternModel.printmodel">
 <tt class="descname">printmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.printmodel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print the entire pattern model to stdout, a detailed overview</p>
@@ -1965,35 +2157,19 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dl class="method">
 <dt id="colibricore.OrderedIndexedPatternModel.reverseindex">
 <tt class="descname">reverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.reverseindex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator over all patterns occurring at the specified index reference</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexreference</strong> &#8211; a (sentence, tokenoffset) tuple</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="colibricore.OrderedIndexedPatternModel.reverseindex_bysentence">
-<tt class="descname">reverseindex_bysentence</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.reverseindex_bysentence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator over all patterns occurring in the specified sentence</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sentence</strong> &#8211; a sentence number</td>
-</tr>
-</tbody>
-</table>
+<dd><p>Returns the reverseindex associated with the model, this will be an instance of IndexedCorpus. Use getreversindex( (sentence, token) ) instead if you want to query the reverse index.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.OrderedIndexedPatternModel.tokens">
 <tt class="descname">tokens</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.tokens" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the total number of tokens in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedIndexedPatternModel.top">
+<tt class="descname">top</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedIndexedPatternModel.top" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over the top [amount] most occurring patterns (of specified category and size if set to values above 0). This is faster than iterating manually! Will return (pattern, occurrencecount) tuples (unsorted). Note that this may return less than the specified amount of patterns if there are multiple patterns with the same occurrence count in its tail.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2226,7 +2402,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dl class="attribute">
 <dt id="colibricore.OrderedUnindexedPatternModel.__iter__">
 <tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.__iter__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Iterates over all patterns in the model.</p>
+<dd><p>Iterates over all patterns in the model. Also consider using the filter() or top() methods if they suit your needs, as they will be faster than doing it manually.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
     <span class="k">print</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">classdecoder</span><span class="p">))</span>
@@ -2253,7 +2429,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.OrderedUnindexedPatternModel.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f5639292360&gt;</em><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4edea0&gt;</em><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2307,6 +2483,12 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.filter">
+<tt class="descname">filter</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over patterns occurring over the set occurrence threshold (and of specified category and size if set to values above 0). This is faster than iterating and filtering manually! Will return (pattern, occurrencecount) tuples (unsorted)</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.OrderedUnindexedPatternModel.frequency">
 <tt class="descname">frequency</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.frequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the frequency of the pattern within its category (ngram/skipgram/flexgram) and exact size class. For a bigram it will thus return the bigram frequency.</p>
@@ -2328,9 +2510,37 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.getreverseindex">
+<tt class="descname">getreverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.getreverseindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over all patterns occurring at the specified index reference</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexreference</strong> &#8211; a (sentence, tokenoffset) tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.getreverseindex_bysentence">
+<tt class="descname">getreverseindex_bysentence</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.getreverseindex_bysentence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over all patterns occurring in the specified sentence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sentence</strong> &#8211; a sentence number</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.OrderedUnindexedPatternModel.histogram">
 <tt class="descname">histogram</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.histogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print a histogram to stdout</p>
+<dd><p>Generator over a histogram of occurrence count data, produces (occurrencecount, frequency) tuples. A minimum threshold may be configured, or a cap on total number of occurrences may be specified (to get only the top occurrences). The histogram can be constrained by category and/or pattern size (if set to &gt;0 values)</p>
 </dd></dl>
 
 <dl class="method">
@@ -2406,6 +2616,12 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.printhistogram">
+<tt class="descname">printhistogram</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.printhistogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a histogram to stdout</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.OrderedUnindexedPatternModel.printmodel">
 <tt class="descname">printmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.printmodel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print the entire pattern model to stdout, a detailed overview</p>
@@ -2452,21 +2668,19 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dl class="method">
 <dt id="colibricore.OrderedUnindexedPatternModel.reverseindex">
 <tt class="descname">reverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.reverseindex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator over all patterns occurring at the specified index reference</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexreference</strong> &#8211; a (sentence, tokenoffset) tuple</td>
-</tr>
-</tbody>
-</table>
+<dd><p>Returns the reverseindex associated with the model, this will be an instance of IndexedCorpus. Use getreversindex( (sentence, token) ) instead if you want to query the reverse index.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.OrderedUnindexedPatternModel.tokens">
 <tt class="descname">tokens</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.tokens" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the total number of tokens in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.OrderedUnindexedPatternModel.top">
+<tt class="descname">top</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.top" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over the top [amount] most occurring patterns (of specified category and size if set to values above 0). This is faster than iterating manually! Will return (pattern, occurrencecount) tuples (unsorted). Note that this may return less than the specified amount of patterns if there are multiple patterns with the same occurrence count in its tail.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2767,7 +2981,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.Pattern.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f5639238b10&gt;</em><a class="headerlink" href="#colibricore.Pattern.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4ed9f0&gt;</em><a class="headerlink" href="#colibricore.Pattern.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3050,7 +3264,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.PatternAlignmentModel_float.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f56392924e0&gt;</em><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4e7570&gt;</em><a class="headerlink" href="#colibricore.PatternAlignmentModel_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3216,7 +3430,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.PatternDict_float.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f56392920f0&gt;</em><a class="headerlink" href="#colibricore.PatternDict_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4edba0&gt;</em><a class="headerlink" href="#colibricore.PatternDict_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3316,7 +3530,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.PatternDict_int.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f56392920c0&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4edb70&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3416,7 +3630,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.PatternDict_int32.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f5639292030&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4edae0&gt;</em><a class="headerlink" href="#colibricore.PatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3507,7 +3721,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.PatternFeatureVectorMap_float.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f5639292420&gt;</em><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4edf60&gt;</em><a class="headerlink" href="#colibricore.PatternFeatureVectorMap_float.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3629,7 +3843,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.PatternSet.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f5639292450&gt;</em><a class="headerlink" href="#colibricore.PatternSet.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4eda80&gt;</em><a class="headerlink" href="#colibricore.PatternSet.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3729,7 +3943,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.PatternSetModel.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f5639292300&gt;</em><a class="headerlink" href="#colibricore.PatternSetModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4ede40&gt;</em><a class="headerlink" href="#colibricore.PatternSetModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3847,7 +4061,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.SmallPatternDict_int32.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f5639292060&gt;</em><a class="headerlink" href="#colibricore.SmallPatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4edb10&gt;</em><a class="headerlink" href="#colibricore.SmallPatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3947,7 +4161,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.TinyPatternDict_int32.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f5639292090&gt;</em><a class="headerlink" href="#colibricore.TinyPatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4edb40&gt;</em><a class="headerlink" href="#colibricore.TinyPatternDict_int32.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -4070,7 +4284,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dl class="attribute">
 <dt id="colibricore.UnindexedPatternModel.__iter__">
 <tt class="descname">__iter__</tt><a class="headerlink" href="#colibricore.UnindexedPatternModel.__iter__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Iterates over all patterns in the model.</p>
+<dd><p>Iterates over all patterns in the model. Also consider using the filter() or top() methods if they suit your needs, as they will be faster than doing it manually.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
     <span class="k">print</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">classdecoder</span><span class="p">))</span>
@@ -4097,7 +4311,7 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 
 <dl class="attribute">
 <dt id="colibricore.UnindexedPatternModel.__pyx_vtable__">
-<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f5639292330&gt;</em><a class="headerlink" href="#colibricore.UnindexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__pyx_vtable__</tt><em class="property"> = &lt;capsule object NULL at 0x7f739b4ede70&gt;</em><a class="headerlink" href="#colibricore.UnindexedPatternModel.__pyx_vtable__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -4151,6 +4365,12 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="colibricore.UnindexedPatternModel.filter">
+<tt class="descname">filter</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over patterns occurring over the set occurrence threshold (and of specified category and size if set to values above 0). This is faster than iterating and filtering manually! Will return (pattern, occurrencecount) tuples (unsorted)</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.UnindexedPatternModel.frequency">
 <tt class="descname">frequency</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.frequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the frequency of the pattern within its category (ngram/skipgram/flexgram) and exact size class. For a bigram it will thus return the bigram frequency.</p>
@@ -4172,9 +4392,37 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="colibricore.UnindexedPatternModel.getreverseindex">
+<tt class="descname">getreverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.getreverseindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over all patterns occurring at the specified index reference</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexreference</strong> &#8211; a (sentence, tokenoffset) tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.getreverseindex_bysentence">
+<tt class="descname">getreverseindex_bysentence</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.getreverseindex_bysentence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over all patterns occurring in the specified sentence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sentence</strong> &#8211; a sentence number</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.UnindexedPatternModel.histogram">
 <tt class="descname">histogram</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.histogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print a histogram to stdout</p>
+<dd><p>Generator over a histogram of occurrence count data, produces (occurrencecount, frequency) tuples. A minimum threshold may be configured, or a cap on total number of occurrences may be specified (to get only the top occurrences). The histogram can be constrained by category and/or pattern size (if set to &gt;0 values)</p>
 </dd></dl>
 
 <dl class="method">
@@ -4250,6 +4498,12 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="colibricore.UnindexedPatternModel.printhistogram">
+<tt class="descname">printhistogram</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.printhistogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a histogram to stdout</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="colibricore.UnindexedPatternModel.printmodel">
 <tt class="descname">printmodel</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.printmodel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print the entire pattern model to stdout, a detailed overview</p>
@@ -4296,21 +4550,19 @@ Notebook, meaning that you can interactively run it and play with it.</p>
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.reverseindex">
 <tt class="descname">reverseindex</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.reverseindex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator over all patterns occurring at the specified index reference</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexreference</strong> &#8211; a (sentence, tokenoffset) tuple</td>
-</tr>
-</tbody>
-</table>
+<dd><p>Returns the reverseindex associated with the model, this will be an instance of IndexedCorpus. Use getreversindex( (sentence, token) ) instead if you want to query the reverse index.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.tokens">
 <tt class="descname">tokens</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.tokens" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the total number of tokens in the training data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colibricore.UnindexedPatternModel.top">
+<tt class="descname">top</tt><big>(</big><big>)</big><a class="headerlink" href="#colibricore.UnindexedPatternModel.top" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator over the top [amount] most occurring patterns (of specified category and size if set to values above 0). This is faster than iterating manually! Will return (pattern, occurrencecount) tuples (unsorted). Note that this may return less than the specified amount of patterns if there are multiple patterns with the same occurrence count in its tail.</p>
 </dd></dl>
 
 <dl class="method">

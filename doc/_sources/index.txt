@@ -601,10 +601,9 @@ still offers most higher-level functionality. The Colibri Core binding between C
 Python is written in Cython.
 
 A Python tutorial for Colibri Core is available in the form of an IPython
-Notebook, meaning that you can interactively run it and play with it. 
+Notebook, meaning that you can interactively run it and play with. You can the
+static, read-only, version here: [../colibricore-python-tutorial.html].
 
-
-A static read-only version can be found here:
 
 
 Python API Reference
