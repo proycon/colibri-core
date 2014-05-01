@@ -223,6 +223,14 @@ int main( int argc, char *argv[] ) {
         Pattern subngram5 = encoder.buildpattern(substring5, true);
 
         cerr << "----------------------------------------------------" << endl;
+        cerr << "Reverse of ngram #1: " << endl;
+
+        Pattern revngram = ngram.reverse();
+        cerr << "Reverse ngram: " << revngram.decode(classdecoder) << endl;
+        cerr << "N: " << (int) revngram.n() << endl;
+
+
+        cerr << "----------------------------------------------------" << endl;
         cerr << "Pattern Pointer tests" << endl;
         PatternPointer pngram = PatternPointer(&ngram);
         Pattern derefngram = Pattern(pngram);

@@ -293,6 +293,8 @@ class Pattern {
      Pattern addskips(std::vector<std::pair<int,int> > & gaps) const;
      Pattern addflexgaps(std::vector<std::pair<int,int> > & gaps) const;
 
+     Pattern reverse() const; 
+
      /**
       * converts a skipgram into a flexgram, ngrams just come out unchanged
       */

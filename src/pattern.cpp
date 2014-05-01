@@ -1,6 +1,7 @@
 #include "pattern.h"
 #include "patternstore.h"
 #include "SpookyV2.h" //spooky hash
+#include <cstring>
 
 /*****************************
 * Colibri Core
@@ -1078,6 +1079,39 @@ Pattern Pattern::addflexgaps(std::vector<std::pair<int,int> > & gaps) const {
     return pattern;
 }
 
+
+Pattern Pattern::reverse() const {
+    const unsigned char _size = bytesize() + 1;
+    unsigned char * newdata = new unsigned char[_size];
+
+    //set endmarker
+    newdata[_size - 1] = ENDMARKER;
+
+    //we fill the newdata from right to left
+    unsigned char cursor = _size - 1;
+
+    int i = 0;
+    do {
+        const unsigned char c = data[i];
+        if (c == ENDMARKER) {
+            //end marker
+            break;
+        } else if (c < 128) {
+            //we have a size
+            cursor = cursor - c - 1; //move newdata cursor to the left (place of insertion)
+            strncpy((char*) newdata + cursor, (char*) data + i, c + 1);
+            i += c + 1;
+        } else {
+            //we have another marker
+            newdata[cursor--] = c;
+            i++;
+        }
+    } while (1);
+
+    Pattern rev = Pattern(newdata, _size);
+    delete[] newdata;
+    return rev;
+}
 
 
 IndexedCorpus::IndexedCorpus(std::istream *in){
