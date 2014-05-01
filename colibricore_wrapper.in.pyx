@@ -906,13 +906,27 @@ cdef class PatternModelOptions:
 
 cdef class IndexedCorpus:
     """An indexed version of a corpus, reads an entire corpus (colibri.dat file) in memory"""
-    cdef cIndexedCorpus data
+    cdef cIndexedCorpus * data
     cdef str _filename
+    cdef bool unload
+
 
     def __init__(self, str filename):
         """:param filename: The name of the colibri.dat file to load"""
         self._filename = filename
+        self.data = new cIndexedCorpus()
         self.data.load(filename.encode('utf-8'))
+        self.unload = True
+
+    cdef bind(self, cIndexedCorpus * d, unload=False):
+        if self.data != NULL and self.unload:
+            del self.data
+        self.data = d
+        self.unload = unload
+
+    def __dealloc__(self):
+        if self.data != NULL and self.unload:
+            del self.data
 
     def filename(self):
         return self._filename

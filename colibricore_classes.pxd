@@ -204,6 +204,7 @@ cdef extern from "patternstore.h":
         vector[IndexReference] findpattern(Pattern&,int) nogil
         int operator[](IndexReference&) nogil except +KeyError
         int sentencelength(int) nogil
+        int sentences() nogil
 
     cdef cppclass AlignedPatternMap[ValueType, ValueHandler, NestedSizeType]:
         cppclass iterator:

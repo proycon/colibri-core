@@ -213,7 +213,7 @@ def load(self, str filename, PatternModelOptions options=None, constrainmodel = 
         self.data.load(filename.encode('utf-8'), options.coptions, NULL)
 
 def loadreverseindex(self, IndexedCorpus reverseindex):
-    self.data.reverseindex = &(reverseindex.data)
+    self.data.reverseindex = reverseindex.data
     self.data.externalreverseindex = True
 
 
@@ -296,7 +296,16 @@ cpdef prune(self, int threshold, int n=0):
     """
     self.data.prune(threshold, n)
 
-def reverseindex(self, indexreference):
+
+def reverseindex(self):
+    """Returns the reverseindex associated with the model, this will be an instance of IndexedCorpus. Use getreversindex( (sentence, token) ) instead if you want to query the reverse index."""
+    ri = IndexedCorpus()
+    ri.bind(self.data.reverseindex)
+    ri.frommodel = self #to prevent segfaults: reference to this pattern model, IndexedCorpus can not live without its parent model as it shares the same data, prevent Python garbage collector from cleaning it up while we still exist
+    return ri
+
+
+def getreverseindex(self, indexreference):
     """Generator over all patterns occurring at the specified index reference
 
     :param indexreference: a (sentence, tokenoffset) tuple
@@ -316,4 +325,21 @@ def reverseindex(self, indexreference):
         pattern = Pattern()
         pattern.bind(cpattern)
         yield pattern
+        inc(resit)
+
+def getreverseindex_bysentence(self, int sentence):
+    """Generator over all patterns occurring in the specified sentence
+
+    :param sentence: a sentence number
+    """
+
+    cdef vector[pair[cIndexReference,cPattern]] results = self.data.getreverseindex_bysentence(sentence)
+    cdef vector[pair[cIndexReference,cPattern]].iterator resit = results.begin()
+    cdef pair[cIndexReference,cPattern] p
+    cdef cPattern cpattern
+    while resit != results.end():
+        p = deref(resit)
+        pattern = Pattern()
+        pattern.bind(p.second)
+        yield (p.first.sentence, p.first.token), pattern
         inc(resit)
