@@ -497,16 +497,17 @@ class PatternModel: public MapType, public PatternModelInterface {
                     Pattern line = Pattern(in);
                     sentence++;
                     if (in->eof()) break;
-                    if (line.size() == 0) {
+                    const int linesize = line.size();
+                    if (linesize == 0) {
                         //skip empty lines
                         continue;
                     }
                     //count total tokens
-                    if (n==1) totaltokens += line.size();
+                    if (n==1) totaltokens += linesize;
 
                     ngrams.clear();
                     if (options.DOPATTERNPERLINE) {
-                        if (line.size() > options.MAXLENGTH) continue;
+                        if (linesize > options.MAXLENGTH) continue;
                         ngrams.push_back(std::pair<PatternPointer,int>(PatternPointer(&line),0));
                     } else {
                         if ((options.MINTOKENS > 1) && (constrainbymodel == NULL)) {
