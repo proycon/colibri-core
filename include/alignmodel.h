@@ -90,7 +90,9 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             delete in;
         }
 
-        virtual void load(std::istream * f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        virtual void load(std::istream * f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+            options.MINTOKENS = 1; //other values would be meaningless
+
             char null;
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
@@ -105,7 +107,8 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             PatternStoreInterface * constrainstore = NULL;
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
-            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET); 
+            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET);  
+            if (options.DEBUG) std::cerr << "Read " << this->size() << " patterns" << std::endl;
             this->postread(options);
         }
 
@@ -122,7 +125,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             out->write( (char*) &v, sizeof(char));        
             out->write( (char*) &totaltokens, sizeof(uint64_t));        
             out->write( (char*) &totaltypes, sizeof(uint64_t)); 
-            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::write(out); //write PatternStore
+            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::write(out); //write PatternStore 
         }
 
         void write(const std::string filename) {

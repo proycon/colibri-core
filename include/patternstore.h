@@ -234,12 +234,11 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
 
 
         template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler>
-        void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false) {
+        void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, bool DEBUG=false) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             std::cerr << "Reading " << s << " patterns" << std::endl;
-            //std::cerr << "Reading " << (int) s << " patterns" << std::endl;
             for (ReadWriteSizeType i = 0; i < s; i++) {
                 Pattern p;
                 try {
@@ -253,22 +252,28 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                     if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
                 }
                 const int n = p.size();
+                if (DEBUG) std::cerr << "Read pattern #" << (i+1) << ", size n";
                 ReadValueType readvalue;
-                //std::cerr << "Read pattern: " << std::endl;
                 readvaluehandler.read(in, readvalue);
                 if (n >= MINLENGTH && n <= MAXLENGTH)  {
                     if ((readvaluehandler.count(readvalue) >= MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
                             ValueType convertedvalue;
                             if (!DORESET) readvaluehandler.convertto(readvalue, convertedvalue); 
+                            if (DEBUG) std::cerr << "...adding";
                             this->insert(p,convertedvalue);
+                    } else if (DEBUG) {
+                        std::cerr << "...skipping because of occurrence or constraints";
                     }
+                } else if (DEBUG) {
+                  std::cerr << "...skipping because of length";
                 }
+                if (DEBUG) std::cerr << std::endl;
             }
         }
 
-        void read(std::string filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET = false) { //no templates for this one, easier on python/cython
+        void read(std::string filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET = false, bool DEBUG=false) { //no templates for this one, easier on python/cython
             std::ifstream * in = new std::ifstream(filename.c_str());
-            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET);
+            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET, DEBUG);
             in->close();
             delete in;
         }

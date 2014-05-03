@@ -236,6 +236,10 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             PatternStoreInterface * constrainstore = NULL;
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
+            if (options.DEBUG) { 
+                std::cerr << "Debug enabled, loading PatternModel type " << model_type << ", version " << model_version << std::endl;   
+                std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;   
+            }
             if (model_type == PATTERNSETMODEL) {
                 //reading set
                 PatternSet<uint64_t>::read(f, options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS); //read PatternStore
@@ -428,17 +432,17 @@ class PatternModel: public MapType, public PatternModelInterface {
 
             if ((model_type == INDEXEDPATTERNMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) {
                 //reading indexed pattern model as unindexed, ok:
-                 MapType::template read<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET);
+                 MapType::template read<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, options.DEBUG);
             } else if ((model_type == UNINDEXEDPATTERNMODEL) && (this->getmodeltype() == INDEXEDPATTERNMODEL)) {
                //reading unindexed model as indexed, this will load the patterns but lose all the counts
-                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET);
+                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, options.DEBUG);
             } else if (model_type == PATTERNALIGNMENTMODEL)  {
                  //reading pattern alignment model as pattern model, can be
                  //done, but semantics change:  count corresponds to the number of distinct alignments (for unindexed models)
                  //indexed models will lose all counts
-                MapType::template read<PatternFeatureVectorMap<double>,PatternFeatureVectorHandler<double>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
+                MapType::template read<PatternFeatureVectorMap<double>,PatternFeatureVectorHandler<double>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS,options.DORESET,options.DEBUG);
             } else {
-                 MapType::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET); //read PatternStore (also works for reading unindexed pattern models as indexed, which will load patterns but lose the counts)
+                 MapType::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, options.DEBUG); //read PatternStore (also works for reading unindexed pattern models as indexed, which will load patterns but lose the counts)
             }
             this->postread(options);
         }
