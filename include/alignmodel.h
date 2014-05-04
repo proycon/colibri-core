@@ -104,10 +104,15 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             f->read( (char*) &totaltokens, sizeof(uint64_t));        
             f->read( (char*) &totaltypes, sizeof(uint64_t)); 
 
+            if (options.DEBUG) { 
+                std::cerr << "Debug enabled, loading Alignment Model type " << model_type << ", version " << model_version << std::endl;   
+                std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;   
+            }
+
             PatternStoreInterface * constrainstore = NULL;
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
-            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET);  
+            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorHandler<FeatureType>>::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, options.DEBUG);  
             if (options.DEBUG) std::cerr << "Read " << this->size() << " patterns" << std::endl;
             this->postread(options);
         }

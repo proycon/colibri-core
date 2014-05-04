@@ -1347,7 +1347,7 @@ cdef class PatternAlignmentModel_float:
         :param options: An instance of PatternModelOptions, containing the options used for loading
         :type options: PatternModelOptions
         """
-        if not options:
+        if options is None:
             options = PatternModelOptions()
         self.data.load(filename.encode('utf-8'), options.coptions)
 

@@ -430,6 +430,11 @@ class PatternModel: public MapType, public PatternModelInterface {
             PatternStoreInterface * constrainstore = NULL;
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
+            if (options.DEBUG) { 
+                std::cerr << "Debug enabled, loading PatternModel type " << model_type << ", version " << model_version << std::endl;   
+                std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;   
+            }
+
             if ((model_type == INDEXEDPATTERNMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) {
                 //reading indexed pattern model as unindexed, ok:
                  MapType::template read<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, options.DEBUG);
