@@ -56,64 +56,9 @@ class IndexReference {
 
 /************* ValueHandler for reading/serialising basic types ********************/
 
-//forward declaration for later
-class IndexedData;
-
-
-/*
- * Value handler deal are interfaces to the values in Pattern Maps. They are
- * used to abstract from the actual value data type and provide some common
- * methods required for all values, as well at methods for serialisation
- * from/to binary file. All are derived from the abstract class
- * AbstractValueHandler
-*/
-
-template<class ValueType>
-class AbstractValueHandler {
-   public:
-    virtual std::string id() { return "AbstractValueHandler"; }
-    virtual void read(std::istream * in, ValueType & value)=0; //read value from input stream (binary)
-    virtual void write(std::ostream * out, ValueType & value)=0; //write value to output stream (binary)
-    virtual std::string tostring(ValueType & value)=0; //convert value to string)
-    virtual int count(ValueType & value) const =0; //what count does this value represent?
-    virtual void add(ValueType * value, const IndexReference & ref ) const=0; //add the indexreference to the value, will be called whenever a token is found during pattern building
-    virtual void convertto(ValueType & source, ValueType & target ) const { if (&source != &target) target = source; }; //this doesn't really convert as source and target are same type, but it is required!
-};
-
-// This templated class can be used for all numeric base types (such as int, uint16_t,
-// float, etc)
-template<class ValueType>
-class BaseValueHandler: public AbstractValueHandler<ValueType> {
-   public:
-    virtual std::string id() { return "BaseValueHandler"; }
-    const static bool indexed = false;
-    void read(std::istream * in, ValueType & v) {
-        in->read( (char*) &v, sizeof(ValueType)); 
-    }
-    void write(std::ostream * out, ValueType & value) {
-        out->write( (char*) &value, sizeof(ValueType));
-    }
-    virtual std::string tostring(ValueType & value) {
-        return tostring(value);
-    }
-    int count(ValueType & value) const {
-        return (int) value;
-    }
-    void add(ValueType * value, const IndexReference & ref ) const {
-        *value = *value + 1;
-    }
-    void convertto(ValueType & source, ValueType & target ) const { if (&source != &target) target = source; }; //this doesn't really convert as source and target are same type, but it is required!
-    void convertto(ValueType & source, IndexedData & target ) const { }; //this doesn't convert either, it returns a totally EMPTY indexeddata, allowing unindexed models to be read as indexed, but losing all counts!
-};
-
-
-/************* ValueHandler for reading/serialising indexed types ********************/
-
-
 class IndexedData {
-   protected:
-    std::vector<IndexReference> data;
    public:
+    std::vector<IndexReference> data;
     IndexedData() { };
     IndexedData(std::istream * in);
     void write(std::ostream * out) const; 
@@ -166,8 +111,58 @@ class IndexedData {
         data.shrink_to_fit();
     }
 
-    friend class IndexedDataHandler;
 };
+
+/*
+ * Value handler deal are interfaces to the values in Pattern Maps. They are
+ * used to abstract from the actual value data type and provide some common
+ * methods required for all values, as well at methods for serialisation
+ * from/to binary file. All are derived from the abstract class
+ * AbstractValueHandler
+*/
+
+template<class ValueType>
+class AbstractValueHandler {
+   public:
+    virtual std::string id() { return "AbstractValueHandler"; }
+    virtual void read(std::istream * in, ValueType & value)=0; //read value from input stream (binary)
+    virtual void write(std::ostream * out, ValueType & value)=0; //write value to output stream (binary)
+    virtual std::string tostring(ValueType & value)=0; //convert value to string)
+    virtual int count(ValueType & value) const =0; //what count does this value represent?
+    virtual void add(ValueType * value, const IndexReference & ref ) const=0; //add the indexreference to the value, will be called whenever a token is found during pattern building
+};
+
+
+
+// This templated class can be used for all numeric base types (such as int, uint16_t,
+// float, etc)
+template<class ValueType>
+class BaseValueHandler: public AbstractValueHandler<ValueType> {
+   public:
+    virtual std::string id() { return "BaseValueHandler"; }
+    const static bool indexed = false;
+    void read(std::istream * in, ValueType & v) {
+        in->read( (char*) &v, sizeof(ValueType)); 
+    }
+    void write(std::ostream * out, ValueType & value) {
+        out->write( (char*) &value, sizeof(ValueType));
+    }
+    virtual std::string tostring(ValueType & value) {
+        return tostring(value);
+    }
+    int count(ValueType & value) const {
+        return (int) value;
+    }
+    void add(ValueType * value, const IndexReference & ref ) const {
+        *value = *value + 1;
+    }
+
+};
+
+
+
+/************* ValueHandler for reading/serialising indexed types ********************/
+
 
 class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
    public:
@@ -209,11 +204,11 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         }
         value->insert(ref);
     }
-    void convertto(IndexedData & source , IndexedData & target) const { if (&source != &target) target = source;  }; //noop
-    void convertto(IndexedData & value, unsigned int & convertedvalue) const { convertedvalue = value.count(); };
+
+
+
+
 };
-
-
 
 
 
@@ -405,9 +400,30 @@ class PatternFeatureVectorHandler: public AbstractValueHandler<PatternFeatureVec
         std::cerr << "ERROR: PatternFeatureVectorHandler does not support insertion of index references, model can not be computed with train()" << std::endl;
         throw InternalError();
     }
-    void convertto(PatternFeatureVectorMap<FeatureType> & source , PatternFeatureVectorMap<FeatureType> & target) const { if (&source != &target) target = source;  }; //noop
-    void convertto(PatternFeatureVectorMap<FeatureType> & source , IndexedData & target) const {  }; //not possible, noop
-    void convertto(PatternFeatureVectorMap<FeatureType> & value, unsigned int & convertedvalue) const { convertedvalue = value.count(); };
+
+
+
+
 };
+
+
+template<class SourceType, class TargetType>
+TargetType * converttype(SourceType * source);
+
+template<>
+unsigned int * converttype<unsigned int, unsigned int>(unsigned int * source) { return source; };
+
+template<>
+IndexedData * converttype<IndexedData, IndexedData>(IndexedData * source) { return source; };
+
+template<>
+PatternFeatureVector<double> * converttype<PatternFeatureVector<double>, PatternFeatureVector<double>>(PatternFeatureVector<double> * source) { return source; };
+
+template<>
+unsigned int * converttype<IndexedData, unsigned int>(IndexedData * source) { unsigned int * t = new unsigned int; *t = source->count(); return t; };
+
+template<>
+IndexedData * converttype<unsigned int, IndexedData>(unsigned int * source) { return new IndexedData(); };
+
 
 #endif
