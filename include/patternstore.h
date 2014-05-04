@@ -261,8 +261,8 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                         if (DORESET) {
                             convertedvalue = new ValueType();
                         } else {
-                            bool converted = readvaluehandler.convertto(&readvalue, convertedvalue); 
-                            if (DEBUG && converted) std::cerr << "...converted";
+                            convertedvalue = converttype<ReadValueType,ValueType>(&readvalue); 
+                            if (DEBUG && ( (void*) &readvalue != (void*) convertedvalue)) std::cerr << "...converted";
                         }
                         if (convertedvalue == NULL) {
                             std::cerr << "Error at read of pattern #" << (i+1) << ", size=" << n << ", valuehandler=" << readvaluehandler.id() << std::endl;

@@ -407,23 +407,10 @@ class PatternFeatureVectorHandler: public AbstractValueHandler<PatternFeatureVec
 };
 
 
+//conversion templates, partial specialisations are in datatypes.cpp !!!
+
 template<class SourceType, class TargetType>
-TargetType * converttype(SourceType * source);
-
-template<>
-unsigned int * converttype<unsigned int, unsigned int>(unsigned int * source) { return source; };
-
-template<>
-IndexedData * converttype<IndexedData, IndexedData>(IndexedData * source) { return source; };
-
-template<>
-PatternFeatureVector<double> * converttype<PatternFeatureVector<double>, PatternFeatureVector<double>>(PatternFeatureVector<double> * source) { return source; };
-
-template<>
-unsigned int * converttype<IndexedData, unsigned int>(IndexedData * source) { unsigned int * t = new unsigned int; *t = source->count(); return t; };
-
-template<>
-IndexedData * converttype<unsigned int, IndexedData>(unsigned int * source) { return new IndexedData(); };
+TargetType * converttype(SourceType * source) { return NULL; };
 
 
 #endif
