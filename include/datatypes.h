@@ -310,7 +310,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
             for (const_iterator iter = ref.begin(); iter != ref.end(); iter++) {
                 //make a copy
                 const PatternFeatureVector<FeatureType> * pfv_ref = *iter;
-                PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(pfv_ref);
+                PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(*pfv_ref);
                 this->data.push_back(pfv);
             }
         }
