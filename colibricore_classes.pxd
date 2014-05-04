@@ -99,7 +99,7 @@ cdef extern from "datatypes.h":
     cdef cppclass PatternFeatureVectorMap[T]:
         PatternFeatureVectorMap() nogil
         cppclass iterator:
-            PatternFeatureVector[T]& operator*() nogil
+            PatternFeatureVector[T] * operator*() nogil
             iterator operator++() nogil
             bint operator==(iterator) nogil
             bint operator!=(iterator) nogil
@@ -109,7 +109,7 @@ cdef extern from "datatypes.h":
         bool has(Pattern&) nogil
         iterator find(Pattern&) nogil
         void insert(PatternFeatureVector&)
-        PatternFeatureVector[T]* getdata(Pattern&, bool makeifnew=False) nogil
+        PatternFeatureVector[T] * getdata(Pattern&) nogil
 
 
 cdef extern from "patternstore.h":

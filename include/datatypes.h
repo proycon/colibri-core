@@ -226,6 +226,12 @@ class PatternFeatureVector {
 
         PatternFeatureVector() {};
         PatternFeatureVector(const Pattern & ref) { pattern = ref; }
+
+        PatternFeatureVector(const Pattern & ref, const std::vector<FeatureType> & dataref) {
+            pattern = ref;
+            data = dataref;
+        }
+
         //copy constructor
         PatternFeatureVector(const PatternFeatureVector & ref) {
             pattern = ref.pattern;
@@ -292,16 +298,39 @@ template<class FeatureType>
 class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a vector to save memory), for 2nd-order use (i.e, within another map)
     public:
 
+
+        std::vector<PatternFeatureVector<FeatureType> *> data;
+
+        typedef typename std::vector<PatternFeatureVector<FeatureType>*>::const_iterator const_iterator;
+        typedef typename std::vector<PatternFeatureVector<FeatureType>*>::iterator iterator;
+
         PatternFeatureVectorMap<FeatureType>() {};
 
-        std::vector<PatternFeatureVector<FeatureType>> data;
-        
-        typedef typename std::vector<PatternFeatureVector<FeatureType>>::const_iterator const_iterator;
-        typedef typename std::vector<PatternFeatureVector<FeatureType>>::iterator iterator;
+        PatternFeatureVectorMap<FeatureType>(const PatternFeatureVectorMap<FeatureType> & ref) {
+            for (const_iterator iter = ref.begin(); iter != ref.end(); iter++) {
+                //make a copy
+                PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(*iter);
+                this->data.push_back(pfv);
+            }
+        }
+
+
+        /*   get double free or corruption error: //TODO: possible memory
+         *   leak??
+        ~PatternFeatureVectorMap<FeatureType>() {
+            const size_t s = this->data.size();
+            for (int i = 0; i < s; i++) {
+                PatternFeatureVector<FeatureType> * pfv = this->data[i];
+                delete pfv;
+                data[i] = NULL;
+            }
+        }
+        */
 
         bool has(const Pattern & ref) const { 
             for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
-                if (iter->pattern == ref) {
+                const PatternFeatureVector<FeatureType> * pfv = *iter;
+                if (pfv->pattern == ref) {
                     return true;
                 }
             }
@@ -311,7 +340,8 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
 
        iterator find(const Pattern & ref) { 
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
-                if (iter->pattern == ref) {
+                const PatternFeatureVector<FeatureType> * pfv = *iter;
+                if (pfv->pattern == ref) {
                     return iter;
                 }
             }
@@ -320,16 +350,38 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
 
         int count() const { return data.size(); }
 
-        void insert(PatternFeatureVector<FeatureType> value, bool checkexists=true) { 
+
+
+        void insert(PatternFeatureVector<FeatureType> * pfv, bool checkexists=true) { 
+            //inserts pointer directly, makes no copy!!
+            if (checkexists) {
+                iterator found = this->find(pfv->pattern);
+                if (found != this->end()) {
+                    const PatternFeatureVector<FeatureType> * old = *found;
+                    delete old;
+                    *found = pfv;
+                } else {
+                    this->data.push_back(pfv);
+                }
+            } else {
+                this->data.push_back(pfv);
+            }
+        }
+
+        void insert(PatternFeatureVector<FeatureType> & value, bool checkexists=true) { 
+            //make a copy, safer
+            PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(value);
             if (checkexists) {
                 iterator found = this->find(value.pattern);
                 if (found != this->end()) {
-                    found->data = std::vector<FeatureType>(value.data.begin(), value.data.end());
+                    const PatternFeatureVector<FeatureType> * old = *found;
+                    delete old;
+                    *found = pfv;
                 } else {
-                    data.push_back(value);
+                    this->data.push_back(pfv);
                 }
             } else {
-                data.push_back(value);
+                this->data.push_back(pfv);
             }
         }
 
@@ -347,14 +399,11 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
         iterator end() { return data.end(); }
         const_iterator end() const { return data.end(); }
 
-        virtual PatternFeatureVector<FeatureType> * getdata(const Pattern & pattern, bool makeifnew=false) { 
+        virtual PatternFeatureVector<FeatureType> * getdata(const Pattern & pattern) { 
             iterator iter = this->find(pattern);
             if (iter != this->end()) {
-                return &(*iter); 
-            } else if (makeifnew) {
-                PatternFeatureVector<FeatureType> newps = PatternFeatureVector<FeatureType>(pattern);
-                insert(newps,false);
-                return this->getdata(pattern, false);
+                PatternFeatureVector<FeatureType> * pfv = *iter;
+                return pfv;
             }
             return NULL;
         }
@@ -370,16 +419,16 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
 };
 
 template<class FeatureType>
-class PatternFeatureVectorHandler: public AbstractValueHandler<PatternFeatureVectorMap<FeatureType>> {
+class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeatureVectorMap<FeatureType>> {
    public:
-    virtual std::string id() { return "PatternFeatureVectorHandler"; }
+    virtual std::string id() { return "PatternFeatureVectorMapHandler"; }
     void read(std::istream * in, PatternFeatureVectorMap<FeatureType> & v) {
         uint16_t c;
         in->read((char*) &c, sizeof(uint16_t));
         v.reserve(c); //reserve space to optimise
         for (unsigned int i = 0; i < c; i++) {
             PatternFeatureVector<FeatureType> ref = PatternFeatureVector<FeatureType>(in);
-            v.insert(ref);
+            v.insert(ref, false); //checkifexists=false, to speed things up when loading, assuming data is sane
         }
         v.shrink_to_fit(); //try to keep vector as small as possible (slows additional insertions down a bit)
 
@@ -389,18 +438,19 @@ class PatternFeatureVectorHandler: public AbstractValueHandler<PatternFeatureVec
         out->write((char*) &c, sizeof(uint16_t));
         //we already assume everything is nicely sorted!
         for (typename PatternFeatureVectorMap<FeatureType>::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
-            iter->write(out);
+            PatternFeatureVector<FeatureType> * pfv = *iter;
+            pfv->write(out);
         }
     }
     virtual std::string tostring(PatternFeatureVectorMap<FeatureType> & value) {
-        std::cerr << "ERROR: PatternFeatureVectorHandler does not support serialisation to string (no classdecoder at this point)" << std::endl;
+        std::cerr << "ERROR: PatternFeatureVectorMapHandler does not support serialisation to string (no classdecoder at this point)" << std::endl;
         throw InternalError();
     }
     int count(PatternFeatureVectorMap<FeatureType> & value) const {
         return value.size();
     }
     void add(PatternFeatureVectorMap<FeatureType> * value, const IndexReference & ref ) const {
-        std::cerr << "ERROR: PatternFeatureVectorHandler does not support insertion of index references, model can not be computed with train()" << std::endl;
+        std::cerr << "ERROR: PatternFeatureVectorMapHandler does not support insertion of index references, model can not be computed with train()" << std::endl;
         throw InternalError();
     }
     void convertto(PatternFeatureVectorMap<FeatureType> * source , PatternFeatureVectorMap<FeatureType> * & target) const { target = source; }; //noop

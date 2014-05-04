@@ -1045,7 +1045,7 @@ cdef class IndexedCorpus:
     def sentencecount(self):
         """Returns the number of sentencecount. ( The C++ equivalent is called sentences() ) """
         return self.data.sentences()
-    
+
 
     def getsentence(self, int i):
         """Get the specified sentence as a pattern, raises KeyError when the sentence, or tokens therein, does not exist"""
@@ -1116,7 +1116,7 @@ cdef class PatternFeatureVectorMap_float:
         self.setdata(pattern, value)
 
     def items(self):
-        cdef cPatternFeatureVector[double] v
+        cdef cPatternFeatureVector[double] * v
         cdef cPatternFeatureVectorMap[double].iterator it = self.data.begin()
         cdef cPatternFeatureVectorMap[double].iterator it_end = self.data.end()
         while it != it_end:
@@ -1127,7 +1127,7 @@ cdef class PatternFeatureVectorMap_float:
             inc(it)
 
     def __iter__(self):
-        cdef cPatternFeatureVector[double] v
+        cdef cPatternFeatureVector[double] * v
         cdef cPatternFeatureVectorMap[double].iterator it = self.data.begin()
         cdef cPatternFeatureVectorMap[double].iterator it_end = self.data.end()
         while it != it_end:
@@ -1200,7 +1200,7 @@ cdef class PatternAlignmentModel_float:
                 cvec = deref(it2)
                 targetpattern = Pattern()
                 targetpattern.bind(cvec.pattern)
-                yield (sourcepattern, targetpattern, self.getfeatures(&cvec) )
+                yield (sourcepattern, targetpattern, self.getfeatures(cvec) )
                 inc(it2)
             inc(it)
 
