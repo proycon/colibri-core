@@ -257,13 +257,21 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                 readvaluehandler.read(in, readvalue);
                 if (n >= MINLENGTH && n <= MAXLENGTH)  {
                     if ((readvaluehandler.count(readvalue) >= MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
-                            ValueType convertedvalue;
-                            if (!DORESET) {
-                                readvaluehandler.convertto(readvalue, convertedvalue); 
-                                if (DEBUG) std::cerr << "...converting";
+                            ValueType * convertedvalue = NULL;
+                            if (DORESET) {
+                                convertedvalue = new ValueType();
+                            } else {
+                                readvaluehandler.convertto(&readvalue, convertedvalue); 
+                                if (DEBUG) std::cerr << "...converted";
+                                if (convertedvalue == NULL) {
+                                    if (DEBUG) std::cerr << std::endl;
+                                    std::cerr << "ERROR: Converted value yielded NULL at pattern #" << (i+1) << ", size=" << n << ", valuehandler=" << readvaluehandler.id() <<std::endl;
+                                    throw InternalError();
+                                }
                             }
                             if (DEBUG) std::cerr << "...adding";
-                            this->insert(p,convertedvalue);
+                            this->insert(p,*convertedvalue);
+                            if ((convertedvalue != NULL) && ((void*) convertedvalue != (void*) &readvalue)) delete convertedvalue;
                     } else if (DEBUG) {
                         if (readvaluehandler.count(readvalue) >= MINTOKENS) {
                             std::cerr << "...skipping because of occurrence below " << MINTOKENS;    
