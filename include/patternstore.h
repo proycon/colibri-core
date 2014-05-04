@@ -252,13 +252,16 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                     if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
                 }
                 const int n = p.size();
-                if (DEBUG) std::cerr << "Read pattern #" << (i+1) << ", size " << n;
+                if (DEBUG) std::cerr << "Read pattern #" << (i+1) << ", size=" << n << ", valuehandler=" << readvaluehandler.id();
                 ReadValueType readvalue;
                 readvaluehandler.read(in, readvalue);
                 if (n >= MINLENGTH && n <= MAXLENGTH)  {
                     if ((readvaluehandler.count(readvalue) >= MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
                             ValueType convertedvalue;
-                            if (!DORESET) readvaluehandler.convertto(readvalue, convertedvalue); 
+                            if (!DORESET) {
+                                readvaluehandler.convertto(readvalue, convertedvalue); 
+                                if (DEBUG) std::cerr << "...converting";
+                            }
                             if (DEBUG) std::cerr << "...adding";
                             this->insert(p,convertedvalue);
                     } else if (DEBUG) {

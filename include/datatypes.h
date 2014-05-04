@@ -383,7 +383,7 @@ class PatternFeatureVectorHandler: public AbstractValueHandler<PatternFeatureVec
             PatternFeatureVector<FeatureType> ref = PatternFeatureVector<FeatureType>(in);
             v.insert(ref);
         }
-        v.shrink_to_fit(); //try to keep vector as small as possible (slows insertions down a bit)
+        v.shrink_to_fit(); //try to keep vector as small as possible (slows additional insertions down a bit)
 
     }
     void write(std::ostream * out, PatternFeatureVectorMap<FeatureType> & value) {
