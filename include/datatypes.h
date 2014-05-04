@@ -410,7 +410,8 @@ class PatternFeatureVectorHandler: public AbstractValueHandler<PatternFeatureVec
 //conversion templates, partial specialisations are in datatypes.cpp !!!
 
 template<class SourceType, class TargetType>
-TargetType * converttype(SourceType * source) { return NULL; };
+TargetType * converttype(SourceType * source);
+
 
 
 #endif

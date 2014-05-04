@@ -16,3 +16,4 @@ int getmodeltype(const std::string filename) {
         return model_type;
     }
 }
+
