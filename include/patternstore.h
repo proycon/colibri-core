@@ -252,7 +252,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                     if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
                 }
                 const int n = p.size();
-                if (DEBUG) std::cerr << "Read pattern #" << (i+1) << ", size n";
+                if (DEBUG) std::cerr << "Read pattern #" << (i+1) << ", size " << n;
                 ReadValueType readvalue;
                 readvaluehandler.read(in, readvalue);
                 if (n >= MINLENGTH && n <= MAXLENGTH)  {
@@ -262,7 +262,11 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                             if (DEBUG) std::cerr << "...adding";
                             this->insert(p,convertedvalue);
                     } else if (DEBUG) {
-                        std::cerr << "...skipping because of occurrence or constraints";
+                        if (readvaluehandler.count(readvalue) >= MINTOKENS) {
+                            std::cerr << "...skipping because of occurrence below " << MINTOKENS;    
+                        } else {
+                            std::cerr << "...skipping because of constraints";    
+                        }
                     }
                 } else if (DEBUG) {
                   std::cerr << "...skipping because of length";

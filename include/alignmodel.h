@@ -105,7 +105,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             f->read( (char*) &totaltypes, sizeof(uint64_t)); 
 
             if (options.DEBUG) { 
-                std::cerr << "Debug enabled, loading Alignment Model type " << model_type << ", version " << model_version << std::endl;   
+                std::cerr << "Debug enabled, loading Alignment Model type " << (int) model_type << ", version " << (int) model_version << std::endl;   
                 std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;   
             }
 

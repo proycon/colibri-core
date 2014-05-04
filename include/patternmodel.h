@@ -237,7 +237,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
             if (options.DEBUG) { 
-                std::cerr << "Debug enabled, loading PatternModel type " << model_type << ", version " << model_version << std::endl;   
+                std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << std::endl;   
                 std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;   
             }
             if (model_type == PATTERNSETMODEL) {
@@ -431,7 +431,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
             if (options.DEBUG) { 
-                std::cerr << "Debug enabled, loading PatternModel type " << model_type << ", version " << model_version << std::endl;   
+                std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << std::endl;   
                 std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;   
             }
 
