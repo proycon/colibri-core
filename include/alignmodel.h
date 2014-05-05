@@ -211,6 +211,25 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             }
         }
 
+        virtual void printmodel(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) { //alias for cython (doesn't like methods named print)
+            print(out,sourcedecoder, targetdecoder);
+        }
+
+        virtual void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) {
+            *out << "PATTERN\tPATTERN2\tFEATURES" << std::endl;
+            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+                const Pattern sourcepattern = iter->first;
+                for (typename PatternFeatureVectorMap<FeatureType>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
+                    PatternFeatureVector<FeatureType> * pfv = *iter2;
+                    const Pattern targetpattern = pfv->pattern;
+                    *out << sourcepattern.tostring(sourcedecoder) << "\t" << targetpattern.tostring(targetdecoder);
+                    for (typename std::vector<FeatureType>::iterator iter3 = pfv->data.begin(); iter3 != pfv->data.end(); iter3++) {
+                        *out << "\t" << *iter3;
+                    }
+                    *out << std::endl;
+                }
+            }
+        }
 };
 
 
