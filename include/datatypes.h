@@ -256,9 +256,14 @@ class PatternFeatureVector {
         }
         void write(std::ostream * out) {
             this->pattern.write(out);
-            uint16_t c = data.size();
+            unsigned int s = data.size();
+            if (s >= 65536) {
+                std::cerr << "ERROR: PatternFeatureVector size exceeds maximum 16-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
+                s = 65536;
+            }
+            uint16_t c = (uint16_t) s;
             out->write((char*) &c , sizeof(uint16_t));
-            for (unsigned int i = 0; i < size(); i++) {
+            for (unsigned int i = 0; i < s; i++) {
                 FeatureType f = data[i];
                 out->write((char*) &f, sizeof(FeatureType));
             }
@@ -435,10 +440,18 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
 
     }
     void write(std::ostream * out, PatternFeatureVectorMap<FeatureType> & value) {
-        const uint16_t c = value.size();
+        unsigned int s = value.size();
+        if (s >= 65536) {
+            std::cerr << "ERROR: PatternFeatureVector size exceeds maximum 16-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
+            s = 65536;
+        }
+        const uint16_t c = (uint16_t) s;
         out->write((char*) &c, sizeof(uint16_t));
         //we already assume everything is nicely sorted!
-        for (typename PatternFeatureVectorMap<FeatureType>::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
+        unsigned int n = 0;
+        for (typename PatternFeatureVectorMap<FeatureType>::iterator iter = value.begin(); iter != value.end(); iter++) {
+            n++;
+            if (n==s) break; 
             PatternFeatureVector<FeatureType> * pfv = *iter;
             pfv->write(out);
         }
