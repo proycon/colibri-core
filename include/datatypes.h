@@ -443,17 +443,16 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
         unsigned int s = value.size();
         if (s >= 65536) {
             std::cerr << "ERROR: PatternFeatureVector size exceeds maximum 16-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
-            s = 65536;
+            s = 65535;
         }
         const uint16_t c = (uint16_t) s;
         out->write((char*) &c, sizeof(uint16_t));
-        //we already assume everything is nicely sorted!
         unsigned int n = 0;
         for (typename PatternFeatureVectorMap<FeatureType>::iterator iter = value.begin(); iter != value.end(); iter++) {
-            n++;
             if (n==s) break; 
             PatternFeatureVector<FeatureType> * pfv = *iter;
             pfv->write(out);
+            n++;
         }
     }
     virtual std::string tostring(PatternFeatureVectorMap<FeatureType> & value) {
