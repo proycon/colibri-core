@@ -201,7 +201,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             PatternFeatureVector<FeatureType> * fv = getdata(pattern,pattern2,true);
             if (fv == NULL) {
                 PatternFeatureVectorMap<FeatureType> * fvm = this->getdata(pattern, true);
-                PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(pattern, features);
+                PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(pattern2, features);
                 fvm->insert(pfv); //(will be freed again by fvm destructor)
             } else {
                 fv->clear(); //will be overwritten by new features 
