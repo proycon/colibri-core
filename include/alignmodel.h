@@ -198,7 +198,10 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
         }
        
         void add(const Pattern & pattern, const Pattern & pattern2, std::vector<FeatureType> & features, bool checkifexists= true) {
-            PatternFeatureVector<FeatureType> * fv = getdata(pattern,pattern2,true);
+            PatternFeatureVector<FeatureType> * fv = NULL;
+            if (checkifexists) {
+                fv = getdata(pattern,pattern2,true);
+            }
             if (fv == NULL) {
                 PatternFeatureVectorMap<FeatureType> * fvm = this->getdata(pattern, true);
                 PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(pattern2, features);
