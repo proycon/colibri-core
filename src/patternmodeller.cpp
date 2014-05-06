@@ -16,6 +16,7 @@
 #include <common.h>
 #include <getopt.h>
 #include <patternmodel.h>
+#include <config.h>
 
 using namespace std;
 
@@ -67,6 +68,8 @@ void usage() {
     cerr << "\t-N               Delete all ngrams from the model" << endl;    
     cerr << "\tOptions -tlTmxXN can be used to filter the model, -u can be used to remove the index, -j can be used to take the intersection with another model, -S to compute and add flexgrams" << endl;
     cerr << "Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
+    cerr << "\t-h               This help message" << endl;
+    cerr << "\t-v               Version information" << endl;
 }
 
 template<class ModelType = IndexedPatternModel<>>
@@ -218,7 +221,7 @@ int main( int argc, char *argv[] ) {
     double COOCTHRESHOLD = 0;
     int DOCOOC = 0; //1= absolute, 2= npmi
     char c;    
-    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:v")) != -1)
         switch (c)
         {
         case 'c':
@@ -324,6 +327,9 @@ int main( int argc, char *argv[] ) {
             exit(2);
         case 'h':
             usage();
+            exit(0);
+        case 'v':
+            cerr << VERSION << endl; 
             exit(0);
         case '?':
             if (optopt == 'c') {
