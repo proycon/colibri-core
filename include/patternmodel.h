@@ -476,7 +476,6 @@ class PatternModel: public MapType, public PatternModelInterface {
                 std::cerr << ", occurrence threshold: " << options.MINTOKENS;
                 std::cerr << std::endl; 
             }
-            int maxlength;
             std::vector<std::pair<PatternPointer,int>> ngrams;
             std::vector<PatternPointer> subngrams;
             bool found;
