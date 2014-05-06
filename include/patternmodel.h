@@ -751,8 +751,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         typedef typename MapType::iterator iterator;
         typedef typename MapType::const_iterator const_iterator;        
 
-        virtual int maxlength() const { return maxn; };
-        virtual int minlength() const { return minn; };
+        virtual int maxlength() const { return this->maxn; };
+        virtual int minlength() const { return this->minn; };
         virtual int occurrencecount(const Pattern & pattern)  { 
             ValueType * data = getdata(pattern);
             if (data != NULL) {
@@ -1301,6 +1301,12 @@ template<class MapType = PatternMap<IndexedData,IndexedDataHandler>>
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType> {
     protected:
         virtual void postread(const PatternModelOptions options) {
+            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+                const Pattern p = iter->first;
+                const int n = p.n();
+                if (n > maxn) maxn = n;
+                if (n < minn) minn = n;
+            }
             buildreverseindex(options); //will only act if options.DOREVERSEINDEX is set
         }
         virtual void posttrain(const PatternModelOptions options) {
