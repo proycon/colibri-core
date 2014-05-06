@@ -1301,11 +1301,11 @@ template<class MapType = PatternMap<IndexedData,IndexedDataHandler>>
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType> {
     protected:
         virtual void postread(const PatternModelOptions options) {
-            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+            for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern p = iter->first;
                 const int n = p.n();
-                if (n > maxn) maxn = n;
-                if (n < minn) minn = n;
+                if (n > this->maxn) this->maxn = n;
+                if (n < this->minn) this->minn = n;
             }
             buildreverseindex(options); //will only act if options.DOREVERSEINDEX is set
         }
