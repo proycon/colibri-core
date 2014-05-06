@@ -458,6 +458,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
             if (options.MINTOKENS == -1) options.MINTOKENS = 2;
+            if (options.MINTOKENS == 0)  options.MINTOKENS = 1;
             if (constrainbymodel == this) {
                 totaltypes = 0;
                 totaltokens = 0;
