@@ -588,6 +588,10 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (options.DOSKIPGRAMS && !options.DOSKIPGRAMS_EXHAUSTIVE) {
                 this->trainskipgrams(options, constrainbymodel);
             }
+            if (options.MINTOKENS == 1) {
+                //needed to compute maxn, minn
+                this->postread(options);
+            } 
             this->posttrain(options);
         }
 
