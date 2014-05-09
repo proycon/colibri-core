@@ -1363,6 +1363,9 @@ cdef class PatternAlignmentModel_float:
         """
         self.data.write(filename.encode('utf-8'))
 
+    cdef cPatternModelInterface* getinterface(self):
+        return self.data.getinterface()
+
 BEGINPATTERN = Pattern()
 BEGINPATTERN.bindbegin()
 ENDPATTERN = Pattern()
