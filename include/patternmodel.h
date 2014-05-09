@@ -805,16 +805,21 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
        
 
-        std::vector<Pattern> getreverseindex(IndexReference ref) {
+        std::vector<Pattern> getreverseindex(const IndexReference ref) {
             //Auxiliary function
             std::vector<Pattern> result;
             if (!this->reverseindex) return result;
             const int sl = this->reverseindex->sentencelength(ref.sentence);
             //std::cerr << "DEBUG: getreverseindex sentencelength(" << ref.sentence << ")=" << sl << std::endl;
-            for (int i = 1; i <= sl; i++) {
+            const int minn = this->minlength();
+            const int maxn = this->maxlength();
+            for (int i = minn; i <= sl && i <= maxn; i++) {
                 try {
                     //std::cerr << "DEBUG: getreverseindex getpattern " << ref.tostring() << " + " << i << std::endl;
-                    Pattern ngram = this->reverseindex->getpattern(ref,i);
+                    const Pattern ngram = this->reverseindex->getpattern(ref,i);
+                    /*std::cerr << "n: " << ngram.n() << std::endl;
+                    std::cerr << "bytesize: " << ngram.bytesize() << std::endl;;
+                    std::cerr << "hash: " << ngram.hash() << std::endl;;*/
                     if (this->has(ngram)) {
                         result.push_back(ngram);
                     }

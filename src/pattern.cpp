@@ -1217,8 +1217,8 @@ std::vector<IndexReference> IndexedCorpus::findpattern(const Pattern & pattern, 
 int IndexedCorpus::sentencelength(int sentence) {
     IndexReference ref = IndexReference(sentence, 0);
     int length = 0;
-    for (iterator iter = this->find(ref); iter != this->end(); iter++) {
-        if (iter->ref.sentence != ref.sentence) return length;
+    for (const_iterator iter = this->find(ref); iter != this->end(); iter++) {
+        if (iter->ref.sentence != sentence) return length;
         length++;
     }
     return length;
