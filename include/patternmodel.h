@@ -141,7 +141,7 @@ class PatternModelInterface: public PatternStoreInterface {
         virtual double frequency(const Pattern &) =0;
         virtual int maxlength() const=0;
         virtual int minlength() const=0;
-        virtual int types() const=0;
+        virtual int types() =0;
         virtual int tokens() const=0;
 
         virtual PatternStoreInterface * getstoreinterface() {
@@ -266,7 +266,8 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             unsigned char v = this->getmodelversion();
             out->write( (char*) &v, sizeof(char));        
             out->write( (char*) &totaltokens, sizeof(uint64_t));        
-            out->write( (char*) &totaltypes, sizeof(uint64_t)); 
+            const uint64_t tp = this->types(); //use this instead of totaltypes, as it may need to be computed on-the-fly still
+            out->write( (char*) &tp, sizeof(uint64_t)); 
             PatternSet<uint64_t>::write(out); //write
         }
 
@@ -291,7 +292,9 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         virtual int maxlength() const { return maxn; };
         virtual int minlength() const { return minn; };
         
-        int types() const { return totaltypes; }
+        int types()  { 
+            return totaltypes;
+        }
         int tokens() const { return totaltokens; }
 
         unsigned char type() const { return model_type; }
@@ -568,7 +571,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
                 if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngrams...";
                 if (foundskipgrams && !options.QUIET) std::cerr << foundskipgrams << " skipgram occurrences...";
-                if (n == 1) totaltypes += this->size(); //total unigrams, also those not in model
+                if ((options.MINTOKENS > 1) && (n == 1)) totaltypes += this->size(); //total unigrams, also those not in model
                 int pruned;
                 if ((options.MINTOKENS == 1) || (constrainbymodel != NULL)) {
                     pruned = this->prune(options.MINTOKENS,0); //prune regardless of size
@@ -740,7 +743,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             unsigned char v = this->getmodelversion();
             out->write( (char*) &v, sizeof(char));        
             out->write( (char*) &totaltokens, sizeof(uint64_t));        
-            out->write( (char*) &totaltypes, sizeof(uint64_t)); 
+            const uint64_t tp = this->types(); //use this instead of totaltypes, as it may need to be computed on-the-fly still
+            out->write( (char*) &tp, sizeof(uint64_t)); 
             MapType::write(out); //write PatternStore
         }
 
@@ -788,7 +792,11 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
 
-        int types() const { return totaltypes; }
+        int types() { 
+            if ((totaltypes == 0) && (!this->data.empty())) totaltypes = this->totalwordtypesingroup(0, 1);
+            return totaltypes; 
+        }
+
         int tokens() const { return totaltokens; }
 
         unsigned char type() const { return model_type; }
