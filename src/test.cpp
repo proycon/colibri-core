@@ -23,6 +23,11 @@ void test(bool r) {
     }
 }
 
+void test(int value , int ref, const std::string msg) {
+    if (value != ref) {
+        cerr << "TEST FAILED: " << msg << endl;
+    }
+}
 
 
 int main( int argc, char *argv[] ) {
@@ -143,6 +148,7 @@ int main( int argc, char *argv[] ) {
 
         cerr << "Ngram #1: " << ngram.decode(classdecoder) << endl;
         cerr << "Size (n): " << (int) ngram.n() << endl; //== size()
+        test(ngram.n(), 6, "Expected size 6");
         cerr << "Bytesize: " << (int) ngram.bytesize() << endl;
         cerr << "Category==ngram: " << (int) (ngram.category() == NGRAM) << endl;
         cerr << "Hash: " << ngram.hash() << endl;

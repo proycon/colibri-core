@@ -568,7 +568,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
                 if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngrams...";
                 if (foundskipgrams && !options.QUIET) std::cerr << foundskipgrams << " skipgram occurrences...";
-                if ((options.MINTOKENS > 1) && (n == 1)) totaltypes += this->size(); //total unigrams, also those not in model
+                if (n == 1) totaltypes += this->size(); //total unigrams, also those not in model
                 int pruned;
                 if ((options.MINTOKENS == 1) || (constrainbymodel != NULL)) {
                     pruned = this->prune(options.MINTOKENS,0); //prune regardless of size
