@@ -77,7 +77,6 @@ class IndexPattern {
 //reverse index by IndexReference
 class IndexedCorpus {
     protected:
-        //std::map<IndexReference,Pattern> data; //tokens
         std::vector<IndexPattern> data;
     public:
         IndexedCorpus() {};
@@ -86,8 +85,6 @@ class IndexedCorpus {
         
         void load(std::istream *in);
         void load(std::string filename);
-        //typedef std::map<IndexReference,Pattern>::iterator iterator;
-        //typedef std::map<IndexReference,Pattern>::const_iterator const_iterator;
         typedef std::vector<IndexPattern>::iterator iterator;
         typedef std::vector<IndexPattern>::const_iterator const_iterator;
         
