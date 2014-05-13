@@ -261,6 +261,8 @@ cpdef train(self, str filename, PatternModelOptions options, constrainmodel = No
             self.trainconstrainedbyindexedmodel(filename, options, constrainmodel)
         elif isinstance(constrainmodel, PatternSetModel):
             self.trainconstrainedbypatternsetmodel(filename, options, constrainmodel)
+        elif isinstance(constrainmodel, PatternAlignmentModel_float):
+            self.trainconstrainedbyalignmodel(filename, options, constrainmodel)
         else:
             raise ValueError("Invalid valid for constrainmodel") #TODO: build patternmodel on the fly from an iterable of patterns or lower level patternstorage
     else:
@@ -276,6 +278,9 @@ cpdef trainconstrainedbyunindexedmodel(self, str filename, PatternModelOptions o
     self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
 
 cpdef trainconstrainedbypatternsetmodel(self, str filename, PatternModelOptions options, PatternSetModel constrainmodel):
+    self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
+
+cpdef trainconstrainedbyalignmodel(self, str filename, PatternModelOptions options, PatternAlignmentModel_float constrainmodel):
     self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
 
 cpdef report(self):

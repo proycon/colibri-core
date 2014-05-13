@@ -475,7 +475,9 @@ class PatternMap: public PatternMapStore<std::unordered_map<const Pattern,ValueT
 
         void insert(const Pattern & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
         
-        bool has(const Pattern & pattern) const { return data.count(pattern); }
+        bool has(const Pattern & pattern) const { 
+            return data.count(pattern);
+        }
         bool has(const PatternPointer & pattern) const { return data.count(Pattern(pattern)); }
 
         size_t size() const { return data.size(); } 

@@ -568,7 +568,12 @@ PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //sl
     } while (1);
 
     data = ref.data + begin_b;
+    if (length_b > 255) {
+        std::cerr << "ERROR: Pattern too long for pattern pointer" << std::endl;
+        throw InternalError();
+    }
     bytes = length_b;
+    
 }
 
 
@@ -619,6 +624,10 @@ Pattern::Pattern(const Pattern& ref) { //copy constructor
 }
 
 Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
+    if (ref.bytesize() > 255) {
+        std::cerr << "ERROR: Pattern too long for pattern pointer" << std::endl;
+        throw InternalError();
+    }
     data = new unsigned char[ref.bytesize() + 1];
     for (int i = 0; i < ref.bytesize(); i++) {
         data[i] = ref.data[i];
@@ -1208,8 +1217,8 @@ std::vector<IndexReference> IndexedCorpus::findpattern(const Pattern & pattern, 
 int IndexedCorpus::sentencelength(int sentence) {
     IndexReference ref = IndexReference(sentence, 0);
     int length = 0;
-    for (iterator iter = this->find(ref); iter != this->end(); iter++) {
-        if (iter->ref.sentence != ref.sentence) return length;
+    for (const_iterator iter = this->find(ref); iter != this->end(); iter++) {
+        if (iter->ref.sentence != sentence) return length;
         length++;
     }
     return length;

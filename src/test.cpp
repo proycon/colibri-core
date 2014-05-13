@@ -811,7 +811,32 @@ int main( int argc, char *argv[] ) {
         }
 
 
+    }
+    {
+        const string classfile = "/tmp/hamlet.colibri.cls";
+        ClassDecoder classdecoder = ClassDecoder(classfile);
+
+        cerr << "Loading corpus as IndexedCorpus" << endl;
+        IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
+
+
+        cerr << "Building pattern model, passing corpus as reverse index" << endl;
+        PatternModel<uint32_t> model = PatternModel<uint32_t>(&corpus);
+
+        PatternModelOptions options;
+        options.MINLENGTH = 3;
+        options.MAXLENGTH = 5;
+        options.MINTOKENS = 1;
+
+        model.train("/tmp/hamlet.colibri.dat", options);
         
+
+        for (IndexedCorpus::iterator iter = corpus.begin(); iter != corpus.end(); iter++) {
+            vector<Pattern> patterns = model.getreverseindex(iter->ref);
+            for (Pattern p : patterns) {
+                cerr << p.tostring(classdecoder) << endl;
+            }
+        }
 
 
     }
