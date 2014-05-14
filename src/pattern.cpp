@@ -59,6 +59,60 @@ const PatternCategory datacategory(const unsigned char * data, int maxbytes = 0)
     } while (1);
 }
 
+
+
+Pattern makerepeatedpattern(const unsigned char cls, const int repetitions) {
+    const int l = repetitions * 2 + 1;
+    int j = 0;
+    for (int i = 0; i < l; i++) {
+        mainpatternbuffer[j++] = 1;
+        mainpatternbuffer[j++] = cls;
+    }
+    Pattern pattern = Pattern(mainpatternbuffer, l);
+    return pattern;
+}
+
+template<class PatternType>
+int getngrams(const Pattern * source, vector<PatternType> & container, const int n, const int sentencemarkers) const { //auxiliary function: return multiple ngrams, also includes skipgrams!
+    const int _n = source->n();
+    if (n > _n) return 0;
+    int found = 0;
+    int begin = 0;
+    int endlength = 0;
+    if (sentencemarkers < n)
+        begin = 1 - sentencemarkers;
+        endlength = sentencemarkers;
+    } else {
+        begin = 1 - n;
+        endlength = n;
+    }
+    for (int i = begin; i < (_n - n) + endlength + 1; i++) {
+        if (!sentencemarkers) {
+            container.push_back(  PatternType(*source,i,n));
+        } else {
+            Pattern beginpattern;
+            Pattern endpattern;
+            int truebegin = i;
+            if (i < 0) {    
+                beginpattern = makerepeatedpattern(BOSCLASS, -1 * i); 
+                truebegin = 0;
+            }
+            if (i + n > _n) {
+                endpattern = 
+            }
+            pattern = PatternType(*source,truebegin,n);
+             
+            if (i + n > _n) {    
+            }
+        }
+        found++;
+    }
+    return found;
+}   
+
+
+
+
 const PatternCategory Pattern::category() const {
     return datacategory(data);
 }
@@ -736,57 +790,78 @@ bool Pattern::contains(const Pattern & pattern) const {
     return (find(pattern) != -1);
 }
 
-int Pattern::ngrams(vector<Pattern> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
+int Pattern::ngrams(vector<Pattern> & container, const int n, const int sentencemarkers) const { //return multiple ngrams, also includes skipgrams!
     const int _n = this->n();
     if (n > _n) return 0;
     int found = 0;
-    for (int i = 0; i < (_n - n) + 1; i++) {
-        container.push_back(  Pattern(*this,i,n));
+    int begin = 0;
+    int endlength = 0;
+    if (sentencemarkers < n)
+        begin = 1 - sentencemarkers;
+        endlength = sentencemarkers;
+    } else {
+        begin = 1 - n;
+        endlength = n;
+    }
+    for (int i = begin; i < (_n - n) + endlength + 1; i++) {
+        if (!sentencemarkers) {
+            container.push_back(  Pattern(*this,i,n));
+        } else {
+            if (i < 0) {    
+                pattern = 
+            } else {
+
+                pattern = Pattern(*this,i,n);
+            }
+             
+            if (i + n > _n) {    
+            }
+        }
         found++;
     }
     return found;
 }   
 
-int Pattern::ngrams(vector<PatternPointer> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
+int Pattern::ngrams(vector<PatternPointer> & container, const int n, const int offset) const { //return multiple ngrams, also includes skipgrams!
     const int _n = this->n();
     if (n > _n) return 0;
     int found = 0;
-    for (int i = 0; i < (_n - n) + 1; i++) {
+    for (int i = offset; i < (_n - n) - offset + 1; i++) {
         container.push_back(  PatternPointer(*this,i,n));
         found++;
     }
     return found;
 }   
 
-int PatternPointer::ngrams(vector<PatternPointer> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
+int PatternPointer::ngrams(vector<PatternPointer> & container, const int n, const int offset) const { //return multiple ngrams, also includes skipgrams!
     const int _n = this->n();
     if (n > _n) return 0;
     int found = 0;
-    for (int i = 0; i < (_n - n) + 1; i++) {
+    for (int i = offset; i < (_n - n) - offset + 1; i++) {
         container.push_back(  PatternPointer(*this,i,n));
         found++;
     }
     return found;
 }   
 
-int Pattern::ngrams(vector<pair<Pattern,int>> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
+int Pattern::ngrams(vector<pair<Pattern,int>> & container, const int n, const int offset) const { //return multiple ngrams, also includes skipgrams!
     const int _n = this->n();
     if (n > _n) return 0;
     
     int found = 0;
-    for (int i = 0; i < (_n - n)+1; i++) {
+    for (int i = offset; i < (_n - n) - offset + 1; i++) {
         container.push_back( pair<Pattern,int>(Pattern(*this,i,n),i) );
         found++;
     }
     return found;
 }   
 
-int Pattern::ngrams(vector<pair<PatternPointer,int>> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
+int Pattern::ngrams(vector<pair<PatternPointer,int>> & container, const int n, const int offset) const { //return multiple ngrams, also includes skipgrams!
     const int _n = this->n();
     if (n > _n) return 0;
     
     int found = 0;
-    for (int i = 0; i < (_n - n)+1; i++) {
+    for (int i = offset; i < (_n - n) - offset + 1; i++) {
         container.push_back( pair<PatternPointer,int>(PatternPointer(*this,i,n),i) );
         found++;
     }
@@ -794,80 +869,80 @@ int Pattern::ngrams(vector<pair<PatternPointer,int>> & container, const int n) c
 }   
 
 
-int PatternPointer::ngrams(vector<pair<PatternPointer,int>> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
+int PatternPointer::ngrams(vector<pair<PatternPointer,int>> & container, const int n, const int offset) const { //return multiple ngrams, also includes skipgrams!
     const int _n = this->n();
     if (n > _n) return 0;
     
     int found = 0;
-    for (int i = 0; i < (_n - n)+1; i++) {
+    for (int i = offset; i < (_n - n) - offset + 1; i++) {
         container.push_back( pair<PatternPointer,int>(PatternPointer(*this,i,n),i) );
         found++;
     }
     return found;
 }   
 
-int Pattern::subngrams(vector<Pattern> & container, int minn, int maxn) const { //also includes skipgrams!
+int Pattern::subngrams(vector<Pattern> & container, int minn, int maxn, const int offset) const { //also includes skipgrams!
     const int _n = n();
     if (maxn > _n) maxn = _n;
     if (minn > _n) return 0;
     int found = 0;
     for (int i = minn; i <= maxn; i++) {
-        found += ngrams(container, i);
+        found += ngrams(container, i, offset);
     }
     return found;
 }
 
-int Pattern::subngrams(vector<PatternPointer> & container, int minn, int maxn) const { //also includes skipgrams!
+int Pattern::subngrams(vector<PatternPointer> & container, int minn, int maxn, const int offset) const { //also includes skipgrams!
     const int _n = n();
     if (maxn > _n) maxn = _n;
     if (minn > _n) return 0;
     int found = 0;
     for (int i = minn; i <= maxn; i++) {
-        found += ngrams(container, i);
+        found += ngrams(container, i, offset);
     }
     return found;
 }
 
-int PatternPointer::subngrams(vector<PatternPointer> & container, int minn, int maxn) const { //also includes skipgrams!
+int PatternPointer::subngrams(vector<PatternPointer> & container, int minn, int maxn, const int offset) const { //also includes skipgrams!
     const int _n = n();
     if (maxn > _n) maxn = _n;
     if (minn > _n) return 0;
     int found = 0;
     for (int i = minn; i <= maxn; i++) {
-        found += ngrams(container, i);
+        found += ngrams(container, i, offset);
     }
     return found;
 }
 
-int Pattern::subngrams(vector<pair<Pattern,int>> & container, int minn, int maxn) const { //also includes skipgrams!
+int Pattern::subngrams(vector<pair<Pattern,int>> & container, int minn, int maxn, const int offset) const { //also includes skipgrams!
     const int _n = n();
     if (maxn > _n) maxn = _n;
     if (minn > _n) return 0;
     int found = 0;
     for (int i = minn; i <= maxn; i++) {
-        found += ngrams(container, i);
+        found += ngrams(container, i, offset);
     }
     return found;
 }
 
-int Pattern::subngrams(vector<pair<PatternPointer,int>> & container, int minn, int maxn) const { //also includes skipgrams!
+int Pattern::subngrams(vector<pair<PatternPointer,int>> & container, int minn, int maxn, const int offset) const { //also includes skipgrams!
     const int _n = n();
     if (maxn > _n) maxn = _n;
     if (minn > _n) return 0;
     int found = 0;
     for (int i = minn; i <= maxn; i++) {
-        found += ngrams(container, i);
+        found += ngrams(container, i, offset);
     }
     return found;
 }
 
-int PatternPointer::subngrams(vector<pair<PatternPointer,int>> & container, int minn, int maxn) const { //also includes skipgrams!
+int PatternPointer::subngrams(vector<pair<PatternPointer,int>> & container, int minn, int maxn, const int offset) const { //also includes skipgrams!
     const int _n = n();
     if (maxn > _n) maxn = _n;
     if (minn > _n) return 0;
     int found = 0;
     for (int i = minn; i <= maxn; i++) {
-        found += ngrams(container, i);
+        found += ngrams(container, i, offset);
     }
     return found;
 }
@@ -1245,4 +1320,31 @@ Pattern patternfromfile(const std::string & filename) {//helper function to read
     Pattern p = Pattern( (std::istream *) in, true);
     in->close();
     delete in;
+}
+
+bool Pattern::sentencemarkersonly() const; //return true if the pattern consists of only begin markers *OR* only end markers
+    //return the size of the pattern (in tokens)
+    bool bosfound = false;
+    bool eosfound = false;
+    int i = 0;
+    do {
+        const unsigned char c = data[i];
+        if (c == ENDMARKER) {
+            //end marker
+            return (bosfound || eosfound); //empty pattern will return false
+        } else if (c == 1) { //only size 1 check is needed
+            if (data[i+1] == BOSMARKER) {
+                bosfound = true;
+                i += 2;
+            } else if (data[i+1] == EOSMARKER) {
+                if (bosfound) return false; //break out if we have both BOS + EOS, we check only for homogeneous markers
+                eosfound = true;
+            } else {
+                return false;
+            }
+        } else {
+            //got something else, not a homogenous pattern of one sentence marker
+            return false;
+        }
+    } while (1);
 }

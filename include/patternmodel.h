@@ -35,11 +35,6 @@ enum ModelType {
     PATTERNALIGNMENTMODEL = 40,
 };
 
-enum ReverseIndexType {
-    NONE = 0,
-    QUICK = 1,
-    COMPACT = 2,
-};
 
 int getmodeltype(const std::string filename);
 
@@ -58,6 +53,8 @@ class PatternModelOptions {
         int MINTOKENS;
         int MINLENGTH;
         int MAXLENGTH;
+
+        int SENTENCEMARKERS;
         
         bool DOSKIPGRAMS;
         bool DOSKIPGRAMS_EXHAUSTIVE;
@@ -79,6 +76,7 @@ class PatternModelOptions {
             MINTOKENS = -1; //defaults to 2 for building, 1 for loading
             MINLENGTH = 1;
             MAXLENGTH = 100;
+            SENTENCEMARKERS = 0;
 
             MINSKIPTYPES = 2;
             DOSKIPGRAMS = false;
@@ -102,6 +100,7 @@ class PatternModelOptions {
             MINTOKENS = ref.MINTOKENS; //defaults to 2 for building, 1 for loading
             MINLENGTH = ref.MINLENGTH;
             MAXLENGTH = ref.MAXLENGTH;
+            SENTENCEMARKERS = ref.SENTENCEMARKERS;
 
             MINSKIPTYPES = ref.MINSKIPTYPES;
             DOSKIPGRAMS = ref.DOSKIPGRAMS;
@@ -479,6 +478,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 std::cerr << ", occurrence threshold: " << options.MINTOKENS;
                 std::cerr << std::endl; 
             }
+
             std::vector<std::pair<PatternPointer,int>> ngrams;
             std::vector<PatternPointer> subngrams;
             bool found;
@@ -487,6 +487,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             for (int n = 1; n <= options.MAXLENGTH; n++) { 
                 int foundngrams = 0;
                 int foundskipgrams = 0;
+                int offset = 0;
                 in->clear();
                 in->seekg(0);
                 if (!options.QUIET) {
@@ -507,6 +508,9 @@ class PatternModel: public MapType, public PatternModelInterface {
                 while (!in->eof()) {
                     //read line
                     Pattern line = Pattern(in);
+                    if (options.SENTENCEMARKERS > 0) {
+                        line = *beginmarkers + line + *endmarkers;
+                    }
                     sentence++;
                     if (in->eof()) break;
                     const int linesize = line.size();
@@ -523,9 +527,9 @@ class PatternModel: public MapType, public PatternModelInterface {
                         ngrams.push_back(std::pair<PatternPointer,int>(PatternPointer(&line),0));
                     } else {
                         if ((options.MINTOKENS > 1) && (constrainbymodel == NULL)) {
-                            line.ngrams(ngrams, n);
+                            line.ngrams(ngrams, n, options.SENTENCEMARKERS);
                         } else {
-                            line.subngrams(ngrams,1,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1 or a constraint model is set, no need to look back anyway, only one iteration over corpus
+                            line.subngrams(ngrams,1,options.MAXLENGTH, options.SENTENCEMARKERS); //extract ALL ngrams if MINTOKENS == 1 or a constraint model is set, no need to look back anyway, only one iteration over corpus
                         }
                     }
 
@@ -540,6 +544,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             subngrams.clear();
                             iter->first.ngrams(subngrams,n-1);
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                if ((options.SENTENCEMARKERS) && (*iter2.sentencemarkersonly())) continue;
                                 if (!this->has(*iter2)) { 
                                     found = false;
                                     break;
@@ -551,7 +556,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             ValueType * data = getdata(pattern, true);
                             add(pattern, data, ref );
                             if ((options.DOREVERSEINDEX) && (n == 1) && (reverseindex != NULL) && (!externalreverseindex)) {
-                               reverseindex->push_back(ref, pattern); //TODO: make patternpointer
+                               reverseindex->push_back(ref, pattern); //MAYBE TODO: make patternpointer
                             }
                         } else if (((n >= 3) || (options.MINTOKENS == 1)) && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
                             foundskipgrams += this->computeskipgrams(iter->first, options, gapconf, &ref, NULL, constrainbymodel, true);
@@ -560,6 +565,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
 
                 
+
                 foundngrams = this->size() - foundskipgrams - prevsize;
         
                 if (foundngrams) {

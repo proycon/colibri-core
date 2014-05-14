@@ -40,25 +40,25 @@ unsigned char * inttobytes(unsigned int cls, int & length) {
 
 
 ClassEncoder::ClassEncoder() {
-    unknownclass = 2;
-    bosclass = 3;
-    eosclass = 4;
+    unknownclass = UNKNOWNCLASS;
+    bosclass = BOSCLASS;
+    eosclass = EOSCLASS;
     highestclass = 5; //5 and lower are reserved
 }
 
 ClassEncoder::ClassEncoder(const string & filename) {
-       unknownclass = 2;
+       unknownclass = UNKNOWNCLASS;
        highestclass = 0; 
-       bosclass = 3;
-       eosclass = 4;
+       bosclass = BOSCLASS;
+       eosclass = EOSCLASS;
        load(filename);
 }
 
 void ClassEncoder::load(const string & filename) {
-       unknownclass = 2;
+       unknownclass = UNKNOWNCLASS;
        highestclass = 0; 
-       bosclass = 3;
-       eosclass = 4;
+       bosclass = BOSCLASS;
+       eosclass = EOSCLASS;
        
 	   ifstream IN;
 	   IN.open( filename.c_str() );    

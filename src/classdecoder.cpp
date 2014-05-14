@@ -26,10 +26,10 @@ unsigned int bytestoint(const unsigned char* a, const int l) {
 
 
 ClassDecoder::ClassDecoder() {
-       unknownclass = 2;
+       unknownclass = UNKNOWNCLASS;
        highestclass = 0;
-       bosclass = 3;
-       eosclass = 4;
+       bosclass = BOSCLASS;
+       eosclass = EOSCLASS;
        classes[unknownclass] = "{UNKNOWN}";
        classes[bosclass] = "{BEGIN}";
        classes[eosclass] = "{END}";
@@ -41,10 +41,10 @@ ClassDecoder::ClassDecoder(const string & filename) {
 
 
 void ClassDecoder::load(const string & filename) {
-       unknownclass = 2;
+       unknownclass = UNKNOWNCLASS;
        highestclass = 0;
-       bosclass = 3;
-       eosclass = 4;
+       bosclass = BOSCLASS;
+       eosclass = EOSCLASS;
 
        classes[unknownclass] = "{UNKNOWN}";
        classes[bosclass] = "{BEGIN}";

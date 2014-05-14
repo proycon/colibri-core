@@ -6,6 +6,10 @@
 #include <vector>
 #include <exception>
 
+const unsigned char UNKNOWNCLASS = 2; 
+const unsigned char BOSCLASS = 3;
+const unsigned char EOSCLASS = 4;
+
 std::string trim(const std::string &t, const std::string &ws);
 std::string get_extension(const std::string& filename);
 bool strip_extension(std::string& filename, const std::string extension);

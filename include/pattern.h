@@ -77,6 +77,7 @@ enum Markers { // <128 size
 
 void readanddiscardpattern(std::istream * in);
 int reader_passmarker(const unsigned char c, std::istream * in); 
+Pattern makerepeatedpattern(const unsigned char cls, const int repetitions);
 
 class PatternPointer;
 
@@ -88,6 +89,7 @@ class PatternPointer;
 class Pattern {
     protected:
      void reader_marker(unsigned char * _data, std::istream * in);
+     template<T> int getngrams(std::vector<T> & container, const int n, const int sentencemarkers) const; 
     public:
      unsigned char * data; /**< This array holds the variable-width byte representation, it is always terminated by \0 (ENDMARKER) */
      
@@ -295,6 +297,8 @@ class Pattern {
 
      Pattern reverse() const; 
 
+     bool sentencemarkersonly() const; //return true if the pattern consists of only begin markers *OR* only end markers
+
      /**
       * converts a skipgram into a flexgram, ngrams just come out unchanged
       */
@@ -381,10 +385,7 @@ class PatternPointer {
 
 const unsigned char tmp_skipmarker = SKIPMARKER;
 const unsigned char tmp_flexmarker = FLEXMARKER;
-//const uint16_t tmp_unk = 0x0102; //0x01 0x02
-//const uint16_t tmp_bos = 0x0103; //0x01 0x03
-//const uint16_t tmp_eos = 0x0104; //0x01 0x04
-static const unsigned char * tmp_unk = (const unsigned char *) "\1\2";
+static const unsigned char * tmp_unk = (const unsigned char *) "\1\2"; //TODO: use same data as common.h
 static const unsigned char * tmp_bos = (const unsigned char *) "\1\3";
 static const unsigned char * tmp_eos = (const unsigned char *) "\1\4";
 const Pattern SKIPPATTERN = Pattern(&tmp_skipmarker,1);

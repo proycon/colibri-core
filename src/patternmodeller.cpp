@@ -41,6 +41,7 @@ void usage() {
     cerr << "\t-t <number>      Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
     cerr << "\t-u               Build an unindexed model (default is indexed)" << endl;    
     cerr << "\t-l <number>      Maximum pattern length (default: 100)" << endl;
+    cerr << "\t-M <number>      Add begin and end markers at the beginning/end of each sentence/line, up to the specified maximum number of consecutive markers. N-grams consisting only of beginning/end markers will never be included, the number is usually set to either 1 or maximum pattern length - 1. Useful especially in Language Modelling." << endl;
     cerr << "\t-s               Compute skipgrams (costs extra memory and time)" << endl;    
     cerr << "\t-T <number>      Skip type threshold (for use with -s): only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, unindexed models always act as if fixed to 1). Also note that only types that occur above the occurrent threshold (-t) are counted here! Requires indexed models" << endl;
     cerr << "\t-S S             Compute flexgrams by abstracting over skipgrams (implies -s)." << endl; 
@@ -221,7 +222,7 @@ int main( int argc, char *argv[] ) {
     double COOCTHRESHOLD = 0;
     int DOCOOC = 0; //1= absolute, 2= npmi
     char c;    
-    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:v")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vM:")) != -1)
         switch (c)
         {
         case 'c':
@@ -253,6 +254,9 @@ int main( int argc, char *argv[] ) {
             break;
         case 'm':
             options.MINLENGTH = atoi(optarg);            
+            break;
+        case 'M':
+            options.SENTENCEMARKERS = atoi(optarg);            
             break;
         case 's':
             options.DOSKIPGRAMS = true;
