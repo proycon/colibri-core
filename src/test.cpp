@@ -598,9 +598,9 @@ int main( int argc, char *argv[] ) {
         PatternMap<uint32_t> map1;
         map1[ngram] = 1;
         map1[dynskipgram5] = 2;
-        cerr << "Integrity for PatternMap" ; test(map1.size() == 2);
-        cerr << "Integrity for PatternMap" ; test(map1[ngram] == 1);
-        cerr << "Integrity for PatternMap" ; test(map1[dynskipgram5] == 2);
+        cerr << "Integrity for PatternMap" ; test(map1.size() , 2);
+        cerr << "Integrity for PatternMap" ; test(map1[ngram], 1);
+        cerr << "Integrity for PatternMap" ; test(map1[dynskipgram5] , 2);
         cerr << "Saving patternmap" << endl; 
         map1.write("/tmp/patternmap.tmp");
 
@@ -608,16 +608,16 @@ int main( int argc, char *argv[] ) {
         PatternMap<uint32_t> map2;
         cerr << "Loading patternmap" << endl; 
         map2.read("/tmp/patternmap.tmp");
-        cerr << "Integrity for PatternMap" ; test(map2.size() == 2);
-        cerr << "Integrity for PatternMap" ; test(map2[ngram] == 1);
-        cerr << "Integrity for PatternMap" ; test(map2[dynskipgram5] == 2);
+        cerr << "Integrity for PatternMap" ; test(map2.size() , 2);
+        cerr << "Integrity for PatternMap" ; test(map2[ngram] , 1);
+        cerr << "Integrity for PatternMap" ; test(map2[dynskipgram5] , 2);
 
         AlignedPatternMap<uint32_t> amap1;
         amap1[ngram][ngram] = 1;
         amap1[dynskipgram5][dynskipgram5] = 2;
-        cerr << "Integrity for AlignedPatternMap" ; test(amap1.size() == 2);
-        cerr << "Integrity for AlignedPatternMap" ; test(amap1[ngram][ngram] == 1);
-        cerr << "Integrity for AlignedPatternMap" ; test(amap1[dynskipgram5][dynskipgram5] == 2);
+        cerr << "Integrity for AlignedPatternMap" ; test(amap1.size(), 2);
+        cerr << "Integrity for AlignedPatternMap" ; test(amap1[ngram][ngram], 1);
+        cerr << "Integrity for AlignedPatternMap" ; test(amap1[dynskipgram5][dynskipgram5], 2);
         cerr << "Saving AlignedPatternMap" << endl; 
         amap1.write("/tmp/alignedpatternmap.tmp");
 
@@ -625,9 +625,9 @@ int main( int argc, char *argv[] ) {
         AlignedPatternMap<uint32_t> amap2;
         cerr << "Loading alignedpatternmap" << endl; 
         amap2.read("/tmp/alignedpatternmap.tmp");
-        cerr << "Integrity for AlignedPatternMap" ; test(amap2.size() == 2);
-        cerr << "Integrity for AlignedPatternMap" ; test(amap2[ngram][ngram] == 1);
-        cerr << "Integrity for AlignedPatternMap" ; test(amap2[dynskipgram5][dynskipgram5] == 2);
+        cerr << "Integrity for AlignedPatternMap" ; test(amap2.size() , 2);
+        cerr << "Integrity for AlignedPatternMap" ; test(amap2[ngram][ngram] , 1);
+        cerr << "Integrity for AlignedPatternMap" ; test(amap2[dynskipgram5][dynskipgram5] , 2);
         }
         
         { 
@@ -686,6 +686,15 @@ int main( int argc, char *argv[] ) {
         unindexedmodel.report(&std::cerr);
         cerr << endl;
         unindexedmodel.histogram(&std::cerr);
+
+
+        
+        Pattern ngram = classencoder.buildpattern(string("To be or not to be"), true); 	
+        cerr << "Testing unindexedmodel.has()" << test( unindexedmodel.has(ngram) );
+        Pattern ngram_ne = encoder.buildpattern("give us fortune", true); 	
+        cerr << "Testing !unindexedmodel.has()" << test( !unindexedmodel.has(ngram_ne) );
+        cerr << "Testing unindexedmodel.occurencecount()" << test( unindexedmodel.occurrencecount(ngram),  1);
+
 
         cerr << endl;
         cerr << "Writing to file" << endl;
