@@ -23,9 +23,12 @@ void test(bool r) {
     }
 }
 
-void test(int value , int ref, const std::string msg) {
+void test(int value , int ref) {
     if (value != ref) {
-        cerr << "TEST FAILED: " << msg << endl;
+        cerr << value << " FAILED! expected " << ref << endl;
+        exit(2);
+    } else {
+        cerr << value << " .... ok" << endl;
     }
 }
 
@@ -147,8 +150,7 @@ int main( int argc, char *argv[] ) {
         Pattern ngram = encoder.buildpattern(querystring, true); 	
 
         cerr << "Ngram #1: " << ngram.decode(classdecoder) << endl;
-        cerr << "Size (n): " << (int) ngram.n() << endl; //== size()
-        test(ngram.n(), 6, "Expected size 6");
+        cerr << "Size (n): "; test(ngram.n(), 6);
         cerr << "Bytesize: " << (int) ngram.bytesize() << endl;
         cerr << "Category==ngram: " << (int) (ngram.category() == NGRAM) << endl;
         cerr << "Hash: " << ngram.hash() << endl;
@@ -689,11 +691,11 @@ int main( int argc, char *argv[] ) {
 
 
         
-        Pattern ngram = classencoder.buildpattern(string("To be or not to be"), true); 	
-        cerr << "Testing unindexedmodel.has()" << test( unindexedmodel.has(ngram) );
-        Pattern ngram_ne = encoder.buildpattern("give us fortune", true); 	
-        cerr << "Testing !unindexedmodel.has()" << test( !unindexedmodel.has(ngram_ne) );
-        cerr << "Testing unindexedmodel.occurencecount()" << test( unindexedmodel.occurrencecount(ngram),  1);
+        Pattern ngram = classencoder.buildpattern(string("or not to"), true); 	
+        cerr << "Testing unindexedmodel.has()"; test( unindexedmodel.has(ngram) );
+        Pattern ngram_ne = classencoder.buildpattern("give us fortune", true); 	
+        cerr << "Testing !unindexedmodel.has()"; test( !unindexedmodel.has(ngram_ne) );
+        cerr << "Testing unindexedmodel.occurencecount()"; test( unindexedmodel.occurrencecount(ngram),  6);
 
 
         cerr << endl;
@@ -741,10 +743,10 @@ int main( int argc, char *argv[] ) {
         PatternModel<uint32_t> indexedasunindexedmodel = PatternModel<uint32_t>(outputfilename, options);
 
         string querystring  = "To die , to sleep";
-        Pattern ngram = classencoder.buildpattern(querystring, true); 	
+        Pattern patterndiesleep = classencoder.buildpattern(querystring, true); 	
         cerr << "Extracting subsumption relations for " << querystring << endl;
 
-        t_relationmap relations = indexedmodel.getsubchildren(ngram);
+        t_relationmap relations = indexedmodel.getsubchildren(patterndiesleep);
         indexedmodel.outputrelations(ngram, relations, classdecoder, &cerr,"SUBSUMES");
 
 
