@@ -175,6 +175,7 @@ void ClassEncoder::buildclasses(unordered_map<string,int> freqlist) {
         	    classes[iter->second] = cls;
             }
         }
+        highestclass = cls;
 }
 
 void ClassEncoder::build(const string & filename) {
