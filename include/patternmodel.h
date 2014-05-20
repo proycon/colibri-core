@@ -52,7 +52,6 @@ class NoSuchPattern: public std::exception {
 
 
 
-
 class PatternModelOptions {
     public:
         int MINTOKENS;
@@ -320,6 +319,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::map<int,std::map<int,int>> cache_grouptotalwordtypes; //total covered word types per group
         std::map<int,std::map<int,int>> cache_grouptotaltokens; //total covered tokens per group
 
+        std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
+
         virtual void postread(const PatternModelOptions options) {
             //this function has a specialisation specific to indexed pattern models,
             //this is the generic version
@@ -467,7 +468,6 @@ class PatternModel: public MapType, public PatternModelInterface {
                 totaltokens = 0;
             }
             uint32_t sentence = 0;
-            std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
             if (!in->good()) {
                 std::cerr << "ERROR: inputstream not good, file does not exist?" << std::endl;
                 throw InternalError();
@@ -554,7 +554,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                reverseindex->push_back(ref, pattern); //TODO: make patternpointer
                             }
                         } else if (((n >= 3) || (options.MINTOKENS == 1)) && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
-                            foundskipgrams += this->computeskipgrams(iter->first, options, gapconf, &ref, NULL, constrainbymodel, true);
+                            foundskipgrams += this->computeskipgrams(iter->first, options, &ref, NULL, constrainbymodel, true);
                         }
                     }
                 }
@@ -615,18 +615,29 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
-        virtual int computeskipgrams(const Pattern & pattern, PatternModelOptions  options, std::map<int, std::vector< std::vector< std::pair<int,int>>>> & gapconf, const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, const bool exhaustive = false) {
-            if (options.MINTOKENS == -1) options.MINTOKENS = 2;
+
+
+        
+        virtual int computeskipgrams(const Pattern & pattern, int mintokens = 2,  const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, std::vector<Pattern> * targetcontainer = NULL,  const bool exhaustive = false, const bool DEBUG = false) {
+
+            //if targetcontainer is NULL, skipgrams will be added to the model,
+            // if not null , they will be added to the targetcontainer instead
+
+            if (mintokens == -1) mintokens = 2;;
+            if (mintokens  <= 1) {
+                mintokens = 1;
+            }
             //internal function for computing skipgrams for a single pattern
             int foundskipgrams = 0;
             const int n = pattern.n();
+            if (gapconf[n].empty()) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
             //loop over all possible gap configurations
             for (std::vector<std::vector<std::pair<int,int>>>::iterator iter2 =  gapconf[n].begin(); iter2 != gapconf[n].end(); iter2++) {
                 std::vector<std::pair<int,int>> * gapconfiguration = &(*iter2);
 
                 //add skips
                 const Pattern skipgram = pattern.addskips(*gapconfiguration);                            
-                if (options.DEBUG) {
+                if (DEBUG) {
                     std::cerr << "Checking for: " << std::endl;
                     skipgram.out();
                 }
@@ -638,65 +649,68 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
 
                 bool skipgram_valid = true;
-                bool check_extra = false;
-                //check if sub-parts were counted
-                std::vector<Pattern> subngrams;
-                skipgram.ngrams(subngrams,n-1); //this also works for and returns skipgrams, despite the name
-                for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                    const Pattern subpattern = *iter2;
-                    if (!subpattern.isgap(0) && !subpattern.isgap(subpattern.n() - 1)) {
-                        if (options.DEBUG) {
-                            std::cerr << "Subpattern: " << std::endl;
-                            subpattern.out();
-                        }
-                        //this subpattern is a valid
-                        //skipgram (no beginning or ending
-                        //gaps) that should occur
-                        if (!this->has(subpattern)) {
-                            if (options.DEBUG) std::cerr << "  discarded" << std::endl;
-                            skipgram_valid = false;
+                if ((mintokens != 1) && (constrainbymodel == NULL)) {
+                    bool check_extra = false;
+                    //check if sub-parts were counted
+                    std::vector<Pattern> subngrams;
+                    skipgram.ngrams(subngrams,n-1); //this also works for and returns skipgrams, despite the name
+                    for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) { //only two patterns
+                        const Pattern subpattern = *iter2;
+                        if (!subpattern.isgap(0) && !subpattern.isgap(subpattern.n() - 1)) {
+                            //this subpattern is a valid
+                            //skipgram or ngram (no beginning or ending
+                            //gaps) that should occur
+                            if (DEBUG) {
+                                std::cerr << "Subpattern: " << std::endl;
+                                subpattern.out();
+                            }
+                            if (!this->has(subpattern)) {
+                                if (DEBUG) std::cerr << "  discarded" << std::endl;
+                                skipgram_valid = false;
+                                break;
+                            }
+                        } else {
+                            //this check isn't enough, subpattern
+                            //starts or ends with gap
+                            //do additional checks
+                            check_extra = true;
                             break;
                         }
-                    } else {
-                        //this check isn't enough, subpattern
-                        //starts or ends with gap
-                        //do additional checks
-                        check_extra = true;
-                        break;
                     }
-                }
-                if (!skipgram_valid) continue;
+                    if (!skipgram_valid) continue;
 
 
-                if (check_extra) {
-                    if (exhaustive) { //by definition the case in non-exhaustive mode
-                        //test whether parts occur in model, otherwise skip
-                        //can't occur either and we can discard it
-                        std::vector<Pattern> parts;
-                        skipgram.parts(parts);
-                        for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
-                            const Pattern part = *iter3;
-                            if (!this->has(part)) {
-                                skipgram_valid = false;
-                                break;
+                    if (check_extra) {
+                        if (exhaustive) { //the following is by definition the case in non-exhaustive mode, so we need only do it in exhaustive mode:
+
+                            //test whether parts occur in model, otherwise skip
+                            //can't occur either and we can discard it
+                            std::vector<Pattern> parts;
+                            skipgram.parts(parts);
+                            for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
+                                const Pattern part = *iter3;
+                                if (!this->has(part)) {
+                                    skipgram_valid = false;
+                                    break;
+                                }
                             }
+                            if (!skipgram_valid) continue;
                         }
-                        if (!skipgram_valid) continue;
-                    }
 
-                    //check whether the the gaps with single token context (X * Y) occur in model,
-                    //otherwise skipgram can't occur
-                    for (std::vector<std::pair<int,int>>::iterator iter3 = gapconfiguration->begin(); iter3 != gapconfiguration->end(); iter3++) {
-                        if (!((iter3->first - 1 == 0) && (iter3->first + iter3->second + 1 == n))) { //entire skipgarm is already X * Y format
-                            const Pattern subskipgram = Pattern(skipgram, iter3->first - 1, iter3->second + 2);
-                            if (options.DEBUG) {
-                                std::cerr << "Subskipgram: " << std::endl;
-                                subskipgram.out();
-                            }
-                            if (!this->has(subskipgram)) {
-                                if (options.DEBUG) std::cerr << "  discarded" << std::endl;
-                                skipgram_valid = false;
-                                break;
+                        //check whether the the gaps with single token context (X * Y) occur in model,
+                        //otherwise skipgram can't occur
+                        for (std::vector<std::pair<int,int>>::iterator iter3 = gapconfiguration->begin(); iter3 != gapconfiguration->end(); iter3++) {
+                            if (!((iter3->first - 1 == 0) && (iter3->first + iter3->second + 1 == n))) { //entire skipgarm is already X * Y format
+                                const Pattern subskipgram = Pattern(skipgram, iter3->first - 1, iter3->second + 2);
+                                if (DEBUG) {
+                                    std::cerr << "Subskipgram: " << std::endl;
+                                    subskipgram.out();
+                                }
+                                if (!this->has(subskipgram)) {
+                                    if (DEBUG) std::cerr << "  discarded" << std::endl;
+                                    skipgram_valid = false;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -704,19 +718,26 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
                 if (skipgram_valid) {
-                    if (options.DEBUG) std::cerr << "  counted!" << std::endl;
-                    if (!has(skipgram)) foundskipgrams++;
-                    ValueType * data = this->getdata(skipgram,true);
-                    if (singleref != NULL) {
-                        add(skipgram, data, *singleref ); //counts the actual skipgram, will add it to the model
-                    } else if (multiplerefs != NULL) {
-                        for (IndexedData::const_iterator refiter =  multiplerefs->begin(); refiter != multiplerefs->end(); refiter++) {
-                            const IndexReference ref = *refiter;
-                            add(skipgram, data, ref ); //counts the actual skipgram, will add it to the model
+                    if (DEBUG) std::cerr << "  counted!" << std::endl;
+                    if (targetcontainer == NULL) {
+                        //put in model
+                        if  (!has(skipgram)) foundskipgrams++;
+                        ValueType * data = this->getdata(skipgram,true);
+                        if (singleref != NULL) {
+                            add(skipgram, data, *singleref ); //counts the actual skipgram, will add it to the model
+                        } else if (multiplerefs != NULL) {
+                            for (IndexedData::const_iterator refiter =  multiplerefs->begin(); refiter != multiplerefs->end(); refiter++) {
+                                const IndexReference ref = *refiter;
+                                add(skipgram, data, ref ); //counts the actual skipgram, will add it to the model
+                            }
+                        } else {
+                            std::cerr << "ERROR: computeskipgrams() called with no singleref and no multiplerefs" << std::endl;
+                            throw InternalError();
                         }
                     } else {
-                        std::cerr << "ERROR: computeskipgrams() called with no singleref and no multiplerefs" << std::endl;
-                        throw InternalError();
+                        //put in target container, may contain duplicates
+                        foundskipgrams++;
+                        targetcontainer->push_back(skipgram);
                     }
 
                 }
@@ -724,9 +745,21 @@ class PatternModel: public MapType, public PatternModelInterface {
             return foundskipgrams;
         }
 
-        
-        virtual void trainskipgrams(const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
-            std::cerr << "Can not compute skipgrams on unindexed model (except exhaustively)" << std::endl;
+        virtual int computeskipgrams(const Pattern & pattern, PatternModelOptions & options ,  const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, const bool exhaustive = false) { //backward compatibility
+            return computeskipgrams(pattern, options.MINTOKENS, singleref, multiplerefs, constrainbymodel, NULL, exhaustive, options.DEBUG);
+        }
+
+        virtual std::vector<Pattern> findskipgrams(const Pattern & pattern, int occurrencethreshold = 1) {
+            //given the pattern, find all skipgrams in it that occur in the model
+
+            std::vector<Pattern> skipgrams;
+            this->computeskipgrams(pattern, occurrencethreshold, NULL, NULL, this->getinterface(), &skipgrams);
+            return skipgrams;
+        }
+
+
+        virtual void trainskipgrams(const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) { 
+            std::cerr << "Can not compute skipgrams on unindexed model (except exhaustively during train() )" << std::endl;
             throw InternalError();
         }
 
@@ -813,7 +846,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
        
 
-        std::vector<Pattern> getreverseindex(const IndexReference ref) {
+        std::vector<Pattern> getreverseindex(const IndexReference ref, int occurrencecount = 0, int category = 0, int size = 0) {
             //Auxiliary function
             std::vector<Pattern> result;
             if (!this->reverseindex) return result;
@@ -822,17 +855,34 @@ class PatternModel: public MapType, public PatternModelInterface {
             const int minn = this->minlength();
             const int maxn = this->maxlength();
             for (int i = minn; i <= sl && i <= maxn; i++) {
-                try {
-                    //std::cerr << "DEBUG: getreverseindex getpattern " << ref.tostring() << " + " << i << std::endl;
-                    const Pattern ngram = this->reverseindex->getpattern(ref,i);
-                    /*std::cerr << "n: " << ngram.n() << std::endl;
-                    std::cerr << "bytesize: " << ngram.bytesize() << std::endl;;
-                    std::cerr << "hash: " << ngram.hash() << std::endl;;*/
-                    if (this->has(ngram)) {
-                        result.push_back(ngram);
+                if ((size == 0) || (i == size)) {
+                    try {
+                        //std::cerr << "DEBUG: getreverseindex getpattern " << ref.tostring() << " + " << i << std::endl;
+                        const Pattern ngram = this->reverseindex->getpattern(ref,i);
+                        /*std::cerr << "n: " << ngram.n() << std::endl;
+                        std::cerr << "bytesize: " << ngram.bytesize() << std::endl;;
+                        std::cerr << "hash: " << ngram.hash() << std::endl;;*/
+                        if ( (((occurrencecount == 0) && this->has(ngram)) || (this->occurrencecount(ngram) >= occurrencecount))
+                            && ((category == 0) || (ngram.category() >= category)) ) {
+                            result.push_back(ngram);
+
+                            if ((category == 0) || (category == SKIPGRAM))  {
+                                
+                                //(we can't use gettemplates() because
+                                //gettemplates() depends on us, we have to
+                                //solve it low-level, punching holes:
+
+
+                                std::vector<Pattern> skipgrams = this->findskipgrams(ngram, occurrencecount);
+                                for (auto skipgram : skipgrams) {
+                                    result.push_back(skipgram);
+                                }
+
+                            }
+                        }
+                    } catch (KeyError &e) {
+                        break;
                     }
-                } catch (KeyError &e) {
-                    break;
                 }
             }
             return result;
@@ -1550,7 +1600,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             for (typename MapType::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
                 const IndexedData multirefs = iter->second;
-                if (((int) pattern.n() == n) && (pattern.category() == NGRAM) ) foundskipgrams += this->computeskipgrams(pattern,options, gapconf, NULL, &multirefs, constrainbymodel, false);
+                if (((int) pattern.n() == n) && (pattern.category() == NGRAM) ) foundskipgrams += this->computeskipgrams(pattern,options, NULL, &multirefs, constrainbymodel, false);
             }
             if (!foundskipgrams) {
                 std::cerr << " None found" << std::endl;
