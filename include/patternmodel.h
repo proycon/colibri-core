@@ -318,6 +318,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::map<int,std::map<int,int>> cache_grouptotalpatterns ; //total distinct patterns per group
         std::map<int,std::map<int,int>> cache_grouptotalwordtypes; //total covered word types per group
         std::map<int,std::map<int,int>> cache_grouptotaltokens; //total covered tokens per group
+        
 
         std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
 
@@ -329,6 +330,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 const int n = p.n();
                 if (n > maxn) maxn = n;
                 if (n < minn) minn = n;
+                if ((!hasskipgrams) && (p.isskipgram())) hasskipgrams = true;
             }
         }
         virtual void posttrain(const PatternModelOptions options) {
@@ -338,12 +340,14 @@ class PatternModel: public MapType, public PatternModelInterface {
     public:
         IndexedCorpus * reverseindex;
         bool externalreverseindex; //true if reverse index was loaded externally and passed to the model (implies it won't be destroyed when the model is) //only used by IndexedPatternModel but stored here to ease things for cython
+        bool hasskipgrams;
 
         PatternModel<ValueType,ValueHandler,MapType>(IndexedCorpus * corpus = NULL) {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
             minn = 999;
+            hasskipgrams = false;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             if (corpus) {
@@ -358,6 +362,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             totaltypes = 0;
             maxn = 0;
             minn = 999;
+            hasskipgrams = false;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             this->load(f,options,constrainmodel);
@@ -375,6 +380,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             totaltypes = 0;
             maxn = 0;
             minn = 999;
+            hasskipgrams = false;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             if (corpus) {
@@ -554,7 +560,9 @@ class PatternModel: public MapType, public PatternModelInterface {
                                reverseindex->push_back(ref, pattern); //TODO: make patternpointer
                             }
                         } else if (((n >= 3) || (options.MINTOKENS == 1)) && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
-                            foundskipgrams += this->computeskipgrams(iter->first, options, &ref, NULL, constrainbymodel, true);
+                            int foundskipgrams_thisround = this->computeskipgrams(iter->first, options, &ref, NULL, constrainbymodel, true);
+                            if (foundskipgrams_thisround > 0) hasskipgrams = true;
+                            foundskipgrams += foundskipgrams_thisround; 
                         }
                     }
                 }
@@ -866,12 +874,11 @@ class PatternModel: public MapType, public PatternModelInterface {
                             && ((category == 0) || (ngram.category() >= category)) ) {
                             result.push_back(ngram);
 
-                            if ((category == 0) || (category == SKIPGRAM))  {
+                            if ((category == 0) || (category == SKIPGRAM) && (this->hasskipgrams))  {
                                 
                                 //(we can't use gettemplates() because
                                 //gettemplates() depends on us, we have to
                                 //solve it low-level, punching holes:
-
 
                                 std::vector<Pattern> skipgrams = this->findskipgrams(ngram, occurrencecount);
                                 for (auto skipgram : skipgrams) {
@@ -1372,6 +1379,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const int n = p.n();
                 if (n > this->maxn) this->maxn = n;
                 if (n < this->minn) this->minn = n;
+                if ((!this->hasskipgrams) && (p.isskipgram())) this->hasskipgrams = true;
             }
             buildreverseindex(options); //will only act if options.DOREVERSEINDEX is set
         }
@@ -1592,9 +1600,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     virtual void trainskipgrams(PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
         if (options.MINTOKENS == -1) options.MINTOKENS = 2;
         this->cache_grouptotal.clear(); //forces recomputation of statistics
-        std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
         for (int n = 3; n <= options.MAXLENGTH; n++) {
-            if ((options.DOSKIPGRAMS) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
+            if (this->gapconf[n].empty()) compute_multi_skips(this->gapconf[n], std::vector<std::pair<int,int> >(), n);
             if (!options.QUIET) std::cerr << "Counting " << n << "-skipgrams" << std::endl; 
             int foundskipgrams = 0;
             for (typename MapType::iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -1605,6 +1612,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             if (!foundskipgrams) {
                 std::cerr << " None found" << std::endl;
                 break;
+            } else {
+                this->hasskipgrams = true;
             }
             if (!options.QUIET) std::cerr << " Found " << foundskipgrams << " skipgrams...";
             int pruned = this->prune(options.MINTOKENS,n);
