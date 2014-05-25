@@ -233,6 +233,60 @@ vector<unsigned int> ClassEncoder::encodeseq(const vector<string> & seq) {
     return result;
 }
 
+int ClassEncoder::outputlength(const string & line) {
+	  int outputcursor = 0;
+      int begin = 0;      
+      int tmphighestclass = highestclass;
+      const int l = line.length();
+      for (int i = 0; i < l; i++) {
+      	  if ((line[i] == ' ') || (i == l - 1)) {
+          	  string word;
+          	  if (line[i] == ' ') {
+          	  	word  = string(line.begin() + begin, line.begin() + i);
+          	  } else {
+			   	word  = string(line.begin() + begin, line.begin() + i + 1);
+          	  }
+              word = trim(word, " \t\n\r\b"); //trim whitespace, control characters
+          	  begin = i+1;
+          	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
+          	    unsigned int cls;
+                if (word == "{*}") {
+                    //variable length skip
+                    outputcursor++;
+                    continue;
+                } else if (word == "{?}") {
+                    //single tokenskip
+                    outputcursor++;
+                    continue;
+                } else if ((word.substr(0,2) == "{*")  && (word.substr(word.size() - 2,2) == "*}")) {
+                    const int skipcount = atoi(word.substr(2,word.size() - 4).c_str()); 
+                    for (int j = 0; j < skipcount; j++) {
+                        outputcursor++;
+                    }                
+                    continue;
+                } else if (classes.count(word) == 0) {
+                    cls = ++tmphighestclass; //as if autoaddunknown
+          	    } else {
+          	  		cls = classes[word];
+          	  	}
+          	  	int length = 0;
+  	        	const unsigned char * byterep = inttobytes(cls, length);
+  	        	if (length == 0) {
+  	        		cerr << "INTERNAL ERROR: Error whilst encoding '" << word << "' (class " << cls << "), length==0, not possible!" << endl;
+  	        		exit(13);
+  	        	} else if (length > 128) {
+  	        		cerr << "INTERNAL ERROR: Error whilst encoding '" << word << "' (class " << cls << "), length exceeds 128, not possible!" << endl;
+  	        		exit(13);
+                }
+                outputcursor += length + 1;
+  	        	delete [] byterep;
+          	  }			 
+          }
+      }
+      return outputcursor; 
+
+}
+
 int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown) {
 	  int outputcursor = 0;
       int begin = 0;      
@@ -418,18 +472,28 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet) {
     const char zero = 0;
     const char one = 1;
-    unsigned char outputbuffer[65536];
-    int outputsize ;
+    int outputbuffersize = 65536;
+    unsigned char * outputbuffer = new unsigned char[outputbuffersize];
+    int outputsize;
     unsigned int linenum = 0;
     while (IN->good()) {	
         string line = "";
         getline(*IN, line);
         if (!IN->good()) break;
         linenum++;
+        if (line.length() > outputbuffersize) { //heuristic to check if we need to compute the length, string will be longer than encoded representation
+            outputsize = outputlength(line);
+            if (outputsize > outputbuffersize) {
+                delete[] outputbuffer;
+                outputbuffersize = outputsize+1;
+                outputbuffer = new unsigned char[outputbuffersize];
+            }
+        }
         outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
         OUT->write((const char *) outputbuffer, outputsize);                        
         OUT->write(&zero, sizeof(char)); //newline          
     }
     if (!quiet) cerr << "Encoded " << linenum << " lines" << endl;
+    delete[] outputbuffer;
 }
 

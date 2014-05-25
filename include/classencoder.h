@@ -52,6 +52,7 @@ class ClassEncoder {
     std::unordered_map<unsigned int, std::string> added;
     
 
+    int outputlength(const std::string & line);
     int encodestring(const std::string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown=false);
     void encodefile(const std::string &, const std::string &, bool allowunknown, bool autoaddunknown=false, bool append=false, bool quiet=false);
     void encodefile(std::istream * IN, std::ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet=false);
