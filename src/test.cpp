@@ -25,7 +25,7 @@ void test(bool r) {
 
 void test(int value , int ref) {
     if (value != ref) {
-        cerr << value << " FAILED! expected " << ref << endl;
+        cerr << value << " .... FAILED! expected " << ref << endl;
         exit(2);
     } else {
         cerr << value << " .... ok" << endl;

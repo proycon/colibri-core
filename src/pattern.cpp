@@ -434,12 +434,18 @@ void readanddiscardpattern(std::istream * in) {
 
 
 Pattern::Pattern(std::istream * in, bool ignoreeol) {
-    int i = 0;
     int readingdata = 0;
     unsigned char c = 0;
+    int beginpos = -1;
+
+    //stage 1 -- get length
+    int length = 0;
+    readingdata = 0;
     do {
         if (in->good()) {
+            if (beginpos == -1) beginpos = in->tellg();
             in->read( (char* ) &c, sizeof(char));
+            //std::cerr << "DEBUG read1=" << (int) c << endl;
         } else {
             if (ignoreeol) {
                 break;
@@ -448,11 +454,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
                 throw InternalError();
             }
         }
-        if (i >= MAINPATTERNBUFFERSIZE) {
-            std::cerr << "ERROR: Pattern(): Patternbuffer size exceeded, exceptionally large pattern, must be invalid. Are you sure you are reading a valid *.colibri.dat file and not plain text?" << std::endl;
-            throw InternalError();
-        }
-        mainpatternbuffer[i++] = c;
+        length++;
         if (readingdata) {
             readingdata--;
         } else {
@@ -470,12 +472,53 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
         }
     } while (1);
 
-    //copy from mainpatternbuffer
-    data = new unsigned char[i];
-    for (int j = 0; j < i; j++) {
-        data[j] = mainpatternbuffer[j];
-    }
+    //allocate buffer
+    data  = new unsigned char[length];
 
+
+
+    //stage 2 -- read buffer
+    int i = 0;
+    readingdata = 0;
+    //std::cerr << "BEGINPOS=" << beginpos << ", LENGTH=" << length << std::endl;
+    if (beginpos == -1) {
+        //std::cerr << "ERROR: Invalid position in input stream whilst Reading pattern" << std::endl;
+        throw InternalError();
+    }
+    in->seekg(beginpos, ios::beg);
+    while (i < length) {
+        if (in->good()) {
+            in->read( (char* ) &c, sizeof(char));
+            //std::cerr << "DEBUG read2=" << (int) c << endl;
+        } else {
+            std::cerr << "ERROR: Invalid pattern data, unexpected end of file" << std::endl;
+            throw InternalError();
+        }
+        data[i++] = c;
+        if (readingdata) {
+            readingdata--;
+        } else {
+            if (c == ENDMARKER) {
+                if (!ignoreeol) break;
+            } else if (c < 128) {
+                //we have a size
+                if (c == 0) {
+                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible!" << std::endl;
+                    throw InternalError();
+                } else {
+                    readingdata = c;
+                }
+            }
+        }
+    }
+    
+
+    //if this is the end of file, we want the eof bit set already, so we try to
+    //read one more byte (and wind back if succesful):
+    if (in->good()) {
+        in->read( (char* ) &c, sizeof(char));
+        if (in->good()) in->unget();
+    }
 }
 
 
@@ -1137,7 +1180,6 @@ void IndexedCorpus::load(std::istream *in) {
     while (!in->eof()) {
         Pattern line = Pattern(in);
         sentence++;
-        if (in->eof()) break;
         int linesize = line.size();
         for (int i = 0; i < linesize; i++) {
             const Pattern unigram = line[i];

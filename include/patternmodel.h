@@ -514,7 +514,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     //read line
                     Pattern line = Pattern(in);
                     sentence++;
-                    if (in->eof()) break;
+                    //if (in->eof()) break;
                     const int linesize = line.size();
                     if (linesize == 0) {
                         //skip empty lines
