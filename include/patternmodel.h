@@ -531,7 +531,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                         if ((options.MINTOKENS > 1) && (constrainbymodel == NULL)) {
                             line.ngrams(ngrams, n);
                         } else {
-                            line.subngrams(ngrams,1,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1 or a constraint model is set, no need to look back anyway, only one iteration over corpus
+                            line.subngrams(ngrams,options.MINLENGTH,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1 or a constraint model is set, no need to look back anyway, only one iteration over corpus
                         }
                     }
 
@@ -584,7 +584,13 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if ((options.MINTOKENS == 1) || (constrainbymodel != NULL)) {
                     pruned = this->prune(options.MINTOKENS,0); //prune regardless of size
                 } else {
-                    pruned = this->prune(options.MINTOKENS,n); //prue only in size-class
+                    pruned = this->prune(options.MINTOKENS,n); //prune only in size-class
+                    if ( (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) &&  ( n - 1 >= 1) &&  ( (n - 1) < options.MINLENGTH) ) {
+                        //we don't need n-1 anymore now we're done with n, it
+                        //is below our threshold, prune it all
+                        this->prune(-1, n-1);
+                        if (!options.QUIET) std::cerr << "(pruned last iteration due to minimum length)" << pruned;
+                    }
                 }
                 if (!options.QUIET) std::cerr << "pruned " << pruned;
                 if (foundskipgrams) {
@@ -1062,11 +1068,13 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
         int prune(int threshold,int _n=0) {
+            //prune all patterns under the specified threshold (set -1 for
+            //all) and of the specified length (set _n==0 for all)
             int pruned = 0;
             PatternModel::iterator iter = this->begin(); 
             while (iter != this->end()) {
                 const Pattern pattern = iter->first;
-                if (( (_n == 0) || (pattern.n() == (unsigned int) _n) )&& (occurrencecount(pattern) < threshold)) {
+                if (( (_n == 0) || (pattern.n() == (unsigned int) _n) )&& ((threshold == -1) || (occurrencecount(pattern) < threshold))) {
                     //std::cerr << occurrencecount(pattern) << std::endl;
                     //std::cerr << "preprune:" << this->size() << std::endl;
                     iter = this->erase(iter); 
@@ -1077,7 +1085,6 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
             };       
 
-            if (pruned) prunereverseindex();
             return pruned;
         }
 
@@ -1085,22 +1092,6 @@ class PatternModel: public MapType, public PatternModelInterface {
             return 0; //only works for indexed models
         }
 
-        int prunereverseindex(int _n = 0) {
-            //prune patterns from reverse index if they don't exist anymore
-            int pruned = 0;
-            /*std::multimap<IndexReference,Pattern>::iterator iter = reverseindex.begin(); 
-            while (iter != reverseindex.end()) {
-                const Pattern pattern = iter->second;
-                if (( (_n == 0) || (pattern.n() == (unsigned int) _n) ) && (!this->has(pattern))) {
-                    iter = reverseindex.erase(iter);
-                    pruned++;
-                } else {
-                    iter++;
-                }
-            }*/
-            //MAYBE TODO: reimplement?
-            return pruned;
-        }
 
         template<class ValueType2,class ValueHandler2,class MapType2>
         int prunebymodel(PatternModel<ValueType2,ValueHandler2,MapType2> & secondmodel) {
@@ -1971,7 +1962,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             }
             iter++;
         }
-        if (pruned) this->prunereverseindex();
         return pruned;
     } 
 
