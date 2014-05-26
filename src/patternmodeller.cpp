@@ -40,7 +40,9 @@ void usage() {
     cerr << "\t-2               Enable two-stage building (for indexed models), takes longer but saves a lot of memory on large corpora! First builds an unindexed model and reuses that (via -I) to build an indexed model (View options are ignored in two-stage building, whereas an output model (-o) is mandatory)" << endl;    
     cerr << "\t-t <number>      Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
     cerr << "\t-u               Build an unindexed model (default is indexed)" << endl;    
+    cerr << "\t-m <number>      Minimum pattern length (default: 1)" << endl;
     cerr << "\t-l <number>      Maximum pattern length (default: 100)" << endl;
+    cerr << "\t-b <number>      Maximum back-off length (default: 100). Only makes sense to set lower than minimum pattern length and may conserve memory during training then" << endl;
     cerr << "\t-s               Compute skipgrams (costs extra memory and time)" << endl;    
     cerr << "\t-T <number>      Skip type threshold (for use with -s): only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, unindexed models always act as if fixed to 1). Also note that only types that occur above the occurrent threshold (-t) are counted here! Requires indexed models" << endl;
     cerr << "\t-S S             Compute flexgrams by abstracting over skipgrams (implies -s)." << endl; 
@@ -59,7 +61,6 @@ void usage() {
     cerr << "\t-g               Compute and show relationships for the specified patterns (use with -q or -Q). Relationships are: subsumptions, neigbours, skipcontent. Only for indexed models." << endl; 
     cerr << "\t-C <threshold>   Compute and show absolute co-occurrence counts above the specified threshold.. Only for indexed models." << endl;
     cerr << "\t-Y <threshold>   Compute and show normalised pointwise mutual information co-occurrence  above the specified threshold [-1,1]. Only for indexed models." << endl;
-    cerr << "\t-m <number>      Minimum pattern length (default: 1)" << endl;
     //cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
     cerr << "Editing a model:  colibri-patternmodeller -o [modelfile] -i [modelfile]" << endl;
@@ -221,7 +222,7 @@ int main( int argc, char *argv[] ) {
     double COOCTHRESHOLD = 0;
     int DOCOOC = 0; //1= absolute, 2= npmi
     char c;    
-    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:v")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vb:")) != -1)
         switch (c)
         {
         case 'c':
@@ -253,6 +254,9 @@ int main( int argc, char *argv[] ) {
             break;
         case 'm':
             options.MINLENGTH = atoi(optarg);            
+            break;
+        case 'b':
+            options.MAXBACKOFFLENGTH = atoi(optarg);            
             break;
         case 's':
             options.DOSKIPGRAMS = true;

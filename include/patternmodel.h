@@ -57,6 +57,7 @@ class PatternModelOptions {
         int MINTOKENS;
         int MINLENGTH;
         int MAXLENGTH;
+        int MAXBACKOFFLENGTH;
         
         bool DOSKIPGRAMS;
         bool DOSKIPGRAMS_EXHAUSTIVE;
@@ -78,6 +79,7 @@ class PatternModelOptions {
             MINTOKENS = -1; //defaults to 2 for building, 1 for loading
             MINLENGTH = 1;
             MAXLENGTH = 100;
+            MAXBACKOFFLENGTH = 100;
 
             MINSKIPTYPES = 2;
             DOSKIPGRAMS = false;
@@ -101,6 +103,7 @@ class PatternModelOptions {
             MINTOKENS = ref.MINTOKENS; //defaults to 2 for building, 1 for loading
             MINLENGTH = ref.MINLENGTH;
             MAXLENGTH = ref.MAXLENGTH;
+            MAXBACKOFFLENGTH = ref.MAXBACKOFFLENGTH;
 
             MINSKIPTYPES = ref.MINSKIPTYPES;
             DOSKIPGRAMS = ref.DOSKIPGRAMS;
@@ -490,6 +493,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             bool found;
             IndexReference ref;
             int prevsize = 0;
+            int backoffn = 0;
             for (int n = 1; n <= options.MAXLENGTH; n++) { 
                 int foundngrams = 0;
                 int foundskipgrams = 0;
@@ -544,7 +548,9 @@ class PatternModel: public MapType, public PatternModelInterface {
                         if ((n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) {
                             //check if sub-parts were counted
                             subngrams.clear();
-                            iter->first.ngrams(subngrams,n-1);
+                            backoffn = n - 1;
+                            if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
+                            iter->first.ngrams(subngrams, backoffn);
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                                 if (!this->has(*iter2)) { 
                                     found = false;
@@ -585,9 +591,9 @@ class PatternModel: public MapType, public PatternModelInterface {
                     pruned = this->prune(options.MINTOKENS,0); //prune regardless of size
                 } else {
                     pruned = this->prune(options.MINTOKENS,n); //prune only in size-class
-                    if ( (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) &&  ( n - 1 >= 1) &&  ( (n - 1) < options.MINLENGTH) ) {
+                    if ( (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) &&  ( n - 1 >= 1) &&  ( (n - 1) < options.MINLENGTH) && (n - 1 != options.MAXBACKOFFLENGTH) ) {
                         //we don't need n-1 anymore now we're done with n, it
-                        //is below our threshold, prune it all
+                        //is below our threshold, prune it all (== -1)
                         this->prune(-1, n-1);
                         if (!options.QUIET) std::cerr << "(pruned last iteration due to minimum length)" << pruned;
                     }
@@ -609,6 +615,9 @@ class PatternModel: public MapType, public PatternModelInterface {
                 //needed to compute maxn, minn
                 this->postread(options);
             } 
+            if (options.MAXBACKOFFLENGTH < options.MINLENGTH) {
+                this->prune(-1, options.MAXBACKOFFLENGTH);
+            }
             this->posttrain(options);
         }
 
