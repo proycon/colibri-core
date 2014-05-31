@@ -658,6 +658,14 @@ class PatternModel: public MapType, public PatternModelInterface {
             for (std::vector<std::vector<std::pair<int,int>>>::iterator iter2 =  gapconf[n].begin(); iter2 != gapconf[n].end(); iter2++) {
                 std::vector<std::pair<int,int>> * gapconfiguration = &(*iter2);
 
+                //integrity check
+                for (std::vector<std::pair<int,int>>::iterator giter = gapconfiguration->begin(); giter != gapconfiguration->end(); giter++) {
+                    if (giter->first + giter->second > n) {
+                        std::cerr << "ERROR: Gapconf is not valid for n=" << n << ": " << giter->first << ","  << giter->second << " is out of bounds!" << std::endl;
+                        throw InternalError();
+                    }
+                }
+
                 //add skips
                 const Pattern skipgram = pattern.addskips(*gapconfiguration);                            
                 if (DEBUG) {
