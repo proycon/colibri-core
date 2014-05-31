@@ -450,8 +450,11 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
             if (ignoreeol) {
                 break;
             } else {
-                std::cerr << "ERROR: Invalid pattern data, unexpected end of file" << std::endl;
-                throw InternalError();
+                std::cerr << "WARNING: Unexpected end of file (stage 1, length=" << length << "), no EOS marker found (adding and continuing)" << std::endl;
+                in->clear(); //clear error bits
+                break;
+                //std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 1, length=" << length << ")" << std::endl;
+                //throw InternalError();
             }
         }
         length++;
@@ -463,7 +466,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
             } else if (c < 128) {
                 //we have a size
                 if (c == 0) {
-                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible!" << std::endl;
+                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 1)" << std::endl;
                     throw InternalError();
                 } else {
                     readingdata = c;
@@ -472,8 +475,13 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
         }
     } while (1);
 
+    
     //allocate buffer
-    data  = new unsigned char[length];
+    if (c == ENDMARKER) {
+        data  = new unsigned char[length];
+    } else {
+        data  = new unsigned char[length+1];
+    }
 
 
 
@@ -491,7 +499,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
             in->read( (char* ) &c, sizeof(char));
             //std::cerr << "DEBUG read2=" << (int) c << endl;
         } else {
-            std::cerr << "ERROR: Invalid pattern data, unexpected end of file" << std::endl;
+            std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 2,i=" << i << ",length=" << length << ")" << std::endl;
             throw InternalError();
         }
         data[i++] = c;
@@ -503,7 +511,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
             } else if (c < 128) {
                 //we have a size
                 if (c == 0) {
-                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible!" << std::endl;
+                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 2)" << std::endl;
                     throw InternalError();
                 } else {
                     readingdata = c;
@@ -511,7 +519,11 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
             }
         }
     }
-    
+
+    if (c != ENDMARKER) { //add endmarker
+        data[i++] = ENDMARKER;
+    }
+
 
     //if this is the end of file, we want the eof bit set already, so we try to
     //read one more byte (and wind back if succesful):
@@ -1177,9 +1189,9 @@ IndexedCorpus::IndexedCorpus(std::string filename){
 
 void IndexedCorpus::load(std::istream *in) {
     int sentence = 0;
-    while (!in->eof()) {
-        Pattern line = Pattern(in);
+    while (in->good()) {
         sentence++;
+        Pattern line = Pattern(in);
         int linesize = line.size();
         for (int i = 0; i < linesize; i++) {
             const Pattern unigram = line[i];
