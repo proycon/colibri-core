@@ -258,7 +258,7 @@ cpdef train(self, str filename, PatternModelOptions options, constrainmodel = No
         if isinstance(constrainmodel, IndexedPatternModel):
             self.trainconstrainedbyindexedmodel(filename, options, constrainmodel)
         elif isinstance(constrainmodel, UnindexedPatternModel):
-            self.trainconstrainedbyindexedmodel(filename, options, constrainmodel)
+            self.trainconstrainedbyunindexedmodel(filename, options, constrainmodel)
         elif isinstance(constrainmodel, PatternSetModel):
             self.trainconstrainedbypatternsetmodel(filename, options, constrainmodel)
         elif isinstance(constrainmodel, PatternAlignmentModel_float):
