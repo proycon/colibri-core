@@ -389,6 +389,25 @@ bool PatternPointer::out() const {
     return dataout(data, bytes);
 }
 
+const bool Pattern::unknown() const {
+    int i = 0;
+    do {
+        const unsigned char c = data[i];
+        if (c == ENDMARKER) {
+            //end marker
+            return false;
+        } else if (c < 128) {
+            //we have a size
+            if ((c == 1) && (data[i+1] == 2)) return true; //TODO, unknownclass is hardcoded to 2 here!
+            i += c + 1;
+        } else {
+            //we have another marker
+            i++;
+        }
+    } while (1);
+    return false;
+}
+
 vector<int> Pattern::tovector() const { 
     vector<int> v;
     int i = 0;

@@ -180,6 +180,9 @@ cdef class Pattern:
 
         return str(self.cpattern.tostring(decoder.data),'utf-8')
 
+    def unknown(self):
+        return self.cpattern.unknown()
+
     def __contains__(self, Pattern pattern):
         """Check if the specified pattern occurs within this larger pattern.
 

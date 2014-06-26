@@ -181,6 +181,7 @@ class Pattern {
      const StructureType type() const;
      const bool isskipgram() const { return category() == SKIPGRAM; }
      const bool isflexgram() const { return category() == FLEXGRAM; }
+     const bool unknown() const;
      
      /**
       * Return a single token (not a byte!). index < size().
