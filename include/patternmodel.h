@@ -13,7 +13,7 @@
 *****************************/
 
 
-//TODO: Reverse index currently does not hold skipgrams/flexgrams
+//TODO: Reverse index currently does not hold flexgrams
 
 #include "patternstore.h"
 #include "classencoder.h"

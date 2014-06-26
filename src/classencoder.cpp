@@ -158,7 +158,7 @@ void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<str
 }
 #endif
 
-void ClassEncoder::buildclasses(unordered_map<string,int> freqlist) {
+void ClassEncoder::buildclasses(unordered_map<string,int> & freqlist) {
 
         //sort by occurrence count  using intermediate representation
         multimap<const int, const string> revfreqlist;

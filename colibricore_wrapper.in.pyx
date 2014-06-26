@@ -33,6 +33,7 @@ cdef class ClassEncoder:
 
     cdef cClassEncoder data
     cdef str _filename
+    cdef unordered_map[string,int] freqlist
 
     def __init__(self, str filename=None):
         if filename:
@@ -69,10 +70,17 @@ cdef class ClassEncoder:
         return pattern
 
 
+    def processcorpus(self, str filename): #build a class from this dataset
+        """Process a corpus, call buildclasses() when finished with all corpora"""
+        if os.path.exists(filename):
+            self.data.processcorpus(filename.encode('utf-8'), self.freqlist)
 
+    def buildclasses(self):
+        """Build classes, call after processing all corpora with processcorpus()"""
+        self.data.buildclasses(self.freqlist)
 
     def build(self, str filename): #build a class from this dataset
-        """Builds a class encoder from a plain-text corpus (utf-8)"""
+        """Builds a class encoder from a plain-text corpus (utf-8). Equivalent to a call to processcorpus() followed by buildclasses()"""
         if os.path.exists(filename):
             self.data.build(filename.encode('utf-8'))
         else:
