@@ -294,10 +294,10 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         virtual int maxlength() const { return maxn; };
         virtual int minlength() const { return minn; };
         
-        int types()  { 
+        virtual int types()  { 
             return totaltypes;
         }
-        int tokens() const { return totaltokens; }
+        virtual int tokens() const { return totaltokens; }
 
         unsigned char type() const { return model_type; }
         unsigned char version() const { return model_version; }
@@ -861,12 +861,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
 
-        int types() { 
+        virtual int types() { 
             if ((totaltypes == 0) && (!this->data.empty())) totaltypes = this->totalwordtypesingroup(0, 1);
             return totaltypes; 
         }
 
-        int tokens() const { return totaltokens; }
+        virtual int tokens() const { return totaltokens; }
 
         unsigned char type() const { return model_type; }
         unsigned char version() const { return model_version; }
