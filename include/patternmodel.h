@@ -862,7 +862,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
         virtual int types() { 
-            if ((totaltypes == 0) && (!this->data.empty())) totaltypes = this->totalwordtypesingroup(0, 1);
+            if ((totaltypes == 0) && (!this->data.empty())) totaltypes = this->totalwordtypesingroup(0, 0);
             return totaltypes; 
         }
 
@@ -1015,6 +1015,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         virtual void computecoveragestats() {
             if ((cache_grouptotal.empty()) && (!this->data.empty())) this->computestats();
+            //bool hasunigrams = false;
             cache_grouptotalwordtypes.clear();
             cache_grouptotaltokens.clear();
             //opting for memory over speed (more iterations, less memory)
@@ -1025,12 +1026,17 @@ class PatternModel: public MapType, public PatternModelInterface {
                     PatternModel::iterator iter = this->begin(); 
                     while (iter != this->end()) {
                         const Pattern pattern = iter->first;                        
-                        if (((*itern == 0) || ((int) pattern.n() == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
-                            std::vector<Pattern> unigrams;
-                            pattern.ngrams(unigrams, 1);
-                            for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
-                                const Pattern p = *iter2;
-                                types.insert(p);
+                        const int pn = (int) pattern.n();
+                        if ( (pn == 1) && (*itern <= 1) && ((*iterc == 0) || (pattern.category() == *iterc))) {
+                            types.insert(pattern);
+                        } else {
+                            if (((*itern == 0) || (pn == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
+                                std::vector<Pattern> unigrams;
+                                pattern.ngrams(unigrams, 1);
+                                for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
+                                    const Pattern p = *iter2;
+                                    types.insert(p);
+                                }
                             }
                         }
                         cache_grouptotaltokens[*iterc][*itern] += this->valuehandler.count(iter->second);
@@ -1039,6 +1045,17 @@ class PatternModel: public MapType, public PatternModelInterface {
                     cache_grouptotalwordtypes[*iterc][*itern] += types.size();
                 }
             }
+
+            /*
+            if (!hasunigrams) {
+                for (std::set<int>::iterator iterc = cache_categories.begin(); iterc != cache_categories.end(); iterc++) {
+                    int max = 0;
+                    for (std::set<int>::iterator itern = cache_n.begin(); itern != cache_n.end(); itern++) {
+                        if cache_grouptotalwordtypes[*iterc][*itern] 
+                    }
+                }
+                
+            }*/
         }
         
 
@@ -1311,7 +1328,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "                          " << std::setw(10) << "PATTERNS" << std::setw(10) << "TOKENS" << std::setw(10) << "COVERAGE" << std::setw(10) << "TYPES" << std::setw(10) << std::endl;
             *OUT << "Total:                    " << std::setw(10) << "-" << std::setw(10) << this->tokens() << std::setw(10) << "-" << std::setw(10) << this->types() <<  std::endl;
 
-            int coveredtypes = totalwordtypesingroup(0,0);
+            int coveredtypes = totalwordtypesingroup(0,0);  //will also word when no unigrams in model
             int coveredtokens = totaltokensingroup(0,0);
 
             if (coveredtokens > this->tokens()) coveredtokens = this->tokens();
@@ -1989,7 +2006,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     virtual void computecoveragestats() {
         //opting for memory over speed (more iterations, less memory)
-        // Indexed model overloads this for better cache_grouptotaltokens computation! 
+        //overloaded version for indexedmodel
         if ((this->cache_grouptotal.empty()) && (!this->data.empty())) this->computestats();
         for (std::set<int>::iterator iterc = this->cache_categories.begin(); iterc != this->cache_categories.end(); iterc++) {
             for (std::set<int>::iterator itern = this->cache_n.begin(); itern != this->cache_n.end(); itern++) {
@@ -1999,18 +2016,22 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 while (iter != this->end()) {
                     const Pattern pattern = iter->first;                        
                     const int n = pattern.n();
-                    if (((*itern == 0) || (n == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
-                        std::vector<Pattern> unigrams;
-                        pattern.ngrams(unigrams, 1);
-                        for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
-                            const Pattern p = *iter2;
-                            types.insert(p);
-                        }
-                        IndexedData * data = this->getdata(pattern);
-                        for (IndexedData::iterator dataiter = data->begin(); dataiter != data->end(); dataiter++) {
-                            //take into account all tokens 
-                            for (int i = 0; i < pattern.n(); i++) {
-                                tokens.insert(*dataiter + i);
+                    if ( (n == 1) && (*itern <= 1) && ((*iterc == 0) || (pattern.category() == *iterc))) {
+                        types.insert(pattern);
+                    } else {
+                        if (((*itern == 0) || (n == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
+                            std::vector<Pattern> unigrams;
+                            pattern.ngrams(unigrams, 1);
+                            for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
+                                const Pattern p = *iter2;
+                                types.insert(p);
+                            }
+                            IndexedData * data = this->getdata(pattern);
+                            for (IndexedData::iterator dataiter = data->begin(); dataiter != data->end(); dataiter++) {
+                                //take into account all tokens 
+                                for (int i = 0; i < pattern.n(); i++) {
+                                    tokens.insert(*dataiter + i);
+                                }
                             }
                         }
                     }
