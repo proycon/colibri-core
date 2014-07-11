@@ -513,7 +513,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, bool debug) {
     in->seekg(beginpos, ios::beg);
     int beginposcheck = in->tellg();
     if (beginposcheck != beginpos) {
-        std::cerr << "ERROR: Resetting read pointer for stage 2 failed!" << std::endl;
+        std::cerr << "ERROR: Resetting read pointer for stage 2 failed! (" << beginposcheck << " != " << beginpos << ")" << std::endl;
         throw InternalError();
     } else if (!in->good()) {
         std::cerr << "ERROR: After resetting readpointer for stage 2, istream is not 'good': eof=" << (int) in->eof() << ", fail=" << (int) in->fail() << ", badbit=" << (int) in->bad() << std::endl;
