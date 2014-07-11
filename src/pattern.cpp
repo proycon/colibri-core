@@ -2,6 +2,7 @@
 #include "patternstore.h"
 #include "SpookyV2.h" //spooky hash
 #include <cstring>
+#include <sstream>
 
 /*****************************
 * Colibri Core
@@ -450,7 +451,120 @@ void readanddiscardpattern(std::istream * in) {
     } while (1);
 }
 
+Pattern::Pattern(unsigned char* dataref) {
+    size_t _size = datasize(dataref);
+    data = new unsigned char[_size+1];
+    for(int i = 0; i < _size; i++) {
+       data[i] = dataref[i];
+    }
+    data[_size] = ENDMARKER; 
+}
 
+void Pattern::set(std::istream * in, bool ignoreeol) {
+
+    if(data!=NULL) {
+        delete data;
+        data = NULL;
+    }
+
+    int readingdata = 0;
+    unsigned char c = 0;
+    int beginpos = -1;
+
+    //stage 1 -- get length
+    int length = 0;
+    readingdata = 0;
+    do {
+        if (in->good()) {
+            if (beginpos == -1) beginpos = in->tellg();
+            in->read( (char* ) &c, sizeof(char));
+            //std::cerr << "DEBUG read1=" << (int) c << endl;
+        } else {
+            if (ignoreeol) {
+                break;
+            } else {
+                std::cerr << "WARNING: Unexpected end of file (stage 1, length=" << length << "), no EOS marker found (adding and continuing)" << std::endl;
+                in->clear(); //clear error bits
+                break;
+                //std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 1, length=" << length << ")" << std::endl;
+                //throw InternalError();
+            }
+        }
+        length++;
+        if (readingdata) {
+            readingdata--;
+        } else {
+            if (c == ENDMARKER) {
+                if (!ignoreeol) break;
+            } else if (c < 128) {
+                //we have a size
+                if (c == 0) {
+                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 1)" << std::endl;
+                    throw InternalError();
+                } else {
+                    readingdata = c;
+                }
+            }
+        }
+    } while (1);
+
+    
+    //allocate buffer
+    if (c == ENDMARKER) {
+        data  = new unsigned char[length];
+    } else {
+        data  = new unsigned char[length+1];
+    }
+
+
+
+    //stage 2 -- read buffer
+    int i = 0;
+    readingdata = 0;
+    //std::cerr << "BEGINPOS=" << beginpos << ", LENGTH=" << length << std::endl;
+    if (beginpos == -1) {
+        //std::cerr << "ERROR: Invalid position in input stream whilst Reading pattern" << std::endl;
+        throw InternalError();
+    }
+    in->seekg(beginpos, ios::beg);
+    while (i < length) {
+        if (in->good()) {
+            in->read( (char* ) &c, sizeof(char));
+            //std::cerr << "DEBUG read2=" << (int) c << endl;
+        } else {
+            std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 2,i=" << i << ",length=" << length << ")" << std::endl;
+            throw InternalError();
+        }
+        data[i++] = c;
+        if (readingdata) {
+            readingdata--;
+        } else {
+            if (c == ENDMARKER) {
+                if (!ignoreeol) break;
+            } else if (c < 128) {
+                //we have a size
+                if (c == 0) {
+                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 2)" << std::endl;
+                    throw InternalError();
+                } else {
+                    readingdata = c;
+                }
+            }
+        }
+    }
+
+    if (c != ENDMARKER) { //add endmarker
+        data[i++] = ENDMARKER;
+    }
+
+
+    //if this is the end of file, we want the eof bit set already, so we try to
+    //read one more byte (and wind back if succesful):
+    if (in->good()) {
+        in->read( (char* ) &c, sizeof(char));
+        if (in->good()) in->unget();
+    }
+}
 
 Pattern::Pattern(std::istream * in, bool ignoreeol) {
     int readingdata = 0;
@@ -550,6 +664,38 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
         in->read( (char* ) &c, sizeof(char));
         if (in->good()) in->unget();
     }
+}
+
+
+void Pattern::set(const std::string& byteString) {
+    if(data!= NULL) {
+        delete[] data;
+        data = NULL;
+    }
+//    size_t _size = std::strlen(byteString.c_str());
+    size_t _size = byteString.size();
+    std::cerr << "< " << _size << std::endl;
+    data = new unsigned char[_size+1];
+    data = (unsigned char *) (byteString.c_str());
+    data[_size] = ENDMARKER;
+}
+
+Pattern::Pattern(const std::string& byteString) {
+    size_t _size = std::strlen(byteString.c_str());
+    data = new unsigned char[_size+1];
+    //data = reinterpret_cast<unsigned char *>(byteString.c_str());
+    data = (unsigned char *) (byteString.c_str());
+    data[_size] = ENDMARKER;
+}
+
+std::string Pattern::toByteString() const {
+    std::stringstream ss;
+
+    ss << data;
+
+    std::cerr << "> " << ss.str().size() << std::endl;
+
+    return ss.str();
 }
 
 
