@@ -509,10 +509,15 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
     readingdata = 0;
     //std::cerr << "BEGINPOS=" << beginpos << ", LENGTH=" << length << std::endl;
     if (beginpos == -1) {
-        //std::cerr << "ERROR: Invalid position in input stream whilst Reading pattern" << std::endl;
+        std::cerr << "ERROR: Invalid position in input stream whilst Reading pattern" << std::endl;
         throw InternalError();
     }
     in->seekg(beginpos, ios::beg);
+    int beginposcheck = in->tellg();
+    if (beginposcheck != beginpos) {
+        std::cerr << "ERROR: Resetting read pointer for stage 2 failed!" << std::endl;
+        throw InternalError();
+    }
     while (i < length) {
         if (in->good()) {
             in->read( (char* ) &c, sizeof(char));
