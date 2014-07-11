@@ -13,11 +13,8 @@
 *****************************/
 
 #include <string>
-#include <cstring>
 #include <iostream>
 #include <ostream>
-#include <sstream>
-#include <fstream>
 #include <istream>
 #include <unordered_map>
 #include <vector>
@@ -31,9 +28,6 @@
 #include "common.h"
 #include "classdecoder.h"
 
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/serialization/binary_object.hpp>
 
 const int MAINPATTERNBUFFERSIZE = 40960;
 
@@ -92,84 +86,6 @@ class PatternPointer;
  * memory-saving fashion. Allows numerous operations.
  */
 class Pattern {
-    private:
-     friend class boost::serialization::access;
-     //template<class Archive>
-     //friend void boost::serialization::save_construct_data(Archive & ar, const Pattern & p, const unsigned int file_version);
-     //template<class Archive>
-     //void serialize(Archive & ar, const unsigned int file_version) { /*ar & data;*/ std::cerr << "o" << std::endl; }
-
-    template<class Archive>
-    void save(Archive & ar, const unsigned int version) const {
-        //std::string byteString = toByteString();
-        //ar & byteString;
-
-        /*
-        std::stringstream ss;
-        ar & ss;
-        this->set(ss);
-        */
-
-        std::ostringstream oss;
-    
-        this->write(&oss);
-        std::string output = oss.str();
-        ar & output;
-
-        /*
-        std::vector<char> kutvector;
-        size_t _size = n();
-        for(int i = 0; i < _size; ++i) {
-            kutvector.push_back(data[i]);
-        }
-
-        ar & kutvector;
-        */
-    }
-
-    template<class Archive>
-    void load(Archive & ar, const unsigned int version) {
-        std::cerr << "LOADING" << std::endl;
-        //std::string byteString;
-        //ar & byteString;
-
-        //set(byteString);
-       // std::stringstream ss;
-
-       // this->write(&ss);
-
-       // ar & ss;
-
-        std::string input;
-        ar & input;
-
-        std::istringstream iss(input);
-        ::new(this)Pattern(&iss);
-
-        /*
-       std::vector<char> kutvector;
-       ar & kutvector;
-       size_t _size = kutvector.size();
-
-        if(data != NULL) {
-            delete data;
-            data = NULL;
-        }
-
-        data = new unsigned char[_size+1];
-
-       for(int i = 0; i < _size; ++i) {
-            data[i] = kutvector[i];
-       }
-
-       data[_size] = ENDMARKER;
-       */
-
-    }
-
-    BOOST_SERIALIZATION_SPLIT_MEMBER()
-
-     Pattern(unsigned char* dataref); 
     protected:
      void reader_marker(unsigned char * _data, std::istream * in);
     public:
@@ -188,35 +104,6 @@ class Pattern {
       * @param size The size (without \0 end marker!) to copy from dataref
       */
      Pattern(const unsigned char* dataref, const int size); 
-
-     /**
-      * This ctor is only used for serialisation purposes. Do not use it to make patterns from text!
-      */
-     Pattern(const std::string& byteString);
-     std::string toByteString() const;
-     void set(const std::string& byteString);
-
-
-/*     template<typename Archive>
-     void save(Archive& ar, const unsigned int version) {
-         int len = std::strlen(n()+1);
-         ar & len;
-         ar & boost::serialization::make_binary_object(data, len);
-     }
-
-     template<typename Archive>
-     void load(Archive& ar, const unsigned int version) {
-//         int len;
-//         ar & len;
-//
-//         delete data;
-//
-//         data = new unsigned char[len];
-//         ar & boost::serialization::make_binary_object(data, len);
-     }
-
-     BOOST_SERIALIZATION_SPLIT_MEMBER()
-*/
 
      /**
       * Slice constructor for Pattern
@@ -240,7 +127,6 @@ class Pattern {
       * @param ignoreeol Ignore end of line markers and read on until the end of the file, storing corpus data in one pattern
       */
      Pattern(std::istream * in, bool ignoreeol = false); 
-     void set(std::istream * in, bool ignoreeol = false);
 
 
      ~Pattern();
