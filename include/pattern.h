@@ -127,6 +127,7 @@ class Pattern {
       * @param ignoreeol Ignore end of line markers and read on until the end of the file, storing corpus data in one pattern
       */
      Pattern(std::istream * in, bool ignoreeol = false, bool debug = false); 
+     Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, bool ignoreeol = false, bool debug = false);
 
 
      ~Pattern();

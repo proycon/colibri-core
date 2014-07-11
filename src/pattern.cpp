@@ -558,8 +558,59 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, bool debug) {
         in->read( (char* ) &c, sizeof(char));
         if (in->good()) in->unget();
     }
+    
 }
 
+
+Pattern::Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, bool ignoreeol, bool debug) {
+    //read pattern using a buffer
+    int i = 0;
+    int readingdata = 0;
+    unsigned char c = 0;
+    do {
+        if (in->good()) {
+            in->read( (char* ) &c, sizeof(char));
+            if (debug) std::cerr << "DEBUG read=" << (int) c << endl;
+        } else {
+            std::cerr << "ERROR: Invalid pattern data, unexpected end of file i=" << i << std::endl;
+            throw InternalError();
+        }
+        if (i >= maxbuffersize) {
+            std::cerr << "ERROR: Pattern read would exceed supplied buffer size (" << maxbuffersize << ")! Aborting prior to segmentation fault..." << std::endl;
+            throw InternalError();
+        }
+        buffer[i++] = c;
+        if (readingdata) {
+            readingdata--;
+        } else {
+            if (c == ENDMARKER) {
+                if (!ignoreeol) break;
+            } else if (c < 128) {
+                //we have a size
+                if (c == 0) {
+                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 2)" << std::endl;
+                    throw InternalError();
+                } else {
+                    readingdata = c;
+                }
+            }
+        }
+    } while (1);
+
+    if (c != ENDMARKER) { //add endmarker
+        buffer[i++] = ENDMARKER;
+    }
+
+
+    if (debug) std::cerr << "DEBUG: Copying from buffer" << std::endl;
+
+    data  = new unsigned char[i];
+    for (int j = 0; j < i; j++) {
+        data[j] = buffer[j];
+    }
+    
+    if (debug) std::cerr << "DEBUG: DONE READING PATTERN" << std::endl;
+}
 
 Pattern::Pattern(const unsigned char * dataref, const int _size) {
     data = new unsigned char[_size+1];
