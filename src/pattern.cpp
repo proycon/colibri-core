@@ -452,7 +452,7 @@ void readanddiscardpattern(std::istream * in) {
 
 
 
-Pattern::Pattern(std::istream * in, bool ignoreeol) {
+Pattern::Pattern(std::istream * in, bool ignoreeol, bool debug) {
     int readingdata = 0;
     unsigned char c = 0;
     int beginpos = -1;
@@ -464,7 +464,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
         if (in->good()) {
             if (beginpos == -1) beginpos = in->tellg();
             in->read( (char* ) &c, sizeof(char));
-            //std::cerr << "DEBUG read1=" << (int) c << endl;
+            if (debug) std::cerr << "DEBUG read1=" << (int) c << endl;
         } else {
             if (ignoreeol) {
                 break;
@@ -472,8 +472,6 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
                 std::cerr << "WARNING: Unexpected end of file (stage 1, length=" << length << "), no EOS marker found (adding and continuing)" << std::endl;
                 in->clear(); //clear error bits
                 break;
-                //std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 1, length=" << length << ")" << std::endl;
-                //throw InternalError();
             }
         }
         length++;
@@ -507,7 +505,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
     //stage 2 -- read buffer
     int i = 0;
     readingdata = 0;
-    //std::cerr << "BEGINPOS=" << beginpos << ", LENGTH=" << length << std::endl;
+    if (debug) std::cerr << "STARTING STAGE 2: BEGINPOS=" << beginpos << ", LENGTH=" << length << std::endl;
     if (beginpos == -1) {
         std::cerr << "ERROR: Invalid position in input stream whilst Reading pattern" << std::endl;
         throw InternalError();
@@ -517,11 +515,14 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
     if (beginposcheck != beginpos) {
         std::cerr << "ERROR: Resetting read pointer for stage 2 failed!" << std::endl;
         throw InternalError();
+    } else if (!in->good()) {
+        std::cerr << "ERROR: After resetting readpointer for stage 2, istream is not 'good': eof=" << (int) in->eof() << ", fail=" << (int) in->fail() << ", badbit=" << (int) in->bad() << std::endl;
+        throw InternalError();
     }
     while (i < length) {
         if (in->good()) {
             in->read( (char* ) &c, sizeof(char));
-            //std::cerr << "DEBUG read2=" << (int) c << endl;
+            if (debug) std::cerr << "DEBUG read2=" << (int) c << endl;
         } else {
             std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 2,i=" << i << ",length=" << length << ")" << std::endl;
             throw InternalError();
@@ -548,10 +549,12 @@ Pattern::Pattern(std::istream * in, bool ignoreeol) {
         data[i++] = ENDMARKER;
     }
 
+    if (debug) std::cerr << "DEBUG: DONE READING PATTERN" << std::endl;
 
     //if this is the end of file, we want the eof bit set already, so we try to
     //read one more byte (and wind back if succesful):
     if (in->good()) {
+        if (debug) std::cerr << "DEBUG: (TESTING EOF)" << std::endl;
         in->read( (char* ) &c, sizeof(char));
         if (in->good()) in->unget();
     }
