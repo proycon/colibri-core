@@ -71,6 +71,7 @@ void usage() {
     cerr << "Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
     cerr << "\t-h               This help message" << endl;
     cerr << "\t-v               Version information" << endl;
+    cerr << "\t-D               Enable Debug mode" << endl;
 }
 
 template<class ModelType = IndexedPatternModel<>>
@@ -235,7 +236,9 @@ int main( int argc, char *argv[] ) {
             inputmodelfile2 = optarg;
             break;
         case 'D':
+            cerr << "(ENABLING DEBUG MODE)" << endl;
         	DEBUG = true;
+            options.DEBUG = true;
         	break;
         case 'R':
             DOREPORT = true;
