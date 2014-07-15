@@ -544,7 +544,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                         if ((constrainbymodel != NULL) && (!constrainbymodel->has(iter->first))) continue; 
 
                         ref = IndexReference(sentence, iter->second);
-                        found = true;
+                        found = true; //default to true (for mintokens == 1)
                         if ((n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) {
                             //check if sub-parts were counted
                             subngrams.clear();
@@ -565,7 +565,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                             if ((options.DOREVERSEINDEX) && (n == 1) && (reverseindex != NULL) && (!externalreverseindex)) {
                                reverseindex->push_back(ref, pattern); //TODO: make patternpointer
                             }
-                        } else if (((n >= 3) || (options.MINTOKENS == 1)) && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
+                        } 
+                        if (((n >= 3) || (options.MINTOKENS == 1)) && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
                             int foundskipgrams_thisround = this->computeskipgrams(iter->first, options, &ref, NULL, constrainbymodel, true);
                             if (foundskipgrams_thisround > 0) hasskipgrams = true;
                             foundskipgrams += foundskipgrams_thisround; 
