@@ -466,6 +466,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, bool debug) {
         if (in->good()) {
             if (!gotbeginpos) {
                 beginpos = in->tellg();
+                gotbeginpos = true;
             }
             in->read( (char* ) &c, sizeof(char));
             if (debug) std::cerr << "DEBUG read1=" << (int) c << endl;
