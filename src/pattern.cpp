@@ -524,7 +524,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, bool debug) {
             in->read( (char* ) &c, sizeof(char));
             if (debug) std::cerr << "DEBUG read2=" << (int) c << endl;
         } else {
-            std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 2,i=" << i << ",length=" << length << ")" << std::endl;
+            std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 2,i=" << i << ",length=" << length << ",beginpos=" << beginpos << ",eof=" << (int) in->eof() << ",fail=" << (int) in->fail() << ",badbit=" << (int) in->bad() << ")" << std::endl;
             throw InternalError();
         }
         data[i++] = c;
