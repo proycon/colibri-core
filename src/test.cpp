@@ -327,6 +327,9 @@ int main( int argc, char *argv[] ) {
             cout << iter2->first << "-" << iter2->second << endl;
         }
         
+        Pattern revskipgram = skipgram.reverse();
+        cerr << "Reverse skipgram: " << revskipgram.decode(classdecoder) << endl;
+        cerr << "N: " << (int) revskipgram.n() << endl;
         
         cerr << "----------------------------------------------------" << endl;
 
