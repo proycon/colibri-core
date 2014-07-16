@@ -1255,7 +1255,7 @@ Pattern Pattern::reverse() const {
             i += c + 1;
         } else {
             //we have another marker
-            newdata[cursor--] = c;
+            newdata[--cursor] = c;
             i++;
         }
     } while (1);
