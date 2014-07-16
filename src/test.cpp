@@ -194,7 +194,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Testing correct size "; test(tokens.size() == 6);
         for (vector<Pattern>::iterator iter2 = tokens.begin(); iter2 != tokens.end(); iter2++) {                
             const Pattern subngram = *iter2;
-            cout << "'" << subngram.decode(classdecoder) << "'" << endl;
+            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
         }
 
         cerr << "----------------------------------------------------" << endl;
@@ -205,7 +205,7 @@ int main( int argc, char *argv[] ) {
         ngram.subngrams(subngrams);
         for (vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {                
             const Pattern subngram = *iter2;
-            cout << "'" << subngram.decode(classdecoder) << "'" << endl;
+            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
         }
         
         cerr << "Below tests should all return 1" << endl;
@@ -250,7 +250,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Testing correct size "; test(ptokens.size() == 6);
         for (vector<PatternPointer>::iterator iter2 = ptokens.begin(); iter2 != ptokens.end(); iter2++) {                
             const PatternPointer subngram = *iter2;
-            cout << "'" << subngram.decode(classdecoder) << "'" << endl;
+            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
         }
 
         cerr << "Subgrams of ngram #1 (as patternpointers): " << endl;
@@ -258,7 +258,7 @@ int main( int argc, char *argv[] ) {
         pngram.subngrams(psubngrams);
         for (vector<PatternPointer>::iterator iter2 = psubngrams.begin(); iter2 != psubngrams.end(); iter2++) {                
             const PatternPointer psubngram = *iter2;
-            cout << "'" << psubngram.tostring(classdecoder) << "'" << endl;
+            cerr << "'" << psubngram.tostring(classdecoder) << "'" << endl;
         }
 
 
@@ -267,7 +267,7 @@ int main( int argc, char *argv[] ) {
         ngram.subngrams(psubngrams2);
         for (vector<PatternPointer>::iterator iter2 = psubngrams2.begin(); iter2 != psubngrams2.end(); iter2++) {                
             const PatternPointer psubngram2 = *iter2;
-            cout << "'" << psubngram2.tostring(classdecoder) << "'" << endl;
+            cerr << "'" << psubngram2.tostring(classdecoder) << "'" << endl;
         }
 
 
@@ -315,7 +315,7 @@ int main( int argc, char *argv[] ) {
         skipgram.parts(parts);
         for (vector<Pattern>::iterator iter2 = parts.begin(); iter2 != parts.end(); iter2++) {                
             const Pattern part = *iter2;
-            cout << "'" << part.decode(classdecoder) << "'" << endl;
+            cerr << "'" << part.decode(classdecoder) << "'" << endl;
         }
 
 
@@ -324,7 +324,7 @@ int main( int argc, char *argv[] ) {
         skipgram.gaps(gapcontainer);
         skipgram.parts(parts);
         for (vector<std::pair<int,int>>::iterator iter2 = gapcontainer.begin(); iter2 != gapcontainer.end(); iter2++) {                
-            cout << iter2->first << "-" << iter2->second << endl;
+            cerr << iter2->first << "-" << iter2->second << endl;
         }
         
         Pattern revskipgram = skipgram.reverse();
@@ -357,7 +357,7 @@ int main( int argc, char *argv[] ) {
         
         for (vector<EncNGram*>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
             const EncAnyGram * subngram = *iter2;
-            cout << "'" << subngram->decode(classdecoder) << "'" << endl;
+            cerr << "'" << subngram->decode(classdecoder) << "'" << endl;
         }
     */  
         cerr << "----------------------------------------------------" << endl;
@@ -376,7 +376,7 @@ int main( int argc, char *argv[] ) {
         skipgraminv2.parts(parts2);
         for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
             const Pattern subngram = *iter2;
-            cout << "'" << subngram.decode(classdecoder) << "'" << endl;
+            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
         }    
         cerr << "----------------------------------------------------" << endl;
         /*cerr << "Re-instantiating skipgram with skipcontent" << endl;
@@ -389,60 +389,60 @@ int main( int argc, char *argv[] ) {
         cerr << "----------------------------------------------------" << endl;
         string querystring5 = "be {*1*} not {*2*} be";
         Pattern skipgram5 = encoder.buildpattern(querystring5, true);
-        cout << skipgram5.decode(classdecoder) << endl;
+        cerr << skipgram5.decode(classdecoder) << endl;
         
         cerr << "Parts: " << endl;
         parts2.clear();
         skipgram5.parts(parts2);
         for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
             const Pattern subngram = *iter2;
-            cout << "'" << subngram.decode(classdecoder) << "'" << endl;
+            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
         }    	 
         cerr << "getgaps: " << endl;
         vector<pair<int,int> > gaps;
         skipgram5.gaps(gaps);
         for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); iter2++) {
-            cout << iter2->first << ':' << iter2->second << endl; 
+            cerr << iter2->first << ':' << iter2->second << endl; 
         }
         cerr << "getparts: " << endl;
         vector<pair<int,int> > p;
         skipgram5.parts(p);
         for (vector<pair<int,int >>::iterator iter2 = p.begin(); iter2 != p.end(); iter2++) {
-            cout << iter2->first << ':' << iter2->second << endl; 
+            cerr << iter2->first << ':' << iter2->second << endl; 
         }	
         /*cerr << "mask: " << endl;
         vector<bool> m;
         skipgram5.mask(m);
         for (vector<bool>::iterator iter2 = m.begin(); iter2 != m.end(); iter2++) {
             if (*iter2)  {
-                cout << "1";
+                cerr << "1";
             } else {
-                cout << "0";
+                cerr << "0";
             }
         }*/		
-        cout << endl;
+        cerr << endl;
         
         cerr << "slice(5,1): " << endl;
         Pattern token = Pattern(skipgram5,5,1);
-        cout << token.decode(classdecoder) << endl;
+        cerr << token.decode(classdecoder) << endl;
         
 
         cerr << "slice(2,4): " << endl;	    
         Pattern s5slice2 = Pattern(skipgram5,2,4);
-        cout << s5slice2.decode(classdecoder) << endl;
+        cerr << s5slice2.decode(classdecoder) << endl;
         cerr << endl; 
         
         
         cerr << "slice(1,3): " << endl;	    
         Pattern s5slice3 = Pattern(skipgram5,1,3);
-        cout << s5slice3.decode(classdecoder) << endl;
+        cerr << s5slice3.decode(classdecoder) << endl;
         cerr << endl;     
 
         
         cerr << "----------------------------------------------------" << endl;
         string querystring6 = "be {*1*} not";
         Pattern skipgram6 = encoder.buildpattern(querystring6, true);
-        cout << skipgram6.decode(classdecoder) << endl;
+        cerr << skipgram6.decode(classdecoder) << endl;
         skipgram6.out();
         
         cerr << "Parts: " << endl;
@@ -450,19 +450,19 @@ int main( int argc, char *argv[] ) {
         skipgram6.parts(parts2);
         for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
             const Pattern subngram = *iter2;
-            cout << "'" << subngram.decode(classdecoder) << "'" << endl;
+            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
         }    	 
         cerr << "Gaps: " << endl;
         vector<pair<int,int> > gaps6;
         skipgram6.gaps(gaps6);
         for (vector<pair<int,int >>::iterator iter2 = gaps6.begin(); iter2 != gaps6.end(); iter2++) {
-            cout << iter2->first << ':' << iter2->second << endl; 
+            cerr << iter2->first << ':' << iter2->second << endl; 
         }
         cerr << "parts: " << endl;
         vector<pair<int,int> > p6;
         skipgram6.parts(p6);
         for (vector<pair<int,int >>::iterator iter2 = p6.begin(); iter2 != p6.end(); iter2++) {
-            cout << iter2->first << ':' << iter2->second << endl; 
+            cerr << iter2->first << ':' << iter2->second << endl; 
         }	
 
 
@@ -470,47 +470,47 @@ int main( int argc, char *argv[] ) {
         cerr << "----------------------------------------------------" << endl;
         string querystring7 = "blah {*1*} or {*2*} blah";
         Pattern skipgram7 = encoder.buildpattern(querystring7, true);
-        cout << skipgram7.decode(classdecoder) << endl;
+        cerr << skipgram7.decode(classdecoder) << endl;
         
         cerr << "Parts: " << endl;
         parts2.clear();
         skipgram7.parts(parts2);
         for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
             const Pattern subngram = *iter2;
-            cout << "'" << subngram.decode(classdecoder) << "'" << endl;
+            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
         }    	 
         cerr << "gaps: " << endl;
         gaps.clear();
         skipgram7.gaps(gaps);
         for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); iter2++) {
-            cout << iter2->first << ':' << iter2->second << endl; 
+            cerr << iter2->first << ':' << iter2->second << endl; 
         }
         cerr << "parts: " << endl;
         p.clear();
         skipgram7.parts(p);
         for (vector<pair<int,int >>::iterator iter2 = p.begin(); iter2 != p.end(); iter2++) {
-            cout << iter2->first << ':' << iter2->second << endl; 
+            cerr << iter2->first << ':' << iter2->second << endl; 
         }	
         /*cerr << "mask: " << endl;
         m.clear();
         skipgram7.mask(m);
         for (vector<bool>::iterator iter2 = m.begin(); iter2 != m.end(); iter2++) {
             if (*iter2)  {
-                cout << "1";
+                cerr << "1";
             } else {
-                cout << "0";
+                cerr << "0";
             }
         }		*/
-        cout << endl;
+        cerr << endl;
         
         cerr << "slice(5,1): " << endl;
         token = Pattern(skipgram7,5,1);
-        cout << token.decode(classdecoder) << endl;
+        cerr << token.decode(classdecoder) << endl;
         
         cerr << "----------------------------------------------------" << endl;
         string querystring8 = "{*1*} or blah {*2*}";
         Pattern skipgram8 = encoder.buildpattern(querystring8, true);
-        cout << skipgram8.decode(classdecoder) << endl;
+        cerr << skipgram8.decode(classdecoder) << endl;
         
             
         cerr << "Parts: " << endl;
@@ -518,57 +518,57 @@ int main( int argc, char *argv[] ) {
         skipgram8.parts(parts2);
         for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
             const Pattern subngram = *iter2;
-            cout << "'" << subngram.decode(classdecoder) << "'" << endl;
+            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
         }    	 
         cerr << "gaps: " << endl;
         gaps.clear();
         skipgram8.gaps(gaps); //TODO: FIX!!
         for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); iter2++) {
-            cout << iter2->first << ':' << iter2->second << endl; 
+            cerr << iter2->first << ':' << iter2->second << endl; 
         }
         cerr << "parts: " << endl;
         p.clear();
         skipgram8.parts(p);
         for (vector<pair<int,int >>::iterator iter2 = p.begin(); iter2 != p.end(); iter2++) {
-            cout << iter2->first << ':' << iter2->second << endl; 
+            cerr << iter2->first << ':' << iter2->second << endl; 
         }	
         /*cerr << "mask: " << endl;
         m.clear();
         skipgram8.mask(m);
         for (vector<bool>::iterator iter2 = m.begin(); iter2 != m.end(); iter2++) {
             if (*iter2)  {
-                cout << "1";
+                cerr << "1";
             } else {
-                cout << "0";
+                cerr << "0";
             }
         }*/		
-        cout << endl;
+        cerr << endl;
         
         cerr << "slice(2,1): " << endl;
         token = Pattern(skipgram8,2,1);
-        cout << token.decode(classdecoder) << endl;	   
+        cerr << token.decode(classdecoder) << endl;	   
         cerr << endl;
         
         cerr << "slice(0,4): " << endl;	    
         Pattern s8slice1 = Pattern(skipgram8,0,4);
-        cout << s8slice1.decode(classdecoder) << endl;
+        cerr << s8slice1.decode(classdecoder) << endl;
         cerr << endl; 
 
         cerr << "slice(1,2): " << endl;	    
         Pattern s8slice2 = Pattern(skipgram8,1,2);
-        cout << s8slice2.decode(classdecoder) << endl;
+        cerr << s8slice2.decode(classdecoder) << endl;
         cerr << endl; 
 
         cerr << "slice(1,4): " << endl;	    
         Pattern s8slice3 = Pattern(skipgram8,1,4);
-        cout << s8slice3.decode(classdecoder) << endl;
+        cerr << s8slice3.decode(classdecoder) << endl;
         cerr << endl;
 
 
         cerr << "----------------------------------------------------" << endl;
         Pattern dynskipgram5 = skipgram5.toflexgram();
         cerr << "Converting skipgram '" << querystring5 << "' to flexgram:" << endl;	    
-        cout << dynskipgram5.decode(classdecoder) << endl;
+        cerr << dynskipgram5.decode(classdecoder) << endl;
         cerr << "Size (n): " << (int) dynskipgram5.n() << endl; //== size()
         cerr << "Bytesize: " << (int) dynskipgram5.bytesize() << endl;
         cerr << "Category==flexgram: "; test(dynskipgram5.category() == FLEXGRAM);
@@ -579,7 +579,7 @@ int main( int argc, char *argv[] ) {
         dynskipgram5.parts(dynparts);
         for (vector<Pattern>::iterator iter2 = dynparts.begin(); iter2 != dynparts.end(); iter2++) {                
             const Pattern subngram = *iter2;
-            cout << "'" << subngram.decode(classdecoder) << "'" << endl;
+            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
         }    	 
 
         cerr << "----------------------------------------------------" << endl;
