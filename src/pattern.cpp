@@ -292,7 +292,7 @@ void Pattern::write(ostream * out) const {
     }
 }
 
-std::string datatostring(unsigned char * data, ClassDecoder& classdecoder, int maxbytes = 0) {
+std::string datatostring(unsigned char * data, const ClassDecoder& classdecoder, int maxbytes = 0) {
     std::string result = ""; 
     int i = 0;
     int gapsize = 0;
@@ -349,11 +349,11 @@ std::string datatostring(unsigned char * data, ClassDecoder& classdecoder, int m
 }
 
 
-std::string Pattern::tostring(ClassDecoder& classdecoder) const {
+std::string Pattern::tostring(const ClassDecoder& classdecoder) const {
     return datatostring(data, classdecoder);
 }
 
-std::string PatternPointer::tostring(ClassDecoder& classdecoder) const {
+std::string PatternPointer::tostring(const ClassDecoder& classdecoder) const {
     return datatostring(data, classdecoder, bytes);
 }
 

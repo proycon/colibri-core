@@ -38,8 +38,13 @@ class ClassDecoder {
         return classes.size();
     }
     
-    std::string operator[](unsigned int key) {
-         return classes[key];
+    std::string operator[](unsigned int key) const {
+         std::unordered_map<unsigned int, std::string>::const_iterator it = classes.find(key);
+         if (it != classes.end()) {
+             return it->second;
+         } else {
+             return "{UNKNOWN}";
+         }
     }
     
     void add( unsigned int, std::string); 
