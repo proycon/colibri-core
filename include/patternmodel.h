@@ -909,7 +909,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             && ((category == 0) || (ngram.category() >= category)) ) {
                             result.push_back(ngram);
 
-                            if ((category == 0) || (category == SKIPGRAM) && (this->hasskipgrams))  {
+                            if (((category == 0) || (category == SKIPGRAM)) && (this->hasskipgrams))  {
                                 
                                 //(we can't use gettemplates() because
                                 //gettemplates() depends on us, we have to
@@ -1230,7 +1230,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         void histogram(std::map<int,int> & hist, unsigned int threshold = 0, unsigned int cap = 0, int category = 0, int size = 0) {
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
-                if (((category != 0) && (pattern.category() != category)) || (size != 0) && (size != pattern.size())) continue;
+                if (((category != 0) && (pattern.category() != category)) || ((size != 0) && (size != pattern.size()))) continue;
                 int c = this->occurrencecount(pattern);
                 if (c >= threshold) hist[c]++;
             }  
