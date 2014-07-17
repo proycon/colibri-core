@@ -1266,16 +1266,16 @@ Pattern Pattern::reverse() const {
 }
 
 
-IndexedCorpus::IndexedCorpus(std::istream *in){
-    this->load(in);
+IndexedCorpus::IndexedCorpus(std::istream *in, bool debug){
+    this->load(in, debug);
 }
 
-IndexedCorpus::IndexedCorpus(std::string filename){
-    this->load(filename);
+IndexedCorpus::IndexedCorpus(std::string filename, bool debug){
+    this->load(filename, debug);
 }
 
 
-void IndexedCorpus::load(std::istream *in) {
+void IndexedCorpus::load(std::istream *in, bool debug) {
     int sentence = 0;
     while (in->good()) {
         sentence++;
@@ -1287,17 +1287,18 @@ void IndexedCorpus::load(std::istream *in) {
             data.push_back(IndexPattern(ref,unigram));
         }
     }
+    if (debug) cerr << "Loaded " << sentence << " sentences";
     data.shrink_to_fit();
 }
 
 
-void IndexedCorpus::load(std::string filename) {
+void IndexedCorpus::load(std::string filename, bool debug) {
     std::ifstream * in = new std::ifstream(filename.c_str());
     if (!in->good()) {
         std::cerr << "ERROR: Unable to load file " << filename << std::endl;
         throw InternalError();
     }
-    this->load( (std::istream *) in);
+    this->load( (std::istream *) in, debug);
     in->close();
     delete in;
 }

@@ -80,11 +80,11 @@ class IndexedCorpus {
         std::vector<IndexPattern> data;
     public:
         IndexedCorpus() {};
-        IndexedCorpus(std::istream *in);
-        IndexedCorpus(std::string filename);
+        IndexedCorpus(std::istream *in, bool debug = false);
+        IndexedCorpus(std::string filename, bool debug = false);
         
-        void load(std::istream *in);
-        void load(std::string filename);
+        void load(std::istream *in, bool debug = false);
+        void load(std::string filename, bool debug = false);
         typedef std::vector<IndexPattern>::iterator iterator;
         typedef std::vector<IndexPattern>::const_iterator const_iterator;
         

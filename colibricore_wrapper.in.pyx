@@ -937,7 +937,7 @@ cdef class IndexedCorpus:
         self._filename = filename
         self.data = new cIndexedCorpus()
         if filename:
-            self.data.load(filename.encode('utf-8'))
+            self.data.load(filename.encode('utf-8'), True) #last bool is debug
         self.unload = True
 
 
