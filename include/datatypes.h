@@ -225,6 +225,7 @@ class PatternFeatureVector {
         std::vector<FeatureType> data;
 
         PatternFeatureVector() {};
+        virtual ~PatternFeatureVector() {};
         PatternFeatureVector(const Pattern & ref) { pattern = ref; }
 
         PatternFeatureVector(const Pattern & ref, const std::vector<FeatureType> & dataref) {
@@ -322,16 +323,16 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
 
 
         /*   get double free or corruption error: //TODO: possible memory
-         *   leak??
-        ~PatternFeatureVectorMap<FeatureType>() {
+         *   leak?? */
+        virtual ~PatternFeatureVectorMap<FeatureType>() {
+            /*
             const size_t s = this->data.size();
             for (int i = 0; i < s; i++) {
                 PatternFeatureVector<FeatureType> * pfv = this->data[i];
                 delete pfv;
                 data[i] = NULL;
-            }
+            }*/
         }
-        */
 
         bool has(const Pattern & ref) const { 
             for (const_iterator iter = this->begin(); iter != this->end(); iter++) {

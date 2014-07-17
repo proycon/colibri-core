@@ -1496,7 +1496,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         delete in;
     }
 
-    ~IndexedPatternModel<MapType>() {
+    virtual ~IndexedPatternModel<MapType>() {
         if ((this->reverseindex != NULL) && (!this->externalreverseindex)) {
             delete this->reverseindex;
             this->reverseindex = NULL;

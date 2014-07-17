@@ -154,7 +154,7 @@ template<class ContainerType,class ReadWriteSizeType = uint64_t>
 class PatternStore: public PatternStoreInterface {
     public:
         PatternStore<ContainerType,ReadWriteSizeType>() {};
-        ~PatternStore<ContainerType,ReadWriteSizeType>() {};
+        virtual ~PatternStore<ContainerType,ReadWriteSizeType>() {};
     
 
         virtual void insert(const Pattern & pattern)=0; //might be a noop in some implementations that require a value
@@ -191,7 +191,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
         ValueHandler valuehandler;
      public:
         PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType>(): PatternStore<ContainerType,ReadWriteSizeType>() {};
-        ~PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType>() {};
+        virtual ~PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType>() {};
 
         virtual void insert(const Pattern & pattern, ValueType & value)=0;
 
@@ -310,7 +310,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
     public:
 
         PatternSet<ReadWriteSizeType>(): PatternStore<t_patternset,ReadWriteSizeType>() {};
-        ~PatternSet<ReadWriteSizeType>() {};
+        virtual ~PatternSet<ReadWriteSizeType>() {};
 
         void insert(const Pattern & pattern) {
             data.insert(pattern);
@@ -404,7 +404,7 @@ class OrderedPatternSet: public PatternStore<t_orderedpatternset,ReadWriteSizeTy
     public:
 
         OrderedPatternSet<ReadWriteSizeType>(): PatternStore<t_orderedpatternset,ReadWriteSizeType>() {};
-        ~OrderedPatternSet<ReadWriteSizeType>();
+        virtual ~OrderedPatternSet<ReadWriteSizeType>();
 
         void insert(const Pattern pattern) {
             data.insert(pattern);
@@ -506,7 +506,7 @@ class OrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType
         std::map<const Pattern, ValueType> data;
     public:
         OrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>(): PatternMapStore<std::map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
-        ~OrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
+        virtual ~OrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
 
         void insert(const Pattern & pattern, ValueType & value) { 
             data[pattern] = value;
