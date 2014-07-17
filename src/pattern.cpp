@@ -26,6 +26,10 @@ unsigned char * inttopatterndata(unsigned char * buffer,unsigned int cls) {
 	unsigned char length = 0;
 	do {
 		cls2 = cls2 / 256;
+        if (length == 255) {
+            cerr << "ERROR: inttopatterndata() LENGTH OVERFLOW" << endl;
+            throw InternalError();
+        }
 		length++;
 	} while (cls2 > 0);
 	int i = 0;
@@ -1303,9 +1307,12 @@ void IndexedCorpus::load(std::string filename, bool debug) {
     delete in;
 }
 
-Pattern IndexedCorpus::getpattern(const IndexReference & begin, int length) { 
+Pattern IndexedCorpus::getpattern(const IndexReference & begin, int length) const {
     //warning: will segfault if mainpatternbuffer overflows!!
-    iterator iter = this->find(begin);
+    //length in tokens
+    //
+    //std::cerr << "getting pattern " << begin.sentence << ":" << begin.token << " length " << length << std::endl;
+    const_iterator iter = this->find(begin);
     unsigned char * buffer = mainpatternbuffer;
     int i = 0;
     while (i < length) {
@@ -1357,7 +1364,7 @@ std::vector<IndexReference> IndexedCorpus::findpattern(const Pattern & pattern, 
     return result;
 }
 
-int IndexedCorpus::sentencelength(int sentence) {
+int IndexedCorpus::sentencelength(int sentence) const {
     IndexReference ref = IndexReference(sentence, 0);
     int length = 0;
     for (const_iterator iter = this->find(ref); iter != this->end(); iter++) {
@@ -1367,15 +1374,15 @@ int IndexedCorpus::sentencelength(int sentence) {
     return length;
 }
 
-unsigned int IndexedCorpus::sentences() {
+unsigned int IndexedCorpus::sentences() const {
     int max = 0;
-    for (iterator iter = this->begin(); iter != this->end(); iter++) {
+    for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
         if (iter->ref.sentence > max) max = iter->ref.sentence;
     }
     return max;
 }
 
-Pattern IndexedCorpus::getsentence(int sentence) { 
+Pattern IndexedCorpus::getsentence(int sentence) const { 
     return getpattern(IndexReference(sentence,0), sentencelength(sentence));
 }
 

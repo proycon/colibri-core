@@ -119,13 +119,13 @@ class IndexedCorpus {
             }
         } 
 
-        Pattern getpattern(const IndexReference & begin, int length=1);
-        Pattern getsentence(int sentence); //returns sentence as a pattern
+        Pattern getpattern(const IndexReference & begin, int length=1) const;
+        Pattern getsentence(int sentence) const; //returns sentence as a pattern
          
         std::vector<IndexReference> findpattern(const Pattern & pattern, int maxmatches=0); //by far not as efficient as a pattern model obviously
 
-        int sentencelength(int sentence) ;  //returns the length of a sentence (0-indexed)
-        unsigned int sentences() ; //returns the number of sentences (1-indexed)
+        int sentencelength(int sentence) const;  //returns the length of a sentence (0-indexed)
+        unsigned int sentences() const; //returns the number of sentences (1-indexed)
 
 
         void push_back(const IndexReference ref, const Pattern & pattern) {

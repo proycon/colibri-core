@@ -37,7 +37,6 @@ int main( int argc, char *argv[] ) {
 	//string model = argv[1];
 	//string classfile = argv[1];
     
-    chdir("/tmp");
 
     const char * poem = 
     "To be or not to be , that is the question ;\n"
@@ -82,52 +81,37 @@ int main( int argc, char *argv[] ) {
     "To pee or not to pee .\n"; //See that Shakespeare? I could be a poet too! 
 	
     {
-        
        /* 
         {
             //DEBUG ZONE
-            PatternModelOptions options;
-            options.DOREVERSEINDEX = false;
-            options.DOSKIPGRAMS_EXHAUSTIVE = false;
-            options.DOSKIPGRAMS = false ;
-            options.MINTOKENS = 1;
-            options.MAXLENGTH = 8;
 
-            cerr << "Building unindexed model (t1)" << endl;
-            PatternModel<uint32_t> unindexedmodel;
+            string corpusfile = "tmppage.colibri.dat";
+            string classfile = "tmppage.colibri.cls";
+            
+            ClassDecoder classdecoder = ClassDecoder(classfile);
+            IndexedCorpus corpusdata = IndexedCorpus(corpusfile);
 
-            cerr << endl;
-            std::string infilename = "/tmp/republic.txt.colibri.dat";
-            const clock_t begin_time = clock();
-            unindexedmodel.train(infilename, options);
-            cerr << "Duration: " << float( clock() - begin_time ) /  CLOCKS_PER_SEC << " s" << endl;
-            cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
-        }
-      
-        {
-            //DEBUG ZONE
-            PatternModelOptions options;
-            options.DOREVERSEINDEX = false;
-            options.DOSKIPGRAMS_EXHAUSTIVE = false;
-            options.DOSKIPGRAMS = false ;
-            options.MINTOKENS = 2;
-            options.MAXLENGTH = 8;
+            cerr << "Iterating over sentences " << corpusfile << endl;
+            int sentencecount = corpusdata.sentences();
+            cerr << "Number of sentences: "  <<  sentencecount << endl;
 
-            cerr << "Building unindexed model (t2)" << endl;
-            PatternModel<uint32_t> unindexedmodel;
+            for (int i = 1; i <= sentencecount; i++) {
+                Pattern sentence = corpusdata.getsentence(i);
+                cerr << "SENTENCE #" << i << ": " << sentence.tostring(classdecoder) << endl;
+                for (int n = 1; n <= 5; n++) { 
+                    vector<Pattern> container;
+                    sentence.ngrams(container,n);
+                }
+            }
 
-            cerr << endl;
-            std::string infilename = "/tmp/republic.txt.colibri.dat";
-            const clock_t begin_time = clock();
-            unindexedmodel.train(infilename, options);
-            cerr << "Duration: " << float( clock() - begin_time ) /  CLOCKS_PER_SEC << " s" << endl;
-            cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
+
             exit(0);
+
         }
         */
-        
        
 
+        chdir("/tmp");
 
         string classfile = "/tmp/colibritest";    
         ofstream f;
