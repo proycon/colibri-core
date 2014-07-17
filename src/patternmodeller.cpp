@@ -44,6 +44,7 @@ void usage() {
     cerr << "\t-l <number>      Maximum pattern length (default: 100)" << endl;
     cerr << "\t-b <number>      Maximum back-off length (default: 100). Only makes sense to set lower than minimum pattern length and may conserve memory during training then" << endl;
     cerr << "\t-s               Compute skipgrams (costs extra memory and time)" << endl;    
+    cerr << "\t-y <number>      Occurrence threshold for skipgrams (overrides -t for skipgrams, defaults to -t). Skipgrams occurring less than this will be pruned. Value must be equal to or higher than -t." << endl;    
     cerr << "\t-T <number>      Skip type threshold (for use with -s): only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, unindexed models always act as if fixed to 1). Also note that only types that occur above the occurrent threshold (-t) are counted here! Requires indexed models" << endl;
     cerr << "\t-S S             Compute flexgrams by abstracting over skipgrams (implies -s)." << endl; 
     cerr << "\t-S <number>      Compute flexgrams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
@@ -223,7 +224,7 @@ int main( int argc, char *argv[] ) {
     double COOCTHRESHOLD = 0;
     int DOCOOC = 0; //1= absolute, 2= npmi
     char c;    
-    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vb:")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vb:y:")) != -1)
         switch (c)
         {
         case 'c':
@@ -251,6 +252,9 @@ int main( int argc, char *argv[] ) {
             break;
         case 'T':
             options.MINSKIPTYPES = atoi(optarg);            
+            break;
+        case 'y':
+            options.MINTOKENS_SKIPGRAMS = atoi(optarg);
             break;
         case 'l':
             options.MAXLENGTH = atoi(optarg); 

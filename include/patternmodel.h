@@ -55,6 +55,7 @@ class NoSuchPattern: public std::exception {
 class PatternModelOptions {
     public:
         int MINTOKENS;
+        int MINTOKENS_SKIPGRAMS;
         int MINLENGTH;
         int MAXLENGTH;
         int MAXBACKOFFLENGTH;
@@ -77,6 +78,7 @@ class PatternModelOptions {
 
         PatternModelOptions() {
             MINTOKENS = -1; //defaults to 2 for building, 1 for loading
+            MINTOKENS_SKIPGRAMS = -1; //defaults to MINTOKENS
             MINLENGTH = 1;
             MAXLENGTH = 100;
             MAXBACKOFFLENGTH = 100;
@@ -101,6 +103,7 @@ class PatternModelOptions {
         //copy constructor
         PatternModelOptions(const PatternModelOptions & ref) {
             MINTOKENS = ref.MINTOKENS; //defaults to 2 for building, 1 for loading
+            MINTOKENS_SKIPGRAMS = ref.MINTOKENS_SKIPGRAMS; //defaults to 2 for building, 1 for loading
             MINLENGTH = ref.MINLENGTH;
             MAXLENGTH = ref.MAXLENGTH;
             MAXBACKOFFLENGTH = ref.MAXBACKOFFLENGTH;
@@ -472,6 +475,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
             if (options.MINTOKENS == -1) options.MINTOKENS = 2;
             if (options.MINTOKENS == 0)  options.MINTOKENS = 1;
+            if (options.MINTOKENS_SKIPGRAMS < options.MINTOKENS) options.MINTOKENS_SKIPGRAMS = options.MINTOKENS;            
             if (constrainbymodel == this) {
                 totaltypes = 0;
                 totaltokens = 0;
@@ -784,7 +788,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
         virtual int computeskipgrams(const Pattern & pattern, PatternModelOptions & options ,  const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, const bool exhaustive = false) { //backward compatibility
-            return computeskipgrams(pattern, options.MINTOKENS, singleref, multiplerefs, constrainbymodel, NULL, exhaustive, options.DEBUG);
+            if (options.MINTOKENS_SKIPGRAMS < options.MINTOKENS) options.MINTOKENS_SKIPGRAMS = options.MINTOKENS;
+            return computeskipgrams(pattern, options.MINTOKENS_SKIPGRAMS, singleref, multiplerefs, constrainbymodel, NULL, exhaustive, options.DEBUG);
         }
 
         virtual std::vector<Pattern> findskipgrams(const Pattern & pattern, int occurrencethreshold = 1) {
