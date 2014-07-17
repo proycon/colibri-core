@@ -1287,7 +1287,7 @@ void IndexedCorpus::load(std::istream *in, bool debug) {
             data.push_back(IndexPattern(ref,unigram));
         }
     }
-    if (debug) cerr << "Loaded " << sentence << " sentences";
+    if (debug) cerr << "Loaded " << sentence << " sentences" << endl;
     data.shrink_to_fit();
 }
 
