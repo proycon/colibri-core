@@ -40,10 +40,10 @@ cdef extern from "pattern.h":
         bint operator<(Pattern&) nogil
         bint operator>(Pattern&) nogil
         Pattern operator+(Pattern&) nogil
-        int ngrams(vector[Pattern] container,int n) nogil
+        int ngrams(vector[Pattern]& container,int n)
         int parts(vector[Pattern]& container) nogil
         int gaps(vector[pair[int,int]]& container) nogil
-        int subngrams(vector[Pattern] container,int minn=0,int maxn=9) nogil
+        int subngrams(vector[Pattern]& container,int minn=0,int maxn=9)
         bool contains(Pattern&) nogil
         Pattern toflexgram() nogil
         vector[int] tovector() nogil
@@ -202,7 +202,7 @@ cdef extern from "patternstore.h":
         IndexedCorpus() nogil
         void load(string, bool) nogil
         bool has(IndexReference&) nogil
-        Pattern getpattern(IndexReference&,int) nogil except +KeyError
+        Pattern getpattern(IndexReference&,int)  except +KeyError
         vector[IndexReference] findpattern(Pattern&,int) nogil
         int operator[](IndexReference&) nogil except +KeyError
         int sentencelength(int) nogil
