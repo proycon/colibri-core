@@ -883,7 +883,7 @@ int Pattern::ngrams(vector<Pattern> & container, const int n) const { //return m
     if (n > _n) return 0;
     int found = 0;
     for (int i = 0; i < (_n - n) + 1; i++) {
-        container.push_back(  Pattern(*this,i,n));
+        container.push_back( Pattern(*this,i,n));
         found++;
     }
     return found;
@@ -1320,7 +1320,6 @@ Pattern IndexedCorpus::getpattern(const IndexReference & begin, int length) cons
             //std::cerr << "ERROR: Specified index " << (begin + i).tostring() << " (pivot " << begin.tostring() << ", offset " << i << ") does not exist"<< std::endl;
             throw KeyError();
         }
-        //cerr << "DEBUG: ref=" << iter->ref.tostring() << " class=" << iter->cls << std::endl;
         buffer = inttopatterndata(buffer, iter->cls);
         i++;
         iter++;
@@ -1329,7 +1328,7 @@ Pattern IndexedCorpus::getpattern(const IndexReference & begin, int length) cons
         //std::cerr << "ERROR: Specified index " << begin.tostring() << " does not exist"<< std::endl;
         throw KeyError();
     }
-    unsigned char buffersize = buffer - mainpatternbuffer; //pointer arithmetic
+    int buffersize = buffer - mainpatternbuffer; //pointer arithmetic
     return Pattern(mainpatternbuffer, buffersize);
 }
 
