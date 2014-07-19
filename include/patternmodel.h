@@ -1143,7 +1143,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             while(iter != this->end()) { 
                 const Pattern pattern = iter->first;
                 if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == SKIPGRAM)) {
-                    if (iter->second < threshold) {
+                    if (this->occurrencecount(pattern) < threshold) {
                         iter = this->erase(iter);
                         pruned++;
                         continue;
