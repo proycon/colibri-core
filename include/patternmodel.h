@@ -606,7 +606,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
                 if (!options.QUIET) std::cerr << "pruned " << pruned;
                 if (foundskipgrams) {
-                    int prunedextra = this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, n);
+                    int prunedextra = this->pruneskipgrams(options.MINTOKENS_SKIPGRAMS, options.MINSKIPTYPES, n);
                     if (prunedextra && !options.QUIET) std::cerr << " plus " << prunedextra << " extra skipgrams..";
                     pruned += prunedextra;
                 }
@@ -1135,7 +1135,23 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
         virtual int pruneskipgrams(int threshold, int minskiptypes=2, int _n = 0) {
-            return 0; //only works for indexed models
+            //NOTE: minskiptypes is completely ignored! that only works for indexed models
+            int pruned = 0;
+            if (minskiptypes <=1) return pruned; //nothing to do
+
+            typename PatternModel<ValueType,BaseValueHandler<ValueType>,MapType>::iterator iter = this->begin(); 
+            while(iter != this->end()) { 
+                const Pattern pattern = iter->first;
+                if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == SKIPGRAM)) {
+                    if (iter->second < threshold) {
+                        iter = this->erase(iter);
+                        pruned++;
+                        continue;
+                    }
+                }
+                iter++;
+            }
+            return pruned;
         }
 
 
@@ -1655,7 +1671,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             if (!options.QUIET) std::cerr << " Found " << foundskipgrams << " skipgrams...";
             int pruned = this->prune(options.MINTOKENS,n);
             if (!options.QUIET) std::cerr << "pruned " << pruned;
-            int prunedextra = this->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES, n);
+            int prunedextra = this->pruneskipgrams(options.MINTOKENS_SKIPGRAMS, options.MINSKIPTYPES, n);
             if (prunedextra && !options.QUIET) std::cerr << " plus " << prunedextra << " extra skipgrams..";
             if (!options.QUIET) std::cerr << "...total kept: " <<  foundskipgrams - pruned - prunedextra << std::endl;
         }
