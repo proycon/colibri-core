@@ -606,7 +606,12 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
                 if (!options.QUIET) std::cerr << "pruned " << pruned;
                 if (foundskipgrams) {
-                    int prunedextra = this->pruneskipgrams(options.MINTOKENS_SKIPGRAMS, options.MINSKIPTYPES, n);
+                    int prunedextra;
+                    if ((options.MINTOKENS == 1) || (constrainbymodel != NULL)) {
+                        prunedextra = this->pruneskipgrams(options.MINTOKENS_SKIPGRAMS, options.MINSKIPTYPES, 0);
+                    } else {
+                        prunedextra = this->pruneskipgrams(options.MINTOKENS_SKIPGRAMS, options.MINSKIPTYPES, n);
+                    }
                     if (prunedextra && !options.QUIET) std::cerr << " plus " << prunedextra << " extra skipgrams..";
                     pruned += prunedextra;
                 }
