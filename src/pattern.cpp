@@ -1211,6 +1211,19 @@ Pattern Pattern::replace(int begin, int length, const Pattern & replacement) con
 }
 
 
+Pattern Pattern::addskip(std::pair<int,int> gap) const {
+    //Returns a pattern with the specified spans replaced by fixed skips
+    const int _n = n();
+    Pattern pattern = *this;
+    const Pattern replacement = Pattern(gap.second);
+    pattern = pattern.replace(gap.first, gap.second, replacement);
+    if (pattern.n() != _n) {
+        std::cerr << "ERROR: addskip(): Pattern length changed from " << _n << " to " << pattern.n() << " after substituting slice (" << gap.first << "," <<gap.second << ")" << std::endl;
+        throw InternalError();
+    }
+    return pattern;
+}
+
 Pattern Pattern::addskips(std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     const int _n = n();
