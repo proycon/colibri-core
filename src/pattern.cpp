@@ -1212,7 +1212,7 @@ Pattern Pattern::replace(int begin, int length, const Pattern & replacement) con
 
 
 Pattern Pattern::addskip(std::pair<int,int> gap) const {
-    //Returns a pattern with the specified spans replaced by fixed skips
+    //Returns a pattern with the specified span replaced by a fixed skip
     const int _n = n();
     Pattern pattern = *this;
     const Pattern replacement = Pattern(gap.second);
