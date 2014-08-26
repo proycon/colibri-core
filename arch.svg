@@ -411,16 +411,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
+     inkscape:zoom="0.98994949"
      inkscape:cx="317.27607"
-     inkscape:cy="166.45152"
+     inkscape:cy="330.9475"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1440"
-     inkscape:window-height="876"
+     inkscape:window-width="1920"
+     inkscape:window-height="1039"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="18"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -430,7 +430,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -447,7 +447,7 @@
        sodipodi:nodetypes="cccccccc" />
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:10.23403454;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:10.23403453999999968;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="path8618-1-5-5-9-3-2"
        sodipodi:cx="647.00269"
        sodipodi:cy="100.12224"
@@ -457,7 +457,7 @@
        transform="matrix(0.23530871,0,-0.00243366,0.16230365,231.85627,761.35049)" />
     <text
        xml:space="preserve"
-       style="font-size:12.79795361px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12.79795361000000042px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="410.70789"
        y="678.34888"
        id="text8712-7-8-4-4-4"
@@ -475,22 +475,22 @@
        sodipodi:cy="100.12224"
        sodipodi:rx="163.13963"
        sodipodi:ry="96.469566"
-       d="m 810.14232,100.12224 c 0,53.27867 -73.0401,96.46956 -163.13963,96.46956 -90.09954,0 -163.13964,-43.19089 -163.13964,-96.46956 0,-53.278672 73.0401,-96.4695682 163.13964,-96.4695682 90.09953,0 163.13963,43.1908962 163.13963,96.4695682 z"
-       transform="matrix(0.23530871,0,-0.00243366,0.16230365,216.70397,785.59415)" />
+       d="m 810.14232,100.12224 a 163.13963,96.469566 0 1 1 -326.27927,0 163.13963,96.469566 0 1 1 326.27927,0 z"
+       transform="matrix(0.23530871,0,-0.00243366,0.16230365,256.09992,791.65507)" />
     <text
        xml:space="preserve"
-       style="font-size:12.79795361px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
-       x="388.56967"
-       y="699.36713"
+       style="font-size:12.79795361px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="434.01126"
+       y="704.6217"
        id="text8712-7-8-4-4"
        sodipodi:linespacing="125%"
        transform="scale(0.86695823,1.1534581)"><tspan
          sodipodi:role="line"
          id="tspan8714-9-7-9-9"
-         x="388.56967"
-         y="699.36713">PatternMap</tspan></text>
+         x="434.01126"
+         y="704.6217">PatternMap</tspan></text>
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.99999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-9)"
+       style="fill:none;stroke:#000000;stroke-width:1.99999988000000006;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-9)"
        d="M 245.40342,603.39412 545.54598,803.31489"
        id="path7687-9"
        inkscape:connector-curvature="0" />
@@ -501,7 +501,7 @@
        inkscape:connector-curvature="0" />
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#e9afdd;fill-opacity:1;stroke:#000000;stroke-width:2.06595182;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#e9afdd;fill-opacity:1;stroke:#000000;stroke-width:2.06595181999999999;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="path8618-6-5"
        sodipodi:cx="647.00269"
        sodipodi:cy="100.12224"
@@ -511,7 +511,7 @@
        transform="matrix(1,0,-0.01034242,0.93717277,-33.814736,311.02257)" />
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#e9afdd;fill-opacity:1;stroke:#000000;stroke-width:2.06595182;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#e9afdd;fill-opacity:1;stroke:#000000;stroke-width:2.06595181999999999;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="path8618-6"
        sodipodi:cx="647.00269"
        sodipodi:cy="100.12224"
@@ -531,7 +531,7 @@
        transform="matrix(1,0,-0.01034242,0.93717277,-15.126935,322.63933)" />
     <text
        xml:space="preserve"
-       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:AR PL Mingti2L Big5"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="107.11823"
        y="349.77988"
        id="text3755"
@@ -540,11 +540,11 @@
          id="tspan3757"
          x="107.11823"
          y="349.77988"
-         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Bold">Colibri Core <tspan
-   style="font-size:28px;font-weight:normal;-inkscape-font-specification:Calibri"
+         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu">Colibri Core <tspan
+   style="font-size:28px;font-weight:normal;-inkscape-font-specification:Ubuntu;font-family:Ubuntu"
    id="tspan3501">- Architecture</tspan></tspan></text>
     <rect
-       style="opacity:0.7092199;fill:#aade87;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#aade87;fill-opacity:1;stroke:none"
        id="rect3883"
        width="121.21831"
        height="117.1777"
@@ -554,7 +554,7 @@
        ry="9.999999" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="70.612602"
        y="401.66226"
        id="text3755-8-0-2-4"
@@ -563,19 +563,19 @@
          id="tspan3757-7-4-1-9"
          x="70.612602"
          y="401.66226"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Italic">plaintext</tspan><tspan
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu">plaintext</tspan><tspan
          sodipodi:role="line"
          x="70.612602"
          y="431.66226"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan3908">corpus</tspan><tspan
          sodipodi:role="line"
          x="70.612602"
          y="461.66226"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan3912">data</tspan></text>
     <rect
-       style="opacity:0.7092199;fill:#aade87;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#aade87;fill-opacity:1;stroke:none"
        id="rect3883-7"
        width="121.21831"
        height="117.1777"
@@ -585,7 +585,7 @@
        ry="9.999999" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="131.10278"
        y="655.87408"
        id="text3755-8-0-2-4-5"
@@ -594,19 +594,19 @@
          id="tspan3757-7-4-1-9-2"
          x="131.10278"
          y="655.87408"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Italic">encoded</tspan><tspan
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu">encoded</tspan><tspan
          sodipodi:role="line"
          x="131.10278"
          y="685.87408"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan3908-9">corpus</tspan><tspan
          sodipodi:role="line"
          x="131.10278"
          y="715.87408"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan3912-2">data</tspan></text>
     <rect
-       style="opacity:0.7092199;fill:#aade87;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#aade87;fill-opacity:1;stroke:none"
        id="rect3883-7-6"
        width="121.21831"
        height="45.456867"
@@ -616,7 +616,7 @@
        ry="9.999999" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="132.11295"
        y="596.27502"
        id="text3755-8-0-2-4-5-8"
@@ -624,10 +624,10 @@
          sodipodi:role="line"
          x="132.11295"
          y="596.27502"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan3912-2-0">class file</tspan></text>
     <rect
-       style="opacity:0.7092199;fill:#c2c52e;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#c2c52e;fill-opacity:1;stroke:none"
        id="rect3784-3-6"
        width="170.6461"
        height="51.960838"
@@ -637,7 +637,7 @@
        ry="50" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="35.804768"
        y="538.57373"
        id="text3755-8-0-2-9"
@@ -646,9 +646,9 @@
          id="tspan3757-7-4-1-97"
          x="35.804768"
          y="538.57373"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Italic">classencode</tspan></text>
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu">classencode</tspan></text>
     <rect
-       style="opacity:0.7092199;fill:#c2c52e;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#c2c52e;fill-opacity:1;stroke:none"
        id="rect3784-3-6-2"
        width="162.07468"
        height="51.960838"
@@ -658,7 +658,7 @@
        ry="50" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="237.57787"
        y="541.25763"
        id="text3755-8-0-2-9-5"
@@ -667,9 +667,9 @@
          id="tspan3757-7-4-1-97-8"
          x="237.57787"
          y="541.25763"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Italic">classdecode</tspan></text>
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu">classdecode</tspan></text>
     <rect
-       style="opacity:0.7092199;fill:#aade87;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#aade87;fill-opacity:1;stroke:none"
        id="rect3883-0"
        width="121.21831"
        height="117.1777"
@@ -679,7 +679,7 @@
        ry="9.999999" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="215.73938"
        y="401.78204"
        id="text3755-8-0-2-4-1"
@@ -688,16 +688,16 @@
          id="tspan3757-7-4-1-9-23"
          x="215.73938"
          y="401.78204"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Italic">FoLiA</tspan><tspan
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu">FoLiA</tspan><tspan
          sodipodi:role="line"
          x="215.73938"
          y="431.78204"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan3908-8">corpus</tspan><tspan
          sodipodi:role="line"
          x="215.73938"
          y="461.78204"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan3912-0">data</tspan></text>
     <text
        xml:space="preserve"
@@ -711,7 +711,7 @@
          id="tspan4821" /></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri Bold"
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="177.14285"
        y="430.93359"
        id="text4823"
@@ -734,7 +734,7 @@
        inkscape:transform-center-x="18.429424"
        inkscape:transform-center-y="-7.6203289" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.99999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
+       style="fill:none;stroke:#000000;stroke-width:1.99999988000000006;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
        d="m 237.68625,585.43959 25.71351,-18.3945"
        id="path4827-6-1"
        inkscape:connector-curvature="0"
@@ -751,7 +751,7 @@
        id="path6444"
        inkscape:connector-curvature="0" />
     <rect
-       style="opacity:0.7092199;fill:#c2c52e;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#c2c52e;fill-opacity:1;stroke:none"
        id="rect3784-3-6-2-8"
        width="198.44017"
        height="97.417702"
@@ -761,7 +761,7 @@
        ry="50" />
     <text
        xml:space="preserve"
-       style="font-size:11.58685017px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:11.58685016999999995px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="398.98767"
        y="669.57465"
        id="text3755-8-0-2-9-5-7"
@@ -771,11 +771,11 @@
          id="tspan3757-7-4-1-97-8-4"
          x="398.98767"
          y="669.57465"
-         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Bold Italic">pattern</tspan><tspan
+         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu">pattern</tspan><tspan
          sodipodi:role="line"
          x="398.98767"
          y="698.54181"
-         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Bold Italic"
+         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan7672">modeller</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#Arrow1Lend-9)"
@@ -794,7 +794,7 @@
        ry="9.999999" />
     <text
        xml:space="preserve"
-       style="font-size:11.58685017px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:11.58685016999999995px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="620.01666"
        y="588.07739"
        id="text3755-8-0-2-9-5-7-5"
@@ -803,12 +803,12 @@
          sodipodi:role="line"
          x="620.01666"
          y="588.07739"
-         style="font-size:23.17370033px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Bold Italic"
+         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan7672-6">Unindexed</tspan><tspan
          sodipodi:role="line"
          x="620.01666"
          y="617.04449"
-         style="font-size:23.17370033px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Bold Italic"
+         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan8244">Pattern Model</tspan></text>
     <rect
        style="opacity:0.70921990000000001;fill:#aade87;fill-opacity:1;stroke:none"
@@ -821,7 +821,7 @@
        ry="9.999999" />
     <text
        xml:space="preserve"
-       style="font-size:11.58685017px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:11.58685016999999995px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="623.61816"
        y="715.42047"
        id="text3755-8-0-2-9-5-7-5-6"
@@ -830,12 +830,12 @@
          sodipodi:role="line"
          x="623.61816"
          y="715.42047"
-         style="font-size:23.17370033px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Bold Italic"
+         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan8145">Indexed</tspan><tspan
          sodipodi:role="line"
          x="623.61816"
          y="744.38757"
-         style="font-size:23.17370033px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Bold Italic"
+         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan8149">Pattern Model</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
@@ -845,7 +845,7 @@
        inkscape:transform-center-x="21.132502"
        inkscape:transform-center-y="-8.9226065" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.99999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
+       style="fill:none;stroke:#000000;stroke-width:1.99999988000000006;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
        d="m 515.86474,625.49765 23.97239,-27.32457"
        id="path4827-6-3-9"
        inkscape:connector-curvature="0"
@@ -853,7 +853,7 @@
        inkscape:transform-center-y="30.354543" />
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri Bold"
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="625.89203"
        y="639.97235"
        id="text4823-5"
@@ -864,7 +864,7 @@
          y="639.97235">OR</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="366.68536"
        y="697.79865"
        id="text8246"
@@ -873,7 +873,7 @@
          id="tspan8248"
          x="366.68536"
          y="697.79865"
-         style="font-style:italic;font-weight:normal;-inkscape-font-specification:Calibri Italic">train mode</tspan></text>
+         style="font-style:italic;font-weight:normal;-inkscape-font-specification:Ubuntu;font-family:Ubuntu">train mode</tspan></text>
     <rect
        style="opacity:0.7092199;fill:#c2c52e;fill-opacity:1;stroke:none"
        id="rect3784-3-6-2-8-9"
@@ -885,7 +885,7 @@
        ry="50" />
     <text
        xml:space="preserve"
-       style="font-size:11.58685017px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:11.58685016999999995px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="851.56122"
        y="649.17426"
        id="text3755-8-0-2-9-5-7-8"
@@ -895,15 +895,15 @@
          id="tspan3757-7-4-1-97-8-4-6"
          x="851.56122"
          y="649.17426"
-         style="font-size:23.17370033px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Bold Italic">pattern</tspan><tspan
+         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu">pattern</tspan><tspan
          sodipodi:role="line"
          x="851.56122"
          y="678.14136"
-         style="font-size:23.17370033px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Bold Italic"
+         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan7672-1">modeller</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="840.44696"
        y="681.13116"
        id="text8246-9"
@@ -912,7 +912,7 @@
          id="tspan8248-9"
          x="840.44696"
          y="681.13116"
-         style="font-style:italic;font-weight:normal;-inkscape-font-specification:Calibri Italic">edit mode</tspan></text>
+         style="font-style:italic;font-weight:normal;-inkscape-font-specification:Ubuntu;font-family:Ubuntu">edit mode</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow2Mstart);marker-end:url(#Arrow1Mend)"
        d="m 750.81194,602.75604 29.4622,21.90831"
@@ -929,7 +929,7 @@
        inkscape:transform-center-y="24.724231" />
     <path
        sodipodi:type="arc"
-       style="opacity:0.70921990000000001;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:1.96927625;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.96927625,5.90782874;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:1.96927625000000006;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.96927625000000006, 5.90782874000000024;stroke-dashoffset:0"
        id="path8556"
        sodipodi:cx="574.77679"
        sodipodi:cy="63.756744"
@@ -939,7 +939,7 @@
        transform="matrix(1,0,-0.01242391,1.0314465,-14.109179,337.44726)" />
     <text
        xml:space="preserve"
-       style="font-size:20.31203079px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:20.31203079000000145px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="539.68781"
        y="399.57968"
        id="text8558"
@@ -952,7 +952,7 @@
     <path
        transform="matrix(1.0593208,0,-0.01316091,1.04784,18.332769,393.69169)"
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:1.89831722;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.89831717, 11.38990295;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:1.89831722000000003;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.89831717000000011, 11.38990294999999975;stroke-dashoffset:0"
        id="path8556-4"
        sodipodi:cx="574.77679"
        sodipodi:cy="63.756744"
@@ -961,7 +961,7 @@
        d="m 634.37579,63.756744 c 0,17.015702 -26.68338,30.809653 -59.599,30.809653 -32.91561,0 -59.59899,-13.793951 -59.59899,-30.809653 0,-17.015701 26.68338,-30.809652 59.59899,-30.809652 32.91562,0 59.599,13.793951 59.599,30.809652 z" />
     <text
        xml:space="preserve"
-       style="font-size:20.31203079px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:87.99999952%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:20.31203079000000145px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:87.99999952000000292%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="601.18085"
        y="440.25958"
        id="text8558-6"
@@ -971,7 +971,7 @@
          id="tspan8560-1"
          x="601.18085"
          y="440.25958"
-         style="font-size:13px;line-height:87.99999952%" /><tspan
+         style="font-size:13px;line-height:87.99999952000000292%;-inkscape-font-specification:Ubuntu;font-family:Ubuntu" /><tspan
          sodipodi:role="line"
          x="601.18085"
          y="455.65298"
@@ -979,7 +979,7 @@
     <path
        transform="matrix(1,0,-0.01242391,1.0314465,113.17631,336.9263)"
        sodipodi:type="arc"
-       style="opacity:0.70921990000000001;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:1.96927625;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.96927625,7.87710499;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:1.96927625000000006;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.96927625000000006, 7.87710499000000031;stroke-dashoffset:0"
        id="path8556-4-1"
        sodipodi:cx="574.77679"
        sodipodi:cy="63.756744"
@@ -988,7 +988,7 @@
        d="m 634.37579,63.756744 c 0,17.015702 -26.68338,30.809653 -59.599,30.809653 -32.91561,0 -59.59899,-13.793951 -59.59899,-30.809653 0,-17.015701 26.68338,-30.809652 59.59899,-30.809652 32.91562,0 59.599,13.793951 59.599,30.809652 z" />
     <text
        xml:space="preserve"
-       style="font-size:20.31203079px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:76.99999809%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:20.31203079000000145px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:76.99999809000000539%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="706.21027"
        y="379.72263"
        id="text8558-6-5"
@@ -998,15 +998,15 @@
          x="706.21027"
          y="379.72263"
          id="tspan8610"
-         style="font-size:18px" /><tspan
+         style="font-size:18px;-inkscape-font-specification:Ubuntu;font-family:Ubuntu" /><tspan
          sodipodi:role="line"
          x="706.21027"
          y="394.67642"
          id="tspan8614"
-         style="line-height:76.99999809%">skipgram</tspan></text>
+         style="line-height:76.99999809000000539%;-inkscape-font-specification:Ubuntu;font-family:Ubuntu">skipgram</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:11.58685017px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:11.58685016999999995px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="604.17731"
        y="377.21927"
        id="text3755-8-0-2-9-5-7-1"
@@ -1015,11 +1015,11 @@
          sodipodi:role="line"
          x="604.17731"
          y="377.21927"
-         style="font-size:23.17370033px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Bold Italic"
+         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan7672-2">Pattern</tspan></text>
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:10.23403454;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:10.23403453999999968;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="path8618-1"
        sodipodi:cx="647.00269"
        sodipodi:cy="100.12224"
@@ -1029,7 +1029,7 @@
        transform="matrix(0.23530871,0,-0.00243366,0.16230365,185.89432,541.13723)" />
     <text
        xml:space="preserve"
-       style="font-size:12.79795361px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12.79795361000000042px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="354.19724"
        y="487.43317"
        id="text8712"
@@ -1041,7 +1041,7 @@
          y="487.43317">ClassDecoder</tspan></text>
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:10.23403454;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:10.23403453999999968;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="path8618-1-5"
        sodipodi:cx="647.00269"
        sodipodi:cy="100.12224"
@@ -1051,7 +1051,7 @@
        transform="matrix(0.23530871,0,-0.00243366,0.16230365,-108.56514,544.16768)" />
     <text
        xml:space="preserve"
-       style="font-size:12.79795361px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12.79795361000000042px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="14.550565"
        y="490.06042"
        id="text8712-7"
@@ -1063,7 +1063,7 @@
          y="490.06042">ClassEncoder</tspan></text>
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:10.23403454;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:10.23403453999999968;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="path8618-1-5-5"
        sodipodi:cx="647.00269"
        sodipodi:cy="100.12224"
@@ -1073,7 +1073,7 @@
        transform="matrix(0.23530871,0,-0.00243366,0.16230365,555.10508,600.73623)" />
     <text
        xml:space="preserve"
-       style="font-size:12.79795361px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12.79795361000000042px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="780.06635"
        y="539.10297"
        id="text8712-7-8"
@@ -1085,7 +1085,7 @@
          y="539.10297">PatternModel</tspan></text>
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:8.54566288;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:8.54566288000000007;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="path8618-1-5-5-3"
        sodipodi:cx="647.00269"
        sodipodi:cy="100.12224"
@@ -1095,7 +1095,7 @@
        transform="matrix(0.33747394,0,-0.0034903,0.16230365,482.5437,725.99515)" />
     <text
        xml:space="preserve"
-       style="font-size:12.79795361px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12.79795361000000042px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="754.43262"
        y="646.82147"
        id="text8712-7-8-1"
@@ -1107,7 +1107,7 @@
          y="646.82147">IndexedPatternModel</tspan></text>
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:2.07042003;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.07042004, 6.2112601;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:2.07042003000000019;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.07042004000000013, 6.21126009999999962;stroke-dashoffset:0"
        id="path8556-3"
        sodipodi:cx="574.77679"
        sodipodi:cy="63.756744"
@@ -1117,7 +1117,7 @@
        transform="matrix(0.96610241,0,-0.01200277,0.96587273,-76.725831,473.58319)" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="488.17603"
        y="523.53992"
        id="text8558-0"
@@ -1132,14 +1132,14 @@
          y="538.53992"
          id="tspan8877">as string</tspan></text>
     <path
-       style="fill:none;stroke:#7d7d7d;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.00000005, 4.0000001;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Mend)"
+       style="fill:none;stroke:#7d7d7d;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.00000005000000014, 4.00000010000000028;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Mend)"
        d="m 383.94953,558.37815 34.36709,-7.22288"
        id="path4827-6-1-1"
        inkscape:connector-curvature="0"
        inkscape:transform-center-x="16.615862"
        inkscape:transform-center-y="11.228164" />
     <path
-       style="fill:none;stroke:#7d7d7d;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.00000005, 4.0000001;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Mend)"
+       style="fill:none;stroke:#7d7d7d;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.00000005000000014, 4.00000010000000028;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Mend)"
        d="M 495.893,471.59614 378.32854,545.31923"
        id="path4827-6-1-1-4"
        inkscape:connector-curvature="0"
@@ -1147,7 +1147,7 @@
        inkscape:transform-center-y="-51.189586" />
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:10.23403454;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:10.23403453999999968;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="path8618-1-5-4"
        sodipodi:cx="647.00269"
        sodipodi:cy="100.12224"
@@ -1157,7 +1157,7 @@
        transform="matrix(0.23530871,0,-0.00243366,0.16230365,244.06973,456.11197)" />
     <text
        xml:space="preserve"
-       style="font-size:12.79795361px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12.79795361000000042px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="421.30011"
        y="413.71982"
        id="text8712-7-4"
@@ -1168,21 +1168,21 @@
          x="421.30011"
          y="413.71982">ClassEncoder</tspan></text>
     <path
-       style="fill:none;stroke:#7d7d7d;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.00000006, 4.00000011;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Mend)"
+       style="fill:none;stroke:#7d7d7d;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.00000006000000008, 4.00000011000000022;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Mend)"
        d="M 439.39182,511.24178 413.92026,487.06604"
        id="path4827-6-1-1-4-4"
        inkscape:connector-curvature="0"
        inkscape:transform-center-x="-19.008907"
        inkscape:transform-center-y="7.1850569" />
     <path
-       style="fill:none;stroke:#7d7d7d;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.00000005, 4.0000001;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Mend)"
+       style="fill:none;stroke:#7d7d7d;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.00000005000000014, 4.00000010000000028;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Mend)"
        d="m 429.58784,457.1611 34.36709,-7.22288"
        id="path4827-6-1-1-5"
        inkscape:connector-curvature="0"
        inkscape:transform-center-x="16.615862"
        inkscape:transform-center-y="11.228164" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.99999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
+       style="fill:none;stroke:#000000;stroke-width:1.99999988000000006;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
        d="m 93.975666,557.94786 11.392964,68.19869"
        id="path4827-6-0"
        inkscape:connector-curvature="0"
@@ -1196,7 +1196,7 @@
        inkscape:transform-center-x="8.7310737"
        inkscape:transform-center-y="84.985065" />
     <rect
-       style="opacity:0.7092199;fill:#c2c52e;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#c2c52e;fill-opacity:1;stroke:none"
        id="rect3784-3-6-2-8-9-4"
        width="198.44017"
        height="97.417702"
@@ -1206,7 +1206,7 @@
        ry="50" />
     <text
        xml:space="preserve"
-       style="font-size:11.58685017px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:11.58685016999999995px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="626.24988"
        y="847.94678"
        id="text3755-8-0-2-9-5-7-8-7"
@@ -1216,15 +1216,15 @@
          id="tspan3757-7-4-1-97-8-4-6-7"
          x="626.24988"
          y="847.94678"
-         style="font-size:23.17370033px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Bold Italic">pattern</tspan><tspan
+         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu">pattern</tspan><tspan
          sodipodi:role="line"
          x="626.24988"
          y="876.91388"
-         style="font-size:23.17370033px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Bold Italic"
+         style="font-size:23.17370032999999907px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan7672-1-2">modeller</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="576.79718"
        y="869.01947"
        id="text8246-9-7"
@@ -1233,7 +1233,7 @@
          id="tspan8248-9-5"
          x="576.79718"
          y="869.01947"
-         style="font-style:italic;font-weight:normal;-inkscape-font-specification:Calibri Italic">view &amp; query mode</tspan></text>
+         style="font-style:italic;font-weight:normal;-inkscape-font-specification:Ubuntu;font-family:Ubuntu">view &amp; query mode</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
        d="m 631.72213,746.28762 2.02279,35.6224"
@@ -1242,7 +1242,7 @@
        inkscape:transform-center-x="11.332016"
        inkscape:transform-center-y="-19.655783" />
     <rect
-       style="opacity:0.7092199;fill:#aade87;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#aade87;fill-opacity:1;stroke:none"
        id="rect3883-7-66"
        width="159.60411"
        height="78.791901"
@@ -1252,7 +1252,7 @@
        ry="9.999999" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="461.27283"
        y="869.49414"
        id="text3755-8-0-2-4-5-4"
@@ -1260,12 +1260,12 @@
          sodipodi:role="line"
          x="461.27283"
          y="869.49414"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan9846">pattern</tspan><tspan
          sodipodi:role="line"
          x="461.27283"
          y="899.49414"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan9850">output</tspan></text>
     <flowRoot
        xml:space="preserve"
@@ -1288,7 +1288,7 @@
            x="273.75134"
            y="583.48022" /></flowRegion><flowPara
          id="flowPara9866" /></flowRoot>    <rect
-       style="opacity:0.7092199;fill:#aade87;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#aade87;fill-opacity:1;stroke:none"
        id="rect3883-7-66-8"
        width="159.60411"
        height="78.791901"
@@ -1298,7 +1298,7 @@
        ry="9.999999" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="460.26266"
        y="962.42816"
        id="text3755-8-0-2-4-5-4-5"
@@ -1306,15 +1306,15 @@
          sodipodi:role="line"
          x="460.26266"
          y="962.42816"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan9850-5">statistical</tspan><tspan
          sodipodi:role="line"
          x="460.26266"
          y="992.42816"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan9897">report</tspan></text>
     <rect
-       style="opacity:0.7092199;fill:#aade87;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#aade87;fill-opacity:1;stroke:none"
        id="rect3883-7-66-8-6"
        width="130.30969"
        height="44.446712"
@@ -1324,7 +1324,7 @@
        ry="9.999999" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="645.12054"
        y="958.38763"
        id="text3755-8-0-2-4-5-4-5-8"
@@ -1332,10 +1332,10 @@
          sodipodi:role="line"
          x="645.12054"
          y="958.38763"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan9897-2">histogram</tspan></text>
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.99999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
+       style="fill:none;stroke:#000000;stroke-width:1.99999988000000006;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
        d="m 752.62403,838.12767 31.57173,-1.66372"
        id="path4827-6-1-11"
        inkscape:connector-curvature="0"
@@ -1356,7 +1356,7 @@
        inkscape:transform-center-x="4.0964011"
        inkscape:transform-center-y="-59.911936" />
     <rect
-       style="opacity:0.7092199;fill:#aade87;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#aade87;fill-opacity:1;stroke:none"
        id="rect3883-7-66-8-6-5"
        width="254.55846"
        height="226.27417"
@@ -1366,7 +1366,7 @@
        ry="9.999999" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="906.75006"
        y="802.82416"
        id="text3755-8-0-2-4-5-4-5-8-2"
@@ -1374,15 +1374,15 @@
          sodipodi:role="line"
          x="906.75006"
          y="802.82416"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan9897-2-5">pattern</tspan><tspan
          sodipodi:role="line"
          x="906.75006"
          y="832.82416"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan10011">relationships</tspan></text>
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.99999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
+       style="fill:none;stroke:#000000;stroke-width:1.99999988000000006;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
        d="m 559.56453,843.36395 -25.05879,19.27691"
        id="path4827-6-1-11-8"
        inkscape:connector-curvature="0"
@@ -1390,7 +1390,7 @@
        inkscape:transform-center-y="-16.993646" />
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:2.5606699;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.56066976, 7.68200927;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:2.56066990000000017;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.56066976000000013, 7.68200927000000000;stroke-dashoffset:0"
        id="path8556-9"
        sodipodi:cx="574.77679"
        sodipodi:cy="63.756744"
@@ -1400,7 +1400,7 @@
        transform="matrix(0.93220479,0,-0.01158163,0.65439731,315.47715,831.33787)" />
     <text
        xml:space="preserve"
-       style="font-size:14.91696167px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:14.91696166999999917px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="844.16614"
        y="857.90173"
        id="text8558-9"
@@ -1412,7 +1412,7 @@
          y="857.90173">subsumption</tspan></text>
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:2.5606699;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.56066976, 7.68200927;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:2.56066990000000017;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.56066976000000013, 7.68200927000000000;stroke-dashoffset:0"
        id="path8556-9-4"
        sodipodi:cx="574.77679"
        sodipodi:cy="63.756744"
@@ -1422,7 +1422,7 @@
        transform="matrix(0.93220479,0,-0.01158163,0.65439731,357.90358,888.41148)" />
     <text
        xml:space="preserve"
-       style="font-size:14.91696167px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:14.91696166999999917px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="883.10089"
        y="911.67316"
        id="text8558-9-8"
@@ -1434,7 +1434,7 @@
          y="911.67316">co-occurrence</tspan></text>
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:2.5606699;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.56066976, 7.68200927;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:2.56066990000000017;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.56066976000000013, 7.68200927000000000;stroke-dashoffset:0"
        id="path8556-9-4-7"
        sodipodi:cx="574.77679"
        sodipodi:cy="63.756744"
@@ -1444,7 +1444,7 @@
        transform="matrix(0.93220479,0,-0.01158163,0.65439731,408.4112,849.01554)" />
     <text
        xml:space="preserve"
-       style="font-size:14.91696167px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:14.91696166999999917px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="939.53027"
        y="875.16779"
        id="text8558-9-8-1"
@@ -1456,7 +1456,7 @@
          y="875.16779">neighbouring</tspan></text>
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:2.5606699;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.56066976, 7.68200927;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#cd87de;fill-opacity:1;stroke:#000000;stroke-width:2.56066990000000017;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.56066976000000013, 7.68200927000000000;stroke-dashoffset:0"
        id="path8556-9-4-8"
        sodipodi:cx="574.77679"
        sodipodi:cy="63.756744"
@@ -1466,7 +1466,7 @@
        transform="matrix(0.93220479,0,-0.01158163,0.65439731,403.36044,932.8582)" />
     <text
        xml:space="preserve"
-       style="font-size:14.91696167px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:14.91696166999999917px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="930.18079"
        y="955.08496"
        id="text8558-9-8-9"
@@ -1595,7 +1595,7 @@
          style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono" /></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="16.162443"
        y="762.4483"
        id="text3487"
@@ -1604,12 +1604,12 @@
          id="tspan3489"
          x="16.162443"
          y="762.4483"
-         style="font-weight:bold">Features:</tspan><tspan
+         style="font-weight:bold;-inkscape-font-specification:Ubuntu;font-family:Ubuntu">Features:</tspan><tspan
          sodipodi:role="line"
          x="16.162443"
          y="787.4483"
          id="tspan3527">- Fully implemented in<tspan
-   style="font-weight:bold"
+   style="font-weight:bold;-inkscape-font-specification:Ubuntu;font-family:Ubuntu"
    id="tspan3615"> C++</tspan></tspan><tspan
          sodipodi:role="line"
          x="16.162443"
@@ -1631,39 +1631,39 @@
          x="16.162443"
          y="912.4483"
          id="tspan3551">- <tspan
-   style="font-weight:bold"
+   style="font-weight:bold;-inkscape-font-specification:Ubuntu;font-family:Ubuntu"
    id="tspan3613">Python</tspan> API binding with C++</tspan><tspan
          sodipodi:role="line"
          x="16.162443"
          y="937.4483"
          id="tspan3555">- <tspan
-   style="font-weight:bold"
+   style="font-weight:bold;-inkscape-font-specification:Ubuntu;font-family:Ubuntu"
    id="tspan3617">Skipgrams <tspan
-   style="font-weight:normal"
+   style="font-weight:normal;-inkscape-font-specification:Ubuntu;font-family:Ubuntu"
    id="tspan3277">&amp;</tspan> Flexgrams</tspan></tspan><tspan
          sodipodi:role="line"
          x="16.162443"
          y="962.4483"
          id="tspan3523">- Elaborate <tspan
-   style="font-weight:bold"
+   style="font-weight:bold;-inkscape-font-specification:Ubuntu;font-family:Ubuntu"
    id="tspan3621">statistical reports</tspan> as output</tspan><tspan
          sodipodi:role="line"
          x="16.162443"
          y="987.4483"
          id="tspan3525">- Compute <tspan
-   style="font-weight:bold"
+   style="font-weight:bold;-inkscape-font-specification:Ubuntu;font-family:Ubuntu"
    id="tspan3640">relations</tspan> between patterns</tspan><tspan
          sodipodi:role="line"
          x="16.162443"
          y="1012.4483"
          id="tspan4410">- Interactive <tspan
-   style="font-weight:bold"
+   style="font-weight:bold;-inkscape-font-specification:Ubuntu;font-family:Ubuntu"
    id="tspan3646">query</tspan> mode</tspan><tspan
          sodipodi:role="line"
          x="16.162443"
          y="1037.4482"
          id="tspan4416">- <tspan
-   style="font-weight:bold"
+   style="font-weight:bold;-inkscape-font-specification:Ubuntu;font-family:Ubuntu"
    id="tspan4418">Comparison</tspan> of pattern models</tspan><tspan
          sodipodi:role="line"
          x="16.162443"
@@ -1678,7 +1678,7 @@
          y="1112.4482"
          id="tspan3491" /></text>
     <rect
-       style="opacity:0.7092199;fill:#aade87;fill-opacity:1;stroke:none"
+       style="opacity:0.70921990000000001;fill:#aade87;fill-opacity:1;stroke:none"
        id="rect3883-7-66-8-6-8"
        width="164.65488"
        height="63.63961"
@@ -1688,7 +1688,7 @@
        ry="9.999999" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:AR PL Mingti2L Big5;-inkscape-font-specification:Calibri Italic"
+       style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="691.08252"
        y="1008.8953"
        id="text3755-8-0-2-4-5-4-5-8-3"
@@ -1696,17 +1696,17 @@
          sodipodi:role="line"
          x="691.08252"
          y="1008.8953"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan3581">co-occurrence</tspan><tspan
          sodipodi:role="line"
          x="691.08252"
          y="1038.8953"
-         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Calibri;-inkscape-font-specification:Calibri Italic"
+         style="font-size:24px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
          id="tspan3585">ranking <tspan
-   style="font-size:13px"
+   style="font-size:13px;-inkscape-font-specification:Ubuntu;font-family:Ubuntu"
    id="tspan3587">(npmi)</tspan></tspan></text>
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.99999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
+       style="fill:none;stroke:#000000;stroke-width:1.99999988000000006;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
        d="m 715.79924,887.41159 2.02279,82.32343"
        id="path4827-6-3-3-1-4"
        inkscape:connector-curvature="0"
@@ -1721,7 +1721,7 @@
        width="97.411148" />
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#800080;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#800080;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="513.15747"
        y="421.01685"
        id="text4258"
@@ -1732,7 +1732,7 @@
          y="421.01685">&quot;to be or not to be&quot;</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#800080;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#800080;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="638.88232"
        y="413.87051"
        id="text4258-1"
@@ -1743,7 +1743,7 @@
          y="413.87051">&quot;to {*1*} or {*2*} be&quot;</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#800080;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#800080;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="587.11115"
        y="478.77011"
        id="text4258-1-1"
@@ -1754,7 +1754,7 @@
          y="478.77011">&quot;to {*} or {*} be&quot;</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="1036.5471"
        y="1017.0069"
        id="text4420"
@@ -1763,20 +1763,20 @@
          id="tspan4422"
          x="1036.5471"
          y="1017.0069"
-         style="text-align:end;text-anchor:end">by Maarten van Gompel</tspan><tspan
+         style="text-align:end;text-anchor:end;-inkscape-font-specification:Ubuntu;font-family:Ubuntu">by Maarten van Gompel</tspan><tspan
          sodipodi:role="line"
          x="1036.5471"
          y="1032.007"
          id="tspan4424"
-         style="text-align:end;text-anchor:end">Centre for Language Studies</tspan><tspan
+         style="text-align:end;text-anchor:end;-inkscape-font-specification:Ubuntu;font-family:Ubuntu">Centre for Language Studies</tspan><tspan
          sodipodi:role="line"
          x="1036.5471"
          y="1047.007"
          id="tspan4426"
-         style="text-align:end;text-anchor:end">Radboud University Nijmegen</tspan></text>
+         style="text-align:end;text-anchor:end;-inkscape-font-specification:Ubuntu;font-family:Ubuntu">Radboud University Nijmegen</tspan></text>
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:9.69560146;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:9.69560146000000067;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="path8618-1-5-5-9-3-3"
        sodipodi:cx="647.00269"
        sodipodi:cy="100.12224"
@@ -1786,7 +1786,7 @@
        transform="matrix(0.32509028,0,-0.00336222,0.13089004,245.58115,777.12259)" />
     <text
        xml:space="preserve"
-       style="font-size:12.79795361px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12.79795361000000042px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="477.70508"
        y="688.4201"
        id="text8712-7-8-4-4-47"
@@ -1798,7 +1798,7 @@
          y="688.4201">PatternOrderedSet</tspan></text>
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:8.70690632;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:8.70690631999999987;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="path8618-1-5-5-9-3-9"
        sodipodi:cx="647.00269"
        sodipodi:cy="100.12224"
@@ -1808,7 +1808,7 @@
        transform="matrix(0.32509028,0,-0.00336222,0.16230365,142.04052,738.11697)" />
     <text
        xml:space="preserve"
-       style="font-size:12.79795361px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12.79795361000000042px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="352.44946"
        y="658.20636"
        id="text8712-7-8-4-4-1"
@@ -1820,7 +1820,7 @@
          y="658.20636">PatternOrderedMap</tspan></text>
     <path
        sodipodi:type="arc"
-       style="opacity:0.7092199;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:11.61219406;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="opacity:0.70921990000000001;fill:#c4c8b7;fill-opacity:1;stroke:#000000;stroke-width:11.61219406000000021;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="path8618-1-5-5-9-3-3-2"
        sodipodi:cx="647.00269"
        sodipodi:cy="100.12224"
@@ -1830,7 +1830,7 @@
        transform="matrix(0.18276927,0,-0.00189028,0.16230365,316.82258,744.17789)" />
     <text
        xml:space="preserve"
-       style="font-size:12.79795361px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Calibri;-inkscape-font-specification:Calibri"
+       style="font-size:12.79795361000000042px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
        x="474.79214"
        y="663.46094"
        id="text8712-7-8-4-4-47-4"
