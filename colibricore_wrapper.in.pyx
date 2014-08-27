@@ -86,7 +86,7 @@ cdef class ClassEncoder:
         else:
             raise IOError("File " + filename + " does not exist")
 
-    def encodefile(self, str sourcefile, str targetfile, bool allowunknown=True): #apply the encoder to a file
+    def encodefile(self, str sourcefile, str targetfile, bool allowunknown=True, bool addunknown=False, bool append=False): #apply the encoder to a file
         """Encodes the specified sourcefile according to the classer (as targetfile)
 
         :param sourcefile: Source filename
@@ -97,7 +97,7 @@ cdef class ClassEncoder:
         :type allowunknown: bool
         """
         if os.path.exists(sourcefile):
-            self.data.encodefile(sourcefile.encode('utf-8'), targetfile.encode('utf-8'),allowunknown)
+            self.data.encodefile(sourcefile.encode('utf-8'), targetfile.encode('utf-8'),allowunknown, addunknown, append)
         else:
             raise IOError("File " + sourcefile + " does not exist")
 
