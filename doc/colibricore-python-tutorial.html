@@ -1543,7 +1543,7 @@ init_mathjax();
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[1]:
+In&nbsp;[128]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="kn">import</span> <span class="nn">colibricore</span>
@@ -1565,7 +1565,7 @@ In&nbsp;[1]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[2]:
+In&nbsp;[129]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">corpustext</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;To be, or not to be, that is the question</span>
@@ -1627,7 +1627,7 @@ In&nbsp;[2]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[3]:
+In&nbsp;[130]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">classfile</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;hamlet.colibri.cls&quot;</span>
@@ -1670,7 +1670,7 @@ Encoded  184  classes, well done!
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[4]:
+In&nbsp;[131]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">corpusfile</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;hamlet.colibri.dat&quot;</span> <span class="c">#this will be the encoded corpus file</span>
@@ -1687,7 +1687,7 @@ In&nbsp;[4]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[5]:
+In&nbsp;[132]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Load class decoder from the classfile we just made</span>
@@ -1764,7 +1764,7 @@ The fair Ophelia . Nymph , in all thy Orisons
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[6]:
+In&nbsp;[133]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Build a pattern from a string, using the class encoder</span>
@@ -1802,7 +1802,7 @@ To be or not to be
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[7]:
+In&nbsp;[134]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Iterate over the token in a pattern, each token will be a Pattern instance</span>
@@ -1840,7 +1840,7 @@ be
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[8]:
+In&nbsp;[135]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Extracting subpatterns by offset</span>
@@ -1884,7 +1884,7 @@ or not
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[9]:
+In&nbsp;[136]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#let&#39;s get all bigrams</span>
@@ -1919,7 +1919,7 @@ to be
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[10]:
+In&nbsp;[137]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#or all n-grams:</span>
@@ -1969,7 +1969,7 @@ be or not to be
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[11]:
+In&nbsp;[138]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#or particular ngrams, such as unigrams up to trigrams:</span>
@@ -2017,7 +2017,7 @@ not to be
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[12]:
+In&nbsp;[139]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#token</span>
@@ -2056,7 +2056,7 @@ True
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[13]:
+In&nbsp;[140]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">p</span><span class="p">)))</span>
@@ -2082,7 +2082,7 @@ b&apos;To be or not to be&apos; 18
 </div>
 
 <div class="hbox output_area"><div class="prompt output_prompt">
-    Out[13]:</div>
+    Out[140]:</div>
 <div class="box-flex1 output_subarea output_pyout">
 
 
@@ -2107,7 +2107,7 @@ True
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[14]:
+In&nbsp;[141]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">corpusdata</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">IndexedCorpus</span><span class="p">(</span><span class="n">corpusfile</span><span class="p">)</span> <span class="c">#encoded data, will be loaded into memory entirely</span>
@@ -2392,7 +2392,7 @@ all thy Orisons
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[15]:
+In&nbsp;[142]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">unigram</span> <span class="o">=</span> <span class="n">corpusdata</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]</span>
@@ -2425,7 +2425,7 @@ in
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[16]:
+In&nbsp;[143]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">ngram</span> <span class="o">=</span> <span class="n">corpusdata</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">):(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)]</span>
@@ -2458,7 +2458,7 @@ in the mind to suffer
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[17]:
+In&nbsp;[144]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">sentencecount</span> <span class="o">=</span> <span class="n">corpusdata</span><span class="o">.</span><span class="n">sentencecount</span><span class="p">()</span>
@@ -2529,7 +2529,7 @@ Length of sentence 34: 10
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[18]:
+In&nbsp;[145]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Set the options</span>
@@ -2628,7 +2628,7 @@ life
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[19]:
+In&nbsp;[146]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Models behave much alike to Python dictionaries:</span>
@@ -2715,7 +2715,7 @@ life 2
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[20]:
+In&nbsp;[147]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">querypattern</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;sleep&quot;</span><span class="p">)</span>
@@ -2748,7 +2748,7 @@ How much sleep?
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[21]:
+In&nbsp;[148]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Like dictionaries, unknown patterns will trigger a KeyError</span>
@@ -2788,7 +2788,7 @@ Nope, KeyError, no such pattern in model..
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[22]:
+In&nbsp;[149]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">if</span> <span class="n">querypattern</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
@@ -2823,7 +2823,7 @@ Insolence in model!
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[23]:
+In&nbsp;[150]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">querypattern</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;and the&quot;</span><span class="p">)</span>
@@ -2857,7 +2857,7 @@ In&nbsp;[23]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[24]:
+In&nbsp;[151]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">for</span> <span class="n">occurrencecount</span><span class="p">,</span> <span class="n">frequency</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">histogram</span><span class="p">():</span>
@@ -2899,7 +2899,7 @@ In&nbsp;[24]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[25]:
+In&nbsp;[152]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">patternmodelfile</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;hamlet.colibri.patternmodel&quot;</span>
@@ -2920,7 +2920,7 @@ In&nbsp;[25]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[26]:
+In&nbsp;[153]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Set the options</span>
@@ -3023,7 +3023,7 @@ life (14, 6) (22, 7)
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[27]:
+In&nbsp;[154]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">querypattern</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;and the&quot;</span><span class="p">)</span>
@@ -3057,7 +3057,7 @@ In&nbsp;[27]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[28]:
+In&nbsp;[155]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;Total amount of tokens in the corpus data:&quot;</span> <span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">tokens</span><span class="p">()</span> <span class="p">)</span>
@@ -3091,7 +3091,7 @@ Total amount of word types in the corpus data: 180
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[29]:
+In&nbsp;[156]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;Patterns at (1,5): &quot;</span><span class="p">)</span>
@@ -3112,6 +3112,9 @@ In&nbsp;[29]:
 Patterns at (1,5): 
 to
 to be
+to be ,
+to be , that
+to be , that is
 
 </pre>
 </div>
@@ -3127,7 +3130,7 @@ to be
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[30]:
+In&nbsp;[157]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;Patterns in first sentence&quot;</span><span class="p">)</span>
@@ -3147,18 +3150,55 @@ In&nbsp;[30]:
 <pre>
 Patterns in first sentence
 1 0  --  To
+1 0  --  To be
+1 0  --  To be ,
+1 0  --  To be , or
+1 0  --  To be , or not
 1 1  --  be
 1 1  --  be ,
+1 1  --  be , or
+1 1  --  be , or not
+1 1  --  be , or not to
 1 2  --  ,
+1 2  --  , or
+1 2  --  , or not
+1 2  --  , or not to
+1 2  --  , or not to be
+1 3  --  or
+1 3  --  or not
+1 3  --  or not to
+1 3  --  or not to be
+1 3  --  or not to be ,
 1 4  --  not
+1 4  --  not to
+1 4  --  not to be
+1 4  --  not to be ,
+1 4  --  not to be , that
 1 5  --  to
 1 5  --  to be
+1 5  --  to be ,
+1 5  --  to be , that
+1 5  --  to be , that is
 1 6  --  be
 1 6  --  be ,
+1 6  --  be , that
+1 6  --  be , that is
+1 6  --  be , that is the
 1 7  --  ,
+1 7  --  , that
+1 7  --  , that is
+1 7  --  , that is the
+1 7  --  , that is the question
 1 8  --  that
+1 8  --  that is
+1 8  --  that is the
+1 8  --  that is the question
 1 9  --  is
+1 9  --  is the
+1 9  --  is the question
 1 10  --  the
+1 10  --  the question
+1 11  --  question
 
 </pre>
 </div>
@@ -3174,7 +3214,7 @@ Patterns in first sentence
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[31]:
+In&nbsp;[158]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">reverseindex</span><span class="p">():</span>
@@ -3213,7 +3253,7 @@ In&nbsp;[31]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[32]:
+In&nbsp;[159]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="kn">import</span> <span class="nn">urllib.request</span>
@@ -3250,7 +3290,7 @@ Downloaded to /tmp/republic.txt
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[33]:
+In&nbsp;[160]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">classfile_plato</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;republic.colibri.cls&quot;</span>
@@ -3301,7 +3341,7 @@ Done
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[34]:
+In&nbsp;[161]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Set the options, doskipgrams=True is the key to enabling skipgrams</span>
@@ -3342,7 +3382,7 @@ Found  84310  patterns:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[35]:
+In&nbsp;[162]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">skipgrams</span> <span class="o">=</span> <span class="mi">0</span>
@@ -3380,7 +3420,7 @@ Found 7921  skipgrams
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[36]:
+In&nbsp;[163]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">skipgrams</span> <span class="o">=</span> <span class="mi">0</span>
@@ -3415,7 +3455,7 @@ Found 7921  skipgrams
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[37]:
+In&nbsp;[164]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">for</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">occurrencecount</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">model</span><span class="o">.</span><span class="n">top</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="n">colibricore</span><span class="o">.</span><span class="n">Category</span><span class="o">.</span><span class="n">SKIPGRAM</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*-</span><span class="mi">1</span> <span class="p">):</span>
@@ -3470,7 +3510,7 @@ of {*2*} ,  --  379
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[38]:
+In&nbsp;[165]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">skipgram</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;To {*1*} or not to {*1*} is the question&quot;</span><span class="p">)</span>
@@ -3486,7 +3526,7 @@ In&nbsp;[38]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[39]:
+In&nbsp;[166]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">skipgram</span><span class="o">.</span><span class="n">parts</span><span class="p">():</span>
@@ -3521,7 +3561,7 @@ is the question
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[40]:
+In&nbsp;[167]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#let&#39;s pick a common skipgram from the data:</span>
@@ -3588,7 +3628,7 @@ to the nature of  -- occurring  2  times
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[41]:
+In&nbsp;[168]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#let&#39;s pick a common skipgram from the data:</span>
@@ -3603,6 +3643,23 @@ In&nbsp;[41]:
 </div>
 </div>
 
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+to the {*1*} of  -- occurring  8  times
+to {*2*} of  -- occurring  8  times
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Another trait of indexed pattern models is the ability to extract co-occurrence information using the <code>getcooc()</code> method. Let's see with what patterns the ngram &quot;the law of&quot; co-occurs more than five times (the second argument specifies this threshold, using it is always more efficient than doing a check on the variable <code>occurrences</code> that is returned):</p>
@@ -3610,7 +3667,7 @@ In&nbsp;[41]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[42]:
+In&nbsp;[169]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">ngram</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;the law&quot;</span><span class="p">)</span>
@@ -3634,67 +3691,107 @@ In&nbsp;[42]:
 ,  -- occurring  99  times
 the  -- occurring  97  times
 and  -- occurring  75  times
-of  -- occurring  73  times
-to  -- occurring  46  times
+of  -- occurring  72  times
+to  -- occurring  45  times
 in  -- occurring  34  times
 is  -- occurring  34  times
 .  -- occurring  32  times
 a  -- occurring  30  times
+the {*1*} of  -- occurring  28  times
 , and  -- occurring  24  times
 ;  -- occurring  24  times
 which  -- occurring  21  times
-they  -- occurring  19  times
 or  -- occurring  19  times
+they  -- occurring  19  times
 their  -- occurring  18  times
 not  -- occurring  18  times
 by  -- occurring  16  times
 that  -- occurring  15  times
 be  -- occurring  15  times
+the {*2*} the  -- occurring  14  times
 have  -- occurring  14  times
 of the  -- occurring  14  times
 them  -- occurring  13  times
-are  -- occurring  13  times
+the {*1*} ,  -- occurring  12  times
+are  -- occurring  12  times
 he  -- occurring  12  times
 this  -- occurring  11  times
-we  -- occurring  10  times
+, {*3*} ,  -- occurring  10  times
+the {*6*} the  -- occurring  10  times
+, {*1*} the  -- occurring  9  times
 as  -- occurring  9  times
 ; and  -- occurring  9  times
 , the  -- occurring  9  times
+we  -- occurring  9  times
 his  -- occurring  8  times
-when  -- occurring  8  times
-in the  -- occurring  8  times
 but  -- occurring  8  times
-these  -- occurring  8  times
 man  -- occurring  8  times
-of a  -- occurring  7  times
-to be  -- occurring  7  times
+the {*4*} ,  -- occurring  8  times
+in the  -- occurring  8  times
+the {*1*} of the  -- occurring  8  times
+, {*1*} ,  -- occurring  8  times
+these  -- occurring  8  times
+and {*3*} the  -- occurring  8  times
+when  -- occurring  8  times
+and {*1*} ,  -- occurring  8  times
+of {*5*} the  -- occurring  8  times
+, {*4*} and  -- occurring  7  times
 for  -- occurring  7  times
-And  -- occurring  7  times
-is not  -- occurring  7  times
+to be  -- occurring  7  times
 I  -- occurring  7  times
+, {*3*} to  -- occurring  7  times
+of a  -- occurring  7  times
+And  -- occurring  7  times
+is {*3*} the  -- occurring  7  times
+, {*3*} of  -- occurring  7  times
+, {*3*} the  -- occurring  7  times
+is not  -- occurring  7  times
+of {*1*} and  -- occurring  6  times
 of these  -- occurring  6  times
-him  -- occurring  6  times
-there  -- occurring  6  times
---  -- occurring  6  times
-with  -- occurring  6  times
-, or  -- occurring  6  times
+the {*3*} and  -- occurring  6  times
+of {*2*} ,  -- occurring  6  times
+, {*5*} the  -- occurring  6  times
 by the  -- occurring  6  times
+and {*3*} and  -- occurring  6  times
+of {*4*} ,  -- occurring  6  times
+the {*6*} ,  -- occurring  6  times
+--  -- occurring  6  times
+him  -- occurring  6  times
 to the  -- occurring  6  times
-is the  -- occurring  5  times
-one  -- occurring  5  times
-father  -- occurring  5  times
-what  -- occurring  5  times
-who  -- occurring  5  times
-they have  -- occurring  5  times
-in which  -- occurring  5  times
-State  -- occurring  5  times
-no  -- occurring  5  times
-has  -- occurring  5  times
-all  -- occurring  5  times
-&apos;  -- occurring  5  times
-state  -- occurring  5  times
+of {*1*} ,  -- occurring  6  times
+with  -- occurring  6  times
+there  -- occurring  6  times
+, or  -- occurring  6  times
+the {*4*} and  -- occurring  6  times
+of {*2*} the  -- occurring  6  times
+in {*2*} ,  -- occurring  6  times
 her  -- occurring  5  times
+is the  -- occurring  5  times
+, {*2*} to  -- occurring  5  times
+state  -- occurring  5  times
 own  -- occurring  5  times
+they have  -- occurring  5  times
+, {*3*} and  -- occurring  5  times
+the {*2*} of  -- occurring  5  times
+has  -- occurring  5  times
+, {*2*} of  -- occurring  5  times
+who  -- occurring  5  times
+the {*5*} the  -- occurring  5  times
+no  -- occurring  5  times
+one  -- occurring  5  times
+of {*3*} ,  -- occurring  5  times
+in which  -- occurring  5  times
+, {*2*} and  -- occurring  5  times
+of {*4*} and  -- occurring  5  times
+State  -- occurring  5  times
+what  -- occurring  5  times
+the {*3*} ,  -- occurring  5  times
+, {*2*} the  -- occurring  5  times
+all  -- occurring  5  times
+, {*5*} ,  -- occurring  5  times
+&apos;  -- occurring  5  times
+the {*5*} ,  -- occurring  5  times
+father  -- occurring  5  times
 
 </pre>
 </div>
@@ -3714,14 +3811,446 @@ own  -- occurring  5  times
 </ul>
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><em>...Tutorial not done yet, this section is be continued later with flexgrams...</em></p>
+<p><em>(TODO: this section is be continued later with flexgrams)</em></p>
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Comparing-pattern-models">Comparing pattern models<a class="anchor-link" href="#Comparing-pattern-models">&#182;</a></h2>
 </div>
 
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><em>Yet to be written</em></p>
+<p>Pattern Models can be used in a train/test paradigm. You can create a Pattern Model on the training corpus and then generated a Pattern Model on the test corpus <strong>constrained</strong> by the training model. This allows you to test what patterns from the training corpus also occur in the test corpus, and how often. Statistics on these two differing counts can provide insight into how much corpora differ.</p>
+<p>We already saw the <em>coverage</em> metric previously, when applied to a train/test scenario it measures the number or ratio of tokens in the test corpus covered by patterns found during training. Let's perform such a comparison.</p>
+<p>We made a Pattern Model on Plato's Republic and we have a small excerpt from Hamlet. Let's use the former as training and the letter as test.</p>
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>When doing any kind of comparison, it is absolutely crucial that you make sure the training and test data are class encoded with the same classes. The best method for this is to build the class files for all data in advance. In the previous class encoding example we saw <code>classencoder.build()</code> which does nothing more than provide us with a shortcut to call <code>classencoder.processcorpus()</code> followed by <code>classencoder.buildclasses()</code>. To process multiple corpora, we do this ourselves:</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[170]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight"><pre><span class="n">classfile2</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;platoandhamlet.colibri.cls&quot;</span>
+
+<span class="c">#Instantiate class encoder</span>
+<span class="n">classencoder2</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">ClassEncoder</span><span class="p">()</span>
+
+<span class="c">#Build classes</span>
+<span class="n">classencoder2</span><span class="o">.</span><span class="n">processcorpus</span><span class="p">(</span><span class="n">corpusfile_plaintext</span><span class="p">)</span>
+<span class="n">classencoder2</span><span class="o">.</span><span class="n">processcorpus</span><span class="p">(</span><span class="n">testcorpusfile_plaintext</span><span class="p">)</span>
+<span class="n">classencoder2</span><span class="o">.</span><span class="n">buildclasses</span><span class="p">()</span>
+
+<span class="c">#Save class file</span>
+<span class="n">classencoder2</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">classfile2</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Encoded &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">classencoder2</span><span class="p">),</span> <span class="s">&quot; classes, well done!&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+Encoded  275  classes, well done!
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>It is important to realise that the Class Encoder we just built (<code>classencoder2</code>) is now not compatible with the earlier class encoder used for previous examples!</p>
+<p>Often, however, you do not have all data available in advance. You may add a different test set later on, long after training. The way to make sure you have a proper class encoding is to extend your original class encoding. Rather than using the class encoder we just build, let us opt for that method, as this will keep all the classes we already had for the training data (Plato's Republic). This we do by calling the <code>encodefile()</code> method with two extra arguments set to True, indicating respectively that unknown words are allowed, and that unknown words are automatically added the the class encoding. If the second boolean is set to False, all unknown words would be encoded by one single class reserved for unknown words.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[171]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;Class encoder has &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">classencoder</span><span class="p">),</span> <span class="s">&quot; classes prior to extension&quot;</span><span class="p">)</span>
+
+<span class="n">testcorpusfile</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;hamlet_test.colibri.dat&quot;</span> <span class="c">#this will be the encoded test corpus file</span>
+<span class="n">classencoder</span><span class="o">.</span><span class="n">encodefile</span><span class="p">(</span><span class="n">corpusfile_plaintext</span><span class="p">,</span> <span class="n">testcorpusfile</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+
+<span class="n">classfile_test</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;platoplushamlet.colibri.cls&quot;</span>
+<span class="n">classencoder</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">classfile_test</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Class encoder has &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">classencoder</span><span class="p">),</span> <span class="s">&quot; classes after extension&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+Class encoder has  11543  classes prior to extension
+Class encoder has  11543  classes after extension
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Do note that this method of encoding is not optimal, only encoding everything in one go ensures the smallest possible memory footprint.</p>
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We already created a pattern model on the training data in one of our earlier steps (called <code>model</code>), to create our test model we <em>train</em> a constrained model on the test set, this model is constrained by the training model we made earlier. This will result in a new pattern model. The nomenclature may be a bit confusing at first. We simply do all this by instantiating a new model and calling the <code>train()</code> method and passing the contraining model as the last argument.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[172]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight"><pre><span class="c">#Set the options</span>
+<span class="n">options</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">PatternModelOptions</span><span class="p">(</span><span class="n">mintokens</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">maxlength</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">doreverseindex</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c">#Instantiate an empty indexed model </span>
+<span class="n">testmodel</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">IndexedPatternModel</span><span class="p">()</span>
+
+<span class="c">#Train it on our test corpus file (class-encoded data, not plain text)</span>
+<span class="n">testmodel</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">testcorpusfile</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we have a test model (effectively the intersection an unconstrained model of the test corpus and the training model). We can see what patterns from the training corpus occur in the test corpus:</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[173]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight"><pre><span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">testmodel</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">classdecoder</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+is
+in
+No
+this
+death
+of
+For
+that
+by
+sleep ,
+die ,
+we
+to sleep
+, to
+sleep
+die
+death ,
+and the
+To
+and
+That
+bear
+.
+be
+,
+makes
+to
+And
+have
+not
+we have
+be ,
+the
+a
+make
+us
+life
+, and the
+, and
+would
+, the
+to be
+With
+The
+all
+When
+end
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can inspect the differences between the counts:</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[174]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight"><pre><span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">testmodel</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">classdecoder</span><span class="p">),</span> <span class="s">&quot; ---  in training: &quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">occurrencecount</span><span class="p">(</span><span class="n">pattern</span><span class="p">),</span> <span class="s">&quot;, in test: &quot;</span><span class="p">,</span> <span class="n">testmodel</span><span class="o">.</span><span class="n">occurrencecount</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>   <span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+is  ---  in training:  4619 , in test:  2
+in  ---  in training:  4319 , in test:  3
+No  ---  in training:  85 , in test:  2
+this  ---  in training:  936 , in test:  2
+death  ---  in training:  60 , in test:  2
+of  ---  in training:  10374 , in test:  15
+For  ---  in training:  169 , in test:  2
+that  ---  in training:  2830 , in test:  4
+by  ---  in training:  1324 , in test:  2
+sleep ,  ---  in training:  3 , in test:  3
+die ,  ---  in training:  3 , in test:  2
+we  ---  in training:  1314 , in test:  4
+to sleep  ---  in training:  4 , in test:  2
+, to  ---  in training:  131 , in test:  3
+sleep  ---  in training:  13 , in test:  5
+die  ---  in training:  13 , in test:  2
+death ,  ---  in training:  14 , in test:  2
+and the  ---  in training:  736 , in test:  2
+To  ---  in training:  88 , in test:  5
+and  ---  in training:  8517 , in test:  7
+That  ---  in training:  197 , in test:  3
+bear  ---  in training:  30 , in test:  3
+.  ---  in training:  7014 , in test:  5
+be  ---  in training:  2930 , in test:  3
+,  ---  in training:  15352 , in test:  36
+makes  ---  in training:  76 , in test:  2
+to  ---  in training:  5917 , in test:  9
+And  ---  in training:  1071 , in test:  5
+have  ---  in training:  1485 , in test:  2
+not  ---  in training:  2267 , in test:  2
+we have  ---  in training:  138 , in test:  2
+be ,  ---  in training:  23 , in test:  2
+the  ---  in training:  14783 , in test:  15
+a  ---  in training:  3924 , in test:  5
+make  ---  in training:  224 , in test:  2
+us  ---  in training:  436 , in test:  3
+life  ---  in training:  395 , in test:  2
+, and the  ---  in training:  310 , in test:  2
+, and  ---  in training:  2899 , in test:  2
+would  ---  in training:  590 , in test:  2
+, the  ---  in training:  551 , in test:  2
+to be  ---  in training:  940 , in test:  2
+With  ---  in training:  9 , in test:  2
+The  ---  in training:  797 , in test:  6
+all  ---  in training:  867 , in test:  2
+When  ---  in training:  78 , in test:  2
+end  ---  in training:  103 , in test:  2
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This isn't so informative unless we apply some normalisation, so let's get the coverage instead:</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[175]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight"><pre><span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">testmodel</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">classdecoder</span><span class="p">),</span> <span class="s">&quot; ---  in training: &quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">coverage</span><span class="p">(</span><span class="n">pattern</span><span class="p">),</span> <span class="s">&quot;, in test: &quot;</span><span class="p">,</span> <span class="n">testmodel</span><span class="o">.</span><span class="n">coverage</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>   <span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+is  ---  in training:  0.01836383370373757 , in test:  0.006349206349206349
+in  ---  in training:  0.01717111880633093 , in test:  0.009523809523809525
+No  ---  in training:  0.0003379358875985481 , in test:  0.006349206349206349
+this  ---  in training:  0.0037212704799087174 , in test:  0.006349206349206349
+death  ---  in training:  0.00023854297948132806 , in test:  0.006349206349206349
+of  ---  in training:  0.04124408115232162 , in test:  0.047619047619047616
+For  ---  in training:  0.0006718960588724073 , in test:  0.006349206349206349
+that  ---  in training:  0.011251277198869307 , in test:  0.012698412698412698
+by  ---  in training:  0.005263848413887972 , in test:  0.006349206349206349
+sleep ,  ---  in training:  2.3854297948132806e-05 , in test:  0.01904761904761905
+die ,  ---  in training:  2.3854297948132806e-05 , in test:  0.012698412698412698
+we  ---  in training:  0.005224091250641084 , in test:  0.012698412698412698
+to sleep  ---  in training:  3.1805730597510405e-05 , in test:  0.012698412698412698
+, to  ---  in training:  0.0010416376770684657 , in test:  0.01904761904761905
+sleep  ---  in training:  5.168431222095441e-05 , in test:  0.015873015873015872
+die  ---  in training:  5.168431222095441e-05 , in test:  0.006349206349206349
+death ,  ---  in training:  0.00011132005709128642 , in test:  0.012698412698412698
+and the  ---  in training:  0.005852254429941915 , in test:  0.012698412698412698
+To  ---  in training:  0.00034986303657261447 , in test:  0.015873015873015872
+and  ---  in training:  0.03386117593737452 , in test:  0.022222222222222223
+That  ---  in training:  0.0007832161159636937 , in test:  0.009523809523809525
+bear  ---  in training:  0.00011927148974066403 , in test:  0.009523809523809525
+.  ---  in training:  0.02788567430136725 , in test:  0.015873015873015872
+be  ---  in training:  0.011648848831338186 , in test:  0.009523809523809525
+,  ---  in training:  0.06103519701662247 , in test:  0.11428571428571428
+makes  ---  in training:  0.0003021544406763489 , in test:  0.006349206349206349
+to  ---  in training:  0.023524313493183634 , in test:  0.02857142857142857
+And  ---  in training:  0.004257992183741705 , in test:  0.015873015873015872
+have  ---  in training:  0.005903938742162869 , in test:  0.006349206349206349
+not  ---  in training:  0.009012948908069512 , in test:  0.006349206349206349
+we have  ---  in training:  0.001097297705614109 , in test:  0.012698412698412698
+be ,  ---  in training:  0.00018288295093568484 , in test:  0.012698412698412698
+the  ---  in training:  0.05877301442787454 , in test:  0.047619047619047616
+a  ---  in training:  0.015600710858078855 , in test:  0.015873015873015872
+make  ---  in training:  0.0008905604567302914 , in test:  0.006349206349206349
+us  ---  in training:  0.0017334123175643172 , in test:  0.009523809523809525
+life  ---  in training:  0.0015704079482520763 , in test:  0.006349206349206349
+, and the  ---  in training:  0.003697416181960585 , in test:  0.01904761904761905
+, and  ---  in training:  0.023051203250545667 , in test:  0.012698412698412698
+would  ---  in training:  0.0023456726315663925 , in test:  0.006349206349206349
+, the  ---  in training:  0.0043812393898070585 , in test:  0.012698412698412698
+to be  ---  in training:  0.0074743466904149455 , in test:  0.012698412698412698
+With  ---  in training:  3.578144692219921e-05 , in test:  0.006349206349206349
+The  ---  in training:  0.003168645910776974 , in test:  0.01904761904761905
+all  ---  in training:  0.0034469460535051905 , in test:  0.006349206349206349
+When  ---  in training:  0.0003101058733257265 , in test:  0.006349206349206349
+end  ---  in training:  0.0004094987814429465 , in test:  0.006349206349206349
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Particularly the total coverage may be an interesting metric for similarity accross of corpora, which we can compute as follows:</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[176]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight"><pre><span class="n">coverage</span> <span class="o">=</span> <span class="n">testmodel</span><span class="o">.</span><span class="n">totaltokensingroup</span><span class="p">()</span> <span class="o">/</span> <span class="n">testmodel</span><span class="o">.</span><span class="n">tokens</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">coverage</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+0.12380952380952381
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To get a more traditional frequency metric for a pattern, you have to be aware that the total that is used in normalisation is impacted by the fact that the model is constrained! It will not include any unseen n-grams, for that you'd need an unconstrained model.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[178]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight"><pre><span class="n">sleep</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;to sleep&quot;</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Frequency in training:&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">frequency</span><span class="p">(</span><span class="n">sleep</span><span class="p">))</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Frequency in test (constrained):&quot;</span><span class="p">,</span> <span class="n">testmodel</span><span class="o">.</span><span class="n">frequency</span><span class="p">(</span><span class="n">sleep</span><span class="p">)</span> <span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Coverage in test (constrained):&quot;</span><span class="p">,</span> <span class="n">testmodel</span><span class="o">.</span><span class="n">coverage</span><span class="p">(</span><span class="n">sleep</span><span class="p">)</span> <span class="p">)</span>
+
+<span class="n">fullmodel</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">IndexedPatternModel</span><span class="p">()</span>
+<span class="n">fullmodel</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">testcorpusfile</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Frequency in test (unconstrained):&quot;</span><span class="p">,</span> <span class="n">fullmodel</span><span class="o">.</span><span class="n">frequency</span><span class="p">(</span><span class="n">sleep</span><span class="p">)</span> <span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Coverage in test (unconstrained):&quot;</span><span class="p">,</span> <span class="n">fullmodel</span><span class="o">.</span><span class="n">coverage</span><span class="p">(</span><span class="n">sleep</span><span class="p">)</span> <span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+Frequency in training: 2.1719535636328094e-05
+Frequency in test (constrained): 0.08333333333333333
+Coverage in test (constrained): 0.012698412698412698
+Frequency in test (unconstrained): 0.07692307692307693
+Coverage in test (unconstrained): 0.012698412698412698
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 </body>
 </html>
