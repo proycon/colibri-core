@@ -1543,7 +1543,7 @@ init_mathjax();
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[128]:
+In&nbsp;[4]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="kn">import</span> <span class="nn">colibricore</span>
@@ -1565,7 +1565,7 @@ In&nbsp;[128]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[129]:
+In&nbsp;[5]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">corpustext</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;To be, or not to be, that is the question</span>
@@ -1627,7 +1627,7 @@ In&nbsp;[129]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[130]:
+In&nbsp;[6]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">classfile</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;hamlet.colibri.cls&quot;</span>
@@ -1670,7 +1670,7 @@ Encoded  184  classes, well done!
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[131]:
+In&nbsp;[7]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">corpusfile</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;hamlet.colibri.dat&quot;</span> <span class="c">#this will be the encoded corpus file</span>
@@ -1687,7 +1687,7 @@ In&nbsp;[131]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[132]:
+In&nbsp;[8]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Load class decoder from the classfile we just made</span>
@@ -1764,7 +1764,7 @@ The fair Ophelia . Nymph , in all thy Orisons
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[133]:
+In&nbsp;[9]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Build a pattern from a string, using the class encoder</span>
@@ -1802,7 +1802,7 @@ To be or not to be
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[134]:
+In&nbsp;[10]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Iterate over the token in a pattern, each token will be a Pattern instance</span>
@@ -1840,7 +1840,7 @@ be
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[135]:
+In&nbsp;[11]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Extracting subpatterns by offset</span>
@@ -1884,7 +1884,7 @@ or not
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[136]:
+In&nbsp;[12]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#let&#39;s get all bigrams</span>
@@ -1919,7 +1919,7 @@ to be
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[137]:
+In&nbsp;[13]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#or all n-grams:</span>
@@ -1969,7 +1969,7 @@ be or not to be
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[138]:
+In&nbsp;[14]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#or particular ngrams, such as unigrams up to trigrams:</span>
@@ -2017,7 +2017,7 @@ not to be
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[139]:
+In&nbsp;[15]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#token</span>
@@ -2056,7 +2056,7 @@ True
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[140]:
+In&nbsp;[16]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">p</span><span class="p">)))</span>
@@ -2082,7 +2082,7 @@ b&apos;To be or not to be&apos; 18
 </div>
 
 <div class="hbox output_area"><div class="prompt output_prompt">
-    Out[140]:</div>
+    Out[16]:</div>
 <div class="box-flex1 output_subarea output_pyout">
 
 
@@ -2107,7 +2107,7 @@ True
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[141]:
+In&nbsp;[17]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">corpusdata</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">IndexedCorpus</span><span class="p">(</span><span class="n">corpusfile</span><span class="p">)</span> <span class="c">#encoded data, will be loaded into memory entirely</span>
@@ -2392,7 +2392,7 @@ all thy Orisons
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[142]:
+In&nbsp;[18]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">unigram</span> <span class="o">=</span> <span class="n">corpusdata</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]</span>
@@ -2425,7 +2425,7 @@ in
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[143]:
+In&nbsp;[19]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">ngram</span> <span class="o">=</span> <span class="n">corpusdata</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">):(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)]</span>
@@ -2458,7 +2458,7 @@ in the mind to suffer
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[144]:
+In&nbsp;[20]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">sentencecount</span> <span class="o">=</span> <span class="n">corpusdata</span><span class="o">.</span><span class="n">sentencecount</span><span class="p">()</span>
@@ -2529,7 +2529,7 @@ Length of sentence 34: 10
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[145]:
+In&nbsp;[21]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Set the options</span>
@@ -2628,7 +2628,7 @@ life
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[146]:
+In&nbsp;[22]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Models behave much alike to Python dictionaries:</span>
@@ -2715,7 +2715,7 @@ life 2
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[147]:
+In&nbsp;[23]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">querypattern</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;sleep&quot;</span><span class="p">)</span>
@@ -2748,7 +2748,7 @@ How much sleep?
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[148]:
+In&nbsp;[24]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Like dictionaries, unknown patterns will trigger a KeyError</span>
@@ -2788,13 +2788,13 @@ Nope, KeyError, no such pattern in model..
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[149]:
+In&nbsp;[25]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">if</span> <span class="n">querypattern</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">&quot;No insolence in model!&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
     <span class="k">print</span><span class="p">(</span><span class="s">&quot;Insolence in model!&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;No insolence in model!&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -2807,7 +2807,7 @@ In&nbsp;[149]:
 <div class="hbox output_area"><div class="prompt"></div>
 <div class="box-flex1 output_subarea output_stream output_stdout">
 <pre>
-Insolence in model!
+No insolence in model!
 
 </pre>
 </div>
@@ -2823,7 +2823,7 @@ Insolence in model!
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[150]:
+In&nbsp;[26]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">querypattern</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;and the&quot;</span><span class="p">)</span>
@@ -2857,7 +2857,7 @@ In&nbsp;[150]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[151]:
+In&nbsp;[27]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">for</span> <span class="n">occurrencecount</span><span class="p">,</span> <span class="n">frequency</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">histogram</span><span class="p">():</span>
@@ -2899,7 +2899,7 @@ In&nbsp;[151]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[152]:
+In&nbsp;[28]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">patternmodelfile</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;hamlet.colibri.patternmodel&quot;</span>
@@ -2920,7 +2920,7 @@ In&nbsp;[152]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[153]:
+In&nbsp;[29]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Set the options</span>
@@ -3023,7 +3023,7 @@ life (14, 6) (22, 7)
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[154]:
+In&nbsp;[30]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">querypattern</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;and the&quot;</span><span class="p">)</span>
@@ -3057,7 +3057,7 @@ In&nbsp;[154]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[155]:
+In&nbsp;[31]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;Total amount of tokens in the corpus data:&quot;</span> <span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">tokens</span><span class="p">()</span> <span class="p">)</span>
@@ -3091,7 +3091,7 @@ Total amount of word types in the corpus data: 180
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[156]:
+In&nbsp;[32]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;Patterns at (1,5): &quot;</span><span class="p">)</span>
@@ -3130,7 +3130,7 @@ to be , that is
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[157]:
+In&nbsp;[33]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;Patterns in first sentence&quot;</span><span class="p">)</span>
@@ -3214,7 +3214,7 @@ Patterns in first sentence
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[158]:
+In&nbsp;[34]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">reverseindex</span><span class="p">():</span>
@@ -3253,7 +3253,7 @@ In&nbsp;[158]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[159]:
+In&nbsp;[35]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="kn">import</span> <span class="nn">urllib.request</span>
@@ -3290,7 +3290,7 @@ Downloaded to /tmp/republic.txt
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[160]:
+In&nbsp;[36]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">classfile_plato</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;republic.colibri.cls&quot;</span>
@@ -3341,7 +3341,7 @@ Done
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[161]:
+In&nbsp;[37]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Set the options, doskipgrams=True is the key to enabling skipgrams</span>
@@ -3382,7 +3382,7 @@ Found  84310  patterns:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[162]:
+In&nbsp;[38]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">skipgrams</span> <span class="o">=</span> <span class="mi">0</span>
@@ -3420,7 +3420,7 @@ Found 7921  skipgrams
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[163]:
+In&nbsp;[39]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">skipgrams</span> <span class="o">=</span> <span class="mi">0</span>
@@ -3455,7 +3455,7 @@ Found 7921  skipgrams
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[164]:
+In&nbsp;[40]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">for</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">occurrencecount</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">model</span><span class="o">.</span><span class="n">top</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="n">colibricore</span><span class="o">.</span><span class="n">Category</span><span class="o">.</span><span class="n">SKIPGRAM</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*-</span><span class="mi">1</span> <span class="p">):</span>
@@ -3510,7 +3510,7 @@ of {*2*} ,  --  379
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[165]:
+In&nbsp;[41]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">skipgram</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;To {*1*} or not to {*1*} is the question&quot;</span><span class="p">)</span>
@@ -3526,7 +3526,7 @@ In&nbsp;[165]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[166]:
+In&nbsp;[42]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">skipgram</span><span class="o">.</span><span class="n">parts</span><span class="p">():</span>
@@ -3561,7 +3561,7 @@ is the question
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[167]:
+In&nbsp;[43]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#let&#39;s pick a common skipgram from the data:</span>
@@ -3628,7 +3628,7 @@ to the nature of  -- occurring  2  times
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[168]:
+In&nbsp;[44]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#let&#39;s pick a common skipgram from the data:</span>
@@ -3667,7 +3667,7 @@ to {*2*} of  -- occurring  8  times
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[169]:
+In&nbsp;[45]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">ngram</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;the law&quot;</span><span class="p">)</span>
@@ -3828,7 +3828,7 @@ father  -- occurring  5  times
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[170]:
+In&nbsp;[48]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">classfile2</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;platoandhamlet.colibri.cls&quot;</span>
@@ -3837,8 +3837,8 @@ In&nbsp;[170]:
 <span class="n">classencoder2</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">ClassEncoder</span><span class="p">()</span>
 
 <span class="c">#Build classes</span>
+<span class="n">classencoder2</span><span class="o">.</span><span class="n">processcorpus</span><span class="p">(</span><span class="n">corpusfile_plato_plaintext</span><span class="p">)</span>
 <span class="n">classencoder2</span><span class="o">.</span><span class="n">processcorpus</span><span class="p">(</span><span class="n">corpusfile_plaintext</span><span class="p">)</span>
-<span class="n">classencoder2</span><span class="o">.</span><span class="n">processcorpus</span><span class="p">(</span><span class="n">testcorpusfile_plaintext</span><span class="p">)</span>
 <span class="n">classencoder2</span><span class="o">.</span><span class="n">buildclasses</span><span class="p">()</span>
 
 <span class="c">#Save class file</span>
@@ -3857,7 +3857,7 @@ In&nbsp;[170]:
 <div class="hbox output_area"><div class="prompt"></div>
 <div class="box-flex1 output_subarea output_stream output_stdout">
 <pre>
-Encoded  275  classes, well done!
+Encoded  11540  classes, well done!
 
 </pre>
 </div>
@@ -3874,7 +3874,7 @@ Encoded  275  classes, well done!
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[171]:
+In&nbsp;[49]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;Class encoder has &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">classencoder</span><span class="p">),</span> <span class="s">&quot; classes prior to extension&quot;</span><span class="p">)</span>
@@ -3918,7 +3918,7 @@ Class encoder has  11543  classes after extension
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[172]:
+In&nbsp;[50]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="c">#Set the options</span>
@@ -3941,7 +3941,7 @@ In&nbsp;[172]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[173]:
+In&nbsp;[51]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">testmodel</span><span class="p">:</span>
@@ -4020,7 +4020,7 @@ end
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[174]:
+In&nbsp;[54]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">testmodel</span><span class="p">:</span>
@@ -4099,7 +4099,7 @@ end  ---  in training:  103 , in test:  2
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[175]:
+In&nbsp;[55]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">testmodel</span><span class="p">:</span>
@@ -4178,7 +4178,7 @@ end  ---  in training:  0.0004094987814429465 , in test:  0.006349206349206349
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[176]:
+In&nbsp;[53]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">coverage</span> <span class="o">=</span> <span class="n">testmodel</span><span class="o">.</span><span class="n">totaltokensingroup</span><span class="p">()</span> <span class="o">/</span> <span class="n">testmodel</span><span class="o">.</span><span class="n">tokens</span><span class="p">()</span>
@@ -4212,7 +4212,7 @@ In&nbsp;[176]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[178]:
+In&nbsp;[52]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">sleep</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;to sleep&quot;</span><span class="p">)</span>
@@ -4247,6 +4247,19 @@ Coverage in test (unconstrained): 0.012698412698412698
 </pre>
 </div>
 </div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight"><pre>
+</pre></div>
 
 </div>
 </div>
