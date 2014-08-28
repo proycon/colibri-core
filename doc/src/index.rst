@@ -69,6 +69,12 @@ C++ headers and the library are installed::
 
   $ python3 ./setup.py build_ext --include-dirs=/path/to/include/colibri-core  --library-dirs=/path/to/lib/  install --prefix=/path/to/somewhere/
 
+If you plan to use Colibri-Core from Python with virtualenv or a distribution
+such as Anaconda, we recommend to install all of colibri-core in this specific
+location. To do this, you need need to call ``configure`` with ``--prefix``, where the prefix is the directory where your
+virtual environment, or Anaconda resides. The ``--prefix`` for ``setup.py`` is
+the same, and the include-dirs and library-dirs should point to respectively
+to the ``include/colibri-core`` and ``lib`` directories within this directory.
 
  
 Keeping colibri up to date
