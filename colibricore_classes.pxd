@@ -253,7 +253,7 @@ cdef extern from "classencoder.h":
         void processcorpus(string filename, unordered_map[string,int]) nogil
         void buildclasses(unordered_map[string,int]) nogil
         void build(string filename) nogil #build a class from this dataset
-        void encodefile(string, string, bool allowunknown, bool autoaddunknown=False, bool append=False) nogil
+        void encodefile(string, string, bool allowunknown, bool autoaddunknown, bool append) nogil
         void save(string)
         Pattern buildpattern(string, bool allowunknown, bool autoaddunknown) nogil
 
