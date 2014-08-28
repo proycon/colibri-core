@@ -1,5 +1,6 @@
 
 - on-line learning, cache models
+
 - embedded systems
 
 - comparison with other LMs
@@ -9,17 +10,19 @@ http://ucrel.lancs.ac.uk/llwizard.html
 
 - stream based Python
 
-- voorbeelden bij metrics in documentatie
+DONE voorbeelden bij metrics in documentatie
 
 - C++ API genereren
 
-- TEchnical Report
+- Technical Report
 
 - Higher level wrapper scripts
 
 - CLAM wrapper
 
-- PIP install / Anaconda package
+
+- PIP install / Anaconda package  
+ (wrote up on it, making a package seems harder)
 
 - SOS/EOS markers
 

@@ -2054,13 +2054,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                                 const Pattern p = *iter2;
                                 types.insert(p);
                             }
-                            IndexedData * data = this->getdata(pattern);
-                            for (IndexedData::iterator dataiter = data->begin(); dataiter != data->end(); dataiter++) {
-                                //take into account all tokens 
-                                for (int i = 0; i < pattern.n(); i++) {
-                                    tokens.insert(*dataiter + i);
-                                }
-                            }
+                        }
+                    }
+                    IndexedData * data = this->getdata(pattern);
+                    for (IndexedData::iterator dataiter = data->begin(); dataiter != data->end(); dataiter++) {
+                        //take into account all tokens 
+                        for (int i = 0; i < pattern.n(); i++) {
+                            tokens.insert(*dataiter + i);
                         }
                     }
                     iter++;
