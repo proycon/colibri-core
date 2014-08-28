@@ -266,7 +266,7 @@ The various columns are:
 
 * **Pattern** - The actual pattern. Gaps in skipgrams are represented as ``{*x*}`` where x is a number representing the size of the skip. Variable-width skipgrams are just ``{*}``. 
 * **Occurrence count** - The absolute number of times this pattern occurs
-* **Tokens** - The absolute number of tokens in the corpus that this pattern covers. Computed as ``occurrencecount * n``. 
+* **Tokens** - The absolute number of tokens in the corpus that this pattern covers. Longer patterns by definition cover more tokens. This value's maximum is ``occurrencecount * n``, the value will be smaller if a pattern overlaps itself.
 * **Coverage** - The number of covered tokens, as a fraction of the total number of tokens.
 * **Category** - The type of pattern (ngram, skipgram or flexgram).
 * **Size** - The length of the n-gram or skipgram in words/tokens.
@@ -371,21 +371,77 @@ Example output::
    skipgram         4         2         4    0.0118         4           8
    skipgram         5         3         5    0.0147         5          13
 
-Some explanation is in order to correctly interpret this data. There are three
-columns:
+Some explanation is in order to correctly interpret this data.  First of all
+patterns are grouped by category (ngram,skipgram, flexgram) and size. There are various metrics:
 
-    * **Pattern** - The number of distinct patterns
-    * **Tokens** - The number of tokens that is covered. This is only available
-      for indexed models, for unindexed models it is either omitted or the
-      number shown is maximum projection.
+    * **Pattern** - The number of distinct patterns in this group, so for
+      category n-gram of 2, this reflects the number of distinct bigrams.
+    * **Tokens** - The number of tokens that is covered by the patterns in the
+      group. Longer patterns by definition cover more tokens.  
+      . This is only available for indexed models, for unindexed models it is either omitted or the
+      number shown is maximum projection ``occurrencecount * size`` .
     * **Coverage** - The number of tokens covered as a fraction of the total number of tokens. Only for indexed models.
-    * **Types** - The number of unique **word** types covered
+    * **Types** - The number of unique **word** types covered, i.e the number
+      of distinct unigrams.
     * **Occurrences** - Cumulative occurrence count of all the patterns in
-      the group. Used as a basis for computing frequency.
+      the group. Used as a basis for computing frequency. Occurrence count
+      differs from **tokens**, the former expresses the number of times a
+      pattern occurs in the corpus, the latter expresses how many tokens are
+      part of the pattern
+      
 
-Pattern models store how many of the tokens and types in the original corpus were covered. Tokens and types not covered did not make the set thresholds. Make sure to use indexed models if you want accurate coverage data.
+To better understand these metrics, let's perceive them in the following test
+sentence::
 
-Similarly, a histogram can also be generated, using the ``-H`` flag::
+    to be or not to be , that is the question
+
+If we generate an indexed pattern model purely on this sentence, **with threshold two**. We find the following three patterns::
+
+    PATTERN COUNT   TOKENS  COVERAGE        CATEGORY        SIZE    FREQUENCY REFERENCES
+    to      2       2       0.181818        ngram            1       0.5     1:0 1:4
+    be      2       2       0.181818        ngram            1       0.5     1:1 1:5
+    to be   2       4       0.363636        ngram            2       1       1:0 1:4
+
+The report then looks as follows::
+
+    REPORT
+    ----------------------------------
+                                PATTERNS    TOKENS  COVERAGE     TYPES
+    Total:                             -        11         -         9
+    Uncovered:                         -         7    0.6364         7
+    Covered:                           3         4    0.3636         2
+
+    CATEGORY N (SIZE)   PATTERNS    TOKENS  COVERAGE     TYPES OCCURRENCES
+        all       all         3         4    0.3636         2           6
+        all         1         2         4    0.3636         2           4
+        all         2         1         4    0.3636         2           2
+     n-gram       all         3         4    0.3636         2           6
+     n-gram         1         2         4    0.3636         2           4
+     n-gram         2         1         4    0.3636         2           2
+
+
+Our sentence has 11 tokens, 7 of which are not covered by the patterns found, 4
+of which are.  Since we have only n-grams and no skipgrams or flexgrams in this
+simple example, the data for *all* and *n-gram* is the same. The **coverage**
+metric expresses this in a normalised fashion. 
+
+In our data we have two unigrams *(to, be)* and one bigram *(to be)*, this is
+expressed by the **patterns** metric. Both the unigrams and the bigrams cover
+the exact same four tokens in our sentence, i.e  0, 1, 4, and 5, so the TOKENS
+column reports four for all. If we look at the **types** column, we notice we
+only have two word types: *to* and *be*. The unigrams occur in four different
+instances and the bigrams occur in two different instances. This is expressed
+in the **occurrences** column. Combined that makes six occurrences.
+
+We have 9 types in total, of which only 2 (to, be) are covered, the remaining 7
+*(or not , that is the question)* remain uncovered as we set our occurrence threshold for
+this model to two. 
+
+Pattern models store how many of the tokens and types in the original corpus
+were covered. Tokens and types not covered did not make the set thresholds.
+Make sure to use indexed models if you want accurate coverage data.
+
+A histogram can also be generated, using the ``-H`` flag::
 	   
         $ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -H
 
