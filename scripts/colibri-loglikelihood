@@ -23,12 +23,16 @@ do
     (t) mintokens=$OPTARG;;
     (m) minlength=$OPTARG;;
     (l) maxlength=$OPTARG;;
-    (a) opt_a="-a"
-    (*) usage;;
+    (a) opt_a="-a";;
+    (*) usage; exit 0;;
     esac
 done
 shift $(expr $OPTIND - 1)
 
+if [ -z "$@" ]; then
+    usage
+    exit 0
+fi
 
 echo "Class encoding corpora...">&2
 colibri-classencode -o colibri.cls $@
