@@ -3,7 +3,7 @@
 
 ACLOCAL_AMFLAGS = -I m4 --install
 
-SUBDIRS = src include
+SUBDIRS = src include scripts
 
 EXTRA_DIST = bootstrap AUTHORS TODO NEWS colibri-core.pc.in
 
