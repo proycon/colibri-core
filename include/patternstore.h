@@ -164,7 +164,7 @@ class PatternStoreInterface {
 };
 
 /**
- * Abstract Pattern store class
+ * Abstract Pattern store class, not to be instantiated directly
  *
  * This is an abstract class, all Pattern storage containers are derived from
  * this. 
@@ -205,6 +205,9 @@ class PatternStore: public PatternStoreInterface {
 /************* Abstract datatype for all kinds of maps ********************/
 
 
+/**
+ * Abstract class for map-like pattern stores, do not instantiate directly
+ */
 template<class ContainerType, class ValueType, class ValueHandler,class ReadWriteSizeType = uint32_t>
 class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> { 
      protected:
@@ -232,6 +235,9 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
         virtual typename ContainerType::iterator end()=0;
         virtual typename ContainerType::iterator find(const Pattern & pattern)=0;
 
+        /**
+         * Write the map to stream output (in binary format)
+         */
         virtual void write(std::ostream * out) {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
@@ -242,6 +248,9 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
             }
         }
         
+        /**
+         * Write the map to file (in binary format)
+         */
         virtual void write(std::string filename) {
             std::ofstream * out = new std::ofstream(filename.c_str());
             this->write(out);
@@ -250,6 +259,9 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
         }
 
 
+        /**
+         * Read a map from input stream (in binary format)
+         */
         template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler>
         void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, bool DEBUG=false) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
@@ -303,6 +315,9 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
             }
         }
 
+        /**
+         * Read a map from file (in binary format)
+         */
         void read(std::string filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET = false, bool DEBUG=false) { //no templates for this one, easier on python/cython
             std::ifstream * in = new std::ifstream(filename.c_str());
             this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET, DEBUG);
@@ -316,47 +331,78 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
 /************* Specific STL-like containers for patterns ********************/
 
 
-/*
- * These are the containers you can directly use from your software
- *
- */
 
 typedef std::unordered_set<Pattern> t_patternset;
 
+/**
+ * A pattern store in the form of an unordered set (i.e, no duplicates). Stores only patterns, no values.
+ * @tparam ReadWriteSizeType The data type for addressing, determines the
+ * maximum amount of patterns that can be held, only used in
+ * serialisation/deserialisation
+ */
 template<class ReadWriteSizeType = uint32_t>
 class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
     protected:
         t_patternset data;
     public:
 
+        /**
+         * Empty set constructor
+         */
         PatternSet<ReadWriteSizeType>(): PatternStore<t_patternset,ReadWriteSizeType>() {};
         virtual ~PatternSet<ReadWriteSizeType>() {};
 
+        /**
+         * Add a new pattern to the set
+         */
         void insert(const Pattern & pattern) {
             data.insert(pattern);
         }
 
+        /**
+         * Checks if a pattern is in the set
+         */
         bool has(const Pattern & pattern) const { return data.count(pattern); }
-        bool has(const PatternPointer & pattern) const { return data.count(Pattern(pattern)); }
-        size_t size() const { return data.size(); } 
 
+        /**
+         * Checks if a pattern is in the set
+         */
+        bool has(const PatternPointer & pattern) const { return data.count(Pattern(pattern)); }
+
+        /**
+         * Returns the number of patterns in the set
+         */
+        size_t size() const { return data.size(); } 
 
         typedef t_patternset::iterator iterator;
         typedef t_patternset::const_iterator const_iterator;
         
+        /**
+         * Returns an iterator to iterate over the set
+         */
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
 
         iterator end() { return data.end(); }
         const_iterator end() const { return data.end(); }
 
+        /**
+         * Returns an iterator to the pattern in the set or end() if no such
+         * pattern was found.
+         */
         iterator find(const Pattern & pattern) { return data.find(pattern); }
         const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
 
+        /**
+         * Removes the specified pattern from the set, returns true if successful
+         */
         bool erase(const Pattern & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
 
 
+        /**
+         * Write the set to output stream, in binary format
+         */
         void write(std::ostream * out) {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
@@ -366,6 +412,9 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
             }
         }
 
+        /**
+         * Read the set from input stream, in binary format
+         */
         void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
@@ -382,6 +431,10 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
             }
         }
 
+        /**
+         * Reads a map from input stream, in binary format, but ignores the values
+         * and retains only the keys for the set.
+         */
         template<class ReadValueType, class ReadValueHandler=BaseValueHandler<ReadValueType>>
         void readmap(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
@@ -417,6 +470,12 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
 typedef std::set<Pattern> t_orderedpatternset;
 
 
+/**
+ * A pattern store in the form of an ordered set (i.e, no duplicates). Stores only patterns, no values.
+ * @tparam ReadWriteSizeType The data type for addressing, determines the
+ * maximum amount of patterns that can be held, only used in
+ * serialisation/deserialisation
+ */
 template<class ReadWriteSizeType = uint64_t>
 class OrderedPatternSet: public PatternStore<t_orderedpatternset,ReadWriteSizeType> {
     protected:
