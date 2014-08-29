@@ -37,10 +37,9 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
     int n_sum = 0;
     int o_sum = 0;
 
-
     std::vector<int> observed;
     std::vector<int> total;
-    std::vector<int> expected;
+    std::vector<double> expected;
 
     int category = pattern.category();
     int patternsize = pattern.n();
@@ -57,7 +56,7 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
 
 
     for (int i = 0; i < total.size(); i++) {
-        e = (total[i] + o_sum) / (n_sum);
+        e = (total[i] * o_sum) / (n_sum);
         expected.push_back(e);
     }
 
@@ -67,6 +66,7 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
             ll += observed[i] * log(observed[i] / expected[i]);
     }
     ll = ll * 2;
+    if (isnan(ll)) ll = 0; //value too low, set to 0
 
     return ll;
 }
@@ -96,7 +96,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
 
     std::vector<int> observed;
     std::vector<int> total;
-    std::vector<int> expected;
+    std::vector<double> expected;
     
     if (output != NULL) {
         *output << "PATTERN\tLOGLIKELIHOOD";
@@ -126,6 +126,9 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
         total.clear();
         expected.clear();
 
+        n_sum = 0;
+        o_sum = 0;
+
         bool abort = false;
         for (int i = 0; i < models.size(); i++) {
             o = models[i]->occurrencecount(pattern);
@@ -143,16 +146,22 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
         if (abort) continue;
 
         for (int i = 0; i < total.size(); i++) {
-            e = (total[i] + o_sum) / (n_sum);
+            e = (total[i] * o_sum) / (double) (n_sum);
+            //std::cerr << "DEBUG: e = " << e << " = (" << total[i] << " + " << o_sum << ") / " << n_sum << std::endl;
             expected.push_back(e);
         }
 
+
         ll = 0;
         for (int i = 0; i < models.size(); i++) {
-            if (observed[i] > 0) 
-                ll += observed[i] * log(observed[i] / expected[i]);
+            if (observed[i] > 0)  {
+                //std::cerr << "DEBUG: observed[" << i << "] = " << observed[i] << "  expected[" << i << "] = " << expected[i] << " total[" << i << "] = " << total[i] << std::endl;
+                ll = ll + (observed[i] * log(observed[i] / expected[i]));
+            }
         }
         ll = ll * 2;
+        if (isnan(ll)) ll = 0; //value too low, set to 0
+        //std::cerr << "DEBUG: ll = " << ll << std::endl;
 
         if (resultmap != NULL) 
             (*resultmap)[pattern] = ll;

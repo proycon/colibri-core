@@ -29,13 +29,13 @@ do
 done
 shift $(expr $OPTIND - 1)
 
-if [ -z "$@" ]; then
+if [ $# -eq 0 ]; then
     usage
     exit 0
 fi
 
 echo "Class encoding corpora...">&2
-colibri-classencode -o colibri.cls $@
+colibri-classencode -o tmp $@
 
 models=""
 for textfile in "$@"
@@ -49,5 +49,6 @@ do
     fi
 done
 
-echo "Running comparemodels...">&2
-colibri-comparemodels -l $maxlength -m $minlength $opt_a $models 
+cmd="colibri-comparemodels -c tmp.colibri.cls -l $maxlength -m $minlength $opt_a $models"
+echo "Running comparemodels: $cmd">&2
+$cmd

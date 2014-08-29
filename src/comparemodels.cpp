@@ -114,8 +114,6 @@ int main( int argc, char *argv[] ) {
         cerr << "Loading model " << modelfiles[i] << endl;
         PatternModel<uint32_t> * model = new PatternModel<uint32_t>(modelfiles[i], options);
         models.push_back(model);
-
-        exit(0);
     }
 
     cerr << "Computing log-likelihood..." << endl;
