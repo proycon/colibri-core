@@ -12,6 +12,18 @@
 *   Licensed under GPLv3
 *****************************/
 
+/**
+ * @file
+ * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
+ * 
+ * @section LICENSE
+ * Licensed under GPLv3
+ *
+ * @section DESCRIPTION
+ * Contains classes for Pattern Models
+ *
+ */
+
 
 //TODO: Reverse index currently does not hold flexgrams
 
@@ -28,6 +40,9 @@
 #include "bz2stream.h"
 
 
+/**
+ * Defines the various types of pattern models
+ */
 enum ModelType {
 	UNINDEXEDPATTERNMODEL = 10, 
     INDEXEDPATTERNMODEL = 20,
@@ -35,13 +50,21 @@ enum ModelType {
     PATTERNALIGNMENTMODEL = 40,
 };
 
+/**
+ * Defines Reverse Index Types
+ */
 enum ReverseIndexType {
     NONE = 0,
     QUICK = 1,
     COMPACT = 2,
 };
 
+/**
+ * Extracts the model type (one of ModelType) from a file
+ */
 int getmodeltype(const std::string filename);
+
+
 
 class NoSuchPattern: public std::exception {
   virtual const char* what() const throw()
@@ -51,31 +74,51 @@ class NoSuchPattern: public std::exception {
 };
 
 
-
+/**
+ * Options for Pattern Model loading and training.
+ *
+ * This class defines all kinds of parameters that can be set for loading and
+ * training Pattern Models, it is passed to various constructors and methods.
+ */
 class PatternModelOptions {
     public:
-        int MINTOKENS;
-        int MINTOKENS_SKIPGRAMS;
-        int MINLENGTH;
-        int MAXLENGTH;
-        int MAXBACKOFFLENGTH;
+        int MINTOKENS; ///< The occurrence threshold, minimum amount of occurrences for a pattern to be included in a model
+                       ///< Defaults to 2 for building, to 1 for loading.
+
+        int MINTOKENS_SKIPGRAMS; ///< The occurrence threshold for skipgrams, minimum amount of occurrences for a pattern to be included in a model.
+                                 ///< Defaults to the same value as MINTOKENS.
+                                 ///< Only used if DOSKIPGRAMS or
+                                 ///< DO_SKIPGRAMS_EXHAUSTIVE is set to true
+
+        int MINLENGTH; ///< The minimum length of patterns to be loaded/extracted (in words/tokens) (default: 1)
+        int MAXLENGTH; ///< The maximum length of patterns to be loaded/extracted, inclusive (in words/tokens) (default: 100)
+        int MAXBACKOFFLENGTH; ///< Counting n-grams is done iteratively for each increasing n. (default: MAXLENGTH)
+                              ///< For each n, presence of sub-ngrams in n-1 is
+                              ///< checked. This values defines a maximum
+                              ///< length for this back-off check. In
+                              ///< combination with MINLENGTH, this allows earlier
+                              ///< pruning and conserves memory.
         
-        bool DOSKIPGRAMS;
-        bool DOSKIPGRAMS_EXHAUSTIVE;
-        int MINSKIPTYPES; 
+        bool DOSKIPGRAMS; ///< Load/extract skipgrams? (default: false)
+        bool DOSKIPGRAMS_EXHAUSTIVE; ///< Load/extract skipgrams in an exhaustive fashion? More memory intensive, but the only options for unindexed models (default: false)
+        int MINSKIPTYPES;  ///< Minimum required amount of distinct patterns that can fit in a gap of a skipgram for the skipgram to be included (default: 2)
 
-        bool DOREVERSEINDEX;
-        bool DOPATTERNPERLINE;
+        bool DOREVERSEINDEX; ///< Compute reverse index? Costs memory. This will be way faster when you pass an IndexedCorpus to the PatternModel constructor. (default: true)
+        bool DOPATTERNPERLINE; ///< Assume each line contains one integral pattern, rather than actively extracting all subpatterns on a line (default: false)
 
-        bool DOREMOVEINDEX;
-        bool DOREMOVENGRAMS;
-        bool DOREMOVESKIPGRAMS;
-        bool DOREMOVEFLEXGRAMS;
-        bool DORESET; //sets all counts to zero upon loading, clears indices
+        bool DOREMOVEINDEX; ///< Do not load index information (for indexed models), loads just the patterns without any counts
+        bool DOREMOVENGRAMS; ///< Remove n-grams from the model upon loading it
+        bool DOREMOVESKIPGRAMS; ///< Remove skip-grams from the model upon loading it
+        bool DOREMOVEFLEXGRAMS; ///< Remove flexgrams from the model upon loading it
+        bool DORESET; ///< sets all counts to zero upon loading, clears indices
 
-        bool QUIET;
-        bool DEBUG;
+        bool QUIET; ///< Don't output to stderr
+        bool DEBUG; ///< Output extra debug information
 
+        /**
+         * Initialise with default values. All members are public and can be
+         * set explicitly..
+         */
         PatternModelOptions() {
             MINTOKENS = -1; //defaults to 2 for building, 1 for loading
             MINTOKENS_SKIPGRAMS = -1; //defaults to MINTOKENS
@@ -100,13 +143,15 @@ class PatternModelOptions {
             QUIET = false;
         }
 
-        //copy constructor
+        /**
+         * Copy constructor
+         */
         PatternModelOptions(const PatternModelOptions & ref) {
             MINTOKENS = ref.MINTOKENS; //defaults to 2 for building, 1 for loading
             MINTOKENS_SKIPGRAMS = ref.MINTOKENS_SKIPGRAMS; //defaults to 2 for building, 1 for loading
             MINLENGTH = ref.MINLENGTH;
             MAXLENGTH = ref.MAXLENGTH;
-            MAXBACKOFFLENGTH = ref.MAXBACKOFFLENGTH;
+            MAXBACKOFFLENGTH = ref.MAXBACKOFFLENGTH; 
 
             MINSKIPTYPES = ref.MINSKIPTYPES;
             DOSKIPGRAMS = ref.DOSKIPGRAMS;
@@ -131,10 +176,20 @@ class PatternModelOptions {
 typedef PatternMap<uint32_t> t_relationmap;
 typedef PatternMap<double> t_relationmap_double;
 
-//basic read-only interface for pattern models, abstract base class.
+/**
+ * Basic read-only interface for pattern models, abstract base class.
+ */
 class PatternModelInterface: public PatternStoreInterface {
     public:
+        /**
+         * Get the type of the model
+         * @return ModelType
+         */
         virtual int getmodeltype() const=0;
+
+        /**
+         * Get the version number of the model
+         */
         virtual int getmodelversion() const=0;
         
         //these are already in PatternStoreInterface:
@@ -142,10 +197,26 @@ class PatternModelInterface: public PatternStoreInterface {
             //virtual bool has(const PatternPointer &) const =0;
             //virtual size_t size() const =0; 
 
+        /**
+         * Returns the number of times this pattern occurs in the model
+         */
         virtual int occurrencecount(const Pattern & pattern)=0;
+
+        /**
+         * Returns the number of times the frequency of the pattern in the
+         * model, a relative/normalised value
+         */
         virtual double frequency(const Pattern &) =0;
+
+        /**
+         * Return the maximum pattern length in this model
+         */
         virtual int maxlength() const=0;
+        /**
+         * Returns the minumum pattern length in this model
+         */
         virtual int minlength() const=0;
+
         virtual int types() =0;
         virtual int tokens() const=0;
 
@@ -156,8 +227,10 @@ class PatternModelInterface: public PatternStoreInterface {
 
 
 
-//A pattern model based on an unordered set, does not hold data, only patterns
-//Very suitable for loading constraint models.  (uint64 refers to max count)
+/**
+ * A pattern model based on an unordered set, does not hold data, only patterns.
+ * Very suitable for loading constraint models. 
+ */
 class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface {
     protected:
         unsigned char model_type;
@@ -167,6 +240,9 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         int maxn; 
         int minn; 
     public:
+        /**
+         * Empty constructor
+         */
         PatternSetModel() {
             totaltokens = 0;
             totaltypes = 0;
@@ -175,7 +251,13 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
         }
-        PatternSetModel(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+
+        /**
+         * Load a PatternSetModel from stream
+         * @param options The options for loading
+         * @param contrainmodel Load only patterns that occur in this model
+         */
+        PatternSetModel(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { 
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -184,7 +266,14 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             model_version = this->getmodelversion();
             this->load(f,options, constrainmodel);
         }
-        PatternSetModel(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        
+        /**
+         * Load a PatternSetModel from file
+         * @param filename The name of the file to load
+         * @param options The options for loading
+         * @param contrainmodel Load only patterns that occur in this model
+         */
+        PatternSetModel(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { 
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -214,6 +303,12 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             return PatternSet<uint64_t>::has(pattern);
         }
         
+        /**
+         * Load a PatternSetModel from file
+         * @param filename The name of the file to load
+         * @param options The options for loading
+         * @param contrainmodel Load only patterns that occur in this model
+         */
         virtual void load(std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
             if (!options.QUIET) std::cerr << "Loading " << filename << " as set-model" << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
@@ -226,6 +321,11 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             delete in;
         }
 
+        /**
+         * Load a PatternSetModel from stream
+         * @param options The options for loading
+         * @param contrainmodel Load only patterns that occur in this model
+         */
         virtual void load(std::istream * f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             char null;
             f->read( (char*) &null, sizeof(char));        
@@ -263,6 +363,9 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             }
         }
 
+        /**
+         * Write a PatternSetModel to an output stream
+         */
         void write(std::ostream * out) {
             const char null = 0;
             out->write( (char*) &null, sizeof(char));       
@@ -276,6 +379,9 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             PatternSet<uint64_t>::write(out); //write
         }
 
+        /**
+         * Write a PatternSetModel to an output file
+         */
         void write(const std::string filename) {
             std::ofstream * out = new std::ofstream(filename.c_str());
             this->write(out);
@@ -283,12 +389,23 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             delete out;
         }
 
+        /**
+         * Get the interface (just a basic typecast)
+         */
         PatternModelInterface * getinterface() {
             return (PatternModelInterface*) this;
         }
 
-        //these are useless in set context, they always return 0
+        /**
+         * This function does not perform anything in a set context, it always
+         * returns zero
+         */
         virtual int occurrencecount(const Pattern & pattern) { return 0;  }
+
+        /**
+         * This function does not perform anything in a set context, it always
+         * returns zero
+         */
         virtual double frequency(const Pattern &) { return 0; }
 
         typedef typename PatternSet<uint64_t>::iterator iterator;
