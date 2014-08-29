@@ -1,5 +1,6 @@
 #include <patternmodel.h>
 
+
 int getmodeltype(const std::string filename) {
     unsigned char null;
     unsigned char model_type;
@@ -15,4 +16,159 @@ int getmodeltype(const std::string filename) {
     } else {
         return model_type;
     }
+}
+
+/*
+ * Computation of log likelihood  for a single pattern, accross corpora.
+ *
+ * Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (ACL 2000). 1-8 October 2000, Hong Kong, pp. 1 - 6: http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf
+ */
+double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternModel<uint32_t>* > models) {       
+    if (models.size() < 2) {
+        std::cerr << "compare_models_loglikelihood requires at least two models!" << std::endl;
+        throw InternalError();
+    }
+
+    int n = 0; //total
+    int o = 0; //observed
+    double e = 0; //expected
+    double ll = 0; //Log Likelihood
+
+    int n_sum = 0;
+    int o_sum = 0;
+
+
+    std::vector<int> observed;
+    std::vector<int> total;
+    std::vector<int> expected;
+
+    int category = pattern.category();
+    int patternsize = pattern.n();
+    
+
+    for (int i = 0; i < models.size(); i++) {
+        o = models[i]->occurrencecount(pattern);
+        n = models[i]->totaloccurrencesingroup(category,patternsize); 
+        total.push_back(n);
+        n_sum += n;
+        observed.push_back( o );
+        o_sum += o;
+    }
+
+
+    for (int i = 0; i < total.size(); i++) {
+        e = (total[i] + o_sum) / (n_sum);
+        expected.push_back(e);
+    }
+
+    ll = 0;
+    for (int i = 0; i < models.size(); i++) {
+        if (observed[i] > 0) 
+            ll += observed[i] * log(observed[i] / expected[i]);
+    }
+    ll = ll * 2;
+
+    return ll;
+}
+
+
+/*
+ * Computation of log likelihood between patterns in corpora
+ *
+ * Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (ACL 2000). 1-8 October 2000, Hong Kong, pp. 1 - 6: http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf
+ */
+void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, PatternMap<double> * resultmap, bool conjunctiononly, std::ostream * output, ClassDecoder * classdecoder) {       
+    if (models.size() < 2) {
+        std::cerr << "compare_models_loglikelihood requires at least two models!" << std::endl;
+        throw InternalError();
+    }
+
+    int category = 0;
+    int patternsize;
+
+    int n = 0; //total
+    int o = 0; //observed
+    double e = 0; //expected
+    double ll = 0; //Log Likelihood
+
+    int n_sum = 0;
+    int o_sum = 0;
+
+    std::vector<int> observed;
+    std::vector<int> total;
+    std::vector<int> expected;
+    
+    if (output != NULL) {
+        *output << "PATTERN\tLOGLIKELIHOOD";
+        for (int i = 0; i < models.size(); i++) {
+            *output << "\tOCC_" << i << "\tFREQ_" << i;
+        }
+    }
+
+    int startmodel = 0;
+    int endmodel = models.size();
+
+    if (conjunctiononly) {
+        startmodel = 1;
+        endmodel = 2;
+    }
+
+
+    for (int m = startmodel; m < endmodel; m++) {
+     for (PatternModel<uint32_t>::iterator iter = models[m]->begin(); iter != models[m]->end(); iter++) {
+        const Pattern pattern = iter->first;
+        if ((!conjunctiononly) && (resultmap->has(pattern))) continue; //already done
+
+        category = pattern.category();
+        patternsize = pattern.n();
+        
+        observed.clear();
+        total.clear();
+        expected.clear();
+
+        bool abort = false;
+        for (int i = 0; i < models.size(); i++) {
+            o = models[i]->occurrencecount(pattern);
+            if ((conjunctiononly) && (o == 0)) {
+                abort = true;
+                break;
+            }
+            n = models[i]->totaloccurrencesingroup(category,patternsize); 
+            total.push_back(n);
+            n_sum += n;
+            observed.push_back( o );
+            o_sum += o;
+        }
+
+        if (abort) continue;
+
+        for (int i = 0; i < total.size(); i++) {
+            e = (total[i] + o_sum) / (n_sum);
+            expected.push_back(e);
+        }
+
+        ll = 0;
+        for (int i = 0; i < models.size(); i++) {
+            if (observed[i] > 0) 
+                ll += observed[i] * log(observed[i] / expected[i]);
+        }
+        ll = ll * 2;
+
+        if (resultmap != NULL) 
+            (*resultmap)[pattern] = ll;
+
+        if ((output != NULL) && (classdecoder != NULL)) {
+            *output << pattern.tostring(*classdecoder) << "\t" << ll;
+            for (int i = 0; i < models.size(); i++) {
+                *output << "\t" << observed[i] << "\t";
+                if (total[i] > 0) {
+                    *output << observed[i] / total[i];
+                } else {
+                    *output << 0;
+                }
+            }
+        }
+     }
+    }
+    
 }

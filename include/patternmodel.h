@@ -2563,4 +2563,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 };
 
+
+double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternModel<uint32_t>* > models);      
+void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, PatternMap<double> * resultmap, bool conjunctiononly = false, std::ostream * output = NULL, ClassDecoder * classdecoder = NULL );      
+
+
 #endif
