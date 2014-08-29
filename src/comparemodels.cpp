@@ -79,7 +79,7 @@ int main( int argc, char *argv[] ) {
             usage();
             exit(0);  
 		default:
-            cerr << "Unknown option: -" <<  optopt << endl;
+            cerr << "ERROR: Unknown option: -" <<  optopt << endl;
             abort ();
         }
     }
@@ -91,6 +91,7 @@ int main( int argc, char *argv[] ) {
 
     if (classfile.empty()) {
         cerr << "ERROR: No class file specified! (-c)" << endl;
+        usage();
         exit(2);
     }
 
