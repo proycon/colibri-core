@@ -73,8 +73,10 @@ class IndexPattern {
         }
 };
 
-//Class for reading an entire (class encoded) corpus into memory, providing a
-//reverse index by IndexReference
+/**
+ * Class for reading an entire (class encoded) corpus into memory, providing a
+ * reverse index by IndexReference
+ */
 class IndexedCorpus {
     protected:
         std::vector<IndexPattern> data;
@@ -142,22 +144,39 @@ class IndexedCorpus {
 
 /************* Base abstract container for pattern storage  ********************/
 
+/**
+ * Limited interface to pattern stores
+ */
 class PatternStoreInterface {
     public:
+        /**
+         * Does the pattern occur in the pattern store?
+         */
         virtual bool has(const Pattern &) const =0;
+        /**
+         * Does the pattern occur in the pattern store?
+         */
         virtual bool has(const PatternPointer &) const =0;
+        /**
+         * How many patterns are in the pattern store?
+         */
         virtual size_t size() const =0; 
 };
 
-//This is an abstract class, all Pattern storage containers are derived from
-//this. ContainerType is the low-level container type used (an STL container such as set/map). ReadWriteSizeType influences only the maximum number of items that can be stored (2**64) in the container, as this will be represented in the very beginning of the binary file. No reason to change this unless the container is very deeply nested in others and contains only few items.
+/**
+ * Abstract Pattern store class
+ *
+ * This is an abstract class, all Pattern storage containers are derived from
+ * this. 
+ * @tparam ContainerType The low-level container type used (an STL container such as set/map). 
+ * @tparam ReadWriteSizeType Data type for addressing, influences only the maximum number of items that can be stored (2**64) in the container, as this will be represented in the very beginning of the binary file. No reason to change this unless the container is very deeply nested in others and contains only few items.
+ */
 template<class ContainerType,class ReadWriteSizeType = uint64_t>
 class PatternStore: public PatternStoreInterface {
     public:
         PatternStore<ContainerType,ReadWriteSizeType>() {};
         virtual ~PatternStore<ContainerType,ReadWriteSizeType>() {};
     
-
         virtual void insert(const Pattern & pattern)=0; //might be a noop in some implementations that require a value
 
         virtual bool has(const Pattern &) const =0;

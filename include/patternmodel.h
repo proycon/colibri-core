@@ -217,7 +217,16 @@ class PatternModelInterface: public PatternStoreInterface {
          */
         virtual int minlength() const=0;
 
+        /**
+         * Return the number of distinct words/unigram in the original corpus,
+         * includes types not covered by the model!
+         */
         virtual int types() =0;
+
+        /**
+         * Returns the number of tokens in the original corpus, includes tokens
+         * not covered by the model!
+         */
         virtual int tokens() const=0;
 
         virtual PatternStoreInterface * getstoreinterface() {
