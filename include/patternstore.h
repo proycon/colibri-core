@@ -136,6 +136,7 @@ class IndexedCorpus {
             //sort data (in-place)
             std::sort(data.begin(), data.end());
         }
+
 };
 
 

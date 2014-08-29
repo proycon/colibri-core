@@ -1409,6 +1409,30 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
         
+
+        PatternSet<uint64_t> extractset(int minlength = 1, int maxlength = 1) {
+            //Returns a PatternSet containing patterns of the specified length.
+            //Patterns are actively reconstructed from patterns in the model,
+            //if necessary. So this includes patterns that are not in the model
+            //explicitly (i.e, smaller patterns that have been pruned.
+
+            PatternSet<uint64_t> result;
+            for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
+                const Pattern pattern = iter->first;   
+                const int patternlength = pattern.n();
+                if ((patternlength >= minlength) && (patternlength <= maxlength)) {
+                    result.insert(pattern);
+                } else if (patternlength > maxlength) {
+                    std::vector<Pattern> subngrams;
+                    pattern.subngrams(subngrams,minlength, maxlength);
+                    for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                        const Pattern pattern2 = *iter2;
+                        result.insert(pattern2);
+                    }
+                }
+            }            
+            return result;
+        }
         
 
         virtual void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT) {} //does nothing for unindexed models
