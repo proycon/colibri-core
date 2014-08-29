@@ -99,5 +99,6 @@ AC_CONFIG_FILES([
   Makefile
   src/Makefile
   include/Makefile
+  scripts/Makefile
 ])
 AC_OUTPUT
