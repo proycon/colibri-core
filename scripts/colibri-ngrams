@@ -1,0 +1,37 @@
+#!/bin/bash
+
+n=3
+
+usage() {
+ echo "Syntax: colibri-ngrams -n size corpusfile [corpusfile2]..." >&2
+ echo "Description: Extract n-grams of a particular size by moving a sliding window over the corpys" >&2
+ echo "Arguments: corpusfiles should be plain text files, tokenised, and one sentence per line" >&2
+ echo "Options:" >&2
+ echo " -n int     N-gram size" >&2
+}
+
+while getopts hn: flag
+do
+    case "$flag" in
+    (h) usage; exit 0;;
+    (n) n=$OPTARG;;
+    (*) usage; exit 0;;
+    esac
+done
+shift $(expr $OPTIND - 1)
+
+if [ $# -eq 0 ]; then
+    usage
+    exit 0
+fi
+
+echo "Class encoding corpora...">&2
+colibri-classencode -o tmp -u $@
+
+echo "Building pattern model...">&2
+colibri-extractngrams -c tmp.colibri.cls -n $n tmp.colibri.dat
+
+#cleanup
+rm tmp.colibri.cls
+rm tmp.colibri.dat
+
