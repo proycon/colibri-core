@@ -1,6 +1,6 @@
 #!/bin/bash
 
-threshold=2
+mintokens=2
 minlength=1
 maxlength=8
 opt_u="-u"
