@@ -350,6 +350,34 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
          * Empty set constructor
          */
         PatternSet<ReadWriteSizeType>(): PatternStore<t_patternset,ReadWriteSizeType>() {};
+
+
+        /**
+         * Constructs a pattern set from a ClassDecoder
+         */
+        PatternSet<ReadWriteSizeType>(const ClassDecoder & classdecoder): PatternStore<t_patternset,ReadWriteSizeType>() {
+            for (ClassDecoder::const_iterator iter = classdecoder.begin(); iter != classdecoder.end(); iter++) {
+                const int cls = iter->first;
+                int length; //will be set by inttobytes
+                unsigned char * buffer = inttobytes(cls, length);
+                data.insert( Pattern(buffer, length) );
+                delete buffer;
+            }
+        }
+
+        /**
+         * Constructs a pattern set from a ClassEncoder
+         */
+        PatternSet<ReadWriteSizeType>(const ClassEncoder & classencoder): PatternStore<t_patternset,ReadWriteSizeType>() {
+            for (ClassEncoder::const_iterator iter = classencoder.begin(); iter != classencoder.end(); iter++) {
+                const int cls = iter->second;
+                int length; //will be set by inttobytes
+                unsigned char * buffer = inttobytes(cls, length);
+                data.insert( Pattern(buffer, length) );
+                delete buffer;
+            }
+        }
+
         virtual ~PatternSet<ReadWriteSizeType>() {};
 
         /**

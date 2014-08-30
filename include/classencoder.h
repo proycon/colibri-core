@@ -76,6 +76,15 @@ class ClassEncoder {
     unsigned int operator[](const std::string & key) {
          return classes[key];
     }
+
+    typedef std::unordered_map<std::string, unsigned int>::const_iterator const_iterator;
+
+    const_iterator begin() const {
+        return classes.begin();
+    }
+    const_iterator end() const {
+        return classes.end();
+    }
 };    
 
 unsigned char * inttobytes(unsigned int, int & length);

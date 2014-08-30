@@ -54,6 +54,17 @@ class ClassDecoder {
     unsigned int newclass(); 
     
     void prune(unsigned int threshold);    
+
+
+    typedef std::unordered_map<unsigned int, std::string>::const_iterator const_iterator;
+
+    const_iterator begin() const {
+        return classes.begin();
+    }
+    const_iterator end() const {
+        return classes.end();
+    }
+
 };
 
 unsigned int bytestoint(const unsigned char* a, const int l);
