@@ -16,7 +16,7 @@ usage() {
  echo " -m int     Minimum pattern length (default: $minlength)" >&2
  echo " -l int     Maximum pattern length (default: $maxlength)" >&2
  echo " -s         Compute skipgrams as well" >&2
- echo " -i         Make an indexed corpus instead of an unindexed one (consumes much more memory!)" >&2
+ echo " -i         Make an indexed pattern model instead of an unindexed one (consumes much more memory!), this stores and shows the exact positions (in the form sentence:token) of each occurrence of a pattern" >&2
  echo " -Q         Start in query mode" >&2
  echo " -Z         Build and print a reverse index (implies -i, memory intensive)" >&2
  echo " -R         Produce a statistical report" >&2
