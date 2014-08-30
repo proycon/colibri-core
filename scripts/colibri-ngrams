@@ -45,9 +45,9 @@ colibri-classencode -o tmp -u $@
 
 echo "Building pattern model...">&2
 if [[ "$verbose" == "1" ]]; then
-    colibri-patternmodeller -c tmp.colibri.cls -f tmp.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_u $opt_s -P | sort -rn -k2,2 -t $'\t'
+    colibri-patternmodeller -c tmp.colibri.cls -f tmp.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_u $opt_s -P | sort -k2,2rn -k1,1 -t $'\t'
 else
-    colibri-patternmodeller -c tmp.colibri.cls -f tmp.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_u $opt_s -P | cut -f1,2 | sort -rn -k2,2 -t $'\t'
+    colibri-patternmodeller -c tmp.colibri.cls -f tmp.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_u $opt_s -P | cut -f1,2 | sort -k2,2rn -k1,1 -t $'\t'
 fi
 
 #cleanup
