@@ -12,7 +12,7 @@ usage() {
  echo "Description: Extract n-grams with their counts from one or more plain-text corpus files" >&2
  echo "Arguments: corpusfiles should be plain text files, tokenised, and one sentence per line" >&2
  echo "Options:" >&2
- echo " -t int     Minimum amount of occurrences for a pattern to be included in the model (default: $threshold)" >&2
+ echo " -t int     Minimum amount of occurrences for a pattern to be included in the model (default: $threshold). Increase this value to decrease memory usage, especially on big corpora." >&2
  echo " -m int     Minimum pattern length (default: $minlength)" >&2
  echo " -l int     Maximum pattern length (default: $maxlength)" >&2
  echo " -s         Compute skipgrams as well" >&2
