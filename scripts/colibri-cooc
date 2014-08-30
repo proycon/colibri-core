@@ -1,7 +1,7 @@
 #!/bin/bash
 
-mintokens=1
-pmithreshold=1
+mintokens=2
+pmithreshold=0.5
 minlength=1
 maxlength=8
 opt_s=""
@@ -19,7 +19,7 @@ usage() {
  echo " -s         Compute skipgrams as well" >&2
 }
 
-while getopts ht:T:m:l:isv flag
+while getopts ht:T:m:l:is flag
 do
     case "$flag" in
     (h) usage; exit 0;;
@@ -28,7 +28,6 @@ do
     (m) minlength=$OPTARG;;
     (l) maxlength=$OPTARG;;
     (s) opt_s="";;
-    (v) opt_u="";;
     (*) usage; exit 0;;
     esac
 done
