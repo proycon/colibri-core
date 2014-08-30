@@ -1,0 +1,56 @@
+#!/bin/bash
+
+mintokens=1
+minlength=1
+maxlength=8
+opt_s=""
+verbose="0"
+
+usage() {
+ echo "Syntax: colibri-coverage -t threshold -m minlength -l maxlength trainingcorpus testcorpus" >&2
+ echo "Description: Computes the coverage of training/background corpus on a particular test/foreground corpus, i.e how many of the patterns in the test corpus were found during training, how many tokens are covered, and how is this all distributed?" >&2
+ echo "Arguments: corpusfiles should be plain text files, tokenised, and one sentence per line" >&2
+ echo "Options:" >&2
+ echo " -t int     Minimum amount of occurrences for a pattern to be included in the model (default: $threshold). Increase this value to decrease memory usage, especially on big corpora." >&2
+ echo " -m int     Minimum pattern length (default: $minlength)" >&2
+ echo " -l int     Maximum pattern length (default: $maxlength)" >&2
+ echo " -s         Compute skipgrams as well" >&2
+ echo " -v         Verbose mode: instead of a report, print a list of all patterns from the training corpus found in the test corpus" >&2
+}
+
+while getopts ht:m:l:sv flag
+do
+    case "$flag" in
+    (h) usage; exit 0;;
+    (t) mintokens=$OPTARG;;
+    (m) minlength=$OPTARG;;
+    (l) maxlength=$OPTARG;;
+    (s) opt_s="";;
+    (v) verbose=1;;
+    (*) usage; exit 0;;
+    esac
+done
+shift $(expr $OPTIND - 1)
+
+if [ $# -ne 2 ]; then
+    usage
+    exit 0
+fi
+
+echo "Class encoding corpora...">&2
+colibri-classencode -o tmp $1 $2
+
+echo "Building pattern model...">&2
+colibri-patternmodeller -c tmp.colibri.cls -f ${1%.txt}.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_s -o tmp.colibri.patternmodel
+
+if [[ "$verbose" == "1" ]]; then
+    colibri-patternmodeller -c tmp.colibri.cls -I -i tmp.colibri.patternmodel -f ${2%.txt}.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_s -P | sort -k2,2rn -k1,1 -t $'\t' 
+else
+    colibri-patternmodeller -c tmp.colibri.cls -I -i tmp.colibri.patternmodel -f ${2%.txt}.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_s -R 
+fi
+
+#cleanup
+rm tmp.colibri.cls tmp.colibri.patternmodel
+rm ${1%.txt}.colibri.dat
+rm ${2%.txt}.colibri.dat
+
