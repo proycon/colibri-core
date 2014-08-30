@@ -89,7 +89,63 @@ And then recompile as per the above instructions.
 General usage instructions
 ---------------------------------
 
-Colibri consist of various programs, each of which will output an extensive overview of available parameters if the parameter ``-h`` is passed. Each program is designed for a specialised purpose, with specific input and output formats. It is often needed to call multiple programs in succession to obtain the final analysis or model you desire. 
+Colibri consist of various programs and scripts, each of which will output an extensive overview of available parameters if the parameter ``-h`` is passed. Each program is designed for a specialised purpose, with specific input and output formats. It is often needed to call multiple programs in succession to obtain the final analysis or model you desire. 
+
+Quick start: High-level scripts
+=================================
+
+Introduction
+---------------
+
+Colibri Core comes with a set of scripts that provide simpler access to the
+underlying tools and can be used from the command line by end-users to get
+quick results. Input to these tools is always one or more plain text files, in
+tokenised form, with one sentence per line.
+
+Tokenisation
+--------------
+
+If your corpus is not tokenised yet, you can consider using the tokeniser `ucto
+<http://ilk.uvt.nl/ucto>`_ , which is not part of Colibri Core, Debian/Ubuntu
+users may it in the repository (``sudo apt-get install ucto``), Mac OS X users
+can find it in homebrew (``brew install naiaden/lama/ucto``). This will also do
+sentence detection and, with the ``-n`` flag output one line per sentence, as
+Colibri prefers::
+
+	$ ucto -L en -n untokenisedcorpus.txt > tokenisedcorpus.txt
+
+The ``-L`` specifies the language of your corpus (English in this case), several others are
+available as well. 
+
+Of course, you can use any other tokeniser of your choice.
+
+
+Scripts
+-----------
+
+In addition to the core tools, described in the remainder of this
+documentation, Colibri Core offers the following scripts:
+
+ * ``colibri-freqlist`` - Extracts all n-grams from one or more corpus text files and
+    outputs a frequency list. Also allows for the extraction of skipgrams. By
+    default all n-grams are extract, but an occurrence threshold can be set with the ``-t`` flag.
+ * ``colibri-ngramstats`` - Prints a summary report on the ngrams in one or
+    more corpus text files. To get the full details on interpreting the output report,
+    read the section *Statistical Reports and Histograms*.
+ * ``colibri-histogram`` - Prints a histogram of ngram/skipgram occurrence count
+ * ``colibri-queryngrams`` - Interactive tool allowing you to query ngrams
+   from standard input, various statistics and relations can be outputted.
+ * ``colibri-reverseindex`` - Computes and prints a reverse index for the
+   specified corpus text file. For each token position in the corpus, it will
+   output what patterns are found there (i.e start at that very same position)
+ * ``colibri-loglikelihood`` - Computes the log-likelihood between patterns in
+   two or more corpus text files, which allows users to determine what words or
+   patterns are significantly more frequent in one corpus than the other.
+ * ``colibri-coverage`` - Computes overlap between a training corpus and a test
+   corpus, produces coverage metrics.
+
+Users have to be aware, however, that these script only expose a
+limited amount of the functionality of Colibri Core.
 
 
 Corpus Class Encoding
@@ -176,6 +232,12 @@ flags ``-s`` and ``-e`` respectively.
 Output will be to ``stdout``, you can redirect it to a file as follows::
 
  $ colibri-classdecode -f yourcorpus.colibri.dat -c yourcorpus.colibri.cls > yourcorpus.txt
+
+
+
+
+
+
 
 
 Pattern Modeller
