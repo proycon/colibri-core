@@ -44,9 +44,9 @@ echo "Building pattern model...">&2
 colibri-patternmodeller -c tmp.colibri.cls -f ${1%.txt}.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_s -o tmp.colibri.patternmodel
 
 if [[ "$verbose" == "1" ]]; then
-    colibri-patternmodeller -c tmp.colibri.cls -I -i tmp.colibri.patternmodel -f ${2%.txt}.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_s -P | sort -k2,2rn -k1,1 -t $'\t' 
+    colibri-patternmodeller -c tmp.colibri.cls -j tmp.colibri.patternmodel -f ${2%.txt}.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_s -P | sort -k2,2rn -k1,1 -t $'\t' 
 else
-    colibri-patternmodeller -c tmp.colibri.cls -I -i tmp.colibri.patternmodel -f ${2%.txt}.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_s -R 
+    colibri-patternmodeller -c tmp.colibri.cls -j tmp.colibri.patternmodel -f ${2%.txt}.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_s -R 
 fi
 
 #cleanup
