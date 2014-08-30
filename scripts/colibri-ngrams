@@ -47,7 +47,7 @@ echo "Building pattern model...">&2
 if [[ "$verbose" == "1" ]]; then
     colibri-patternmodeller -c tmp.colibri.cls -f tmp.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_u $opt_s -P 
 else
-    colibri-patternmodeller -c tmp.colibri.cls -f tmp.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_u $opt_s -P | cut -f1,2 -d'\t'
+    colibri-patternmodeller -c tmp.colibri.cls -f tmp.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_u $opt_s -P | cut -f1,2
 fi
 
 #cleanup
