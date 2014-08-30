@@ -1,4 +1,3 @@
-
 #include <string>
 #include <iostream>
 #include "getopt.h"
@@ -34,8 +33,7 @@ int main( int argc, char *argv[] ) {
     
     char c;    
     while ((c = getopt(argc, argv, "c:hn:")) != -1) {
-        switch (c)
-        {
+        switch (c) {
         case 'c':
             classfile = optarg;
             break;   
@@ -60,6 +58,27 @@ int main( int argc, char *argv[] ) {
         cerr << "ERROR: No class file specified! (-c)" << endl;
         usage();
         exit(2);
+    }
+
+    ClassDecoder classdecoder = ClassDecoder(classfile); 
+
+    std::vector<std::pair<PatternPointer,int>> ngrams;
+    bool first;
+
+
+    for (int i = 0; i < datafiles.size(); i++) {
+        std::ifstream * in = new std::ifstream(datafiles[i].c_str(), std::ios::in|std::ios::binary);
+        while (!in->eof()) {
+            //read line
+            Pattern line = Pattern(in);
+            ngrams.clear();
+            line.ngrams(ngrams, n);
+        
+            for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
+                cout << iter->first.tostring(classdecoder) << endl;
+            }
+        }
+        delete in;
     }
 
 
