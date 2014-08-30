@@ -1,0 +1,46 @@
+#!/bin/bash
+
+mintokens=1
+minlength=1
+maxlength=8
+opt_s=""
+
+usage() {
+ echo "Syntax: colibri-histogram -t threshold -m minlength -l maxlength corpusfile [corpusfile2]..." >&2
+ echo "Description: Computes a histogram for ngram occurrences (and optionally skipgrams) in the corpus " >&2
+ echo "Arguments: corpusfiles should be plain text files, tokenised, and one sentence per line" >&2
+ echo "Options:" >&2
+ echo " -t int     Minimum amount of occurrences for a pattern to be included in the model (default: $threshold)" >&2
+ echo " -m int     Minimum pattern length (default: $minlength)" >&2
+ echo " -l int     Maximum pattern length (default: $maxlength)" >&2
+ echo " -s         Compute skipgrams as well" >&2
+}
+
+while getopts ht:m:l:isv flag
+do
+    case "$flag" in
+    (h) usage; exit 0;;
+    (t) mintokens=$OPTARG;;
+    (m) minlength=$OPTARG;;
+    (l) maxlength=$OPTARG;;
+    (s) opt_s="";;
+    (*) usage; exit 0;;
+    esac
+done
+shift $(expr $OPTIND - 1)
+
+if [ $# -eq 0 ]; then
+    usage
+    exit 0
+fi
+
+echo "Class encoding corpora...">&2
+colibri-classencode -o tmp -u $@
+
+echo "Building pattern model...">&2
+colibri-patternmodeller -c tmp.colibri.cls -f tmp.colibri.dat -t $mintokens -m $minlength -l $maxlength  $opt_s -u -H 
+
+#cleanup
+rm tmp.colibri.cls
+rm tmp.colibri.dat
+
