@@ -8,8 +8,8 @@ opt_s=""
 verbose="0"
 
 usage() {
- echo "Syntax: colibri-ngrams -t threshold -m minlength -l maxlength corpusfile [corpusfile2]..." >&2
- echo "Description: Extract n-grams with their counts from one or more plain-text corpus files" >&2
+ echo "Syntax: colibri-freqlist -t threshold -m minlength -l maxlength corpusfile [corpusfile2]..." >&2
+ echo "Description: Extract n-grams (and optionally skipgrams) with their counts from one or more plain-text corpus files" >&2
  echo "Arguments: corpusfiles should be plain text files, tokenised, and one sentence per line" >&2
  echo "Options:" >&2
  echo " -t int     Minimum amount of occurrences for a pattern to be included in the model (default: $threshold). Increase this value to decrease memory usage, especially on big corpora." >&2
