@@ -1,1 +1,1 @@
-bin_SCRIPTS = colibri-loglikelihood colibri-ngrams
+bin_SCRIPTS = colibri-loglikelihood colibri-ngrams colibri-queryngrams colibri-ngramstats

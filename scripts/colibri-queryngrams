@@ -5,31 +5,29 @@ minlength=1
 maxlength=8
 opt_u="-u"
 opt_s=""
-verbose="0"
+opt_g=""
 
 usage() {
- echo "Syntax: colibri-ngrams -t threshold -m minlength -l maxlength corpusfile [corpusfile2]..." >&2
- echo "Description: Extract n-grams with their counts from one or more plain-text corpus files" >&2
+ echo "Syntax: colibri-queryngrams -t threshold -m minlength -l maxlength corpusfile [corpusfile2]..." >&2
+ echo "Description: Interactive command line  tool to  n-grams with their counts from one or more plain-text corpus files" >&2
  echo "Arguments: corpusfiles should be plain text files, tokenised, and one sentence per line" >&2
  echo "Options:" >&2
  echo " -t int     Minimum amount of occurrences for a pattern to be included in the model (default: $threshold)" >&2
  echo " -m int     Minimum pattern length (default: $minlength)" >&2
  echo " -l int     Maximum pattern length (default: $maxlength)" >&2
  echo " -s         Compute skipgrams as well" >&2
- echo " -i         (Advanced) Indexed model: show the exact positions (in the form sentence:token) of each occurrence of a pattern (implies -v, requires more memory!)" >&2
- echo " -v         Verbose output" >&2
+ echo " -v         Verbose, computes better and more statistics at the cost of more memory (builds an indexed model)" >&2
 }
 
-while getopts ht:m:l:isv flag
+while getopts ht:m:l:sv flag
 do
     case "$flag" in
     (h) usage; exit 0;;
     (t) mintokens=$OPTARG;;
     (m) minlength=$OPTARG;;
     (l) maxlength=$OPTARG;;
-    (i) verbose=1; opt_u="";;
     (s) opt_s="";;
-    (v) verbose=1;;
+    (v) opt_u=""; opt_g="-g";;
     (*) usage; exit 0;;
     esac
 done
@@ -44,11 +42,7 @@ echo "Class encoding corpora...">&2
 colibri-classencode -o tmp -u $@
 
 echo "Building pattern model...">&2
-if [[ "$verbose" == "1" ]]; then
-    colibri-patternmodeller -c tmp.colibri.cls -f tmp.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_u $opt_s -P 
-else
-    colibri-patternmodeller -c tmp.colibri.cls -f tmp.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_u $opt_s -P | cut -f1,2 -d'\t'
-fi
+colibri-patternmodeller -c tmp.colibri.cls -f tmp.colibri.dat -t $mintokens -m $minlength -l $maxlength $opt_u $opt_s $opt_g -Q 
 
 #cleanup
 rm tmp.colibri.cls
