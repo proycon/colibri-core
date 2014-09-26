@@ -129,6 +129,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
         n_sum = 0;
         o_sum = 0;
 
+
         bool abort = false;
         for (int i = 0; i < models.size(); i++) {
             o = models[i]->occurrencecount(pattern);
@@ -136,7 +137,8 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
                 abort = true;
                 break;
             }
-            n = models[i]->totaloccurrencesingroup(category,patternsize); 
+            //n = models[i]->totaloccurrencesingroup(category,patternsize); 
+            n = models[i]->tokens();
             total.push_back(n);
             n_sum += n;
             observed.push_back( o );
