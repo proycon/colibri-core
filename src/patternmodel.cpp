@@ -47,7 +47,8 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
 
     for (int i = 0; i < models.size(); i++) {
         o = models[i]->occurrencecount(pattern);
-        n = models[i]->totaloccurrencesingroup(category,patternsize); 
+        //n = models[i]->totaloccurrencesingroup(category,patternsize); 
+        n = models[i]->tokens();
         total.push_back(n);
         n_sum += n;
         observed.push_back( o );
