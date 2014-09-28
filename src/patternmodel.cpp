@@ -150,7 +150,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
 
         for (int i = 0; i < total.size(); i++) {
             e = (total[i] * o_sum) / (double) (n_sum);
-            //std::cerr << "DEBUG: e = " << e << " = (" << total[i] << " + " << o_sum << ") / " << n_sum << std::endl;
+            std::cerr << "DEBUG: e = " << e << " = (" << total[i] << " + " << o_sum << ") / " << n_sum << std::endl;
             expected.push_back(e);
         }
 
@@ -158,13 +158,13 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
         ll = 0;
         for (int i = 0; i < models.size(); i++) {
             if (observed[i] > 0)  {
-                //std::cerr << "DEBUG: observed[" << i << "] = " << observed[i] << "  expected[" << i << "] = " << expected[i] << " total[" << i << "] = " << total[i] << std::endl;
+                std::cerr << "DEBUG: observed[" << i << "] = " << observed[i] << "  expected[" << i << "] = " << expected[i] << " total[" << i << "] = " << total[i] << std::endl;
                 ll = ll + (observed[i] * log(observed[i] / expected[i]));
             }
         }
         ll = ll * 2;
         if (isnan(ll)) ll = 0; //value too low, set to 0
-        //std::cerr << "DEBUG: ll = " << ll << std::endl;
+        std::cerr << "DEBUG: ll = " << ll << std::endl;
 
         if (resultmap != NULL) 
             (*resultmap)[pattern] = ll;
