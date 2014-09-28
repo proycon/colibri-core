@@ -179,6 +179,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
                     *output << 0;
                 }
             }
+            *output << std::endl;
         }
      }
     }
