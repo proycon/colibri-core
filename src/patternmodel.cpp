@@ -33,7 +33,7 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
     int o = 0; //observed
     double e = 0; //expected
     double ll = 0; //Log Likelihood
-    unsigned long long int e_log = 0;
+    double e_log = 0;
 
     unsigned long long int n_sum = 0;
     unsigned long long int o_sum = 0;
@@ -59,7 +59,7 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
 
     for (int i = 0; i < total.size(); i++) {
         e_log = (log(total[i]) + log(o_sum)) - log(n_sum); // do computation in logarithms to prevent overflows! e = (total[i] * o_sum) / n_sum
-        e = pow(M_E, e_log);
+        e = exp( e_log);
         expected.push_back(e);
     }
 
@@ -93,7 +93,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
     int o = 0; //observed
     double e = 0; //expected
     double ll = 0; //Log Likelihood
-    unsigned long long int e_log = 0;
+    double e_log = 0;
 
     unsigned long long int n_sum = 0;
     unsigned long long int o_sum = 0;
@@ -153,7 +153,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
 
         for (int i = 0; i < total.size(); i++) {
             e_log = (log(total[i]) + log(o_sum)) - log(n_sum); // do computation in logarithms to prevent overflows! e = (total[i] * o_sum) / n_sum
-            e = pow(M_E, e_log);
+            e = exp( e_log);
             std::cerr << "DEBUG: e = " << e << " = (" << total[i] << " * " << o_sum << ") / " << n_sum << std::endl;
             expected.push_back(e);
         }
