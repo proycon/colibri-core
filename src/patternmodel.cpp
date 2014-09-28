@@ -33,7 +33,7 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
     int o = 0; //observed
     double e = 0; //expected
     double ll = 0; //Log Likelihood
-    unsigned long long int prod = 0;
+    unsigned long long int e_log = 0;
 
     unsigned long long int n_sum = 0;
     unsigned long long int o_sum = 0;
