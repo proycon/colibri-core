@@ -150,7 +150,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
 
         for (int i = 0; i < total.size(); i++) {
             e = (total[i] * o_sum) / (double) (n_sum);
-            std::cerr << "DEBUG: e = " << e << " = (" << total[i] << " + " << o_sum << ") / " << n_sum << std::endl;
+            std::cerr << "DEBUG: e = " << e << " = (" << total[i] << " * " << o_sum << ") / " << n_sum << std::endl;
             expected.push_back(e);
         }
 
