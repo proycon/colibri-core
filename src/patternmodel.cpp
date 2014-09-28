@@ -58,7 +58,7 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
 
 
     for (int i = 0; i < total.size(); i++) {
-        e_log = (log(total[i]) + log(o_sum)) - log(n_sum) // do computation in logarithms to prevent overflows! e = (total[i] * o_sum) / n_sum
+        e_log = (log(total[i]) + log(o_sum)) - log(n_sum); // do computation in logarithms to prevent overflows! e = (total[i] * o_sum) / n_sum
         e = pow(M_E, e_log);
         expected.push_back(e);
     }
@@ -152,7 +152,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
         if (abort) continue;
 
         for (int i = 0; i < total.size(); i++) {
-            e_log = (log(total[i]) + log(o_sum)) - log(n_sum) // do computation in logarithms to prevent overflows! e = (total[i] * o_sum) / n_sum
+            e_log = (log(total[i]) + log(o_sum)) - log(n_sum); // do computation in logarithms to prevent overflows! e = (total[i] * o_sum) / n_sum
             e = pow(M_E, e_log);
             std::cerr << "DEBUG: e = " << e << " = (" << total[i] << " * " << o_sum << ") / " << n_sum << std::endl;
             expected.push_back(e);
