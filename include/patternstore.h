@@ -566,9 +566,9 @@ class OrderedPatternSet: public PatternStore<t_orderedpatternset,ReadWriteSizeTy
 
 
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class ReadWriteSizeType = uint64_t>
-class PatternMap: public PatternMapStore<std::unordered_map<const Pattern,ValueType>,ValueType,ValueHandler,ReadWriteSizeType> {
+class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,ValueType,ValueHandler,ReadWriteSizeType> {
     protected:
-        std::unordered_map<const Pattern, ValueType> data;
+        std::unordered_map<Pattern, ValueType> data;
     public:
         //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
         PatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
@@ -589,8 +589,8 @@ class PatternMap: public PatternMapStore<std::unordered_map<const Pattern,ValueT
         ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
         ValueType& operator [](const PatternPointer & pattern) { return data[Pattern(pattern)]; } 
         
-        typedef typename std::unordered_map<const Pattern,ValueType>::iterator iterator;
-        typedef typename std::unordered_map<const Pattern,ValueType>::const_iterator const_iterator;
+        typedef typename std::unordered_map<Pattern,ValueType>::iterator iterator;
+        typedef typename std::unordered_map<Pattern,ValueType>::const_iterator const_iterator;
         
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
