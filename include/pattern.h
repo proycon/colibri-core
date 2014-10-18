@@ -214,7 +214,8 @@ class Pattern {
      bool operator==(const Pattern & other) const;
      bool operator!=(const Pattern & other) const;
 
-     Pattern & operator =(const Pattern other);   
+     //Pattern & operator =(const Pattern other);   
+     void operator =(const Pattern other);   
 
 
      //patterns are sortable

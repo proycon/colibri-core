@@ -819,14 +819,15 @@ bool Pattern::operator>(const Pattern & other) const {
     return (other < *this);
 }
 
-Pattern & Pattern::operator =(const Pattern other) { //(note: argument passed by value!)
+void Pattern::operator =(const Pattern other) { //(note: argument passed by value!)
     //delete old data
     if (data != NULL) {
         delete[] data;
         data = NULL;
     } else if (data == other.data) {
         //nothing to do
-        return *this;
+        //return *this;
+        return;
     }
     
     //set new data
@@ -838,7 +839,7 @@ Pattern & Pattern::operator =(const Pattern other) { //(note: argument passed by
     data[s] = ENDMARKER;
 
     // by convention, always return *this (for chaining)
-    return *this;
+    //return *this;
 }
 
 Pattern Pattern::operator +(const Pattern & other) const {
