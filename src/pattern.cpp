@@ -522,7 +522,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, bool debug) {
     }
     in->seekg(beginpos, ios::beg);
     std::streampos beginposcheck = in->tellg();
-    if (beginposcheck != beginpos) {
+    if ((beginposcheck != beginpos) && (beginposcheck >= 18446744073709551000)) {
         std::cerr << "ERROR: Resetting read pointer for stage 2 failed! (" << (unsigned long) beginposcheck << " != " << (unsigned long) beginpos << ")" << std::endl;
         throw InternalError();
     } else if (!in->good()) {
