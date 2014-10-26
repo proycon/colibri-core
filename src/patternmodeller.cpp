@@ -216,7 +216,6 @@ int main( int argc, char *argv[] ) {
     bool DOPRINTREVERSEINDEX = false;
     bool DORELATIONS = false;
     bool DOINFO = false;
-    bool DEBUG = false;
     bool DOFLEXFROMSKIP = false;
     bool DOFLEXFROMCOOC = false;
     bool DOTWOSTAGE =false;
@@ -238,7 +237,6 @@ int main( int argc, char *argv[] ) {
             break;
         case 'D':
             cerr << "(ENABLING DEBUG MODE)" << endl;
-        	DEBUG = true;
             options.DEBUG = true;
         	break;
         case 'R':

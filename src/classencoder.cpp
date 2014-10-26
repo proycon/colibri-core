@@ -385,11 +385,11 @@ void ClassEncoder::add(std::string s, unsigned int cls) {
 }
 
 void ClassEncoder::encodefile(const std::string & inputfilename, const std::string & outputfilename, bool allowunknown, bool autoaddunknown, bool append, bool quiet) {
-    const char zero = 0;
-    const char one = 1;
 	    
     if ((inputfilename.rfind(".xml") != string::npos) ||  (inputfilename.rfind(".xml.bz2") != string::npos) ||  (inputfilename.rfind(".xml.gz") != string::npos)) {
         #ifdef WITHFOLIA
+        const char zero = 0;
+        const char one = 1;
         //FoLiA
         folia::Document doc;
         doc.readFromFile(inputfilename);
@@ -471,10 +471,9 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 
 void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet) {
     const char zero = 0;
-    const char one = 1;
-    int outputbuffersize = 65536;
+    size_t outputbuffersize = 65536;
     unsigned char * outputbuffer = new unsigned char[outputbuffersize];
-    int outputsize;
+    unsigned int outputsize;
     unsigned int linenum = 0;
     while (IN->good()) {	
         string line = "";

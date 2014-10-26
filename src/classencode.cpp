@@ -138,7 +138,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Built " << prefixedoutputprefix << ".colibri.cls" << endl;
     }   
     
-    int highestclass = classencoder.gethighestclass();
+    unsigned int highestclass = classencoder.gethighestclass();
     for (size_t i = 0; i < corpusfiles.size(); i++) {
         string outfile = corpusfiles[i];
         if (outfile.find_last_of("/") != string::npos) {

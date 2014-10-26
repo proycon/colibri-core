@@ -63,10 +63,9 @@ int main( int argc, char *argv[] ) {
     ClassDecoder classdecoder = ClassDecoder(classfile); 
 
     std::vector<std::pair<PatternPointer,int>> ngrams;
-    bool first;
 
 
-    for (int i = 0; i < datafiles.size(); i++) {
+    for (unsigned int i = 0; i < datafiles.size(); i++) {
         std::ifstream * in = new std::ifstream(datafiles[i].c_str(), std::ios::in|std::ios::binary);
         while (!in->eof()) {
             //read line

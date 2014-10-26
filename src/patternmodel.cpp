@@ -42,11 +42,9 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
     std::vector<int> total;
     std::vector<double> expected;
 
-    int category = pattern.category();
-    int patternsize = pattern.n();
     
 
-    for (int i = 0; i < models.size(); i++) {
+    for (unsigned int i = 0; i < models.size(); i++) {
         o = models[i]->occurrencecount(pattern);
         //n = models[i]->totaloccurrencesingroup(category,patternsize); 
         n = models[i]->tokens();
@@ -57,14 +55,14 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
     }
 
 
-    for (int i = 0; i < total.size(); i++) {
+    for (unsigned int i = 0; i < total.size(); i++) {
         e_log = (log(total[i]) + log(o_sum)) - log(n_sum); // do computation in logarithms to prevent overflows! e = (total[i] * o_sum) / n_sum
         e = exp( e_log);
         expected.push_back(e);
     }
 
     ll = 0;
-    for (int i = 0; i < models.size(); i++) {
+    for (unsigned int i = 0; i < models.size(); i++) {
         if (observed[i] > 0) 
             ll += observed[i] * log(observed[i] / expected[i]);
     }
@@ -86,8 +84,6 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
         throw InternalError();
     }
 
-    int category = 0;
-    int patternsize;
 
     int n = 0; //total
     int o = 0; //observed
@@ -104,7 +100,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
     
     if (output != NULL) {
         *output << "PATTERN\tLOGLIKELIHOOD";
-        for (int i = 0; i < models.size(); i++) {
+        for (unsigned int i = 0; i < models.size(); i++) {
             *output << "\tOCC_" << i << "\tFREQ_" << i;
         }
     }
@@ -123,8 +119,6 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
         const Pattern pattern = iter->first;
         if ((!conjunctiononly) && (resultmap->has(pattern))) continue; //already done
 
-        category = pattern.category();
-        patternsize = pattern.n();
         
         observed.clear();
         total.clear();
@@ -135,7 +129,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
 
 
         bool abort = false;
-        for (int i = 0; i < models.size(); i++) {
+        for (unsigned int i = 0; i < models.size(); i++) {
             o = models[i]->occurrencecount(pattern);
             if ((conjunctiononly) && (o == 0)) {
                 abort = true;
@@ -151,7 +145,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
 
         if (abort) continue;
 
-        for (int i = 0; i < total.size(); i++) {
+        for (unsigned int i = 0; i < total.size(); i++) {
             e_log = (log(total[i]) + log(o_sum)) - log(n_sum); // do computation in logarithms to prevent overflows! e = (total[i] * o_sum) / n_sum
             e = exp( e_log);
             //std::cerr << "DEBUG: e = " << e << " = (" << total[i] << " * " << o_sum << ") / " << n_sum << std::endl;
@@ -160,7 +154,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
 
 
         ll = 0;
-        for (int i = 0; i < models.size(); i++) {
+        for (unsigned int i = 0; i < models.size(); i++) {
             if (observed[i] > 0)  {
                 //std::cerr << "DEBUG: observed[" << i << "] = " << observed[i] << "  expected[" << i << "] = " << expected[i] << " total[" << i << "] = " << total[i] << std::endl;
                 ll = ll + (observed[i] * log(observed[i] / expected[i]));
@@ -175,7 +169,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, P
 
         if ((output != NULL) && (classdecoder != NULL)) {
             *output << pattern.tostring(*classdecoder) << "\t" << ll;
-            for (int i = 0; i < models.size(); i++) {
+            for (unsigned int i = 0; i < models.size(); i++) {
                 *output << "\t" << observed[i] << "\t";
                 if (total[i] > 0) {
                     *output << observed[i] / total[i];

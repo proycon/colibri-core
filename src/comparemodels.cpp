@@ -37,7 +37,6 @@ void usage() {
 int main( int argc, char *argv[] ) {    
     string classfile = "";
     vector<string> modelfiles;
-    bool coveragebased = false; //not implemented yet
     bool conjunctiononly = false;
     bool directoutput = false;
     PatternModelOptions options = PatternModelOptions();
@@ -45,7 +44,7 @@ int main( int argc, char *argv[] ) {
     string outputfile;
     
     char c;    
-    while ((c = getopt(argc, argv, "c:hl:m:CSFad")) != -1) {
+    while ((c = getopt(argc, argv, "c:hl:m:SFad")) != -1) {
         switch (c)
         {
         case 'c':
@@ -56,9 +55,6 @@ int main( int argc, char *argv[] ) {
             break;
         case 'm':
             options.MINLENGTH = atoi(optarg); 
-            break;
-        case 'C':
-            coveragebased = true;
             break;
         case 'N':
             options.DOREMOVENGRAMS = true;
@@ -110,7 +106,7 @@ int main( int argc, char *argv[] ) {
 
     vector<PatternModel<uint32_t>* > models; //first model is training model or background model
 
-    for (int i = 0; i < modelfiles.size(); i++) {
+    for (unsigned int i = 0; i < modelfiles.size(); i++) {
         cerr << "Loading model " << modelfiles[i] << endl;
         PatternModel<uint32_t> * model = new PatternModel<uint32_t>(modelfiles[i], options);
         models.push_back(model);
@@ -131,7 +127,7 @@ int main( int argc, char *argv[] ) {
 
         cerr << "Output:" << endl;
         cout << "PATTERN\tLOGLIKELIHOOD";
-        for (int i = 0; i < modelfiles.size(); i++) {
+        for (unsigned int i = 0; i < modelfiles.size(); i++) {
             cout << "\tOCC_" << i << "\tFREQ_" << i;
         }
         cout << endl;
@@ -139,14 +135,14 @@ int main( int argc, char *argv[] ) {
         for (set<pair<double,Pattern>>::iterator iter = results.begin(); iter != results.end(); iter++) {
             const Pattern pattern = iter->second; 
             cout << pattern.tostring(classdecoder) << "\t" << (iter->first * -1);
-            for (int i = 0; i < models.size(); i++) {
+            for (unsigned int i = 0; i < models.size(); i++) {
                 cout << "\t" << models[i]->occurrencecount(pattern) << "\t" << models[i]->frequency(pattern);
             }
             cout << endl;
         }
     }
 
-    for (int i = 0; i < models.size(); i++) {
+    for (unsigned int i = 0; i < models.size(); i++) {
         delete models[i];
     }
 
