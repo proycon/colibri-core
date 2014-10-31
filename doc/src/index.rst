@@ -126,6 +126,8 @@ Scripts
 In addition to the core tools, described in the remainder of this
 documentation, Colibri Core offers the following scripts:
 
+ * ``colibri-ngrams`` - Extracts n-grams of a particular size from the corpus
+   text, in the order they occur, i.e. by moving a sliding window over the text.
  * ``colibri-freqlist`` - Extracts all n-grams from one or more corpus text files and
     outputs a frequency list. Also allows for the extraction of skipgrams. By
     default all n-grams are extract, but an occurrence threshold can be set with the ``-t`` flag.
