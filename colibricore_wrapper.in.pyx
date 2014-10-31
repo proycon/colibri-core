@@ -95,6 +95,8 @@ cdef class ClassEncoder:
         :type sourcefile: str
         :param allowunknown: Encode unknown classes as 'unknown', a single class for all, rather than failing with an exception if a word type is unseen (bool, default=False)
         :type allowunknown: bool
+        :param append: Append to file (bool, default=False)
+        :type append: bool
         """
         if os.path.exists(sourcefile):
             self.data.encodefile(sourcefile.encode('utf-8'), targetfile.encode('utf-8'),allowunknown, addunknown, append)
