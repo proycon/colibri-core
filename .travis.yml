@@ -3,7 +3,7 @@ install:
     - bash bootstrap
     - ./configure
     - make
-    - make install
+    - sudo make install
 compiler:
   - gcc
   - clang
