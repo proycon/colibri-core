@@ -12,7 +12,7 @@ install:
     - ./configure
     - make
     - sudo make install
-    - python setup.py build_ext install
+    - python setup.py build_ext  --include-dirs=/usr/include/:/usr/local/include/colibri-core/ --library-dirs=/usr/lib:/usr/local/lib/ install
 script: 
     - colibri-test
     - python test.py
