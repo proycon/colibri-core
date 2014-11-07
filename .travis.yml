@@ -1,17 +1,12 @@
 language: cpp
-before_install:
-    - sudo apt-get update
-    - sudo apt-get install -y python3 cython3
 install: 
     - bash bootstrap
     - ./configure
     - make
     - sudo make install
-    - sudo python3 ./setup.py build_ext install
 compiler:
   - gcc
   - clang
 script: 
     - colibri-test
-    - python3 test.py
     
