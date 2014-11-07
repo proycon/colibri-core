@@ -12,7 +12,7 @@ install:
     - ./configure
     - make
     - sudo make install
-    - sudo python setup.py build_ext install
+    - python setup.py build_ext install
 script: 
     - colibri-test
     - python test.py
