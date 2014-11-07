@@ -1,12 +1,19 @@
-language: cpp
+language: python
+
+python:
+    - 2.7
+    - 3.2
+    - 3.3
+    - 3.4
+before_install:
+    - pip install cython
 install: 
     - bash bootstrap
     - ./configure
     - make
     - sudo make install
-compiler:
-  - gcc
-  - clang
+    - sudo python setup.py build_ext install
 script: 
     - colibri-test
+    - python test.py
     
