@@ -1,0 +1,10 @@
+language: cpp
+install: 
+    - bash bootstrap
+    - ./configure
+    - make
+    - make install
+compiler:
+  - gcc
+  - clang
+script: colibri-test
