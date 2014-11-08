@@ -21,6 +21,18 @@ from libcpp.map cimport map as stdmap
 from libcpp.utility cimport pair
 import os.path
 from collections import Counter
+from sys import version
+
+PYTHON2=(version[0] == '2')
+def encode(s):
+    if PYTHON2:
+        if isinstance(s, unicode):
+            return s.encode('utf-8')
+        else:
+            return s #assume already encoded
+    else:
+        return s.encode('utf-8')
+
 
 class Category:
     """Pattern Category"""
@@ -39,7 +51,7 @@ cdef class ClassEncoder:
         if filename:
             self._filename = filename
             if os.path.exists(filename):
-                self.data.load(filename.encode('utf-8'))
+                self.data.load(encode(filename))
             else:
                 raise IOError("File " + filename + " does not exist")
         else:
@@ -64,7 +76,7 @@ cdef class ClassEncoder:
         :rtype: Pattern
         """
 
-        cdef cPattern cpattern = self.data.buildpattern(text.encode('utf-8'), allowunknown, autoaddunknown)
+        cdef cPattern cpattern = self.data.buildpattern(encode(text), allowunknown, autoaddunknown)
         pattern = Pattern()
         pattern.bind(cpattern)
         return pattern
@@ -73,7 +85,7 @@ cdef class ClassEncoder:
     def processcorpus(self, str filename): #build a class from this dataset
         """Process a corpus, call buildclasses() when finished with all corpora"""
         if os.path.exists(filename):
-            self.data.processcorpus(filename.encode('utf-8'), self.freqlist)
+            self.data.processcorpus(encode(filename), self.freqlist)
 
     def buildclasses(self):
         """Build classes, call after processing all corpora with processcorpus()"""
@@ -82,7 +94,7 @@ cdef class ClassEncoder:
     def build(self, str filename): #build a class from this dataset
         """Builds a class encoder from a plain-text corpus (utf-8). Equivalent to a call to processcorpus() followed by buildclasses()"""
         if os.path.exists(filename):
-            self.data.build(filename.encode('utf-8'))
+            self.data.build(encode(filename))
         else:
             raise IOError("File " + filename + " does not exist")
 
@@ -101,14 +113,14 @@ cdef class ClassEncoder:
         :type append: bool
         """
         if os.path.exists(sourcefile):
-            self.data.encodefile(sourcefile.encode('utf-8'), targetfile.encode('utf-8'),allowunknown, addunknown, append)
+            self.data.encodefile(encode(sourcefile), encode(targetfile),allowunknown, addunknown, append)
         else:
             raise IOError("File " + sourcefile + " does not exist")
 
     def save(self, str filename):
         if not self.filename:
             self.filename = filename
-        self.data.save(filename.encode('utf-8'))
+        self.data.save(encode(filename))
 
 
 cdef class ClassDecoder:
@@ -121,7 +133,7 @@ cdef class ClassDecoder:
         if filename:
             self._filename = filename
             if os.path.exists(filename):
-                self.data.load(filename.encode('utf-8'))
+                self.data.load(encode(filename))
             else:
                 raise IOError("No such file: " + filename)
         else:
@@ -134,7 +146,7 @@ cdef class ClassDecoder:
 
     def decodefile(self, str filename):
         if os.path.exists(filename):
-            return str(self.data.decodefiletostring(filename.encode('utf-8')),'utf-8')
+            return str(self.data.decodefiletostring(encode(filename)),'utf-8')
         else:
             raise IOError("File " + filename + " does not exist")
 
@@ -143,7 +155,7 @@ cdef class ClassDecoder:
 
 def patternfromfile(str filename):
     """Builds a single pattern from corpus data, will ignore any newlines. You may want to use IndexedCorpus instead."""
-    cdef cPattern cpattern = cpatternfromfile(filename.encode('utf-8'))
+    cdef cPattern cpattern = cpatternfromfile(encode(filename))
     pattern = Pattern()
     pattern.bind(cpattern)
     return pattern
@@ -182,7 +194,10 @@ cdef class Pattern:
         :rtype: str
         """
 
-        return str(self.cpattern.tostring(decoder.data),'utf-8')
+        if PYTHON2:
+            return unicode(self.cpattern.tostring(decoder.data),'utf-8')
+        else:
+            return str(self.cpattern.tostring(decoder.data),'utf-8')
 
     def unknown(self):
         return self.cpattern.unknown()
@@ -744,12 +759,12 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
 
     def read(self, str filename):
         if os.path.exists(filename):
-            self.data.read(filename.encode('utf-8'))
+            self.data.read(encode(filename))
         else:
             raise IOError
 
     def write(self, str filename):
-        self.data.write(filename.encode('utf-8'))
+        self.data.write(encode(filename))
 
 
 cdef class IndexedPatternModel:
@@ -802,7 +817,7 @@ cdef class PatternSetModel:
         """
         if options is None:
             options = PatternModelOptions()
-        self.data.load(filename.encode('utf-8'), options.coptions)
+        self.data.load(encode(filename), options.coptions)
 
     def read(self, str filename, PatternModelOptions options=None):
         """Alias for load"""
@@ -814,7 +829,7 @@ cdef class PatternSetModel:
         :param filename: The name of the file to write to
         :type filename: str
         """
-        self.data.write(filename.encode('utf-8'))
+        self.data.write(encode(filename))
 
 cpdef write(self, str filename):
     """Write a patternmodel to file
@@ -822,7 +837,7 @@ cpdef write(self, str filename):
     :param filename: The name of the file to write to
     :type filename: str
     """
-    self.data.write(filename.encode('utf-8'))
+    self.data.write(encode(filename))
 
 cdef class UnindexedPatternModel:
     """Unindexed Pattern Model, less flexible and powerful than its indexed counterpart, but smaller memory footprint"""
@@ -941,7 +956,7 @@ cdef class IndexedCorpus:
         self._filename = filename
         self.data = new cIndexedCorpus()
         if filename:
-            self.data.load(filename.encode('utf-8'), True) #last bool is debug
+            self.data.load(encode(filename), True) #last bool is debug
         self.unload = True
 
 
@@ -1364,7 +1379,7 @@ cdef class PatternAlignmentModel_float:
         """
         if options is None:
             options = PatternModelOptions()
-        self.data.load(filename.encode('utf-8'), options.coptions)
+        self.data.load(encode(filename), options.coptions)
 
     def read(self, str filename, PatternModelOptions options=None):
         """Alias for load"""
@@ -1376,7 +1391,7 @@ cdef class PatternAlignmentModel_float:
         :param filename: The name of the file to write to
         :type filename: str
         """
-        self.data.write(filename.encode('utf-8'))
+        self.data.write(encode(filename))
 
     cdef cPatternModelInterface* getinterface(self):
         return self.data.getinterface()

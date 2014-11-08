@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, unicode_literals, division, absolute_import
+from __future__ import print_function, division, absolute_import
 
 import os
 import sys
@@ -42,16 +42,17 @@ print(ngram3.tostring(decoder))
 print("Equality check")
 assert( ngram == ngram3 )
 
+if sys.version[0] != '2':
+    #Python 3 only for now:
 
-print("Picking n-gram:")
-pickled = pickle.dumps(ngram)
+    print("Picking n-gram:")
+    pickled = pickle.dumps(ngram)
 
-print("Unpicking n-gram:")
-unpickledngram = pickle.loads(pickled)
+    print("Unpicking n-gram:")
+    unpickledngram = pickle.loads(pickled)
 
-
-print("Equality check")
-assert( ngram == unpickledngram )
+    print("Equality check")
+    assert( ngram == unpickledngram )
 
 print("Subgrams of ngram:")
 for subngram in ngram.subngrams():
@@ -153,7 +154,7 @@ To see or not to see .
 To pee or not to pee .
 """
 
-with open('/tmp/hamlet.txt','w',encoding='utf-8') as f:
+with open('/tmp/hamlet.txt','w') as f:
     f.write(hamlet)
 
 
@@ -170,7 +171,7 @@ print("Total number of tokens: ", len(corpus));
 firstword = corpus[(1,0)] ;
 print("First word: ", firstword.tostring(decoder))
 needle = encoder.buildpattern("fair Ophelia");
-for match in corpus.findmatches(needle):
+for match in corpus.findpattern(needle):
     print( "'fair Ophelia' found at ", match)
 
 
@@ -241,3 +242,6 @@ for pattern, value in indexedmodel.items():
 
 print("Extracting count for specific pattern")
 print(len(indexedmodel[encoder.buildpattern("to be")]))
+
+
+print("Test done")

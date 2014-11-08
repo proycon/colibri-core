@@ -210,7 +210,7 @@ def load(self, str filename, PatternModelOptions options=None, constrainmodel = 
     elif isinstance(constrainmodel, UnindexedPatternModel):
         self.loadconstrainedbysetmodel(filename,options, constrainmodel)
     else:
-        self.data.load(filename.encode('utf-8'), options.coptions, NULL)
+        self.data.load(encode(filename), options.coptions, NULL)
 
 def loadreverseindex(self, IndexedCorpus reverseindex):
     self.data.reverseindex = reverseindex.data
@@ -218,13 +218,13 @@ def loadreverseindex(self, IndexedCorpus reverseindex):
 
 
 cpdef loadconstrainedbyindexedmodel(self, str filename, PatternModelOptions options, IndexedPatternModel constrainmodel):
-    self.data.load(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
+    self.data.load(encode(filename),options.coptions,  constrainmodel.getinterface())
 
 cpdef loadconstrainedbyunindexedmodel(self, str filename, PatternModelOptions options, UnindexedPatternModel constrainmodel):
-    self.data.load(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
+    self.data.load(encode(filename),options.coptions,  constrainmodel.getinterface())
 
 cpdef loadconstrainedbysetmodel(self, str filename, PatternModelOptions options, PatternSetModel constrainmodel):
-    self.data.load(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
+    self.data.load(encode(filename),options.coptions,  constrainmodel.getinterface())
 
 def read(self, str filename, PatternModelOptions options=None):
     """Alias for load"""
@@ -236,7 +236,7 @@ cpdef write(self, str filename):
     :param filename: The name of the file to write to
     :type filename: str
     """
-    self.data.write(filename.encode('utf-8'))
+    self.data.write(encode(filename))
 
 cpdef printmodel(self,ClassDecoder decoder):
     """Print the entire pattern model to stdout, a detailed overview
@@ -266,22 +266,22 @@ cpdef train(self, str filename, PatternModelOptions options, constrainmodel = No
         else:
             raise ValueError("Invalid valid for constrainmodel") #TODO: build patternmodel on the fly from an iterable of patterns or lower level patternstorage
     else:
-        self.data.train(filename.encode('utf-8'),options.coptions, NULL)
+        self.data.train(encode(filename),options.coptions, NULL)
 
 cdef cPatternModelInterface* getinterface(self):
     return self.data.getinterface()
 
 cpdef trainconstrainedbyindexedmodel(self, str filename, PatternModelOptions options, IndexedPatternModel constrainmodel):
-    self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
+    self.data.train(encode(filename),options.coptions,  constrainmodel.getinterface())
 
 cpdef trainconstrainedbyunindexedmodel(self, str filename, PatternModelOptions options, UnindexedPatternModel constrainmodel):
-    self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
+    self.data.train(encode(filename),options.coptions,  constrainmodel.getinterface())
 
 cpdef trainconstrainedbypatternsetmodel(self, str filename, PatternModelOptions options, PatternSetModel constrainmodel):
-    self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
+    self.data.train(encode(filename),options.coptions,  constrainmodel.getinterface())
 
 cpdef trainconstrainedbyalignmodel(self, str filename, PatternModelOptions options, PatternAlignmentModel_float constrainmodel):
-    self.data.train(filename.encode('utf-8'),options.coptions,  constrainmodel.getinterface())
+    self.data.train(encode(filename),options.coptions,  constrainmodel.getinterface())
 
 cpdef report(self):
     """Print a detailed statistical report to stdout"""
