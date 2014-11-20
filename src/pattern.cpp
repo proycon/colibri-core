@@ -502,7 +502,11 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, bool debug) {
         }
     } while (1);
 
-    
+    if (length == 0) {
+        std::cerr << "ERROR: Attempting to read pattern from file, but file is empty?" << std::endl;
+        throw InternalError();
+    }
+
     //allocate buffer
     if (c == ENDMARKER) {
         data  = new unsigned char[length];
