@@ -2144,7 +2144,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         
         t_relationmap neighbours;
         for (IndexedData::iterator iter = data->begin(); iter != data->end(); iter++) {
-            const IndexReference ref = *iter;
+            IndexReference ref = *iter;
+            ref.token += pattern.size();
 
             //search in reverse index
             std::vector<Pattern> rindex = this->getreverseindex(ref);

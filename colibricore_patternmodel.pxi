@@ -181,8 +181,12 @@ def __init__(self, str filename = "",PatternModelOptions options = None, constra
     :type filename: str
     :param options: An instance of PatternModelOptions, containing the options used for loading
     :type options: PatternModelOptions
-
+    :param constrainmodel: A model to be used as a constraint, only patterns occuring in this constraint model will be loaded/trained
+    :type constrainmodel: IndexedPatternModel, UnindexedPatternModel or None (default)
+    :param reverseindex: Corpus data to use as reverse index 
+    :type reverseindex: IndexedCorpus or None
     """
+
     if reverseindex:
         self.loadreverseindex(reverseindex)
 
