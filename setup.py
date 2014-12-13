@@ -47,10 +47,5 @@ setup(
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     ],
-    entry_points = {
-        'console_scripts': [
-            'colibri-webgraphview = colibricoreX.webgraphview:main',
-        ]
-    },
 
 )
