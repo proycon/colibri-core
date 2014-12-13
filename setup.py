@@ -37,7 +37,6 @@ setup(
     version = '0.5.6',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},
-    packages=['colibricoreX'],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Topic :: Text Processing :: Linguistic",
