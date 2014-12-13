@@ -279,7 +279,13 @@ cdef class Pattern:
 
         cdef cPattern c_pattern
         if isinstance(item, slice):
-            c_pattern = cPattern(self.cpattern, item.start, item.stop-item.start)
+            start = item.start
+            stop = item.stop
+            if not stop:
+                stop = len(self)
+            if not start:
+                start = 0
+            c_pattern = cPattern(self.cpattern, start, stop - start)
             newpattern = Pattern()
             newpattern.bind(c_pattern)
             return newpattern
