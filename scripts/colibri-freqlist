@@ -28,7 +28,7 @@ do
     (m) minlength=$OPTARG;;
     (l) maxlength=$OPTARG;;
     (i) verbose=1; opt_u="";;
-    (s) opt_s="";;
+    (s) opt_s="-s";;
     (v) verbose=1;;
     (*) usage; exit 0;;
     esac
