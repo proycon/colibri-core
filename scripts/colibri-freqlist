@@ -40,7 +40,7 @@ if [ $# -eq 0 ]; then
     exit 0
 fi
 
-tmp=$(mktemp)
+tmp=$(mktemp --tmpdir=.)
 
 echo "Class encoding corpora...">&2
 colibri-classencode -o ${tmp} -u $@
