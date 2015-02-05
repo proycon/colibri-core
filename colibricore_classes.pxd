@@ -248,7 +248,7 @@ cdef extern from "classencoder.h":
     cdef cppclass ClassEncoder:
         ClassEncoder(int minlength=0, int maxlength=0) nogil except +
         ClassEncoder(string, int minlength=0, int maxlength=0) nogil except +
-        void load(string, int minlength=0, int maxlength=0) nogil
+        void load(string, int minlength, int maxlength) nogil
         int size() nogil
         void processcorpus(string filename, unordered_map[string,int]) nogil
         void buildclasses(unordered_map[string,int]) nogil
