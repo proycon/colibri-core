@@ -46,6 +46,8 @@ cdef class ClassEncoder:
     cdef cClassEncoder data
     cdef str _filename
     cdef unordered_map[string,int] freqlist
+    cdef int minlength
+    cdef int maxlength
 
     def __init__(self, str filename=None, int minlength=0, int maxlength=0):
         self.minlength = minlength
