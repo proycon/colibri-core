@@ -37,28 +37,46 @@ unsigned char * inttobytes(unsigned int cls, int & length) {
 	return byterep;    
 }
 
+//from http://www.zedwood.com/article/cpp-utf8-strlen-function
+int utf8_strlen(const string& str)
+{
+    int c,i,ix,q;
+    for (q=0, i=0, ix=str.length(); i < ix; i++, q++)
+    {
+        c = (unsigned char) str[i];
+        if      (c>=0   && c<=127) i+=0;
+        else if ((c & 0xE0) == 0xC0) i+=1;
+        else if ((c & 0xF0) == 0xE0) i+=2;
+        else if ((c & 0xF8) == 0xF0) i+=3;
+        //else if (($c & 0xFC) == 0xF8) i+=4; // 111110bb //byte 5, unnecessary in 4 byte UTF-8
+        //else if (($c & 0xFE) == 0xFC) i+=5; // 1111110b //byte 6, unnecessary in 4 byte UTF-8
+        else return 0;//invalid utf8
+    }
+    return q;
+}
 
 
-ClassEncoder::ClassEncoder() {
+ClassEncoder::ClassEncoder(const unsigned int minlength, unsigned const int maxlength) {
     unknownclass = 2;
     bosclass = 3;
     eosclass = 4;
     highestclass = 5; //5 and lower are reserved
+
+    this->minlength = minlength;
+    this->maxlength = maxlength;
 }
 
-ClassEncoder::ClassEncoder(const string & filename) {
+ClassEncoder::ClassEncoder(const string & filename,const unsigned int minlength, unsigned const int maxlength) {
+       load(filename,minlength,maxlength);
+}
+
+void ClassEncoder::load(const string & filename,const unsigned int minlength, unsigned const int maxlength) {
        unknownclass = 2;
        highestclass = 0; 
        bosclass = 3;
        eosclass = 4;
-       load(filename);
-}
-
-void ClassEncoder::load(const string & filename) {
-       unknownclass = 2;
-       highestclass = 0; 
-       bosclass = 3;
-       eosclass = 4;
+       this->minlength = minlength;
+       this->maxlength = maxlength;
        
 	   ifstream IN;
 	   IN.open( filename.c_str() );    
@@ -75,6 +93,10 @@ void ClassEncoder::load(const string & filename) {
                   const string cls_s = string(line.begin(), line.begin() + i);
                   unsigned int cls = (unsigned int) atoi(cls_s.c_str());
                   const string word = string(line.begin() + i + 1, line.end());                  
+                  if ((minlength > 0) || (maxlength > 0))  {
+                    const int l = utf8_strlen(word);
+                    if (((minlength > 0) && (l < minlength)) || ((maxlength > 0) && (l > maxlength))) continue;
+                  }
                   classes[word] = cls;
                   if (cls == 2) {
                     unknownclass = 0;
@@ -134,7 +156,14 @@ void ClassEncoder::processcorpus(istream * IN , unordered_map<string,int> & freq
               	  string word = string(line.begin() + begin, line.begin() + i + offset);              	  
               	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
               	    word = trim(word, " \t\n\r"); //trim whitespace, control characters
-              	  	freqlist[word]++;
+                    if ((minlength > 0) || (maxlength > 0))  {
+                        const int l = utf8_strlen(word);
+                        if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
+                            freqlist[word]++;
+                        }
+                    } else {
+                        freqlist[word]++;
+                    }
               	  }
               	  begin = i+ 1; 
               }
@@ -152,9 +181,16 @@ void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<str
     for (vector<folia::Word*>::iterator iterw = words.begin(); iterw != words.end(); iterw++) {
         folia::Word * word = *iterw;
         const string wordtext = word->str();
-        freqlist[wordtext]++;
+        if ((minlength > 0) || (maxlength > 0))  {
+            const int l = utf8_strlen(wordtext);
+            if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
+                freqlist[wordtext]++;
+            }
+        } else {
+            freqlist[wordtext]++;
+        }
     }
-    
+
 }
 #endif
 

@@ -47,11 +47,13 @@ cdef class ClassEncoder:
     cdef str _filename
     cdef unordered_map[string,int] freqlist
 
-    def __init__(self, str filename=None):
+    def __init__(self, str filename=None, int minlength=0, int maxlength=0):
+        self.minlength = minlength
+        self.maxlength = maxlength
         if filename:
             self._filename = filename
             if os.path.exists(filename):
-                self.data.load(encode(filename))
+                self.data.load(encode(filename), minlength, maxlength)
             else:
                 raise IOError("File " + filename + " does not exist")
         else:

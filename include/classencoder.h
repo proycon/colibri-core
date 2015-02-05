@@ -33,10 +33,12 @@ class ClassEncoder {
      unsigned int bosclass;
      unsigned int eosclass;
      unsigned int highestclass;
+     unsigned int minlength;
+     unsigned int maxlength;
     public:
-    ClassEncoder();
-    ClassEncoder(const std::string &); //load an existing classer
-    void load(const std::string &); //load an existing classer
+    ClassEncoder(const unsigned int minlength = 0, const unsigned int maxlength = 0);
+    ClassEncoder(const std::string &, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
+    void load(const std::string &, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
     void build(const std::string & filename); //build a class from this dataset
     void build(std::vector<std::string> & files, bool quiet=false); //build a class from this dataset
     
