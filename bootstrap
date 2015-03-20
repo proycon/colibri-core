@@ -18,8 +18,11 @@
 #  GNU autoconf, from e.g. ftp.gnu.org:/pub/gnu/autoconf/
 #  GNU automake, from e.g. http://ftp.gnu.org/gnu/automake/
 
+
 automake=automake
 aclocal=aclocal
+
+ln -s README.rst README
 
 # if you want to autogenerate a ChangeLog form svn:
 # 
