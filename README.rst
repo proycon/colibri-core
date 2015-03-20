@@ -5,6 +5,7 @@ Colibri Core
     :target: https://travis-ci.org/proycon/colibri-core
 
 *by Maarten van Gompel, proycon@anaproy.nl, Radboud University Nijmegen*
+
 *Licensed under GPLv3 (See http://www.gnu.org/licenses/gpl-3.0.html)*
 
 Colibri core is an NLP tool as well as a C++ and Python library for working
