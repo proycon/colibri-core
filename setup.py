@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
+from __future__ import print_function
 from distutils.core import setup, Extension
 from Cython.Distutils import build_ext
 import glob
 import os
 import sys
 
-from __future__ import print_function
 
 from os.path import expanduser
 HOMEDIR = expanduser("~")
@@ -110,7 +110,7 @@ setup(
     description = ("Colibri core is an NLP tool as well as a C++ and Python library for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. At the core is the tool ``colibri-patternmodeller`` which allows you to build, view, manipulate and query pattern models."),
     license = "GPL",
     keywords = "nlp computational_linguistics frequency ngram skipgram pmi cooccurrence linguistics",
-    version = '0.5.7.2',
+    version = '0.5.7.3',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},
     classifiers=[
