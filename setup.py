@@ -11,7 +11,7 @@ HOMEDIR = expanduser("~")
 ROOTDIR = os.path.abspath(os.path.dirname(__file__))
 
 #cython's include is sucky unfortunately :( We'll have our own:
-for filename in glob.glob("*.in.pyx"):
+for filename in glob.glob(os.path.join(ROOTDIR ,"*.in.pyx")):
     with open(filename,'r') as f_in:
         with open(filename[:-6]+'pyx','w') as f_out:
             for line in f_in:
@@ -20,7 +20,7 @@ for filename in glob.glob("*.in.pyx"):
                     f_out.write(line)
                 else:
                     includefilename = line[found+9:].strip()
-                    with open(includefilename) as f_inc:
+                    with open(os.path.join(ROOTDIR,includefilename)) as f_inc:
                         for incline in f_inc:
                             f_out.write(" " * found + incline)
 
@@ -33,7 +33,7 @@ includedirs = ["/usr/include/colibri-core", "/usr/include/libxml2"]
 libdirs = ["/usr/lib"]
 if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' in sys.argv[1:]:
     if '-n' in sys.argv[1:]:
-        print("Dry run not supported for colibri-compilation",file=sys.stderr)
+        print("Dry run not supported for colibri-core compilation",file=sys.stderr)
         sys.exit(2)
 
     os.chdir(ROOTDIR)
@@ -62,7 +62,7 @@ if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' i
         print("Bootstrapping colibri-core",file=sys.stderr)
         r = os.system("bash bootstrap")
         if r != 0:
-            print("Bootstrapping colibri-core failed: make sure you have autoconf, automake and autoconf-archive installed?",file=sys.stderr)
+            print("Bootstrapping colibri-core failed: make sure you have a basic build environment with gcc/clang, autoconf, automake and autoconf-archive installed",file=sys.stderr)
             sys.exit(2)
     if not os.path.exists(ROOTDIR + "/Makefile") or '-f' in sys.argv[1:] or '--force' in sys.argv[1:]:
         if prefix:
