@@ -8,11 +8,7 @@ python:
 before_install:
     - pip install cython
 install: 
-    - bash bootstrap
-    - ./configure
-    - make
-    - sudo make install
-    - sudo python setup.py install
+    - python setup.py install
 script: 
     - colibri-test
     - LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib/" python test.py
