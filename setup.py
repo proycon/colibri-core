@@ -5,6 +5,8 @@ import glob
 import os
 import sys
 
+from __future__ import print_function
+
 from os.path import expanduser
 HOMEDIR = expanduser("~")
 
