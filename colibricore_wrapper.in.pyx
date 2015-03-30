@@ -899,6 +899,8 @@ cdef class PatternModelOptions:
             self.coptions.DOSKIPGRAMS = value
         elif key == 'DOSKIPGRAMS_EXHAUSTIVE':
             self.coptions.DOSKIPGRAMS_EXHAUSTIVE = value
+        elif key == 'MINTOKENS_UNIGRAMS':
+            self.coptions.MINTOKENS_UNIGRAMS = value
         elif key == 'MINSKIPTYPES':
             self.coptions.MINSKIPTYPES = value
         elif key == 'DOREVERSEINDEX':
@@ -931,6 +933,8 @@ cdef class PatternModelOptions:
             return self.coptions.DOSKIPGRAMS
         elif key == 'DOSKIPGRAMS_EXHAUSTIVE':
             return self.coptions.DOSKIPGRAMS_EXHAUSTIVE
+        elif key == 'MINTOKENS_UNIGRAMS':
+            return eelf.coptions.MINTOKENS_UNIGRAMS
         elif key == 'MINSKIPTYPES':
             return self.coptions.MINSKIPTYPES
         elif key == 'DOREVERSEINDEX':

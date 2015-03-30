@@ -90,6 +90,11 @@ class PatternModelOptions {
                                  ///< Only used if DOSKIPGRAMS or
                                  ///< DO_SKIPGRAMS_EXHAUSTIVE is set to true
 
+        int MINTOKENS_UNIGRAMS; ///< The occurrence threshold for unigrams, unigrams must occur at least this many times for higher-order ngram/skipgram to be included in a model
+                                ///< Defaults to the same value as MINOKENS
+                                ///< Only has an effect if MINTOKENS_UNIGRAMS >
+                                //MINTOKENS.
+                                //
         int MINLENGTH; ///< The minimum length of patterns to be loaded/extracted (in words/tokens) (default: 1)
         int MAXLENGTH; ///< The maximum length of patterns to be loaded/extracted, inclusive (in words/tokens) (default: 100)
         int MAXBACKOFFLENGTH; ///< Counting n-grams is done iteratively for each increasing n. (default: MAXLENGTH)
@@ -122,6 +127,7 @@ class PatternModelOptions {
         PatternModelOptions() {
             MINTOKENS = -1; //defaults to 2 for building, 1 for loading
             MINTOKENS_SKIPGRAMS = -1; //defaults to MINTOKENS
+            MINTOKENS_UNIGRAMS = 1; //defaults to, effectively disabled
             MINLENGTH = 1;
             MAXLENGTH = 100;
             MAXBACKOFFLENGTH = 100;
@@ -148,6 +154,7 @@ class PatternModelOptions {
          */
         PatternModelOptions(const PatternModelOptions & ref) {
             MINTOKENS = ref.MINTOKENS; //defaults to 2 for building, 1 for loading
+            MINTOKENS_UNIGRAMS = ref.MINTOKENS_UNIGRAMS; 
             MINTOKENS_SKIPGRAMS = ref.MINTOKENS_SKIPGRAMS; //defaults to 2 for building, 1 for loading
             MINLENGTH = ref.MINLENGTH;
             MAXLENGTH = ref.MAXLENGTH;
@@ -624,13 +631,21 @@ class PatternModel: public MapType, public PatternModelInterface {
             IndexReference ref;
             int prevsize = 0;
             int backoffn = 0;
+            
+            bool iter_unigramsonly = false; //only needed for counting unigrams when we need them but they would be discarded
+            if ((options.MINLENGTH > 1) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS)) {
+                iter_unigramsonly = true;
+            }
+
             for (int n = 1; n <= options.MAXLENGTH; n++) { 
                 int foundngrams = 0;
                 int foundskipgrams = 0;
                 in->clear();
                 in->seekg(0);
                 if (!options.QUIET) {
-                    if (options.DOPATTERNPERLINE) {
+                    if (iter_unigramsonly) {
+                        std::cerr << "Counting unigrams using secondary word occurrence threshold (" << options.MINTOKENS_UNIGRAMS << ")" << std::endl;
+                    } else if (options.DOPATTERNPERLINE) {
                         std::cerr << "Counting patterns from list, one per line" << std::endl; 
                     } else if (constrainbymodel != NULL) {
                         std::cerr << "Counting n-grams that occur in constraint model" << std::endl;
@@ -662,20 +677,36 @@ class PatternModel: public MapType, public PatternModelInterface {
                         if (linesize > options.MAXLENGTH) continue;
                         ngrams.push_back(std::pair<PatternPointer,int>(PatternPointer(&line),0));
                     } else {
-                        if ((options.MINTOKENS > 1) && (constrainbymodel == NULL)) {
+                        if (iter_unigramsonly) {
+                            line.ngrams(ngrams, n);
+                        } else if ((options.MINTOKENS > 1) && (constrainbymodel == NULL)) {
                             line.ngrams(ngrams, n);
                         } else {
                             line.subngrams(ngrams,options.MINLENGTH,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1 or a constraint model is set, no need to look back anyway, only one iteration over corpus
                         }
                     }
 
+                    // *** ITERATION OVER ALL NGRAMS OF CURRENT ORDER (n) IN THE LINE/SENTENCE ***
                     for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
-                        //check against constraint model
-                        if ((constrainbymodel != NULL) && (!constrainbymodel->has(iter->first))) continue; 
+                        //check against constraint model 
+                        if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter->first))) continue; 
 
-                        ref = IndexReference(sentence, iter->second);
-                        found = true; //default to true (for mintokens == 1)
-                        if ((n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) {
+                        found = true; //are the submatches in order? (default to true, needed for mintokens==1) 
+
+                        //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
+                        if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS> options.MINTOKENS)) { 
+                            iter->first.ngrams(subngrams,1); //get all unigrams
+                            for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                //check if unigram exists
+                                if (!this->has(*iter2)) { 
+                                    found = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        //ngram (n-1) lookback
+                        if ((n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) { 
                             //check if sub-parts were counted
                             subngrams.clear();
                             backoffn = n - 1;
@@ -688,6 +719,9 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 }
                             }
                         }
+
+
+                        ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
                         if (found) {
                             const Pattern pattern = Pattern(iter->first);
                             ValueType * data = getdata(pattern, true);
@@ -706,43 +740,55 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
 
                 
-                foundngrams = this->size() - foundskipgrams - prevsize;
-        
-                if (foundngrams) {
-                    if (n > this->maxn) this->maxn = n;
-                    if (n < this->minn) this->minn = n;
-                } else {
-                    if (!options.QUIET) std::cerr << "None found" << std::endl;
-                    break;
-                }
-                if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngrams...";
-                if (options.DOSKIPGRAMS_EXHAUSTIVE && !options.QUIET) std::cerr << foundskipgrams << " skipgram occurrences...";
-                if ((options.MINTOKENS > 1) && (n == 1)) totaltypes += this->size(); //total unigrams, also those not in model
-                int pruned;
-                if ((options.MINTOKENS == 1) || (constrainbymodel != NULL)) {
-                    pruned = this->prune(options.MINTOKENS,0); //prune regardless of size
-                } else {
-                    pruned = this->prune(options.MINTOKENS,n); //prune only in size-class
-                    if ( (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) &&  ( n - 1 >= 1) &&  ( (n - 1) < options.MINLENGTH) && (n - 1 != options.MAXBACKOFFLENGTH) ) {
-                        //we don't need n-1 anymore now we're done with n, it
-                        //is below our threshold, prune it all (== -1)
-                        this->prune(-1, n-1);
-                        if (!options.QUIET) std::cerr << "(pruned last iteration due to minimum length)" << pruned;
-                    }
-                }
-                if (!options.QUIET) std::cerr << "pruned " << pruned;
-                if (foundskipgrams) {
-                    int prunedextra;
-                    if ((options.MINTOKENS == 1) || (constrainbymodel != NULL)) {
-                        prunedextra = this->pruneskipgrams(options.MINTOKENS_SKIPGRAMS, options.MINSKIPTYPES, 0);
+                if (!iter_unigramsonly) {
+                    foundngrams = this->size() - foundskipgrams - prevsize;
+            
+                    if (foundngrams) {
+                        if (n > this->maxn) this->maxn = n;
+                        if (n < this->minn) this->minn = n;
                     } else {
-                        prunedextra = this->pruneskipgrams(options.MINTOKENS_SKIPGRAMS, options.MINSKIPTYPES, n);
+                        if (!options.QUIET) std::cerr << "None found" << std::endl;
+                        break;
                     }
-                    if (prunedextra && !options.QUIET) std::cerr << " plus " << prunedextra << " extra skipgrams..";
-                    pruned += prunedextra;
+                    if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngrams...";
+                    if (options.DOSKIPGRAMS_EXHAUSTIVE && !options.QUIET) std::cerr << foundskipgrams << " skipgram occurrences...";
+                    if ((options.MINTOKENS > 1) && (n == 1)) totaltypes += this->size(); //total unigrams, also those not in model
+                    int pruned;
+                    if ((options.MINTOKENS == 1) || (constrainbymodel != NULL)) {
+                        pruned = this->prune(options.MINTOKENS,0); //prune regardless of size
+                    } else {
+                        pruned = this->prune(options.MINTOKENS,n); //prune only in size-class
+                        if ( (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) &&  ( n - 1 >= 1) &&  ( (n - 1) < options.MINLENGTH) && (n - 1 != options.MAXBACKOFFLENGTH) &&
+                            !( (n-1 == 1) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS)  ) //don't delete unigrams if we're gonna need them    
+                            ) {
+                            //we don't need n-1 anymore now we're done with n, it
+                            //is below our threshold, prune it all (== -1)
+                            this->prune(-1, n-1);
+                            if (!options.QUIET) std::cerr << "(pruned last iteration due to minimum length)" << pruned;
+                        }
+                    }
+                    if (!options.QUIET) std::cerr << "pruned " << pruned;
+                    if (foundskipgrams) {
+                        int prunedextra;
+                        if ((options.MINTOKENS == 1) || (constrainbymodel != NULL)) {
+                            prunedextra = this->pruneskipgrams(options.MINTOKENS_SKIPGRAMS, options.MINSKIPTYPES, 0);
+                        } else {
+                            prunedextra = this->pruneskipgrams(options.MINTOKENS_SKIPGRAMS, options.MINSKIPTYPES, n);
+                        }
+                        if (prunedextra && !options.QUIET) std::cerr << " plus " << prunedextra << " extra skipgrams..";
+                        pruned += prunedextra;
+                    }
+                    if (!options.QUIET) std::cerr << "...total kept: " << (foundngrams + foundskipgrams) - pruned << std::endl;
+                    if (((options.MINTOKENS == 1) || (constrainbymodel != NULL))) break; //no need for further n iterations, we did all in one pass since there's no point in looking back
+                } else { //iter_unigramsonly
+                    if (!options.QUIET) std::cerr <<  "found " << this->size() << std::endl;
+                    //prune the unigrams based on the word occurrence threshold
+                    this->prune(options.MINTOKENS_UNIGRAMS,1);
+                    //normal behaviour next round
+                    iter_unigramsonly = false; 
+                    //decrease n so it will be the same (always 1) next (and by definition last) iteration
+                    n--; 
                 }
-                if (!options.QUIET) std::cerr << "...total kept: " << (foundngrams + foundskipgrams) - pruned << std::endl;
-                if ((options.MINTOKENS == 1) || (constrainbymodel != NULL)) break; //no need for further n iterations, we did all in one pass since there's no point in looking back
                 prevsize = this->size();
             }
             if (options.DOSKIPGRAMS && !options.DOSKIPGRAMS_EXHAUSTIVE) {
@@ -754,6 +800,10 @@ class PatternModel: public MapType, public PatternModelInterface {
             } 
             if (options.MAXBACKOFFLENGTH < options.MINLENGTH) {
                 this->prune(-1, options.MAXBACKOFFLENGTH);
+            }
+            if ((options.MINLENGTH > 1) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS)) {
+                //prune the unigrams again
+                this->prune(-1,1);
             }
             this->posttrain(options);
         }

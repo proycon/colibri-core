@@ -260,6 +260,7 @@ cdef extern from "classencoder.h":
 cdef extern from "patternmodel.h":
     cdef cppclass PatternModelOptions:
         int MINTOKENS
+        int MINTOKENS_UNIGRAMS
         int MINLENGTH
         int MAXLENGTH
         bool DOSKIPGRAMS
