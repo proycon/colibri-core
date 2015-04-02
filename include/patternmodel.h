@@ -695,6 +695,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                         //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
                         if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS> options.MINTOKENS)) { 
+                            subngrams.clear();
                             iter->first.ngrams(subngrams,1); //get all unigrams
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                                 //check if unigram exists
@@ -704,6 +705,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 }
                             }
                         }
+
 
                         //ngram (n-1) lookback
                         if ((n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) { 
