@@ -228,13 +228,13 @@ class PatternModelInterface: public PatternStoreInterface {
          * Return the number of distinct words/unigram in the original corpus,
          * includes types not covered by the model!
          */
-        virtual int types() =0;
+        virtual unsigned int types() =0;
 
         /**
          * Returns the number of tokens in the original corpus, includes tokens
          * not covered by the model!
          */
-        virtual int tokens() const=0;
+        virtual unsigned int tokens() const=0;
 
         virtual PatternStoreInterface * getstoreinterface() {
             return (PatternStoreInterface*) this;
@@ -430,10 +430,10 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         virtual int maxlength() const { return maxn; };
         virtual int minlength() const { return minn; };
         
-        virtual int types()  { 
+        virtual unsigned int types()  { 
             return totaltypes;
         }
-        virtual int tokens() const { return totaltokens; }
+        virtual unsigned int tokens() const { return totaltokens; }
 
         unsigned char type() const { return model_type; }
         unsigned char version() const { return model_version; }
@@ -1051,12 +1051,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
 
-        virtual int types() { 
+        virtual unsigned int types() { 
             if ((totaltypes == 0) && (!this->data.empty())) totaltypes = this->totalwordtypesingroup(0, 0);
             return totaltypes; 
         }
 
-        virtual int tokens() const { return totaltokens; }
+        virtual unsigned int tokens() const { return totaltokens; }
 
         unsigned char type() const { return model_type; }
         unsigned char version() const { return model_version; }

@@ -291,7 +291,7 @@ cdef extern from "patternmodel.h":
         int maxlength()
         int minlength()
         int types()
-        int tokens()
+        unsigned int tokens()
 
 
     ctypedef PatternMap[uint32_t,BaseValueHandler[uint32_t],uint64_t] t_relationmap
@@ -332,8 +332,8 @@ cdef extern from "patternmodel.h":
         iterator begin() nogil
         iterator end() nogil
         PatternModel() nogil
-        int types() nogil
-        int tokens() nogil
+        unsigned int types() nogil
+        unsigned int tokens() nogil
         int type() nogil
         int version() nogil
         int maxlength() nogil
@@ -395,8 +395,8 @@ cdef extern from "patternmodel.h":
         iterator begin() nogil
         iterator end() nogil
         PatternModel() nogil
-        int types() nogil
-        int tokens() nogil
+        unsigned int types() nogil
+        unsigned int tokens() nogil
         int type() nogil
         int version() nogil
         int maxlength() nogil
@@ -460,8 +460,8 @@ cdef extern from "alignmodel.h":
         iterator begin() nogil
         iterator end() nogil
         PatternAlignmentModel() nogil
-        int types() nogil
-        int tokens() nogil
+        unsigned int types() nogil
+        unsigned int tokens() nogil
         int type() nogil
         int version() nogil
         int maxlength() nogil
