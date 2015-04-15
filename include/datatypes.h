@@ -68,7 +68,7 @@ class IndexedData {
             return std::find(this->begin(), this->end(), ref) != this->end();
         }
     }
-    int count() const { return data.size(); }
+    unsigned int count() const { return data.size(); }
 
     void insert(IndexReference ref) { data.push_back(ref); }
     size_t size() const { return data.size(); }
@@ -129,7 +129,7 @@ class AbstractValueHandler {
     virtual void read(std::istream * in, ValueType & value)=0; //read value from input stream (binary)
     virtual void write(std::ostream * out, ValueType & value)=0; //write value to output stream (binary)
     virtual std::string tostring(ValueType & value)=0; //convert value to string)
-    virtual int count(ValueType & value) const =0; //what count does this value represent?
+    virtual unsigned int count(ValueType & value) const =0; //what count does this value represent?
     virtual void add(ValueType * value, const IndexReference & ref ) const=0; //add the indexreference to the value, will be called whenever a token is found during pattern building
 
     virtual void convertto(ValueType * source, ValueType* & target ) const { target = source; }; //this doesn't really convert as source and target are same type, but it is required!
@@ -151,8 +151,8 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     virtual std::string tostring(ValueType & value) {
         return tostring(value);
     }
-    int count(ValueType & value) const {
-        return (int) value;
+    unsigned int count(ValueType & value) const {
+        return (unsigned int) value;
     }
     void add(ValueType * value, const IndexReference & ref ) const {
         *value = *value + 1;
@@ -197,7 +197,7 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         }
         return s;
     }
-    int count(IndexedData & value) const {
+    unsigned int count(IndexedData & value) const {
         return value.data.size();
     }
     void add(IndexedData * value, const IndexReference & ref ) const {
@@ -208,7 +208,7 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         value->insert(ref);
     }
     void convertto(IndexedData * source , IndexedData *&  target) const { target = source;  }; //noop
-    void convertto(IndexedData * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = (unsigned int) value->count(); };
+    void convertto(IndexedData * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue =  value->count(); };
 };
 
 
@@ -355,7 +355,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
             return this->end();
         }
 
-        int count() const { return data.size(); }
+        unsigned int count() const { return data.size(); }
 
 
 
@@ -460,7 +460,7 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
         std::cerr << "ERROR: PatternFeatureVectorMapHandler does not support serialisation to string (no classdecoder at this point)" << std::endl;
         throw InternalError();
     }
-    int count(PatternFeatureVectorMap<FeatureType> & value) const {
+    unsigned int count(PatternFeatureVectorMap<FeatureType> & value) const {
         return value.size();
     }
     void add(PatternFeatureVectorMap<FeatureType> * value, const IndexReference & ref ) const {

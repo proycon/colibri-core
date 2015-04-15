@@ -675,7 +675,7 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
         }
         return s;
     }
-    int count(std::array<T,N> & a) const {
+    unsigned int count(std::array<T,N> & a) const {
         return (int) a[countindex];
     }
     void add(std::array<T,N> * value, const IndexReference & ref ) const {
@@ -700,7 +700,7 @@ class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
         std::cerr << "PatternStoreValueHandler::tostring() is not supported" << std::endl;
         throw InternalError();
     }
-    int count( PatternStoreType & value) const {
+    unsigned int count( PatternStoreType & value) const {
         return value.size();
     }
     void add( PatternStoreType * value, const IndexReference & ref ) const {

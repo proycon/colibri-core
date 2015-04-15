@@ -207,7 +207,7 @@ class PatternModelInterface: public PatternStoreInterface {
         /**
          * Returns the number of times this pattern occurs in the model
          */
-        virtual int occurrencecount(const Pattern & pattern)=0;
+        virtual unsigned int occurrencecount(const Pattern & pattern)=0;
 
         /**
          * Returns the number of times the frequency of the pattern in the
@@ -416,7 +416,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * This function does not perform anything in a set context, it always
          * returns zero
          */
-        virtual int occurrencecount(const Pattern & pattern) { return 0;  }
+        virtual unsigned int occurrencecount(const Pattern & pattern) { return 0;  }
 
         /**
          * This function does not perform anything in a set context, it always
@@ -453,10 +453,10 @@ class PatternModel: public MapType, public PatternModelInterface {
         //std::multimap<IndexReference,Pattern> reverseindex; 
         std::set<int> cache_categories;
         std::set<int> cache_n;
-        std::map<int,std::map<int,int>> cache_grouptotal; //total occurrences (used for frequency computation, within a group)
-        std::map<int,std::map<int,int>> cache_grouptotalpatterns ; //total distinct patterns per group
-        std::map<int,std::map<int,int>> cache_grouptotalwordtypes; //total covered word types per group
-        std::map<int,std::map<int,int>> cache_grouptotaltokens; //total covered tokens per group
+        std::map<int,std::map<int,unsigned int>> cache_grouptotal; //total occurrences (used for frequency computation, within a group)
+        std::map<int,std::map<int,unsigned int>> cache_grouptotalpatterns ; //total distinct patterns per group
+        std::map<int,std::map<int,unsigned int>> cache_grouptotalwordtypes; //total covered word types per group
+        std::map<int,std::map<int,unsigned int>> cache_grouptotaltokens; //total covered tokens per group
         
 
         std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
@@ -1019,7 +1019,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         virtual int maxlength() const { return this->maxn; };
         virtual int minlength() const { return this->minn; };
-        virtual int occurrencecount(const Pattern & pattern)  { 
+        virtual unsigned int occurrencecount(const Pattern & pattern)  { 
             ValueType * data = getdata(pattern);
             if (data != NULL) {
                 return this->valuehandler.count(*data); 
@@ -1064,7 +1064,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         void output(std::ostream *);
         
         
-        int coveragecount(const Pattern &  key) {
+        unsigned int coveragecount(const Pattern &  key) {
            return this->occurrencecount(key) * key.size();
         }
         double coverage(const Pattern & key) {
@@ -1249,25 +1249,25 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
         
 
-        int totaloccurrencesingroup(int category, int n) {
+        unsigned int totaloccurrencesingroup(int category, int n) {
             //category and n can be set to 0 to loop over all
             if ((cache_grouptotal.empty()) && (!this->data.empty())) this->computestats();
             return cache_grouptotal[category][n];
         }
 
-        int totalpatternsingroup(int category, int n) {
+        unsigned int totalpatternsingroup(int category, int n) {
             //category and n can be set to 0 to loop over all
             if ((cache_grouptotalpatterns.empty()) && (!this->data.empty())) this->computestats();
             return cache_grouptotalpatterns[category][n];
         }
 
-        int totalwordtypesingroup(int category, int n) {
+        unsigned int totalwordtypesingroup(int category, int n) {
             //total covered word/unigram types
             //category and n can be set to 0 to loop over all
             if ((cache_grouptotalwordtypes.empty()) && (!this->data.empty())) this->computecoveragestats();
             return cache_grouptotalwordtypes[category][n];
         }
-        int totaltokensingroup(int category, int n) {
+        unsigned int totaltokensingroup(int category, int n) {
             //total COVERED tokens
             //category and n can be set to 0 to loop over all
             if ((cache_grouptotaltokens.empty()) && (!this->data.empty())) this->computecoveragestats();
@@ -1296,7 +1296,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             this->valuehandler.add(value, ref);
         }
 
-        int prune(int threshold,int _n=0) {
+        int prune(unsigned int threshold,int _n=0) {
             //prune all patterns under the specified threshold (set -1 for
             //all) and of the specified length (set _n==0 for all)
             int pruned = 0;
@@ -1317,7 +1317,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             return pruned;
         }
 
-        virtual int pruneskipgrams(int threshold, int minskiptypes=2, int _n = 0) {
+        virtual int pruneskipgrams(unsigned int threshold, int minskiptypes=2, int _n = 0) {
             //NOTE: minskiptypes is completely ignored! that only works for indexed models
             int pruned = 0;
             if (minskiptypes <=1) return pruned; //nothing to do
@@ -1403,8 +1403,8 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         virtual void print(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool endline = true) {
             const std::string pattern_s = pattern.tostring(decoder);
-            const int count = this->occurrencecount(pattern); 
-            const int covcount = this->coveragecount(pattern);
+            const unsigned int count = this->occurrencecount(pattern); 
+            const unsigned int covcount = this->coveragecount(pattern);
             const double coverage = covcount / (double) this->tokens();
             const double freq = this->frequency(pattern);
             const int cat = pattern.category();
@@ -1426,16 +1426,16 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
-        void histogram(std::map<int,int> & hist, unsigned int threshold = 0, unsigned int cap = 0, int category = 0, int size = 0) {
+        void histogram(std::map<int,unsigned int> & hist, unsigned int threshold = 0, unsigned int cap = 0, int category = 0, int size = 0) {
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
                 if (((category != 0) && (pattern.category() != category)) || ((size != 0) && (size != pattern.size()))) continue;
-                int c = this->occurrencecount(pattern);
+                unsigned int c = this->occurrencecount(pattern);
                 if (c >= threshold) hist[c]++;
             }  
             if (cap > 0) {
                 unsigned int sum = 0;
-                std::map<int,int>::reverse_iterator iter = hist.rbegin();
+                std::map<int,unsigned int>::reverse_iterator iter = hist.rbegin();
                 while ((sum < cap) && (iter != hist.rend())) {
                     iter++;
                     sum += iter->second; 
@@ -1447,9 +1447,9 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         unsigned int topthreshold(int amount, int category=0, int size=0) {
             //compute occurrence threshold that holds the top $amount occurrences
-            std::map<int,int> hist;
+            std::map<int,unsigned int> hist;
             histogram(hist, 0, amount, category, size);
-            std::map<int,int>::reverse_iterator iter = hist.rbegin();
+            std::map<int,unsigned int>::reverse_iterator iter = hist.rbegin();
             if (iter != hist.rend()) {
                 return iter->first;
             } else {
@@ -1459,12 +1459,12 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
         void histogram(std::ostream * OUT, unsigned int threshold = 0, unsigned int cap = 0) {
-            std::map<int,int> hist;
+            std::map<int,unsigned int> hist;
             histogram(hist);
             *OUT << "HISTOGRAM" << std::endl;
             *OUT << "------------------------------" << std::endl;
             *OUT << "OCCURRENCES\tPATTERNS" << std::endl;
-            for (std::map<int,int>::iterator iter = hist.begin(); iter != hist.end(); iter++) {
+            for (std::map<int,unsigned int>::iterator iter = hist.begin(); iter != hist.end(); iter++) {
                 *OUT << iter->first << "\t" << iter->second << std::endl;
             }
         }
@@ -1832,8 +1832,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     void print(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool endline = true) {
             const std::string pattern_s = pattern.tostring(decoder);
-            const int count = this->occurrencecount(pattern); 
-            const int covcount = this->coveragecount(pattern);
+            const unsigned int count = this->occurrencecount(pattern); 
+            const unsigned int covcount = this->coveragecount(pattern);
             const double coverage = covcount / (double) this->tokens();
             const double freq = this->frequency(pattern);
             const int cat = pattern.category();
