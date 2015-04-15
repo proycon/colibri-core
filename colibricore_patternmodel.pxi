@@ -358,8 +358,8 @@ def getreverseindex_bysentence(self, int sentence):
 
 def histogram(self, unsigned int threshold=0, unsigned int cap=0, int category = 0, int size = 0):
     """Generator over a histogram of occurrence count data, produces (occurrencecount, frequency) tuples. A minimum threshold may be configured, or a cap on total number of occurrences may be specified (to get only the top occurrences). The histogram can be constrained by category and/or pattern size (if set to >0 values)"""
-    cdef stdmap[int,int] hist
-    cdef stdmap[int,int].iterator it
+    cdef stdmap[int,unsigned int] hist
+    cdef stdmap[int,unsigned int].iterator it
     self.data.histogram(hist,threshold,cap, category, size)
     it = hist.begin()  
     while it != hist.end():
