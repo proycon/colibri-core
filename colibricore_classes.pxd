@@ -349,10 +349,10 @@ cdef extern from "patternmodel.h":
         PatternModelInterface * getinterface() nogil
         void train(string filename, PatternModelOptions options, PatternModelInterface *)
 
-        int totaloccurrencesingroup(int category, int n)
-        int totalpatternsingroup(int category, int n)
-        int totaltokensingroup(int category, int n)
-        int totalwordtypesingroup(int category, int n)
+        unsigned int totaloccurrencesingroup(int category, int n)
+        unsigned int totalpatternsingroup(int category, int n)
+        unsigned int totaltokensingroup(int category, int n)
+        unsigned int totalwordtypesingroup(int category, int n)
 
         void insert(Pattern&, ValueType& value) nogil
         bool has(Pattern&) nogil
@@ -411,10 +411,10 @@ cdef extern from "patternmodel.h":
         IndexedCorpus * reverseindex
         bool externalreverseindex
 
-        int totaloccurrencesingroup(int category, int n)
-        int totalpatternsingroup(int category, int n)
-        int totaltokensingroup(int category, int n)
-        int totalwordtypesingroup(int category, int n)
+        unsigned int totaloccurrencesingroup(int category, int n)
+        unsigned int totalpatternsingroup(int category, int n)
+        unsigned int totaltokensingroup(int category, int n)
+        unsigned int totalwordtypesingroup(int category, int n)
 
         void insert(Pattern&, IndexedData& value) nogil
         bool has(Pattern&) nogil
