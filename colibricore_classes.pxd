@@ -66,7 +66,7 @@ cdef extern from "datatypes.h":
         uint16_t token
 
     cdef cppclass BaseValueHandler[T]:
-        int count(T &)
+        unsigned int count(T &)
         int add(T *, IndexReference&)
         str tostring(T&)
 
@@ -276,7 +276,7 @@ cdef extern from "patternmodel.h":
         bool DORESET
 
     cdef cppclass IndexedDataHandler:
-        int count(IndexedData &)
+        unsigned int count(IndexedData &)
         int add(IndexedData *, IndexReference&)
         str tostring(IndexedData&)
 
@@ -286,7 +286,7 @@ cdef extern from "patternmodel.h":
         int getmodelversion()
         bool has(const Pattern &)
         size_t size()
-        int occurrencecount(Pattern & pattern)
+        unsigned int occurrencecount(Pattern & pattern)
         double frequency(Pattern &)
         int maxlength()
         int minlength()
@@ -313,7 +313,7 @@ cdef extern from "patternmodel.h":
         bool has(Pattern&) nogil
         int size() nogil
 
-        int occurrencecount(Pattern&) nogil #always returns 0
+        unsigned int occurrencecount(Pattern&) nogil #always returns 0
         float frequency(Pattern&) nogil
 
         PatternModelInterface * getinterface() nogil
@@ -338,8 +338,8 @@ cdef extern from "patternmodel.h":
         int version() nogil
         int maxlength() nogil
         int minlength() nogil
-        int occurrencecount(Pattern&) nogil
-        int coveragecount(Pattern&) nogil
+        unsigned int occurrencecount(Pattern&) nogil
+        unsigned int coveragecount(Pattern&) nogil
         float coverage(Pattern&) nogil
         float frequency(Pattern&) nogil
         void add(Pattern&, ValueType*, IndexReference&)
@@ -401,8 +401,8 @@ cdef extern from "patternmodel.h":
         int version() nogil
         int maxlength() nogil
         int minlength() nogil
-        int occurrencecount(Pattern&) nogil
-        int coveragecount(Pattern&) nogil
+        unsigned int occurrencecount(Pattern&) nogil
+        unsigned int coveragecount(Pattern&) nogil
         float coverage(Pattern&) nogil
         float frequency(Pattern&) nogil
 
