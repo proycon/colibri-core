@@ -179,7 +179,6 @@ cdef extern from "patternstore.h":
         PatternSet() nogil
         void insert(Pattern&) nogil
         bool has(Pattern&) nogil
-        int size() nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
         void read(string filename) nogil
@@ -311,7 +310,7 @@ cdef extern from "patternmodel.h":
         iterator end() nogil
 
         bool has(Pattern&) nogil
-        int size() nogil
+        unsigned int size() nogil
 
         unsigned int occurrencecount(Pattern&) nogil #always returns 0
         float frequency(Pattern&) nogil
@@ -357,7 +356,7 @@ cdef extern from "patternmodel.h":
 
         void insert(Pattern&, ValueType& value) nogil
         bool has(Pattern&) nogil
-        int size() nogil
+        unsigned int size() nogil
         ValueType& operator[](Pattern&) nogil
         bool erase(Pattern&) nogil
         int prune(int threshold, int n) nogil
@@ -367,7 +366,7 @@ cdef extern from "patternmodel.h":
         void printmodel(ostream*, ClassDecoder&) nogil
         void printpattern(ostream*, ClassDecoder&, Pattern&) nogil
         void report(ostream*) nogil
-        void histogram(stdmap[int,int] & hist, unsigned int threshold, unsigned int cap,int,int)
+        void histogram(stdmap[int,unsigned int] & hist, unsigned int threshold, unsigned int cap,int,int)
         void histogram(ostream*) nogil
         unsigned int topthreshold(int,int,int) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
@@ -419,7 +418,7 @@ cdef extern from "patternmodel.h":
 
         void insert(Pattern&, IndexedData& value) nogil
         bool has(Pattern&) nogil
-        int size() nogil
+        unsigned int size() nogil
         IndexedData& operator[](Pattern&) nogil
         bool erase(Pattern&) nogil
         int prune(int threshold, int n) nogil
@@ -430,7 +429,7 @@ cdef extern from "patternmodel.h":
         void printpattern(ostream*, ClassDecoder&, Pattern&) nogil
         void report(ostream*) nogil
         void histogram(ostream*) nogil
-        void histogram(stdmap[int,int] & hist, unsigned int threshold , unsigned int cap,int,int )
+        void histogram(stdmap[int,unsigned int] & hist, unsigned int threshold , unsigned int cap,int,int )
         unsigned int topthreshold(int,int,int) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
 
@@ -474,7 +473,7 @@ cdef extern from "alignmodel.h":
         bool has(Pattern&) nogil
         bool has(Pattern&, Pattern&) nogil
 
-        int size() nogil
+        unsigned int size() nogil
 
         PatternFeatureVectorMap[double]& operator[](Pattern&) nogil
         PatternFeatureVectorMap[double]* getdata(Pattern&, bool makeifnew=False) nogil
