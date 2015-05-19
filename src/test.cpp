@@ -690,10 +690,17 @@ int main( int argc, char *argv[] ) {
         unindexedmodel.write(outputfilename);
 
 
+        options.DEBUG = true;
         cerr << "Reading from file" << endl;
         PatternModel<uint32_t> unindexedmodel2 = PatternModel<uint32_t>(outputfilename, options);
+        options.DEBUG = false;
         cerr << "Outputting report again" << endl;
         unindexedmodel2.report(&std::cerr);
+        cerr << "Equal tokens? " ; test(unindexedmodel.tokens() == unindexedmodel2.tokens() );
+        cerr << "Equal types? " ; test(unindexedmodel.types() == unindexedmodel2.types() );
+        cerr << "Equal size? " ; test(unindexedmodel.size() == unindexedmodel2.size() );
+        cerr << "Testing unindexedmodel2.has()"; test( unindexedmodel2.has(ngram) );
+        cerr << "Testing unindexedmodel2.occurrencecount()"; test( unindexedmodel2.occurrencecount(ngram),6 );
 
 
 

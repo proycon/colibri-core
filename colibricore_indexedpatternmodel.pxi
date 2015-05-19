@@ -112,7 +112,7 @@ def getsubchildren(self, Pattern pattern, int occurrencethreshold = 0, int categ
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
 
     cdef cPattern cpattern
-    cdef int value
+    cdef unsigned int value
     while relit != relations.end():
         cpattern = deref(relit).first
         value = deref(relit).second
@@ -135,7 +135,7 @@ def getsubparents(self, Pattern pattern, int occurrencethreshold = 0, int catego
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubparents(pattern.cpattern, occurrencethreshold, category, size)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
-    cdef int value
+    cdef unsigned int value
     while relit != relations.end():
         cpattern = deref(relit).first
         value = deref(relit).second
@@ -158,7 +158,7 @@ def getleftneighbours(self, Pattern pattern, int occurrencethreshold = 0, int ca
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern, occurrencethreshold, category, size)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
-    cdef int value
+    cdef unsigned int value
     while relit != relations.end():
         cpattern = deref(relit).first
         value = deref(relit).second
@@ -181,7 +181,7 @@ def getrightneighbours(self, Pattern pattern, int occurrencethreshold = 0, int c
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern, occurrencethreshold, category, size)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
-    cdef int value
+    cdef unsigned int value
     while relit != relations.end():
         cpattern = deref(relit).first
         value = deref(relit).second
@@ -199,7 +199,7 @@ def getskipcontent(self, Pattern pattern):
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getskipcontent(pattern.cpattern)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
-    cdef int value
+    cdef unsigned int value
     while relit != relations.end():
         cpattern = deref(relit).first
         value = deref(relit).second
@@ -219,7 +219,7 @@ def gettemplates(self, Pattern pattern, int occurrencethreshold = 0):
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.gettemplates(pattern.cpattern, occurrencethreshold)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
-    cdef int value
+    cdef unsigned int value
     while relit != relations.end():
         cpattern = deref(relit).first
         value = deref(relit).second
@@ -239,7 +239,7 @@ def getinstances(self, Pattern pattern, int occurrencethreshold = 0):
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getinstances(pattern.cpattern, occurrencethreshold)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
-    cdef int value
+    cdef unsigned int value
     while relit != relations.end():
         cpattern = deref(relit).first
         value = deref(relit).second
@@ -262,7 +262,7 @@ def getcooc(self, Pattern pattern,  int occurrencethreshold = 0, int category = 
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getcooc(pattern.cpattern, occurrencethreshold, category, size)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
-    cdef int value
+    cdef unsigned int value
     while relit != relations.end():
         cpattern = deref(relit).first
         value = deref(relit).second
@@ -285,7 +285,7 @@ def getleftcooc(self, Pattern pattern, int occurrencethreshold = 0, int category
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftcooc(pattern.cpattern, occurrencethreshold, category, size)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
-    cdef int value
+    cdef unsigned int value
     while relit != relations.end():
         cpattern = deref(relit).first
         value = deref(relit).second
@@ -308,7 +308,7 @@ def getrightcooc(self, Pattern pattern, int occurrencethreshold = 0, int categor
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightcooc(pattern.cpattern, occurrencethreshold, category, size)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
-    cdef int value
+    cdef unsigned int value
     while relit != relations.end():
         cpattern = deref(relit).first
         value = deref(relit).second

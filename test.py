@@ -40,7 +40,7 @@ ngram3 = copy(ngram)
 print(ngram3.tostring(decoder))
 
 print("Equality check")
-assert( ngram == ngram3 )
+assert ngram == ngram3
 
 if sys.version[0] != '2':
     #Python 3 only for now:
@@ -52,7 +52,7 @@ if sys.version[0] != '2':
     unpickledngram = pickle.loads(pickled)
 
     print("Equality check")
-    assert( ngram == unpickledngram )
+    assert ngram == unpickledngram
 
 print("Subgrams of ngram:")
 for subngram in ngram.subngrams():
@@ -60,20 +60,20 @@ for subngram in ngram.subngrams():
 
 subngram = encoder.buildpattern("or not")
 print("Testing occurrence of substring 'or not'...")
-assert (subngram in ngram)
+assert subngram in ngram
 
 subngram2 = encoder.buildpattern("to be")
 print("Testing occurrence of substring 'to be'...")
-assert (subngram2 in ngram)
+assert subngram2 in ngram
 
 subngram3 = encoder.buildpattern("or")
 print("Testing occurrence of substring 'or'...")
-assert (subngram3 in ngram)
+assert subngram3 in ngram
 
 print("Testing gram addition:")
 ngramconc = subngram + subngram2
 print(ngramconc.tostring(decoder))
-assert (ngramconc.tostring(decoder) == "or not to be" )
+assert ngramconc.tostring(decoder) == "or not to be"
 
 print("Testing sorting")
 for subngram in sorted(ngram.subngrams()):
@@ -87,7 +87,7 @@ print("Bytesize: ", skipgram.bytesize())
 print("Category==SKIPGRAM", (skipgram.category() == colibricore.Category.SKIPGRAM) )
 print("Hash: ", hash(skipgram))
 print("Skipcount check...")
-assert(skipgram.skipcount() == 2)
+assert skipgram.skipcount() == 2
 
 print("Parts:")
 for part in skipgram.parts():
@@ -105,7 +105,7 @@ print("Bytesize: ", flexgram.bytesize())
 print("Category==SKIPGRAM", (flexgram.category() == colibricore.Category.FLEXGRAM) )
 print("Hash: ", hash(flexgram))
 print("Skipcount check...")
-assert(flexgram.skipcount() == 2)
+assert flexgram.skipcount() == 2
 
 print("Parts:")
 for part in flexgram.parts():
@@ -159,7 +159,7 @@ with open('/tmp/hamlet.txt','w') as f:
 
 
 print("Class encoding corpus...")
-os.system("colibri-classencode /tmp/hamlet.txt");
+os.system("colibri-classencode /tmp/hamlet.txt")
 
 print("Loading new decoder")
 decoder = colibricore.ClassDecoder("/tmp/hamlet.colibri.cls")
@@ -167,10 +167,10 @@ encoder = colibricore.ClassEncoder("/tmp/hamlet.colibri.cls")
 
 print("Loading corpus as IndexedCorpus")
 corpus = colibricore.IndexedCorpus("/tmp/hamlet.colibri.dat")
-print("Total number of tokens: ", len(corpus));
-firstword = corpus[(1,0)] ;
+print("Total number of tokens: ", len(corpus))
+firstword = corpus[(1,0)]
 print("First word: ", firstword.tostring(decoder))
-needle = encoder.buildpattern("fair Ophelia");
+needle = encoder.buildpattern("fair Ophelia")
 for match in corpus.findpattern(needle):
     print( "'fair Ophelia' found at ", match)
 
@@ -190,18 +190,20 @@ unindexedmodel = colibricore.UnindexedPatternModel()
 unindexedmodel.train("/tmp/hamlet.colibri.dat",options)
 
 print("Found ", len(unindexedmodel), " patterns, " , unindexedmodel.types()," types, " , unindexedmodel.tokens(), " tokens")
-unindexedmodel.printmodel(decoder);
+unindexedmodel.printmodel(decoder)
 print("REPORT:")
-unindexedmodel.report();
+unindexedmodel.report()
 print("HISTOGRAM:")
-unindexedmodel.histogram();
+unindexedmodel.histogram()
 
 outputfilename = "/tmp/data.colibri.patternmodel"
 print("Writing to file")
-unindexedmodel.write(outputfilename);
+unindexedmodel.write(outputfilename)
 
 print("Loading unindexed corpus")
 unindexedmodel = colibricore.UnindexedPatternModel("/tmp/data.colibri.patternmodel")
+print("REPORT:")
+unindexedmodel.report()
 
 print("iterating over all patterns")
 for pattern in unindexedmodel:
@@ -223,15 +225,15 @@ indexedmodel = colibricore.IndexedPatternModel()
 indexedmodel.train("/tmp/hamlet.colibri.dat",options)
 
 print("Found ", len(indexedmodel), " patterns, " , indexedmodel.types()," types, " , indexedmodel.tokens(), " tokens")
-indexedmodel.printmodel(decoder);
+indexedmodel.printmodel(decoder)
 print("REPORT:")
-indexedmodel.report();
+indexedmodel.report()
 print("HISTOGRAM:")
-indexedmodel.histogram();
+indexedmodel.histogram()
 
 outputfilename = "/tmp/data.colibri.indexedpatternmodel"
 print("Writing to file")
-indexedmodel.write(outputfilename);
+indexedmodel.write(outputfilename)
 
 print("Loading indexed corpus")
 indexedmodel = colibricore.IndexedPatternModel("/tmp/data.colibri.indexedpatternmodel")

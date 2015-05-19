@@ -268,6 +268,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             std::cerr << "Reading " << s << " patterns" << std::endl;
+            if (MINTOKENS == -1) MINTOKENS = 0;
             for (ReadWriteSizeType i = 0; i < s; i++) {
                 Pattern p;
                 try {
@@ -285,7 +286,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                 ReadValueType readvalue;
                 readvaluehandler.read(in, readvalue);
                 if (n >= MINLENGTH && n <= MAXLENGTH)  {
-                    if ((readvaluehandler.count(readvalue) >= MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
+                    if ((readvaluehandler.count(readvalue) >= (unsigned int) MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
                             ValueType * convertedvalue = NULL;
                             if (DORESET) {
                                 convertedvalue = new ValueType();
@@ -302,8 +303,8 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                             this->insert(p,*convertedvalue);
                             if ((convertedvalue != NULL) && ((void*) convertedvalue != (void*) &readvalue)) delete convertedvalue;
                     } else if (DEBUG) {
-                        if (readvaluehandler.count(readvalue) >= MINTOKENS) {
-                            std::cerr << "...skipping because of occurrence below " << MINTOKENS;    
+                        if (readvaluehandler.count(readvalue) < (unsigned int) MINTOKENS) {
+                            std::cerr << "...skipping because of occurrence (" << readvaluehandler.count(readvalue) << " below " << MINTOKENS;    
                         } else {
                             std::cerr << "...skipping because of constraints";    
                         }
@@ -486,7 +487,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
                 //std::cerr << "Read pattern: " << std::endl;
                 readvaluehandler.read(in, readvalue);
                 if (n >= MINLENGTH && n <= MAXLENGTH)  {
-                    if ((readvaluehandler.count(readvalue) >= MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
+                    if ((readvaluehandler.count(readvalue) >= (unsigned int) MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
                         this->insert(p);
                     }
                 }

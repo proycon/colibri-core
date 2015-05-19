@@ -94,7 +94,7 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
                   unsigned int cls = (unsigned int) atoi(cls_s.c_str());
                   const string word = string(line.begin() + i + 1, line.end());                  
                   if ((minlength > 0) || (maxlength > 0))  {
-                    const int l = utf8_strlen(word);
+                    const unsigned int l = (unsigned int) utf8_strlen(word);
                     if (((minlength > 0) && (l < minlength)) || ((maxlength > 0) && (l > maxlength))) continue;
                   }
                   classes[word] = cls;
@@ -157,7 +157,7 @@ void ClassEncoder::processcorpus(istream * IN , unordered_map<string,int> & freq
               	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
               	    word = trim(word, " \t\n\r"); //trim whitespace, control characters
                     if ((minlength > 0) || (maxlength > 0))  {
-                        const int l = utf8_strlen(word);
+                        const unsigned int l = (unsigned int) utf8_strlen(word);
                         if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
                             freqlist[word]++;
                         }
