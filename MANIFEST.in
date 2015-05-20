@@ -1,0 +1,6 @@
+include bootstrap README README.rst AUTHORS configure.ac Makefile.am *.pc.in *.pxi *.in.pyx benchmarks.py test.py ChangeLog NEWS
+recursive-include src *.cpp Makefile.am
+recursive-include include *.h Makefile.am
+recursive-include exp *
+recursive-include scripts *
+recursive-include m4 ax_cxx_compile-stdcxx_11.m4
