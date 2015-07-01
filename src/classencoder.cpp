@@ -359,7 +359,7 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
                         classes[word] = cls;  
                         added[cls] = word;
           	    	} else if (!allowunknown) {	
-  	        			cerr << "ERROR: Unknown word '" << word << "', does not occur in model. You may want to pass either option -U or option -e to colibri-classencode to deal with unknown words." << endl;
+                        //cerr << "ERROR: Unknown word '" << word << "', does not occur in model. You may want to pass either option -U or option -e to colibri-classencode to deal with unknown words." << endl;
   	        			return 0;         
 	  	        	} else {
 	  	        		//cerr << "WARNING: Unknown word '" << word << "', does not occur in model. Replacing with placeholder" << endl;
