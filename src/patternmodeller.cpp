@@ -26,14 +26,8 @@ void usage() {
     cerr << "Input/output options:" << endl;
     cerr << "\t-i [modelfile]   Input model" << endl;
     cerr << "\t-o [modelfile]   Output model" << endl;
-    cerr << "\t-f [datafile]    Corpus data file. The following formats are supported:" << endl;
-    cerr << "\t                   - plain text, preferably tokenised (tokens space delimited)" << endl;
-    cerr << "\t                     one sentence per line, unix newlines, encoding agnostic." << endl;
-    cerr << "\t                   - as above, but bzip2 compressed (bz2 extension)" << endl;
-#ifdef WITHFOLIA
-    cerr << "\t                   - FoLiA XML (xml extension)" << endl;
-#endif
-    cerr << "\t-c [classfile]   Class file"<< endl;
+    cerr << "\t-f [datafile]    Corpus data file (encoded from plain text or other sources with colibri-classencode)" << endl;
+    cerr << "\t-c [classfile]   Class file (creted with colibri-classencode)"<< endl;
     cerr << "\t-j [modelfile]   Joined input model, i.e. constraint model/training model. Result will be the *intersection* of this (training) model and the input model or constructed model." << endl;
     cerr << "\t-r [datafile]    Corpus data file to be used as reverse index. Not mandatory but may be specified when loading a patternmodel (even unindexed ones!), with indexed pattern models, specifying this options prevents the reverse index from being computed on-the-fly from the forward index, which is far more time consuming (especially on large models). For unindexed models, reverse indices are always disabled unless explicitly specified using this option" << endl;
     cerr << " Building a model:  colibri-patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
