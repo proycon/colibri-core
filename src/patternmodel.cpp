@@ -12,7 +12,10 @@ int getmodeltype(const std::string filename) {
     f->close();
     delete f;
     if (null != 0) return -1;
-    if ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) ) return -2;
+    if ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) ) {
+        std::cerr << "got model_type " << model_type << std::endl;
+        return -2;
+    }
     return model_type;
 }
 
