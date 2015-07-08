@@ -594,7 +594,7 @@ int main( int argc, char *argv[] ) {
             }
 
         } else if (!inputmodelfile.empty()) {
-            cerr << "ERROR: Input model is not a valid colibri pattern model" << endl;
+            cerr << "ERROR: Input model is not a valid colibri pattern model (" << inputmodeltype << ")" << endl;
             exit(2);
         } else {
             //no inputmodel
