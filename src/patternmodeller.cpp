@@ -422,7 +422,7 @@ int main( int argc, char *argv[] ) {
         if (!inputmodelfile.empty()) {
             if ((access(inputmodelfile.c_str(), F_OK) == -1)) {
                 cerr << "No such file: " << inputmodelfile << endl;
-                exit(2)
+                exit(2);
             }
             inputmodeltype = getmodeltype(inputmodelfile);
             if ((inputmodeltype == INDEXEDPATTERNMODEL) && (outputmodeltype == UNINDEXEDPATTERNMODEL)) {
@@ -462,7 +462,7 @@ int main( int argc, char *argv[] ) {
                 if (!reverseindexfile.empty()) {
                     if ((access(reverseindexfile.c_str(), F_OK) == -1)) {
                         cerr << "No such file: " << reverseindexfile << endl;
-                        exit(2)
+                        exit(2);
                     }
                     cerr << "Loading corpus data for reverse index" << endl;
                     std::ifstream * f = new ifstream(reverseindexfile.c_str());
@@ -487,7 +487,7 @@ int main( int argc, char *argv[] ) {
             } else {
                 if ((access(corpusfile.c_str(), F_OK) == -1)) {
                     cerr << "No such file: " << corpusfile << endl;
-                    exit(2)
+                    exit(2);
                 }
             }
 
