@@ -418,7 +418,7 @@ int main( int argc, char *argv[] ) {
             }
         }
 
-        int inputmodeltype = 0;
+        int inputmodeltype = -99;
         if (!inputmodelfile.empty()) {
             inputmodeltype = getmodeltype(inputmodelfile);
             if ((inputmodeltype == INDEXEDPATTERNMODEL) && (outputmodeltype == UNINDEXEDPATTERNMODEL)) {
