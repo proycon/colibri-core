@@ -142,6 +142,14 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
 }
 
 
+void assert_file_exists(const string & filename) {
+    ifstream testf(filename);
+    if (!testf.good()) {
+        cerr << "No such file: " << filename << endl;
+        exit(2);
+    }
+}
+
 
 template<class ModelType = IndexedPatternModel<>>
 bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold = 0.1) {
@@ -420,10 +428,7 @@ int main( int argc, char *argv[] ) {
 
         int inputmodeltype = -99;
         if (!inputmodelfile.empty()) {
-            if ((access(inputmodelfile.c_str(), F_OK) == -1)) {
-                cerr << "No such file: " << inputmodelfile << endl;
-                exit(2);
-            }
+            assert_file_exists(inputmodelfile);
             inputmodeltype = getmodeltype(inputmodelfile);
             if ((inputmodeltype == INDEXEDPATTERNMODEL) && (outputmodeltype == UNINDEXEDPATTERNMODEL)) {
                 cerr << "Indexed input model will be read as unindexed because -u was set" << endl;
@@ -460,10 +465,7 @@ int main( int argc, char *argv[] ) {
                 cerr << "Reverse index: disabled" << endl;
             } else {
                 if (!reverseindexfile.empty()) {
-                    if ((access(reverseindexfile.c_str(), F_OK) == -1)) {
-                        cerr << "No such file: " << reverseindexfile << endl;
-                        exit(2);
-                    }
+                    assert_file_exists(reveseindexfile);
                     cerr << "Loading corpus data for reverse index" << endl;
                     std::ifstream * f = new ifstream(reverseindexfile.c_str());
                     if (!f->good()) {
@@ -485,10 +487,7 @@ int main( int argc, char *argv[] ) {
                 cerr << "ERROR: Corpus data file (-f) must be specified when -I is set!." << classfile << endl;
                 exit(2);
             } else {
-                if ((access(corpusfile.c_str(), F_OK) == -1)) {
-                    cerr << "No such file: " << corpusfile << endl;
-                    exit(2);
-                }
+                assert_file_exists(corpusfile);
             }
 
             if (outputmodeltype == UNINDEXEDPATTERNMODEL) {
