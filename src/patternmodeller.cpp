@@ -465,7 +465,7 @@ int main( int argc, char *argv[] ) {
                 cerr << "Reverse index: disabled" << endl;
             } else {
                 if (!reverseindexfile.empty()) {
-                    assert_file_exists(reveseindexfile);
+                    assert_file_exists(reverseindexfile);
                     cerr << "Loading corpus data for reverse index" << endl;
                     std::ifstream * f = new ifstream(reverseindexfile.c_str());
                     if (!f->good()) {
