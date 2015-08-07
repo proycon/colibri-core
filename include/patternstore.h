@@ -607,6 +607,70 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
 
 };
 
+template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>>
+class FreqOrderedPatternMapContainer {
+    protected:
+        std::multimap<unsigned int, std::vector<const Pattern>> data;
+    public:
+        FreqOrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
+        virtual ~FreqOrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
+
+
+        virtual typename ContainerType::iterator begin()=0;
+        virtual typename ContainerType::iterator end()=0;
+        virtual typename ContainerType::iterator find(const Pattern & pattern)=0;
+
+
+        class iterator: 
+            protected:
+                typedef std::multimap<unsigned int, std::vector<const Pattern>>::iterator t_real_iterator;
+                t_real_iterator real_iterator;
+                std::pair<const Pattern, unsigned int> * swappedpair;
+
+                void getswappedpair() {
+                    ValueHandler valuehandler;
+                    swappedpair = new std::pair<const Pattern, unsigned int>(
+                            real_iterator->second,
+                            valuehandler.count(real_iterator->first),
+                    );
+                }
+
+            public:
+                iterator() {
+                    swappedpair = NULL;
+                }
+                iterator(t_real_iterator iter) {
+                    real_iterator = iter;
+                    swappedpair = NULL;
+                }
+                ~iterator() {
+                    if (swappedpair != NULL) delete swappedpair;
+                }
+
+                std::pair<const Pattern, unsigned int> * operator->() const {
+                    getswappedpair();
+                    if (swappedpair == NULL) return NULL;
+                    return swappedpair;
+                }
+
+                std::pair<const Pattern, unsigned int> & operator*() const {
+                    getswappedpair();
+                    return *swappedpair;
+                }
+
+                iterator& operator++() { real_iterator++; return this; }
+                
+        }
+
+
+}
+
+template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class ReadWriteSizeType = uint64_t>
+class FreqOrderedPatternMap: public PatternMapStore<FreqOrderedPatternMapContainer<ValueType,ValueHandler>,ValueType,ValueHandler,ReadWriteSizeType> {
+    protected:
+        FreqorderedPatternMapContainer data;
+}
+
 template<class ValueType,class ValueHandler = BaseValueHandler<ValueType>,class ReadWriteSizeType = uint64_t>
 class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType>,ValueType,ValueHandler,ReadWriteSizeType> {
     protected:
