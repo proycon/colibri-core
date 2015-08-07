@@ -496,7 +496,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
 };
 
 
-typedef std::set<Pattern> t_orderedpatternset;
+typedef std::set<Pattern> t_hashorderedpatternset;
 
 
 /**
@@ -506,13 +506,13 @@ typedef std::set<Pattern> t_orderedpatternset;
  * serialisation/deserialisation
  */
 template<class ReadWriteSizeType = uint64_t>
-class OrderedPatternSet: public PatternStore<t_orderedpatternset,ReadWriteSizeType> {
+class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWriteSizeType> {
     protected:
-        t_orderedpatternset data;
+        t_hashorderedpatternset data;
     public:
 
-        OrderedPatternSet<ReadWriteSizeType>(): PatternStore<t_orderedpatternset,ReadWriteSizeType>() {};
-        virtual ~OrderedPatternSet<ReadWriteSizeType>();
+        HashOrderedPatternSet<ReadWriteSizeType>(): PatternStore<t_hashorderedpatternset,ReadWriteSizeType>() {};
+        virtual ~HashOrderedPatternSet<ReadWriteSizeType>();
 
         void insert(const Pattern pattern) {
             data.insert(pattern);
@@ -522,8 +522,8 @@ class OrderedPatternSet: public PatternStore<t_orderedpatternset,ReadWriteSizeTy
         bool has(const PatternPointer & pattern) const { return data.count(Pattern(pattern)); }
         size_t size() const { return data.size(); } 
 
-        typedef t_orderedpatternset::iterator iterator;
-        typedef t_orderedpatternset::const_iterator const_iterator;
+        typedef t_hashorderedpatternset::iterator iterator;
+        typedef t_hashorderedpatternset::const_iterator const_iterator;
         
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
@@ -607,14 +607,13 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
 
 };
 
-
 template<class ValueType,class ValueHandler = BaseValueHandler<ValueType>,class ReadWriteSizeType = uint64_t>
-class OrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType>,ValueType,ValueHandler,ReadWriteSizeType> {
+class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType>,ValueType,ValueHandler,ReadWriteSizeType> {
     protected:
         std::map<const Pattern, ValueType> data;
     public:
-        OrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>(): PatternMapStore<std::map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
-        virtual ~OrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
+        HashOrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>(): PatternMapStore<std::map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
+        virtual ~HashOrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
 
         void insert(const Pattern & pattern, ValueType & value) { 
             data[pattern] = value;

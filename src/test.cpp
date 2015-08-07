@@ -797,7 +797,7 @@ int main( int argc, char *argv[] ) {
         options.DOSKIPGRAMS_EXHAUSTIVE = false;
         options.DOSKIPGRAMS = false ;
         cerr << "Building unindexed model using ordered patternmap" << endl;
-        PatternModel<uint32_t,BaseValueHandler<uint32_t>,OrderedPatternMap<uint32_t,BaseValueHandler<uint32_t>>> unindexedmodel3;
+        PatternModel<uint32_t,BaseValueHandler<uint32_t>,HashOrderedPatternMap<uint32_t,BaseValueHandler<uint32_t>>> unindexedmodel3;
 
         cerr << endl;
         unindexedmodel3.train(infilename, options);
