@@ -860,8 +860,8 @@ cdef class UnindexedPatternModel:
 
 cdef class OrderedUnindexedPatternModel:
     """Unindexed Pattern Model, implemented using an ordered map, less flexible and powerful than its indexed counterpart, but smaller memory footprint"""
-    cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cOrderedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]] data
-    cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cOrderedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]].iterator it
+    cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cHashOrderedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]] data
+    cdef cPatternModel[uint32_t,cBaseValueHandler[uint32_t],cHashOrderedPatternMap[uint32_t,cBaseValueHandler[uint32_t],uint64_t]].iterator it
 
     @include colibricore_patternmodel.pxi
     @include colibricore_unindexedpatternmodel.pxi
