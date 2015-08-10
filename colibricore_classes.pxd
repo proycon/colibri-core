@@ -132,7 +132,7 @@ cdef extern from "patternstore.h":
         void read(string filename) nogil
         void write(string filename) nogil
 
-    cdef cppclass OrderedPatternMap[ValueType,ValueHandler,ReadWriteSizeType]:
+    cdef cppclass HashOrderedPatternMap[ValueType,ValueHandler,ReadWriteSizeType]:
         cppclass iterator:
             pair[Pattern,ValueType] & operator*() nogil
             iterator operator++() nogil
@@ -141,7 +141,7 @@ cdef extern from "patternstore.h":
         size_t size() nogil
         iterator begin() nogil
         iterator end() nogil
-        OrderedPatternMap() nogil
+        HashOrderedPatternMap() nogil
         void insert(Pattern&, ValueType& value) nogil
         bool has(Pattern&) nogil
         ValueType& operator[](Pattern&) nogil
@@ -167,7 +167,7 @@ cdef extern from "patternstore.h":
         void read(string filename) nogil
         void write(string filename) nogil
 
-    cdef cppclass OrderedPatternSet[ReadWriteSizeType]:
+    cdef cppclass HashOrderedPatternSet[ReadWriteSizeType]:
         cppclass iterator:
             Pattern& operator*() nogil
             iterator operator++() nogil
@@ -176,7 +176,7 @@ cdef extern from "patternstore.h":
         size_t size() nogil
         iterator begin() nogil
         iterator end() nogil
-        PatternSet() nogil
+        HashOrderedPatternSet() nogil
         void insert(Pattern&) nogil
         bool has(Pattern&) nogil
         iterator erase(Pattern&) nogil
