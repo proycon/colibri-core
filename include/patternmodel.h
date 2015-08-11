@@ -180,8 +180,8 @@ class PatternModelOptions {
 
 };
 
-typedef PatternMap<uint32_t,BaseValueHandler<uint32_t>,uint64_t> t_relationmap;
-typedef PatternMap<double,BaseValueHandler<double>,uint64_t> t_relationmap_double;
+typedef PatternMap<uint32_t> t_relationmap;
+typedef PatternMap<double> t_relationmap_double;
 
 /**
  * Basic read-only interface for pattern models, abstract base class.
