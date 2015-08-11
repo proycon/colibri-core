@@ -373,8 +373,8 @@ cdef extern from "patternmodel.h":
 
         t_relationmap getsubchildren(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
         t_relationmap getsubparents(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
-        t_relationmap getleftneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
-        t_relationmap getrightneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+        t_relationmap getleftneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
+        t_relationmap getrightneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
         t_relationmap getskipcontent(Pattern & pattern) except +KeyError
         t_relationmap gettemplates(Pattern & pattern, unsigned int occurrencethreshold) except +KeyError
         t_relationmap getinstances(Pattern & pattern, unsigned int occurrencethreshold) except +KeyError
@@ -440,8 +440,8 @@ cdef extern from "patternmodel.h":
 
         t_relationmap getsubchildren(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
         t_relationmap getsubparents(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
-        t_relationmap getleftneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
-        t_relationmap getrightneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+        t_relationmap getleftneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
+        t_relationmap getrightneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
         t_relationmap getskipcontent(Pattern & pattern) except +KeyError
         t_relationmap gettemplates(Pattern & pattern, unsigned int occurrencethreshold) except +KeyError
         t_relationmap getinstances(Pattern & pattern, unsigned int occurrencethreshold) except +KeyError

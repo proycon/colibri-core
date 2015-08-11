@@ -144,7 +144,7 @@ def getsubparents(self, Pattern pattern, int occurrencethreshold = 0, int catego
         yield (pattern,value)
         inc(relit)
 
-def getleftneighbours(self, Pattern pattern, int occurrencethreshold = 0, int category = 0, int size = 0):
+def getleftneighbours(self, Pattern pattern, int occurrencethreshold = 0, int category = 0, int size = 0, int cutoff = 0):
     """Get left neighbours for the specified pattern
     :param pattern: The pattern
     :type pattern: Pattern
@@ -155,7 +155,7 @@ def getleftneighbours(self, Pattern pattern, int occurrencethreshold = 0, int ca
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern, occurrencethreshold, category, size)
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern, occurrencethreshold, category, size,cutoff)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef unsigned int value
@@ -167,7 +167,7 @@ def getleftneighbours(self, Pattern pattern, int occurrencethreshold = 0, int ca
         yield (pattern,value)
         inc(relit)
 
-def getrightneighbours(self, Pattern pattern, int occurrencethreshold = 0, int category = 0, int size = 0):
+def getrightneighbours(self, Pattern pattern, int occurrencethreshold = 0, int category = 0, int size = 0, int cutoff = 0):
     """Get right neighbours for the specified pattern
     :param pattern: The pattern
     :type pattern: Pattern
@@ -178,7 +178,7 @@ def getrightneighbours(self, Pattern pattern, int occurrencethreshold = 0, int c
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern, occurrencethreshold, category, size)
+    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern, occurrencethreshold, category, size,cutoff)
     cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef unsigned int value

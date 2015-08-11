@@ -1619,8 +1619,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual t_relationmap gettemplates(const Pattern & pattern,int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getinstances(const Pattern & pattern,int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getskipcontent(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getleftneighbours(const Pattern & pattern,int = 0, int = 0,int = 0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getrightneighbours(const Pattern & pattern,int = 0, int = 0,int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getleftneighbours(const Pattern & pattern,int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getrightneighbours(const Pattern & pattern,int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap_double getnpmi(const Pattern & pattern, double threshold) { return t_relationmap_double(); } //does nothing for unindexed models
         virtual int computeflexgrams_fromskipgrams() { return 0; }//does nothing for unindexed models
         virtual int computeflexgrams_fromcooc() {return 0; }//does nothing for unindexed models
@@ -2150,7 +2150,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
 
-    t_relationmap getleftneighbours(const Pattern & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0) {
+    t_relationmap getleftneighbours(const Pattern & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0, unsigned int cutoff=0) {
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -2176,14 +2176,16 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         && ((size == 0) || (neighbour.n() >= size))
                     ){
                     neighbours[neighbour]++;
+                    if ((cutoff > 0) && (neighbours.size() >= cutoff)) break;
                 } else if ((ref2.token > ref.token) || (ref2.sentence > ref.sentence)) break;
             }
+            if ((cutoff > 0) && (neighbours.size() >= cutoff)) break;
         }
         if (occurrencethreshold > 0) this->prunerelations(neighbours, occurrencethreshold);
         return neighbours;
     }
 
-    t_relationmap getrightneighbours(const Pattern & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0) {
+    t_relationmap getrightneighbours(const Pattern & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0, unsigned int cutoff=0) {
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -2207,8 +2209,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         && ((category == 0) || (neighbour.category() >= category))
                         && ((size == 0) || (neighbour.n() >= size)) ) {
                     neighbours[neighbour]++;
+                    if ((cutoff > 0) && (neighbours.size() >= cutoff)) break;
                 }
             }
+            if ((cutoff > 0) && (neighbours.size() >= cutoff)) break;
         }
         if (occurrencethreshold > 0) this->prunerelations(neighbours, occurrencethreshold);
         return neighbours;
