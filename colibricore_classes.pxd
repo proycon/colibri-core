@@ -293,11 +293,11 @@ cdef extern from "patternmodel.h":
         unsigned int tokens()
 
 
-    ctypedef PatternMap[uint32_t,BaseValueHandler[uint32_t],uint64_t] t_relationmap
-    ctypedef PatternMap[double,BaseValueHandler[double],uint64_t] t_relationmap_double
+    ctypedef PatternMap[uint32_t,BaseValueHandler[uint32_t],uint64_t] cy_t_relationmap
+    ctypedef PatternMap[double,BaseValueHandler[double],uint64_t] cy_t_relationmap_double
 
-    ctypedef PatternMap[uint32_t,BaseValueHandler[uint32_t],uint64_t].iterator t_relationmap_iterator
-    ctypedef PatternMap[double,BaseValueHandler[double],uint64_t].iterator t_relationmap_double_iterator
+    ctypedef PatternMap[uint32_t,BaseValueHandler[uint32_t],uint64_t].iterator cy_t_relationmap_iterator
+    ctypedef PatternMap[double,BaseValueHandler[double],uint64_t].iterator cy_t_relationmap_double_iterator
 
 
     cdef cppclass PatternSetModel:
@@ -371,16 +371,16 @@ cdef extern from "patternmodel.h":
         unsigned int topthreshold(int,int,int) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
 
-        t_relationmap getsubchildren(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
-        t_relationmap getsubparents(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
-        t_relationmap getleftneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
-        t_relationmap getrightneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
-        t_relationmap getskipcontent(Pattern & pattern) except +KeyError
-        t_relationmap gettemplates(Pattern & pattern, unsigned int occurrencethreshold) except +KeyError
-        t_relationmap getinstances(Pattern & pattern, unsigned int occurrencethreshold) except +KeyError
-        t_relationmap getcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
-        t_relationmap getleftcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
-        t_relationmap getrightcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+        cy_t_relationmap getsubchildren(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+        cy_t_relationmap getsubparents(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+        cy_t_relationmap getleftneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
+        cy_t_relationmap getrightneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
+        cy_t_relationmap getskipcontent(Pattern & pattern) except +KeyError
+        cy_t_relationmap gettemplates(Pattern & pattern, unsigned int occurrencethreshold) except +KeyError
+        cy_t_relationmap getinstances(Pattern & pattern, unsigned int occurrencethreshold) except +KeyError
+        cy_t_relationmap getcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+        cy_t_relationmap getleftcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+        cy_t_relationmap getrightcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
 
         vector[Pattern] getreverseindex(IndexReference&)
         vector[pair[IndexReference,Pattern]] getreverseindex_bysentence(int)
@@ -438,16 +438,16 @@ cdef extern from "patternmodel.h":
         vector[Pattern] getreverseindex(IndexReference&)
         vector[pair[IndexReference,Pattern]] getreverseindex_bysentence(int)
 
-        t_relationmap getsubchildren(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
-        t_relationmap getsubparents(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
-        t_relationmap getleftneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
-        t_relationmap getrightneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
-        t_relationmap getskipcontent(Pattern & pattern) except +KeyError
-        t_relationmap gettemplates(Pattern & pattern, unsigned int occurrencethreshold) except +KeyError
-        t_relationmap getinstances(Pattern & pattern, unsigned int occurrencethreshold) except +KeyError
-        t_relationmap getcooc(Pattern & pattern,  unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
-        t_relationmap getleftcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
-        t_relationmap getrightcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+        cy_t_relationmap getsubchildren(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+        cy_t_relationmap getsubparents(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+        cy_t_relationmap getleftneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
+        cy_t_relationmap getrightneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
+        cy_t_relationmap getskipcontent(Pattern & pattern) except +KeyError
+        cy_t_relationmap gettemplates(Pattern & pattern, unsigned int occurrencethreshold) except +KeyError
+        cy_t_relationmap getinstances(Pattern & pattern, unsigned int occurrencethreshold) except +KeyError
+        cy_t_relationmap getcooc(Pattern & pattern,  unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+        cy_t_relationmap getleftcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+        cy_t_relationmap getrightcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
 
 cdef extern from "alignmodel.h":
     cdef cppclass PatternAlignmentModel[FeatureType]:
