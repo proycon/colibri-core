@@ -4,7 +4,7 @@
 # $URL: https://ilk.uvt.nl/svn/sources/ucto/trunk/configure.ac $
 
 AC_PREREQ([2.67])
-AC_INIT([colibri-core],[0.5.9],[proycon@anaproy.nl])
+AC_INIT([colibri-core],[0.5.10],[proycon@anaproy.nl])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADER([config.h])

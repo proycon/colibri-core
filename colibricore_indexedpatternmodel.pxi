@@ -108,8 +108,8 @@ def getsubchildren(self, Pattern pattern, int occurrencethreshold = 0, int categ
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubchildren(pattern.cpattern, occurrencethreshold, category, size)
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef t_relationmap  relations = self.data.getsubchildren(pattern.cpattern, occurrencethreshold, category, size)
+    cdef t_relationmap_iterator relit = relations.begin()
 
     cdef cPattern cpattern
     cdef unsigned int value
@@ -132,8 +132,8 @@ def getsubparents(self, Pattern pattern, int occurrencethreshold = 0, int catego
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getsubparents(pattern.cpattern, occurrencethreshold, category, size)
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef t_relationmap  relations = self.data.getsubparents(pattern.cpattern, occurrencethreshold, category, size)
+    cdef t_relationmap_iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef unsigned int value
     while relit != relations.end():
@@ -155,8 +155,8 @@ def getleftneighbours(self, Pattern pattern, int occurrencethreshold = 0, int ca
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftneighbours(pattern.cpattern, occurrencethreshold, category, size,cutoff)
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef t_relationmap  relations = self.data.getleftneighbours(pattern.cpattern, occurrencethreshold, category, size,cutoff)
+    cdef t_relationmap_iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef unsigned int value
     while relit != relations.end():
@@ -178,8 +178,8 @@ def getrightneighbours(self, Pattern pattern, int occurrencethreshold = 0, int c
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightneighbours(pattern.cpattern, occurrencethreshold, category, size,cutoff)
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef t_relationmap  relations = self.data.getrightneighbours(pattern.cpattern, occurrencethreshold, category, size,cutoff)
+    cdef t_relationmap_iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef unsigned int value
     while relit != relations.end():
@@ -196,8 +196,8 @@ def getskipcontent(self, Pattern pattern):
     :type pattern: Pattern
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getskipcontent(pattern.cpattern)
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef t_relationmap  relations = self.data.getskipcontent(pattern.cpattern)
+    cdef t_relationmap_iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef unsigned int value
     while relit != relations.end():
@@ -216,8 +216,8 @@ def gettemplates(self, Pattern pattern, int occurrencethreshold = 0):
     :type occurrencethreshold: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.gettemplates(pattern.cpattern, occurrencethreshold)
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef t_relationmap  relations = self.data.gettemplates(pattern.cpattern, occurrencethreshold)
+    cdef t_relationmap_iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef unsigned int value
     while relit != relations.end():
@@ -236,8 +236,8 @@ def getinstances(self, Pattern pattern, int occurrencethreshold = 0):
     :type occurrencethreshold: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getinstances(pattern.cpattern, occurrencethreshold)
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef t_relationmap  relations = self.data.getinstances(pattern.cpattern, occurrencethreshold)
+    cdef t_relationmap_iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef unsigned int value
     while relit != relations.end():
@@ -259,8 +259,8 @@ def getcooc(self, Pattern pattern,  int occurrencethreshold = 0, int category = 
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getcooc(pattern.cpattern, occurrencethreshold, category, size)
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef t_relationmap  relations = self.data.getcooc(pattern.cpattern, occurrencethreshold, category, size)
+    cdef t_relationmap_iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef unsigned int value
     while relit != relations.end():
@@ -282,8 +282,8 @@ def getleftcooc(self, Pattern pattern, int occurrencethreshold = 0, int category
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getleftcooc(pattern.cpattern, occurrencethreshold, category, size)
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef t_relationmap  relations = self.data.getleftcooc(pattern.cpattern, occurrencethreshold, category, size)
+    cdef t_relationmap_iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef unsigned int value
     while relit != relations.end():
@@ -305,8 +305,8 @@ def getrightcooc(self, Pattern pattern, int occurrencethreshold = 0, int categor
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long]  relations = self.data.getrightcooc(pattern.cpattern, occurrencethreshold, category, size)
-    cdef cPatternMap[unsigned int,cBaseValueHandler[uint],unsigned long].iterator relit = relations.begin()
+    cdef t_relationmap  relations = self.data.getrightcooc(pattern.cpattern, occurrencethreshold, category, size)
+    cdef t_relationmap_iterator relit = relations.begin()
     cdef cPattern cpattern
     cdef unsigned int value
     while relit != relations.end():

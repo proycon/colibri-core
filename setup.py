@@ -114,7 +114,7 @@ setup(
     license = "GPL",
     keywords = "nlp computational_linguistics frequency ngram skipgram pmi cooccurrence linguistics",
     long_description=read('README.rst'),
-    version = '0.5.9.1',
+    version = '0.5.10',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},
     classifiers=[
@@ -127,5 +127,5 @@ setup(
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     ],
-
+    install_requires=['Cython >= 0.23'],
 )
