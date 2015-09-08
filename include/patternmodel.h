@@ -91,9 +91,8 @@ class PatternModelOptions {
                                  ///< DO_SKIPGRAMS_EXHAUSTIVE is set to true
 
         int MINTOKENS_UNIGRAMS; ///< The occurrence threshold for unigrams, unigrams must occur at least this many times for higher-order ngram/skipgram to be included in a model
-                                ///< Defaults to the same value as MINOKENS
-                                ///< Only has an effect if MINTOKENS_UNIGRAMS >
-                                //MINTOKENS.
+                                ///< Defaults to the same value as MINTOKENS
+                                ///< Only has an effect if MINTOKENS_UNIGRAMS > MINTOKENS.
                                 //
         int MINLENGTH; ///< The minimum length of patterns to be loaded/extracted (in words/tokens) (default: 1)
         int MAXLENGTH; ///< The maximum length of patterns to be loaded/extracted, inclusive (in words/tokens) (default: 100)
@@ -622,10 +621,16 @@ class PatternModel: public MapType, public PatternModelInterface {
                 throw InternalError();
             }
 
+            bool iter_unigramsonly = false; //only needed for counting unigrams when we need them but they would be discarded
+            if ((options.MINLENGTH > 1) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS)) {
+                iter_unigramsonly = true;
+            }
+
             if (!options.QUIET) {
                 std::cerr << "Training patternmodel";
                 if (constrainbymodel != NULL) std::cerr << ", constrained by another model";
                 std::cerr << ", occurrence threshold: " << options.MINTOKENS;
+                if (iter_unigramsonly) stdd::cerr << ", secondary unigram threshold: " << options.MINTOKENS_UNIGRAMS;
                 std::cerr << std::endl; 
             }
             std::vector<std::pair<PatternPointer,int>> ngrams;
@@ -635,10 +640,6 @@ class PatternModel: public MapType, public PatternModelInterface {
             int prevsize = 0;
             int backoffn = 0;
             
-            bool iter_unigramsonly = false; //only needed for counting unigrams when we need them but they would be discarded
-            if ((options.MINLENGTH > 1) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS)) {
-                iter_unigramsonly = true;
-            }
 
             for (int n = 1; n <= options.MAXLENGTH; n++) { 
                 int foundngrams = 0;
