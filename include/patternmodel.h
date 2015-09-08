@@ -2245,6 +2245,21 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         //opting for memory over speed (more iterations, less memory)
         //overloaded version for indexedmodel
         if ((this->cache_grouptotal.empty()) && (!this->data.empty())) this->computestats();
+        
+        if (this->cache_n.size() == 1) {
+            //special condition, only unigrams, we can be done quicker
+            this->cache_grouptotalwordtypes[0][1] = this->size();;
+            const int n = *this->cache_n.begin();
+            if (n == 1) {
+                typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); 
+                while (iter != this->end()) {
+                    this->cache_grouptotaltokens[0][1] += this->valuehandler.count(iter->second);
+                    iter++;
+                }
+            }
+            return;
+        }
+
         for (std::set<int>::iterator iterc = this->cache_categories.begin(); iterc != this->cache_categories.end(); iterc++) {
             for (std::set<int>::iterator itern = this->cache_n.begin(); itern != this->cache_n.end(); itern++) {
                 std::set<Pattern> types;
