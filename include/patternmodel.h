@@ -630,7 +630,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 std::cerr << "Training patternmodel";
                 if (constrainbymodel != NULL) std::cerr << ", constrained by another model";
                 std::cerr << ", occurrence threshold: " << options.MINTOKENS;
-                if (iter_unigramsonly) stdd::cerr << ", secondary unigram threshold: " << options.MINTOKENS_UNIGRAMS;
+                if (iter_unigramsonly) stdd::cerr << ", secondary word occurrence threshold: " << options.MINTOKENS_UNIGRAMS;
                 std::cerr << std::endl; 
             }
             std::vector<std::pair<PatternPointer,int>> ngrams;
@@ -698,12 +698,12 @@ class PatternModel: public MapType, public PatternModelInterface {
                         found = true; //are the submatches in order? (default to true, needed for mintokens==1) 
 
                         //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
-                        if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS> options.MINTOKENS)) { 
+                        if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS> options.MINTOKENS) && (n > 1)) { 
                             subngrams.clear();
                             iter->first.ngrams(subngrams,1); //get all unigrams
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                                 //check if unigram exists
-                                if (!this->has(*iter2)) { 
+                                if (!this->occurrencecount(*iter2) < options.MINTOKENS_UNIGRAMS) { 
                                     found = false;
                                     break;
                                 }
