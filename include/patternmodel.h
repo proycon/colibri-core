@@ -698,11 +698,11 @@ class PatternModel: public MapType, public PatternModelInterface {
                         found = true; //are the submatches in order? (default to true, needed for mintokens==1) 
 
                         //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
-                        if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS> options.MINTOKENS) && (n > 1)) { 
+                        if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS> options.MINTOKENS) && ((n > 1) || (options.MINTOKENS ==1)) ) { 
                             subngrams.clear();
                             iter->first.ngrams(subngrams,1); //get all unigrams
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                                //check if unigram exists
+                                //check if unigram reaches threshold
                                 if (this->occurrencecount(*iter2) < options.MINTOKENS_UNIGRAMS) { 
                                     found = false;
                                     break;
@@ -712,7 +712,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
                         //ngram (n-1) lookback
-                        if ((n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) { 
+                        if ((found) && (n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) { 
                             //check if sub-parts were counted
                             subngrams.clear();
                             backoffn = n - 1;
