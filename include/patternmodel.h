@@ -622,7 +622,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
 
             bool iter_unigramsonly = false; //only needed for counting unigrams when we need them but they would be discarded
-            if ((options.MINLENGTH > 1) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS)) {
+            if (( (options.MINLENGTH > 1) ||(options.MINTOKENS == 1)) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS)) {
                 iter_unigramsonly = true;
             }
 
