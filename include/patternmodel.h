@@ -699,13 +699,11 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                         //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
                         if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS) && ((n > 1) || (options.MINTOKENS == 1)) ) { 
-                            std::cerr << "IN" << std::endl;
                             subngrams.clear();
                             iter->first.ngrams(subngrams,1); //get all unigrams
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                                 //check if unigram reaches threshold
                                 if (this->occurrencecount(*iter2) < options.MINTOKENS_UNIGRAMS) { 
-                                    std::cerr << "under threshold " << this->occurrencecount(*iter2) << std::endl;
                                     found = false;
                                     break;
                                 }
