@@ -705,7 +705,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                                 //check if unigram reaches threshold
                                 if (this->occurrencecount(*iter2) < options.MINTOKENS_UNIGRAMS) { 
-                                    std::cerr << "under threshold " << this->occurencecount(*iter2) << std::endl;
+                                    std::cerr << "under threshold " << this->occurrencecount(*iter2) << std::endl;
                                     found = false;
                                     break;
                                 }
