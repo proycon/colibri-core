@@ -1387,10 +1387,25 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
         virtual void print(std::ostream * out, ClassDecoder & decoder) {
-            *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY" << std::endl;
+            bool haveoutput = false;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
+                if (!haveoutput) {
+                    *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY" << std::endl;
+                    haveoutput = true;
+                }
                 const Pattern pattern = iter->first;
                 this->print(out, decoder, pattern, true);
+            }
+            if (haveoutput) {
+                std::cerr << std::endl << "Legend:" << std::endl;
+                std::cerr << " - PATTERN    : The pattern, Gaps in skipgrams are represented as {*x*} where x is a number representing the size of the skip. Variable-width gaps in flexgrams are shown using  {*}." << std::endl;
+                std::cerr << " - COUNT      : The occurrence count - the amount of times the pattern occurs in the data" << std::endl;
+                std::cerr << " - TOKENS     : The maximum number of tokens in the corpus that this pattern covers. *THIS IS JUST A MAXIMUM PROJECTION* rather than an exact number because your model is not indexed" << std::endl;
+                std::cerr << " - COVERAGE   : The maximum number of tokens covered, as a fraction of the total in the corpus (projection)" << std::endl;
+                std::cerr << " - CATEGORY   : The pattern type category (ngram,skipgram,flexgram)" << std::endl;
+                std::cerr << " - SIZE       : The size of the pattern (in tokens)" << std::endl;
+                std::cerr << " - FREQUENCY  : The frequency of the pattern *within it's pattern type category and size-class*." << std::endl;
+                std::cerr << " - REFERENCES : A space-delimited list of sentence:token position where the pattern occurs in the data. Sentences start at 1, tokens at 0" << std::endl;
             }
         }
 
@@ -1557,16 +1572,21 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Covered:                  " << std::setw(10) << this->size() << std::setw(10) << coveredtokens << std::setw(10) << coveredtokens / (double) this->tokens() <<  std::setw(10) << coveredtypes <<  std::endl << std::endl;
             
             
-            *OUT << std::setw(10) << "CATEGORY" << std::setw(10) << "N (SIZE) "<< std::setw(10) << "PATTERNS";
-            if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) *OUT << std::setw(10) << "TOKENS" << std::setw(10) << "COVERAGE";
-            *OUT << std::setw(10) << "TYPES" << std::setw(12) << "OCCURRENCES" << std::endl;
-            
+           
+            bool haveoutput = false;
             for (std::set<int>::iterator iterc = cache_categories.begin(); iterc != cache_categories.end(); iterc++) {
                 const int c = *iterc;
                 if (cache_grouptotalpatterns.count(c))
                 for (std::set<int>::iterator itern = cache_n.begin(); itern != cache_n.end(); itern++) {
                     const int n = *itern;
                     if (cache_grouptotalpatterns[c].count(n)) {
+                        if (!haveoutput) {
+                            //output headers
+                            *OUT << std::setw(10) << "CATEGORY" << std::setw(10) << "N (SIZE) "<< std::setw(10) << "PATTERNS";
+                            if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) *OUT << std::setw(10) << "TOKENS" << std::setw(10) << "COVERAGE";
+                            *OUT << std::setw(10) << "TYPES" << std::setw(12) << "OCCURRENCES" << std::endl;
+                            haveoutput = true;
+                        }
                         //category
                         if (c == 0) {
                             *OUT << std::setw(10) << "all";
@@ -1597,6 +1617,17 @@ class PatternModel: public MapType, public PatternModelInterface {
                         *OUT << std::setw(12) << cache_grouptotal[c][n] << std::endl;;
                     }
                 }
+            }
+
+            if (haveoutput) {
+                std::cerr << std::endl << "Legend:" << std::endl;
+                std::cerr << " - PATTERNS    : The number of distinct patterns within the group" << std::endl;
+                if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) {
+                    std::cerr << " - TOKENS      : The number of tokens that is covered by the patterns in the group." << std::endl;
+                    std::cerr << " - COVERAGE    : The number of tokens covered, as a fraction of the total in the corpus" << std::endl;
+                }
+                std::cerr << " - TYPES       : The number of unique *word/unigram* types in this group" << std::endl;
+                std::cerr << " - OCCURRENCES : The total number of occurrences of the patterns in this group" << std::endl;
             }
         }
         
@@ -1836,10 +1867,25 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
     void print(std::ostream * out, ClassDecoder & decoder) {
-        *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY\tREFERENCES" << std::endl;
+        bool haveoutput = false;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+            if (!haveoutput) {
+                *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY\tREFERENCES" << std::endl;
+                haveoutput = true;
+            }
             const Pattern pattern = iter->first;
             this->print(out, decoder, pattern, true);
+        }
+        if (haveoutput) {
+            std::cerr << std::endl << "Legend:" << std::endl;
+            std::cerr << " - PATTERN    : The pattern, Gaps in skipgrams are represented as {*x*} where x is a number representing the size of the skip. Variable-width gaps in flexgrams are shown using  {*}." << std::endl;
+            std::cerr << " - COUNT      : The occurrence count - the amount of times the pattern occurs in the data" << std::endl;
+            std::cerr << " - TOKENS     : The number of tokens in the corpus that this pattern covers" << std::endl;
+            std::cerr << " - COVERAGE   : The number of tokens covered, as a fraction of the total in the corpus" << std::endl;
+            std::cerr << " - CATEGORY   : The pattern type category (ngram,skipgram,flexgram)" << std::endl;
+            std::cerr << " - SIZE       : The size of the pattern (in tokens)" << std::endl;
+            std::cerr << " - FREQUENCY  : The frequency of the pattern *within it's pattern type category and size-class*." << std::endl;
+            std::cerr << " - REFERENCES : A space-delimited list of sentence:token position where the pattern occurs in the data. Sentences start at 1, tokens at 0" << std::endl;
         }
     }
 
