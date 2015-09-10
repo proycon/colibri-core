@@ -622,6 +622,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
 
             bool iter_unigramsonly = false; //only needed for counting unigrams when we need them but they would be discarded
+            bool skipunigrams = false; //will be set to true later only when MINTOKENS=1,MINLENGTH=1 to prevent double counting of unigrams
             if (( (options.MINLENGTH > 1) ||(options.MINTOKENS == 1)) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS)) {
                 iter_unigramsonly = true;
             }
@@ -692,6 +693,13 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                     // *** ITERATION OVER ALL NGRAMS OF CURRENT ORDER (n) IN THE LINE/SENTENCE ***
                     for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
+
+                        if ((options.MINTOKENS == 1) && (options.MINLENGTH == 1) && (skipunigrams) && (iter->first.n() == 1)) {
+                            //prevent double counting of unigrams after a iter_unigramsonly run with mintokens==1
+                            continue;
+                        }
+
+
                         //check against constraint model 
                         if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter->first))) continue; 
 
@@ -792,6 +800,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     this->prune(options.MINTOKENS_UNIGRAMS,1);
                     //normal behaviour next round
                     iter_unigramsonly = false; 
+                    if ((n == 1) && (options.MINLENGTH ==1)) skipunigrams = true; //prevent double counting of unigrams
                     //decrease n so it will be the same (always 1) next (and by definition last) iteration
                     n--; 
                 }
