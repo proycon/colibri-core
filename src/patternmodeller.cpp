@@ -43,6 +43,7 @@ void usage() {
     cerr << "\t-T <number>      Skip type threshold (for use with -s): only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, unindexed models always act as if fixed to 1). Also note that only types that occur above the occurrent threshold (-t) are counted here! Requires indexed models" << endl;
     cerr << "\t-S S             Compute flexgrams by abstracting over skipgrams (implies -s)." << endl; 
     cerr << "\t-S <number>      Compute flexgrams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
+    cerr << "\t-p <number>      Prune all lower-order n-grams, up to and including the specified order, that are *NOT* subsumed by higher order n-grams (default: 0, disabled). Only effective when used with -l" << endl;
     cerr << "\t-L               Input data file (-f) is a list of one pattern per line. No subgrams will be stored, implies -t 1" <<endl;
     cerr << "\t-I               Builds a new model from an input model (-i) and corpus data (-f).  Only patterns present in the input model will be present in the final model, making the input model the trining model and the corpus data the test data. This method uses memory-efficient in-place building, and does not hold two models (unlike -j). Input model (-i) and or output model (-o) may be indexed or unindexed (-u), this option also allows for constructing indexed models from unindexed models (given the same source corpus), and is used in two-stage building (-2)." <<endl;  
     cerr << "\t--ssr            Perform Statistical Substring reduction, prunes n-grams that are only part of larger n-grams (TO BE IMPLEMENTED STILL)" << endl; //TODO
@@ -226,7 +227,7 @@ int main( int argc, char *argv[] ) {
     double COOCTHRESHOLD = 0;
     int DOCOOC = 0; //1= absolute, 2= npmi
     char c;    
-    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vb:y:W:")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vb:y:W:p")) != -1)
         switch (c)
         {
         case 'c':
@@ -268,6 +269,9 @@ int main( int argc, char *argv[] ) {
             break;
         case 'W':
             options.MINTOKENS_UNIGRAMS = atoi(optarg);
+            break;
+        case 'p':
+            options.PRUNENONSUBSUMED = atoi(optarg);
             break;
         case 's':
             options.DOSKIPGRAMS = true;
