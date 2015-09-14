@@ -801,24 +801,29 @@ class PatternModel: public MapType, public PatternModelInterface {
                     unsigned int pruned;
                     if (singlepass) {
                         pruned = this->prune(options.MINTOKENS,0); //prune regardless of size
+                        if (!options.QUIET) std::cerr << "pruned " << pruned;
                         if (options.PRUNENONSUBSUMED) {
-                            pruned += this->prunenotinset(subsumed, options.MAXLENGTH-1, 0);
+                            if (!options.QUIET) std::cerr << " (pruning non-subsumed patterns: ";
+                            const unsigned int prunednonsubsumed = this->prunenotinset(subsumed, options.MAXLENGTH-1, 0);
+                            if (!options.QUIET) std::cerr << prunednonsubsumed<< ")";
                         }
                     } else {
                         pruned = this->prune(options.MINTOKENS,n); //prune only in size-class
+                        if (!options.QUIET) std::cerr << "pruned " << pruned;
                         if ( (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) &&  ( n - 1 >= 1) &&  ( (n - 1) < options.MINLENGTH) && (n - 1 != options.MAXBACKOFFLENGTH) &&
                             !( (n-1 == 1) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS)  ) //don't delete unigrams if we're gonna need them    
                             ) {
                             //we don't need n-1 anymore now we're done with n, it
                             //is below our threshold, prune it all (== -1)
                             this->prune(-1, n-1);
-                            if (!options.QUIET) std::cerr << "(pruned last iteration due to minimum length)" << pruned;
+                            if (!options.QUIET) std::cerr << " (pruned last iteration due to minimum length)" << pruned;
                         }
                         if (options.PRUNENONSUBSUMED) {
-                            pruned += this->prunenotinset(subsumed, options.MAXLENGTH-1, n-1);
+                            if (!options.QUIET) std::cerr << " (pruning non-subsumed patterns: ";
+                            const unsigned int prunednonsubsumed = this->prunenotinset(subsumed, options.MAXLENGTH-1, n-1);
+                            if (!options.QUIET) std::cerr << prunednonsubsumed<< ")";
                         }
                     }
-                    if (!options.QUIET) std::cerr << "pruned " << pruned;
                     if (foundskipgrams) {
                         unsigned int prunedextra;
                         if ((options.MINTOKENS == 1) || (constrainbymodel != NULL)) {
@@ -1398,14 +1403,14 @@ class PatternModel: public MapType, public PatternModelInterface {
                 const Pattern pattern = iter->first;
                 const unsigned int pattern_n = pattern.n();
                 if (( pattern_n <= (unsigned int) maxn) && ( (_n == 0) || (pattern_n == (unsigned int) _n) )) {
-                    if (s.find(pattern) != s.end()) {
+                    if (s.find(pattern) == s.end()) {
                         //not found in subsumed
                         iter = this->erase(iter); 
                         pruned++;
+                        continue;
                     }
-                } else {
-                    iter++;
                 }
+                iter++;
             };       
 
             return pruned;
