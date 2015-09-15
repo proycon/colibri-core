@@ -42,7 +42,10 @@ enum PatternCategory {
     FLEXGRAM = 3, /**< For flexgrams, i.e. patterns with dynamic-width gaps */
 };
 
-//Not really used much yet, but reserved for encoding structural markup
+/**
+ * Not really used much yet, but reserved for encoding structural markup later
+ * on.
+ */
 enum StructureType { 
     STRUCT_PATTERN = 0, //undefined pattern (if n==1 -> token)
     STRUCT_SENTENCE = 1,
@@ -89,7 +92,7 @@ class Pattern {
     protected:
      void reader_marker(unsigned char * _data, std::istream * in);
     public:
-     unsigned char * data; /**< This array holds the variable-width byte representation, it is always terminated by \0 (ENDMARKER) */
+     unsigned char * data; /**< This array holds the variable-width byte representation, it is always terminated by \0 (ENDMARKER). Though public, you usually do not want to access it directly */
      
      /**
       * Default/empty Pattern constructor. Creates an empty pattern. Still consumes one
@@ -209,16 +212,26 @@ class Pattern {
       * Debug function outputting the classes in this pattern to stderr
       */
      bool out() const;
+
+     /**
+      * Convert the pattern to a vector of integers, where the integers
+      * correspond to the token classes.
+      */
      std::vector<int> tovector() const;
 
      bool operator==(const Pattern & other) const;
      bool operator!=(const Pattern & other) const;
 
-     //Pattern & operator =(const Pattern other);   
+     /**
+      * Assignment operator
+      */
      void operator =(const Pattern & other);   
 
 
-     //patterns are sortable
+     /**
+      * Patterns can be sorted, note however that the sorting is based on the
+      * frequencies of the tokens and is not alphanumerical!
+      */
      bool operator<(const Pattern & other) const;
      bool operator>(const Pattern & other) const;
 
@@ -290,26 +303,52 @@ class Pattern {
       */
      int gaps(std::vector<std::pair<int,int> > & container) const; 
 
-     Pattern extractskipcontent(Pattern & instance) const; //given a pattern and an instance, extract a pattern from the instance that would fill the gaps
 
+     /**
+      * Given a skipgram and an ngram instantation of it (i.e, both of the same length), extract a pattern from the instance that would fill the gaps. Raise an exception if the instance can not be matched with the skipgram
+      */
+     Pattern extractskipcontent(Pattern & instance) const; 
+
+     /**
+      * Replace the tokens from begin (0-indexed), up to the specified length,
+      * with a replacement pattern (of any length)
+      */
      Pattern replace(int begin, int length, const Pattern & replacement) const;
-     Pattern addskip(std::pair<int,int> gaps) const;
+
+     /**
+      * Replaces a series of tokens with a skip/gap of a particular size.
+      * Effectively turns a pattern into a skipgram.
+      * @param gap The position and size of the skip/gap: a pair consisting of a begin index (0-indexed) and a length, i.e. the size of the skip
+      */
+     Pattern addskip(std::pair<int,int> gap) const;
+     /**
+      * Replaces multiple series of tokens with skips/gaps of particular sizes.  Effectively turns a pattern into a skipgram.
+      * @param gaps The positions and sizes of the gaps: a vector of pairs, each pair consisting of a begin index (0-indexed) and a length, indicating where to place the gap
+      * @return A skipgram
+      */
      Pattern addskips(std::vector<std::pair<int,int> > & gaps) const;
+     /**
+      * Replaces multiple series of tokens with skips/gaps of undefined variable size.  Effectively turns a pattern into a flexgram.
+      * @param gaps The positions and sizes of the gaps: a vector of pairs, each pair consisting of a begin index (0-indexed) and a length, indicating where to place the gap
+      * @return A flexgram
+      */
      Pattern addflexgaps(std::vector<std::pair<int,int> > & gaps) const;
 
+     /**
+      * Returns a pattern with the tokens in reverse order
+      */
      Pattern reverse() const; 
 
      /**
-      * converts a skipgram into a flexgram, ngrams just come out unchanged
+      * converts a skipgram into a flexgram (ngrams just come out unchanged)
       */
      Pattern toflexgram() const;
 
-     bool isgap(int i) const; //is the word at this position a gap?
+     /**
+      * Is the word at the specified index (0 indexed) a gap?
+      */
+     bool isgap(int i) const; 
 
-     //CHANGES from old colibri ngram:
-     //
-     //no slice, ngram, gettoken method, use slice constructor
-     //no ngram method, use slice constructor
      
      //NOT IMPLEMENTED YET:
 
