@@ -404,7 +404,8 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         }
 
         /**
-         * Write a PatternSetModel to an output file
+         * Write a PatternSetModel to an output file. This is a wrapper around
+         * write(std::ostream *)
          */
         void write(const std::string filename) {
             std::ofstream * out = new std::ofstream(filename.c_str());
@@ -435,7 +436,14 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         typedef typename PatternSet<uint64_t>::iterator iterator;
         typedef typename PatternSet<uint64_t>::const_iterator const_iterator;        
 
+        /**
+         * Return the maximum length of patterns in this model
+         */
         virtual int maxlength() const { return maxn; };
+
+        /**
+         * Return the minimum length of patterns in this model
+         */
         virtual int minlength() const { return minn; };
         
         virtual unsigned int types()  { 
@@ -721,7 +729,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             iter->first.ngrams(subngrams,1); //get all unigrams
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                                 //check if unigram reaches threshold
-                                if (this->occurrencecount(*iter2) < options.MINTOKENS_UNIGRAMS) { 
+                                if (this->occurrencecount(*iter2) < (unsigned int) options.MINTOKENS_UNIGRAMS) { 
                                     found = false;
                                     break;
                                 }
@@ -840,7 +848,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     PatternModel::iterator iter = this->begin(); 
                     while (iter != this->end()) {
                         const unsigned int pattern_n = iter->first.n();
-                        if (pattern_n == n) {
+                        if (pattern_n == (unsigned int) n) {
                             subngrams.clear();
                             iter->first.ngrams(subngrams, n-1);
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) subsumed.insert(Pattern(*iter2));
@@ -1612,8 +1620,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                 *OUT << "            assuming no overlap at all!!! Use an indexed model for accurate coverage counts" << std::endl;
             }
             *OUT << "----------------------------------" << std::endl;
-            *OUT << "                          " << std::setw(10) << "PATTERNS" << std::setw(10) << "TOKENS" << std::setw(10) << "COVERAGE" << std::setw(10) << "TYPES" << std::setw(10) << std::endl;
-            *OUT << "Total:                    " << std::setw(10) << "-" << std::setw(10) << this->tokens() << std::setw(10) << "-" << std::setw(10) << this->types() <<  std::endl;
+            *OUT << "                          " << std::setw(15) << "PATTERNS" << std::setw(15) << "TOKENS" << std::setw(15) << "COVERAGE" << std::setw(15) << "TYPES" << std::setw(15) << std::endl;
+            *OUT << "Total:                    " << std::setw(15) << "-" << std::setw(15) << this->tokens() << std::setw(15) << "-" << std::setw(15) << this->types() <<  std::endl;
 
             unsigned int coveredtypes = totalwordtypesingroup(0,0);  //will also word when no unigrams in model
             unsigned int coveredtokens = totaltokensingroup(0,0);
@@ -1621,8 +1629,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (coveredtokens > this->tokens()) coveredtokens = this->tokens();
             unsigned int uncoveredtokens = this->tokens() - coveredtokens;
             if (uncoveredtokens < 0) uncoveredtokens = 0;
-            *OUT << "Uncovered:                " << std::setw(10) << "-" << std::setw(10) << uncoveredtokens << std::setw(10) << uncoveredtokens / (double) this->tokens() << std::setw(10) << this->types() - coveredtypes <<  std::endl;
-            *OUT << "Covered:                  " << std::setw(10) << this->size() << std::setw(10) << coveredtokens << std::setw(10) << coveredtokens / (double) this->tokens() <<  std::setw(10) << coveredtypes <<  std::endl << std::endl;
+            *OUT << "Uncovered:                " << std::setw(15) << "-" << std::setw(15) << uncoveredtokens << std::setw(15) << uncoveredtokens / (double) this->tokens() << std::setw(15) << this->types() - coveredtypes <<  std::endl;
+            *OUT << "Covered:                  " << std::setw(15) << this->size() << std::setw(15) << coveredtokens << std::setw(15) << coveredtokens / (double) this->tokens() <<  std::setw(15) << coveredtypes <<  std::endl << std::endl;
             
             
            
@@ -1635,39 +1643,39 @@ class PatternModel: public MapType, public PatternModelInterface {
                     if (cache_grouptotalpatterns[c].count(n)) {
                         if (!haveoutput) {
                             //output headers
-                            *OUT << std::setw(10) << "CATEGORY" << std::setw(10) << "N (SIZE) "<< std::setw(10) << "PATTERNS";
-                            if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) *OUT << std::setw(10) << "TOKENS" << std::setw(10) << "COVERAGE";
-                            *OUT << std::setw(10) << "TYPES" << std::setw(12) << "OCCURRENCES" << std::endl;
+                            *OUT << std::setw(15) << "CATEGORY" << std::setw(15) << "N (SIZE) "<< std::setw(15) << "PATTERNS";
+                            if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) *OUT << std::setw(15) << "TOKENS" << std::setw(15) << "COVERAGE";
+                            *OUT << std::setw(15) << "TYPES" << std::setw(15) << "OCCURRENCES" << std::endl;
                             haveoutput = true;
                         }
                         //category
                         if (c == 0) {
-                            *OUT << std::setw(10) << "all";
+                            *OUT << std::setw(15) << "all";
                         } else if (c == NGRAM) {
-                            *OUT << std::setw(10) << "n-gram";
+                            *OUT << std::setw(15) << "n-gram";
                         } else if (c == SKIPGRAM) {
-                            *OUT << std::setw(10) << "skipgram";
+                            *OUT << std::setw(15) << "skipgram";
                         } else if (c == FLEXGRAM) {
-                            *OUT << std::setw(10) << "flexgram";
+                            *OUT << std::setw(15) << "flexgram";
                         }
                         //size
                         if (n == 0) {
-                            *OUT << std::setw(10) << "all";
+                            *OUT << std::setw(15) << "all";
                         } else {
-                            *OUT << std::setw(10) << n;
+                            *OUT << std::setw(15) << n;
                         }
                         //patterns
-                        *OUT << std::setw(10) << cache_grouptotalpatterns[c][n];
+                        *OUT << std::setw(15) << cache_grouptotalpatterns[c][n];
                         if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) {
                             //tokens
-                            *OUT << std::setw(10) << cache_grouptotaltokens[c][n];
+                            *OUT << std::setw(15) << cache_grouptotaltokens[c][n];
                             //coverage
-                            *OUT << std::setw(10) << cache_grouptotaltokens[c][n] / (double) this->tokens();
+                            *OUT << std::setw(15) << cache_grouptotaltokens[c][n] / (double) this->tokens();
                         }
                         //types
-                        *OUT << std::setw(10) << cache_grouptotalwordtypes[c][n];
+                        *OUT << std::setw(15) << cache_grouptotalwordtypes[c][n];
                         //occurrences
-                        *OUT << std::setw(12) << cache_grouptotal[c][n] << std::endl;;
+                        *OUT << std::setw(15) << cache_grouptotal[c][n] << std::endl;;
                     }
                 }
             }
