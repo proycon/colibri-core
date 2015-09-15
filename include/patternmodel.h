@@ -185,7 +185,17 @@ class PatternModelOptions {
 
 };
 
+/**
+ * A relationmap is just a pattern map, the map is specific for a pattern and
+ * holds patterns that are in a relation with the  first pattern. The value of
+ * the map is an integer that expresses how often the relationship occurs.
+ */
 typedef PatternMap<uint32_t,BaseValueHandler<uint32_t>,uint64_t> t_relationmap; 
+/**
+ * A relationmap_double is just a pattern map, the map is specific for a pattern and
+ * holds patterns that are in a relation with the  first pattern. The value of
+ * the map is an double that expresses the weight of the relation.
+ */
 typedef PatternMap<double,BaseValueHandler<double>,uint64_t> t_relationmap_double;
 
 typedef PatternMap<uint32_t,BaseValueHandler<uint32_t>,uint64_t>::iterator t_relationmap_iterator;  //needed for Cython
@@ -2054,6 +2064,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
 
        
+    /**
+    * Begin a new pattern model, optionally pre-setting a reverseindex.
+    */
     IndexedPatternModel<MapType>(IndexedCorpus * corpus = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType>() {
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
@@ -2066,6 +2079,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
+    /**
+    * Read a pattern model from an input stream
+    * @param f The input stream
+    * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+    * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+    * @param corpus Pointer to the loaded corpus, used as a reverse index.
+    */
     IndexedPatternModel<MapType>(std::istream *f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<IndexedData,IndexedDataHandler,MapType>(){ //load from file
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
@@ -2079,6 +2099,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         this->load(f,options, constrainmodel);
     }
 
+    /**
+    * Read a pattern model from file
+    * @param filename The filename
+    * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+    * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+    * @param corpus Pointer to the loaded corpus, used as a reverse index.
+    */
     IndexedPatternModel<MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType>() { //load from file
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
@@ -2107,6 +2134,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     int getmodelversion() const { return 1;} 
 
 
+    /**
+     * Add a pattern, with a given position, and a value to the model. This
+     * is called during training at every time an instance of a pattern is found in the data.
+     * @param pattern The pattern to add
+     * @param value A pointer to the value for this pattern, set to NULL and it will be automatically determined
+     * @param IndexReference The position in the corpus where the patterns occurs
+     */
     void add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
         if (value == NULL) {
             value = getdata(pattern,true);
@@ -2120,6 +2154,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         this->valuehandler.add(value, ref);
     }
     
+    /**
+     * Get the indices stored for the specified pattern.
+     * @param makeifnew Add the pattern with empty value if it does not exist (default: false)
+     **/
     IndexedData * getdata(const Pattern & pattern, bool makeifnew=false)  { 
         typename MapType::iterator iter = this->find(pattern);
         if (iter != this->end()) {
@@ -2146,6 +2184,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
 
+    /**
+     * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
+     */
     void info(std::ostream * OUT) {
         if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
             *OUT << "Type: indexed" << std::endl;
@@ -2198,6 +2239,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
 
+    /**
+    * Print the contents of the pattern model, i.e. all patterns and
+    * associated counts, to the output stream.
+    * @param out The output stream
+    * @param decoder The class decoder to use
+    */
     void print(std::ostream * out, ClassDecoder & decoder) {
         bool haveoutput = false;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -2248,6 +2295,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
 
+    /**
+     * Train skipgrams, for indexed models only
+     * @pattern options Pattern model options
+     * @pattern constrainbymodel Pointer to a pattern model to use as contraint: only include skipgrams that occur in the constraint model (default: NULL)
+     */
     virtual void trainskipgrams(PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
         if (options.MINTOKENS == -1) options.MINTOKENS = 2;
         this->cache_grouptotal.clear(); //forces recomputation of statistics
@@ -2275,15 +2327,22 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
+    /** 
+     * Return the unigram Pattern that occurs on the specified position, using
+     * the reverse index.
+     */
     Pattern getpatternfromtoken(IndexReference ref) {
         return this->reverseindex->getpattern(ref,1);
     }
     
 
 
+    /**
+     * Given a skipgram, returns patterns which would instantiate the skipgram
+     * if inserted into the gaps. For skipgrams with multiple gaps, these skip content patterns are themselves skipgrams. Skipgram and skip content complement eachother
+     * @returns A relation map
+     */
     t_relationmap getskipcontent(const Pattern & pattern) {
-        //NOTE: skipcontent patterns of skipgrams with multiple gaps are
-        //themselves skipgrams!
         unsigned char fixedgapbuffer[101];
         for (int i = 0; i< 100; i++) fixedgapbuffer[i] = 128;
 
@@ -2345,8 +2404,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return skipcontent;
     }
     
+    /**
+     * Given a relation map, prune relations below the specified occurrence threshold
+     * @param relations The relationmap to manipulate
+     * @param occurrencethreshold The occurrence threshold
+     */
     void prunerelations(t_relationmap & relations, unsigned int occurrencethreshold) {
-        //prune relations below the specified occurrence threshold
         t_relationmap::iterator eraseiter;
         t_relationmap::iterator iter = relations.begin();
         while (iter != relations.end()) {
@@ -2360,6 +2423,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
+    /**
+     * Returns all skipgrams and flexgrams in the model that are an abstraction of the
+     * specified pattern. Pattern itself may be a skipgram too. An optional
+     * occurrence threshold may be used to filter.
+     * @return a relation map
+     */
     t_relationmap gettemplates(const Pattern & pattern, unsigned int occurrencethreshold = 0) {
         //returns patterns that are an abstraction of the specified pattern
         //skipgrams
@@ -2395,6 +2464,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return templates;
     }
 
+    /**
+     * Returns all ngrams in the model that instantiate the given
+     * skipgram/flexgram. If all the gaps in a skipgram/flexgram are filled, we
+     * speak of such an instantiation.
+     * An occurrence threshold may be used to filter.
+     * @return a relation map
+     */
     t_relationmap getinstances(const Pattern & pattern, unsigned int occurrencethreshold = 0) {
         //returns patterns that instantiate the specified pattern
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
@@ -2429,9 +2505,14 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return instances;
     }
 
+    /**
+     * Returns all patterns in the model that are subsumed by the specified pattern. Subsumed patterns are smaller than the subsuming pattern. Every n-gram (except unigram) by definition subsumes two n-1-grams. 
+    * @pattern occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+    * @pattern category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
+    * @pattern size Set to any value above zero to only include patterns of the specified length.
+    * @return a relation map
+    */
     t_relationmap getsubchildren(const Pattern & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0) {
-        //returns patterns that are subsumed by the specified pattern (i.e.
-        //smaller patterns)
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -2488,6 +2569,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return subchildren;
     }
 
+    /**
+     * Returns all patterns in the model that subsume the specified pattern. Subsuming patterns are larger than the subsuming pattern. Every n-gram (except unigram) by definition subsumes two n-1-grams. 
+    * @pattern occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+    * @pattern category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
+    * @pattern size Set to any value above zero to only include patterns of the specified length.
+    * @return a relation map
+    */
     t_relationmap getsubparents(const Pattern & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0) {
         //returns patterns that subsume the specified pattern (i.e. larger
         //patterns)
