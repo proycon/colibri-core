@@ -27,6 +27,30 @@
  */
 
 
+
+/** 
+ * \mainpage Colibri Core
+ *
+ * Colibri Core is a set of tools as well as a C++ and Python library for
+ * working with basic linguistic constructions such as n-grams and skipgrams (i.e
+ * patterns with one or more gaps, either of fixed or dynamic size) in a quick
+ * and memory-efficient way. At the core is the tool colibri-patternmodeller
+ * which allows you to build, view, manipulate and query pattern models.
+ *
+ * In Colibri Core, text data is encoded as a compressed binary representation
+ * using a class encoding. The ClassEncoder and ClassDecoder can be used to
+ * create and decode such a class encoding. The Pattern class represents any
+ * n-gram, skip-gram, flexgram.  These patterns can be stored in various
+ * models, such as the PatternModel or it's indexed equivalent, the
+ * IndexedPatternModel. These are high-level classes built on lower-level
+ * containers such as PatternMap. Other containers such as PatternSet are
+ * available too.
+ *
+ * Corpus data can also be read into an IndexedCorpus class, which also acts
+ * as a reverse index for the pattern models.
+ *
+ */
+
 //TODO: Reverse index currently does not hold flexgrams
 
 #include "patternstore.h"
