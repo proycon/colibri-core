@@ -16,6 +16,8 @@ allows you to build, view, manipulate and query pattern models.
 
 Please consult the documentation at http://proycon.github.io/colibri-core 
 
+Installation instructions are here:  http://proycon.github.io/colibri-core/doc/#installation
+
 This software is developed in the scope of the Ph.D. research project
 Constructions as Linguistic Bridges. This research examines the identification
 and extraction of aligned constructions or patterns across natural languages,
