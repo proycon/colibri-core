@@ -1,0 +1,219 @@
+\hypertarget{classPatternPointer}{}\section{Pattern\+Pointer Class Reference}
+\label{classPatternPointer}\index{Pattern\+Pointer@{Pattern\+Pointer}}
+
+
+{\ttfamily \#include $<$pattern.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPatternPointer_ae636664cd90e3529db1006c8fa85fe36}{Pattern\+Pointer} (unsigned char $\ast$dataref, const int \hyperlink{classPatternPointer_a8a204b408ed1cccc3b0c89183e818210}{bytesize})
+\item 
+\hyperlink{classPatternPointer_a5eb9e3fcab5a8551cdce0283fe944ea8}{Pattern\+Pointer} (const \hyperlink{classPattern}{Pattern} $\ast$ref)
+\item 
+\hyperlink{classPatternPointer_a39eb71907e688b7b459b56806d8053e4}{Pattern\+Pointer} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&ref)
+\item 
+\hyperlink{classPatternPointer}{Pattern\+Pointer} \& \hyperlink{classPatternPointer_aa9db1bf0980f3ce147638c24e045ead8}{operator=} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} other)
+\item 
+\hyperlink{classPatternPointer_aa13d9661c3e49d0846ea1e10d2917ab8}{Pattern\+Pointer} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&, int, int)
+\item 
+\hyperlink{classPatternPointer_a0eba7796fceeba5d3a19308dfc0a783b}{Pattern\+Pointer} (const \hyperlink{classPattern}{Pattern} \&, int, int)
+\item 
+const size\+\_\+t \hyperlink{classPatternPointer_a557d9f27ecad057a8942770313c22e42}{n} () const 
+\item 
+const size\+\_\+t \hyperlink{classPatternPointer_a8a204b408ed1cccc3b0c89183e818210}{bytesize} () const 
+\item 
+const size\+\_\+t \hyperlink{classPatternPointer_a2c8bab975c7234c935f7992701b897b9}{size} () const 
+\item 
+const \hyperlink{pattern_8h_a17879f85ec892834fb691c61e71dfe54}{Pattern\+Category} \hyperlink{classPatternPointer_aab5856a3a8e1ae58c7446b631142503e}{category} () const 
+\item 
+std\+::string \hyperlink{classPatternPointer_ab17b7641c0651d2879bfe320826492e7}{tostring} (const \hyperlink{classClassDecoder}{Class\+Decoder} \&classdecoder) const 
+\item 
+std\+::string \hyperlink{classPatternPointer_ac35cb0151096929cd0054f77110e1afe}{decode} (const \hyperlink{classClassDecoder}{Class\+Decoder} \&classdecoder) const 
+\item 
+bool \hyperlink{classPatternPointer_a281b6877995271a87cf561c450c4421b}{out} () const 
+\item 
+bool \hyperlink{classPatternPointer_a70e5e8f505fe4b136f37ab6e19ffc1c7}{operator==} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&other) const 
+\item 
+bool \hyperlink{classPatternPointer_acdb6d4e30680813986d6e6d2cc4c49c3}{operator!=} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&other) const 
+\item 
+int \hyperlink{classPatternPointer_aafda149990a0f254f2c24d121796df55}{ngrams} (std\+::vector$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer} $>$ \&container, const int \hyperlink{classPatternPointer_a557d9f27ecad057a8942770313c22e42}{n}) const 
+\item 
+int \hyperlink{classPatternPointer_a86f864d3b5d9504f8aa29836a4c57049}{subngrams} (std\+::vector$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer} $>$ \&container, int minn=1, int maxn=9) const 
+\item 
+int \hyperlink{classPatternPointer_a68524816c4b4504aa950a6000d5fbd15}{ngrams} (std\+::vector$<$ std\+::pair$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer}, int $>$$>$ \&container, const int \hyperlink{classPatternPointer_a557d9f27ecad057a8942770313c22e42}{n}) const 
+\item 
+int \hyperlink{classPatternPointer_a9313e5d4ec8575aab14f04922011ed71}{subngrams} (std\+::vector$<$ std\+::pair$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer}, int $>$$>$ \&container, int minn=1, int maxn=9) const 
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+unsigned char $\ast$ \hyperlink{classPatternPointer_ad754ecbbeeb29fbebb075f520884e11d}{data}
+\item 
+unsigned char \hyperlink{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{bytes}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classPatternPointer_ae636664cd90e3529db1006c8fa85fe36}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{Pattern\+Pointer(unsigned char $\ast$dataref, const int bytesize)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{dataref, }
+\item[{const int}]{bytesize}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_ae636664cd90e3529db1006c8fa85fe36}
+\hypertarget{classPatternPointer_a5eb9e3fcab5a8551cdce0283fe944ea8}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{Pattern\+Pointer(const Pattern $\ast$ref)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} $\ast$}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a5eb9e3fcab5a8551cdce0283fe944ea8}
+\hypertarget{classPatternPointer_a39eb71907e688b7b459b56806d8053e4}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{Pattern\+Pointer(const Pattern\+Pointer \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a39eb71907e688b7b459b56806d8053e4}
+\hypertarget{classPatternPointer_aa13d9661c3e49d0846ea1e10d2917ab8}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{Pattern\+Pointer(const Pattern\+Pointer \&, int, int)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{ref, }
+\item[{int}]{begin, }
+\item[{int}]{length}
+\end{DoxyParamCaption}
+)}\label{classPatternPointer_aa13d9661c3e49d0846ea1e10d2917ab8}
+\hypertarget{classPatternPointer_a0eba7796fceeba5d3a19308dfc0a783b}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{Pattern\+Pointer(const Pattern \&, int, int)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{ref, }
+\item[{int}]{begin, }
+\item[{int}]{length}
+\end{DoxyParamCaption}
+)}\label{classPatternPointer_a0eba7796fceeba5d3a19308dfc0a783b}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPatternPointer_a8a204b408ed1cccc3b0c89183e818210}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!bytesize@{bytesize}}
+\index{bytesize@{bytesize}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{bytesize() const }]{\setlength{\rightskip}{0pt plus 5cm}const size\+\_\+t Pattern\+Pointer\+::bytesize (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a8a204b408ed1cccc3b0c89183e818210}
+\hypertarget{classPatternPointer_aab5856a3a8e1ae58c7446b631142503e}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!category@{category}}
+\index{category@{category}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{category() const }]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Pattern\+Category} Pattern\+Pointer\+::category (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_aab5856a3a8e1ae58c7446b631142503e}
+\hypertarget{classPatternPointer_ac35cb0151096929cd0054f77110e1afe}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!decode@{decode}}
+\index{decode@{decode}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{decode(const Class\+Decoder \&classdecoder) const }]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Pattern\+Pointer\+::decode (
+\begin{DoxyParamCaption}
+\item[{const {\bf Class\+Decoder} \&}]{classdecoder}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_ac35cb0151096929cd0054f77110e1afe}
+\hypertarget{classPatternPointer_a557d9f27ecad057a8942770313c22e42}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!n@{n}}
+\index{n@{n}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{n() const }]{\setlength{\rightskip}{0pt plus 5cm}const size\+\_\+t Pattern\+Pointer\+::n (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a557d9f27ecad057a8942770313c22e42}
+\hypertarget{classPatternPointer_aafda149990a0f254f2c24d121796df55}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!ngrams@{ngrams}}
+\index{ngrams@{ngrams}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{ngrams(std\+::vector$<$ Pattern\+Pointer $>$ \&container, const int n) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Pointer\+::ngrams (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ {\bf Pattern\+Pointer} $>$ \&}]{container, }
+\item[{const int}]{n}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_aafda149990a0f254f2c24d121796df55}
+\hypertarget{classPatternPointer_a68524816c4b4504aa950a6000d5fbd15}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!ngrams@{ngrams}}
+\index{ngrams@{ngrams}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{ngrams(std\+::vector$<$ std\+::pair$<$ Pattern\+Pointer, int $>$$>$ \&container, const int n) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Pointer\+::ngrams (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ std\+::pair$<$ {\bf Pattern\+Pointer}, int $>$$>$ \&}]{container, }
+\item[{const int}]{n}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a68524816c4b4504aa950a6000d5fbd15}
+\hypertarget{classPatternPointer_acdb6d4e30680813986d6e6d2cc4c49c3}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{operator"!=(const Pattern\+Pointer \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Pointer\+::operator!= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_acdb6d4e30680813986d6e6d2cc4c49c3}
+\hypertarget{classPatternPointer_aa9db1bf0980f3ce147638c24e045ead8}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!operator=@{operator=}}
+\index{operator=@{operator=}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{operator=(const Pattern\+Pointer other)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Pointer}\& Pattern\+Pointer\+::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer}}]{other}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_aa9db1bf0980f3ce147638c24e045ead8}
+\hypertarget{classPatternPointer_a70e5e8f505fe4b136f37ab6e19ffc1c7}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!operator==@{operator==}}
+\index{operator==@{operator==}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{operator==(const Pattern\+Pointer \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Pointer\+::operator== (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a70e5e8f505fe4b136f37ab6e19ffc1c7}
+\hypertarget{classPatternPointer_a281b6877995271a87cf561c450c4421b}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!out@{out}}
+\index{out@{out}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{out() const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Pointer\+::out (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a281b6877995271a87cf561c450c4421b}
+\hypertarget{classPatternPointer_a2c8bab975c7234c935f7992701b897b9}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!size@{size}}
+\index{size@{size}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}const size\+\_\+t Pattern\+Pointer\+::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a2c8bab975c7234c935f7992701b897b9}
+\hypertarget{classPatternPointer_a86f864d3b5d9504f8aa29836a4c57049}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!subngrams@{subngrams}}
+\index{subngrams@{subngrams}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{subngrams(std\+::vector$<$ Pattern\+Pointer $>$ \&container, int minn=1, int maxn=9) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Pointer\+::subngrams (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ {\bf Pattern\+Pointer} $>$ \&}]{container, }
+\item[{int}]{minn = {\ttfamily 1}, }
+\item[{int}]{maxn = {\ttfamily 9}}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a86f864d3b5d9504f8aa29836a4c57049}
+\hypertarget{classPatternPointer_a9313e5d4ec8575aab14f04922011ed71}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!subngrams@{subngrams}}
+\index{subngrams@{subngrams}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{subngrams(std\+::vector$<$ std\+::pair$<$ Pattern\+Pointer, int $>$$>$ \&container, int minn=1, int maxn=9) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Pointer\+::subngrams (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ std\+::pair$<$ {\bf Pattern\+Pointer}, int $>$$>$ \&}]{container, }
+\item[{int}]{minn = {\ttfamily 1}, }
+\item[{int}]{maxn = {\ttfamily 9}}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a9313e5d4ec8575aab14f04922011ed71}
+\hypertarget{classPatternPointer_ab17b7641c0651d2879bfe320826492e7}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!tostring@{tostring}}
+\index{tostring@{tostring}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{tostring(const Class\+Decoder \&classdecoder) const }]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Pattern\+Pointer\+::tostring (
+\begin{DoxyParamCaption}
+\item[{const {\bf Class\+Decoder} \&}]{classdecoder}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_ab17b7641c0651d2879bfe320826492e7}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!bytes@{bytes}}
+\index{bytes@{bytes}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{bytes}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char Pattern\+Pointer\+::bytes}\label{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}
+Pointer to \hyperlink{classPattern}{Pattern} data \hypertarget{classPatternPointer_ad754ecbbeeb29fbebb075f520884e11d}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!data@{data}}
+\index{data@{data}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ Pattern\+Pointer\+::data}\label{classPatternPointer_ad754ecbbeeb29fbebb075f520884e11d}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{pattern_8h}{pattern.\+h}\item 
+src/\hyperlink{pattern_8cpp}{pattern.\+cpp}\end{DoxyCompactItemize}

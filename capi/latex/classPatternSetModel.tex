@@ -1,0 +1,366 @@
+\hypertarget{classPatternSetModel}{}\section{Pattern\+Set\+Model Class Reference}
+\label{classPatternSetModel}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+
+
+A pattern model based on an unordered set, does not hold data, only patterns. Very suitable for loading constraint models.  
+
+
+
+
+{\ttfamily \#include $<$patternmodel.\+h$>$}
+
+Inheritance diagram for Pattern\+Set\+Model\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.218391cm]{classPatternSetModel}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{classPatternSet}{Pattern\+Set}$<$ uint64\+\_\+t $>$\+::\hyperlink{classPatternSetModel_a59468751dd558f75f6ddaa514b93ff07}{iterator} \hyperlink{classPatternSetModel_a59468751dd558f75f6ddaa514b93ff07}{iterator}
+\item 
+typedef \hyperlink{classPatternSet}{Pattern\+Set}$<$ uint64\+\_\+t $>$\+::\hyperlink{classPatternSetModel_aca006659665c67916ea64d89b16a46e4}{const\+\_\+iterator} \hyperlink{classPatternSetModel_aca006659665c67916ea64d89b16a46e4}{const\+\_\+iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPatternSetModel_a983877848beaf832f41f747231e1bf6f}{Pattern\+Set\+Model} ()
+\item 
+\hyperlink{classPatternSetModel_aecf0741defc687aff8e69514742c697d}{Pattern\+Set\+Model} (std\+::istream $\ast$f, \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L)
+\item 
+\hyperlink{classPatternSetModel_add4a2435685baf51852eb2fc55cbdc35}{Pattern\+Set\+Model} (const std\+::string filename, const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L)
+\item 
+virtual int \hyperlink{classPatternSetModel_a27adf3033f15f03e908d53d032779d09}{getmodeltype} () const 
+\item 
+virtual int \hyperlink{classPatternSetModel_a79dc7fd04e3de5eb894541bd664f5d12}{getmodelversion} () const 
+\item 
+virtual size\+\_\+t \hyperlink{classPatternSetModel_aa19ae308dbc4bf1db35be6ba7ff4769b}{size} () const 
+\item 
+virtual bool \hyperlink{classPatternSetModel_a8821cf7c6d469d0978e32e5ed9cfcda0}{has} (const \hyperlink{classPattern}{Pattern} \&pattern) const 
+\item 
+virtual bool \hyperlink{classPatternSetModel_a2fcd4d3d1023b5e20f67d2b845a29b2f}{has} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&pattern) const 
+\item 
+virtual void \hyperlink{classPatternSetModel_a04080c0e0ce176b5c53f0c1e8cdf5519}{load} (std\+::string filename, const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L)
+\item 
+virtual void \hyperlink{classPatternSetModel_aa77fa04be083535b7c8c5dd6f0ca07b7}{load} (std\+::istream $\ast$f, const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L)
+\item 
+void \hyperlink{classPatternSetModel_a8b5731f823fd868cfc6b219e01b13343}{write} (std\+::ostream $\ast$out)
+\item 
+void \hyperlink{classPatternSetModel_ac1fe33cf4ea003f37779fd39319d06fa}{write} (const std\+::string filename)
+\item 
+\hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$ \hyperlink{classPatternSetModel_af2ead0d1766424cb00e95f76cab0c334}{getinterface} ()
+\item 
+virtual unsigned int \hyperlink{classPatternSetModel_ab1ca42eb82df349263b10c57f968678e}{occurrencecount} (const \hyperlink{classPattern}{Pattern} \&pattern)
+\item 
+virtual double \hyperlink{classPatternSetModel_af5bdb2a283c048233e62b2a0741b7cab}{frequency} (const \hyperlink{classPattern}{Pattern} \&)
+\item 
+virtual int \hyperlink{classPatternSetModel_abd386cc901e2328079a349eae42d9ee8}{maxlength} () const 
+\item 
+virtual int \hyperlink{classPatternSetModel_a3cc6ca22d4dd68270068d5a4e05f530a}{minlength} () const 
+\item 
+virtual unsigned int \hyperlink{classPatternSetModel_a178d3c988a43130b4ba3d4fa57001055}{types} ()
+\item 
+virtual unsigned int \hyperlink{classPatternSetModel_aa834dd6a5467ea8a68680512d6251e16}{tokens} () const 
+\item 
+unsigned char \hyperlink{classPatternSetModel_a5ca48d3e5c9d52b3eae858d033706bf6}{type} () const 
+\item 
+unsigned char \hyperlink{classPatternSetModel_a664147d04aad980c5cefbffca9bb4285}{version} () const 
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+unsigned char \hyperlink{classPatternSetModel_a932b792d6f1dc488c772efb6c8530b85}{model\+\_\+type}
+\item 
+unsigned char \hyperlink{classPatternSetModel_ad80b50a1066615f9b20e791dfee50296}{model\+\_\+version}
+\item 
+uint64\+\_\+t \hyperlink{classPatternSetModel_ae64f1edc5d72066d8cc6fbb80422518b}{totaltokens}
+\item 
+uint64\+\_\+t \hyperlink{classPatternSetModel_ac7aeed2a7d78ef5883ba38618a3e49a7}{totaltypes}
+\item 
+int \hyperlink{classPatternSetModel_aa1b03b92de5af1cf36545dfbff5b56f4}{maxn}
+\item 
+int \hyperlink{classPatternSetModel_a52940caa8c4bb3900f75ead2cb8a97c8}{minn}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A pattern model based on an unordered set, does not hold data, only patterns. Very suitable for loading constraint models. 
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classPatternSetModel_aca006659665c67916ea64d89b16a46e4}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!const\+\_\+iterator@{const\+\_\+iterator}}
+\index{const\+\_\+iterator@{const\+\_\+iterator}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{const\+\_\+iterator}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf Pattern\+Set}$<$uint64\+\_\+t$>$\+::{\bf const\+\_\+iterator} {\bf Pattern\+Set\+Model\+::const\+\_\+iterator}}\label{classPatternSetModel_aca006659665c67916ea64d89b16a46e4}
+\hypertarget{classPatternSetModel_a59468751dd558f75f6ddaa514b93ff07}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!iterator@{iterator}}
+\index{iterator@{iterator}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf Pattern\+Set}$<$uint64\+\_\+t$>$\+::{\bf iterator} {\bf Pattern\+Set\+Model\+::iterator}}\label{classPatternSetModel_a59468751dd558f75f6ddaa514b93ff07}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classPatternSetModel_a983877848beaf832f41f747231e1bf6f}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{Pattern\+Set\+Model()}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Set\+Model\+::\+Pattern\+Set\+Model (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSetModel_a983877848beaf832f41f747231e1bf6f}
+Empty constructor \hypertarget{classPatternSetModel_aecf0741defc687aff8e69514742c697d}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{Pattern\+Set\+Model(std\+::istream $\ast$f, Pattern\+Model\+Options options, Pattern\+Model\+Interface $\ast$constrainmodel=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Set\+Model\+::\+Pattern\+Set\+Model (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{f, }
+\item[{{\bf Pattern\+Model\+Options}}]{options, }
+\item[{{\bf Pattern\+Model\+Interface} $\ast$}]{constrainmodel = {\ttfamily NULL}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSetModel_aecf0741defc687aff8e69514742c697d}
+Load a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} from stream 
+\begin{DoxyParams}{Parameters}
+{\em options} & The options for loading \\
+\hline
+{\em constrainmodel} & Load only patterns that occur in this model \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPatternSetModel_add4a2435685baf51852eb2fc55cbdc35}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{Pattern\+Set\+Model(const std\+::string filename, const Pattern\+Model\+Options options, Pattern\+Model\+Interface $\ast$constrainmodel=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Set\+Model\+::\+Pattern\+Set\+Model (
+\begin{DoxyParamCaption}
+\item[{const std\+::string}]{filename, }
+\item[{const {\bf Pattern\+Model\+Options}}]{options, }
+\item[{{\bf Pattern\+Model\+Interface} $\ast$}]{constrainmodel = {\ttfamily NULL}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSetModel_add4a2435685baf51852eb2fc55cbdc35}
+Load a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} from file 
+\begin{DoxyParams}{Parameters}
+{\em filename} & The name of the file to load \\
+\hline
+{\em options} & The options for loading \\
+\hline
+{\em constrainmodel} & Load only patterns that occur in this model \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPatternSetModel_af5bdb2a283c048233e62b2a0741b7cab}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!frequency@{frequency}}
+\index{frequency@{frequency}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{frequency(const Pattern \&)}]{\setlength{\rightskip}{0pt plus 5cm}virtual double Pattern\+Set\+Model\+::frequency (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_af5bdb2a283c048233e62b2a0741b7cab}
+This function does not perform anything in a set context, it always returns zero 
+
+Implements \hyperlink{classPatternModelInterface_abab22952ac502743377e3a5a524e2ae1}{Pattern\+Model\+Interface}.
+
+\hypertarget{classPatternSetModel_af2ead0d1766424cb00e95f76cab0c334}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!getinterface@{getinterface}}
+\index{getinterface@{getinterface}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{getinterface()}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Model\+Interface}$\ast$ Pattern\+Set\+Model\+::getinterface (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSetModel_af2ead0d1766424cb00e95f76cab0c334}
+Get the interface (just a basic typecast) \hypertarget{classPatternSetModel_a27adf3033f15f03e908d53d032779d09}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!getmodeltype@{getmodeltype}}
+\index{getmodeltype@{getmodeltype}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{getmodeltype() const }]{\setlength{\rightskip}{0pt plus 5cm}virtual int Pattern\+Set\+Model\+::getmodeltype (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_a27adf3033f15f03e908d53d032779d09}
+Get the type of the model \begin{DoxyReturn}{Returns}
+Model\+Type 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classPatternModelInterface_ad485931462c2f1c1bcd0aac13ec3028b}{Pattern\+Model\+Interface}.
+
+\hypertarget{classPatternSetModel_a79dc7fd04e3de5eb894541bd664f5d12}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!getmodelversion@{getmodelversion}}
+\index{getmodelversion@{getmodelversion}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{getmodelversion() const }]{\setlength{\rightskip}{0pt plus 5cm}virtual int Pattern\+Set\+Model\+::getmodelversion (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_a79dc7fd04e3de5eb894541bd664f5d12}
+Get the version number of the model 
+
+Implements \hyperlink{classPatternModelInterface_a0d58b42e55df75e04faae361677aa777}{Pattern\+Model\+Interface}.
+
+\hypertarget{classPatternSetModel_a8821cf7c6d469d0978e32e5ed9cfcda0}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!has@{has}}
+\index{has@{has}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{has(const Pattern \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}virtual bool Pattern\+Set\+Model\+::has (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_a8821cf7c6d469d0978e32e5ed9cfcda0}
+Does the pattern occur in the pattern store? 
+
+Implements \hyperlink{classPatternStoreInterface_aec9f27496b38f8db1eced920fb2dc9fe}{Pattern\+Store\+Interface}.
+
+\hypertarget{classPatternSetModel_a2fcd4d3d1023b5e20f67d2b845a29b2f}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!has@{has}}
+\index{has@{has}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{has(const Pattern\+Pointer \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}virtual bool Pattern\+Set\+Model\+::has (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_a2fcd4d3d1023b5e20f67d2b845a29b2f}
+Does the pattern occur in the pattern store? 
+
+Implements \hyperlink{classPatternStoreInterface_a6b3e80cd9021201ce8992ad6c293a354}{Pattern\+Store\+Interface}.
+
+\hypertarget{classPatternSetModel_a04080c0e0ce176b5c53f0c1e8cdf5519}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!load@{load}}
+\index{load@{load}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{load(std\+::string filename, const Pattern\+Model\+Options options, Pattern\+Model\+Interface $\ast$constrainmodel=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Pattern\+Set\+Model\+::load (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{filename, }
+\item[{const {\bf Pattern\+Model\+Options}}]{options, }
+\item[{{\bf Pattern\+Model\+Interface} $\ast$}]{constrainmodel = {\ttfamily NULL}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_a04080c0e0ce176b5c53f0c1e8cdf5519}
+Load a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} from file 
+\begin{DoxyParams}{Parameters}
+{\em filename} & The name of the file to load \\
+\hline
+{\em options} & The options for loading \\
+\hline
+{\em constrainmodel} & Load only patterns that occur in this model \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPatternSetModel_aa77fa04be083535b7c8c5dd6f0ca07b7}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!load@{load}}
+\index{load@{load}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{load(std\+::istream $\ast$f, const Pattern\+Model\+Options options, Pattern\+Model\+Interface $\ast$constrainmodel=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Pattern\+Set\+Model\+::load (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{f, }
+\item[{const {\bf Pattern\+Model\+Options}}]{options, }
+\item[{{\bf Pattern\+Model\+Interface} $\ast$}]{constrainmodel = {\ttfamily NULL}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_aa77fa04be083535b7c8c5dd6f0ca07b7}
+Load a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} from stream 
+\begin{DoxyParams}{Parameters}
+{\em options} & The options for loading \\
+\hline
+{\em constrainmodel} & Load only patterns that occur in this model \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPatternSetModel_abd386cc901e2328079a349eae42d9ee8}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!maxlength@{maxlength}}
+\index{maxlength@{maxlength}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{maxlength() const }]{\setlength{\rightskip}{0pt plus 5cm}virtual int Pattern\+Set\+Model\+::maxlength (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_abd386cc901e2328079a349eae42d9ee8}
+Return the maximum length of patterns in this model 
+
+Implements \hyperlink{classPatternModelInterface_acbe234679e86792765d3afade8ce014c}{Pattern\+Model\+Interface}.
+
+\hypertarget{classPatternSetModel_a3cc6ca22d4dd68270068d5a4e05f530a}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!minlength@{minlength}}
+\index{minlength@{minlength}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{minlength() const }]{\setlength{\rightskip}{0pt plus 5cm}virtual int Pattern\+Set\+Model\+::minlength (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_a3cc6ca22d4dd68270068d5a4e05f530a}
+Return the minimum length of patterns in this model 
+
+Implements \hyperlink{classPatternModelInterface_a53325f7b36c9cf0de4954b618eff2416}{Pattern\+Model\+Interface}.
+
+\hypertarget{classPatternSetModel_ab1ca42eb82df349263b10c57f968678e}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!occurrencecount@{occurrencecount}}
+\index{occurrencecount@{occurrencecount}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{occurrencecount(const Pattern \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}virtual unsigned int Pattern\+Set\+Model\+::occurrencecount (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_ab1ca42eb82df349263b10c57f968678e}
+This function does not perform anything in a set context, it always returns zero 
+
+Implements \hyperlink{classPatternModelInterface_afd9ec4756bb723ee6bf94321f05f1b71}{Pattern\+Model\+Interface}.
+
+\hypertarget{classPatternSetModel_aa19ae308dbc4bf1db35be6ba7ff4769b}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!size@{size}}
+\index{size@{size}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}virtual size\+\_\+t Pattern\+Set\+Model\+::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_aa19ae308dbc4bf1db35be6ba7ff4769b}
+How many patterns are in the pattern store? 
+
+Implements \hyperlink{classPatternStoreInterface_a225c319d318aad157512cd0001b05eb2}{Pattern\+Store\+Interface}.
+
+\hypertarget{classPatternSetModel_aa834dd6a5467ea8a68680512d6251e16}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!tokens@{tokens}}
+\index{tokens@{tokens}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{tokens() const }]{\setlength{\rightskip}{0pt plus 5cm}virtual unsigned int Pattern\+Set\+Model\+::tokens (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_aa834dd6a5467ea8a68680512d6251e16}
+Returns the total amount of tokens in the original corpus, includes tokens not covered by the model! 
+
+Implements \hyperlink{classPatternModelInterface_aafea9a0f8fd453b85cffd18709a42ae7}{Pattern\+Model\+Interface}.
+
+\hypertarget{classPatternSetModel_a5ca48d3e5c9d52b3eae858d033706bf6}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!type@{type}}
+\index{type@{type}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{type() const }]{\setlength{\rightskip}{0pt plus 5cm}unsigned char Pattern\+Set\+Model\+::type (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSetModel_a5ca48d3e5c9d52b3eae858d033706bf6}
+Returns the type of the model, value is of the Pattern\+Type enumeration. \hypertarget{classPatternSetModel_a178d3c988a43130b4ba3d4fa57001055}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!types@{types}}
+\index{types@{types}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{types()}]{\setlength{\rightskip}{0pt plus 5cm}virtual unsigned int Pattern\+Set\+Model\+::types (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_a178d3c988a43130b4ba3d4fa57001055}
+Returns the total amount of unigram/word types in the original corpus, includes types not covered by the model! 
+
+Implements \hyperlink{classPatternModelInterface_a5f3fab33835e8b01bf30b20793746e24}{Pattern\+Model\+Interface}.
+
+\hypertarget{classPatternSetModel_a664147d04aad980c5cefbffca9bb4285}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!version@{version}}
+\index{version@{version}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{version() const }]{\setlength{\rightskip}{0pt plus 5cm}unsigned char Pattern\+Set\+Model\+::version (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSetModel_a664147d04aad980c5cefbffca9bb4285}
+Returns the version of the model\textquotesingle{}s implementation and binary serialisation format. \hypertarget{classPatternSetModel_a8b5731f823fd868cfc6b219e01b13343}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!write@{write}}
+\index{write@{write}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{write(std\+::ostream $\ast$out)}]{\setlength{\rightskip}{0pt plus 5cm}void Pattern\+Set\+Model\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_a8b5731f823fd868cfc6b219e01b13343}
+Write a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} to an output stream 
+
+Implements \hyperlink{classPatternStore_ac491b99964c6b4c99f5c40519d0c8ccc}{Pattern\+Store$<$ t\+\_\+patternset, uint64\+\_\+t $>$}.
+
+\hypertarget{classPatternSetModel_ac1fe33cf4ea003f37779fd39319d06fa}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!write@{write}}
+\index{write@{write}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{write(const std\+::string filename)}]{\setlength{\rightskip}{0pt plus 5cm}void Pattern\+Set\+Model\+::write (
+\begin{DoxyParamCaption}
+\item[{const std\+::string}]{filename}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSetModel_ac1fe33cf4ea003f37779fd39319d06fa}
+Write a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} to an output file. This is a wrapper around \hyperlink{classPatternSetModel_a8b5731f823fd868cfc6b219e01b13343}{write(std\+::ostream $\ast$)} 
+
+\subsection{Member Data Documentation}
+\hypertarget{classPatternSetModel_aa1b03b92de5af1cf36545dfbff5b56f4}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!maxn@{maxn}}
+\index{maxn@{maxn}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{maxn}]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Set\+Model\+::maxn\hspace{0.3cm}{\ttfamily [protected]}}\label{classPatternSetModel_aa1b03b92de5af1cf36545dfbff5b56f4}
+\hypertarget{classPatternSetModel_a52940caa8c4bb3900f75ead2cb8a97c8}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!minn@{minn}}
+\index{minn@{minn}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{minn}]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Set\+Model\+::minn\hspace{0.3cm}{\ttfamily [protected]}}\label{classPatternSetModel_a52940caa8c4bb3900f75ead2cb8a97c8}
+\hypertarget{classPatternSetModel_a932b792d6f1dc488c772efb6c8530b85}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!model\+\_\+type@{model\+\_\+type}}
+\index{model\+\_\+type@{model\+\_\+type}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{model\+\_\+type}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char Pattern\+Set\+Model\+::model\+\_\+type\hspace{0.3cm}{\ttfamily [protected]}}\label{classPatternSetModel_a932b792d6f1dc488c772efb6c8530b85}
+\hypertarget{classPatternSetModel_ad80b50a1066615f9b20e791dfee50296}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!model\+\_\+version@{model\+\_\+version}}
+\index{model\+\_\+version@{model\+\_\+version}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{model\+\_\+version}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char Pattern\+Set\+Model\+::model\+\_\+version\hspace{0.3cm}{\ttfamily [protected]}}\label{classPatternSetModel_ad80b50a1066615f9b20e791dfee50296}
+\hypertarget{classPatternSetModel_ae64f1edc5d72066d8cc6fbb80422518b}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!totaltokens@{totaltokens}}
+\index{totaltokens@{totaltokens}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{totaltokens}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t Pattern\+Set\+Model\+::totaltokens\hspace{0.3cm}{\ttfamily [protected]}}\label{classPatternSetModel_ae64f1edc5d72066d8cc6fbb80422518b}
+\hypertarget{classPatternSetModel_ac7aeed2a7d78ef5883ba38618a3e49a7}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!totaltypes@{totaltypes}}
+\index{totaltypes@{totaltypes}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\subsubsection[{totaltypes}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t Pattern\+Set\+Model\+::totaltypes\hspace{0.3cm}{\ttfamily [protected]}}\label{classPatternSetModel_ac7aeed2a7d78ef5883ba38618a3e49a7}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{patternmodel_8h}{patternmodel.\+h}\end{DoxyCompactItemize}

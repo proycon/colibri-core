@@ -1,0 +1,147 @@
+\hypertarget{classIndexedDataHandler}{}\section{Indexed\+Data\+Handler Class Reference}
+\label{classIndexedDataHandler}\index{Indexed\+Data\+Handler@{Indexed\+Data\+Handler}}
+
+
+Data handler for \hyperlink{classIndexedData}{Indexed\+Data}. Deals with serialisation from/to file and conversions.  
+
+
+
+
+{\ttfamily \#include $<$datatypes.\+h$>$}
+
+Inheritance diagram for Indexed\+Data\+Handler\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classIndexedDataHandler}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual std\+::string \hyperlink{classIndexedDataHandler_a858b6661224371858487adf4515a929c}{id} ()
+\item 
+void \hyperlink{classIndexedDataHandler_ab24da9862e5572a9d6f58e51f62fb5c7}{read} (std\+::istream $\ast$in, \hyperlink{classIndexedData}{Indexed\+Data} \&v)
+\item 
+void \hyperlink{classIndexedDataHandler_adac292491ac7e7e59d15f0a8a76bfac7}{write} (std\+::ostream $\ast$out, \hyperlink{classIndexedData}{Indexed\+Data} \&value)
+\item 
+virtual std\+::string \hyperlink{classIndexedDataHandler_a7a3fd16bf83956b3fbc2fe46578aa958}{tostring} (\hyperlink{classIndexedData}{Indexed\+Data} \&value)
+\item 
+unsigned int \hyperlink{classIndexedDataHandler_a9ce91a864dceb5e7de23ee89d1083037}{count} (\hyperlink{classIndexedData}{Indexed\+Data} \&value) const 
+\item 
+void \hyperlink{classIndexedDataHandler_a242beac1d0b430238e3259556d2b1426}{add} (\hyperlink{classIndexedData}{Indexed\+Data} $\ast$value, const \hyperlink{classIndexReference}{Index\+Reference} \&ref) const 
+\item 
+void \hyperlink{classIndexedDataHandler_a5f4e87e6b1d952f9a1724168786bc99e}{convertto} (\hyperlink{classIndexedData}{Indexed\+Data} $\ast$source, \hyperlink{classIndexedData}{Indexed\+Data} $\ast$\&target) const 
+\item 
+void \hyperlink{classIndexedDataHandler_ab9ceda9fb27c913f8d14c25d714ac461}{convertto} (\hyperlink{classIndexedData}{Indexed\+Data} $\ast$value, unsigned int $\ast$\&convertedvalue) const 
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const bool \hyperlink{classIndexedDataHandler_a08512932e8b482034656d21c67773571}{indexed} = true
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Data handler for \hyperlink{classIndexedData}{Indexed\+Data}. Deals with serialisation from/to file and conversions. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classIndexedDataHandler_a242beac1d0b430238e3259556d2b1426}{}\index{Indexed\+Data\+Handler@{Indexed\+Data\+Handler}!add@{add}}
+\index{add@{add}!Indexed\+Data\+Handler@{Indexed\+Data\+Handler}}
+\subsubsection[{add(\+Indexed\+Data $\ast$value, const Index\+Reference \&ref) const }]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Data\+Handler\+::add (
+\begin{DoxyParamCaption}
+\item[{{\bf Indexed\+Data} $\ast$}]{value, }
+\item[{const {\bf Index\+Reference} \&}]{ref}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedDataHandler_a242beac1d0b430238e3259556d2b1426}
+
+
+Implements \hyperlink{classAbstractValueHandler_a72ecec2580cb5a9a3ba1495a98d08d98}{Abstract\+Value\+Handler$<$ Indexed\+Data $>$}.
+
+\hypertarget{classIndexedDataHandler_a5f4e87e6b1d952f9a1724168786bc99e}{}\index{Indexed\+Data\+Handler@{Indexed\+Data\+Handler}!convertto@{convertto}}
+\index{convertto@{convertto}!Indexed\+Data\+Handler@{Indexed\+Data\+Handler}}
+\subsubsection[{convertto(\+Indexed\+Data $\ast$source, Indexed\+Data $\ast$\&target) const }]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Data\+Handler\+::convertto (
+\begin{DoxyParamCaption}
+\item[{{\bf Indexed\+Data} $\ast$}]{source, }
+\item[{{\bf Indexed\+Data} $\ast$\&}]{target}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedDataHandler_a5f4e87e6b1d952f9a1724168786bc99e}
+
+
+Reimplemented from \hyperlink{classAbstractValueHandler_ae89579ec77805153a0acc617202f89b4}{Abstract\+Value\+Handler$<$ Indexed\+Data $>$}.
+
+\hypertarget{classIndexedDataHandler_ab9ceda9fb27c913f8d14c25d714ac461}{}\index{Indexed\+Data\+Handler@{Indexed\+Data\+Handler}!convertto@{convertto}}
+\index{convertto@{convertto}!Indexed\+Data\+Handler@{Indexed\+Data\+Handler}}
+\subsubsection[{convertto(\+Indexed\+Data $\ast$value, unsigned int $\ast$\&convertedvalue) const }]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Data\+Handler\+::convertto (
+\begin{DoxyParamCaption}
+\item[{{\bf Indexed\+Data} $\ast$}]{value, }
+\item[{unsigned int $\ast$\&}]{convertedvalue}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedDataHandler_ab9ceda9fb27c913f8d14c25d714ac461}
+\hypertarget{classIndexedDataHandler_a9ce91a864dceb5e7de23ee89d1083037}{}\index{Indexed\+Data\+Handler@{Indexed\+Data\+Handler}!count@{count}}
+\index{count@{count}!Indexed\+Data\+Handler@{Indexed\+Data\+Handler}}
+\subsubsection[{count(\+Indexed\+Data \&value) const }]{\setlength{\rightskip}{0pt plus 5cm}unsigned int Indexed\+Data\+Handler\+::count (
+\begin{DoxyParamCaption}
+\item[{{\bf Indexed\+Data} \&}]{value}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedDataHandler_a9ce91a864dceb5e7de23ee89d1083037}
+
+
+Implements \hyperlink{classAbstractValueHandler_a1d5941f6ff2afaee0c0bfc89ccb5188e}{Abstract\+Value\+Handler$<$ Indexed\+Data $>$}.
+
+\hypertarget{classIndexedDataHandler_a858b6661224371858487adf4515a929c}{}\index{Indexed\+Data\+Handler@{Indexed\+Data\+Handler}!id@{id}}
+\index{id@{id}!Indexed\+Data\+Handler@{Indexed\+Data\+Handler}}
+\subsubsection[{id()}]{\setlength{\rightskip}{0pt plus 5cm}virtual std\+::string Indexed\+Data\+Handler\+::id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedDataHandler_a858b6661224371858487adf4515a929c}
+
+
+Reimplemented from \hyperlink{classAbstractValueHandler_a6e2f7abe130cdec1062e51d56e4f9fac}{Abstract\+Value\+Handler$<$ Indexed\+Data $>$}.
+
+\hypertarget{classIndexedDataHandler_ab24da9862e5572a9d6f58e51f62fb5c7}{}\index{Indexed\+Data\+Handler@{Indexed\+Data\+Handler}!read@{read}}
+\index{read@{read}!Indexed\+Data\+Handler@{Indexed\+Data\+Handler}}
+\subsubsection[{read(std\+::istream $\ast$in, Indexed\+Data \&v)}]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Data\+Handler\+::read (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{{\bf Indexed\+Data} \&}]{v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedDataHandler_ab24da9862e5572a9d6f58e51f62fb5c7}
+
+
+Implements \hyperlink{classAbstractValueHandler_ac7921fae157361b054e467bf96785654}{Abstract\+Value\+Handler$<$ Indexed\+Data $>$}.
+
+\hypertarget{classIndexedDataHandler_a7a3fd16bf83956b3fbc2fe46578aa958}{}\index{Indexed\+Data\+Handler@{Indexed\+Data\+Handler}!tostring@{tostring}}
+\index{tostring@{tostring}!Indexed\+Data\+Handler@{Indexed\+Data\+Handler}}
+\subsubsection[{tostring(\+Indexed\+Data \&value)}]{\setlength{\rightskip}{0pt plus 5cm}virtual std\+::string Indexed\+Data\+Handler\+::tostring (
+\begin{DoxyParamCaption}
+\item[{{\bf Indexed\+Data} \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedDataHandler_a7a3fd16bf83956b3fbc2fe46578aa958}
+
+
+Implements \hyperlink{classAbstractValueHandler_a8e56e3bbccc464a47a666352249e6a1b}{Abstract\+Value\+Handler$<$ Indexed\+Data $>$}.
+
+\hypertarget{classIndexedDataHandler_adac292491ac7e7e59d15f0a8a76bfac7}{}\index{Indexed\+Data\+Handler@{Indexed\+Data\+Handler}!write@{write}}
+\index{write@{write}!Indexed\+Data\+Handler@{Indexed\+Data\+Handler}}
+\subsubsection[{write(std\+::ostream $\ast$out, Indexed\+Data \&value)}]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Data\+Handler\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out, }
+\item[{{\bf Indexed\+Data} \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedDataHandler_adac292491ac7e7e59d15f0a8a76bfac7}
+
+
+Implements \hyperlink{classAbstractValueHandler_aecd2820bc132f8065babbec5cd7458b8}{Abstract\+Value\+Handler$<$ Indexed\+Data $>$}.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classIndexedDataHandler_a08512932e8b482034656d21c67773571}{}\index{Indexed\+Data\+Handler@{Indexed\+Data\+Handler}!indexed@{indexed}}
+\index{indexed@{indexed}!Indexed\+Data\+Handler@{Indexed\+Data\+Handler}}
+\subsubsection[{indexed}]{\setlength{\rightskip}{0pt plus 5cm}const bool Indexed\+Data\+Handler\+::indexed = true\hspace{0.3cm}{\ttfamily [static]}}\label{classIndexedDataHandler_a08512932e8b482034656d21c67773571}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{datatypes_8h}{datatypes.\+h}\end{DoxyCompactItemize}

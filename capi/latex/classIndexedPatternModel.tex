@@ -1,0 +1,767 @@
+\hypertarget{classIndexedPatternModel}{}\section{Indexed\+Pattern\+Model$<$ Map\+Type $>$ Class Template Reference}
+\label{classIndexedPatternModel}\index{Indexed\+Pattern\+Model$<$ Map\+Type $>$@{Indexed\+Pattern\+Model$<$ Map\+Type $>$}}
+
+
+An indexed model mapping patterns to values, high-\/level interface. This is a specialised subclass of \hyperlink{classPatternMap}{Pattern\+Map}.  
+
+
+
+
+{\ttfamily \#include $<$patternmodel.\+h$>$}
+
+Inheritance diagram for Indexed\+Pattern\+Model$<$ Map\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.991111cm]{classIndexedPatternModel}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classIndexedPatternModel_a0d53765f0498911c976744cc3670ff72}{buildreverseindex} (const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options)
+\item 
+\hyperlink{classIndexedPatternModel_af2fbb7d1f40210bda30bee3d5577546a}{Indexed\+Pattern\+Model} (\hyperlink{classIndexedCorpus}{Indexed\+Corpus} $\ast$corpus=N\+U\+L\+L)
+\item 
+\hyperlink{classIndexedPatternModel_a983367ac09e96735a2075a1f780d1de4}{Indexed\+Pattern\+Model} (std\+::istream $\ast$f, const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L, \hyperlink{classIndexedCorpus}{Indexed\+Corpus} $\ast$corpus=N\+U\+L\+L)
+\item 
+\hyperlink{classIndexedPatternModel_a8d49b0f8aea957fc80e7e8d7b4dd5ba8}{Indexed\+Pattern\+Model} (const std\+::string filename, const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L, \hyperlink{classIndexedCorpus}{Indexed\+Corpus} $\ast$corpus=N\+U\+L\+L)
+\item 
+virtual \hyperlink{classIndexedPatternModel_aadc89a95b7ef0874ab5d763d0c453e79}{$\sim$\+Indexed\+Pattern\+Model} ()
+\item 
+int \hyperlink{classIndexedPatternModel_adeb6b2bce5dc4fcdd9f8ec9f723d0f5b}{getmodeltype} () const 
+\item 
+int \hyperlink{classIndexedPatternModel_adabaad88e64edd1c4762a56c86d1bae4}{getmodelversion} () const 
+\item 
+void \hyperlink{classIndexedPatternModel_a41367fc32c9fa72d1a88e60d749015a5}{add} (const \hyperlink{classPattern}{Pattern} \&pattern, \hyperlink{classIndexedData}{Indexed\+Data} $\ast$value, const \hyperlink{classIndexReference}{Index\+Reference} \&ref)
+\item 
+void \hyperlink{classIndexedPatternModel_a83e3a00515a9ad419b4a2f820278c5f7}{add} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&patternpointer, \hyperlink{classIndexedData}{Indexed\+Data} $\ast$value, const \hyperlink{classIndexReference}{Index\+Reference} \&ref)
+\item 
+\hyperlink{classIndexedData}{Indexed\+Data} $\ast$ \hyperlink{classIndexedPatternModel_a1ee41056c7235bf03573e6532cd5efce}{getdata} (const \hyperlink{classPattern}{Pattern} \&pattern, bool makeifnew=false)
+\item 
+\hyperlink{classIndexedData}{Indexed\+Data} $\ast$ \hyperlink{classIndexedPatternModel_a9311529a1123f602720b9e95f3f89236}{getdata} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&patternpointer, bool makeifnew=false)
+\item 
+void \hyperlink{classIndexedPatternModel_a64fade10459a7699b856c8cb621789f9}{info} (std\+::ostream $\ast$O\+U\+T)
+\item 
+void \hyperlink{classIndexedPatternModel_a4a5f41aa99e3b93a9a816e9c21b9b790}{print} (std\+::ostream $\ast$out, \hyperlink{classClassDecoder}{Class\+Decoder} \&decoder)
+\item 
+void \hyperlink{classIndexedPatternModel_aed4218c952b051b523d8d5a31c5c00fb}{print} (std\+::ostream $\ast$out, \hyperlink{classClassDecoder}{Class\+Decoder} \&decoder, const \hyperlink{classPattern}{Pattern} \&pattern, bool endline=true)
+\item 
+virtual void \hyperlink{classIndexedPatternModel_acf0b5ec19f8b76b875dbef07ca0cb398}{trainskipgrams} (\hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainbymodel=N\+U\+L\+L)
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classIndexedPatternModel_a205e5f3a0019a9948064084c0b92a7ce}{getpatternfromtoken} (\hyperlink{classIndexReference}{Index\+Reference} ref)
+\item 
+\hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} \hyperlink{classIndexedPatternModel_ac2478fc9fd1eabfc616c1692fc2a58d9}{getskipcontent} (const \hyperlink{classPattern}{Pattern} \&pattern)
+\item 
+void \hyperlink{classIndexedPatternModel_a0509989bf6bcb7d09dbc0e5c9e3dc84a}{prunerelations} (\hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} \&relations, unsigned int occurrencethreshold)
+\item 
+\hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} \hyperlink{classIndexedPatternModel_a951ae48d5f211af94a3c63102f708356}{gettemplates} (const \hyperlink{classPattern}{Pattern} \&pattern, unsigned int occurrencethreshold=0)
+\item 
+\hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} \hyperlink{classIndexedPatternModel_a2942d0920ce1e646cb733c0c84fdd0d7}{getinstances} (const \hyperlink{classPattern}{Pattern} \&pattern, unsigned int occurrencethreshold=0)
+\item 
+\hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} \hyperlink{classIndexedPatternModel_a785f4b6ef4229843b90ba895957a1b56}{getsubchildren} (const \hyperlink{classPattern}{Pattern} \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int \hyperlink{classPatternModel_a25f387acaf981af9962195bd05b3e7e2}{size}=0)
+\item 
+\hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} \hyperlink{classIndexedPatternModel_aed2ec73f5bece8595e6f6ab4f180ce75}{getsubparents} (const \hyperlink{classPattern}{Pattern} \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int \hyperlink{classPatternModel_a25f387acaf981af9962195bd05b3e7e2}{size}=0)
+\item 
+\hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} \hyperlink{classIndexedPatternModel_a7d3909fc9e28191fa2f47be30b3dd99e}{getleftneighbours} (const \hyperlink{classPattern}{Pattern} \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int \hyperlink{classPatternModel_a25f387acaf981af9962195bd05b3e7e2}{size}=0, unsigned int cutoff=0)
+\item 
+\hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} \hyperlink{classIndexedPatternModel_ab2d837b1f82f65b18ab6a7fc3ba2b15c}{getrightneighbours} (const \hyperlink{classPattern}{Pattern} \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int \hyperlink{classPatternModel_a25f387acaf981af9962195bd05b3e7e2}{size}=0, unsigned int cutoff=0)
+\item 
+int \hyperlink{classIndexedPatternModel_a0df4f0e3a55dd00c0fe00fc3841f66ed}{pruneskipgrams} (int threshold, int minskiptypes, int \+\_\+n=0)
+\item 
+virtual void \hyperlink{classIndexedPatternModel_acf70c3536f4869b3e8330289f7409bf5}{computecoveragestats} ()
+\item 
+\hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} \hyperlink{classIndexedPatternModel_ad0d8258d41c372a17b91f8be08f3f305}{getrightcooc} (const \hyperlink{classPattern}{Pattern} \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int \hyperlink{classPatternModel_a25f387acaf981af9962195bd05b3e7e2}{size}=0, \hyperlink{classIndexedData}{Indexed\+Data} $\ast$matches=N\+U\+L\+L)
+\item 
+\hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} \hyperlink{classIndexedPatternModel_a9f9292a132bac92267f26eeae00fd8ee}{getleftcooc} (const \hyperlink{classPattern}{Pattern} \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int \hyperlink{classPatternModel_a25f387acaf981af9962195bd05b3e7e2}{size}=0)
+\item 
+\hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} \hyperlink{classIndexedPatternModel_aaa6caa3a7aa9ce15087b98dd8d2b1c4b}{getcooc} (const \hyperlink{classPattern}{Pattern} \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int \hyperlink{classPatternModel_a25f387acaf981af9962195bd05b3e7e2}{size}=0, bool ordersignificant=false)
+\item 
+double \hyperlink{classIndexedPatternModel_a03c138c720ca2724457f2786626478d3}{npmi} (const \hyperlink{classPattern}{Pattern} \&key1, const \hyperlink{classPattern}{Pattern} \&key2, int jointcount)
+\item 
+void \hyperlink{classIndexedPatternModel_a001c634d095eee8883e8cd8fd24846d8}{outputrelations} (const \hyperlink{classPattern}{Pattern} \&pattern, \hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} \&relations, \hyperlink{classClassDecoder}{Class\+Decoder} \&classdecoder, std\+::ostream $\ast$O\+U\+T, const std\+::string label=\char`\"{}R\+E\+L\+A\+T\+E\+D-\/T\+O\char`\"{})
+\item 
+void \hyperlink{classIndexedPatternModel_abfe968ebfe686a774ae70c810d2d9cc3}{outputrelations} (const \hyperlink{classPattern}{Pattern} \&pattern, \hyperlink{classClassDecoder}{Class\+Decoder} \&classdecoder, std\+::ostream $\ast$O\+U\+T, bool outputheader=true)
+\item 
+void \hyperlink{classIndexedPatternModel_ab07346735ccdee4d7e42043e95d1bc2e}{computenpmi} (std\+::map$<$ \hyperlink{classPattern}{Pattern}, \hyperlink{patternmodel_8h_ae13b52c8cf777358f19da17c90c7dac0}{t\+\_\+relationmap\+\_\+double} $>$ \&coocmap, double threshold, bool right=true, bool left=true)
+\item 
+void \hyperlink{classIndexedPatternModel_ae62d20c9507dee1edd2f133cf3de2a5f}{computecooc} (std\+::map$<$ \hyperlink{classPattern}{Pattern}, \hyperlink{patternmodel_8h_a8695a2b10be5a74c827cd6c11bd46fb9}{t\+\_\+relationmap} $>$ \&coocmap, int threshold, bool right=true, bool left=true)
+\item 
+int \hyperlink{classIndexedPatternModel_ad3b8e1405429aa869501f9117664b0d5}{computeflexgrams\+\_\+fromskipgrams} ()
+\item 
+int \hyperlink{classIndexedPatternModel_a2d1a24a490466115aad4cf09058337ec}{computeflexgrams\+\_\+fromcooc} (double threshold)
+\item 
+void \hyperlink{classIndexedPatternModel_a4e8d1bf4017173e8214cfd37bab576c1}{outputcooc\+\_\+npmi} (std\+::ostream $\ast$O\+U\+T, \hyperlink{classClassDecoder}{Class\+Decoder} \&classdecoder, double threshold)
+\item 
+void \hyperlink{classIndexedPatternModel_a6ab1e2d6bf0a8aeed25a39c306e51c34}{outputcooc} (std\+::ostream $\ast$O\+U\+T, \hyperlink{classClassDecoder}{Class\+Decoder} \&classdecoder, double threshold)
+\item 
+int \hyperlink{classIndexedPatternModel_abd312da331baffd69a7944084cc0e4f6}{flexgramsize} (const \hyperlink{classPattern}{Pattern} \&pattern, \hyperlink{classIndexReference}{Index\+Reference} begin)
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \hyperlink{classIndexedPatternModel_a82f5f4fffea239a4f5bde4d346691f5d}{postread} (const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options)
+\item 
+virtual void \hyperlink{classIndexedPatternModel_a4a39df881afb2ef2c6c4a29afe9aa6ff}{posttrain} (const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$class Indexed\+Pattern\+Model$<$ Map\+Type $>$}
+
+An indexed model mapping patterns to values, high-\/level interface. This is a specialised subclass of \hyperlink{classPatternMap}{Pattern\+Map}. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Map\+Type} & The type of container to use \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classIndexedPatternModel_af2fbb7d1f40210bda30bee3d5577546a}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{Indexed\+Pattern\+Model(\+Indexed\+Corpus $\ast$corpus=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::{\bf Indexed\+Pattern\+Model} (
+\begin{DoxyParamCaption}
+\item[{{\bf Indexed\+Corpus} $\ast$}]{corpus = {\ttfamily NULL}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_af2fbb7d1f40210bda30bee3d5577546a}
+Begin a new pattern model, optionally pre-\/setting a reverseindex. \hypertarget{classIndexedPatternModel_a983367ac09e96735a2075a1f780d1de4}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{Indexed\+Pattern\+Model(std\+::istream $\ast$f, const Pattern\+Model\+Options options, Pattern\+Model\+Interface $\ast$constrainmodel=\+N\+U\+L\+L, Indexed\+Corpus $\ast$corpus=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::{\bf Indexed\+Pattern\+Model} (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{f, }
+\item[{const {\bf Pattern\+Model\+Options}}]{options, }
+\item[{{\bf Pattern\+Model\+Interface} $\ast$}]{constrainmodel = {\ttfamily NULL}, }
+\item[{{\bf Indexed\+Corpus} $\ast$}]{corpus = {\ttfamily NULL}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a983367ac09e96735a2075a1f780d1de4}
+Read a pattern model from an input stream 
+\begin{DoxyParams}{Parameters}
+{\em f} & The input stream \\
+\hline
+{\em options} & Options for reading, these act as filter for the data, allowing you to raise thresholds etc \\
+\hline
+{\em constrainmodel} & Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to N\+U\+L\+L (no constraining) \\
+\hline
+{\em corpus} & Pointer to the loaded corpus, used as a reverse index. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classIndexedPatternModel_a8d49b0f8aea957fc80e7e8d7b4dd5ba8}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{Indexed\+Pattern\+Model(const std\+::string filename, const Pattern\+Model\+Options options, Pattern\+Model\+Interface $\ast$constrainmodel=\+N\+U\+L\+L, Indexed\+Corpus $\ast$corpus=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::{\bf Indexed\+Pattern\+Model} (
+\begin{DoxyParamCaption}
+\item[{const std\+::string}]{filename, }
+\item[{const {\bf Pattern\+Model\+Options}}]{options, }
+\item[{{\bf Pattern\+Model\+Interface} $\ast$}]{constrainmodel = {\ttfamily NULL}, }
+\item[{{\bf Indexed\+Corpus} $\ast$}]{corpus = {\ttfamily NULL}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a8d49b0f8aea957fc80e7e8d7b4dd5ba8}
+Read a pattern model from file 
+\begin{DoxyParams}{Parameters}
+{\em filename} & The filename \\
+\hline
+{\em options} & Options for reading, these act as filter for the data, allowing you to raise thresholds etc \\
+\hline
+{\em constrainmodel} & Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to N\+U\+L\+L (no constraining) \\
+\hline
+{\em corpus} & Pointer to the loaded corpus, used as a reverse index. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classIndexedPatternModel_aadc89a95b7ef0874ab5d763d0c453e79}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!````~Indexed\+Pattern\+Model@{$\sim$\+Indexed\+Pattern\+Model}}
+\index{````~Indexed\+Pattern\+Model@{$\sim$\+Indexed\+Pattern\+Model}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{$\sim$\+Indexed\+Pattern\+Model()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ virtual {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::$\sim${\bf Indexed\+Pattern\+Model} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_aadc89a95b7ef0874ab5d763d0c453e79}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classIndexedPatternModel_a41367fc32c9fa72d1a88e60d749015a5}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!add@{add}}
+\index{add@{add}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{add(const Pattern \&pattern, Indexed\+Data $\ast$value, const Index\+Reference \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::add (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{{\bf Indexed\+Data} $\ast$}]{value, }
+\item[{const {\bf Index\+Reference} \&}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_a41367fc32c9fa72d1a88e60d749015a5}
+Add a pattern, with a given position, and a value to the model. This is called during training at every time an instance of a pattern is found in the data. 
+\begin{DoxyParams}{Parameters}
+{\em pattern} & The pattern to add \\
+\hline
+{\em value} & A pointer to the value for this pattern, set to N\+U\+L\+L and it will be automatically determined \\
+\hline
+{\em \hyperlink{classIndexReference}{Index\+Reference}} & The position in the corpus where the patterns occurs \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classPatternModel_a0cdb8badafbce0f56089f7c2b8f4716a}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_a83e3a00515a9ad419b4a2f820278c5f7}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!add@{add}}
+\index{add@{add}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{add(const Pattern\+Pointer \&patternpointer, Indexed\+Data $\ast$value, const Index\+Reference \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::add (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{patternpointer, }
+\item[{{\bf Indexed\+Data} $\ast$}]{value, }
+\item[{const {\bf Index\+Reference} \&}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_a83e3a00515a9ad419b4a2f820278c5f7}
+
+
+Reimplemented from \hyperlink{classPatternModel_ad16097db7894d75815cd40ef5acc99a5}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_a0d53765f0498911c976744cc3670ff72}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!buildreverseindex@{buildreverseindex}}
+\index{buildreverseindex@{buildreverseindex}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{buildreverseindex(const Pattern\+Model\+Options options)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::buildreverseindex (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Model\+Options}}]{options}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a0d53765f0498911c976744cc3670ff72}
+build reverse index, requires options.\+D\+O\+R\+E\+V\+E\+R\+S\+E\+I\+N\+D\+E\+X to be set or won\textquotesingle{}t do anything. Also won\textquotesingle{}t build a reverse index if one is loaded already. Note that pre-\/loading a reverse index when loading/training your model is generally quicker. \hypertarget{classIndexedPatternModel_ae62d20c9507dee1edd2f133cf3de2a5f}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!computecooc@{computecooc}}
+\index{computecooc@{computecooc}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{computecooc(std\+::map$<$ Pattern, t\+\_\+relationmap $>$ \&coocmap, int threshold, bool right=true, bool left=true)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::computecooc (
+\begin{DoxyParamCaption}
+\item[{std\+::map$<$ {\bf Pattern}, {\bf t\+\_\+relationmap} $>$ \&}]{coocmap, }
+\item[{int}]{threshold, }
+\item[{bool}]{right = {\ttfamily true}, }
+\item[{bool}]{left = {\ttfamily true}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_ae62d20c9507dee1edd2f133cf3de2a5f}
+Compute co-\/occurence as absolute joint occurrence count, for all patterns 
+\begin{DoxyParams}{Parameters}
+{\em coocmap} & The map that will store the results \\
+\hline
+{\em threshold} & Only include pairs passing this N\+P\+M\+I threshold \\
+\hline
+{\em right} & Compute co-\/occurence to the right (default\+: true) \\
+\hline
+{\em left} & Compute co-\/occurence to the left (default\+: true) \\
+\hline
+\end{DoxyParams}
+\hypertarget{classIndexedPatternModel_acf70c3536f4869b3e8330289f7409bf5}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!computecoveragestats@{computecoveragestats}}
+\index{computecoveragestats@{computecoveragestats}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{computecoveragestats()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ virtual void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::computecoveragestats (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_acf70c3536f4869b3e8330289f7409bf5}
+Compute coverage statistics on the model, will generally be called automatically by methods who use it, and the statistics are cached after computation. 
+
+Reimplemented from \hyperlink{classPatternModel_ae36bb1e641f954ee78a5fbab98ae069a}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_a2d1a24a490466115aad4cf09058337ec}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!computeflexgrams\+\_\+fromcooc@{computeflexgrams\+\_\+fromcooc}}
+\index{computeflexgrams\+\_\+fromcooc@{computeflexgrams\+\_\+fromcooc}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{computeflexgrams\+\_\+fromcooc(double threshold)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ int {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::computeflexgrams\+\_\+fromcooc (
+\begin{DoxyParamCaption}
+\item[{double}]{threshold}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a2d1a24a490466115aad4cf09058337ec}
+Compute flexgrams using co-\/occurrence 
+\begin{DoxyParams}{Parameters}
+{\em threshold} & Normalised Pointwise Mutual Information threshold \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of flexgrams found 
+\end{DoxyReturn}
+\hypertarget{classIndexedPatternModel_ad3b8e1405429aa869501f9117664b0d5}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!computeflexgrams\+\_\+fromskipgrams@{computeflexgrams\+\_\+fromskipgrams}}
+\index{computeflexgrams\+\_\+fromskipgrams@{computeflexgrams\+\_\+fromskipgrams}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{computeflexgrams\+\_\+fromskipgrams()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ int {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::computeflexgrams\+\_\+fromskipgrams (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_ad3b8e1405429aa869501f9117664b0d5}
+Compute flexgrams by abstracting from existing skipgrams in the model \begin{DoxyReturn}{Returns}
+The number of flexgrams found 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classPatternModel_ab393fff93aae08db7456a9e60296a0b3}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_ab07346735ccdee4d7e42043e95d1bc2e}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!computenpmi@{computenpmi}}
+\index{computenpmi@{computenpmi}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{computenpmi(std\+::map$<$ Pattern, t\+\_\+relationmap\+\_\+double $>$ \&coocmap, double threshold, bool right=true, bool left=true)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::computenpmi (
+\begin{DoxyParamCaption}
+\item[{std\+::map$<$ {\bf Pattern}, {\bf t\+\_\+relationmap\+\_\+double} $>$ \&}]{coocmap, }
+\item[{double}]{threshold, }
+\item[{bool}]{right = {\ttfamily true}, }
+\item[{bool}]{left = {\ttfamily true}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_ab07346735ccdee4d7e42043e95d1bc2e}
+\hypertarget{classIndexedPatternModel_abd312da331baffd69a7944084cc0e4f6}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!flexgramsize@{flexgramsize}}
+\index{flexgramsize@{flexgramsize}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{flexgramsize(const Pattern \&pattern, Index\+Reference begin)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ int {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::flexgramsize (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{{\bf Index\+Reference}}]{begin}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_abd312da331baffd69a7944084cc0e4f6}
+attempt to find the flexgram size for the given begin position, returns 0 if the flexgram was not found at all if there are multiple matches, the shortest is returned \hypertarget{classIndexedPatternModel_aaa6caa3a7aa9ce15087b98dd8d2b1c4b}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getcooc@{getcooc}}
+\index{getcooc@{getcooc}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getcooc(const Pattern \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int size=0, bool ordersignificant=false)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf t\+\_\+relationmap} {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getcooc (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{unsigned int}]{occurrencethreshold = {\ttfamily 0}, }
+\item[{int}]{category = {\ttfamily 0}, }
+\item[{unsigned int}]{size = {\ttfamily 0}, }
+\item[{bool}]{ordersignificant = {\ttfamily false}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_aaa6caa3a7aa9ce15087b98dd8d2b1c4b}
+Returns all patterns in the model that co-\/occur with the given pattern in the same sentence 
+\begin{DoxyParams}{Parameters}
+{\em occurrencethreshold} & If set above zero, filters to only include patterns occurring above this threshold \\
+\hline
+{\em category} & Set to any value of Pattern\+Category (N\+G\+R\+A\+M,S\+K\+I\+P\+G\+R\+A\+M,F\+L\+E\+X\+G\+R\+A\+M) to include only this category. Set to 0 for unfiltered (default) \\
+\hline
+{\em size} & Set to any value above zero to only include patterns of the specified length. \\
+\hline
+{\em ordersignificant} & If set to true, each co-\/occuring pair will occur at least once in the result, if false (default) it will appear twice, once in A,B form and once in B,A form. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a relation map 
+\end{DoxyReturn}
+\hypertarget{classIndexedPatternModel_a1ee41056c7235bf03573e6532cd5efce}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getdata@{getdata}}
+\index{getdata@{getdata}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getdata(const Pattern \&pattern, bool makeifnew=false)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf Indexed\+Data}$\ast$ {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getdata (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{bool}]{makeifnew = {\ttfamily false}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_a1ee41056c7235bf03573e6532cd5efce}
+Get the indices stored for the specified pattern. 
+\begin{DoxyParams}{Parameters}
+{\em makeifnew} & Add the pattern with empty value if it does not exist (default\+: false) \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classPatternModel_aaec0fa3d026d88bc5b8e2dc5f0994015}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_a9311529a1123f602720b9e95f3f89236}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getdata@{getdata}}
+\index{getdata@{getdata}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getdata(const Pattern\+Pointer \&patternpointer, bool makeifnew=false)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf Indexed\+Data}$\ast$ {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getdata (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{patternpointer, }
+\item[{bool}]{makeifnew = {\ttfamily false}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_a9311529a1123f602720b9e95f3f89236}
+
+
+Reimplemented from \hyperlink{classPatternModel_a1baf331b3a10a45fdadd6a835a744cf3}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_a2942d0920ce1e646cb733c0c84fdd0d7}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getinstances@{getinstances}}
+\index{getinstances@{getinstances}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getinstances(const Pattern \&pattern, unsigned int occurrencethreshold=0)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf t\+\_\+relationmap} {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getinstances (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{unsigned int}]{occurrencethreshold = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a2942d0920ce1e646cb733c0c84fdd0d7}
+Returns all ngrams in the model that instantiate the given skipgram/flexgram. If all the gaps in a skipgram/flexgram are filled, we speak of such an instantiation. An occurrence threshold may be used to filter. \begin{DoxyReturn}{Returns}
+a relation map 
+\end{DoxyReturn}
+\hypertarget{classIndexedPatternModel_a9f9292a132bac92267f26eeae00fd8ee}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getleftcooc@{getleftcooc}}
+\index{getleftcooc@{getleftcooc}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getleftcooc(const Pattern \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int size=0)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf t\+\_\+relationmap} {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getleftcooc (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{unsigned int}]{occurrencethreshold = {\ttfamily 0}, }
+\item[{int}]{category = {\ttfamily 0}, }
+\item[{unsigned int}]{size = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a9f9292a132bac92267f26eeae00fd8ee}
+Returns all patterns in the model that co-\/occur with the given pattern in the same sentence and appear to the left of the given pattern 
+\begin{DoxyParams}{Parameters}
+{\em occurrencethreshold} & If set above zero, filters to only include patterns occurring above this threshold \\
+\hline
+{\em category} & Set to any value of Pattern\+Category (N\+G\+R\+A\+M,S\+K\+I\+P\+G\+R\+A\+M,F\+L\+E\+X\+G\+R\+A\+M) to include only this category. Set to 0 for unfiltered (default) \\
+\hline
+{\em size} & Set to any value above zero to only include patterns of the specified length. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a relation map 
+\end{DoxyReturn}
+\hypertarget{classIndexedPatternModel_a7d3909fc9e28191fa2f47be30b3dd99e}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getleftneighbours@{getleftneighbours}}
+\index{getleftneighbours@{getleftneighbours}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getleftneighbours(const Pattern \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int size=0, unsigned int cutoff=0)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf t\+\_\+relationmap} {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getleftneighbours (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{unsigned int}]{occurrencethreshold = {\ttfamily 0}, }
+\item[{int}]{category = {\ttfamily 0}, }
+\item[{unsigned int}]{size = {\ttfamily 0}, }
+\item[{unsigned int}]{cutoff = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a7d3909fc9e28191fa2f47be30b3dd99e}
+Returns all patterns in the model that directly neighbour the given pattern at the left side 
+\begin{DoxyParams}{Parameters}
+{\em occurrencethreshold} & If set above zero, filters to only include patterns occurring above this threshold \\
+\hline
+{\em category} & Set to any value of Pattern\+Category (N\+G\+R\+A\+M,S\+K\+I\+P\+G\+R\+A\+M,F\+L\+E\+X\+G\+R\+A\+M) to include only this category. Set to 0 for unfiltered (default) \\
+\hline
+{\em size} & Set to any value above zero to only include patterns of the specified length. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a relation map 
+\end{DoxyReturn}
+\hypertarget{classIndexedPatternModel_adeb6b2bce5dc4fcdd9f8ec9f723d0f5b}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getmodeltype@{getmodeltype}}
+\index{getmodeltype@{getmodeltype}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getmodeltype() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ int {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getmodeltype (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_adeb6b2bce5dc4fcdd9f8ec9f723d0f5b}
+Returns the type of model (a value from Model\+Type) 
+
+Reimplemented from \hyperlink{classPatternModel_aadea1e70400eb2aeced1ca1648cf9cd9}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_adabaad88e64edd1c4762a56c86d1bae4}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getmodelversion@{getmodelversion}}
+\index{getmodelversion@{getmodelversion}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getmodelversion() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ int {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getmodelversion (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_adabaad88e64edd1c4762a56c86d1bae4}
+Returns the version of the model implementation and binary serialisation format 
+
+Reimplemented from \hyperlink{classPatternModel_ac2f98f98d449951caa82894be78e9fe6}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_a205e5f3a0019a9948064084c0b92a7ce}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getpatternfromtoken@{getpatternfromtoken}}
+\index{getpatternfromtoken@{getpatternfromtoken}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getpatternfromtoken(\+Index\+Reference ref)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf Pattern} {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getpatternfromtoken (
+\begin{DoxyParamCaption}
+\item[{{\bf Index\+Reference}}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a205e5f3a0019a9948064084c0b92a7ce}
+Return the unigram \hyperlink{classPattern}{Pattern} that occurs on the specified position, using the reverse index. \hypertarget{classIndexedPatternModel_ad0d8258d41c372a17b91f8be08f3f305}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getrightcooc@{getrightcooc}}
+\index{getrightcooc@{getrightcooc}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getrightcooc(const Pattern \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int size=0, Indexed\+Data $\ast$matches=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf t\+\_\+relationmap} {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getrightcooc (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{unsigned int}]{occurrencethreshold = {\ttfamily 0}, }
+\item[{int}]{category = {\ttfamily 0}, }
+\item[{unsigned int}]{size = {\ttfamily 0}, }
+\item[{{\bf Indexed\+Data} $\ast$}]{matches = {\ttfamily NULL}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_ad0d8258d41c372a17b91f8be08f3f305}
+Returns all patterns in the model that co-\/occur with the given pattern in the same sentence and appear to the right of the given pattern 
+\begin{DoxyParams}{Parameters}
+{\em occurrencethreshold} & If set above zero, filters to only include patterns occurring above this threshold \\
+\hline
+{\em category} & Set to any value of Pattern\+Category (N\+G\+R\+A\+M,S\+K\+I\+P\+G\+R\+A\+M,F\+L\+E\+X\+G\+R\+A\+M) to include only this category. Set to 0 for unfiltered (default) \\
+\hline
+{\em size} & Set to any value above zero to only include patterns of the specified length. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a relation map 
+\end{DoxyReturn}
+\hypertarget{classIndexedPatternModel_ab2d837b1f82f65b18ab6a7fc3ba2b15c}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getrightneighbours@{getrightneighbours}}
+\index{getrightneighbours@{getrightneighbours}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getrightneighbours(const Pattern \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int size=0, unsigned int cutoff=0)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf t\+\_\+relationmap} {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getrightneighbours (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{unsigned int}]{occurrencethreshold = {\ttfamily 0}, }
+\item[{int}]{category = {\ttfamily 0}, }
+\item[{unsigned int}]{size = {\ttfamily 0}, }
+\item[{unsigned int}]{cutoff = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_ab2d837b1f82f65b18ab6a7fc3ba2b15c}
+Returns all patterns in the model that directly neighbour the given pattern at the right side 
+\begin{DoxyParams}{Parameters}
+{\em occurrencethreshold} & If set above zero, filters to only include patterns occurring above this threshold \\
+\hline
+{\em category} & Set to any value of Pattern\+Category (N\+G\+R\+A\+M,S\+K\+I\+P\+G\+R\+A\+M,F\+L\+E\+X\+G\+R\+A\+M) to include only this category. Set to 0 for unfiltered (default) \\
+\hline
+{\em size} & Set to any value above zero to only include patterns of the specified length. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a relation map 
+\end{DoxyReturn}
+\hypertarget{classIndexedPatternModel_ac2478fc9fd1eabfc616c1692fc2a58d9}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getskipcontent@{getskipcontent}}
+\index{getskipcontent@{getskipcontent}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getskipcontent(const Pattern \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf t\+\_\+relationmap} {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getskipcontent (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_ac2478fc9fd1eabfc616c1692fc2a58d9}
+Given a skipgram, returns patterns which would instantiate the skipgram if inserted into the gaps. For skipgrams with multiple gaps, these skip content patterns are themselves skipgrams. Skipgram and skip content complement eachother \begin{DoxyReturn}{Returns}
+A relation map 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classPatternModel_aa9d5de68d7989ba234d2628ab4af35fb}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_a785f4b6ef4229843b90ba895957a1b56}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getsubchildren@{getsubchildren}}
+\index{getsubchildren@{getsubchildren}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getsubchildren(const Pattern \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int size=0)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf t\+\_\+relationmap} {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getsubchildren (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{unsigned int}]{occurrencethreshold = {\ttfamily 0}, }
+\item[{int}]{category = {\ttfamily 0}, }
+\item[{unsigned int}]{size = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a785f4b6ef4229843b90ba895957a1b56}
+Returns all patterns in the model that are subsumed by the specified pattern. Subsumed patterns are smaller than the subsuming pattern. Every n-\/gram (except unigram) by definition subsumes two n-\/1-\/grams. 
+\begin{DoxyParams}{Parameters}
+{\em occurrencethreshold} & If set above zero, filters to only include patterns occurring above this threshold \\
+\hline
+{\em category} & Set to any value of Pattern\+Category (N\+G\+R\+A\+M,S\+K\+I\+P\+G\+R\+A\+M,F\+L\+E\+X\+G\+R\+A\+M) to include only this category. Set to 0 for unfiltered (default) \\
+\hline
+{\em size} & Set to any value above zero to only include patterns of the specified length. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a relation map 
+\end{DoxyReturn}
+\hypertarget{classIndexedPatternModel_aed2ec73f5bece8595e6f6ab4f180ce75}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!getsubparents@{getsubparents}}
+\index{getsubparents@{getsubparents}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{getsubparents(const Pattern \&pattern, unsigned int occurrencethreshold=0, int category=0, unsigned int size=0)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf t\+\_\+relationmap} {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::getsubparents (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{unsigned int}]{occurrencethreshold = {\ttfamily 0}, }
+\item[{int}]{category = {\ttfamily 0}, }
+\item[{unsigned int}]{size = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_aed2ec73f5bece8595e6f6ab4f180ce75}
+Returns all patterns in the model that subsume the specified pattern. Subsuming patterns are larger than the subsuming pattern. Every n-\/gram (except unigram) by definition subsumes two n-\/1-\/grams. 
+\begin{DoxyParams}{Parameters}
+{\em occurrencethreshold} & If set above zero, filters to only include patterns occurring above this threshold \\
+\hline
+{\em category} & Set to any value of Pattern\+Category (N\+G\+R\+A\+M,S\+K\+I\+P\+G\+R\+A\+M,F\+L\+E\+X\+G\+R\+A\+M) to include only this category. Set to 0 for unfiltered (default) \\
+\hline
+{\em size} & Set to any value above zero to only include patterns of the specified length. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a relation map 
+\end{DoxyReturn}
+\hypertarget{classIndexedPatternModel_a951ae48d5f211af94a3c63102f708356}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!gettemplates@{gettemplates}}
+\index{gettemplates@{gettemplates}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{gettemplates(const Pattern \&pattern, unsigned int occurrencethreshold=0)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ {\bf t\+\_\+relationmap} {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::gettemplates (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{unsigned int}]{occurrencethreshold = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a951ae48d5f211af94a3c63102f708356}
+Returns all skipgrams and flexgrams in the model that are an abstraction of the specified pattern. \hyperlink{classPattern}{Pattern} itself may be a skipgram too. An optional occurrence threshold may be used to filter. \begin{DoxyReturn}{Returns}
+a relation map 
+\end{DoxyReturn}
+\hypertarget{classIndexedPatternModel_a64fade10459a7699b856c8cb621789f9}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!info@{info}}
+\index{info@{info}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{info(std\+::ostream $\ast$\+O\+U\+T)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::info (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{O\+U\+T}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a64fade10459a7699b856c8cb621789f9}
+Output information about the model to the output stream, includes some statistics and technical details such as space requirements. \hypertarget{classIndexedPatternModel_a03c138c720ca2724457f2786626478d3}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!npmi@{npmi}}
+\index{npmi@{npmi}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{npmi(const Pattern \&key1, const Pattern \&key2, int jointcount)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ double {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::npmi (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{key1, }
+\item[{const {\bf Pattern} \&}]{key2, }
+\item[{int}]{jointcount}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a03c138c720ca2724457f2786626478d3}
+Compute normalised pointwise mutual information given two patterns and their joint occurrence count. \hypertarget{classIndexedPatternModel_a6ab1e2d6bf0a8aeed25a39c306e51c34}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!outputcooc@{outputcooc}}
+\index{outputcooc@{outputcooc}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{outputcooc(std\+::ostream $\ast$\+O\+U\+T, Class\+Decoder \&classdecoder, double threshold)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::outputcooc (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{O\+U\+T, }
+\item[{{\bf Class\+Decoder} \&}]{classdecoder, }
+\item[{double}]{threshold}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_a6ab1e2d6bf0a8aeed25a39c306e51c34}
+Compute and output co-\/occurrence relations as joint occurrence count 
+\begin{DoxyParams}{Parameters}
+{\em threshold} & Normalised Pointwise Mutual Information threshold \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classPatternModel_a107980d1345c1f20ba3284474220ee7e}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_a4e8d1bf4017173e8214cfd37bab576c1}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!outputcooc\+\_\+npmi@{outputcooc\+\_\+npmi}}
+\index{outputcooc\+\_\+npmi@{outputcooc\+\_\+npmi}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{outputcooc\+\_\+npmi(std\+::ostream $\ast$\+O\+U\+T, Class\+Decoder \&classdecoder, double threshold)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::outputcooc\+\_\+npmi (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{O\+U\+T, }
+\item[{{\bf Class\+Decoder} \&}]{classdecoder, }
+\item[{double}]{threshold}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_a4e8d1bf4017173e8214cfd37bab576c1}
+Compute and output co-\/occurrence relations as Normalised Pointwise Mutual Information 
+\begin{DoxyParams}{Parameters}
+{\em threshold} & Normalised Pointwise Mutual Information threshold \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classPatternModel_a45da84761e93772df0465bca2780b9b3}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_a001c634d095eee8883e8cd8fd24846d8}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!outputrelations@{outputrelations}}
+\index{outputrelations@{outputrelations}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{outputrelations(const Pattern \&pattern, t\+\_\+relationmap \&relations, Class\+Decoder \&classdecoder, std\+::ostream $\ast$\+O\+U\+T, const std\+::string label=""R\+E\+L\+A\+T\+E\+D-\/\+T\+O"")}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::outputrelations (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{{\bf t\+\_\+relationmap} \&}]{relations, }
+\item[{{\bf Class\+Decoder} \&}]{classdecoder, }
+\item[{std\+::ostream $\ast$}]{O\+U\+T, }
+\item[{const std\+::string}]{label = {\ttfamily \char`\"{}RELATED-\/TO\char`\"{}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a001c634d095eee8883e8cd8fd24846d8}
+Output the specified relation map for the specified pattern to output stream. Low-\/level function. 
+\begin{DoxyParams}{Parameters}
+{\em pattern} & The pattern \\
+\hline
+{\em relations} & A relation map \\
+\hline
+{\em classdecoder} & A class decoder \\
+\hline
+{\em O\+U\+T} & The output stream \\
+\hline
+{\em label} & A label to insert between relations (defaults to\+: R\+E\+L\+A\+T\+E\+D-\/\+T\+O) \\
+\hline
+\end{DoxyParams}
+\hypertarget{classIndexedPatternModel_abfe968ebfe686a774ae70c810d2d9cc3}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!outputrelations@{outputrelations}}
+\index{outputrelations@{outputrelations}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{outputrelations(const Pattern \&pattern, Class\+Decoder \&classdecoder, std\+::ostream $\ast$\+O\+U\+T, bool outputheader=true)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::outputrelations (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{{\bf Class\+Decoder} \&}]{classdecoder, }
+\item[{std\+::ostream $\ast$}]{O\+U\+T, }
+\item[{bool}]{outputheader = {\ttfamily true}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_abfe968ebfe686a774ae70c810d2d9cc3}
+Compute and output all possible relations for a given pattern. High-\/level function. 
+\begin{DoxyParams}{Parameters}
+{\em pattern} & The pattern \\
+\hline
+{\em classdecoder} & A class decoder \\
+\hline
+{\em O\+U\+T} & The output stream \\
+\hline
+{\em outputheader} & Output a header (default\+: true) \\
+\hline
+\end{DoxyParams}
+\hypertarget{classIndexedPatternModel_a82f5f4fffea239a4f5bde4d346691f5d}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!postread@{postread}}
+\index{postread@{postread}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{postread(const Pattern\+Model\+Options options)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ virtual void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::postread (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Model\+Options}}]{options}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_a82f5f4fffea239a4f5bde4d346691f5d}
+
+
+Reimplemented from \hyperlink{classPatternModel_a3746e351f393bb6201f3b8df92881bb7}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_a4a39df881afb2ef2c6c4a29afe9aa6ff}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!posttrain@{posttrain}}
+\index{posttrain@{posttrain}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{posttrain(const Pattern\+Model\+Options options)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ virtual void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::posttrain (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Model\+Options}}]{options}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_a4a39df881afb2ef2c6c4a29afe9aa6ff}
+
+
+Reimplemented from \hyperlink{classPatternModel_a5447228ff966dcb3c93c8c787ce31386}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_a4a5f41aa99e3b93a9a816e9c21b9b790}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!print@{print}}
+\index{print@{print}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{print(std\+::ostream $\ast$out, Class\+Decoder \&decoder)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::print (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out, }
+\item[{{\bf Class\+Decoder} \&}]{decoder}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_a4a5f41aa99e3b93a9a816e9c21b9b790}
+Print the contents of the pattern model, i.\+e. all patterns and associated counts, to the output stream. 
+\begin{DoxyParams}{Parameters}
+{\em out} & The output stream \\
+\hline
+{\em decoder} & The class decoder to use \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classPatternModel_a6d645bd24603696e77d6904c09d9b39c}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_aed4218c952b051b523d8d5a31c5c00fb}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!print@{print}}
+\index{print@{print}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{print(std\+::ostream $\ast$out, Class\+Decoder \&decoder, const Pattern \&pattern, bool endline=true)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::print (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out, }
+\item[{{\bf Class\+Decoder} \&}]{decoder, }
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{bool}]{endline = {\ttfamily true}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_aed4218c952b051b523d8d5a31c5c00fb}
+Print for one pattern only. 
+\begin{DoxyParams}{Parameters}
+{\em out} & The output stream \\
+\hline
+{\em decoder} & The class decoder to use \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classPatternModel_a58bbe1d44c4daf8560872f97d124a836}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+\hypertarget{classIndexedPatternModel_a0509989bf6bcb7d09dbc0e5c9e3dc84a}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!prunerelations@{prunerelations}}
+\index{prunerelations@{prunerelations}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{prunerelations(t\+\_\+relationmap \&relations, unsigned int occurrencethreshold)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::prunerelations (
+\begin{DoxyParamCaption}
+\item[{{\bf t\+\_\+relationmap} \&}]{relations, }
+\item[{unsigned int}]{occurrencethreshold}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a0509989bf6bcb7d09dbc0e5c9e3dc84a}
+Given a relation map, prune relations below the specified occurrence threshold 
+\begin{DoxyParams}{Parameters}
+{\em relations} & The relationmap to manipulate \\
+\hline
+{\em occurrencethreshold} & The occurrence threshold \\
+\hline
+\end{DoxyParams}
+\hypertarget{classIndexedPatternModel_a0df4f0e3a55dd00c0fe00fc3841f66ed}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!pruneskipgrams@{pruneskipgrams}}
+\index{pruneskipgrams@{pruneskipgrams}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{pruneskipgrams(int threshold, int minskiptypes, int \+\_\+n=0)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ int {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::pruneskipgrams (
+\begin{DoxyParamCaption}
+\item[{int}]{threshold, }
+\item[{int}]{minskiptypes, }
+\item[{int}]{\+\_\+n = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedPatternModel_a0df4f0e3a55dd00c0fe00fc3841f66ed}
+Prune skipgrams based on an occurrence threshold, and a skiptype threshold. The latter enforces that at least the specified number of distinct patterns must fit in the gap for the skipgram to be retained. 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+n} & Set to any value above zero to only include patterns of the specified length. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classIndexedPatternModel_acf0b5ec19f8b76b875dbef07ca0cb398}{}\index{Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}!trainskipgrams@{trainskipgrams}}
+\index{trainskipgrams@{trainskipgrams}!Indexed\+Pattern\+Model@{Indexed\+Pattern\+Model}}
+\subsubsection[{trainskipgrams(\+Pattern\+Model\+Options options, Pattern\+Model\+Interface $\ast$constrainbymodel=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Map\+Type = Pattern\+Map$<$\+Indexed\+Data,\+Indexed\+Data\+Handler$>$$>$ virtual void {\bf Indexed\+Pattern\+Model}$<$ Map\+Type $>$\+::trainskipgrams (
+\begin{DoxyParamCaption}
+\item[{{\bf Pattern\+Model\+Options}}]{options, }
+\item[{{\bf Pattern\+Model\+Interface} $\ast$}]{constrainbymodel = {\ttfamily NULL}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classIndexedPatternModel_acf0b5ec19f8b76b875dbef07ca0cb398}
+Train skipgrams, for indexed models only 
+\begin{DoxyParams}{Parameters}
+{\em options} & \hyperlink{classPattern}{Pattern} model options \\
+\hline
+{\em constrainbymodel} & Pointer to a pattern model to use as contraint\+: only include skipgrams that occur in the constraint model (default\+: N\+U\+L\+L) \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classPatternModel_acd4e0ecc0e796c894b994859b2c5ffb6}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{patternmodel_8h}{patternmodel.\+h}\end{DoxyCompactItemize}

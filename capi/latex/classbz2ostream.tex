@@ -1,0 +1,67 @@
+\hypertarget{classbz2ostream}{}\section{bz2ostream Class Reference}
+\label{classbz2ostream}\index{bz2ostream@{bz2ostream}}
+
+
+An output stream compressing all data with the bz2 algorithm.  
+
+
+
+
+{\ttfamily \#include $<$bz2stream.\+h$>$}
+
+Inheritance diagram for bz2ostream\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=5.000000cm]{classbz2ostream}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classbz2ostream_abec3e4e8fc51c61ce2b5a8272fc93434}{bz2ostream} (std\+::streambuf $\ast$dest, unsigned int block\+\_\+size\+\_\+100\+K=9, unsigned int verbosity=0, unsigned int work\+\_\+factor=0, \hyperlink{bz2stream_8h_ad84a886ecf0c0c00445cdd219beb6a7b}{bzalloc\+\_\+ptr} bzalloc=N\+U\+L\+L, \hyperlink{bz2stream_8h_a3ae1e0ffde629a32e954abecc8cd7bb2}{bzfree\+\_\+ptr} bzfree=N\+U\+L\+L, void $\ast$opaque=N\+U\+L\+L, size\+\_\+t buffer\+\_\+size=1024, size\+\_\+t out\+\_\+buffer\+\_\+size=1024)
+\begin{DoxyCompactList}\small\item\em Creates a new \hyperlink{classbz2ostream}{bz2ostream} object. See \hyperlink{classbz2outbuf_ad907143431be210070e941c963df0f14}{bz2outbuf\+::bz2outbuf} for an explanation of the parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classbz2outbuf}{bz2outbuf} \hyperlink{classbz2ostream_afc503bb7dba240ec2384872767bdb3ba}{buf}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+An output stream compressing all data with the bz2 algorithm. 
+
+As the actual compression is achieved in the underlying \hyperlink{classbz2outbuf}{bz2outbuf} stream buffer, you should read its documentation before using this class.
+
+A \hyperlink{classbz2ostream}{bz2ostream} object writes the output data to a stream buffer you specify in the constructor; it can thus be used to write to any stream buffer you want. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classbz2ostream_abec3e4e8fc51c61ce2b5a8272fc93434}{}\index{bz2ostream@{bz2ostream}!bz2ostream@{bz2ostream}}
+\index{bz2ostream@{bz2ostream}!bz2ostream@{bz2ostream}}
+\subsubsection[{bz2ostream(std\+::streambuf $\ast$dest, unsigned int block\+\_\+size\+\_\+100\+K=9, unsigned int verbosity=0, unsigned int work\+\_\+factor=0, bzalloc\+\_\+ptr bzalloc=\+N\+U\+L\+L, bzfree\+\_\+ptr bzfree=\+N\+U\+L\+L, void $\ast$opaque=\+N\+U\+L\+L, size\+\_\+t buffer\+\_\+size=1024, size\+\_\+t out\+\_\+buffer\+\_\+size=1024)}]{\setlength{\rightskip}{0pt plus 5cm}bz2ostream\+::bz2ostream (
+\begin{DoxyParamCaption}
+\item[{std\+::streambuf $\ast$}]{dest, }
+\item[{unsigned int}]{block\+\_\+size\+\_\+100\+K = {\ttfamily 9}, }
+\item[{unsigned int}]{verbosity = {\ttfamily 0}, }
+\item[{unsigned int}]{work\+\_\+factor = {\ttfamily 0}, }
+\item[{{\bf bzalloc\+\_\+ptr}}]{bzalloc = {\ttfamily NULL}, }
+\item[{{\bf bzfree\+\_\+ptr}}]{bzfree = {\ttfamily NULL}, }
+\item[{void $\ast$}]{opaque = {\ttfamily NULL}, }
+\item[{size\+\_\+t}]{buffer\+\_\+size = {\ttfamily 1024}, }
+\item[{size\+\_\+t}]{out\+\_\+buffer\+\_\+size = {\ttfamily 1024}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classbz2ostream_abec3e4e8fc51c61ce2b5a8272fc93434}
+
+
+Creates a new \hyperlink{classbz2ostream}{bz2ostream} object. See \hyperlink{classbz2outbuf_ad907143431be210070e941c963df0f14}{bz2outbuf\+::bz2outbuf} for an explanation of the parameters. 
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classbz2ostream_afc503bb7dba240ec2384872767bdb3ba}{}\index{bz2ostream@{bz2ostream}!buf@{buf}}
+\index{buf@{buf}!bz2ostream@{bz2ostream}}
+\subsubsection[{buf}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bz2outbuf} bz2ostream\+::buf\hspace{0.3cm}{\ttfamily [protected]}}\label{classbz2ostream_afc503bb7dba240ec2384872767bdb3ba}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{bz2stream_8h}{bz2stream.\+h}\end{DoxyCompactItemize}

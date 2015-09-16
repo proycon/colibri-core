@@ -1,0 +1,92 @@
+\hypertarget{pattern_8cpp}{}\section{src/pattern.cpp File Reference}
+\label{pattern_8cpp}\index{src/pattern.\+cpp@{src/pattern.\+cpp}}
+{\ttfamily \#include \char`\"{}pattern.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}patternstore.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Spooky\+V2.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$cstring$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+unsigned char $\ast$ \hyperlink{pattern_8cpp_a596d31d8e393e5280e06a8e82cadd416}{inttopatterndata} (unsigned char $\ast$buffer, unsigned int cls)
+\item 
+const \hyperlink{pattern_8h_a17879f85ec892834fb691c61e71dfe54}{Pattern\+Category} \hyperlink{pattern_8cpp_a455f4834be42248a30579f12c8fce1f1}{datacategory} (const unsigned char $\ast$data, int maxbytes=0)
+\item 
+const size\+\_\+t \hyperlink{pattern_8cpp_aa35f7c02f0b33f90cf30fca8eda3c712}{datasize} (unsigned char $\ast$data, int maxbytes=0)
+\item 
+std\+::string \hyperlink{pattern_8cpp_a1d1ad9be89018e20698de73bf51847f3}{datatostring} (unsigned char $\ast$data, const \hyperlink{classClassDecoder}{Class\+Decoder} \&classdecoder, int maxbytes=0)
+\item 
+bool \hyperlink{pattern_8cpp_aaeedd854046c679043b1c3c72984a663}{dataout} (unsigned char $\ast$data, int maxbytes=0)
+\item 
+void \hyperlink{pattern_8cpp_a3afea24db8ad9026a42ac0e9caa0b72e}{readanddiscardpattern} (std\+::istream $\ast$in)
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{pattern_8cpp_a5e9195e7d434a0b52779b53baf69283f}{patternfromfile} (const std\+::string \&filename)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+unsigned char \hyperlink{pattern_8cpp_a9ba6d45200bf94ac8b18fe107a733a31}{mainpatternbuffer} \mbox{[}\hyperlink{pattern_8h_abb5e3da43ee16bd408675e2c306e0c8c}{M\+A\+I\+N\+P\+A\+T\+T\+E\+R\+N\+B\+U\+F\+F\+E\+R\+S\+I\+Z\+E}+1\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{pattern_8cpp_a455f4834be42248a30579f12c8fce1f1}{}\index{pattern.\+cpp@{pattern.\+cpp}!datacategory@{datacategory}}
+\index{datacategory@{datacategory}!pattern.\+cpp@{pattern.\+cpp}}
+\subsubsection[{datacategory(const unsigned char $\ast$data, int maxbytes=0)}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Pattern\+Category} datacategory (
+\begin{DoxyParamCaption}
+\item[{const unsigned char $\ast$}]{data, }
+\item[{int}]{maxbytes = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}\label{pattern_8cpp_a455f4834be42248a30579f12c8fce1f1}
+\hypertarget{pattern_8cpp_aaeedd854046c679043b1c3c72984a663}{}\index{pattern.\+cpp@{pattern.\+cpp}!dataout@{dataout}}
+\index{dataout@{dataout}!pattern.\+cpp@{pattern.\+cpp}}
+\subsubsection[{dataout(unsigned char $\ast$data, int maxbytes=0)}]{\setlength{\rightskip}{0pt plus 5cm}bool dataout (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{data, }
+\item[{int}]{maxbytes = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}\label{pattern_8cpp_aaeedd854046c679043b1c3c72984a663}
+\hypertarget{pattern_8cpp_aa35f7c02f0b33f90cf30fca8eda3c712}{}\index{pattern.\+cpp@{pattern.\+cpp}!datasize@{datasize}}
+\index{datasize@{datasize}!pattern.\+cpp@{pattern.\+cpp}}
+\subsubsection[{datasize(unsigned char $\ast$data, int maxbytes=0)}]{\setlength{\rightskip}{0pt plus 5cm}const size\+\_\+t datasize (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{data, }
+\item[{int}]{maxbytes = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}\label{pattern_8cpp_aa35f7c02f0b33f90cf30fca8eda3c712}
+\hypertarget{pattern_8cpp_a1d1ad9be89018e20698de73bf51847f3}{}\index{pattern.\+cpp@{pattern.\+cpp}!datatostring@{datatostring}}
+\index{datatostring@{datatostring}!pattern.\+cpp@{pattern.\+cpp}}
+\subsubsection[{datatostring(unsigned char $\ast$data, const Class\+Decoder \&classdecoder, int maxbytes=0)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string datatostring (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{data, }
+\item[{const {\bf Class\+Decoder} \&}]{classdecoder, }
+\item[{int}]{maxbytes = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}\label{pattern_8cpp_a1d1ad9be89018e20698de73bf51847f3}
+\hypertarget{pattern_8cpp_a596d31d8e393e5280e06a8e82cadd416}{}\index{pattern.\+cpp@{pattern.\+cpp}!inttopatterndata@{inttopatterndata}}
+\index{inttopatterndata@{inttopatterndata}!pattern.\+cpp@{pattern.\+cpp}}
+\subsubsection[{inttopatterndata(unsigned char $\ast$buffer, unsigned int cls)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ inttopatterndata (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{buffer, }
+\item[{unsigned int}]{cls}
+\end{DoxyParamCaption}
+)}\label{pattern_8cpp_a596d31d8e393e5280e06a8e82cadd416}
+\hypertarget{pattern_8cpp_a5e9195e7d434a0b52779b53baf69283f}{}\index{pattern.\+cpp@{pattern.\+cpp}!patternfromfile@{patternfromfile}}
+\index{patternfromfile@{patternfromfile}!pattern.\+cpp@{pattern.\+cpp}}
+\subsubsection[{patternfromfile(const std\+::string \&filename)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} patternfromfile (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{filename}
+\end{DoxyParamCaption}
+)}\label{pattern_8cpp_a5e9195e7d434a0b52779b53baf69283f}
+\hypertarget{pattern_8cpp_a3afea24db8ad9026a42ac0e9caa0b72e}{}\index{pattern.\+cpp@{pattern.\+cpp}!readanddiscardpattern@{readanddiscardpattern}}
+\index{readanddiscardpattern@{readanddiscardpattern}!pattern.\+cpp@{pattern.\+cpp}}
+\subsubsection[{readanddiscardpattern(std\+::istream $\ast$in)}]{\setlength{\rightskip}{0pt plus 5cm}void readanddiscardpattern (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in}
+\end{DoxyParamCaption}
+)}\label{pattern_8cpp_a3afea24db8ad9026a42ac0e9caa0b72e}
+
+
+\subsection{Variable Documentation}
+\hypertarget{pattern_8cpp_a9ba6d45200bf94ac8b18fe107a733a31}{}\index{pattern.\+cpp@{pattern.\+cpp}!mainpatternbuffer@{mainpatternbuffer}}
+\index{mainpatternbuffer@{mainpatternbuffer}!pattern.\+cpp@{pattern.\+cpp}}
+\subsubsection[{mainpatternbuffer}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char mainpatternbuffer\mbox{[}{\bf M\+A\+I\+N\+P\+A\+T\+T\+E\+R\+N\+B\+U\+F\+F\+E\+R\+S\+I\+Z\+E}+1\mbox{]}}\label{pattern_8cpp_a9ba6d45200bf94ac8b18fe107a733a31}

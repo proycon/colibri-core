@@ -1,0 +1,202 @@
+\hypertarget{classPatternFeatureVectorMap}{}\section{Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ Class Template Reference}
+\label{classPatternFeatureVectorMap}\index{Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$@{Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$}}
+
+
+{\ttfamily \#include $<$datatypes.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::vector$<$ \hyperlink{classPatternFeatureVector}{Pattern\+Feature\+Vector}$<$ Feature\+Type $>$ $\ast$ $>$\+::\hyperlink{classPatternFeatureVectorMap_ae7d2f49b99e49834acbc799a0660cb18}{const\+\_\+iterator} \hyperlink{classPatternFeatureVectorMap_ae7d2f49b99e49834acbc799a0660cb18}{const\+\_\+iterator}
+\item 
+typedef std\+::vector$<$ \hyperlink{classPatternFeatureVector}{Pattern\+Feature\+Vector}$<$ Feature\+Type $>$ $\ast$ $>$\+::\hyperlink{classPatternFeatureVectorMap_a1c80bb683efdee17443a5b951412ddd3}{iterator} \hyperlink{classPatternFeatureVectorMap_a1c80bb683efdee17443a5b951412ddd3}{iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPatternFeatureVectorMap_a0381ca488621083a7fafc3e63eedfcae}{Pattern\+Feature\+Vector\+Map} ()
+\item 
+\hyperlink{classPatternFeatureVectorMap_aab61ba487b202bc5c0be4a68c3924628}{Pattern\+Feature\+Vector\+Map} (const \hyperlink{classPatternFeatureVectorMap}{Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ \&ref)
+\item 
+virtual \hyperlink{classPatternFeatureVectorMap_ab4b85487d672c47ed1102ddc485b01d3}{$\sim$\+Pattern\+Feature\+Vector\+Map} ()
+\item 
+bool \hyperlink{classPatternFeatureVectorMap_ad85a2e354504ffdc477d1d38de98c4ae}{has} (const \hyperlink{classPattern}{Pattern} \&ref) const 
+\item 
+\hyperlink{classPatternFeatureVectorMap_a1c80bb683efdee17443a5b951412ddd3}{iterator} \hyperlink{classPatternFeatureVectorMap_a7ae30986f3e207afc18cdc918960ad81}{find} (const \hyperlink{classPattern}{Pattern} \&ref)
+\item 
+unsigned int \hyperlink{classPatternFeatureVectorMap_aafd5e6211bd53aebb5f3810b17d60b32}{count} () const 
+\item 
+void \hyperlink{classPatternFeatureVectorMap_a90b60dbc7335c97312816da56c7faa56}{insert} (\hyperlink{classPatternFeatureVector}{Pattern\+Feature\+Vector}$<$ Feature\+Type $>$ $\ast$pfv, bool checkexists=true)
+\item 
+void \hyperlink{classPatternFeatureVectorMap_a0c8495e15a6979ea51f272d908b7c82a}{insert} (\hyperlink{classPatternFeatureVector}{Pattern\+Feature\+Vector}$<$ Feature\+Type $>$ \&value, bool checkexists=true)
+\item 
+size\+\_\+t \hyperlink{classPatternFeatureVectorMap_a886aeabb1db572b24b156288af3e9779}{size} () const 
+\item 
+virtual std\+::string \hyperlink{classPatternFeatureVectorMap_a5577a2d1f129119754a8afed91bf60bb}{tostring} ()
+\item 
+\hyperlink{classPatternFeatureVectorMap_a1c80bb683efdee17443a5b951412ddd3}{iterator} \hyperlink{classPatternFeatureVectorMap_afc5fa83a43764f47a1dc817fd4c2f9a4}{begin} ()
+\item 
+\hyperlink{classPatternFeatureVectorMap_ae7d2f49b99e49834acbc799a0660cb18}{const\+\_\+iterator} \hyperlink{classPatternFeatureVectorMap_a316e2846d97d33f2d1d3e0dd6b80504d}{begin} () const 
+\item 
+\hyperlink{classPatternFeatureVectorMap_a1c80bb683efdee17443a5b951412ddd3}{iterator} \hyperlink{classPatternFeatureVectorMap_ac19308fec657ab0d40f9379a4df59d56}{end} ()
+\item 
+\hyperlink{classPatternFeatureVectorMap_ae7d2f49b99e49834acbc799a0660cb18}{const\+\_\+iterator} \hyperlink{classPatternFeatureVectorMap_a4da010d37dfdd0bc42e752d2e282942b}{end} () const 
+\item 
+virtual \hyperlink{classPatternFeatureVector}{Pattern\+Feature\+Vector}$<$ Feature\+Type $>$ $\ast$ \hyperlink{classPatternFeatureVectorMap_ad89fc79a2d663bee2e3fd3670f3da956}{getdata} (const \hyperlink{classPattern}{Pattern} \&pattern)
+\item 
+void \hyperlink{classPatternFeatureVectorMap_a63d6aa6a1866aa900765bdbe70be3a55}{reserve} (size\+\_\+t \hyperlink{classPatternFeatureVectorMap_a886aeabb1db572b24b156288af3e9779}{size})
+\item 
+void \hyperlink{classPatternFeatureVectorMap_aa6333ce6acb01124ab3f8485b0d46aa2}{shrink\+\_\+to\+\_\+fit} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ \hyperlink{classPatternFeatureVector}{Pattern\+Feature\+Vector}$<$ Feature\+Type $>$ $\ast$ $>$ \hyperlink{classPatternFeatureVectorMap_aa07d43ae4f1c409ae7ceb903d826cf6f}{data}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classPatternFeatureVectorMap_ae7d2f49b99e49834acbc799a0660cb18}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!const\+\_\+iterator@{const\+\_\+iterator}}
+\index{const\+\_\+iterator@{const\+\_\+iterator}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{const\+\_\+iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ typedef std\+::vector$<${\bf Pattern\+Feature\+Vector}$<$Feature\+Type$>$$\ast$$>$\+::{\bf const\+\_\+iterator} {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::{\bf const\+\_\+iterator}}\label{classPatternFeatureVectorMap_ae7d2f49b99e49834acbc799a0660cb18}
+\hypertarget{classPatternFeatureVectorMap_a1c80bb683efdee17443a5b951412ddd3}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!iterator@{iterator}}
+\index{iterator@{iterator}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ typedef std\+::vector$<${\bf Pattern\+Feature\+Vector}$<$Feature\+Type$>$$\ast$$>$\+::{\bf iterator} {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::{\bf iterator}}\label{classPatternFeatureVectorMap_a1c80bb683efdee17443a5b951412ddd3}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classPatternFeatureVectorMap_a0381ca488621083a7fafc3e63eedfcae}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{Pattern\+Feature\+Vector\+Map()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::{\bf Pattern\+Feature\+Vector\+Map} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_a0381ca488621083a7fafc3e63eedfcae}
+\hypertarget{classPatternFeatureVectorMap_aab61ba487b202bc5c0be4a68c3924628}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{Pattern\+Feature\+Vector\+Map(const Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::{\bf Pattern\+Feature\+Vector\+Map} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ \&}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_aab61ba487b202bc5c0be4a68c3924628}
+\hypertarget{classPatternFeatureVectorMap_ab4b85487d672c47ed1102ddc485b01d3}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!````~Pattern\+Feature\+Vector\+Map@{$\sim$\+Pattern\+Feature\+Vector\+Map}}
+\index{````~Pattern\+Feature\+Vector\+Map@{$\sim$\+Pattern\+Feature\+Vector\+Map}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{$\sim$\+Pattern\+Feature\+Vector\+Map()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ virtual {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::$\sim${\bf Pattern\+Feature\+Vector\+Map} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternFeatureVectorMap_ab4b85487d672c47ed1102ddc485b01d3}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPatternFeatureVectorMap_afc5fa83a43764f47a1dc817fd4c2f9a4}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!begin@{begin}}
+\index{begin@{begin}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{begin()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf iterator} {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_afc5fa83a43764f47a1dc817fd4c2f9a4}
+\hypertarget{classPatternFeatureVectorMap_a316e2846d97d33f2d1d3e0dd6b80504d}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!begin@{begin}}
+\index{begin@{begin}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{begin() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf const\+\_\+iterator} {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_a316e2846d97d33f2d1d3e0dd6b80504d}
+\hypertarget{classPatternFeatureVectorMap_aafd5e6211bd53aebb5f3810b17d60b32}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!count@{count}}
+\index{count@{count}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{count() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ unsigned int {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::count (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_aafd5e6211bd53aebb5f3810b17d60b32}
+\hypertarget{classPatternFeatureVectorMap_ac19308fec657ab0d40f9379a4df59d56}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!end@{end}}
+\index{end@{end}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{end()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf iterator} {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_ac19308fec657ab0d40f9379a4df59d56}
+\hypertarget{classPatternFeatureVectorMap_a4da010d37dfdd0bc42e752d2e282942b}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!end@{end}}
+\index{end@{end}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{end() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf const\+\_\+iterator} {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_a4da010d37dfdd0bc42e752d2e282942b}
+\hypertarget{classPatternFeatureVectorMap_a7ae30986f3e207afc18cdc918960ad81}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!find@{find}}
+\index{find@{find}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{find(const Pattern \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf iterator} {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_a7ae30986f3e207afc18cdc918960ad81}
+\hypertarget{classPatternFeatureVectorMap_ad89fc79a2d663bee2e3fd3670f3da956}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!getdata@{getdata}}
+\index{getdata@{getdata}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{getdata(const Pattern \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ virtual {\bf Pattern\+Feature\+Vector}$<$Feature\+Type$>$$\ast$ {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::getdata (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternFeatureVectorMap_ad89fc79a2d663bee2e3fd3670f3da956}
+\hypertarget{classPatternFeatureVectorMap_ad85a2e354504ffdc477d1d38de98c4ae}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!has@{has}}
+\index{has@{has}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{has(const Pattern \&ref) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ bool {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::has (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{ref}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_ad85a2e354504ffdc477d1d38de98c4ae}
+\hypertarget{classPatternFeatureVectorMap_a90b60dbc7335c97312816da56c7faa56}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!insert@{insert}}
+\index{insert@{insert}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{insert(\+Pattern\+Feature\+Vector$<$ Feature\+Type $>$ $\ast$pfv, bool checkexists=true)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ void {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::insert (
+\begin{DoxyParamCaption}
+\item[{{\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$ $\ast$}]{pfv, }
+\item[{bool}]{checkexists = {\ttfamily true}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_a90b60dbc7335c97312816da56c7faa56}
+\hypertarget{classPatternFeatureVectorMap_a0c8495e15a6979ea51f272d908b7c82a}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!insert@{insert}}
+\index{insert@{insert}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{insert(\+Pattern\+Feature\+Vector$<$ Feature\+Type $>$ \&value, bool checkexists=true)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ void {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::insert (
+\begin{DoxyParamCaption}
+\item[{{\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$ \&}]{value, }
+\item[{bool}]{checkexists = {\ttfamily true}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_a0c8495e15a6979ea51f272d908b7c82a}
+\hypertarget{classPatternFeatureVectorMap_a63d6aa6a1866aa900765bdbe70be3a55}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!reserve@{reserve}}
+\index{reserve@{reserve}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{reserve(size\+\_\+t size)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ void {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::reserve (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_a63d6aa6a1866aa900765bdbe70be3a55}
+\hypertarget{classPatternFeatureVectorMap_aa6333ce6acb01124ab3f8485b0d46aa2}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!shrink\+\_\+to\+\_\+fit@{shrink\+\_\+to\+\_\+fit}}
+\index{shrink\+\_\+to\+\_\+fit@{shrink\+\_\+to\+\_\+fit}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{shrink\+\_\+to\+\_\+fit()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ void {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::shrink\+\_\+to\+\_\+fit (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_aa6333ce6acb01124ab3f8485b0d46aa2}
+\hypertarget{classPatternFeatureVectorMap_a886aeabb1db572b24b156288af3e9779}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!size@{size}}
+\index{size@{size}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ size\+\_\+t {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMap_a886aeabb1db572b24b156288af3e9779}
+\hypertarget{classPatternFeatureVectorMap_a5577a2d1f129119754a8afed91bf60bb}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!tostring@{tostring}}
+\index{tostring@{tostring}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{tostring()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ virtual std\+::string {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::tostring (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternFeatureVectorMap_a5577a2d1f129119754a8afed91bf60bb}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classPatternFeatureVectorMap_aa07d43ae4f1c409ae7ceb903d826cf6f}{}\index{Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}!data@{data}}
+\index{data@{data}!Pattern\+Feature\+Vector\+Map@{Pattern\+Feature\+Vector\+Map}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ std\+::vector$<${\bf Pattern\+Feature\+Vector}$<$Feature\+Type$>$ $\ast$$>$ {\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$\+::data}\label{classPatternFeatureVectorMap_aa07d43ae4f1c409ae7ceb903d826cf6f}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{datatypes_8h}{datatypes.\+h}\end{DoxyCompactItemize}

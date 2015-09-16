@@ -1,0 +1,90 @@
+\hypertarget{common_8cpp}{}\section{src/common.cpp File Reference}
+\label{common_8cpp}\index{src/common.\+cpp@{src/common.\+cpp}}
+{\ttfamily \#include \char`\"{}common.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$glob.\+h$>$}\\*
+{\ttfamily \#include $<$sstream$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \hyperlink{common_8cpp_a2aff1a2b056deb94193805ed343537e4}{trim} (const std\+::string \&t, const std\+::string \&ws)
+\item 
+std\+::string \hyperlink{common_8cpp_a700bda521eeb90915cd175a22c86eb0d}{get\+\_\+extension} (const std\+::string \&filename)
+\item 
+bool \hyperlink{common_8cpp_a8544a216bc5f2e6d50d507e3208d7e06}{strip\+\_\+extension} (std\+::string \&filename, const std\+::string extension)
+\item 
+double \hyperlink{common_8cpp_a1ab688049cbf324201871bc62d2fc409}{listproduct} (const vector$<$ double $>$ \&l)
+\item 
+double \hyperlink{common_8cpp_a6e00392147ee6d3b1baa27e0482435f8}{listsum} (const vector$<$ double $>$ \&l)
+\item 
+void \hyperlink{common_8cpp_a8d1d17912722e55b63720e66162bece5}{orderedinsert} (list$<$ double $>$ \&l, double value)
+\item 
+vector$<$ string $>$ \& \hyperlink{common_8cpp_a9006fe1efd7ed909359f4f09aebc9145}{split} (const string \&s, char delim, vector$<$ string $>$ \&elems)
+\item 
+vector$<$ string $>$ \hyperlink{common_8cpp_add313f0fe82466f4c1c4622307d928bc}{split} (const string \&s, char delim)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{common_8cpp_a700bda521eeb90915cd175a22c86eb0d}{}\index{common.\+cpp@{common.\+cpp}!get\+\_\+extension@{get\+\_\+extension}}
+\index{get\+\_\+extension@{get\+\_\+extension}!common.\+cpp@{common.\+cpp}}
+\subsubsection[{get\+\_\+extension(const std\+::string \&filename)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string get\+\_\+extension (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{filename}
+\end{DoxyParamCaption}
+)}\label{common_8cpp_a700bda521eeb90915cd175a22c86eb0d}
+\hypertarget{common_8cpp_a1ab688049cbf324201871bc62d2fc409}{}\index{common.\+cpp@{common.\+cpp}!listproduct@{listproduct}}
+\index{listproduct@{listproduct}!common.\+cpp@{common.\+cpp}}
+\subsubsection[{listproduct(const vector$<$ double $>$ \&l)}]{\setlength{\rightskip}{0pt plus 5cm}double listproduct (
+\begin{DoxyParamCaption}
+\item[{const vector$<$ double $>$ \&}]{l}
+\end{DoxyParamCaption}
+)}\label{common_8cpp_a1ab688049cbf324201871bc62d2fc409}
+\hypertarget{common_8cpp_a6e00392147ee6d3b1baa27e0482435f8}{}\index{common.\+cpp@{common.\+cpp}!listsum@{listsum}}
+\index{listsum@{listsum}!common.\+cpp@{common.\+cpp}}
+\subsubsection[{listsum(const vector$<$ double $>$ \&l)}]{\setlength{\rightskip}{0pt plus 5cm}double listsum (
+\begin{DoxyParamCaption}
+\item[{const vector$<$ double $>$ \&}]{l}
+\end{DoxyParamCaption}
+)}\label{common_8cpp_a6e00392147ee6d3b1baa27e0482435f8}
+\hypertarget{common_8cpp_a8d1d17912722e55b63720e66162bece5}{}\index{common.\+cpp@{common.\+cpp}!orderedinsert@{orderedinsert}}
+\index{orderedinsert@{orderedinsert}!common.\+cpp@{common.\+cpp}}
+\subsubsection[{orderedinsert(list$<$ double $>$ \&l, double value)}]{\setlength{\rightskip}{0pt plus 5cm}void orderedinsert (
+\begin{DoxyParamCaption}
+\item[{list$<$ double $>$ \&}]{l, }
+\item[{double}]{value}
+\end{DoxyParamCaption}
+)}\label{common_8cpp_a8d1d17912722e55b63720e66162bece5}
+\hypertarget{common_8cpp_a9006fe1efd7ed909359f4f09aebc9145}{}\index{common.\+cpp@{common.\+cpp}!split@{split}}
+\index{split@{split}!common.\+cpp@{common.\+cpp}}
+\subsubsection[{split(const string \&s, char delim, vector$<$ string $>$ \&elems)}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$string$>$\& split (
+\begin{DoxyParamCaption}
+\item[{const string \&}]{s, }
+\item[{char}]{delim, }
+\item[{vector$<$ string $>$ \&}]{elems}
+\end{DoxyParamCaption}
+)}\label{common_8cpp_a9006fe1efd7ed909359f4f09aebc9145}
+\hypertarget{common_8cpp_add313f0fe82466f4c1c4622307d928bc}{}\index{common.\+cpp@{common.\+cpp}!split@{split}}
+\index{split@{split}!common.\+cpp@{common.\+cpp}}
+\subsubsection[{split(const string \&s, char delim)}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$string$>$ split (
+\begin{DoxyParamCaption}
+\item[{const string \&}]{s, }
+\item[{char}]{delim}
+\end{DoxyParamCaption}
+)}\label{common_8cpp_add313f0fe82466f4c1c4622307d928bc}
+\hypertarget{common_8cpp_a8544a216bc5f2e6d50d507e3208d7e06}{}\index{common.\+cpp@{common.\+cpp}!strip\+\_\+extension@{strip\+\_\+extension}}
+\index{strip\+\_\+extension@{strip\+\_\+extension}!common.\+cpp@{common.\+cpp}}
+\subsubsection[{strip\+\_\+extension(std\+::string \&filename, const std\+::string extension)}]{\setlength{\rightskip}{0pt plus 5cm}bool strip\+\_\+extension (
+\begin{DoxyParamCaption}
+\item[{std\+::string \&}]{filename, }
+\item[{const std\+::string}]{extension}
+\end{DoxyParamCaption}
+)}\label{common_8cpp_a8544a216bc5f2e6d50d507e3208d7e06}
+\hypertarget{common_8cpp_a2aff1a2b056deb94193805ed343537e4}{}\index{common.\+cpp@{common.\+cpp}!trim@{trim}}
+\index{trim@{trim}!common.\+cpp@{common.\+cpp}}
+\subsubsection[{trim(const std\+::string \&t, const std\+::string \&ws)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string trim (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{t, }
+\item[{const std\+::string \&}]{ws}
+\end{DoxyParamCaption}
+)}\label{common_8cpp_a2aff1a2b056deb94193805ed343537e4}

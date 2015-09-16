@@ -1,0 +1,48 @@
+\hypertarget{datatypes_8h}{}\section{include/datatypes.h File Reference}
+\label{datatypes_8h}\index{include/datatypes.\+h@{include/datatypes.\+h}}
+
+
+Classes for data types and handlers for those data types.  
+
+
+{\ttfamily \#include $<$string$>$}\\*
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$ostream$>$}\\*
+{\ttfamily \#include $<$istream$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$set$>$}\\*
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include \char`\"{}common.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pattern.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}datatypes.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}classdecoder.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classIndexReference}{Index\+Reference}
+\begin{DoxyCompactList}\small\item\em Reference to a position in the corpus. \end{DoxyCompactList}\item 
+class \hyperlink{classIndexedData}{Indexed\+Data}
+\begin{DoxyCompactList}\small\item\em Collection of references to position in the corpus (\hyperlink{classIndexReference}{Index\+Reference}). Used by Indexed \hyperlink{classPattern}{Pattern} models. \end{DoxyCompactList}\item 
+class \hyperlink{classAbstractValueHandler}{Abstract\+Value\+Handler$<$ Value\+Type $>$}
+\begin{DoxyCompactList}\small\item\em Abstract value handler class, all value handlers are derived from this. Value handlers are interfaces to the values in \hyperlink{classPattern}{Pattern} Maps. They are used to abstract from the actual value data type and provide some common methods required for all values, as well at methods for serialisation from/to binary file. All are derived from the abstract class \hyperlink{classAbstractValueHandler}{Abstract\+Value\+Handler}. \end{DoxyCompactList}\item 
+class \hyperlink{classBaseValueHandler}{Base\+Value\+Handler$<$ Value\+Type $>$}
+\begin{DoxyCompactList}\small\item\em This templated class can be used for all numeric base types (such as int, uint16\+\_\+t, float, etc). \end{DoxyCompactList}\item 
+class \hyperlink{classIndexedDataHandler}{Indexed\+Data\+Handler}
+\begin{DoxyCompactList}\small\item\em Data handler for \hyperlink{classIndexedData}{Indexed\+Data}. Deals with serialisation from/to file and conversions. \end{DoxyCompactList}\item 
+class \hyperlink{classPatternFeatureVector}{Pattern\+Feature\+Vector$<$ Feature\+Type $>$}
+\item 
+class \hyperlink{classPatternFeatureVectorMap}{Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$}
+\item 
+class \hyperlink{classPatternFeatureVectorMapHandler}{Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Classes for data types and handlers for those data types. 
+
+\begin{DoxyAuthor}{Author}
+Maarten van Gompel (proycon) \href{mailto:proycon@anaproy.nl}{\tt proycon@anaproy.\+nl}
+\end{DoxyAuthor}
+\hypertarget{SpookyV2_8h_LICENSE}{}\subsection{L\+I\+C\+E\+N\+S\+E}\label{SpookyV2_8h_LICENSE}
+Licensed under G\+P\+Lv3\hypertarget{SpookyV2_8h_DESCRIPTION}{}\subsection{D\+E\+S\+C\+R\+I\+P\+T\+I\+O\+N}\label{SpookyV2_8h_DESCRIPTION}
+Classes for data types and handlers for those data types. They can be passes as template parameters to the various containers. 

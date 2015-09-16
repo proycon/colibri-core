@@ -1,0 +1,251 @@
+\hypertarget{classHashOrderedPatternSet}{}\section{Hash\+Ordered\+Pattern\+Set$<$ Read\+Write\+Size\+Type $>$ Class Template Reference}
+\label{classHashOrderedPatternSet}\index{Hash\+Ordered\+Pattern\+Set$<$ Read\+Write\+Size\+Type $>$@{Hash\+Ordered\+Pattern\+Set$<$ Read\+Write\+Size\+Type $>$}}
+
+
+A pattern store in the form of an ordered set (i.\+e, no duplicates). Stores only patterns, no values.  
+
+
+
+
+{\ttfamily \#include $<$patternstore.\+h$>$}
+
+Inheritance diagram for Hash\+Ordered\+Pattern\+Set$<$ Read\+Write\+Size\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classHashOrderedPatternSet}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef t\+\_\+hashorderedpatternset\+::iterator \hyperlink{classHashOrderedPatternSet_a3191eb8aa122dfe2bf819d37468bd0b6}{iterator}
+\item 
+typedef t\+\_\+hashorderedpatternset\+::const\+\_\+iterator \hyperlink{classHashOrderedPatternSet_a5e1bbb1c4ef5ee0937bc0d5251a8d97e}{const\+\_\+iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classHashOrderedPatternSet_a045167c1a12c5e9e6dca775c2080a7b0}{Hash\+Ordered\+Pattern\+Set} ()
+\item 
+virtual \hyperlink{classHashOrderedPatternSet_acabae5fd5eb84ef383deb562a4cef808}{$\sim$\+Hash\+Ordered\+Pattern\+Set} ()
+\item 
+void \hyperlink{classHashOrderedPatternSet_a9da0aaf61e7b1425a181da16ccef6a1b}{insert} (const \hyperlink{classPattern}{Pattern} pattern)
+\item 
+bool \hyperlink{classHashOrderedPatternSet_ac21ec186302af16a3b70c5c85e434510}{has} (const \hyperlink{classPattern}{Pattern} \&pattern) const 
+\item 
+bool \hyperlink{classHashOrderedPatternSet_a4d917cedc8386b463aae0ad86856c82a}{has} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&pattern) const 
+\item 
+size\+\_\+t \hyperlink{classHashOrderedPatternSet_a42fee5ee6f163edf807623ffc6ab2617}{size} () const 
+\item 
+\hyperlink{classHashOrderedPatternSet_a3191eb8aa122dfe2bf819d37468bd0b6}{iterator} \hyperlink{classHashOrderedPatternSet_a94bf915d870e33639c80839d7da7ce54}{begin} ()
+\item 
+\hyperlink{classHashOrderedPatternSet_a5e1bbb1c4ef5ee0937bc0d5251a8d97e}{const\+\_\+iterator} \hyperlink{classHashOrderedPatternSet_a82869ce8a41f6f5d45ffca4cd4f4133c}{begin} () const 
+\item 
+\hyperlink{classHashOrderedPatternSet_a3191eb8aa122dfe2bf819d37468bd0b6}{iterator} \hyperlink{classHashOrderedPatternSet_ada3bb2f1617443ad288c5c22dcd33ec0}{end} ()
+\item 
+\hyperlink{classHashOrderedPatternSet_a5e1bbb1c4ef5ee0937bc0d5251a8d97e}{const\+\_\+iterator} \hyperlink{classHashOrderedPatternSet_a0bd639de898189b047a8432292d18392}{end} () const 
+\item 
+\hyperlink{classHashOrderedPatternSet_a3191eb8aa122dfe2bf819d37468bd0b6}{iterator} \hyperlink{classHashOrderedPatternSet_aaf005777860a7af872aa104b1b7f9895}{find} (const \hyperlink{classPattern}{Pattern} \&pattern)
+\item 
+\hyperlink{classHashOrderedPatternSet_a5e1bbb1c4ef5ee0937bc0d5251a8d97e}{const\+\_\+iterator} \hyperlink{classHashOrderedPatternSet_a1c4db04fcfa32faf3f807f40bc52f602}{find} (const \hyperlink{classPattern}{Pattern} \&pattern) const 
+\item 
+bool \hyperlink{classHashOrderedPatternSet_ab48e2380fcc00d9dc0ef01d9217fb5e6}{erase} (const \hyperlink{classPattern}{Pattern} \&pattern)
+\item 
+\hyperlink{classHashOrderedPatternSet_a3191eb8aa122dfe2bf819d37468bd0b6}{iterator} \hyperlink{classHashOrderedPatternSet_a6240dd699062a02b09811935517edab2}{erase} (\hyperlink{classHashOrderedPatternSet_a5e1bbb1c4ef5ee0937bc0d5251a8d97e}{const\+\_\+iterator} position)
+\item 
+void \hyperlink{classHashOrderedPatternSet_a5410dc1022729fe531e7ef7dcd0e845c}{write} (std\+::ostream $\ast$out)
+\item 
+void \hyperlink{classHashOrderedPatternSet_ae4f18bc4f126da615a0ec194fe8f24b0}{read} (std\+::istream $\ast$in, int M\+I\+N\+L\+E\+N\+G\+T\+H=0, int M\+A\+X\+L\+E\+N\+G\+T\+H=999999, bool D\+O\+N\+G\+R\+A\+M\+S=true, bool D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S=true, bool D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S=true)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{patternstore_8h_a95f03de9f728d05eb31111e2dbdac6a7}{t\+\_\+hashorderedpatternset} \hyperlink{classHashOrderedPatternSet_a04f495b51e93c8f7d6798623398e5e61}{data}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Read\+Write\+Size\+Type = uint64\+\_\+t$>$class Hash\+Ordered\+Pattern\+Set$<$ Read\+Write\+Size\+Type $>$}
+
+A pattern store in the form of an ordered set (i.\+e, no duplicates). Stores only patterns, no values. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Read\+Write\+Size\+Type} & The data type for addressing, determines the maximum amount of patterns that can be held, only used in serialisation/deserialisation \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classHashOrderedPatternSet_a5e1bbb1c4ef5ee0937bc0d5251a8d97e}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!const\+\_\+iterator@{const\+\_\+iterator}}
+\index{const\+\_\+iterator@{const\+\_\+iterator}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{const\+\_\+iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ typedef t\+\_\+hashorderedpatternset\+::const\+\_\+iterator {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::{\bf const\+\_\+iterator}}\label{classHashOrderedPatternSet_a5e1bbb1c4ef5ee0937bc0d5251a8d97e}
+\hypertarget{classHashOrderedPatternSet_a3191eb8aa122dfe2bf819d37468bd0b6}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!iterator@{iterator}}
+\index{iterator@{iterator}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ typedef t\+\_\+hashorderedpatternset\+::iterator {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::{\bf iterator}}\label{classHashOrderedPatternSet_a3191eb8aa122dfe2bf819d37468bd0b6}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classHashOrderedPatternSet_a045167c1a12c5e9e6dca775c2080a7b0}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{Hash\+Ordered\+Pattern\+Set()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::{\bf Hash\+Ordered\+Pattern\+Set} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classHashOrderedPatternSet_a045167c1a12c5e9e6dca775c2080a7b0}
+\hypertarget{classHashOrderedPatternSet_acabae5fd5eb84ef383deb562a4cef808}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!````~Hash\+Ordered\+Pattern\+Set@{$\sim$\+Hash\+Ordered\+Pattern\+Set}}
+\index{````~Hash\+Ordered\+Pattern\+Set@{$\sim$\+Hash\+Ordered\+Pattern\+Set}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{$\sim$\+Hash\+Ordered\+Pattern\+Set()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ virtual {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::$\sim${\bf Hash\+Ordered\+Pattern\+Set} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\label{classHashOrderedPatternSet_acabae5fd5eb84ef383deb562a4cef808}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classHashOrderedPatternSet_a94bf915d870e33639c80839d7da7ce54}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!begin@{begin}}
+\index{begin@{begin}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{begin()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ {\bf iterator} {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_a94bf915d870e33639c80839d7da7ce54}
+
+
+Implements \hyperlink{classPatternStore_a9dfc403ac576e1904f4ec326fec1adaa}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classHashOrderedPatternSet_a82869ce8a41f6f5d45ffca4cd4f4133c}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!begin@{begin}}
+\index{begin@{begin}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{begin() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ {\bf const\+\_\+iterator} {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classHashOrderedPatternSet_a82869ce8a41f6f5d45ffca4cd4f4133c}
+\hypertarget{classHashOrderedPatternSet_ada3bb2f1617443ad288c5c22dcd33ec0}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!end@{end}}
+\index{end@{end}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{end()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ {\bf iterator} {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_ada3bb2f1617443ad288c5c22dcd33ec0}
+
+
+Implements \hyperlink{classPatternStore_aed5adf38c88543123f705e44b4cddfee}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classHashOrderedPatternSet_a0bd639de898189b047a8432292d18392}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!end@{end}}
+\index{end@{end}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{end() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ {\bf const\+\_\+iterator} {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classHashOrderedPatternSet_a0bd639de898189b047a8432292d18392}
+\hypertarget{classHashOrderedPatternSet_ab48e2380fcc00d9dc0ef01d9217fb5e6}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!erase@{erase}}
+\index{erase@{erase}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{erase(const Pattern \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ bool {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::erase (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_ab48e2380fcc00d9dc0ef01d9217fb5e6}
+
+
+Implements \hyperlink{classPatternStore_ad8b6d8e1eba917d45e8667ace70f1b1e}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classHashOrderedPatternSet_a6240dd699062a02b09811935517edab2}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!erase@{erase}}
+\index{erase@{erase}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{erase(const\+\_\+iterator position)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ {\bf iterator} {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::erase (
+\begin{DoxyParamCaption}
+\item[{{\bf const\+\_\+iterator}}]{position}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classHashOrderedPatternSet_a6240dd699062a02b09811935517edab2}
+\hypertarget{classHashOrderedPatternSet_aaf005777860a7af872aa104b1b7f9895}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!find@{find}}
+\index{find@{find}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{find(const Pattern \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ {\bf iterator} {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_aaf005777860a7af872aa104b1b7f9895}
+
+
+Implements \hyperlink{classPatternStore_ac8cf692af151c3aad6aea81fa5748957}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classHashOrderedPatternSet_a1c4db04fcfa32faf3f807f40bc52f602}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!find@{find}}
+\index{find@{find}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{find(const Pattern \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ {\bf const\+\_\+iterator} {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classHashOrderedPatternSet_a1c4db04fcfa32faf3f807f40bc52f602}
+\hypertarget{classHashOrderedPatternSet_ac21ec186302af16a3b70c5c85e434510}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!has@{has}}
+\index{has@{has}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{has(const Pattern \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ bool {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::has (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_ac21ec186302af16a3b70c5c85e434510}
+Does the pattern occur in the pattern store? 
+
+Implements \hyperlink{classPatternStore_abdebd74a21912e436531a64fe8b09a6c}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classHashOrderedPatternSet_a4d917cedc8386b463aae0ad86856c82a}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!has@{has}}
+\index{has@{has}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{has(const Pattern\+Pointer \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ bool {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::has (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_a4d917cedc8386b463aae0ad86856c82a}
+Does the pattern occur in the pattern store? 
+
+Implements \hyperlink{classPatternStore_ad9c8afcf7b7da6acd257c52336751bd2}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classHashOrderedPatternSet_a9da0aaf61e7b1425a181da16ccef6a1b}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!insert@{insert}}
+\index{insert@{insert}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{insert(const Pattern pattern)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ void {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::insert (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern}}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classHashOrderedPatternSet_a9da0aaf61e7b1425a181da16ccef6a1b}
+\hypertarget{classHashOrderedPatternSet_ae4f18bc4f126da615a0ec194fe8f24b0}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!read@{read}}
+\index{read@{read}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{read(std\+::istream $\ast$in, int M\+I\+N\+L\+E\+N\+G\+T\+H=0, int M\+A\+X\+L\+E\+N\+G\+T\+H=999999, bool D\+O\+N\+G\+R\+A\+M\+S=true, bool D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S=true, bool D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S=true)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ void {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::read (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{int}]{M\+I\+N\+L\+E\+N\+G\+T\+H = {\ttfamily 0}, }
+\item[{int}]{M\+A\+X\+L\+E\+N\+G\+T\+H = {\ttfamily 999999}, }
+\item[{bool}]{D\+O\+N\+G\+R\+A\+M\+S = {\ttfamily true}, }
+\item[{bool}]{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S = {\ttfamily true}, }
+\item[{bool}]{D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S = {\ttfamily true}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classHashOrderedPatternSet_ae4f18bc4f126da615a0ec194fe8f24b0}
+\hypertarget{classHashOrderedPatternSet_a42fee5ee6f163edf807623ffc6ab2617}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!size@{size}}
+\index{size@{size}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ size\+\_\+t {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_a42fee5ee6f163edf807623ffc6ab2617}
+How many patterns are in the pattern store? 
+
+Implements \hyperlink{classPatternStore_a586751d731a509da5865d5863d56a8e4}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classHashOrderedPatternSet_a5410dc1022729fe531e7ef7dcd0e845c}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!write@{write}}
+\index{write@{write}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{write(std\+::ostream $\ast$out)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ void {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_a5410dc1022729fe531e7ef7dcd0e845c}
+
+
+Implements \hyperlink{classPatternStore_ac491b99964c6b4c99f5c40519d0c8ccc}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classHashOrderedPatternSet_a04f495b51e93c8f7d6798623398e5e61}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!data@{data}}
+\index{data@{data}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ {\bf t\+\_\+hashorderedpatternset} {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::data\hspace{0.3cm}{\ttfamily [protected]}}\label{classHashOrderedPatternSet_a04f495b51e93c8f7d6798623398e5e61}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{patternstore_8h}{patternstore.\+h}\end{DoxyCompactItemize}

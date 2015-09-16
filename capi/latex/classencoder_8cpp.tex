@@ -1,0 +1,50 @@
+\hypertarget{classencoder_8cpp}{}\section{src/classencoder.cpp File Reference}
+\label{classencoder_8cpp}\index{src/classencoder.\+cpp@{src/classencoder.\+cpp}}
+{\ttfamily \#include \char`\"{}classencoder.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$fstream$>$}\\*
+{\ttfamily \#include $<$cmath$>$}\\*
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$map$>$}\\*
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\\*
+{\ttfamily \#include \char`\"{}bz2stream.\+h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+unsigned char $\ast$ \hyperlink{classencoder_8cpp_ab480fc678930b4cd82b667d4235b135c}{inttobytes} (unsigned int cls, int \&length)
+\item 
+int \hyperlink{classencoder_8cpp_a4f9039489cb2f0e2b654ecfb218e80dd}{utf8\+\_\+strlen} (const string \&str)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const int \hyperlink{classencoder_8cpp_a6fcab04ef7afdfbcaab43a9fd860b5bb}{buildbuffersize} = 65536
+\item 
+unsigned char \hyperlink{classencoder_8cpp_a12073696145ec9d64c88d6c4d986a712}{buildbuffer} \mbox{[}\hyperlink{classencoder_8cpp_a6fcab04ef7afdfbcaab43a9fd860b5bb}{buildbuffersize}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{classencoder_8cpp_ab480fc678930b4cd82b667d4235b135c}{}\index{classencoder.\+cpp@{classencoder.\+cpp}!inttobytes@{inttobytes}}
+\index{inttobytes@{inttobytes}!classencoder.\+cpp@{classencoder.\+cpp}}
+\subsubsection[{inttobytes(unsigned int cls, int \&length)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ inttobytes (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{cls, }
+\item[{int \&}]{length}
+\end{DoxyParamCaption}
+)}\label{classencoder_8cpp_ab480fc678930b4cd82b667d4235b135c}
+\hypertarget{classencoder_8cpp_a4f9039489cb2f0e2b654ecfb218e80dd}{}\index{classencoder.\+cpp@{classencoder.\+cpp}!utf8\+\_\+strlen@{utf8\+\_\+strlen}}
+\index{utf8\+\_\+strlen@{utf8\+\_\+strlen}!classencoder.\+cpp@{classencoder.\+cpp}}
+\subsubsection[{utf8\+\_\+strlen(const string \&str)}]{\setlength{\rightskip}{0pt plus 5cm}int utf8\+\_\+strlen (
+\begin{DoxyParamCaption}
+\item[{const string \&}]{str}
+\end{DoxyParamCaption}
+)}\label{classencoder_8cpp_a4f9039489cb2f0e2b654ecfb218e80dd}
+
+
+\subsection{Variable Documentation}
+\hypertarget{classencoder_8cpp_a12073696145ec9d64c88d6c4d986a712}{}\index{classencoder.\+cpp@{classencoder.\+cpp}!buildbuffer@{buildbuffer}}
+\index{buildbuffer@{buildbuffer}!classencoder.\+cpp@{classencoder.\+cpp}}
+\subsubsection[{buildbuffer}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char buildbuffer\mbox{[}{\bf buildbuffersize}\mbox{]}}\label{classencoder_8cpp_a12073696145ec9d64c88d6c4d986a712}
+\hypertarget{classencoder_8cpp_a6fcab04ef7afdfbcaab43a9fd860b5bb}{}\index{classencoder.\+cpp@{classencoder.\+cpp}!buildbuffersize@{buildbuffersize}}
+\index{buildbuffersize@{buildbuffersize}!classencoder.\+cpp@{classencoder.\+cpp}}
+\subsubsection[{buildbuffersize}]{\setlength{\rightskip}{0pt plus 5cm}const int buildbuffersize = 65536}\label{classencoder_8cpp_a6fcab04ef7afdfbcaab43a9fd860b5bb}

@@ -1,0 +1,215 @@
+\hypertarget{classPatternFeatureVector}{}\section{Pattern\+Feature\+Vector$<$ Feature\+Type $>$ Class Template Reference}
+\label{classPatternFeatureVector}\index{Pattern\+Feature\+Vector$<$ Feature\+Type $>$@{Pattern\+Feature\+Vector$<$ Feature\+Type $>$}}
+
+
+{\ttfamily \#include $<$datatypes.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::vector$<$ Feature\+Type $>$\+::\hyperlink{classPatternFeatureVector_a4a2652f25b1f733630a6d1b8479fce77}{iterator} \hyperlink{classPatternFeatureVector_a4a2652f25b1f733630a6d1b8479fce77}{iterator}
+\item 
+typedef std\+::vector$<$ Feature\+Type $>$\+::\hyperlink{classPatternFeatureVector_a8fae8bc79a755c241964080a684cfd43}{const\+\_\+iterator} \hyperlink{classPatternFeatureVector_a8fae8bc79a755c241964080a684cfd43}{const\+\_\+iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPatternFeatureVector_ad99d4a05d82fcf345432dff0b28306f0}{Pattern\+Feature\+Vector} ()
+\item 
+virtual \hyperlink{classPatternFeatureVector_a28391cd22ee11edf557e0f4c51df3f5b}{$\sim$\+Pattern\+Feature\+Vector} ()
+\item 
+\hyperlink{classPatternFeatureVector_a984df156b0fbf3a0a11bc1e57bea24a3}{Pattern\+Feature\+Vector} (const \hyperlink{classPattern}{Pattern} \&ref)
+\item 
+\hyperlink{classPatternFeatureVector_a7f6948af69865125ead89fa3ee3c83eb}{Pattern\+Feature\+Vector} (const \hyperlink{classPattern}{Pattern} \&ref, const std\+::vector$<$ Feature\+Type $>$ \&dataref)
+\item 
+\hyperlink{classPatternFeatureVector_a941dcf7305fb15d06ccd7c32690bc025}{Pattern\+Feature\+Vector} (const \hyperlink{classPatternFeatureVector}{Pattern\+Feature\+Vector} \&ref)
+\item 
+\hyperlink{classPatternFeatureVector_a2ce1bdcf182b806bd3e06e5c412221b4}{Pattern\+Feature\+Vector} (std\+::istream $\ast$in)
+\item 
+void \hyperlink{classPatternFeatureVector_a874b73d43566d1514404f9d8f1e7dd91}{read} (std\+::istream $\ast$in)
+\item 
+void \hyperlink{classPatternFeatureVector_ae315b88a17a31d7c79615c8cf17f2a6a}{write} (std\+::ostream $\ast$out)
+\item 
+size\+\_\+t \hyperlink{classPatternFeatureVector_ad99cf7876fda7bf9d7d41c8f0648df80}{size} () const 
+\item 
+\hyperlink{classPatternFeatureVector}{Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::\hyperlink{classPatternFeatureVector_a4a2652f25b1f733630a6d1b8479fce77}{iterator} \hyperlink{classPatternFeatureVector_a56aff729865bfeff35d2e2850cca18fe}{begin} ()
+\item 
+\hyperlink{classPatternFeatureVector}{Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::\hyperlink{classPatternFeatureVector_a8fae8bc79a755c241964080a684cfd43}{const\+\_\+iterator} \hyperlink{classPatternFeatureVector_a1e09020a733965118aab5f386f32ef4f}{begin} () const 
+\item 
+\hyperlink{classPatternFeatureVector}{Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::\hyperlink{classPatternFeatureVector_a4a2652f25b1f733630a6d1b8479fce77}{iterator} \hyperlink{classPatternFeatureVector_acedcc928b3de5e2c66498f0c44bf7cc2}{end} ()
+\item 
+\hyperlink{classPatternFeatureVector}{Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::\hyperlink{classPatternFeatureVector_a8fae8bc79a755c241964080a684cfd43}{const\+\_\+iterator} \hyperlink{classPatternFeatureVector_a45060f620f3dc078de4faa22a8ef50b0}{end} () const 
+\item 
+Feature\+Type \hyperlink{classPatternFeatureVector_a82c7035fc558b218a8b971c82b5cda8b}{get} (int index)
+\item 
+void \hyperlink{classPatternFeatureVector_a3f49d8f1b798da5155b9e4c78129cf1b}{clear} ()
+\item 
+void \hyperlink{classPatternFeatureVector_ae69ed2f0d62ba0bf6977caaca4e96d25}{push\+\_\+back} (Feature\+Type \&f)
+\item 
+void \hyperlink{classPatternFeatureVector_a30756ee185cf6cdad80c9ab7fd381eec}{reserve} (size\+\_\+t \hyperlink{classPatternFeatureVector_ad99cf7876fda7bf9d7d41c8f0648df80}{size})
+\item 
+void \hyperlink{classPatternFeatureVector_af33c2dfca927f3bfe9a03444e0f9875d}{shrink\+\_\+to\+\_\+fit} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classPatternFeatureVector_ac4e2107b847e0b198de465ad81afd65a}{pattern}
+\item 
+std\+::vector$<$ Feature\+Type $>$ \hyperlink{classPatternFeatureVector_a82fb84a5b10f25a52375747a140fdf6a}{data}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classPatternFeatureVector_a8fae8bc79a755c241964080a684cfd43}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!const\+\_\+iterator@{const\+\_\+iterator}}
+\index{const\+\_\+iterator@{const\+\_\+iterator}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{const\+\_\+iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ typedef std\+::vector$<$Feature\+Type$>$\+::{\bf const\+\_\+iterator} {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::{\bf const\+\_\+iterator}}\label{classPatternFeatureVector_a8fae8bc79a755c241964080a684cfd43}
+\hypertarget{classPatternFeatureVector_a4a2652f25b1f733630a6d1b8479fce77}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!iterator@{iterator}}
+\index{iterator@{iterator}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ typedef std\+::vector$<$Feature\+Type$>$\+::{\bf iterator} {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::{\bf iterator}}\label{classPatternFeatureVector_a4a2652f25b1f733630a6d1b8479fce77}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classPatternFeatureVector_ad99d4a05d82fcf345432dff0b28306f0}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{Pattern\+Feature\+Vector()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::{\bf Pattern\+Feature\+Vector} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_ad99d4a05d82fcf345432dff0b28306f0}
+\hypertarget{classPatternFeatureVector_a28391cd22ee11edf557e0f4c51df3f5b}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!````~Pattern\+Feature\+Vector@{$\sim$\+Pattern\+Feature\+Vector}}
+\index{````~Pattern\+Feature\+Vector@{$\sim$\+Pattern\+Feature\+Vector}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{$\sim$\+Pattern\+Feature\+Vector()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ virtual {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::$\sim${\bf Pattern\+Feature\+Vector} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternFeatureVector_a28391cd22ee11edf557e0f4c51df3f5b}
+\hypertarget{classPatternFeatureVector_a984df156b0fbf3a0a11bc1e57bea24a3}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{Pattern\+Feature\+Vector(const Pattern \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::{\bf Pattern\+Feature\+Vector} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_a984df156b0fbf3a0a11bc1e57bea24a3}
+\hypertarget{classPatternFeatureVector_a7f6948af69865125ead89fa3ee3c83eb}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{Pattern\+Feature\+Vector(const Pattern \&ref, const std\+::vector$<$ Feature\+Type $>$ \&dataref)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::{\bf Pattern\+Feature\+Vector} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{ref, }
+\item[{const std\+::vector$<$ Feature\+Type $>$ \&}]{dataref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_a7f6948af69865125ead89fa3ee3c83eb}
+\hypertarget{classPatternFeatureVector_a941dcf7305fb15d06ccd7c32690bc025}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{Pattern\+Feature\+Vector(const Pattern\+Feature\+Vector \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::{\bf Pattern\+Feature\+Vector} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$ \&}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_a941dcf7305fb15d06ccd7c32690bc025}
+\hypertarget{classPatternFeatureVector_a2ce1bdcf182b806bd3e06e5c412221b4}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{Pattern\+Feature\+Vector(std\+::istream $\ast$in)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::{\bf Pattern\+Feature\+Vector} (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_a2ce1bdcf182b806bd3e06e5c412221b4}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPatternFeatureVector_a56aff729865bfeff35d2e2850cca18fe}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!begin@{begin}}
+\index{begin@{begin}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{begin()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf Pattern\+Feature\+Vector}$<$Feature\+Type$>$\+::{\bf iterator} {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_a56aff729865bfeff35d2e2850cca18fe}
+\hypertarget{classPatternFeatureVector_a1e09020a733965118aab5f386f32ef4f}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!begin@{begin}}
+\index{begin@{begin}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{begin() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf Pattern\+Feature\+Vector}$<$Feature\+Type$>$\+::{\bf const\+\_\+iterator} {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_a1e09020a733965118aab5f386f32ef4f}
+\hypertarget{classPatternFeatureVector_a3f49d8f1b798da5155b9e4c78129cf1b}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!clear@{clear}}
+\index{clear@{clear}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{clear()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ void {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::clear (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_a3f49d8f1b798da5155b9e4c78129cf1b}
+\hypertarget{classPatternFeatureVector_acedcc928b3de5e2c66498f0c44bf7cc2}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!end@{end}}
+\index{end@{end}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{end()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf Pattern\+Feature\+Vector}$<$Feature\+Type$>$\+::{\bf iterator} {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_acedcc928b3de5e2c66498f0c44bf7cc2}
+\hypertarget{classPatternFeatureVector_a45060f620f3dc078de4faa22a8ef50b0}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!end@{end}}
+\index{end@{end}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{end() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf Pattern\+Feature\+Vector}$<$Feature\+Type$>$\+::{\bf const\+\_\+iterator} {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_a45060f620f3dc078de4faa22a8ef50b0}
+\hypertarget{classPatternFeatureVector_a82c7035fc558b218a8b971c82b5cda8b}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!get@{get}}
+\index{get@{get}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{get(int index)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ Feature\+Type {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::get (
+\begin{DoxyParamCaption}
+\item[{int}]{index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_a82c7035fc558b218a8b971c82b5cda8b}
+\hypertarget{classPatternFeatureVector_ae69ed2f0d62ba0bf6977caaca4e96d25}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!push\+\_\+back@{push\+\_\+back}}
+\index{push\+\_\+back@{push\+\_\+back}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{push\+\_\+back(\+Feature\+Type \&f)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ void {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::push\+\_\+back (
+\begin{DoxyParamCaption}
+\item[{Feature\+Type \&}]{f}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_ae69ed2f0d62ba0bf6977caaca4e96d25}
+\hypertarget{classPatternFeatureVector_a874b73d43566d1514404f9d8f1e7dd91}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!read@{read}}
+\index{read@{read}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{read(std\+::istream $\ast$in)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ void {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::read (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_a874b73d43566d1514404f9d8f1e7dd91}
+\hypertarget{classPatternFeatureVector_a30756ee185cf6cdad80c9ab7fd381eec}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!reserve@{reserve}}
+\index{reserve@{reserve}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{reserve(size\+\_\+t size)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ void {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::reserve (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_a30756ee185cf6cdad80c9ab7fd381eec}
+\hypertarget{classPatternFeatureVector_af33c2dfca927f3bfe9a03444e0f9875d}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!shrink\+\_\+to\+\_\+fit@{shrink\+\_\+to\+\_\+fit}}
+\index{shrink\+\_\+to\+\_\+fit@{shrink\+\_\+to\+\_\+fit}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{shrink\+\_\+to\+\_\+fit()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ void {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::shrink\+\_\+to\+\_\+fit (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_af33c2dfca927f3bfe9a03444e0f9875d}
+\hypertarget{classPatternFeatureVector_ad99cf7876fda7bf9d7d41c8f0648df80}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!size@{size}}
+\index{size@{size}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ size\+\_\+t {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_ad99cf7876fda7bf9d7d41c8f0648df80}
+\hypertarget{classPatternFeatureVector_ae315b88a17a31d7c79615c8cf17f2a6a}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!write@{write}}
+\index{write@{write}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{write(std\+::ostream $\ast$out)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ void {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVector_ae315b88a17a31d7c79615c8cf17f2a6a}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classPatternFeatureVector_a82fb84a5b10f25a52375747a140fdf6a}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!data@{data}}
+\index{data@{data}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ std\+::vector$<$Feature\+Type$>$ {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::data}\label{classPatternFeatureVector_a82fb84a5b10f25a52375747a140fdf6a}
+\hypertarget{classPatternFeatureVector_ac4e2107b847e0b198de465ad81afd65a}{}\index{Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}!pattern@{pattern}}
+\index{pattern@{pattern}!Pattern\+Feature\+Vector@{Pattern\+Feature\+Vector}}
+\subsubsection[{pattern}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type$>$ {\bf Pattern} {\bf Pattern\+Feature\+Vector}$<$ Feature\+Type $>$\+::pattern}\label{classPatternFeatureVector_ac4e2107b847e0b198de465ad81afd65a}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{datatypes_8h}{datatypes.\+h}\end{DoxyCompactItemize}

@@ -1,0 +1,176 @@
+\hypertarget{classIndexPattern}{}\section{Index\+Pattern Class Reference}
+\label{classIndexPattern}\index{Index\+Pattern@{Index\+Pattern}}
+
+
+This class corresponds to a single token in a corpus, it holds the token class and the position.  
+
+
+
+
+{\ttfamily \#include $<$patternstore.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classIndexPattern_afd5aa833be918a676a1365b088df03ec}{Index\+Pattern} (const \hyperlink{classIndexReference}{Index\+Reference} \&\hyperlink{classIndexPattern_a068a44839584d00943b1fe06a5166dc9}{ref}, const \hyperlink{classPattern}{Pattern} \&\hyperlink{classIndexPattern_abf106928d12b0b3d6f3d8b69bec5ac91}{pattern})
+\item 
+\hyperlink{classIndexPattern_a56904dd604599f3ea9cc1283d0f33f6a}{Index\+Pattern} (const \hyperlink{classIndexReference}{Index\+Reference} \&\hyperlink{classIndexPattern_a068a44839584d00943b1fe06a5166dc9}{ref}, uint32\+\_\+t \hyperlink{classIndexPattern_afedfcca7851b65e8abca346df1d57e84}{cls})
+\item 
+\hyperlink{classIndexPattern_af8c43f63fd6648fecfda4e47fb7cab90}{Index\+Pattern} (const \hyperlink{classIndexReference}{Index\+Reference} \&\hyperlink{classIndexPattern_a068a44839584d00943b1fe06a5166dc9}{ref})
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classIndexPattern_abf106928d12b0b3d6f3d8b69bec5ac91}{pattern} ()
+\item 
+bool \hyperlink{classIndexPattern_ad8c623993903b92daf8a2ee965b2df3d}{operator==} (const \hyperlink{classIndexPattern}{Index\+Pattern} \&other) const 
+\item 
+bool \hyperlink{classIndexPattern_ac2b547d3d22e0bba569506d7d923ee5c}{operator==} (const \hyperlink{classIndexReference}{Index\+Reference} \&other) const 
+\item 
+bool \hyperlink{classIndexPattern_afab88a6d4bd35d07964698f0f00cb8b1}{operator!=} (const \hyperlink{classIndexPattern}{Index\+Pattern} \&other) const 
+\item 
+bool \hyperlink{classIndexPattern_af5532c5cbcc5a5077bf7fdebcd20af1b}{operator!=} (const \hyperlink{classIndexReference}{Index\+Reference} \&other) const 
+\item 
+bool \hyperlink{classIndexPattern_ab28599c650b1c84716c38142493975af}{operator$<$} (const \hyperlink{classIndexPattern}{Index\+Pattern} \&other) const 
+\item 
+bool \hyperlink{classIndexPattern_af8a7fe38ec0ca30fbc97809d5c9d7592}{operator$<$} (const \hyperlink{classIndexReference}{Index\+Reference} \&other) const 
+\item 
+bool \hyperlink{classIndexPattern_a02099d74e554356fa8e990cb07960a7b}{operator$>$} (const \hyperlink{classIndexPattern}{Index\+Pattern} \&other) const 
+\item 
+bool \hyperlink{classIndexPattern_aba9892ad04f5b8d03d46052306fec78f}{operator$>$} (const \hyperlink{classIndexReference}{Index\+Reference} \&other) const 
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classIndexReference}{Index\+Reference} \hyperlink{classIndexPattern_a068a44839584d00943b1fe06a5166dc9}{ref}
+\begin{DoxyCompactList}\small\item\em The position of this token in the corpus. \end{DoxyCompactList}\item 
+uint32\+\_\+t \hyperlink{classIndexPattern_afedfcca7851b65e8abca346df1d57e84}{cls}
+\begin{DoxyCompactList}\small\item\em The content of this token (a class from a particular class encoding) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This class corresponds to a single token in a corpus, it holds the token class and the position. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classIndexPattern_afd5aa833be918a676a1365b088df03ec}{}\index{Index\+Pattern@{Index\+Pattern}!Index\+Pattern@{Index\+Pattern}}
+\index{Index\+Pattern@{Index\+Pattern}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{Index\+Pattern(const Index\+Reference \&ref, const Pattern \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}Index\+Pattern\+::\+Index\+Pattern (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{ref, }
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexPattern_afd5aa833be918a676a1365b088df03ec}
+Constructor from a unigram \hyperlink{classPattern}{Pattern} 
+\begin{DoxyParams}{Parameters}
+{\em ref} & The position in the corpus \\
+\hline
+{\em pattern} & A unigram \\
+\hline
+\end{DoxyParams}
+\hypertarget{classIndexPattern_a56904dd604599f3ea9cc1283d0f33f6a}{}\index{Index\+Pattern@{Index\+Pattern}!Index\+Pattern@{Index\+Pattern}}
+\index{Index\+Pattern@{Index\+Pattern}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{Index\+Pattern(const Index\+Reference \&ref, uint32\+\_\+t cls)}]{\setlength{\rightskip}{0pt plus 5cm}Index\+Pattern\+::\+Index\+Pattern (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{ref, }
+\item[{uint32\+\_\+t}]{cls}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexPattern_a56904dd604599f3ea9cc1283d0f33f6a}
+Constructor from an integer 
+\begin{DoxyParams}{Parameters}
+{\em ref} & The position in the corpus \\
+\hline
+{\em cls} & A class from a particular class encoding \\
+\hline
+\end{DoxyParams}
+\hypertarget{classIndexPattern_af8c43f63fd6648fecfda4e47fb7cab90}{}\index{Index\+Pattern@{Index\+Pattern}!Index\+Pattern@{Index\+Pattern}}
+\index{Index\+Pattern@{Index\+Pattern}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{Index\+Pattern(const Index\+Reference \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}Index\+Pattern\+::\+Index\+Pattern (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexPattern_af8c43f63fd6648fecfda4e47fb7cab90}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classIndexPattern_afab88a6d4bd35d07964698f0f00cb8b1}{}\index{Index\+Pattern@{Index\+Pattern}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{operator"!=(const Index\+Pattern \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Index\+Pattern\+::operator!= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Pattern} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexPattern_afab88a6d4bd35d07964698f0f00cb8b1}
+\hypertarget{classIndexPattern_af5532c5cbcc5a5077bf7fdebcd20af1b}{}\index{Index\+Pattern@{Index\+Pattern}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{operator"!=(const Index\+Reference \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Index\+Pattern\+::operator!= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexPattern_af5532c5cbcc5a5077bf7fdebcd20af1b}
+\hypertarget{classIndexPattern_ab28599c650b1c84716c38142493975af}{}\index{Index\+Pattern@{Index\+Pattern}!operator$<$@{operator$<$}}
+\index{operator$<$@{operator$<$}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{operator$<$(const Index\+Pattern \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Index\+Pattern\+::operator$<$ (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Pattern} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexPattern_ab28599c650b1c84716c38142493975af}
+\hypertarget{classIndexPattern_af8a7fe38ec0ca30fbc97809d5c9d7592}{}\index{Index\+Pattern@{Index\+Pattern}!operator$<$@{operator$<$}}
+\index{operator$<$@{operator$<$}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{operator$<$(const Index\+Reference \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Index\+Pattern\+::operator$<$ (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexPattern_af8a7fe38ec0ca30fbc97809d5c9d7592}
+\hypertarget{classIndexPattern_ad8c623993903b92daf8a2ee965b2df3d}{}\index{Index\+Pattern@{Index\+Pattern}!operator==@{operator==}}
+\index{operator==@{operator==}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{operator==(const Index\+Pattern \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Index\+Pattern\+::operator== (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Pattern} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexPattern_ad8c623993903b92daf8a2ee965b2df3d}
+Tests if two Index\+Patterns describe the same position, in which case they are considered equal regardless of the class content! Unsuitable for use in containers where one reference is ambiguous, designed for \hyperlink{classIndexedCorpus}{Indexed\+Corpus} \hypertarget{classIndexPattern_ac2b547d3d22e0bba569506d7d923ee5c}{}\index{Index\+Pattern@{Index\+Pattern}!operator==@{operator==}}
+\index{operator==@{operator==}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{operator==(const Index\+Reference \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Index\+Pattern\+::operator== (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexPattern_ac2b547d3d22e0bba569506d7d923ee5c}
+\hypertarget{classIndexPattern_a02099d74e554356fa8e990cb07960a7b}{}\index{Index\+Pattern@{Index\+Pattern}!operator$>$@{operator$>$}}
+\index{operator$>$@{operator$>$}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{operator$>$(const Index\+Pattern \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Index\+Pattern\+::operator$>$ (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Pattern} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexPattern_a02099d74e554356fa8e990cb07960a7b}
+\hypertarget{classIndexPattern_aba9892ad04f5b8d03d46052306fec78f}{}\index{Index\+Pattern@{Index\+Pattern}!operator$>$@{operator$>$}}
+\index{operator$>$@{operator$>$}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{operator$>$(const Index\+Reference \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Index\+Pattern\+::operator$>$ (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexPattern_aba9892ad04f5b8d03d46052306fec78f}
+\hypertarget{classIndexPattern_abf106928d12b0b3d6f3d8b69bec5ac91}{}\index{Index\+Pattern@{Index\+Pattern}!pattern@{pattern}}
+\index{pattern@{pattern}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{pattern()}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Index\+Pattern\+::pattern (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexPattern_abf106928d12b0b3d6f3d8b69bec5ac91}
+Obtain a unigram \hyperlink{classPattern}{Pattern} 
+
+\subsection{Member Data Documentation}
+\hypertarget{classIndexPattern_afedfcca7851b65e8abca346df1d57e84}{}\index{Index\+Pattern@{Index\+Pattern}!cls@{cls}}
+\index{cls@{cls}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{cls}]{\setlength{\rightskip}{0pt plus 5cm}uint32\+\_\+t Index\+Pattern\+::cls}\label{classIndexPattern_afedfcca7851b65e8abca346df1d57e84}
+
+
+The content of this token (a class from a particular class encoding) 
+
+\hypertarget{classIndexPattern_a068a44839584d00943b1fe06a5166dc9}{}\index{Index\+Pattern@{Index\+Pattern}!ref@{ref}}
+\index{ref@{ref}!Index\+Pattern@{Index\+Pattern}}
+\subsubsection[{ref}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Index\+Reference} Index\+Pattern\+::ref}\label{classIndexPattern_a068a44839584d00943b1fe06a5166dc9}
+
+
+The position of this token in the corpus. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{patternstore_8h}{patternstore.\+h}\end{DoxyCompactItemize}

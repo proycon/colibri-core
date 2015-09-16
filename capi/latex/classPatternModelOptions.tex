@@ -1,0 +1,202 @@
+\hypertarget{classPatternModelOptions}{}\section{Pattern\+Model\+Options Class Reference}
+\label{classPatternModelOptions}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+
+
+Options for \hyperlink{classPattern}{Pattern} Model loading and training.  
+
+
+
+
+{\ttfamily \#include $<$patternmodel.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPatternModelOptions_a32b803262231539a8cd3d715dea7ee81}{Pattern\+Model\+Options} ()
+\item 
+\hyperlink{classPatternModelOptions_a4166fddbf1270f94c60d1c5f391972a9}{Pattern\+Model\+Options} (const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} \&ref)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{classPatternModelOptions_a4572cfbca28c3130d98f886a4c1857e0}{M\+I\+N\+T\+O\+K\+E\+N\+S}
+\item 
+int \hyperlink{classPatternModelOptions_a130b2214a2a9eaaa4862f8019fdfe2bc}{M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+S\+K\+I\+P\+G\+R\+A\+M\+S}
+\item 
+int \hyperlink{classPatternModelOptions_a14d2ed1c3edb2c9b3944aff462e87a03}{M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+U\+N\+I\+G\+R\+A\+M\+S}
+\item 
+int \hyperlink{classPatternModelOptions_a4dada20f1bba3cc5e08a49e4a9bfb545}{M\+I\+N\+L\+E\+N\+G\+T\+H}
+\begin{DoxyCompactList}\small\item\em The minimum length of patterns to be loaded/extracted (in words/tokens) (default\+: 1) \end{DoxyCompactList}\item 
+int \hyperlink{classPatternModelOptions_a7630da974c460ec2d67c2ed9f4c84144}{M\+A\+X\+L\+E\+N\+G\+T\+H}
+\begin{DoxyCompactList}\small\item\em The maximum length of patterns to be loaded/extracted, inclusive (in words/tokens) (default\+: 100) \end{DoxyCompactList}\item 
+int \hyperlink{classPatternModelOptions_a9154b55890ee1ff5d9ec43741a0e3908}{M\+A\+X\+B\+A\+C\+K\+O\+F\+F\+L\+E\+N\+G\+T\+H}
+\item 
+bool \hyperlink{classPatternModelOptions_a79465fd9abbfab5a481222d9660e598a}{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S}
+\begin{DoxyCompactList}\small\item\em Load/extract skipgrams? (default\+: false) \end{DoxyCompactList}\item 
+bool \hyperlink{classPatternModelOptions_ab9f8da4d9fe653cf967f571ae6766ed4}{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S\+\_\+\+E\+X\+H\+A\+U\+S\+T\+I\+V\+E}
+\begin{DoxyCompactList}\small\item\em Load/extract skipgrams in an exhaustive fashion? More memory intensive, but the only options for unindexed models (default\+: false) \end{DoxyCompactList}\item 
+int \hyperlink{classPatternModelOptions_ad5b2686b6f641463c54441a595259046}{M\+I\+N\+S\+K\+I\+P\+T\+Y\+P\+E\+S}
+\begin{DoxyCompactList}\small\item\em Minimum required amount of distinct patterns that can fit in a gap of a skipgram for the skipgram to be included (default\+: 2) \end{DoxyCompactList}\item 
+bool \hyperlink{classPatternModelOptions_ad4d4b2fa96e3355b9e3f4b8e51bb62ff}{D\+O\+R\+E\+V\+E\+R\+S\+E\+I\+N\+D\+E\+X}
+\begin{DoxyCompactList}\small\item\em Compute reverse index? Costs memory. This will be way faster when you pass an \hyperlink{classIndexedCorpus}{Indexed\+Corpus} to the \hyperlink{classPatternModel}{Pattern\+Model} constructor. (default\+: true) \end{DoxyCompactList}\item 
+bool \hyperlink{classPatternModelOptions_ad4391604983decec050de83f13cd6235}{D\+O\+P\+A\+T\+T\+E\+R\+N\+P\+E\+R\+L\+I\+N\+E}
+\begin{DoxyCompactList}\small\item\em Assume each line contains one integral pattern, rather than actively extracting all subpatterns on a line (default\+: false) \end{DoxyCompactList}\item 
+int \hyperlink{classPatternModelOptions_acb220b576d5b4126289cd4a6dec98a1c}{P\+R\+U\+N\+E\+N\+O\+N\+S\+U\+B\+S\+U\+M\+E\+D}
+\item 
+bool \hyperlink{classPatternModelOptions_ad7c8615dee16492c719bf455bb67e6a5}{D\+O\+R\+E\+M\+O\+V\+E\+I\+N\+D\+E\+X}
+\begin{DoxyCompactList}\small\item\em Do not load index information (for indexed models), loads just the patterns without any counts. \end{DoxyCompactList}\item 
+bool \hyperlink{classPatternModelOptions_a4ded839cdeb4f4191896d074ef45cf6e}{D\+O\+R\+E\+M\+O\+V\+E\+N\+G\+R\+A\+M\+S}
+\begin{DoxyCompactList}\small\item\em Remove n-\/grams from the model upon loading it. \end{DoxyCompactList}\item 
+bool \hyperlink{classPatternModelOptions_a88eb47abf2e38a2afac00e8cb9a7a869}{D\+O\+R\+E\+M\+O\+V\+E\+S\+K\+I\+P\+G\+R\+A\+M\+S}
+\begin{DoxyCompactList}\small\item\em Remove skip-\/grams from the model upon loading it. \end{DoxyCompactList}\item 
+bool \hyperlink{classPatternModelOptions_a82fad4131fd2b0a41a81f65586ae9378}{D\+O\+R\+E\+M\+O\+V\+E\+F\+L\+E\+X\+G\+R\+A\+M\+S}
+\begin{DoxyCompactList}\small\item\em Remove flexgrams from the model upon loading it. \end{DoxyCompactList}\item 
+bool \hyperlink{classPatternModelOptions_a52b76b6c81b7666c997ca05bc1df7e97}{D\+O\+R\+E\+S\+E\+T}
+\begin{DoxyCompactList}\small\item\em sets all counts to zero upon loading, clears indices \end{DoxyCompactList}\item 
+bool \hyperlink{classPatternModelOptions_ad99d007239e6ef18a6fd8ce51fb9d1bd}{Q\+U\+I\+E\+T}
+\begin{DoxyCompactList}\small\item\em Don\textquotesingle{}t output to stderr. \end{DoxyCompactList}\item 
+bool \hyperlink{classPatternModelOptions_ae0019dce9d441e011dab04dea4fa8d46}{D\+E\+B\+U\+G}
+\begin{DoxyCompactList}\small\item\em Output extra debug information. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Options for \hyperlink{classPattern}{Pattern} Model loading and training. 
+
+This class defines all kinds of parameters that can be set for loading and training \hyperlink{classPattern}{Pattern} Models, it is passed to various constructors and methods. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classPatternModelOptions_a32b803262231539a8cd3d715dea7ee81}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{Pattern\+Model\+Options()}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Model\+Options\+::\+Pattern\+Model\+Options (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternModelOptions_a32b803262231539a8cd3d715dea7ee81}
+Initialise with default values. All members are public and can be set explicitly.. \hypertarget{classPatternModelOptions_a4166fddbf1270f94c60d1c5f391972a9}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{Pattern\+Model\+Options(const Pattern\+Model\+Options \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Model\+Options\+::\+Pattern\+Model\+Options (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Model\+Options} \&}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternModelOptions_a4166fddbf1270f94c60d1c5f391972a9}
+Copy constructor 
+
+\subsection{Member Data Documentation}
+\hypertarget{classPatternModelOptions_ae0019dce9d441e011dab04dea4fa8d46}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!D\+E\+B\+U\+G@{D\+E\+B\+U\+G}}
+\index{D\+E\+B\+U\+G@{D\+E\+B\+U\+G}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{D\+E\+B\+U\+G}]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Model\+Options\+::\+D\+E\+B\+U\+G}\label{classPatternModelOptions_ae0019dce9d441e011dab04dea4fa8d46}
+
+
+Output extra debug information. 
+
+\hypertarget{classPatternModelOptions_ad4391604983decec050de83f13cd6235}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!D\+O\+P\+A\+T\+T\+E\+R\+N\+P\+E\+R\+L\+I\+N\+E@{D\+O\+P\+A\+T\+T\+E\+R\+N\+P\+E\+R\+L\+I\+N\+E}}
+\index{D\+O\+P\+A\+T\+T\+E\+R\+N\+P\+E\+R\+L\+I\+N\+E@{D\+O\+P\+A\+T\+T\+E\+R\+N\+P\+E\+R\+L\+I\+N\+E}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{D\+O\+P\+A\+T\+T\+E\+R\+N\+P\+E\+R\+L\+I\+N\+E}]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Model\+Options\+::\+D\+O\+P\+A\+T\+T\+E\+R\+N\+P\+E\+R\+L\+I\+N\+E}\label{classPatternModelOptions_ad4391604983decec050de83f13cd6235}
+
+
+Assume each line contains one integral pattern, rather than actively extracting all subpatterns on a line (default\+: false) 
+
+\hypertarget{classPatternModelOptions_a82fad4131fd2b0a41a81f65586ae9378}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!D\+O\+R\+E\+M\+O\+V\+E\+F\+L\+E\+X\+G\+R\+A\+M\+S@{D\+O\+R\+E\+M\+O\+V\+E\+F\+L\+E\+X\+G\+R\+A\+M\+S}}
+\index{D\+O\+R\+E\+M\+O\+V\+E\+F\+L\+E\+X\+G\+R\+A\+M\+S@{D\+O\+R\+E\+M\+O\+V\+E\+F\+L\+E\+X\+G\+R\+A\+M\+S}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{D\+O\+R\+E\+M\+O\+V\+E\+F\+L\+E\+X\+G\+R\+A\+M\+S}]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Model\+Options\+::\+D\+O\+R\+E\+M\+O\+V\+E\+F\+L\+E\+X\+G\+R\+A\+M\+S}\label{classPatternModelOptions_a82fad4131fd2b0a41a81f65586ae9378}
+
+
+Remove flexgrams from the model upon loading it. 
+
+\hypertarget{classPatternModelOptions_ad7c8615dee16492c719bf455bb67e6a5}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!D\+O\+R\+E\+M\+O\+V\+E\+I\+N\+D\+E\+X@{D\+O\+R\+E\+M\+O\+V\+E\+I\+N\+D\+E\+X}}
+\index{D\+O\+R\+E\+M\+O\+V\+E\+I\+N\+D\+E\+X@{D\+O\+R\+E\+M\+O\+V\+E\+I\+N\+D\+E\+X}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{D\+O\+R\+E\+M\+O\+V\+E\+I\+N\+D\+E\+X}]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Model\+Options\+::\+D\+O\+R\+E\+M\+O\+V\+E\+I\+N\+D\+E\+X}\label{classPatternModelOptions_ad7c8615dee16492c719bf455bb67e6a5}
+
+
+Do not load index information (for indexed models), loads just the patterns without any counts. 
+
+\hypertarget{classPatternModelOptions_a4ded839cdeb4f4191896d074ef45cf6e}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!D\+O\+R\+E\+M\+O\+V\+E\+N\+G\+R\+A\+M\+S@{D\+O\+R\+E\+M\+O\+V\+E\+N\+G\+R\+A\+M\+S}}
+\index{D\+O\+R\+E\+M\+O\+V\+E\+N\+G\+R\+A\+M\+S@{D\+O\+R\+E\+M\+O\+V\+E\+N\+G\+R\+A\+M\+S}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{D\+O\+R\+E\+M\+O\+V\+E\+N\+G\+R\+A\+M\+S}]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Model\+Options\+::\+D\+O\+R\+E\+M\+O\+V\+E\+N\+G\+R\+A\+M\+S}\label{classPatternModelOptions_a4ded839cdeb4f4191896d074ef45cf6e}
+
+
+Remove n-\/grams from the model upon loading it. 
+
+\hypertarget{classPatternModelOptions_a88eb47abf2e38a2afac00e8cb9a7a869}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!D\+O\+R\+E\+M\+O\+V\+E\+S\+K\+I\+P\+G\+R\+A\+M\+S@{D\+O\+R\+E\+M\+O\+V\+E\+S\+K\+I\+P\+G\+R\+A\+M\+S}}
+\index{D\+O\+R\+E\+M\+O\+V\+E\+S\+K\+I\+P\+G\+R\+A\+M\+S@{D\+O\+R\+E\+M\+O\+V\+E\+S\+K\+I\+P\+G\+R\+A\+M\+S}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{D\+O\+R\+E\+M\+O\+V\+E\+S\+K\+I\+P\+G\+R\+A\+M\+S}]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Model\+Options\+::\+D\+O\+R\+E\+M\+O\+V\+E\+S\+K\+I\+P\+G\+R\+A\+M\+S}\label{classPatternModelOptions_a88eb47abf2e38a2afac00e8cb9a7a869}
+
+
+Remove skip-\/grams from the model upon loading it. 
+
+\hypertarget{classPatternModelOptions_a52b76b6c81b7666c997ca05bc1df7e97}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!D\+O\+R\+E\+S\+E\+T@{D\+O\+R\+E\+S\+E\+T}}
+\index{D\+O\+R\+E\+S\+E\+T@{D\+O\+R\+E\+S\+E\+T}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{D\+O\+R\+E\+S\+E\+T}]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Model\+Options\+::\+D\+O\+R\+E\+S\+E\+T}\label{classPatternModelOptions_a52b76b6c81b7666c997ca05bc1df7e97}
+
+
+sets all counts to zero upon loading, clears indices 
+
+\hypertarget{classPatternModelOptions_ad4d4b2fa96e3355b9e3f4b8e51bb62ff}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!D\+O\+R\+E\+V\+E\+R\+S\+E\+I\+N\+D\+E\+X@{D\+O\+R\+E\+V\+E\+R\+S\+E\+I\+N\+D\+E\+X}}
+\index{D\+O\+R\+E\+V\+E\+R\+S\+E\+I\+N\+D\+E\+X@{D\+O\+R\+E\+V\+E\+R\+S\+E\+I\+N\+D\+E\+X}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{D\+O\+R\+E\+V\+E\+R\+S\+E\+I\+N\+D\+E\+X}]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Model\+Options\+::\+D\+O\+R\+E\+V\+E\+R\+S\+E\+I\+N\+D\+E\+X}\label{classPatternModelOptions_ad4d4b2fa96e3355b9e3f4b8e51bb62ff}
+
+
+Compute reverse index? Costs memory. This will be way faster when you pass an \hyperlink{classIndexedCorpus}{Indexed\+Corpus} to the \hyperlink{classPatternModel}{Pattern\+Model} constructor. (default\+: true) 
+
+\hypertarget{classPatternModelOptions_a79465fd9abbfab5a481222d9660e598a}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S@{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S}}
+\index{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S@{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S}]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Model\+Options\+::\+D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S}\label{classPatternModelOptions_a79465fd9abbfab5a481222d9660e598a}
+
+
+Load/extract skipgrams? (default\+: false) 
+
+\hypertarget{classPatternModelOptions_ab9f8da4d9fe653cf967f571ae6766ed4}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S\+\_\+\+E\+X\+H\+A\+U\+S\+T\+I\+V\+E@{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S\+\_\+\+E\+X\+H\+A\+U\+S\+T\+I\+V\+E}}
+\index{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S\+\_\+\+E\+X\+H\+A\+U\+S\+T\+I\+V\+E@{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S\+\_\+\+E\+X\+H\+A\+U\+S\+T\+I\+V\+E}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S\+\_\+\+E\+X\+H\+A\+U\+S\+T\+I\+V\+E}]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Model\+Options\+::\+D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S\+\_\+\+E\+X\+H\+A\+U\+S\+T\+I\+V\+E}\label{classPatternModelOptions_ab9f8da4d9fe653cf967f571ae6766ed4}
+
+
+Load/extract skipgrams in an exhaustive fashion? More memory intensive, but the only options for unindexed models (default\+: false) 
+
+\hypertarget{classPatternModelOptions_a9154b55890ee1ff5d9ec43741a0e3908}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!M\+A\+X\+B\+A\+C\+K\+O\+F\+F\+L\+E\+N\+G\+T\+H@{M\+A\+X\+B\+A\+C\+K\+O\+F\+F\+L\+E\+N\+G\+T\+H}}
+\index{M\+A\+X\+B\+A\+C\+K\+O\+F\+F\+L\+E\+N\+G\+T\+H@{M\+A\+X\+B\+A\+C\+K\+O\+F\+F\+L\+E\+N\+G\+T\+H}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{M\+A\+X\+B\+A\+C\+K\+O\+F\+F\+L\+E\+N\+G\+T\+H}]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Model\+Options\+::\+M\+A\+X\+B\+A\+C\+K\+O\+F\+F\+L\+E\+N\+G\+T\+H}\label{classPatternModelOptions_a9154b55890ee1ff5d9ec43741a0e3908}
+Counting n-\/grams is done iteratively for each increasing n. (default\+: M\+A\+X\+L\+E\+N\+G\+T\+H) For each n, presence of sub-\/ngrams in n-\/1 is checked. This values defines a maximum length for this back-\/off check. In combination with M\+I\+N\+L\+E\+N\+G\+T\+H, this allows earlier pruning and conserves memory. \hypertarget{classPatternModelOptions_a7630da974c460ec2d67c2ed9f4c84144}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!M\+A\+X\+L\+E\+N\+G\+T\+H@{M\+A\+X\+L\+E\+N\+G\+T\+H}}
+\index{M\+A\+X\+L\+E\+N\+G\+T\+H@{M\+A\+X\+L\+E\+N\+G\+T\+H}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{M\+A\+X\+L\+E\+N\+G\+T\+H}]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Model\+Options\+::\+M\+A\+X\+L\+E\+N\+G\+T\+H}\label{classPatternModelOptions_a7630da974c460ec2d67c2ed9f4c84144}
+
+
+The maximum length of patterns to be loaded/extracted, inclusive (in words/tokens) (default\+: 100) 
+
+\hypertarget{classPatternModelOptions_a4dada20f1bba3cc5e08a49e4a9bfb545}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!M\+I\+N\+L\+E\+N\+G\+T\+H@{M\+I\+N\+L\+E\+N\+G\+T\+H}}
+\index{M\+I\+N\+L\+E\+N\+G\+T\+H@{M\+I\+N\+L\+E\+N\+G\+T\+H}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{M\+I\+N\+L\+E\+N\+G\+T\+H}]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Model\+Options\+::\+M\+I\+N\+L\+E\+N\+G\+T\+H}\label{classPatternModelOptions_a4dada20f1bba3cc5e08a49e4a9bfb545}
+
+
+The minimum length of patterns to be loaded/extracted (in words/tokens) (default\+: 1) 
+
+\hypertarget{classPatternModelOptions_ad5b2686b6f641463c54441a595259046}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!M\+I\+N\+S\+K\+I\+P\+T\+Y\+P\+E\+S@{M\+I\+N\+S\+K\+I\+P\+T\+Y\+P\+E\+S}}
+\index{M\+I\+N\+S\+K\+I\+P\+T\+Y\+P\+E\+S@{M\+I\+N\+S\+K\+I\+P\+T\+Y\+P\+E\+S}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{M\+I\+N\+S\+K\+I\+P\+T\+Y\+P\+E\+S}]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Model\+Options\+::\+M\+I\+N\+S\+K\+I\+P\+T\+Y\+P\+E\+S}\label{classPatternModelOptions_ad5b2686b6f641463c54441a595259046}
+
+
+Minimum required amount of distinct patterns that can fit in a gap of a skipgram for the skipgram to be included (default\+: 2) 
+
+\hypertarget{classPatternModelOptions_a4572cfbca28c3130d98f886a4c1857e0}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!M\+I\+N\+T\+O\+K\+E\+N\+S@{M\+I\+N\+T\+O\+K\+E\+N\+S}}
+\index{M\+I\+N\+T\+O\+K\+E\+N\+S@{M\+I\+N\+T\+O\+K\+E\+N\+S}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{M\+I\+N\+T\+O\+K\+E\+N\+S}]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Model\+Options\+::\+M\+I\+N\+T\+O\+K\+E\+N\+S}\label{classPatternModelOptions_a4572cfbca28c3130d98f886a4c1857e0}
+The occurrence threshold, minimum amount of occurrences for a pattern to be included in a model Defaults to 2 for building, to 1 for loading. \hypertarget{classPatternModelOptions_a130b2214a2a9eaaa4862f8019fdfe2bc}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+S\+K\+I\+P\+G\+R\+A\+M\+S@{M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+S\+K\+I\+P\+G\+R\+A\+M\+S}}
+\index{M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+S\+K\+I\+P\+G\+R\+A\+M\+S@{M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+S\+K\+I\+P\+G\+R\+A\+M\+S}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+S\+K\+I\+P\+G\+R\+A\+M\+S}]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Model\+Options\+::\+M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+S\+K\+I\+P\+G\+R\+A\+M\+S}\label{classPatternModelOptions_a130b2214a2a9eaaa4862f8019fdfe2bc}
+The occurrence threshold for skipgrams, minimum amount of occurrences for a pattern to be included in a model. Defaults to the same value as M\+I\+N\+T\+O\+K\+E\+N\+S. Only used if D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S or D\+O\+\_\+\+S\+K\+I\+P\+G\+R\+A\+M\+S\+\_\+\+E\+X\+H\+A\+U\+S\+T\+I\+V\+E is set to true \hypertarget{classPatternModelOptions_a14d2ed1c3edb2c9b3944aff462e87a03}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+U\+N\+I\+G\+R\+A\+M\+S@{M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+U\+N\+I\+G\+R\+A\+M\+S}}
+\index{M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+U\+N\+I\+G\+R\+A\+M\+S@{M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+U\+N\+I\+G\+R\+A\+M\+S}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+U\+N\+I\+G\+R\+A\+M\+S}]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Model\+Options\+::\+M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+U\+N\+I\+G\+R\+A\+M\+S}\label{classPatternModelOptions_a14d2ed1c3edb2c9b3944aff462e87a03}
+The occurrence threshold for unigrams, unigrams must occur at least this many times for higher-\/order ngram/skipgram to be included in a model Defaults to the same value as M\+I\+N\+T\+O\+K\+E\+N\+S Only has an effect if M\+I\+N\+T\+O\+K\+E\+N\+S\+\_\+\+U\+N\+I\+G\+R\+A\+M\+S $>$ M\+I\+N\+T\+O\+K\+E\+N\+S. \hypertarget{classPatternModelOptions_acb220b576d5b4126289cd4a6dec98a1c}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!P\+R\+U\+N\+E\+N\+O\+N\+S\+U\+B\+S\+U\+M\+E\+D@{P\+R\+U\+N\+E\+N\+O\+N\+S\+U\+B\+S\+U\+M\+E\+D}}
+\index{P\+R\+U\+N\+E\+N\+O\+N\+S\+U\+B\+S\+U\+M\+E\+D@{P\+R\+U\+N\+E\+N\+O\+N\+S\+U\+B\+S\+U\+M\+E\+D}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{P\+R\+U\+N\+E\+N\+O\+N\+S\+U\+B\+S\+U\+M\+E\+D}]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Model\+Options\+::\+P\+R\+U\+N\+E\+N\+O\+N\+S\+U\+B\+S\+U\+M\+E\+D}\label{classPatternModelOptions_acb220b576d5b4126289cd4a6dec98a1c}
+\hypertarget{classPatternModelOptions_ad99d007239e6ef18a6fd8ce51fb9d1bd}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!Q\+U\+I\+E\+T@{Q\+U\+I\+E\+T}}
+\index{Q\+U\+I\+E\+T@{Q\+U\+I\+E\+T}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{Q\+U\+I\+E\+T}]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Model\+Options\+::\+Q\+U\+I\+E\+T}\label{classPatternModelOptions_ad99d007239e6ef18a6fd8ce51fb9d1bd}
+
+
+Don\textquotesingle{}t output to stderr. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{patternmodel_8h}{patternmodel.\+h}\end{DoxyCompactItemize}

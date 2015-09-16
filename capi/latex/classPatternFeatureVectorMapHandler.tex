@@ -1,0 +1,138 @@
+\hypertarget{classPatternFeatureVectorMapHandler}{}\section{Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$ Class Template Reference}
+\label{classPatternFeatureVectorMapHandler}\index{Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$@{Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$}}
+
+
+{\ttfamily \#include $<$datatypes.\+h$>$}
+
+Inheritance diagram for Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classPatternFeatureVectorMapHandler}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual std\+::string \hyperlink{classPatternFeatureVectorMapHandler_ac3a86c293fbc3417ae6d8dc13389be82}{id} ()
+\item 
+void \hyperlink{classPatternFeatureVectorMapHandler_a3956b0d0deccf1a3f36135d084a30627}{read} (std\+::istream $\ast$in, \hyperlink{classPatternFeatureVectorMap}{Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ \&v)
+\item 
+void \hyperlink{classPatternFeatureVectorMapHandler_a188df59b0fe05271e3ee90ba20204ffa}{write} (std\+::ostream $\ast$out, \hyperlink{classPatternFeatureVectorMap}{Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ \&value)
+\item 
+virtual std\+::string \hyperlink{classPatternFeatureVectorMapHandler_a27faed3107244e4ab0f53e3acea201de}{tostring} (\hyperlink{classPatternFeatureVectorMap}{Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ \&value)
+\item 
+unsigned int \hyperlink{classPatternFeatureVectorMapHandler_a67a49821f7c2b8b4d6e1e5be81c36bd4}{count} (\hyperlink{classPatternFeatureVectorMap}{Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ \&value) const 
+\item 
+void \hyperlink{classPatternFeatureVectorMapHandler_ab234259fb46c86986d41b0ef81a3b0c0}{add} (\hyperlink{classPatternFeatureVectorMap}{Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ $\ast$value, const \hyperlink{classIndexReference}{Index\+Reference} \&ref) const 
+\item 
+void \hyperlink{classPatternFeatureVectorMapHandler_ad69265b8885d3fba7e557a39c3632768}{convertto} (\hyperlink{classPatternFeatureVectorMap}{Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ $\ast$source, \hyperlink{classPatternFeatureVectorMap}{Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ $\ast$\&target) const 
+\item 
+void \hyperlink{classPatternFeatureVectorMapHandler_a8fda95432700c51dd0b7584fb9b47da9}{convertto} (\hyperlink{classPatternFeatureVectorMap}{Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ $\ast$source, \hyperlink{classIndexedData}{Indexed\+Data} $\ast$\&target) const 
+\item 
+void \hyperlink{classPatternFeatureVectorMapHandler_a2f61dcfc0704d06b3a0b4ee421bb9a4a}{convertto} (\hyperlink{classPatternFeatureVectorMap}{Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ $\ast$value, unsigned int $\ast$\&convertedvalue) const 
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPatternFeatureVectorMapHandler_ab234259fb46c86986d41b0ef81a3b0c0}{}\index{Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}!add@{add}}
+\index{add@{add}!Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}}
+\subsubsection[{add(\+Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ $\ast$value, const Index\+Reference \&ref) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type $>$ void {\bf Pattern\+Feature\+Vector\+Map\+Handler}$<$ Feature\+Type $>$\+::add (
+\begin{DoxyParamCaption}
+\item[{{\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ $\ast$}]{value, }
+\item[{const {\bf Index\+Reference} \&}]{ref}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternFeatureVectorMapHandler_ab234259fb46c86986d41b0ef81a3b0c0}
+
+
+Implements \hyperlink{classAbstractValueHandler_a72ecec2580cb5a9a3ba1495a98d08d98}{Abstract\+Value\+Handler$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternFeatureVectorMapHandler_ad69265b8885d3fba7e557a39c3632768}{}\index{Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}!convertto@{convertto}}
+\index{convertto@{convertto}!Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}}
+\subsubsection[{convertto(\+Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ $\ast$source, Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ $\ast$\&target) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type $>$ void {\bf Pattern\+Feature\+Vector\+Map\+Handler}$<$ Feature\+Type $>$\+::convertto (
+\begin{DoxyParamCaption}
+\item[{{\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ $\ast$}]{source, }
+\item[{{\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ $\ast$\&}]{target}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternFeatureVectorMapHandler_ad69265b8885d3fba7e557a39c3632768}
+
+
+Reimplemented from \hyperlink{classAbstractValueHandler_ae89579ec77805153a0acc617202f89b4}{Abstract\+Value\+Handler$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternFeatureVectorMapHandler_a8fda95432700c51dd0b7584fb9b47da9}{}\index{Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}!convertto@{convertto}}
+\index{convertto@{convertto}!Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}}
+\subsubsection[{convertto(\+Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ $\ast$source, Indexed\+Data $\ast$\&target) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type $>$ void {\bf Pattern\+Feature\+Vector\+Map\+Handler}$<$ Feature\+Type $>$\+::convertto (
+\begin{DoxyParamCaption}
+\item[{{\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ $\ast$}]{source, }
+\item[{{\bf Indexed\+Data} $\ast$\&}]{target}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMapHandler_a8fda95432700c51dd0b7584fb9b47da9}
+\hypertarget{classPatternFeatureVectorMapHandler_a2f61dcfc0704d06b3a0b4ee421bb9a4a}{}\index{Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}!convertto@{convertto}}
+\index{convertto@{convertto}!Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}}
+\subsubsection[{convertto(\+Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ $\ast$value, unsigned int $\ast$\&convertedvalue) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type $>$ void {\bf Pattern\+Feature\+Vector\+Map\+Handler}$<$ Feature\+Type $>$\+::convertto (
+\begin{DoxyParamCaption}
+\item[{{\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ $\ast$}]{value, }
+\item[{unsigned int $\ast$\&}]{convertedvalue}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternFeatureVectorMapHandler_a2f61dcfc0704d06b3a0b4ee421bb9a4a}
+\hypertarget{classPatternFeatureVectorMapHandler_a67a49821f7c2b8b4d6e1e5be81c36bd4}{}\index{Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}!count@{count}}
+\index{count@{count}!Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}}
+\subsubsection[{count(\+Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ \&value) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type $>$ unsigned int {\bf Pattern\+Feature\+Vector\+Map\+Handler}$<$ Feature\+Type $>$\+::count (
+\begin{DoxyParamCaption}
+\item[{{\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ \&}]{value}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternFeatureVectorMapHandler_a67a49821f7c2b8b4d6e1e5be81c36bd4}
+
+
+Implements \hyperlink{classAbstractValueHandler_a1d5941f6ff2afaee0c0bfc89ccb5188e}{Abstract\+Value\+Handler$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternFeatureVectorMapHandler_ac3a86c293fbc3417ae6d8dc13389be82}{}\index{Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}!id@{id}}
+\index{id@{id}!Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}}
+\subsubsection[{id()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type $>$ virtual std\+::string {\bf Pattern\+Feature\+Vector\+Map\+Handler}$<$ Feature\+Type $>$\+::id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternFeatureVectorMapHandler_ac3a86c293fbc3417ae6d8dc13389be82}
+
+
+Reimplemented from \hyperlink{classAbstractValueHandler_a6e2f7abe130cdec1062e51d56e4f9fac}{Abstract\+Value\+Handler$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternFeatureVectorMapHandler_a3956b0d0deccf1a3f36135d084a30627}{}\index{Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}!read@{read}}
+\index{read@{read}!Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}}
+\subsubsection[{read(std\+::istream $\ast$in, Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ \&v)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type $>$ void {\bf Pattern\+Feature\+Vector\+Map\+Handler}$<$ Feature\+Type $>$\+::read (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{{\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ \&}]{v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternFeatureVectorMapHandler_a3956b0d0deccf1a3f36135d084a30627}
+
+
+Implements \hyperlink{classAbstractValueHandler_ac7921fae157361b054e467bf96785654}{Abstract\+Value\+Handler$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternFeatureVectorMapHandler_a27faed3107244e4ab0f53e3acea201de}{}\index{Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}!tostring@{tostring}}
+\index{tostring@{tostring}!Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}}
+\subsubsection[{tostring(\+Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ \&value)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type $>$ virtual std\+::string {\bf Pattern\+Feature\+Vector\+Map\+Handler}$<$ Feature\+Type $>$\+::tostring (
+\begin{DoxyParamCaption}
+\item[{{\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternFeatureVectorMapHandler_a27faed3107244e4ab0f53e3acea201de}
+
+
+Implements \hyperlink{classAbstractValueHandler_a8e56e3bbccc464a47a666352249e6a1b}{Abstract\+Value\+Handler$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternFeatureVectorMapHandler_a188df59b0fe05271e3ee90ba20204ffa}{}\index{Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}!write@{write}}
+\index{write@{write}!Pattern\+Feature\+Vector\+Map\+Handler@{Pattern\+Feature\+Vector\+Map\+Handler}}
+\subsubsection[{write(std\+::ostream $\ast$out, Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ \&value)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Feature\+Type $>$ void {\bf Pattern\+Feature\+Vector\+Map\+Handler}$<$ Feature\+Type $>$\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out, }
+\item[{{\bf Pattern\+Feature\+Vector\+Map}$<$ Feature\+Type $>$ \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternFeatureVectorMapHandler_a188df59b0fe05271e3ee90ba20204ffa}
+
+
+Implements \hyperlink{classAbstractValueHandler_aecd2820bc132f8065babbec5cd7458b8}{Abstract\+Value\+Handler$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$ $>$}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{datatypes_8h}{datatypes.\+h}\end{DoxyCompactItemize}

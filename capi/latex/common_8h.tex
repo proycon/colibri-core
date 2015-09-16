@@ -1,0 +1,112 @@
+\hypertarget{common_8h}{}\section{include/common.h File Reference}
+\label{common_8h}\index{include/common.\+h@{include/common.\+h}}
+
+
+Basic largely trivial functions for the common good.  
+
+
+{\ttfamily \#include $<$string$>$}\\*
+{\ttfamily \#include $<$list$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$exception$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classInternalError}{Internal\+Error}
+\item 
+class \hyperlink{classKeyError}{Key\+Error}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \hyperlink{common_8h_a2aff1a2b056deb94193805ed343537e4}{trim} (const std\+::string \&t, const std\+::string \&ws)
+\item 
+std\+::string \hyperlink{common_8h_a700bda521eeb90915cd175a22c86eb0d}{get\+\_\+extension} (const std\+::string \&filename)
+\item 
+bool \hyperlink{common_8h_a8544a216bc5f2e6d50d507e3208d7e06}{strip\+\_\+extension} (std\+::string \&filename, const std\+::string extension)
+\item 
+double \hyperlink{common_8h_a54b58025eba4b6d39cc47f78a409daee}{listproduct} (const std\+::vector$<$ double $>$ \&l)
+\item 
+double \hyperlink{common_8h_a4166423667f38b2cb0be33dfbea1dac0}{listsum} (const std\+::vector$<$ double $>$ \&l)
+\item 
+void \hyperlink{common_8h_a97c788f79725aa2df3fb196f7406dc76}{orderedinsert} (std\+::list$<$ double $>$ \&l, double value)
+\item 
+std\+::vector$<$ std\+::string $>$ \& \hyperlink{common_8h_a7e8c005cbce86b3a6b65bcfb106b2825}{split} (const std\+::string \&s, char delim, std\+::vector$<$ std\+::string $>$ \&elems)
+\item 
+std\+::vector$<$ std\+::string $>$ \hyperlink{common_8h_ae924c9b43cd7b086945003c09c294d2b}{split} (const std\+::string \&s, char delim)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Basic largely trivial functions for the common good. 
+
+\begin{DoxyAuthor}{Author}
+Maarten van Gompel (proycon) \href{mailto:proycon@anaproy.nl}{\tt proycon@anaproy.\+nl}
+\end{DoxyAuthor}
+\hypertarget{SpookyV2_8h_LICENSE}{}\subsection{L\+I\+C\+E\+N\+S\+E}\label{SpookyV2_8h_LICENSE}
+Licensed under G\+P\+Lv3\hypertarget{SpookyV2_8h_DESCRIPTION}{}\subsection{D\+E\+S\+C\+R\+I\+P\+T\+I\+O\+N}\label{SpookyV2_8h_DESCRIPTION}
+Basic largely trivial functions for the common good. 
+
+\subsection{Function Documentation}
+\hypertarget{common_8h_a700bda521eeb90915cd175a22c86eb0d}{}\index{common.\+h@{common.\+h}!get\+\_\+extension@{get\+\_\+extension}}
+\index{get\+\_\+extension@{get\+\_\+extension}!common.\+h@{common.\+h}}
+\subsubsection[{get\+\_\+extension(const std\+::string \&filename)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string get\+\_\+extension (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{filename}
+\end{DoxyParamCaption}
+)}\label{common_8h_a700bda521eeb90915cd175a22c86eb0d}
+\hypertarget{common_8h_a54b58025eba4b6d39cc47f78a409daee}{}\index{common.\+h@{common.\+h}!listproduct@{listproduct}}
+\index{listproduct@{listproduct}!common.\+h@{common.\+h}}
+\subsubsection[{listproduct(const std\+::vector$<$ double $>$ \&l)}]{\setlength{\rightskip}{0pt plus 5cm}double listproduct (
+\begin{DoxyParamCaption}
+\item[{const std\+::vector$<$ double $>$ \&}]{l}
+\end{DoxyParamCaption}
+)}\label{common_8h_a54b58025eba4b6d39cc47f78a409daee}
+\hypertarget{common_8h_a4166423667f38b2cb0be33dfbea1dac0}{}\index{common.\+h@{common.\+h}!listsum@{listsum}}
+\index{listsum@{listsum}!common.\+h@{common.\+h}}
+\subsubsection[{listsum(const std\+::vector$<$ double $>$ \&l)}]{\setlength{\rightskip}{0pt plus 5cm}double listsum (
+\begin{DoxyParamCaption}
+\item[{const std\+::vector$<$ double $>$ \&}]{l}
+\end{DoxyParamCaption}
+)}\label{common_8h_a4166423667f38b2cb0be33dfbea1dac0}
+\hypertarget{common_8h_a97c788f79725aa2df3fb196f7406dc76}{}\index{common.\+h@{common.\+h}!orderedinsert@{orderedinsert}}
+\index{orderedinsert@{orderedinsert}!common.\+h@{common.\+h}}
+\subsubsection[{orderedinsert(std\+::list$<$ double $>$ \&l, double value)}]{\setlength{\rightskip}{0pt plus 5cm}void orderedinsert (
+\begin{DoxyParamCaption}
+\item[{std\+::list$<$ double $>$ \&}]{l, }
+\item[{double}]{value}
+\end{DoxyParamCaption}
+)}\label{common_8h_a97c788f79725aa2df3fb196f7406dc76}
+\hypertarget{common_8h_a7e8c005cbce86b3a6b65bcfb106b2825}{}\index{common.\+h@{common.\+h}!split@{split}}
+\index{split@{split}!common.\+h@{common.\+h}}
+\subsubsection[{split(const std\+::string \&s, char delim, std\+::vector$<$ std\+::string $>$ \&elems)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$std\+::string$>$\& split (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{s, }
+\item[{char}]{delim, }
+\item[{std\+::vector$<$ std\+::string $>$ \&}]{elems}
+\end{DoxyParamCaption}
+)}\label{common_8h_a7e8c005cbce86b3a6b65bcfb106b2825}
+\hypertarget{common_8h_ae924c9b43cd7b086945003c09c294d2b}{}\index{common.\+h@{common.\+h}!split@{split}}
+\index{split@{split}!common.\+h@{common.\+h}}
+\subsubsection[{split(const std\+::string \&s, char delim)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$std\+::string$>$ split (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{s, }
+\item[{char}]{delim}
+\end{DoxyParamCaption}
+)}\label{common_8h_ae924c9b43cd7b086945003c09c294d2b}
+\hypertarget{common_8h_a8544a216bc5f2e6d50d507e3208d7e06}{}\index{common.\+h@{common.\+h}!strip\+\_\+extension@{strip\+\_\+extension}}
+\index{strip\+\_\+extension@{strip\+\_\+extension}!common.\+h@{common.\+h}}
+\subsubsection[{strip\+\_\+extension(std\+::string \&filename, const std\+::string extension)}]{\setlength{\rightskip}{0pt plus 5cm}bool strip\+\_\+extension (
+\begin{DoxyParamCaption}
+\item[{std\+::string \&}]{filename, }
+\item[{const std\+::string}]{extension}
+\end{DoxyParamCaption}
+)}\label{common_8h_a8544a216bc5f2e6d50d507e3208d7e06}
+\hypertarget{common_8h_a2aff1a2b056deb94193805ed343537e4}{}\index{common.\+h@{common.\+h}!trim@{trim}}
+\index{trim@{trim}!common.\+h@{common.\+h}}
+\subsubsection[{trim(const std\+::string \&t, const std\+::string \&ws)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string trim (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{t, }
+\item[{const std\+::string \&}]{ws}
+\end{DoxyParamCaption}
+)}\label{common_8h_a2aff1a2b056deb94193805ed343537e4}

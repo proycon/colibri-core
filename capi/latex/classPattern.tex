@@ -1,0 +1,652 @@
+\hypertarget{classPattern}{}\section{Pattern Class Reference}
+\label{classPattern}\index{Pattern@{Pattern}}
+
+
+\hyperlink{classPattern}{Pattern} class, represents a pattern (ngram, skipgram or flexgram). Encoded in a memory-\/saving fashion. Allows numerous operations.  
+
+
+
+
+{\ttfamily \#include $<$pattern.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPattern_a95f42b0f1717d9e6c2d831e87d27f83c}{Pattern} ()
+\item 
+\hyperlink{classPattern_a4b345a9704f37489492d769073abe964}{Pattern} (const unsigned char $\ast$dataref, const int \hyperlink{classPattern_a400a18c6a1b6de3eb574b6a0f12c9ca2}{size})
+\item 
+\hyperlink{classPattern_a4f080abb2e6bb11fea1b91a68c59f89b}{Pattern} (const \hyperlink{classPattern}{Pattern} \&ref, int begin, int length)
+\item 
+\hyperlink{classPattern_ad981fd3fe3723d68226c98c0a3891c13}{Pattern} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&ref, int begin, int length)
+\item 
+\hyperlink{classPattern_a9b69825f6e0b1f741be370ac1cbd1b4d}{Pattern} (const \hyperlink{classPattern}{Pattern} \&ref)
+\item 
+\hyperlink{classPattern_a5731960d41f0f7ffa3e8b03bb519f8b5}{Pattern} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&ref)
+\item 
+\hyperlink{classPattern_a94cb62534e311b8d78561e8e52780829}{Pattern} (std\+::istream $\ast$in, bool ignoreeol=false, bool debug=false)
+\item 
+\hyperlink{classPattern_a0a3103f6112a56d00a82bdd56cc55afb}{Pattern} (std\+::istream $\ast$in, unsigned char $\ast$buffer, int maxbuffersize, bool ignoreeol=false, bool debug=false)
+\item 
+\hyperlink{classPattern_a6e8b9388bbd39934e9f9534b974d7498}{$\sim$\+Pattern} ()
+\item 
+\hyperlink{classPattern_a80041c82ee57093f673677b22906bbf8}{Pattern} (int \hyperlink{classPattern_a400a18c6a1b6de3eb574b6a0f12c9ca2}{size})
+\item 
+void \hyperlink{classPattern_a17d74bdb4862199e302eae994f4c376f}{write} (std\+::ostream $\ast$\hyperlink{classPattern_ac608089f2fee04e0e8ff6249f14517e4}{out}) const 
+\item 
+const size\+\_\+t \hyperlink{classPattern_a13e66bbb8dd77219255ade5aa5f72c7c}{n} () const 
+\item 
+const size\+\_\+t \hyperlink{classPattern_a57440647189b9e07bdf6ddbcfb0b3f7f}{bytesize} () const 
+\item 
+const size\+\_\+t \hyperlink{classPattern_a400a18c6a1b6de3eb574b6a0f12c9ca2}{size} () const 
+\item 
+const unsigned int \hyperlink{classPattern_a0ed5bb99641eb8fd96be7890f2ea5c89}{skipcount} () const 
+\item 
+const \hyperlink{pattern_8h_a17879f85ec892834fb691c61e71dfe54}{Pattern\+Category} \hyperlink{classPattern_af01c6684c8cec38d3ad57d4303dac5fb}{category} () const 
+\item 
+const \hyperlink{pattern_8h_aff0cb3a143c587463f28ef629d0cd35e}{Structure\+Type} \hyperlink{classPattern_ab5cf03f0619bd68238df9655501eb31e}{type} () const 
+\item 
+const bool \hyperlink{classPattern_a609a2ba1f832678fb69baa201f50b163}{isskipgram} () const 
+\item 
+const bool \hyperlink{classPattern_a8bef14a88603946827aa1342b47ec001}{isflexgram} () const 
+\item 
+const bool \hyperlink{classPattern_ad2325ce11035ced772f72dbfd4b57c01}{unknown} () const 
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classPattern_a96b22b7fdcfde6313ee6c6452c70edbe}{operator\mbox{[}$\,$\mbox{]}} (int index) const 
+\item 
+const size\+\_\+t \hyperlink{classPattern_a8b0f2c0b2e993631a44b3e7ba0acc380}{hash} (bool stripmarkers=false) const 
+\item 
+std\+::string \hyperlink{classPattern_a810d538d873a823d0b6dbe04d2faf334}{tostring} (const \hyperlink{classClassDecoder}{Class\+Decoder} \&classdecoder) const 
+\item 
+std\+::string \hyperlink{classPattern_abb031f769621b5a2d5652a29a85b86a2}{decode} (const \hyperlink{classClassDecoder}{Class\+Decoder} \&classdecoder) const 
+\item 
+bool \hyperlink{classPattern_ac608089f2fee04e0e8ff6249f14517e4}{out} () const 
+\item 
+std\+::vector$<$ int $>$ \hyperlink{classPattern_aea8bcb92b5b11ae358d7645de11a35fd}{tovector} () const 
+\item 
+bool \hyperlink{classPattern_a2b5a2c979473b3a62b17128f4c628be2}{operator==} (const \hyperlink{classPattern}{Pattern} \&other) const 
+\item 
+bool \hyperlink{classPattern_ac02b6479822d7c9ad1beb12dc26eb419}{operator!=} (const \hyperlink{classPattern}{Pattern} \&other) const 
+\item 
+void \hyperlink{classPattern_ae0ea02ade72a1fe7f92cd48d98754559}{operator=} (const \hyperlink{classPattern}{Pattern} \&other)
+\item 
+bool \hyperlink{classPattern_aaad79201ca656e519b069cd746722d1b}{operator$<$} (const \hyperlink{classPattern}{Pattern} \&other) const 
+\item 
+bool \hyperlink{classPattern_a638524274293c8001ec8c605ea5697a5}{operator$>$} (const \hyperlink{classPattern}{Pattern} \&other) const 
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classPattern_a023243f162cf922306129c14ea7786f7}{operator+} (const \hyperlink{classPattern}{Pattern} \&) const 
+\item 
+int \hyperlink{classPattern_abcd8d461a6c7ebdafe764f959f152c83}{find} (const \hyperlink{classPattern}{Pattern} \&subpattern) const 
+\item 
+bool \hyperlink{classPattern_aa0de9e5bf5611e8072b0324869e2f782}{contains} (const \hyperlink{classPattern}{Pattern} \&subpattern) const 
+\item 
+bool \hyperlink{classPattern_a62563035a235a84b77fc4bd97bc82e0e}{instanceof} (const \hyperlink{classPattern}{Pattern} \&skipgram) const 
+\item 
+int \hyperlink{classPattern_a776b95441fb7c4cdd159c7df7b9097af}{ngrams} (std\+::vector$<$ \hyperlink{classPattern}{Pattern} $>$ \&container, const int \hyperlink{classPattern_a13e66bbb8dd77219255ade5aa5f72c7c}{n}) const 
+\item 
+int \hyperlink{classPattern_ad2a401cd64493ce88725a14333a3d4e4}{ngrams} (std\+::vector$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer} $>$ \&container, const int \hyperlink{classPattern_a13e66bbb8dd77219255ade5aa5f72c7c}{n}) const 
+\item 
+int \hyperlink{classPattern_a6a7b34dfc31443c28f4769a21ddebaad}{subngrams} (std\+::vector$<$ \hyperlink{classPattern}{Pattern} $>$ \&container, int minn=1, int maxn=9) const 
+\item 
+int \hyperlink{classPattern_aae7ead84de1198aa1576b39baaceaf52}{subngrams} (std\+::vector$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer} $>$ \&container, int minn=1, int maxn=9) const 
+\item 
+int \hyperlink{classPattern_ad0d0f54adcf6e23070e6761fa1832d3c}{ngrams} (std\+::vector$<$ std\+::pair$<$ \hyperlink{classPattern}{Pattern}, int $>$$>$ \&container, const int \hyperlink{classPattern_a13e66bbb8dd77219255ade5aa5f72c7c}{n}) const 
+\item 
+int \hyperlink{classPattern_a85c317920a643e765fc51f6f14e2a474}{ngrams} (std\+::vector$<$ std\+::pair$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer}, int $>$$>$ \&container, const int \hyperlink{classPattern_a13e66bbb8dd77219255ade5aa5f72c7c}{n}) const 
+\item 
+int \hyperlink{classPattern_af74f62b5d7cb9b831025340ff7b62ea4}{subngrams} (std\+::vector$<$ std\+::pair$<$ \hyperlink{classPattern}{Pattern}, int $>$$>$ \&container, int minn=1, int maxn=9) const 
+\item 
+int \hyperlink{classPattern_af64bc5357eb5c30128e0a4f13243cd2a}{subngrams} (std\+::vector$<$ std\+::pair$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer}, int $>$$>$ \&container, int minn=1, int maxn=9) const 
+\item 
+int \hyperlink{classPattern_a615d0bd0b135804c993ce0fb027c5491}{parts} (std\+::vector$<$ \hyperlink{classPattern}{Pattern} $>$ \&container) const 
+\item 
+int \hyperlink{classPattern_acde3a00e476df661b46cc28318e32077}{parts} (std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&container) const 
+\item 
+int \hyperlink{classPattern_ad4dd286b352c7e5e66dd73233b0d6b29}{gaps} (std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&container) const 
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classPattern_af8d6a22c49da3a8aa470635bb67ece60}{extractskipcontent} (\hyperlink{classPattern}{Pattern} \&instance) const 
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classPattern_afab002bc06207214e84ff324becfe224}{replace} (int begin, int length, const \hyperlink{classPattern}{Pattern} \&replacement) const 
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classPattern_a0f697977abd217fe4e57a4016c3bb9e0}{addskip} (std\+::pair$<$ int, int $>$ gap) const 
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classPattern_a4a93ba100dfde6f2f0a2914bce400ed0}{addskips} (std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&\hyperlink{classPattern_ad4dd286b352c7e5e66dd73233b0d6b29}{gaps}) const 
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classPattern_a043a073515f0a5c7a11492f9f47b2e55}{addflexgaps} (std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&\hyperlink{classPattern_ad4dd286b352c7e5e66dd73233b0d6b29}{gaps}) const 
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classPattern_a15e028c7c47223bec756f9a50c9d3fd0}{reverse} () const 
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classPattern_a542295a795ff5a906044dd9b6b550f0e}{toflexgram} () const 
+\item 
+bool \hyperlink{classPattern_a971a055b02cf2c7d6f0c6a5a0e4401f0}{isgap} (int i) const 
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classPattern_ae9b514ce75a9e8a32407684167b8ce99}{addcontext} (const \hyperlink{classPattern}{Pattern} \&leftcontext, const \hyperlink{classPattern}{Pattern} \&rightcontext) const 
+\item 
+void \hyperlink{classPattern_a1388ffcf485ba7a32417e6a442338f44}{mask} (std\+::vector$<$ bool $>$ \&container) const 
+\item 
+void \hyperlink{classPattern_afc9539da36985d942552620ea2f26525}{set} (const unsigned char $\ast$dataref, const int \hyperlink{classPattern_a400a18c6a1b6de3eb574b6a0f12c9ca2}{size})
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+unsigned char $\ast$ \hyperlink{classPattern_a2e20f4d132daff981db27bb13d3ff2b5}{data}
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classPattern_a81cbadcd914912e5ea61a2aadd6f4fc0}{reader\+\_\+marker} (unsigned char $\ast$\+\_\+data, std\+::istream $\ast$in)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classPattern}{Pattern} class, represents a pattern (ngram, skipgram or flexgram). Encoded in a memory-\/saving fashion. Allows numerous operations. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classPattern_a95f42b0f1717d9e6c2d831e87d27f83c}{}\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\subsubsection[{Pattern()}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+::\+Pattern (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPattern_a95f42b0f1717d9e6c2d831e87d27f83c}
+Default/empty \hyperlink{classPattern}{Pattern} constructor. Creates an empty pattern. Still consumes one byte (the end-\/marker) \hypertarget{classPattern_a4b345a9704f37489492d769073abe964}{}\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\subsubsection[{Pattern(const unsigned char $\ast$dataref, const int size)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+::\+Pattern (
+\begin{DoxyParamCaption}
+\item[{const unsigned char $\ast$}]{dataref, }
+\item[{const int}]{size}
+\end{DoxyParamCaption}
+)}\label{classPattern_a4b345a9704f37489492d769073abe964}
+Low-\/level pattern constructor from character array. The size is in bytes and never includes the end-\/marker. 
+\begin{DoxyParams}{Parameters}
+{\em dataref} & Reference data, must be properly class-\/encoded \\
+\hline
+{\em size} & The size (without \textbackslash{}0 end marker!) to copy from dataref \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPattern_a4f080abb2e6bb11fea1b91a68c59f89b}{}\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\subsubsection[{Pattern(const Pattern \&ref, int begin, int length)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+::\+Pattern (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{ref, }
+\item[{int}]{begin, }
+\item[{int}]{length}
+\end{DoxyParamCaption}
+)}\label{classPattern_a4f080abb2e6bb11fea1b91a68c59f89b}
+Slice constructor for \hyperlink{classPattern}{Pattern} 
+\begin{DoxyParams}{Parameters}
+{\em ref} & Reference pattern \\
+\hline
+{\em begin} & Index of the first token to copy (0-\/indexed) \\
+\hline
+{\em length} & Number of tokens to copy \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPattern_ad981fd3fe3723d68226c98c0a3891c13}{}\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\subsubsection[{Pattern(const Pattern\+Pointer \&ref, int begin, int length)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+::\+Pattern (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{ref, }
+\item[{int}]{begin, }
+\item[{int}]{length}
+\end{DoxyParamCaption}
+)}\label{classPattern_ad981fd3fe3723d68226c98c0a3891c13}
+\hypertarget{classPattern_a9b69825f6e0b1f741be370ac1cbd1b4d}{}\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\subsubsection[{Pattern(const Pattern \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+::\+Pattern (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{ref}
+\end{DoxyParamCaption}
+)}\label{classPattern_a9b69825f6e0b1f741be370ac1cbd1b4d}
+Copy constructor for \hyperlink{classPattern}{Pattern} 
+\begin{DoxyParams}{Parameters}
+{\em ref} & Reference pattern \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPattern_a5731960d41f0f7ffa3e8b03bb519f8b5}{}\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\subsubsection[{Pattern(const Pattern\+Pointer \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+::\+Pattern (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{ref}
+\end{DoxyParamCaption}
+)}\label{classPattern_a5731960d41f0f7ffa3e8b03bb519f8b5}
+\hypertarget{classPattern_a94cb62534e311b8d78561e8e52780829}{}\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\subsubsection[{Pattern(std\+::istream $\ast$in, bool ignoreeol=false, bool debug=false)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+::\+Pattern (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{bool}]{ignoreeol = {\ttfamily false}, }
+\item[{bool}]{debug = {\ttfamily false}}
+\end{DoxyParamCaption}
+)}\label{classPattern_a94cb62534e311b8d78561e8e52780829}
+Read \hyperlink{classPattern}{Pattern} from input stream (in binary form) 
+\begin{DoxyParams}{Parameters}
+{\em in} & The input stream \\
+\hline
+{\em ignoreeol} & Ignore end of line markers and read on until the end of the file, storing corpus data in one pattern \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPattern_a0a3103f6112a56d00a82bdd56cc55afb}{}\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\subsubsection[{Pattern(std\+::istream $\ast$in, unsigned char $\ast$buffer, int maxbuffersize, bool ignoreeol=false, bool debug=false)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+::\+Pattern (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{unsigned char $\ast$}]{buffer, }
+\item[{int}]{maxbuffersize, }
+\item[{bool}]{ignoreeol = {\ttfamily false}, }
+\item[{bool}]{debug = {\ttfamily false}}
+\end{DoxyParamCaption}
+)}\label{classPattern_a0a3103f6112a56d00a82bdd56cc55afb}
+\hypertarget{classPattern_a6e8b9388bbd39934e9f9534b974d7498}{}\index{Pattern@{Pattern}!````~Pattern@{$\sim$\+Pattern}}
+\index{````~Pattern@{$\sim$\+Pattern}!Pattern@{Pattern}}
+\subsubsection[{$\sim$\+Pattern()}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+::$\sim$\+Pattern (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPattern_a6e8b9388bbd39934e9f9534b974d7498}
+\hypertarget{classPattern_a80041c82ee57093f673677b22906bbf8}{}\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\index{Pattern@{Pattern}!Pattern@{Pattern}}
+\subsubsection[{Pattern(int size)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+::\+Pattern (
+\begin{DoxyParamCaption}
+\item[{int}]{size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPattern_a80041c82ee57093f673677b22906bbf8}
+\hyperlink{classPattern}{Pattern} constructor consisting of only a fixed-\/size gap 
+\begin{DoxyParams}{Parameters}
+{\em size} & The size of the gap \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPattern_ae9b514ce75a9e8a32407684167b8ce99}{}\index{Pattern@{Pattern}!addcontext@{addcontext}}
+\index{addcontext@{addcontext}!Pattern@{Pattern}}
+\subsubsection[{addcontext(const Pattern \&leftcontext, const Pattern \&rightcontext) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Pattern\+::addcontext (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{leftcontext, }
+\item[{const {\bf Pattern} \&}]{rightcontext}
+\end{DoxyParamCaption}
+) const}\label{classPattern_ae9b514ce75a9e8a32407684167b8ce99}
+\hypertarget{classPattern_a043a073515f0a5c7a11492f9f47b2e55}{}\index{Pattern@{Pattern}!addflexgaps@{addflexgaps}}
+\index{addflexgaps@{addflexgaps}!Pattern@{Pattern}}
+\subsubsection[{addflexgaps(std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&gaps) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Pattern\+::addflexgaps (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{gaps}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a043a073515f0a5c7a11492f9f47b2e55}
+Replaces multiple series of tokens with skips/gaps of undefined variable size. Effectively turns a pattern into a flexgram. 
+\begin{DoxyParams}{Parameters}
+{\em gaps} & The positions and sizes of the gaps\+: a vector of pairs, each pair consisting of a begin index (0-\/indexed) and a length, indicating where to place the gap \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A flexgram 
+\end{DoxyReturn}
+\hypertarget{classPattern_a0f697977abd217fe4e57a4016c3bb9e0}{}\index{Pattern@{Pattern}!addskip@{addskip}}
+\index{addskip@{addskip}!Pattern@{Pattern}}
+\subsubsection[{addskip(std\+::pair$<$ int, int $>$ gap) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Pattern\+::addskip (
+\begin{DoxyParamCaption}
+\item[{std\+::pair$<$ int, int $>$}]{gap}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a0f697977abd217fe4e57a4016c3bb9e0}
+Replaces a series of tokens with a skip/gap of a particular size. Effectively turns a pattern into a skipgram. 
+\begin{DoxyParams}{Parameters}
+{\em gap} & The position and size of the skip/gap\+: a pair consisting of a begin index (0-\/indexed) and a length, i.\+e. the size of the skip \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPattern_a4a93ba100dfde6f2f0a2914bce400ed0}{}\index{Pattern@{Pattern}!addskips@{addskips}}
+\index{addskips@{addskips}!Pattern@{Pattern}}
+\subsubsection[{addskips(std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&gaps) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Pattern\+::addskips (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{gaps}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a4a93ba100dfde6f2f0a2914bce400ed0}
+Replaces multiple series of tokens with skips/gaps of particular sizes. Effectively turns a pattern into a skipgram. 
+\begin{DoxyParams}{Parameters}
+{\em gaps} & The positions and sizes of the gaps\+: a vector of pairs, each pair consisting of a begin index (0-\/indexed) and a length, indicating where to place the gap \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A skipgram 
+\end{DoxyReturn}
+\hypertarget{classPattern_a57440647189b9e07bdf6ddbcfb0b3f7f}{}\index{Pattern@{Pattern}!bytesize@{bytesize}}
+\index{bytesize@{bytesize}!Pattern@{Pattern}}
+\subsubsection[{bytesize() const }]{\setlength{\rightskip}{0pt plus 5cm}const size\+\_\+t Pattern\+::bytesize (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a57440647189b9e07bdf6ddbcfb0b3f7f}
+return the size of the pattern (in bytes), this does not include the final \textbackslash{}0 end-\/marker. \hypertarget{classPattern_af01c6684c8cec38d3ad57d4303dac5fb}{}\index{Pattern@{Pattern}!category@{category}}
+\index{category@{category}!Pattern@{Pattern}}
+\subsubsection[{category() const }]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Pattern\+Category} Pattern\+::category (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPattern_af01c6684c8cec38d3ad57d4303dac5fb}
+Returns the category of this pattern (value from enum Pattern\+Category) \hypertarget{classPattern_aa0de9e5bf5611e8072b0324869e2f782}{}\index{Pattern@{Pattern}!contains@{contains}}
+\index{contains@{contains}!Pattern@{Pattern}}
+\subsubsection[{contains(const Pattern \&subpattern) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+::contains (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{subpattern}
+\end{DoxyParamCaption}
+) const}\label{classPattern_aa0de9e5bf5611e8072b0324869e2f782}
+Test whether the pattern contains the specified subpattern. \hypertarget{classPattern_abb031f769621b5a2d5652a29a85b86a2}{}\index{Pattern@{Pattern}!decode@{decode}}
+\index{decode@{decode}!Pattern@{Pattern}}
+\subsubsection[{decode(const Class\+Decoder \&classdecoder) const }]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Pattern\+::decode (
+\begin{DoxyParamCaption}
+\item[{const {\bf Class\+Decoder} \&}]{classdecoder}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPattern_abb031f769621b5a2d5652a29a85b86a2}
+alias for \hyperlink{classPattern_a810d538d873a823d0b6dbe04d2faf334}{tostring()} \hypertarget{classPattern_af8d6a22c49da3a8aa470635bb67ece60}{}\index{Pattern@{Pattern}!extractskipcontent@{extractskipcontent}}
+\index{extractskipcontent@{extractskipcontent}!Pattern@{Pattern}}
+\subsubsection[{extractskipcontent(\+Pattern \&instance) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Pattern\+::extractskipcontent (
+\begin{DoxyParamCaption}
+\item[{{\bf Pattern} \&}]{instance}
+\end{DoxyParamCaption}
+) const}\label{classPattern_af8d6a22c49da3a8aa470635bb67ece60}
+Given a skipgram and an ngram instantation of it (i.\+e, both of the same length), extract a pattern from the instance that would fill the gaps. Raise an exception if the instance can not be matched with the skipgram \hypertarget{classPattern_abcd8d461a6c7ebdafe764f959f152c83}{}\index{Pattern@{Pattern}!find@{find}}
+\index{find@{find}!Pattern@{Pattern}}
+\subsubsection[{find(const Pattern \&subpattern) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{subpattern}
+\end{DoxyParamCaption}
+) const}\label{classPattern_abcd8d461a6c7ebdafe764f959f152c83}
+Finds the specified subpattern in the this pattern. Returns the index at which it is found, or -\/1 if it is not found at all. \hypertarget{classPattern_ad4dd286b352c7e5e66dd73233b0d6b29}{}\index{Pattern@{Pattern}!gaps@{gaps}}
+\index{gaps@{gaps}!Pattern@{Pattern}}
+\subsubsection[{gaps(std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&container) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+::gaps (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{container}
+\end{DoxyParamCaption}
+) const}\label{classPattern_ad4dd286b352c7e5e66dd73233b0d6b29}
+Finds all the gaps of a skipgram or flexgram., parts are the portions that are not skips and adds them to container as begin,length pairs... Thus \textquotesingle{}to be \{$\ast$\} not \{$\ast$\} be\textquotesingle{} has three parts. The gap-\/length of a flexgram will always be its minimum length one. \hypertarget{classPattern_a8b0f2c0b2e993631a44b3e7ba0acc380}{}\index{Pattern@{Pattern}!hash@{hash}}
+\index{hash@{hash}!Pattern@{Pattern}}
+\subsubsection[{hash(bool stripmarkers=false) const }]{\setlength{\rightskip}{0pt plus 5cm}const size\+\_\+t Pattern\+::hash (
+\begin{DoxyParamCaption}
+\item[{bool}]{stripmarkers = {\ttfamily false}}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a8b0f2c0b2e993631a44b3e7ba0acc380}
+Compute a hash value for this pattern \hypertarget{classPattern_a62563035a235a84b77fc4bd97bc82e0e}{}\index{Pattern@{Pattern}!instanceof@{instanceof}}
+\index{instanceof@{instanceof}!Pattern@{Pattern}}
+\subsubsection[{instanceof(const Pattern \&skipgram) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+::instanceof (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{skipgram}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a62563035a235a84b77fc4bd97bc82e0e}
+Tests whether the pattern is an instantiation of the specified skipgram \hypertarget{classPattern_a8bef14a88603946827aa1342b47ec001}{}\index{Pattern@{Pattern}!isflexgram@{isflexgram}}
+\index{isflexgram@{isflexgram}!Pattern@{Pattern}}
+\subsubsection[{isflexgram() const }]{\setlength{\rightskip}{0pt plus 5cm}const bool Pattern\+::isflexgram (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPattern_a8bef14a88603946827aa1342b47ec001}
+\hypertarget{classPattern_a971a055b02cf2c7d6f0c6a5a0e4401f0}{}\index{Pattern@{Pattern}!isgap@{isgap}}
+\index{isgap@{isgap}!Pattern@{Pattern}}
+\subsubsection[{isgap(int i) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+::isgap (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a971a055b02cf2c7d6f0c6a5a0e4401f0}
+Is the word at the specified index (0 indexed) a gap? \hypertarget{classPattern_a609a2ba1f832678fb69baa201f50b163}{}\index{Pattern@{Pattern}!isskipgram@{isskipgram}}
+\index{isskipgram@{isskipgram}!Pattern@{Pattern}}
+\subsubsection[{isskipgram() const }]{\setlength{\rightskip}{0pt plus 5cm}const bool Pattern\+::isskipgram (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPattern_a609a2ba1f832678fb69baa201f50b163}
+\hypertarget{classPattern_a1388ffcf485ba7a32417e6a442338f44}{}\index{Pattern@{Pattern}!mask@{mask}}
+\index{mask@{mask}!Pattern@{Pattern}}
+\subsubsection[{mask(std\+::vector$<$ bool $>$ \&container) const }]{\setlength{\rightskip}{0pt plus 5cm}void Pattern\+::mask (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ bool $>$ \&}]{container}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a1388ffcf485ba7a32417e6a442338f44}
+\hypertarget{classPattern_a13e66bbb8dd77219255ade5aa5f72c7c}{}\index{Pattern@{Pattern}!n@{n}}
+\index{n@{n}!Pattern@{Pattern}}
+\subsubsection[{n() const }]{\setlength{\rightskip}{0pt plus 5cm}const size\+\_\+t Pattern\+::n (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a13e66bbb8dd77219255ade5aa5f72c7c}
+return the size of the pattern in tokens (will count flex gaps gaps as size 1) \hypertarget{classPattern_a776b95441fb7c4cdd159c7df7b9097af}{}\index{Pattern@{Pattern}!ngrams@{ngrams}}
+\index{ngrams@{ngrams}!Pattern@{Pattern}}
+\subsubsection[{ngrams(std\+::vector$<$ Pattern $>$ \&container, const int n) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+::ngrams (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ {\bf Pattern} $>$ \&}]{container, }
+\item[{const int}]{n}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a776b95441fb7c4cdd159c7df7b9097af}
+Adds all patterns (not just ngrams) of size n that are contained within the pattern to container. Does not extract skipgrams that are not directly present in the pattern. \hypertarget{classPattern_ad2a401cd64493ce88725a14333a3d4e4}{}\index{Pattern@{Pattern}!ngrams@{ngrams}}
+\index{ngrams@{ngrams}!Pattern@{Pattern}}
+\subsubsection[{ngrams(std\+::vector$<$ Pattern\+Pointer $>$ \&container, const int n) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+::ngrams (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ {\bf Pattern\+Pointer} $>$ \&}]{container, }
+\item[{const int}]{n}
+\end{DoxyParamCaption}
+) const}\label{classPattern_ad2a401cd64493ce88725a14333a3d4e4}
+\hypertarget{classPattern_ad0d0f54adcf6e23070e6761fa1832d3c}{}\index{Pattern@{Pattern}!ngrams@{ngrams}}
+\index{ngrams@{ngrams}!Pattern@{Pattern}}
+\subsubsection[{ngrams(std\+::vector$<$ std\+::pair$<$ Pattern, int $>$$>$ \&container, const int n) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+::ngrams (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ std\+::pair$<$ {\bf Pattern}, int $>$$>$ \&}]{container, }
+\item[{const int}]{n}
+\end{DoxyParamCaption}
+) const}\label{classPattern_ad0d0f54adcf6e23070e6761fa1832d3c}
+Adds all pairs of all patterns (not just ngrams) of size n that are contained within the pattern, with the token offset at which they were found, to container. Does not extract skipgrams that are not directly present in the pattern. \hypertarget{classPattern_a85c317920a643e765fc51f6f14e2a474}{}\index{Pattern@{Pattern}!ngrams@{ngrams}}
+\index{ngrams@{ngrams}!Pattern@{Pattern}}
+\subsubsection[{ngrams(std\+::vector$<$ std\+::pair$<$ Pattern\+Pointer, int $>$$>$ \&container, const int n) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+::ngrams (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ std\+::pair$<$ {\bf Pattern\+Pointer}, int $>$$>$ \&}]{container, }
+\item[{const int}]{n}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a85c317920a643e765fc51f6f14e2a474}
+\hypertarget{classPattern_ac02b6479822d7c9ad1beb12dc26eb419}{}\index{Pattern@{Pattern}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!Pattern@{Pattern}}
+\subsubsection[{operator"!=(const Pattern \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+::operator!= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{other}
+\end{DoxyParamCaption}
+) const}\label{classPattern_ac02b6479822d7c9ad1beb12dc26eb419}
+\hypertarget{classPattern_a023243f162cf922306129c14ea7786f7}{}\index{Pattern@{Pattern}!operator+@{operator+}}
+\index{operator+@{operator+}!Pattern@{Pattern}}
+\subsubsection[{operator+(const Pattern \&) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Pattern\+::operator+ (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{other}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a023243f162cf922306129c14ea7786f7}
+\hypertarget{classPattern_aaad79201ca656e519b069cd746722d1b}{}\index{Pattern@{Pattern}!operator$<$@{operator$<$}}
+\index{operator$<$@{operator$<$}!Pattern@{Pattern}}
+\subsubsection[{operator$<$(const Pattern \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+::operator$<$ (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{other}
+\end{DoxyParamCaption}
+) const}\label{classPattern_aaad79201ca656e519b069cd746722d1b}
+Patterns can be sorted, note however that the sorting is based on the frequencies of the tokens and is not alphanumerical! \hypertarget{classPattern_ae0ea02ade72a1fe7f92cd48d98754559}{}\index{Pattern@{Pattern}!operator=@{operator=}}
+\index{operator=@{operator=}!Pattern@{Pattern}}
+\subsubsection[{operator=(const Pattern \&other)}]{\setlength{\rightskip}{0pt plus 5cm}void Pattern\+::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{other}
+\end{DoxyParamCaption}
+)}\label{classPattern_ae0ea02ade72a1fe7f92cd48d98754559}
+Assignment operator \hypertarget{classPattern_a2b5a2c979473b3a62b17128f4c628be2}{}\index{Pattern@{Pattern}!operator==@{operator==}}
+\index{operator==@{operator==}!Pattern@{Pattern}}
+\subsubsection[{operator==(const Pattern \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+::operator== (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{other}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a2b5a2c979473b3a62b17128f4c628be2}
+\hypertarget{classPattern_a638524274293c8001ec8c605ea5697a5}{}\index{Pattern@{Pattern}!operator$>$@{operator$>$}}
+\index{operator$>$@{operator$>$}!Pattern@{Pattern}}
+\subsubsection[{operator$>$(const Pattern \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+::operator$>$ (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{other}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a638524274293c8001ec8c605ea5697a5}
+\hypertarget{classPattern_a96b22b7fdcfde6313ee6c6452c70edbe}{}\index{Pattern@{Pattern}!operator\mbox{[}$\,$\mbox{]}@{operator[]}}
+\index{operator\mbox{[}$\,$\mbox{]}@{operator[]}!Pattern@{Pattern}}
+\subsubsection[{operator[](int index) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Pattern\+::operator\mbox{[}$\,$\mbox{]} (
+\begin{DoxyParamCaption}
+\item[{int}]{index}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPattern_a96b22b7fdcfde6313ee6c6452c70edbe}
+Return a single token (not a byte!). index $<$ \hyperlink{classPattern_a400a18c6a1b6de3eb574b6a0f12c9ca2}{size()}. \hypertarget{classPattern_ac608089f2fee04e0e8ff6249f14517e4}{}\index{Pattern@{Pattern}!out@{out}}
+\index{out@{out}!Pattern@{Pattern}}
+\subsubsection[{out() const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+::out (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPattern_ac608089f2fee04e0e8ff6249f14517e4}
+Debug function outputting the classes in this pattern to stderr \hypertarget{classPattern_a615d0bd0b135804c993ce0fb027c5491}{}\index{Pattern@{Pattern}!parts@{parts}}
+\index{parts@{parts}!Pattern@{Pattern}}
+\subsubsection[{parts(std\+::vector$<$ Pattern $>$ \&container) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+::parts (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ {\bf Pattern} $>$ \&}]{container}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a615d0bd0b135804c993ce0fb027c5491}
+Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container... Thus \textquotesingle{}to be \{$\ast$\} not \{$\ast$\} be\textquotesingle{} has three parts \hypertarget{classPattern_acde3a00e476df661b46cc28318e32077}{}\index{Pattern@{Pattern}!parts@{parts}}
+\index{parts@{parts}!Pattern@{Pattern}}
+\subsubsection[{parts(std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&container) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+::parts (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{container}
+\end{DoxyParamCaption}
+) const}\label{classPattern_acde3a00e476df661b46cc28318e32077}
+Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container as begin,length pairs... Thus \textquotesingle{}to be \{$\ast$\} not \{$\ast$\} be\textquotesingle{} has three parts \hypertarget{classPattern_a81cbadcd914912e5ea61a2aadd6f4fc0}{}\index{Pattern@{Pattern}!reader\+\_\+marker@{reader\+\_\+marker}}
+\index{reader\+\_\+marker@{reader\+\_\+marker}!Pattern@{Pattern}}
+\subsubsection[{reader\+\_\+marker(unsigned char $\ast$\+\_\+data, std\+::istream $\ast$in)}]{\setlength{\rightskip}{0pt plus 5cm}void Pattern\+::reader\+\_\+marker (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{\+\_\+data, }
+\item[{std\+::istream $\ast$}]{in}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\label{classPattern_a81cbadcd914912e5ea61a2aadd6f4fc0}
+\hypertarget{classPattern_afab002bc06207214e84ff324becfe224}{}\index{Pattern@{Pattern}!replace@{replace}}
+\index{replace@{replace}!Pattern@{Pattern}}
+\subsubsection[{replace(int begin, int length, const Pattern \&replacement) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Pattern\+::replace (
+\begin{DoxyParamCaption}
+\item[{int}]{begin, }
+\item[{int}]{length, }
+\item[{const {\bf Pattern} \&}]{replacement}
+\end{DoxyParamCaption}
+) const}\label{classPattern_afab002bc06207214e84ff324becfe224}
+Replace the tokens from begin (0-\/indexed), up to the specified length, with a replacement pattern (of any length) \hypertarget{classPattern_a15e028c7c47223bec756f9a50c9d3fd0}{}\index{Pattern@{Pattern}!reverse@{reverse}}
+\index{reverse@{reverse}!Pattern@{Pattern}}
+\subsubsection[{reverse() const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Pattern\+::reverse (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a15e028c7c47223bec756f9a50c9d3fd0}
+Returns a pattern with the tokens in reverse order \hypertarget{classPattern_afc9539da36985d942552620ea2f26525}{}\index{Pattern@{Pattern}!set@{set}}
+\index{set@{set}!Pattern@{Pattern}}
+\subsubsection[{set(const unsigned char $\ast$dataref, const int size)}]{\setlength{\rightskip}{0pt plus 5cm}void Pattern\+::set (
+\begin{DoxyParamCaption}
+\item[{const unsigned char $\ast$}]{dataref, }
+\item[{const int}]{size}
+\end{DoxyParamCaption}
+)}\label{classPattern_afc9539da36985d942552620ea2f26525}
+\hypertarget{classPattern_a400a18c6a1b6de3eb574b6a0f12c9ca2}{}\index{Pattern@{Pattern}!size@{size}}
+\index{size@{size}!Pattern@{Pattern}}
+\subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}const size\+\_\+t Pattern\+::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPattern_a400a18c6a1b6de3eb574b6a0f12c9ca2}
+return the size of the pattern in tokens (will count flex gaps gaps as size 1) \hypertarget{classPattern_a0ed5bb99641eb8fd96be7890f2ea5c89}{}\index{Pattern@{Pattern}!skipcount@{skipcount}}
+\index{skipcount@{skipcount}!Pattern@{Pattern}}
+\subsubsection[{skipcount() const }]{\setlength{\rightskip}{0pt plus 5cm}const unsigned int Pattern\+::skipcount (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a0ed5bb99641eb8fd96be7890f2ea5c89}
+return the number of skips in this pattern \hypertarget{classPattern_a6a7b34dfc31443c28f4769a21ddebaad}{}\index{Pattern@{Pattern}!subngrams@{subngrams}}
+\index{subngrams@{subngrams}!Pattern@{Pattern}}
+\subsubsection[{subngrams(std\+::vector$<$ Pattern $>$ \&container, int minn=1, int maxn=9) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+::subngrams (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ {\bf Pattern} $>$ \&}]{container, }
+\item[{int}]{minn = {\ttfamily 1}, }
+\item[{int}]{maxn = {\ttfamily 9}}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a6a7b34dfc31443c28f4769a21ddebaad}
+Adds all patterns (not just ngrams) of all sizes that are contained within the pattern to container. Does not extract skipgrams that are not directly present in the pattern. \hypertarget{classPattern_aae7ead84de1198aa1576b39baaceaf52}{}\index{Pattern@{Pattern}!subngrams@{subngrams}}
+\index{subngrams@{subngrams}!Pattern@{Pattern}}
+\subsubsection[{subngrams(std\+::vector$<$ Pattern\+Pointer $>$ \&container, int minn=1, int maxn=9) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+::subngrams (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ {\bf Pattern\+Pointer} $>$ \&}]{container, }
+\item[{int}]{minn = {\ttfamily 1}, }
+\item[{int}]{maxn = {\ttfamily 9}}
+\end{DoxyParamCaption}
+) const}\label{classPattern_aae7ead84de1198aa1576b39baaceaf52}
+\hypertarget{classPattern_af74f62b5d7cb9b831025340ff7b62ea4}{}\index{Pattern@{Pattern}!subngrams@{subngrams}}
+\index{subngrams@{subngrams}!Pattern@{Pattern}}
+\subsubsection[{subngrams(std\+::vector$<$ std\+::pair$<$ Pattern, int $>$$>$ \&container, int minn=1, int maxn=9) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+::subngrams (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ std\+::pair$<$ {\bf Pattern}, int $>$$>$ \&}]{container, }
+\item[{int}]{minn = {\ttfamily 1}, }
+\item[{int}]{maxn = {\ttfamily 9}}
+\end{DoxyParamCaption}
+) const}\label{classPattern_af74f62b5d7cb9b831025340ff7b62ea4}
+Adds all pairs of all patterns (not just ngrams) that are contained within the pattern, with the token offset at which they were found, to container. Does not extract skipgrams that are not directly present in the pattern. \hypertarget{classPattern_af64bc5357eb5c30128e0a4f13243cd2a}{}\index{Pattern@{Pattern}!subngrams@{subngrams}}
+\index{subngrams@{subngrams}!Pattern@{Pattern}}
+\subsubsection[{subngrams(std\+::vector$<$ std\+::pair$<$ Pattern\+Pointer, int $>$$>$ \&container, int minn=1, int maxn=9) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+::subngrams (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ std\+::pair$<$ {\bf Pattern\+Pointer}, int $>$$>$ \&}]{container, }
+\item[{int}]{minn = {\ttfamily 1}, }
+\item[{int}]{maxn = {\ttfamily 9}}
+\end{DoxyParamCaption}
+) const}\label{classPattern_af64bc5357eb5c30128e0a4f13243cd2a}
+\hypertarget{classPattern_a542295a795ff5a906044dd9b6b550f0e}{}\index{Pattern@{Pattern}!toflexgram@{toflexgram}}
+\index{toflexgram@{toflexgram}!Pattern@{Pattern}}
+\subsubsection[{toflexgram() const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Pattern\+::toflexgram (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a542295a795ff5a906044dd9b6b550f0e}
+converts a skipgram into a flexgram (ngrams just come out unchanged) \hypertarget{classPattern_a810d538d873a823d0b6dbe04d2faf334}{}\index{Pattern@{Pattern}!tostring@{tostring}}
+\index{tostring@{tostring}!Pattern@{Pattern}}
+\subsubsection[{tostring(const Class\+Decoder \&classdecoder) const }]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Pattern\+::tostring (
+\begin{DoxyParamCaption}
+\item[{const {\bf Class\+Decoder} \&}]{classdecoder}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a810d538d873a823d0b6dbe04d2faf334}
+Converts this pattern back into its string representation, using a classdecoder \hypertarget{classPattern_aea8bcb92b5b11ae358d7645de11a35fd}{}\index{Pattern@{Pattern}!tovector@{tovector}}
+\index{tovector@{tovector}!Pattern@{Pattern}}
+\subsubsection[{tovector() const }]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ int $>$ Pattern\+::tovector (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPattern_aea8bcb92b5b11ae358d7645de11a35fd}
+Convert the pattern to a vector of integers, where the integers correspond to the token classes. \hypertarget{classPattern_ab5cf03f0619bd68238df9655501eb31e}{}\index{Pattern@{Pattern}!type@{type}}
+\index{type@{type}!Pattern@{Pattern}}
+\subsubsection[{type() const }]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Structure\+Type} Pattern\+::type (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPattern_ab5cf03f0619bd68238df9655501eb31e}
+\hypertarget{classPattern_ad2325ce11035ced772f72dbfd4b57c01}{}\index{Pattern@{Pattern}!unknown@{unknown}}
+\index{unknown@{unknown}!Pattern@{Pattern}}
+\subsubsection[{unknown() const }]{\setlength{\rightskip}{0pt plus 5cm}const bool Pattern\+::unknown (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPattern_ad2325ce11035ced772f72dbfd4b57c01}
+\hypertarget{classPattern_a17d74bdb4862199e302eae994f4c376f}{}\index{Pattern@{Pattern}!write@{write}}
+\index{write@{write}!Pattern@{Pattern}}
+\subsubsection[{write(std\+::ostream $\ast$out) const }]{\setlength{\rightskip}{0pt plus 5cm}void Pattern\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out}
+\end{DoxyParamCaption}
+) const}\label{classPattern_a17d74bdb4862199e302eae994f4c376f}
+Write \hyperlink{classPattern}{Pattern} to output stream (in binary form) 
+\begin{DoxyParams}{Parameters}
+{\em out} & The output stream \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classPattern_a2e20f4d132daff981db27bb13d3ff2b5}{}\index{Pattern@{Pattern}!data@{data}}
+\index{data@{data}!Pattern@{Pattern}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ Pattern\+::data}\label{classPattern_a2e20f4d132daff981db27bb13d3ff2b5}
+This array holds the variable-\/width byte representation, it is always terminated by \textbackslash{}0 (E\+N\+D\+M\+A\+R\+K\+E\+R). Though public, you usually do not want to access it directly 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{pattern_8h}{pattern.\+h}\item 
+src/\hyperlink{pattern_8cpp}{pattern.\+cpp}\end{DoxyCompactItemize}

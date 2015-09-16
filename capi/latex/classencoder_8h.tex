@@ -1,0 +1,65 @@
+\hypertarget{classencoder_8h}{}\section{include/classencoder.h File Reference}
+\label{classencoder_8h}\index{include/classencoder.\+h@{include/classencoder.\+h}}
+
+
+Class for encoding plain-\/text to binary class-\/encoded data.  
+
+
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\\*
+{\ttfamily \#include $<$string$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$fstream$>$}\\*
+{\ttfamily \#include $<$pattern.\+h$>$}\\*
+{\ttfamily \#include $<$common.\+h$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classClassEncoder}{Class\+Encoder}
+\begin{DoxyCompactList}\small\item\em Class for encoding plain-\/text to binary class-\/encoded data. The \hyperlink{classClassEncoder}{Class\+Encoder} maintains a mapping of words to classes (integers). It allows a corpus to be losslessly compressed by substituting words for classes. The classes are distributed based on word frequency, with frequent words receiving a lower class number that can be represented in fewer bytes, and rare words receiving a higher class number. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+unsigned char $\ast$ \hyperlink{classencoder_8h_a721ad23402594e00edef5eccb07c917c}{inttobytes} (unsigned int, int \&length)
+\item 
+int \hyperlink{classencoder_8h_ad84aa03fdcbb1681ea715967a289e034}{readline} (std\+::istream $\ast$I\+N, unsigned char $\ast$buffer, const int)
+\item 
+const int \hyperlink{classencoder_8h_a1c8dd71d61ed906899f173ce9942229d}{countwords} (const unsigned char $\ast$data, const int l)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for encoding plain-\/text to binary class-\/encoded data. 
+
+\begin{DoxyAuthor}{Author}
+Maarten van Gompel (proycon) \href{mailto:proycon@anaproy.nl}{\tt proycon@anaproy.\+nl}
+\end{DoxyAuthor}
+\hypertarget{SpookyV2_8h_LICENSE}{}\subsection{L\+I\+C\+E\+N\+S\+E}\label{SpookyV2_8h_LICENSE}
+Licensed under G\+P\+Lv3\hypertarget{SpookyV2_8h_DESCRIPTION}{}\subsection{D\+E\+S\+C\+R\+I\+P\+T\+I\+O\+N}\label{SpookyV2_8h_DESCRIPTION}
+Class for encoding plain-\/text to binary class-\/encoded data 
+
+\subsection{Function Documentation}
+\hypertarget{classencoder_8h_a1c8dd71d61ed906899f173ce9942229d}{}\index{classencoder.\+h@{classencoder.\+h}!countwords@{countwords}}
+\index{countwords@{countwords}!classencoder.\+h@{classencoder.\+h}}
+\subsubsection[{countwords(const unsigned char $\ast$data, const int l)}]{\setlength{\rightskip}{0pt plus 5cm}const int countwords (
+\begin{DoxyParamCaption}
+\item[{const unsigned char $\ast$}]{data, }
+\item[{const int}]{l}
+\end{DoxyParamCaption}
+)}\label{classencoder_8h_a1c8dd71d61ed906899f173ce9942229d}
+\hypertarget{classencoder_8h_a721ad23402594e00edef5eccb07c917c}{}\index{classencoder.\+h@{classencoder.\+h}!inttobytes@{inttobytes}}
+\index{inttobytes@{inttobytes}!classencoder.\+h@{classencoder.\+h}}
+\subsubsection[{inttobytes(unsigned int, int \&length)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ inttobytes (
+\begin{DoxyParamCaption}
+\item[{unsigned}]{int, }
+\item[{int \&}]{length}
+\end{DoxyParamCaption}
+)}\label{classencoder_8h_a721ad23402594e00edef5eccb07c917c}
+\hypertarget{classencoder_8h_ad84aa03fdcbb1681ea715967a289e034}{}\index{classencoder.\+h@{classencoder.\+h}!readline@{readline}}
+\index{readline@{readline}!classencoder.\+h@{classencoder.\+h}}
+\subsubsection[{readline(std\+::istream $\ast$\+I\+N, unsigned char $\ast$buffer, const int)}]{\setlength{\rightskip}{0pt plus 5cm}int readline (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{I\+N, }
+\item[{unsigned char $\ast$}]{buffer, }
+\item[{const int}]{}
+\end{DoxyParamCaption}
+)}\label{classencoder_8h_ad84aa03fdcbb1681ea715967a289e034}

@@ -1,0 +1,67 @@
+\hypertarget{SpookyV2_8h}{}\section{include/\+Spooky\+V2.h File Reference}
+\label{SpookyV2_8h}\index{include/\+Spooky\+V2.\+h@{include/\+Spooky\+V2.\+h}}
+
+
+\hyperlink{classSpookyHash}{Spooky\+Hash}\+: a 128-\/bit noncryptographic hash function.  
+
+
+{\ttfamily \#include $<$stddef.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classSpookyHash}{Spooky\+Hash}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{SpookyV2_8h_a2eb6f9e0395b47b8d5e3eeae4fe0c116}{I\+N\+L\+I\+N\+E}~inline
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef uint64\+\_\+t \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64}
+\item 
+typedef uint32\+\_\+t \hyperlink{SpookyV2_8h_acbd4acd0d29e2d6c43104827f77d9cd2}{uint32}
+\item 
+typedef uint16\+\_\+t \hyperlink{SpookyV2_8h_ac2a9e79eb120216f855626495b7bd18a}{uint16}
+\item 
+typedef uint8\+\_\+t \hyperlink{SpookyV2_8h_a33a5e996e7a90acefb8b1c0bea47e365}{uint8}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classSpookyHash}{Spooky\+Hash}\+: a 128-\/bit noncryptographic hash function. 
+
+\begin{DoxyAuthor}{Author}
+Bob Jenkins
+\end{DoxyAuthor}
+\hypertarget{SpookyV2_8h_LICENSE}{}\subsection{L\+I\+C\+E\+N\+S\+E}\label{SpookyV2_8h_LICENSE}
+public domain\hypertarget{SpookyV2_8h_DESCRIPTION}{}\subsection{D\+E\+S\+C\+R\+I\+P\+T\+I\+O\+N}\label{SpookyV2_8h_DESCRIPTION}
+\hyperlink{classSpookyHash}{Spooky\+Hash}\+: a 128-\/bit noncryptographic hash function By Bob Jenkins, public domain Oct 31 2010\+: alpha, framework + \hyperlink{classSpookyHash_a749e6012af3d67884a323e227105e032}{Spooky\+Hash\+::\+Mix} appears right Oct 31 2011\+: alpha again, Mix only good to 2$^\wedge$$^\wedge$69 but rest appears right Dec 31 2011\+: beta, improved Mix, tested it for 2-\/bit deltas Feb 2 2012\+: production, same bits as beta Feb 5 2012\+: adjusted definitions of uint$\ast$ to be more portable Mar 30 2012\+: 3 bytes/cycle, not 4. Alpha was 4 but wasn\textquotesingle{}t thorough enough. August 5 2012\+: Spooky\+V2 (different results)
+
+Up to 3 bytes/cycle for long messages. Reasonably fast for short messages. All 1 or 2 bit deltas achieve avalanche within 1\% bias per output bit.
+
+This was developed for and tested on 64-\/bit x86-\/compatible processors. It assumes the processor is little-\/endian. There is a macro controlling whether unaligned reads are allowed (by default they are). This should be an equally good hash on big-\/endian machines, but it will compute different results on them than on little-\/endian machines.
+
+Google\textquotesingle{}s City\+Hash has similar specs to \hyperlink{classSpookyHash}{Spooky\+Hash}, and City\+Hash is faster on new Intel boxes. M\+D4 and M\+D5 also have similar specs, but they are orders of magnitude slower. C\+R\+Cs are two or more times slower, but unlike \hyperlink{classSpookyHash}{Spooky\+Hash}, they have nice math for combining the C\+R\+Cs of pieces to form the C\+R\+Cs of wholes. There are also cryptographic hashes, but those are even slower than M\+D5. 
+
+\subsection{Macro Definition Documentation}
+\hypertarget{SpookyV2_8h_a2eb6f9e0395b47b8d5e3eeae4fe0c116}{}\index{Spooky\+V2.\+h@{Spooky\+V2.\+h}!I\+N\+L\+I\+N\+E@{I\+N\+L\+I\+N\+E}}
+\index{I\+N\+L\+I\+N\+E@{I\+N\+L\+I\+N\+E}!Spooky\+V2.\+h@{Spooky\+V2.\+h}}
+\subsubsection[{I\+N\+L\+I\+N\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+N\+L\+I\+N\+E~inline}\label{SpookyV2_8h_a2eb6f9e0395b47b8d5e3eeae4fe0c116}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{SpookyV2_8h_ac2a9e79eb120216f855626495b7bd18a}{}\index{Spooky\+V2.\+h@{Spooky\+V2.\+h}!uint16@{uint16}}
+\index{uint16@{uint16}!Spooky\+V2.\+h@{Spooky\+V2.\+h}}
+\subsubsection[{uint16}]{\setlength{\rightskip}{0pt plus 5cm}typedef uint16\+\_\+t {\bf uint16}}\label{SpookyV2_8h_ac2a9e79eb120216f855626495b7bd18a}
+\hypertarget{SpookyV2_8h_acbd4acd0d29e2d6c43104827f77d9cd2}{}\index{Spooky\+V2.\+h@{Spooky\+V2.\+h}!uint32@{uint32}}
+\index{uint32@{uint32}!Spooky\+V2.\+h@{Spooky\+V2.\+h}}
+\subsubsection[{uint32}]{\setlength{\rightskip}{0pt plus 5cm}typedef uint32\+\_\+t {\bf uint32}}\label{SpookyV2_8h_acbd4acd0d29e2d6c43104827f77d9cd2}
+\hypertarget{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{}\index{Spooky\+V2.\+h@{Spooky\+V2.\+h}!uint64@{uint64}}
+\index{uint64@{uint64}!Spooky\+V2.\+h@{Spooky\+V2.\+h}}
+\subsubsection[{uint64}]{\setlength{\rightskip}{0pt plus 5cm}typedef uint64\+\_\+t {\bf uint64}}\label{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}
+\hypertarget{SpookyV2_8h_a33a5e996e7a90acefb8b1c0bea47e365}{}\index{Spooky\+V2.\+h@{Spooky\+V2.\+h}!uint8@{uint8}}
+\index{uint8@{uint8}!Spooky\+V2.\+h@{Spooky\+V2.\+h}}
+\subsubsection[{uint8}]{\setlength{\rightskip}{0pt plus 5cm}typedef uint8\+\_\+t {\bf uint8}}\label{SpookyV2_8h_a33a5e996e7a90acefb8b1c0bea47e365}

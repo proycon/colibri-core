@@ -1,0 +1,156 @@
+\hypertarget{classBaseValueHandler}{}\section{Base\+Value\+Handler$<$ Value\+Type $>$ Class Template Reference}
+\label{classBaseValueHandler}\index{Base\+Value\+Handler$<$ Value\+Type $>$@{Base\+Value\+Handler$<$ Value\+Type $>$}}
+
+
+This templated class can be used for all numeric base types (such as int, uint16\+\_\+t, float, etc).  
+
+
+
+
+{\ttfamily \#include $<$datatypes.\+h$>$}
+
+Inheritance diagram for Base\+Value\+Handler$<$ Value\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classBaseValueHandler}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual std\+::string \hyperlink{classBaseValueHandler_a7bc1637a355d28baa52bc3f1e069bfb7}{id} ()
+\item 
+void \hyperlink{classBaseValueHandler_ae55dd264dd8dcd4e9105a36fa8211df8}{read} (std\+::istream $\ast$in, Value\+Type \&v)
+\item 
+void \hyperlink{classBaseValueHandler_a56854e807c698507ddfeab331abd0482}{write} (std\+::ostream $\ast$out, Value\+Type \&value)
+\item 
+virtual std\+::string \hyperlink{classBaseValueHandler_a486eb004615965908cf2a5e670d55293}{tostring} (Value\+Type \&value)
+\item 
+unsigned int \hyperlink{classBaseValueHandler_a841fab906106fcfdef995e7b9c594ef4}{count} (Value\+Type \&value) const 
+\item 
+void \hyperlink{classBaseValueHandler_a260db19187a4f3fdd6dcf1fed7ac6a59}{add} (Value\+Type $\ast$value, const \hyperlink{classIndexReference}{Index\+Reference} \&ref) const 
+\item 
+void \hyperlink{classBaseValueHandler_a6b00505c99c8ba21309d8306e423a109}{convertto} (Value\+Type $\ast$source, Value\+Type $\ast$\&target) const 
+\item 
+void \hyperlink{classBaseValueHandler_aeb47f3d86de265e9c1ef5f4af39f941b}{convertto} (Value\+Type $\ast$source, \hyperlink{classIndexedData}{Indexed\+Data} $\ast$\&target) const 
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const bool \hyperlink{classBaseValueHandler_a53a7fc222b1aa001cedacec165c58203}{indexed} = false
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Value\+Type$>$class Base\+Value\+Handler$<$ Value\+Type $>$}
+
+This templated class can be used for all numeric base types (such as int, uint16\+\_\+t, float, etc). 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Value\+Type} & the actual numeric base type used \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classBaseValueHandler_a260db19187a4f3fdd6dcf1fed7ac6a59}{}\index{Base\+Value\+Handler@{Base\+Value\+Handler}!add@{add}}
+\index{add@{add}!Base\+Value\+Handler@{Base\+Value\+Handler}}
+\subsubsection[{add(\+Value\+Type $\ast$value, const Index\+Reference \&ref) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type $>$ void {\bf Base\+Value\+Handler}$<$ Value\+Type $>$\+::add (
+\begin{DoxyParamCaption}
+\item[{Value\+Type $\ast$}]{value, }
+\item[{const {\bf Index\+Reference} \&}]{ref}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classBaseValueHandler_a260db19187a4f3fdd6dcf1fed7ac6a59}
+
+
+Implements \hyperlink{classAbstractValueHandler_a72ecec2580cb5a9a3ba1495a98d08d98}{Abstract\+Value\+Handler$<$ Value\+Type $>$}.
+
+\hypertarget{classBaseValueHandler_a6b00505c99c8ba21309d8306e423a109}{}\index{Base\+Value\+Handler@{Base\+Value\+Handler}!convertto@{convertto}}
+\index{convertto@{convertto}!Base\+Value\+Handler@{Base\+Value\+Handler}}
+\subsubsection[{convertto(\+Value\+Type $\ast$source, Value\+Type $\ast$\&target) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type $>$ void {\bf Base\+Value\+Handler}$<$ Value\+Type $>$\+::convertto (
+\begin{DoxyParamCaption}
+\item[{Value\+Type $\ast$}]{source, }
+\item[{Value\+Type $\ast$\&}]{target}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classBaseValueHandler_a6b00505c99c8ba21309d8306e423a109}
+
+
+Reimplemented from \hyperlink{classAbstractValueHandler_ae89579ec77805153a0acc617202f89b4}{Abstract\+Value\+Handler$<$ Value\+Type $>$}.
+
+\hypertarget{classBaseValueHandler_aeb47f3d86de265e9c1ef5f4af39f941b}{}\index{Base\+Value\+Handler@{Base\+Value\+Handler}!convertto@{convertto}}
+\index{convertto@{convertto}!Base\+Value\+Handler@{Base\+Value\+Handler}}
+\subsubsection[{convertto(\+Value\+Type $\ast$source, Indexed\+Data $\ast$\&target) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type $>$ void {\bf Base\+Value\+Handler}$<$ Value\+Type $>$\+::convertto (
+\begin{DoxyParamCaption}
+\item[{Value\+Type $\ast$}]{source, }
+\item[{{\bf Indexed\+Data} $\ast$\&}]{target}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classBaseValueHandler_aeb47f3d86de265e9c1ef5f4af39f941b}
+\hypertarget{classBaseValueHandler_a841fab906106fcfdef995e7b9c594ef4}{}\index{Base\+Value\+Handler@{Base\+Value\+Handler}!count@{count}}
+\index{count@{count}!Base\+Value\+Handler@{Base\+Value\+Handler}}
+\subsubsection[{count(\+Value\+Type \&value) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type $>$ unsigned int {\bf Base\+Value\+Handler}$<$ Value\+Type $>$\+::count (
+\begin{DoxyParamCaption}
+\item[{Value\+Type \&}]{value}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classBaseValueHandler_a841fab906106fcfdef995e7b9c594ef4}
+
+
+Implements \hyperlink{classAbstractValueHandler_a1d5941f6ff2afaee0c0bfc89ccb5188e}{Abstract\+Value\+Handler$<$ Value\+Type $>$}.
+
+\hypertarget{classBaseValueHandler_a7bc1637a355d28baa52bc3f1e069bfb7}{}\index{Base\+Value\+Handler@{Base\+Value\+Handler}!id@{id}}
+\index{id@{id}!Base\+Value\+Handler@{Base\+Value\+Handler}}
+\subsubsection[{id()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type $>$ virtual std\+::string {\bf Base\+Value\+Handler}$<$ Value\+Type $>$\+::id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classBaseValueHandler_a7bc1637a355d28baa52bc3f1e069bfb7}
+
+
+Reimplemented from \hyperlink{classAbstractValueHandler_a6e2f7abe130cdec1062e51d56e4f9fac}{Abstract\+Value\+Handler$<$ Value\+Type $>$}.
+
+\hypertarget{classBaseValueHandler_ae55dd264dd8dcd4e9105a36fa8211df8}{}\index{Base\+Value\+Handler@{Base\+Value\+Handler}!read@{read}}
+\index{read@{read}!Base\+Value\+Handler@{Base\+Value\+Handler}}
+\subsubsection[{read(std\+::istream $\ast$in, Value\+Type \&v)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type $>$ void {\bf Base\+Value\+Handler}$<$ Value\+Type $>$\+::read (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{Value\+Type \&}]{v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classBaseValueHandler_ae55dd264dd8dcd4e9105a36fa8211df8}
+
+
+Implements \hyperlink{classAbstractValueHandler_ac7921fae157361b054e467bf96785654}{Abstract\+Value\+Handler$<$ Value\+Type $>$}.
+
+\hypertarget{classBaseValueHandler_a486eb004615965908cf2a5e670d55293}{}\index{Base\+Value\+Handler@{Base\+Value\+Handler}!tostring@{tostring}}
+\index{tostring@{tostring}!Base\+Value\+Handler@{Base\+Value\+Handler}}
+\subsubsection[{tostring(\+Value\+Type \&value)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type $>$ virtual std\+::string {\bf Base\+Value\+Handler}$<$ Value\+Type $>$\+::tostring (
+\begin{DoxyParamCaption}
+\item[{Value\+Type \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classBaseValueHandler_a486eb004615965908cf2a5e670d55293}
+
+
+Implements \hyperlink{classAbstractValueHandler_a8e56e3bbccc464a47a666352249e6a1b}{Abstract\+Value\+Handler$<$ Value\+Type $>$}.
+
+\hypertarget{classBaseValueHandler_a56854e807c698507ddfeab331abd0482}{}\index{Base\+Value\+Handler@{Base\+Value\+Handler}!write@{write}}
+\index{write@{write}!Base\+Value\+Handler@{Base\+Value\+Handler}}
+\subsubsection[{write(std\+::ostream $\ast$out, Value\+Type \&value)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type $>$ void {\bf Base\+Value\+Handler}$<$ Value\+Type $>$\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out, }
+\item[{Value\+Type \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classBaseValueHandler_a56854e807c698507ddfeab331abd0482}
+
+
+Implements \hyperlink{classAbstractValueHandler_aecd2820bc132f8065babbec5cd7458b8}{Abstract\+Value\+Handler$<$ Value\+Type $>$}.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classBaseValueHandler_a53a7fc222b1aa001cedacec165c58203}{}\index{Base\+Value\+Handler@{Base\+Value\+Handler}!indexed@{indexed}}
+\index{indexed@{indexed}!Base\+Value\+Handler@{Base\+Value\+Handler}}
+\subsubsection[{indexed}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type $>$ const bool {\bf Base\+Value\+Handler}$<$ Value\+Type $>$\+::indexed = false\hspace{0.3cm}{\ttfamily [static]}}\label{classBaseValueHandler_a53a7fc222b1aa001cedacec165c58203}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{datatypes_8h}{datatypes.\+h}\end{DoxyCompactItemize}

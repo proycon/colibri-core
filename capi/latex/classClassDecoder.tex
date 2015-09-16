@@ -1,0 +1,210 @@
+\hypertarget{classClassDecoder}{}\section{Class\+Decoder Class Reference}
+\label{classClassDecoder}\index{Class\+Decoder@{Class\+Decoder}}
+
+
+Class for decoding binary class-\/encoded data back to plain-\/text. The \hyperlink{classClassDecoder}{Class\+Decoder} maintains a mapping of classes (integers) to words. It allows decoding of a corpus that was losslessly compressed by substituting words for classes. The classes are distributed based on word frequency, with frequent words receiving a lower class number that can be represented in fewer bytes, and rare words receiving a higher class number.  
+
+
+
+
+{\ttfamily \#include $<$classdecoder.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::unordered\+\_\+map$<$ unsigned int, std\+::string $>$\+::\hyperlink{classClassDecoder_a24770930683eb9829a898343fe016929}{const\+\_\+iterator} \hyperlink{classClassDecoder_a24770930683eb9829a898343fe016929}{const\+\_\+iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classClassDecoder_a1964931b3b4f83220f0468e9a5a3f5ab}{Class\+Decoder} ()
+\item 
+\hyperlink{classClassDecoder_ae68c4f3ffc8bc69d67750828876484ce}{Class\+Decoder} (const std\+::string \&filename)
+\item 
+void \hyperlink{classClassDecoder_a497f71de32cb7cfafbb67657afc6a2be}{load} (const std\+::string \&filename)
+\item 
+std\+::vector$<$ std\+::string $>$ \hyperlink{classClassDecoder_ac7b469a8815a77b07daee3e76ef41f8f}{decodeseq} (const std\+::vector$<$ int $>$ \&seq)
+\item 
+void \hyperlink{classClassDecoder_a6e9e821e67a97d9197047d64a5e1cb18}{decodefile} (const std\+::string \&filename, std\+::ostream $\ast$, unsigned int start=0, unsigned int \hyperlink{classClassDecoder_af3c11f55c5acdc9e0e6f7ec4ec0a45e7}{end}=0, bool quiet=false)
+\item 
+std\+::string \hyperlink{classClassDecoder_a75348f84c3f9eb4f699f1b0986593ea6}{decodefiletostring} (const std\+::string \&filename, unsigned int start=0, unsigned int \hyperlink{classClassDecoder_af3c11f55c5acdc9e0e6f7ec4ec0a45e7}{end}=0, bool quiet=true)
+\item 
+int \hyperlink{classClassDecoder_af4a58ebdaed62bbc27f3d0fd860c9dde}{size} () const 
+\item 
+std\+::string \hyperlink{classClassDecoder_ab212c7a5643348965fc70e85ccf6a454}{operator\mbox{[}$\,$\mbox{]}} (unsigned int key) const 
+\item 
+void \hyperlink{classClassDecoder_a92ceaca2cdad3cdd40cf4489dffb70be}{add} (unsigned int, std\+::string)
+\item 
+unsigned int \hyperlink{classClassDecoder_a90399b17e31b20a7330fcdd501e8350a}{gethighestclass} ()
+\item 
+bool \hyperlink{classClassDecoder_ade08d075b70964c24a2fba6b5f43f7da}{hasclass} (unsigned int key) const 
+\item 
+unsigned int \hyperlink{classClassDecoder_ab8418982b22ee11e48d89175bcf5e66d}{newclass} ()
+\item 
+void \hyperlink{classClassDecoder_aaddeef1f5e8730eb6eeb5351db4eb826}{prune} (unsigned int threshold)
+\item 
+\hyperlink{classClassDecoder_a24770930683eb9829a898343fe016929}{const\+\_\+iterator} \hyperlink{classClassDecoder_ab52e0396600b9fca95348c603b6aca7d}{begin} () const 
+\item 
+\hyperlink{classClassDecoder_a24770930683eb9829a898343fe016929}{const\+\_\+iterator} \hyperlink{classClassDecoder_af3c11f55c5acdc9e0e6f7ec4ec0a45e7}{end} () const 
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for decoding binary class-\/encoded data back to plain-\/text. The \hyperlink{classClassDecoder}{Class\+Decoder} maintains a mapping of classes (integers) to words. It allows decoding of a corpus that was losslessly compressed by substituting words for classes. The classes are distributed based on word frequency, with frequent words receiving a lower class number that can be represented in fewer bytes, and rare words receiving a higher class number. 
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classClassDecoder_a24770930683eb9829a898343fe016929}{}\index{Class\+Decoder@{Class\+Decoder}!const\+\_\+iterator@{const\+\_\+iterator}}
+\index{const\+\_\+iterator@{const\+\_\+iterator}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{const\+\_\+iterator}]{\setlength{\rightskip}{0pt plus 5cm}typedef std\+::unordered\+\_\+map$<$unsigned int, std\+::string$>$\+::{\bf const\+\_\+iterator} {\bf Class\+Decoder\+::const\+\_\+iterator}}\label{classClassDecoder_a24770930683eb9829a898343fe016929}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classClassDecoder_a1964931b3b4f83220f0468e9a5a3f5ab}{}\index{Class\+Decoder@{Class\+Decoder}!Class\+Decoder@{Class\+Decoder}}
+\index{Class\+Decoder@{Class\+Decoder}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{Class\+Decoder()}]{\setlength{\rightskip}{0pt plus 5cm}Class\+Decoder\+::\+Class\+Decoder (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classClassDecoder_a1964931b3b4f83220f0468e9a5a3f5ab}
+Constructor for an empty class decoder \hypertarget{classClassDecoder_ae68c4f3ffc8bc69d67750828876484ce}{}\index{Class\+Decoder@{Class\+Decoder}!Class\+Decoder@{Class\+Decoder}}
+\index{Class\+Decoder@{Class\+Decoder}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{Class\+Decoder(const std\+::string \&filename)}]{\setlength{\rightskip}{0pt plus 5cm}Class\+Decoder\+::\+Class\+Decoder (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{filename}
+\end{DoxyParamCaption}
+)}\label{classClassDecoder_ae68c4f3ffc8bc69d67750828876484ce}
+Constructor for a class decoder loading a class encoding from file 
+
+\subsection{Member Function Documentation}
+\hypertarget{classClassDecoder_a92ceaca2cdad3cdd40cf4489dffb70be}{}\index{Class\+Decoder@{Class\+Decoder}!add@{add}}
+\index{add@{add}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{add(unsigned int, std\+::string)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Decoder\+::add (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{cls, }
+\item[{std\+::string}]{s}
+\end{DoxyParamCaption}
+)}\label{classClassDecoder_a92ceaca2cdad3cdd40cf4489dffb70be}
+Add the class with the given word string to the class encoding \hypertarget{classClassDecoder_ab52e0396600b9fca95348c603b6aca7d}{}\index{Class\+Decoder@{Class\+Decoder}!begin@{begin}}
+\index{begin@{begin}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{begin() const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf const\+\_\+iterator} Class\+Decoder\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classClassDecoder_ab52e0396600b9fca95348c603b6aca7d}
+\hypertarget{classClassDecoder_a6e9e821e67a97d9197047d64a5e1cb18}{}\index{Class\+Decoder@{Class\+Decoder}!decodefile@{decodefile}}
+\index{decodefile@{decodefile}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{decodefile(const std\+::string \&filename, std\+::ostream $\ast$, unsigned int start=0, unsigned int end=0, bool quiet=false)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Decoder\+::decodefile (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{filename, }
+\item[{std\+::ostream $\ast$}]{out, }
+\item[{unsigned int}]{start = {\ttfamily 0}, }
+\item[{unsigned int}]{end = {\ttfamily 0}, }
+\item[{bool}]{quiet = {\ttfamily false}}
+\end{DoxyParamCaption}
+)}\label{classClassDecoder_a6e9e821e67a97d9197047d64a5e1cb18}
+Create a plain-\/text corpus file from a class-\/encoded corpus file ($\ast$.colibri.\+dat) 
+\begin{DoxyParams}{Parameters}
+{\em inputfilename} & Filename of the input file, a plain-\/text corpus file \\
+\hline
+{\em out} & Output stream for the plain-\/text corpus data, units (e.\+g sentences) are delimited with newlines \\
+\hline
+{\em start} & Start decoding at the specified line (corresponds to sentences or whatever other unit the data employs) \\
+\hline
+{\em end} & End decoding at the specified line (this line will be included) (corresponds to sentences or whatever other unit the data employs) \\
+\hline
+{\em quiet} & Do not report decoding problems to stderr \\
+\hline
+\end{DoxyParams}
+\hypertarget{classClassDecoder_a75348f84c3f9eb4f699f1b0986593ea6}{}\index{Class\+Decoder@{Class\+Decoder}!decodefiletostring@{decodefiletostring}}
+\index{decodefiletostring@{decodefiletostring}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{decodefiletostring(const std\+::string \&filename, unsigned int start=0, unsigned int end=0, bool quiet=true)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Class\+Decoder\+::decodefiletostring (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{filename, }
+\item[{unsigned int}]{start = {\ttfamily 0}, }
+\item[{unsigned int}]{end = {\ttfamily 0}, }
+\item[{bool}]{quiet = {\ttfamily true}}
+\end{DoxyParamCaption}
+)}\label{classClassDecoder_a75348f84c3f9eb4f699f1b0986593ea6}
+Create a plain-\/text corpus file from a class-\/encoded corpus file ($\ast$.colibri.\+dat) 
+\begin{DoxyParams}{Parameters}
+{\em inputfilename} & Filename of the input file, a plain-\/text corpus file \\
+\hline
+{\em start} & Start decoding at the specified line (corresponds to sentences or whatever other unit the data employs) \\
+\hline
+{\em end} & End decoding at the specified line (this line will be included) (corresponds to sentences or whatever other unit the data employs) \\
+\hline
+{\em quiet} & Do not report decoding problems to stderr \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A string with the plain-\/text corpus data, units (e.\+g sentences) are delimited with newlines 
+\end{DoxyReturn}
+\hypertarget{classClassDecoder_ac7b469a8815a77b07daee3e76ef41f8f}{}\index{Class\+Decoder@{Class\+Decoder}!decodeseq@{decodeseq}}
+\index{decodeseq@{decodeseq}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{decodeseq(const std\+::vector$<$ int $>$ \&seq)}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ string $>$ Class\+Decoder\+::decodeseq (
+\begin{DoxyParamCaption}
+\item[{const std\+::vector$<$ int $>$ \&}]{seq}
+\end{DoxyParamCaption}
+)}\label{classClassDecoder_ac7b469a8815a77b07daee3e76ef41f8f}
+\hypertarget{classClassDecoder_af3c11f55c5acdc9e0e6f7ec4ec0a45e7}{}\index{Class\+Decoder@{Class\+Decoder}!end@{end}}
+\index{end@{end}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{end() const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf const\+\_\+iterator} Class\+Decoder\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classClassDecoder_af3c11f55c5acdc9e0e6f7ec4ec0a45e7}
+\hypertarget{classClassDecoder_a90399b17e31b20a7330fcdd501e8350a}{}\index{Class\+Decoder@{Class\+Decoder}!gethighestclass@{gethighestclass}}
+\index{gethighestclass@{gethighestclass}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{gethighestclass()}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int Class\+Decoder\+::gethighestclass (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classClassDecoder_a90399b17e31b20a7330fcdd501e8350a}
+Return the highest class in the class encoding \hypertarget{classClassDecoder_ade08d075b70964c24a2fba6b5f43f7da}{}\index{Class\+Decoder@{Class\+Decoder}!hasclass@{hasclass}}
+\index{hasclass@{hasclass}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{hasclass(unsigned int key) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Class\+Decoder\+::hasclass (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{key}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classClassDecoder_ade08d075b70964c24a2fba6b5f43f7da}
+Test if the specified class exists in this class encoding \hypertarget{classClassDecoder_a497f71de32cb7cfafbb67657afc6a2be}{}\index{Class\+Decoder@{Class\+Decoder}!load@{load}}
+\index{load@{load}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{load(const std\+::string \&filename)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Decoder\+::load (
+\begin{DoxyParamCaption}
+\item[{const std\+::string \&}]{filename}
+\end{DoxyParamCaption}
+)}\label{classClassDecoder_a497f71de32cb7cfafbb67657afc6a2be}
+Load a class encoding from file \hypertarget{classClassDecoder_ab8418982b22ee11e48d89175bcf5e66d}{}\index{Class\+Decoder@{Class\+Decoder}!newclass@{newclass}}
+\index{newclass@{newclass}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{newclass()}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int Class\+Decoder\+::newclass (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classClassDecoder_ab8418982b22ee11e48d89175bcf5e66d}
+Return a new class, not yet assigned \hypertarget{classClassDecoder_ab212c7a5643348965fc70e85ccf6a454}{}\index{Class\+Decoder@{Class\+Decoder}!operator\mbox{[}$\,$\mbox{]}@{operator[]}}
+\index{operator\mbox{[}$\,$\mbox{]}@{operator[]}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{operator[](unsigned int key) const }]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Class\+Decoder\+::operator\mbox{[}$\,$\mbox{]} (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{key}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classClassDecoder_ab212c7a5643348965fc70e85ccf6a454}
+Return the word pertaining to the given class. Unknown classes will be decoded as \{U\+N\+K\+N\+O\+W\+N\}. \hypertarget{classClassDecoder_aaddeef1f5e8730eb6eeb5351db4eb826}{}\index{Class\+Decoder@{Class\+Decoder}!prune@{prune}}
+\index{prune@{prune}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{prune(unsigned int threshold)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Decoder\+::prune (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{threshold}
+\end{DoxyParamCaption}
+)}\label{classClassDecoder_aaddeef1f5e8730eb6eeb5351db4eb826}
+Retain only the specified number of most frequent classes, prune the remainder \hypertarget{classClassDecoder_af4a58ebdaed62bbc27f3d0fd860c9dde}{}\index{Class\+Decoder@{Class\+Decoder}!size@{size}}
+\index{size@{size}!Class\+Decoder@{Class\+Decoder}}
+\subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}int Class\+Decoder\+::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classClassDecoder_af4a58ebdaed62bbc27f3d0fd860c9dde}
+Return the number of classes, i.\+e. word types, in the class encoding 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{classdecoder_8h}{classdecoder.\+h}\item 
+src/\hyperlink{classdecoder_8cpp}{classdecoder.\+cpp}\end{DoxyCompactItemize}

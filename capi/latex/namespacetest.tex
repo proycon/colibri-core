@@ -1,0 +1,113 @@
+\hypertarget{namespacetest}{}\section{test Namespace Reference}
+\label{namespacetest}\index{test@{test}}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+tuple \hyperlink{namespacetest_a315e1f1cdf594ddd88b3c64ac5a8d8ea}{decoder} = colibricore.\+Class\+Decoder(\char`\"{}/tmp/colibritest\char`\"{})
+\item 
+tuple \hyperlink{namespacetest_abcc44abf2a2645b488cdf35706e3f8dd}{encoder} = colibricore.\+Class\+Encoder(\char`\"{}/tmp/colibritest\char`\"{})
+\item 
+tuple \hyperlink{namespacetest_a172822b9b1b04a83c37863777d586d66}{ngram} = encoder.\+buildpattern(\char`\"{}To be or not to be\char`\"{})
+\item 
+list \hyperlink{namespacetest_a192953f02127a54653c24b19995e4ab5}{ngram2} = \hyperlink{namespacetest_a172822b9b1b04a83c37863777d586d66}{ngram}\mbox{[}2\+:2\mbox{]}
+\item 
+tuple \hyperlink{namespacetest_a16964a57a08015b96ec6a0a5571221c4}{ngram3} = copy(\hyperlink{namespacetest_a172822b9b1b04a83c37863777d586d66}{ngram})
+\item 
+tuple \hyperlink{namespacetest_ae0a947197ff98632dbd9b9202af2e9d4}{pickled} = pickle.\+dumps(\hyperlink{namespacetest_a172822b9b1b04a83c37863777d586d66}{ngram})
+\item 
+tuple \hyperlink{namespacetest_a3fd9766be745abf941fa498c963c65ca}{unpickledngram} = pickle.\+loads(\hyperlink{namespacetest_ae0a947197ff98632dbd9b9202af2e9d4}{pickled})
+\item 
+tuple \hyperlink{namespacetest_aebc4bce24c358f86be52bd0827e717e3}{subngram} = encoder.\+buildpattern(\char`\"{}or not\char`\"{})
+\item 
+tuple \hyperlink{namespacetest_a74ad1b92a76663226004d55408ff5336}{subngram2} = encoder.\+buildpattern(\char`\"{}to be\char`\"{})
+\item 
+tuple \hyperlink{namespacetest_a91d28841d2bda96a438e76d99dbe6294}{subngram3} = encoder.\+buildpattern(\char`\"{}or\char`\"{})
+\item 
+\hyperlink{namespacetest_aa28f4be90818659453cac8fac2589d39}{ngramconc} = \hyperlink{namespacetest_aebc4bce24c358f86be52bd0827e717e3}{subngram}+\hyperlink{namespacetest_a74ad1b92a76663226004d55408ff5336}{subngram2}
+\item 
+tuple \hyperlink{namespacetest_a4c2fb2fac7937b950be064eae096b564}{skipgram} = encoder.\+buildpattern(\char`\"{}To \{$\ast$1$\ast$\} or \{$\ast$1$\ast$\} to be\char`\"{})
+\item 
+tuple \hyperlink{namespacetest_a8933a99096108a0d9655a4c91eb38224}{flexgram} = skipgram.\+toflexgram()
+\item 
+string \hyperlink{namespacetest_aa74f097103f43897cb329756acef4552}{hamlet}
+\item 
+tuple \hyperlink{namespacetest_aee9d9f416f3ac69649728f0679b460e2}{corpus} = colibricore.\+Indexed\+Corpus(\char`\"{}/tmp/hamlet.\+colibri.\+dat\char`\"{})
+\item 
+list \hyperlink{namespacetest_a5a126843bd3c37ec8975aee3d83d8728}{firstword} = \hyperlink{namespacetest_aee9d9f416f3ac69649728f0679b460e2}{corpus}\mbox{[}(1,0)\mbox{]}
+\item 
+tuple \hyperlink{namespacetest_a51ed4c3f6972c49e80c5c430c2d82153}{needle} = encoder.\+buildpattern(\char`\"{}fair Ophelia\char`\"{})
+\item 
+tuple \hyperlink{namespacetest_a8e4cf0fa4db680c61526b4a824f43d23}{options} = colibricore.\+Pattern\+Model\+Options()
+\item 
+tuple \hyperlink{namespacetest_aed06428888223bbb3d645936625ebec8}{unindexedmodel} = colibricore.\+Unindexed\+Pattern\+Model()
+\item 
+string \hyperlink{namespacetest_a11b1ef528efe815402e528cb353937d2}{outputfilename} = \char`\"{}/tmp/data.\+colibri.\+patternmodel\char`\"{}
+\item 
+tuple \hyperlink{namespacetest_a9d72ba48113d00bd5f59eec20845f71b}{indexedmodel} = colibricore.\+Indexed\+Pattern\+Model()
+\end{DoxyCompactItemize}
+
+
+\subsection{Variable Documentation}
+\hypertarget{namespacetest_aee9d9f416f3ac69649728f0679b460e2}{}\index{test@{test}!corpus@{corpus}}
+\index{corpus@{corpus}!test@{test}}
+\subsubsection[{corpus}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+corpus = colibricore.\+Indexed\+Corpus(\char`\"{}/tmp/hamlet.\+colibri.\+dat\char`\"{})}\label{namespacetest_aee9d9f416f3ac69649728f0679b460e2}
+\hypertarget{namespacetest_a315e1f1cdf594ddd88b3c64ac5a8d8ea}{}\index{test@{test}!decoder@{decoder}}
+\index{decoder@{decoder}!test@{test}}
+\subsubsection[{decoder}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+decoder = colibricore.\+Class\+Decoder(\char`\"{}/tmp/colibritest\char`\"{})}\label{namespacetest_a315e1f1cdf594ddd88b3c64ac5a8d8ea}
+\hypertarget{namespacetest_abcc44abf2a2645b488cdf35706e3f8dd}{}\index{test@{test}!encoder@{encoder}}
+\index{encoder@{encoder}!test@{test}}
+\subsubsection[{encoder}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+encoder = colibricore.\+Class\+Encoder(\char`\"{}/tmp/colibritest\char`\"{})}\label{namespacetest_abcc44abf2a2645b488cdf35706e3f8dd}
+\hypertarget{namespacetest_a5a126843bd3c37ec8975aee3d83d8728}{}\index{test@{test}!firstword@{firstword}}
+\index{firstword@{firstword}!test@{test}}
+\subsubsection[{firstword}]{\setlength{\rightskip}{0pt plus 5cm}list test.\+firstword = {\bf corpus}\mbox{[}(1,0)\mbox{]}}\label{namespacetest_a5a126843bd3c37ec8975aee3d83d8728}
+\hypertarget{namespacetest_a8933a99096108a0d9655a4c91eb38224}{}\index{test@{test}!flexgram@{flexgram}}
+\index{flexgram@{flexgram}!test@{test}}
+\subsubsection[{flexgram}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+flexgram = skipgram.\+toflexgram()}\label{namespacetest_a8933a99096108a0d9655a4c91eb38224}
+\hypertarget{namespacetest_aa74f097103f43897cb329756acef4552}{}\index{test@{test}!hamlet@{hamlet}}
+\index{hamlet@{hamlet}!test@{test}}
+\subsubsection[{hamlet}]{\setlength{\rightskip}{0pt plus 5cm}string test.\+hamlet}\label{namespacetest_aa74f097103f43897cb329756acef4552}
+\hypertarget{namespacetest_a9d72ba48113d00bd5f59eec20845f71b}{}\index{test@{test}!indexedmodel@{indexedmodel}}
+\index{indexedmodel@{indexedmodel}!test@{test}}
+\subsubsection[{indexedmodel}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+indexedmodel = colibricore.\+Indexed\+Pattern\+Model()}\label{namespacetest_a9d72ba48113d00bd5f59eec20845f71b}
+\hypertarget{namespacetest_a51ed4c3f6972c49e80c5c430c2d82153}{}\index{test@{test}!needle@{needle}}
+\index{needle@{needle}!test@{test}}
+\subsubsection[{needle}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+needle = encoder.\+buildpattern(\char`\"{}fair Ophelia\char`\"{})}\label{namespacetest_a51ed4c3f6972c49e80c5c430c2d82153}
+\hypertarget{namespacetest_a172822b9b1b04a83c37863777d586d66}{}\index{test@{test}!ngram@{ngram}}
+\index{ngram@{ngram}!test@{test}}
+\subsubsection[{ngram}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+ngram = encoder.\+buildpattern(\char`\"{}To be or not to be\char`\"{})}\label{namespacetest_a172822b9b1b04a83c37863777d586d66}
+\hypertarget{namespacetest_a192953f02127a54653c24b19995e4ab5}{}\index{test@{test}!ngram2@{ngram2}}
+\index{ngram2@{ngram2}!test@{test}}
+\subsubsection[{ngram2}]{\setlength{\rightskip}{0pt plus 5cm}list test.\+ngram2 = {\bf ngram}\mbox{[}2\+:2\mbox{]}}\label{namespacetest_a192953f02127a54653c24b19995e4ab5}
+\hypertarget{namespacetest_a16964a57a08015b96ec6a0a5571221c4}{}\index{test@{test}!ngram3@{ngram3}}
+\index{ngram3@{ngram3}!test@{test}}
+\subsubsection[{ngram3}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+ngram3 = copy({\bf ngram})}\label{namespacetest_a16964a57a08015b96ec6a0a5571221c4}
+\hypertarget{namespacetest_aa28f4be90818659453cac8fac2589d39}{}\index{test@{test}!ngramconc@{ngramconc}}
+\index{ngramconc@{ngramconc}!test@{test}}
+\subsubsection[{ngramconc}]{\setlength{\rightskip}{0pt plus 5cm}test.\+ngramconc = {\bf subngram}+{\bf subngram2}}\label{namespacetest_aa28f4be90818659453cac8fac2589d39}
+\hypertarget{namespacetest_a8e4cf0fa4db680c61526b4a824f43d23}{}\index{test@{test}!options@{options}}
+\index{options@{options}!test@{test}}
+\subsubsection[{options}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+options = colibricore.\+Pattern\+Model\+Options()}\label{namespacetest_a8e4cf0fa4db680c61526b4a824f43d23}
+\hypertarget{namespacetest_a11b1ef528efe815402e528cb353937d2}{}\index{test@{test}!outputfilename@{outputfilename}}
+\index{outputfilename@{outputfilename}!test@{test}}
+\subsubsection[{outputfilename}]{\setlength{\rightskip}{0pt plus 5cm}string test.\+outputfilename = \char`\"{}/tmp/data.\+colibri.\+patternmodel\char`\"{}}\label{namespacetest_a11b1ef528efe815402e528cb353937d2}
+\hypertarget{namespacetest_ae0a947197ff98632dbd9b9202af2e9d4}{}\index{test@{test}!pickled@{pickled}}
+\index{pickled@{pickled}!test@{test}}
+\subsubsection[{pickled}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+pickled = pickle.\+dumps({\bf ngram})}\label{namespacetest_ae0a947197ff98632dbd9b9202af2e9d4}
+\hypertarget{namespacetest_a4c2fb2fac7937b950be064eae096b564}{}\index{test@{test}!skipgram@{skipgram}}
+\index{skipgram@{skipgram}!test@{test}}
+\subsubsection[{skipgram}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+skipgram = encoder.\+buildpattern(\char`\"{}To \{$\ast$1$\ast$\} or \{$\ast$1$\ast$\} to be\char`\"{})}\label{namespacetest_a4c2fb2fac7937b950be064eae096b564}
+\hypertarget{namespacetest_aebc4bce24c358f86be52bd0827e717e3}{}\index{test@{test}!subngram@{subngram}}
+\index{subngram@{subngram}!test@{test}}
+\subsubsection[{subngram}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+subngram = encoder.\+buildpattern(\char`\"{}or not\char`\"{})}\label{namespacetest_aebc4bce24c358f86be52bd0827e717e3}
+\hypertarget{namespacetest_a74ad1b92a76663226004d55408ff5336}{}\index{test@{test}!subngram2@{subngram2}}
+\index{subngram2@{subngram2}!test@{test}}
+\subsubsection[{subngram2}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+subngram2 = encoder.\+buildpattern(\char`\"{}to be\char`\"{})}\label{namespacetest_a74ad1b92a76663226004d55408ff5336}
+\hypertarget{namespacetest_a91d28841d2bda96a438e76d99dbe6294}{}\index{test@{test}!subngram3@{subngram3}}
+\index{subngram3@{subngram3}!test@{test}}
+\subsubsection[{subngram3}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+subngram3 = encoder.\+buildpattern(\char`\"{}or\char`\"{})}\label{namespacetest_a91d28841d2bda96a438e76d99dbe6294}
+\hypertarget{namespacetest_aed06428888223bbb3d645936625ebec8}{}\index{test@{test}!unindexedmodel@{unindexedmodel}}
+\index{unindexedmodel@{unindexedmodel}!test@{test}}
+\subsubsection[{unindexedmodel}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+unindexedmodel = colibricore.\+Unindexed\+Pattern\+Model()}\label{namespacetest_aed06428888223bbb3d645936625ebec8}
+\hypertarget{namespacetest_a3fd9766be745abf941fa498c963c65ca}{}\index{test@{test}!unpickledngram@{unpickledngram}}
+\index{unpickledngram@{unpickledngram}!test@{test}}
+\subsubsection[{unpickledngram}]{\setlength{\rightskip}{0pt plus 5cm}tuple test.\+unpickledngram = pickle.\+loads({\bf pickled})}\label{namespacetest_a3fd9766be745abf941fa498c963c65ca}

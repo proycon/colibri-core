@@ -1,0 +1,49 @@
+\hypertarget{classAlignedPatternMap}{}\section{Aligned\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ Class Template Reference}
+\label{classAlignedPatternMap}\index{Aligned\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$@{Aligned\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$}}
+
+
+A nested pattern map, useful for storing patterns that map to other patterns, which in turn map to values. An example is phrase-\/translation tables in Machine Translation.  
+
+
+
+
+{\ttfamily \#include $<$patternstore.\+h$>$}
+
+Inheritance diagram for Aligned\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.775523cm]{classAlignedPatternMap}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{classPatternMap}{Pattern\+Map}$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ \hyperlink{classAlignedPatternMap_a5b139dad8d98612f62fc561a1e29153d}{valuetype}
+\item 
+typedef \hyperlink{classPatternMap}{Pattern\+Map}$<$ \hyperlink{classPatternMap}{Pattern\+Map}$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$, \hyperlink{classPatternStoreValueHandler}{Pattern\+Store\+Value\+Handler}$<$ \hyperlink{classPatternMap}{Pattern\+Map}$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$, uint64\+\_\+t $>$\+::\hyperlink{classAlignedPatternMap_ac784198ebf47e631d2feb1c9d6063b1b}{iterator} \hyperlink{classAlignedPatternMap_ac784198ebf47e631d2feb1c9d6063b1b}{iterator}
+\item 
+typedef \hyperlink{classPatternMap}{Pattern\+Map}$<$ \hyperlink{classPatternMap}{Pattern\+Map}$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$, \hyperlink{classPatternStoreValueHandler}{Pattern\+Store\+Value\+Handler}$<$ \hyperlink{classPatternMap}{Pattern\+Map}$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$, uint64\+\_\+t $>$\+::\hyperlink{classAlignedPatternMap_a1dd59a53ad5586979698949f2845a1ee}{const\+\_\+iterator} \hyperlink{classAlignedPatternMap_a1dd59a53ad5586979698949f2845a1ee}{const\+\_\+iterator}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Value\+Type, class Value\+Handler = Base\+Value\+Handler$<$\+Value\+Type$>$, class Nested\+Size\+Type = uint16\+\_\+t$>$class Aligned\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$}
+
+A nested pattern map, useful for storing patterns that map to other patterns, which in turn map to values. An example is phrase-\/translation tables in Machine Translation. 
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classAlignedPatternMap_a1dd59a53ad5586979698949f2845a1ee}{}\index{Aligned\+Pattern\+Map@{Aligned\+Pattern\+Map}!const\+\_\+iterator@{const\+\_\+iterator}}
+\index{const\+\_\+iterator@{const\+\_\+iterator}!Aligned\+Pattern\+Map@{Aligned\+Pattern\+Map}}
+\subsubsection[{const\+\_\+iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type , class Value\+Handler  = Base\+Value\+Handler$<$\+Value\+Type$>$, class Nested\+Size\+Type  = uint16\+\_\+t$>$ typedef {\bf Pattern\+Map}$<$ {\bf Pattern\+Map}$<$Value\+Type,Value\+Handler,Nested\+Size\+Type$>$,{\bf Pattern\+Store\+Value\+Handler}$<${\bf Pattern\+Map}$<$Value\+Type,Value\+Handler,Nested\+Size\+Type$>$ $>$, uint64\+\_\+t $>$\+::{\bf const\+\_\+iterator} {\bf Aligned\+Pattern\+Map}$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$\+::{\bf const\+\_\+iterator}}\label{classAlignedPatternMap_a1dd59a53ad5586979698949f2845a1ee}
+\hypertarget{classAlignedPatternMap_ac784198ebf47e631d2feb1c9d6063b1b}{}\index{Aligned\+Pattern\+Map@{Aligned\+Pattern\+Map}!iterator@{iterator}}
+\index{iterator@{iterator}!Aligned\+Pattern\+Map@{Aligned\+Pattern\+Map}}
+\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type , class Value\+Handler  = Base\+Value\+Handler$<$\+Value\+Type$>$, class Nested\+Size\+Type  = uint16\+\_\+t$>$ typedef {\bf Pattern\+Map}$<$ {\bf Pattern\+Map}$<$Value\+Type,Value\+Handler,Nested\+Size\+Type$>$,{\bf Pattern\+Store\+Value\+Handler}$<${\bf Pattern\+Map}$<$Value\+Type,Value\+Handler,Nested\+Size\+Type$>$ $>$, uint64\+\_\+t $>$\+::{\bf iterator} {\bf Aligned\+Pattern\+Map}$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$\+::{\bf iterator}}\label{classAlignedPatternMap_ac784198ebf47e631d2feb1c9d6063b1b}
+\hypertarget{classAlignedPatternMap_a5b139dad8d98612f62fc561a1e29153d}{}\index{Aligned\+Pattern\+Map@{Aligned\+Pattern\+Map}!valuetype@{valuetype}}
+\index{valuetype@{valuetype}!Aligned\+Pattern\+Map@{Aligned\+Pattern\+Map}}
+\subsubsection[{valuetype}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type , class Value\+Handler  = Base\+Value\+Handler$<$\+Value\+Type$>$, class Nested\+Size\+Type  = uint16\+\_\+t$>$ typedef {\bf Pattern\+Map}$<$Value\+Type,Value\+Handler,Nested\+Size\+Type$>$ {\bf Aligned\+Pattern\+Map}$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$\+::{\bf valuetype}}\label{classAlignedPatternMap_a5b139dad8d98612f62fc561a1e29153d}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{patternstore_8h}{patternstore.\+h}\end{DoxyCompactItemize}

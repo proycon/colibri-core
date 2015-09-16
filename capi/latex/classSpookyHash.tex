@@ -1,0 +1,181 @@
+\hypertarget{classSpookyHash}{}\section{Spooky\+Hash Class Reference}
+\label{classSpookyHash}\index{Spooky\+Hash@{Spooky\+Hash}}
+
+
+{\ttfamily \#include $<$Spooky\+V2.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classSpookyHash_acba9d3327d8576d4126b15f301a17282}{Init} (\hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} seed1, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} seed2)
+\item 
+void \hyperlink{classSpookyHash_a1a95761b21aa9d827ad9b62f56a30877}{Update} (const void $\ast$message, size\+\_\+t length)
+\item 
+void \hyperlink{classSpookyHash_ae37b93d6c4386e1879cec667ab6c103e}{Final} (\hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} $\ast$hash1, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} $\ast$hash2)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \hyperlink{classSpookyHash_a9d8973d46becbc8036c458fae3efc3a5}{Hash128} (const void $\ast$message, size\+\_\+t length, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} $\ast$hash1, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} $\ast$hash2)
+\item 
+static \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \hyperlink{classSpookyHash_a4781c0814a39002c57900a108f3005f0}{Hash64} (const void $\ast$message, size\+\_\+t length, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} seed=0)
+\item 
+static \hyperlink{SpookyV2_8h_acbd4acd0d29e2d6c43104827f77d9cd2}{uint32} \hyperlink{classSpookyHash_a73d8524c291fccbc319517341abb2f77}{Hash32} (const void $\ast$message, size\+\_\+t length, \hyperlink{SpookyV2_8h_acbd4acd0d29e2d6c43104827f77d9cd2}{uint32} seed=0)
+\item 
+static \hyperlink{SpookyV2_8h_a2eb6f9e0395b47b8d5e3eeae4fe0c116}{I\+N\+L\+I\+N\+E} \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \hyperlink{classSpookyHash_a2b3b07af28a0b4f0f920fdb3a31a0c87}{Rot64} (\hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} x, int k)
+\item 
+static \hyperlink{SpookyV2_8h_a2eb6f9e0395b47b8d5e3eeae4fe0c116}{I\+N\+L\+I\+N\+E} void \hyperlink{classSpookyHash_a749e6012af3d67884a323e227105e032}{Mix} (const \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} $\ast$data, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&s0, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&s1, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&s2, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&s3, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&s4, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&s5, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&s6, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&s7, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&s8, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&s9, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&s10, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&s11)
+\item 
+static \hyperlink{SpookyV2_8h_a2eb6f9e0395b47b8d5e3eeae4fe0c116}{I\+N\+L\+I\+N\+E} void \hyperlink{classSpookyHash_a9799c4b36e1c73e895e4e7293eb94521}{End\+Partial} (\hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h0, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h1, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h2, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h3, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h4, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h5, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h6, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h7, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h8, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h9, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h10, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h11)
+\item 
+static \hyperlink{SpookyV2_8h_a2eb6f9e0395b47b8d5e3eeae4fe0c116}{I\+N\+L\+I\+N\+E} void \hyperlink{classSpookyHash_a21b8777af68b866653ac4de06df9416f}{End} (const \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} $\ast$data, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h0, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h1, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h2, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h3, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h4, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h5, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h6, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h7, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h8, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h9, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h10, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h11)
+\item 
+static \hyperlink{SpookyV2_8h_a2eb6f9e0395b47b8d5e3eeae4fe0c116}{I\+N\+L\+I\+N\+E} void \hyperlink{classSpookyHash_a2a18b61b405f43f283ba9a20016b5b9f}{Short\+Mix} (\hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h0, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h1, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h2, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h3)
+\item 
+static \hyperlink{SpookyV2_8h_a2eb6f9e0395b47b8d5e3eeae4fe0c116}{I\+N\+L\+I\+N\+E} void \hyperlink{classSpookyHash_a5b01b1a2b3270e9c11244a6702b0db59}{Short\+End} (\hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h0, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h1, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h2, \hyperlink{SpookyV2_8h_abc0f5bc07737e498f287334775dff2b6}{uint64} \&h3)
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classSpookyHash_a21b8777af68b866653ac4de06df9416f}{}\index{Spooky\+Hash@{Spooky\+Hash}!End@{End}}
+\index{End@{End}!Spooky\+Hash@{Spooky\+Hash}}
+\subsubsection[{End(const uint64 $\ast$data, uint64 \&h0, uint64 \&h1, uint64 \&h2, uint64 \&h3, uint64 \&h4, uint64 \&h5, uint64 \&h6, uint64 \&h7, uint64 \&h8, uint64 \&h9, uint64 \&h10, uint64 \&h11)}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf I\+N\+L\+I\+N\+E} void Spooky\+Hash\+::\+End (
+\begin{DoxyParamCaption}
+\item[{const {\bf uint64} $\ast$}]{data, }
+\item[{{\bf uint64} \&}]{h0, }
+\item[{{\bf uint64} \&}]{h1, }
+\item[{{\bf uint64} \&}]{h2, }
+\item[{{\bf uint64} \&}]{h3, }
+\item[{{\bf uint64} \&}]{h4, }
+\item[{{\bf uint64} \&}]{h5, }
+\item[{{\bf uint64} \&}]{h6, }
+\item[{{\bf uint64} \&}]{h7, }
+\item[{{\bf uint64} \&}]{h8, }
+\item[{{\bf uint64} \&}]{h9, }
+\item[{{\bf uint64} \&}]{h10, }
+\item[{{\bf uint64} \&}]{h11}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\label{classSpookyHash_a21b8777af68b866653ac4de06df9416f}
+\hypertarget{classSpookyHash_a9799c4b36e1c73e895e4e7293eb94521}{}\index{Spooky\+Hash@{Spooky\+Hash}!End\+Partial@{End\+Partial}}
+\index{End\+Partial@{End\+Partial}!Spooky\+Hash@{Spooky\+Hash}}
+\subsubsection[{End\+Partial(uint64 \&h0, uint64 \&h1, uint64 \&h2, uint64 \&h3, uint64 \&h4, uint64 \&h5, uint64 \&h6, uint64 \&h7, uint64 \&h8, uint64 \&h9, uint64 \&h10, uint64 \&h11)}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf I\+N\+L\+I\+N\+E} void Spooky\+Hash\+::\+End\+Partial (
+\begin{DoxyParamCaption}
+\item[{{\bf uint64} \&}]{h0, }
+\item[{{\bf uint64} \&}]{h1, }
+\item[{{\bf uint64} \&}]{h2, }
+\item[{{\bf uint64} \&}]{h3, }
+\item[{{\bf uint64} \&}]{h4, }
+\item[{{\bf uint64} \&}]{h5, }
+\item[{{\bf uint64} \&}]{h6, }
+\item[{{\bf uint64} \&}]{h7, }
+\item[{{\bf uint64} \&}]{h8, }
+\item[{{\bf uint64} \&}]{h9, }
+\item[{{\bf uint64} \&}]{h10, }
+\item[{{\bf uint64} \&}]{h11}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\label{classSpookyHash_a9799c4b36e1c73e895e4e7293eb94521}
+\hypertarget{classSpookyHash_ae37b93d6c4386e1879cec667ab6c103e}{}\index{Spooky\+Hash@{Spooky\+Hash}!Final@{Final}}
+\index{Final@{Final}!Spooky\+Hash@{Spooky\+Hash}}
+\subsubsection[{Final(uint64 $\ast$hash1, uint64 $\ast$hash2)}]{\setlength{\rightskip}{0pt plus 5cm}void Spooky\+Hash\+::\+Final (
+\begin{DoxyParamCaption}
+\item[{{\bf uint64} $\ast$}]{hash1, }
+\item[{{\bf uint64} $\ast$}]{hash2}
+\end{DoxyParamCaption}
+)}\label{classSpookyHash_ae37b93d6c4386e1879cec667ab6c103e}
+\hypertarget{classSpookyHash_a9d8973d46becbc8036c458fae3efc3a5}{}\index{Spooky\+Hash@{Spooky\+Hash}!Hash128@{Hash128}}
+\index{Hash128@{Hash128}!Spooky\+Hash@{Spooky\+Hash}}
+\subsubsection[{Hash128(const void $\ast$message, size\+\_\+t length, uint64 $\ast$hash1, uint64 $\ast$hash2)}]{\setlength{\rightskip}{0pt plus 5cm}void Spooky\+Hash\+::\+Hash128 (
+\begin{DoxyParamCaption}
+\item[{const void $\ast$}]{message, }
+\item[{size\+\_\+t}]{length, }
+\item[{{\bf uint64} $\ast$}]{hash1, }
+\item[{{\bf uint64} $\ast$}]{hash2}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\label{classSpookyHash_a9d8973d46becbc8036c458fae3efc3a5}
+\hypertarget{classSpookyHash_a73d8524c291fccbc319517341abb2f77}{}\index{Spooky\+Hash@{Spooky\+Hash}!Hash32@{Hash32}}
+\index{Hash32@{Hash32}!Spooky\+Hash@{Spooky\+Hash}}
+\subsubsection[{Hash32(const void $\ast$message, size\+\_\+t length, uint32 seed=0)}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf uint32} Spooky\+Hash\+::\+Hash32 (
+\begin{DoxyParamCaption}
+\item[{const void $\ast$}]{message, }
+\item[{size\+\_\+t}]{length, }
+\item[{{\bf uint32}}]{seed = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\label{classSpookyHash_a73d8524c291fccbc319517341abb2f77}
+\hypertarget{classSpookyHash_a4781c0814a39002c57900a108f3005f0}{}\index{Spooky\+Hash@{Spooky\+Hash}!Hash64@{Hash64}}
+\index{Hash64@{Hash64}!Spooky\+Hash@{Spooky\+Hash}}
+\subsubsection[{Hash64(const void $\ast$message, size\+\_\+t length, uint64 seed=0)}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf uint64} Spooky\+Hash\+::\+Hash64 (
+\begin{DoxyParamCaption}
+\item[{const void $\ast$}]{message, }
+\item[{size\+\_\+t}]{length, }
+\item[{{\bf uint64}}]{seed = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\label{classSpookyHash_a4781c0814a39002c57900a108f3005f0}
+\hypertarget{classSpookyHash_acba9d3327d8576d4126b15f301a17282}{}\index{Spooky\+Hash@{Spooky\+Hash}!Init@{Init}}
+\index{Init@{Init}!Spooky\+Hash@{Spooky\+Hash}}
+\subsubsection[{Init(uint64 seed1, uint64 seed2)}]{\setlength{\rightskip}{0pt plus 5cm}void Spooky\+Hash\+::\+Init (
+\begin{DoxyParamCaption}
+\item[{{\bf uint64}}]{seed1, }
+\item[{{\bf uint64}}]{seed2}
+\end{DoxyParamCaption}
+)}\label{classSpookyHash_acba9d3327d8576d4126b15f301a17282}
+\hypertarget{classSpookyHash_a749e6012af3d67884a323e227105e032}{}\index{Spooky\+Hash@{Spooky\+Hash}!Mix@{Mix}}
+\index{Mix@{Mix}!Spooky\+Hash@{Spooky\+Hash}}
+\subsubsection[{Mix(const uint64 $\ast$data, uint64 \&s0, uint64 \&s1, uint64 \&s2, uint64 \&s3, uint64 \&s4, uint64 \&s5, uint64 \&s6, uint64 \&s7, uint64 \&s8, uint64 \&s9, uint64 \&s10, uint64 \&s11)}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf I\+N\+L\+I\+N\+E} void Spooky\+Hash\+::\+Mix (
+\begin{DoxyParamCaption}
+\item[{const {\bf uint64} $\ast$}]{data, }
+\item[{{\bf uint64} \&}]{s0, }
+\item[{{\bf uint64} \&}]{s1, }
+\item[{{\bf uint64} \&}]{s2, }
+\item[{{\bf uint64} \&}]{s3, }
+\item[{{\bf uint64} \&}]{s4, }
+\item[{{\bf uint64} \&}]{s5, }
+\item[{{\bf uint64} \&}]{s6, }
+\item[{{\bf uint64} \&}]{s7, }
+\item[{{\bf uint64} \&}]{s8, }
+\item[{{\bf uint64} \&}]{s9, }
+\item[{{\bf uint64} \&}]{s10, }
+\item[{{\bf uint64} \&}]{s11}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\label{classSpookyHash_a749e6012af3d67884a323e227105e032}
+\hypertarget{classSpookyHash_a2b3b07af28a0b4f0f920fdb3a31a0c87}{}\index{Spooky\+Hash@{Spooky\+Hash}!Rot64@{Rot64}}
+\index{Rot64@{Rot64}!Spooky\+Hash@{Spooky\+Hash}}
+\subsubsection[{Rot64(uint64 x, int k)}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf I\+N\+L\+I\+N\+E} {\bf uint64} Spooky\+Hash\+::\+Rot64 (
+\begin{DoxyParamCaption}
+\item[{{\bf uint64}}]{x, }
+\item[{int}]{k}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\label{classSpookyHash_a2b3b07af28a0b4f0f920fdb3a31a0c87}
+\hypertarget{classSpookyHash_a5b01b1a2b3270e9c11244a6702b0db59}{}\index{Spooky\+Hash@{Spooky\+Hash}!Short\+End@{Short\+End}}
+\index{Short\+End@{Short\+End}!Spooky\+Hash@{Spooky\+Hash}}
+\subsubsection[{Short\+End(uint64 \&h0, uint64 \&h1, uint64 \&h2, uint64 \&h3)}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf I\+N\+L\+I\+N\+E} void Spooky\+Hash\+::\+Short\+End (
+\begin{DoxyParamCaption}
+\item[{{\bf uint64} \&}]{h0, }
+\item[{{\bf uint64} \&}]{h1, }
+\item[{{\bf uint64} \&}]{h2, }
+\item[{{\bf uint64} \&}]{h3}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\label{classSpookyHash_a5b01b1a2b3270e9c11244a6702b0db59}
+\hypertarget{classSpookyHash_a2a18b61b405f43f283ba9a20016b5b9f}{}\index{Spooky\+Hash@{Spooky\+Hash}!Short\+Mix@{Short\+Mix}}
+\index{Short\+Mix@{Short\+Mix}!Spooky\+Hash@{Spooky\+Hash}}
+\subsubsection[{Short\+Mix(uint64 \&h0, uint64 \&h1, uint64 \&h2, uint64 \&h3)}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf I\+N\+L\+I\+N\+E} void Spooky\+Hash\+::\+Short\+Mix (
+\begin{DoxyParamCaption}
+\item[{{\bf uint64} \&}]{h0, }
+\item[{{\bf uint64} \&}]{h1, }
+\item[{{\bf uint64} \&}]{h2, }
+\item[{{\bf uint64} \&}]{h3}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}\label{classSpookyHash_a2a18b61b405f43f283ba9a20016b5b9f}
+\hypertarget{classSpookyHash_a1a95761b21aa9d827ad9b62f56a30877}{}\index{Spooky\+Hash@{Spooky\+Hash}!Update@{Update}}
+\index{Update@{Update}!Spooky\+Hash@{Spooky\+Hash}}
+\subsubsection[{Update(const void $\ast$message, size\+\_\+t length)}]{\setlength{\rightskip}{0pt plus 5cm}void Spooky\+Hash\+::\+Update (
+\begin{DoxyParamCaption}
+\item[{const void $\ast$}]{message, }
+\item[{size\+\_\+t}]{length}
+\end{DoxyParamCaption}
+)}\label{classSpookyHash_a1a95761b21aa9d827ad9b62f56a30877}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{SpookyV2_8h}{Spooky\+V2.\+h}\item 
+src/\hyperlink{SpookyV2_8cpp}{Spooky\+V2.\+cpp}\end{DoxyCompactItemize}

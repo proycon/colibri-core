@@ -1,0 +1,144 @@
+\hypertarget{classIndexReference}{}\section{Index\+Reference Class Reference}
+\label{classIndexReference}\index{Index\+Reference@{Index\+Reference}}
+
+
+Reference to a position in the corpus.  
+
+
+
+
+{\ttfamily \#include $<$datatypes.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classIndexReference_afcc00f656c2940e65cf7771efb663eb2}{Index\+Reference} ()
+\item 
+\hyperlink{classIndexReference_a6a5540b71a1e86d0165e5845979eea0b}{Index\+Reference} (uint32\+\_\+t \hyperlink{classIndexReference_ac8e7129f517e6ceb4c223e7568219f47}{sentence}, uint16\+\_\+t \hyperlink{classIndexReference_a90f3de27395e19a1d53f62f9e7bea1d7}{token})
+\item 
+\hyperlink{classIndexReference_a1bae610567a3133e4c362e46ade5f7d0}{Index\+Reference} (std\+::istream $\ast$in)
+\item 
+\hyperlink{classIndexReference_a7bb45da23e1718f13d9ee53bae79c175}{Index\+Reference} (const \hyperlink{classIndexReference}{Index\+Reference} \&other)
+\item 
+void \hyperlink{classIndexReference_a5e1726b6ce5fed19478fad34315c1eca}{write} (std\+::ostream $\ast$out) const 
+\item 
+bool \hyperlink{classIndexReference_aa36bf5625589f6da824732da2391b040}{operator$<$} (const \hyperlink{classIndexReference}{Index\+Reference} \&other) const 
+\item 
+bool \hyperlink{classIndexReference_a03c5501f91f5e9c478902067f90f4632}{operator$>$} (const \hyperlink{classIndexReference}{Index\+Reference} \&other) const 
+\item 
+bool \hyperlink{classIndexReference_a6481b0eb9b078a7d5961358a721ae685}{operator==} (const \hyperlink{classIndexReference}{Index\+Reference} \&other) const 
+\item 
+bool \hyperlink{classIndexReference_ad4c7fee2cbadf635c1f87aa6c0aeaae5}{operator!=} (const \hyperlink{classIndexReference}{Index\+Reference} \&other) const 
+\item 
+\hyperlink{classIndexReference}{Index\+Reference} \hyperlink{classIndexReference_a2be54b0378ac272539dde33b8920d830}{operator+} (const int other) const 
+\item 
+std\+::string \hyperlink{classIndexReference_ae59b115f9e1b41a26352d9e9e0d76dfb}{tostring} () const 
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \hyperlink{classIndexReference_ac8e7129f517e6ceb4c223e7568219f47}{sentence}
+\item 
+uint16\+\_\+t \hyperlink{classIndexReference_a90f3de27395e19a1d53f62f9e7bea1d7}{token}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Reference to a position in the corpus. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classIndexReference_afcc00f656c2940e65cf7771efb663eb2}{}\index{Index\+Reference@{Index\+Reference}!Index\+Reference@{Index\+Reference}}
+\index{Index\+Reference@{Index\+Reference}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{Index\+Reference()}]{\setlength{\rightskip}{0pt plus 5cm}Index\+Reference\+::\+Index\+Reference (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexReference_afcc00f656c2940e65cf7771efb663eb2}
+\hypertarget{classIndexReference_a6a5540b71a1e86d0165e5845979eea0b}{}\index{Index\+Reference@{Index\+Reference}!Index\+Reference@{Index\+Reference}}
+\index{Index\+Reference@{Index\+Reference}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{Index\+Reference(uint32\+\_\+t sentence, uint16\+\_\+t token)}]{\setlength{\rightskip}{0pt plus 5cm}Index\+Reference\+::\+Index\+Reference (
+\begin{DoxyParamCaption}
+\item[{uint32\+\_\+t}]{sentence, }
+\item[{uint16\+\_\+t}]{token}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexReference_a6a5540b71a1e86d0165e5845979eea0b}
+Constructor for a reference to a position in the corpus, sentences (or whatever other unit delimits your data) start at 1, tokens start at 0 \hypertarget{classIndexReference_a1bae610567a3133e4c362e46ade5f7d0}{}\index{Index\+Reference@{Index\+Reference}!Index\+Reference@{Index\+Reference}}
+\index{Index\+Reference@{Index\+Reference}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{Index\+Reference(std\+::istream $\ast$in)}]{\setlength{\rightskip}{0pt plus 5cm}Index\+Reference\+::\+Index\+Reference (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexReference_a1bae610567a3133e4c362e46ade5f7d0}
+\hypertarget{classIndexReference_a7bb45da23e1718f13d9ee53bae79c175}{}\index{Index\+Reference@{Index\+Reference}!Index\+Reference@{Index\+Reference}}
+\index{Index\+Reference@{Index\+Reference}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{Index\+Reference(const Index\+Reference \&other)}]{\setlength{\rightskip}{0pt plus 5cm}Index\+Reference\+::\+Index\+Reference (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{other}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexReference_a7bb45da23e1718f13d9ee53bae79c175}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classIndexReference_ad4c7fee2cbadf635c1f87aa6c0aeaae5}{}\index{Index\+Reference@{Index\+Reference}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{operator"!=(const Index\+Reference \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Index\+Reference\+::operator!= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexReference_ad4c7fee2cbadf635c1f87aa6c0aeaae5}
+\hypertarget{classIndexReference_a2be54b0378ac272539dde33b8920d830}{}\index{Index\+Reference@{Index\+Reference}!operator+@{operator+}}
+\index{operator+@{operator+}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{operator+(const int other) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Index\+Reference} Index\+Reference\+::operator+ (
+\begin{DoxyParamCaption}
+\item[{const int}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexReference_a2be54b0378ac272539dde33b8920d830}
+\hypertarget{classIndexReference_aa36bf5625589f6da824732da2391b040}{}\index{Index\+Reference@{Index\+Reference}!operator$<$@{operator$<$}}
+\index{operator$<$@{operator$<$}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{operator$<$(const Index\+Reference \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Index\+Reference\+::operator$<$ (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexReference_aa36bf5625589f6da824732da2391b040}
+\hypertarget{classIndexReference_a6481b0eb9b078a7d5961358a721ae685}{}\index{Index\+Reference@{Index\+Reference}!operator==@{operator==}}
+\index{operator==@{operator==}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{operator==(const Index\+Reference \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Index\+Reference\+::operator== (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexReference_a6481b0eb9b078a7d5961358a721ae685}
+\hypertarget{classIndexReference_a03c5501f91f5e9c478902067f90f4632}{}\index{Index\+Reference@{Index\+Reference}!operator$>$@{operator$>$}}
+\index{operator$>$@{operator$>$}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{operator$>$(const Index\+Reference \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Index\+Reference\+::operator$>$ (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexReference_a03c5501f91f5e9c478902067f90f4632}
+\hypertarget{classIndexReference_ae59b115f9e1b41a26352d9e9e0d76dfb}{}\index{Index\+Reference@{Index\+Reference}!tostring@{tostring}}
+\index{tostring@{tostring}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{tostring() const }]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Index\+Reference\+::tostring (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexReference_ae59b115f9e1b41a26352d9e9e0d76dfb}
+\hypertarget{classIndexReference_a5e1726b6ce5fed19478fad34315c1eca}{}\index{Index\+Reference@{Index\+Reference}!write@{write}}
+\index{write@{write}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{write(std\+::ostream $\ast$out) const }]{\setlength{\rightskip}{0pt plus 5cm}void Index\+Reference\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexReference_a5e1726b6ce5fed19478fad34315c1eca}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classIndexReference_ac8e7129f517e6ceb4c223e7568219f47}{}\index{Index\+Reference@{Index\+Reference}!sentence@{sentence}}
+\index{sentence@{sentence}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{sentence}]{\setlength{\rightskip}{0pt plus 5cm}uint32\+\_\+t Index\+Reference\+::sentence}\label{classIndexReference_ac8e7129f517e6ceb4c223e7568219f47}
+\hypertarget{classIndexReference_a90f3de27395e19a1d53f62f9e7bea1d7}{}\index{Index\+Reference@{Index\+Reference}!token@{token}}
+\index{token@{token}!Index\+Reference@{Index\+Reference}}
+\subsubsection[{token}]{\setlength{\rightskip}{0pt plus 5cm}uint16\+\_\+t Index\+Reference\+::token}\label{classIndexReference_a90f3de27395e19a1d53f62f9e7bea1d7}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{datatypes_8h}{datatypes.\+h}\end{DoxyCompactItemize}

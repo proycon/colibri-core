@@ -1,0 +1,290 @@
+\hypertarget{classPatternSet}{}\section{Pattern\+Set$<$ Read\+Write\+Size\+Type $>$ Class Template Reference}
+\label{classPatternSet}\index{Pattern\+Set$<$ Read\+Write\+Size\+Type $>$@{Pattern\+Set$<$ Read\+Write\+Size\+Type $>$}}
+
+
+A pattern store in the form of an unordered set (i.\+e, no duplicates). Stores only patterns, no values.  
+
+
+
+
+{\ttfamily \#include $<$patternstore.\+h$>$}
+
+Inheritance diagram for Pattern\+Set$<$ Read\+Write\+Size\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classPatternSet}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef t\+\_\+patternset\+::iterator \hyperlink{classPatternSet_a18b78ea966c57db2373741291ba610f3}{iterator}
+\item 
+typedef t\+\_\+patternset\+::const\+\_\+iterator \hyperlink{classPatternSet_a5d419991ea0abb0fbc4a2282574b1b8c}{const\+\_\+iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPatternSet_a8cf2b4c7f096c7a3a7d17342c0153154}{Pattern\+Set} ()
+\item 
+\hyperlink{classPatternSet_a0174aa499a90c0a191fb3ad9d003c343}{Pattern\+Set} (const \hyperlink{classClassDecoder}{Class\+Decoder} \&classdecoder)
+\item 
+\hyperlink{classPatternSet_a693cd64ce7f5ab7f0e9c2dc15d8179fe}{Pattern\+Set} (const \hyperlink{classClassEncoder}{Class\+Encoder} \&classencoder)
+\item 
+virtual \hyperlink{classPatternSet_a4a521fd6ed29c03dad6e665cfe840a01}{$\sim$\+Pattern\+Set} ()
+\item 
+void \hyperlink{classPatternSet_aee78dae3e67875f22089ba537d50bc29}{insert} (const \hyperlink{classPattern}{Pattern} \&pattern)
+\item 
+bool \hyperlink{classPatternSet_a25e9ec9ca33750f21dd729cd2462d925}{has} (const \hyperlink{classPattern}{Pattern} \&pattern) const 
+\item 
+bool \hyperlink{classPatternSet_a28de1eeb8ec5774505173cc28e06320e}{has} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&pattern) const 
+\item 
+size\+\_\+t \hyperlink{classPatternSet_af85860d7135a5154a01a8366131beb39}{size} () const 
+\item 
+\hyperlink{classPatternSet_a18b78ea966c57db2373741291ba610f3}{iterator} \hyperlink{classPatternSet_ac8c206e63c54d45443a38df762cea863}{begin} ()
+\item 
+\hyperlink{classPatternSet_a5d419991ea0abb0fbc4a2282574b1b8c}{const\+\_\+iterator} \hyperlink{classPatternSet_af78486457770e3260e73fc233b789a1a}{begin} () const 
+\item 
+\hyperlink{classPatternSet_a18b78ea966c57db2373741291ba610f3}{iterator} \hyperlink{classPatternSet_a8ef5ec893a3ab9b00cf70cfdf2e623b9}{end} ()
+\item 
+\hyperlink{classPatternSet_a5d419991ea0abb0fbc4a2282574b1b8c}{const\+\_\+iterator} \hyperlink{classPatternSet_af0b085d67c1aa4c38aa40451868a8500}{end} () const 
+\item 
+\hyperlink{classPatternSet_a18b78ea966c57db2373741291ba610f3}{iterator} \hyperlink{classPatternSet_a2c56aa5b266f2132f8453bf794bba1f5}{find} (const \hyperlink{classPattern}{Pattern} \&pattern)
+\item 
+\hyperlink{classPatternSet_a5d419991ea0abb0fbc4a2282574b1b8c}{const\+\_\+iterator} \hyperlink{classPatternSet_a56c0fcc8deb357628e778d3cc0d3c418}{find} (const \hyperlink{classPattern}{Pattern} \&pattern) const 
+\item 
+bool \hyperlink{classPatternSet_afd2c053ac589e30edd7eda5c9f95c771}{erase} (const \hyperlink{classPattern}{Pattern} \&pattern)
+\item 
+\hyperlink{classPatternSet_a18b78ea966c57db2373741291ba610f3}{iterator} \hyperlink{classPatternSet_afbcbec2296a6ea98b809dcd9288eb756}{erase} (\hyperlink{classPatternSet_a5d419991ea0abb0fbc4a2282574b1b8c}{const\+\_\+iterator} position)
+\item 
+void \hyperlink{classPatternSet_ae55073ee2384d529faf51fca22c8dee1}{write} (std\+::ostream $\ast$out)
+\item 
+void \hyperlink{classPatternSet_a97bff883909c96f3f8a07a9c9ef83d84}{read} (std\+::istream $\ast$in, int M\+I\+N\+L\+E\+N\+G\+T\+H=0, int M\+A\+X\+L\+E\+N\+G\+T\+H=999999, \hyperlink{classPatternStoreInterface}{Pattern\+Store\+Interface} $\ast$constrainstore=N\+U\+L\+L, bool D\+O\+N\+G\+R\+A\+M\+S=true, bool D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S=true, bool D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S=true)
+\item 
+{\footnotesize template$<$class Read\+Value\+Type , class Read\+Value\+Handler  = Base\+Value\+Handler$<$\+Read\+Value\+Type$>$$>$ }\\void \hyperlink{classPatternSet_a7c974deb65a7b48ada65a4b4a45a5a3f}{readmap} (std\+::istream $\ast$in, int M\+I\+N\+T\+O\+K\+E\+N\+S=0, int M\+I\+N\+L\+E\+N\+G\+T\+H=0, int M\+A\+X\+L\+E\+N\+G\+T\+H=999999, \hyperlink{classPatternStoreInterface}{Pattern\+Store\+Interface} $\ast$constrainstore=N\+U\+L\+L, bool D\+O\+N\+G\+R\+A\+M\+S=true, bool D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S=true, bool D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S=true)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{patternstore_8h_a29bbbbc6d95519f30358276784e16c25}{t\+\_\+patternset} \hyperlink{classPatternSet_afa1d4a71d4b1f17a5fa5fba98f637687}{data}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$class Pattern\+Set$<$ Read\+Write\+Size\+Type $>$}
+
+A pattern store in the form of an unordered set (i.\+e, no duplicates). Stores only patterns, no values. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Read\+Write\+Size\+Type} & The data type for addressing, determines the maximum amount of patterns that can be held, only used in serialisation/deserialisation \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classPatternSet_a5d419991ea0abb0fbc4a2282574b1b8c}{}\index{Pattern\+Set@{Pattern\+Set}!const\+\_\+iterator@{const\+\_\+iterator}}
+\index{const\+\_\+iterator@{const\+\_\+iterator}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{const\+\_\+iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ typedef t\+\_\+patternset\+::const\+\_\+iterator {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::{\bf const\+\_\+iterator}}\label{classPatternSet_a5d419991ea0abb0fbc4a2282574b1b8c}
+\hypertarget{classPatternSet_a18b78ea966c57db2373741291ba610f3}{}\index{Pattern\+Set@{Pattern\+Set}!iterator@{iterator}}
+\index{iterator@{iterator}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ typedef t\+\_\+patternset\+::iterator {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::{\bf iterator}}\label{classPatternSet_a18b78ea966c57db2373741291ba610f3}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classPatternSet_a8cf2b4c7f096c7a3a7d17342c0153154}{}\index{Pattern\+Set@{Pattern\+Set}!Pattern\+Set@{Pattern\+Set}}
+\index{Pattern\+Set@{Pattern\+Set}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{Pattern\+Set()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::{\bf Pattern\+Set} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSet_a8cf2b4c7f096c7a3a7d17342c0153154}
+Empty set constructor \hypertarget{classPatternSet_a0174aa499a90c0a191fb3ad9d003c343}{}\index{Pattern\+Set@{Pattern\+Set}!Pattern\+Set@{Pattern\+Set}}
+\index{Pattern\+Set@{Pattern\+Set}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{Pattern\+Set(const Class\+Decoder \&classdecoder)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::{\bf Pattern\+Set} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Class\+Decoder} \&}]{classdecoder}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSet_a0174aa499a90c0a191fb3ad9d003c343}
+Constructs a pattern set from a \hyperlink{classClassDecoder}{Class\+Decoder} \hypertarget{classPatternSet_a693cd64ce7f5ab7f0e9c2dc15d8179fe}{}\index{Pattern\+Set@{Pattern\+Set}!Pattern\+Set@{Pattern\+Set}}
+\index{Pattern\+Set@{Pattern\+Set}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{Pattern\+Set(const Class\+Encoder \&classencoder)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::{\bf Pattern\+Set} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Class\+Encoder} \&}]{classencoder}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSet_a693cd64ce7f5ab7f0e9c2dc15d8179fe}
+Constructs a pattern set from a \hyperlink{classClassEncoder}{Class\+Encoder} \hypertarget{classPatternSet_a4a521fd6ed29c03dad6e665cfe840a01}{}\index{Pattern\+Set@{Pattern\+Set}!````~Pattern\+Set@{$\sim$\+Pattern\+Set}}
+\index{````~Pattern\+Set@{$\sim$\+Pattern\+Set}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{$\sim$\+Pattern\+Set()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::$\sim${\bf Pattern\+Set} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_a4a521fd6ed29c03dad6e665cfe840a01}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPatternSet_ac8c206e63c54d45443a38df762cea863}{}\index{Pattern\+Set@{Pattern\+Set}!begin@{begin}}
+\index{begin@{begin}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{begin()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf iterator} {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_ac8c206e63c54d45443a38df762cea863}
+Returns an iterator to iterate over the set 
+
+Implements \hyperlink{classPatternStore_a9dfc403ac576e1904f4ec326fec1adaa}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classPatternSet_af78486457770e3260e73fc233b789a1a}{}\index{Pattern\+Set@{Pattern\+Set}!begin@{begin}}
+\index{begin@{begin}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{begin() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf const\+\_\+iterator} {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSet_af78486457770e3260e73fc233b789a1a}
+\hypertarget{classPatternSet_a8ef5ec893a3ab9b00cf70cfdf2e623b9}{}\index{Pattern\+Set@{Pattern\+Set}!end@{end}}
+\index{end@{end}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{end()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf iterator} {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_a8ef5ec893a3ab9b00cf70cfdf2e623b9}
+
+
+Implements \hyperlink{classPatternStore_aed5adf38c88543123f705e44b4cddfee}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classPatternSet_af0b085d67c1aa4c38aa40451868a8500}{}\index{Pattern\+Set@{Pattern\+Set}!end@{end}}
+\index{end@{end}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{end() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf const\+\_\+iterator} {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSet_af0b085d67c1aa4c38aa40451868a8500}
+\hypertarget{classPatternSet_afd2c053ac589e30edd7eda5c9f95c771}{}\index{Pattern\+Set@{Pattern\+Set}!erase@{erase}}
+\index{erase@{erase}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{erase(const Pattern \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ bool {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::erase (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_afd2c053ac589e30edd7eda5c9f95c771}
+Removes the specified pattern from the set, returns true if successful 
+
+Implements \hyperlink{classPatternStore_ad8b6d8e1eba917d45e8667ace70f1b1e}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classPatternSet_afbcbec2296a6ea98b809dcd9288eb756}{}\index{Pattern\+Set@{Pattern\+Set}!erase@{erase}}
+\index{erase@{erase}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{erase(const\+\_\+iterator position)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf iterator} {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::erase (
+\begin{DoxyParamCaption}
+\item[{{\bf const\+\_\+iterator}}]{position}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSet_afbcbec2296a6ea98b809dcd9288eb756}
+\hypertarget{classPatternSet_a2c56aa5b266f2132f8453bf794bba1f5}{}\index{Pattern\+Set@{Pattern\+Set}!find@{find}}
+\index{find@{find}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{find(const Pattern \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf iterator} {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_a2c56aa5b266f2132f8453bf794bba1f5}
+Returns an iterator to the pattern in the set or \hyperlink{classPatternSet_a8ef5ec893a3ab9b00cf70cfdf2e623b9}{end()} if no such pattern was found. 
+
+Implements \hyperlink{classPatternStore_ac8cf692af151c3aad6aea81fa5748957}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classPatternSet_a56c0fcc8deb357628e778d3cc0d3c418}{}\index{Pattern\+Set@{Pattern\+Set}!find@{find}}
+\index{find@{find}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{find(const Pattern \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf const\+\_\+iterator} {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSet_a56c0fcc8deb357628e778d3cc0d3c418}
+\hypertarget{classPatternSet_a25e9ec9ca33750f21dd729cd2462d925}{}\index{Pattern\+Set@{Pattern\+Set}!has@{has}}
+\index{has@{has}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{has(const Pattern \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ bool {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::has (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_a25e9ec9ca33750f21dd729cd2462d925}
+Checks if a pattern is in the set 
+
+Implements \hyperlink{classPatternStore_abdebd74a21912e436531a64fe8b09a6c}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classPatternSet_a28de1eeb8ec5774505173cc28e06320e}{}\index{Pattern\+Set@{Pattern\+Set}!has@{has}}
+\index{has@{has}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{has(const Pattern\+Pointer \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ bool {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::has (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{pattern}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_a28de1eeb8ec5774505173cc28e06320e}
+Checks if a pattern is in the set 
+
+Implements \hyperlink{classPatternStore_ad9c8afcf7b7da6acd257c52336751bd2}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classPatternSet_aee78dae3e67875f22089ba537d50bc29}{}\index{Pattern\+Set@{Pattern\+Set}!insert@{insert}}
+\index{insert@{insert}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{insert(const Pattern \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ void {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::insert (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_aee78dae3e67875f22089ba537d50bc29}
+Add a new pattern to the set 
+
+Implements \hyperlink{classPatternStore_a22e091d80efb8182ac49cf6b225f0aa1}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classPatternSet_a97bff883909c96f3f8a07a9c9ef83d84}{}\index{Pattern\+Set@{Pattern\+Set}!read@{read}}
+\index{read@{read}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{read(std\+::istream $\ast$in, int M\+I\+N\+L\+E\+N\+G\+T\+H=0, int M\+A\+X\+L\+E\+N\+G\+T\+H=999999, Pattern\+Store\+Interface $\ast$constrainstore=\+N\+U\+L\+L, bool D\+O\+N\+G\+R\+A\+M\+S=true, bool D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S=true, bool D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S=true)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ void {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::read (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{int}]{M\+I\+N\+L\+E\+N\+G\+T\+H = {\ttfamily 0}, }
+\item[{int}]{M\+A\+X\+L\+E\+N\+G\+T\+H = {\ttfamily 999999}, }
+\item[{{\bf Pattern\+Store\+Interface} $\ast$}]{constrainstore = {\ttfamily NULL}, }
+\item[{bool}]{D\+O\+N\+G\+R\+A\+M\+S = {\ttfamily true}, }
+\item[{bool}]{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S = {\ttfamily true}, }
+\item[{bool}]{D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S = {\ttfamily true}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSet_a97bff883909c96f3f8a07a9c9ef83d84}
+Read the set from input stream, in binary format \hypertarget{classPatternSet_a7c974deb65a7b48ada65a4b4a45a5a3f}{}\index{Pattern\+Set@{Pattern\+Set}!readmap@{readmap}}
+\index{readmap@{readmap}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{readmap(std\+::istream $\ast$in, int M\+I\+N\+T\+O\+K\+E\+N\+S=0, int M\+I\+N\+L\+E\+N\+G\+T\+H=0, int M\+A\+X\+L\+E\+N\+G\+T\+H=999999, Pattern\+Store\+Interface $\ast$constrainstore=\+N\+U\+L\+L, bool D\+O\+N\+G\+R\+A\+M\+S=true, bool D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S=true, bool D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S=true)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ template$<$class Read\+Value\+Type , class Read\+Value\+Handler  = Base\+Value\+Handler$<$\+Read\+Value\+Type$>$$>$ void {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::readmap (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{int}]{M\+I\+N\+T\+O\+K\+E\+N\+S = {\ttfamily 0}, }
+\item[{int}]{M\+I\+N\+L\+E\+N\+G\+T\+H = {\ttfamily 0}, }
+\item[{int}]{M\+A\+X\+L\+E\+N\+G\+T\+H = {\ttfamily 999999}, }
+\item[{{\bf Pattern\+Store\+Interface} $\ast$}]{constrainstore = {\ttfamily NULL}, }
+\item[{bool}]{D\+O\+N\+G\+R\+A\+M\+S = {\ttfamily true}, }
+\item[{bool}]{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S = {\ttfamily true}, }
+\item[{bool}]{D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S = {\ttfamily true}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSet_a7c974deb65a7b48ada65a4b4a45a5a3f}
+Reads a map from input stream, in binary format, but ignores the values and retains only the keys for the set. \hypertarget{classPatternSet_af85860d7135a5154a01a8366131beb39}{}\index{Pattern\+Set@{Pattern\+Set}!size@{size}}
+\index{size@{size}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ size\+\_\+t {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_af85860d7135a5154a01a8366131beb39}
+Returns the number of patterns in the set 
+
+Implements \hyperlink{classPatternStore_a586751d731a509da5865d5863d56a8e4}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classPatternSet_ae55073ee2384d529faf51fca22c8dee1}{}\index{Pattern\+Set@{Pattern\+Set}!write@{write}}
+\index{write@{write}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{write(std\+::ostream $\ast$out)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ void {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_ae55073ee2384d529faf51fca22c8dee1}
+Write the set to output stream, in binary format 
+
+Implements \hyperlink{classPatternStore_ac491b99964c6b4c99f5c40519d0c8ccc}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classPatternSet_afa1d4a71d4b1f17a5fa5fba98f637687}{}\index{Pattern\+Set@{Pattern\+Set}!data@{data}}
+\index{data@{data}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf t\+\_\+patternset} {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::data\hspace{0.3cm}{\ttfamily [protected]}}\label{classPatternSet_afa1d4a71d4b1f17a5fa5fba98f637687}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{patternstore_8h}{patternstore.\+h}\end{DoxyCompactItemize}

@@ -1,0 +1,180 @@
+\hypertarget{classbz2outbuf}{}\section{bz2outbuf Class Reference}
+\label{classbz2outbuf}\index{bz2outbuf@{bz2outbuf}}
+
+
+A stream buffer which takes any form of input, compresses it using the bz2 algorithm and writes it to another stream buffer.  
+
+
+
+
+{\ttfamily \#include $<$bz2stream.\+h$>$}
+
+Inheritance diagram for bz2outbuf\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classbz2outbuf}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classbz2outbuf_ad907143431be210070e941c963df0f14}{bz2outbuf} (std\+::streambuf $\ast$\+\_\+dest, unsigned int block\+\_\+size\+\_\+100\+K=9, unsigned int verbosity=0, unsigned int work\+\_\+factor=0, \hyperlink{bz2stream_8h_ad84a886ecf0c0c00445cdd219beb6a7b}{bzalloc\+\_\+ptr} bzalloc=N\+U\+L\+L, \hyperlink{bz2stream_8h_a3ae1e0ffde629a32e954abecc8cd7bb2}{bzfree\+\_\+ptr} bzfree=N\+U\+L\+L, void $\ast$opaque=N\+U\+L\+L, size\+\_\+t stream\+\_\+buffer\+\_\+size=2048, size\+\_\+t out\+\_\+buffer\+\_\+size=2048)
+\begin{DoxyCompactList}\small\item\em Constructs a new \hyperlink{classbz2outbuf}{bz2outbuf} object. \end{DoxyCompactList}\item 
+virtual \hyperlink{classbz2outbuf_a79ea8efd07c7e4a80c85e00e178e94bf}{$\sim$bz2outbuf} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{classbz2outbuf_af40665a45501362030a2bbda91da622f}{process\+\_\+block} ()
+\item 
+bool \hyperlink{classbz2outbuf_aec43fc6ec0468c2c688c851c15608883}{flush} ()
+\item 
+bool \hyperlink{classbz2outbuf_a867664ad9a778eabf5d64e5f7418b1cf}{finish} ()
+\item 
+virtual int\+\_\+type \hyperlink{classbz2outbuf_a5e272a380b209835fc3ddc30244bc819}{overflow} (int\+\_\+type c)
+\item 
+virtual int \hyperlink{classbz2outbuf_ae108159927323a49053efd36603a9e27}{sync} ()
+\item 
+virtual std\+::streamsize \hyperlink{classbz2outbuf_a6fc601d2a68654c045f650acedd450d9}{xsputn} (const char $\ast$p, std\+::streamsize num)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::streambuf $\ast$ \hyperlink{classbz2outbuf_a44445968ae24691baabe3303e11dfe9a}{dest}
+\item 
+std\+::vector$<$ char $>$ \hyperlink{classbz2outbuf_ad5f7c46abb433b5fcc88e62849169cb9}{buffer}
+\item 
+std\+::vector$<$ char $>$ \hyperlink{classbz2outbuf_a8634b0224b7912495b80d02963573c65}{out\+\_\+buffer}
+\item 
+bz\+\_\+stream \hyperlink{classbz2outbuf_ab2010bc7f9fdd85a0fa988cf92cf7411}{cstream}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A stream buffer which takes any form of input, compresses it using the bz2 algorithm and writes it to another stream buffer. 
+
+There is one special aspect of this class. The bz2 algorithm works on blocks of data; it waits until a block is full and then compresses it. As long as you only feed data to the stream without flushing it this works normally. If you flush the stream, you force a premature end of the data block; this will cause a worse compression factor. You should avoid flushing a \hyperlink{classbz2outbuf}{bz2outbuf} buffer at all costs. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classbz2outbuf_ad907143431be210070e941c963df0f14}{}\index{bz2outbuf@{bz2outbuf}!bz2outbuf@{bz2outbuf}}
+\index{bz2outbuf@{bz2outbuf}!bz2outbuf@{bz2outbuf}}
+\subsubsection[{bz2outbuf(std\+::streambuf $\ast$\+\_\+dest, unsigned int block\+\_\+size\+\_\+100\+K=9, unsigned int verbosity=0, unsigned int work\+\_\+factor=0, bzalloc\+\_\+ptr bzalloc=\+N\+U\+L\+L, bzfree\+\_\+ptr bzfree=\+N\+U\+L\+L, void $\ast$opaque=\+N\+U\+L\+L, size\+\_\+t stream\+\_\+buffer\+\_\+size=2048, size\+\_\+t out\+\_\+buffer\+\_\+size=2048)}]{\setlength{\rightskip}{0pt plus 5cm}bz2outbuf\+::bz2outbuf (
+\begin{DoxyParamCaption}
+\item[{std\+::streambuf $\ast$}]{\+\_\+dest, }
+\item[{unsigned int}]{block\+\_\+size\+\_\+100\+K = {\ttfamily 9}, }
+\item[{unsigned int}]{verbosity = {\ttfamily 0}, }
+\item[{unsigned int}]{work\+\_\+factor = {\ttfamily 0}, }
+\item[{{\bf bzalloc\+\_\+ptr}}]{bzalloc = {\ttfamily NULL}, }
+\item[{{\bf bzfree\+\_\+ptr}}]{bzfree = {\ttfamily NULL}, }
+\item[{void $\ast$}]{opaque = {\ttfamily NULL}, }
+\item[{size\+\_\+t}]{stream\+\_\+buffer\+\_\+size = {\ttfamily 2048}, }
+\item[{size\+\_\+t}]{out\+\_\+buffer\+\_\+size = {\ttfamily 2048}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classbz2outbuf_ad907143431be210070e941c963df0f14}
+
+
+Constructs a new \hyperlink{classbz2outbuf}{bz2outbuf} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+dest} & The stream buffer to write the compressed data to. Notice that this stream buffer must be in binary and not in text mode, because if the newline characters are processed the data will be corrupted.\\
+\hline
+{\em block\+\_\+size\+\_\+100\+K} & The size of the blocks in 100\+K the bz2 algorithm should compress. The bigger the blocks are, the slower and the more memory intensive the compression gets, but the data will be compressed more. Valid values range from 1 to 9.\\
+\hline
+{\em verbostity} & The amount of debugging information libbz2 should print to stderr. Ranges from 0 (quiet) to 4 (very talkative).\\
+\hline
+{\em work\+\_\+factor} & The \char`\"{}work factor\char`\"{} of the compression algorithm. It is described in the libbz2 documentation; leave it 0 if you don\textquotesingle{}t know what you\textquotesingle{}re doing. Ranges from 1 to 250; 0 is a special value which will be internally replaced by the default value of 30.\\
+\hline
+{\em bzalloc} & A pointer to a custom memory allocation routine, to be used by libbz2. If N\+U\+L\+L, malloc() will be used. See also \hyperlink{bz2stream_8h_ad84a886ecf0c0c00445cdd219beb6a7b}{bzalloc\+\_\+ptr}.\\
+\hline
+{\em bzfree} & A pointer to a custom memory deallocation routine, to be used by libbz2. If N\+U\+L\+L, free() will be used. See also \hyperlink{bz2stream_8h_a3ae1e0ffde629a32e954abecc8cd7bb2}{bzfree\+\_\+ptr}.\\
+\hline
+{\em opaque} & A pointer which will be passed to the custom routines bzalloc and bzfree, if you specified them. See also \hyperlink{bz2stream_8h_ad84a886ecf0c0c00445cdd219beb6a7b}{bzalloc\+\_\+ptr} and \hyperlink{bz2stream_8h_a3ae1e0ffde629a32e954abecc8cd7bb2}{bzfree\+\_\+ptr}.\\
+\hline
+{\em buffer\+\_\+size} & The size of the stream buffer used by \hyperlink{classbz2outbuf}{bz2outbuf}. Leave it alone if you don\textquotesingle{}t know what you\textquotesingle{}re doing. (Bigger values are not necessarily faster). Must be positive.\\
+\hline
+{\em out\+\_\+buffer\+\_\+size} & The size of the output buffer used by \hyperlink{classbz2outbuf}{bz2outbuf}. Definitely leave it alone if you don\textquotesingle{}t know what you\textquotesingle{}re doing. Must be positive, too.\\
+\hline
+\end{DoxyParams}
+Currently, this constructor throws any of the following exceptions\+:
+
+
+\begin{DoxyItemize}
+\item std\+::range\+\_\+error if one of the parameters is out of range.
+\item std\+::bad\+\_\+alloc if it runs out of memory.
+\item std\+::runtime\+\_\+error for other errors.
+\end{DoxyItemize}
+
+For future compatibility, you should expect it to throw any std\+::exception derived exception. All exceptions but std\+::bad\+\_\+alloc include descriptions of what went bad. Thus using the what() member makes sense. \hypertarget{classbz2outbuf_a79ea8efd07c7e4a80c85e00e178e94bf}{}\index{bz2outbuf@{bz2outbuf}!````~bz2outbuf@{$\sim$bz2outbuf}}
+\index{````~bz2outbuf@{$\sim$bz2outbuf}!bz2outbuf@{bz2outbuf}}
+\subsubsection[{$\sim$bz2outbuf()}]{\setlength{\rightskip}{0pt plus 5cm}virtual bz2outbuf\+::$\sim$bz2outbuf (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classbz2outbuf_a79ea8efd07c7e4a80c85e00e178e94bf}
+Flush the buffer and destroy the object. Notice that there is no way for the destructor to report a failure to write to the underlying stream buffer. Thus you might want to check the underlying stream buffer for errors {\itshape after} the \hyperlink{classbz2outbuf}{bz2outbuf} object has been destroyed. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classbz2outbuf_a867664ad9a778eabf5d64e5f7418b1cf}{}\index{bz2outbuf@{bz2outbuf}!finish@{finish}}
+\index{finish@{finish}!bz2outbuf@{bz2outbuf}}
+\subsubsection[{finish()}]{\setlength{\rightskip}{0pt plus 5cm}bool bz2outbuf\+::finish (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}\label{classbz2outbuf_a867664ad9a778eabf5d64e5f7418b1cf}
+\hypertarget{classbz2outbuf_aec43fc6ec0468c2c688c851c15608883}{}\index{bz2outbuf@{bz2outbuf}!flush@{flush}}
+\index{flush@{flush}!bz2outbuf@{bz2outbuf}}
+\subsubsection[{flush()}]{\setlength{\rightskip}{0pt plus 5cm}bool bz2outbuf\+::flush (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}\label{classbz2outbuf_aec43fc6ec0468c2c688c851c15608883}
+\hypertarget{classbz2outbuf_a5e272a380b209835fc3ddc30244bc819}{}\index{bz2outbuf@{bz2outbuf}!overflow@{overflow}}
+\index{overflow@{overflow}!bz2outbuf@{bz2outbuf}}
+\subsubsection[{overflow(int\+\_\+type c)}]{\setlength{\rightskip}{0pt plus 5cm}virtual int\+\_\+type bz2outbuf\+::overflow (
+\begin{DoxyParamCaption}
+\item[{int\+\_\+type}]{c}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}\label{classbz2outbuf_a5e272a380b209835fc3ddc30244bc819}
+\hypertarget{classbz2outbuf_af40665a45501362030a2bbda91da622f}{}\index{bz2outbuf@{bz2outbuf}!process\+\_\+block@{process\+\_\+block}}
+\index{process\+\_\+block@{process\+\_\+block}!bz2outbuf@{bz2outbuf}}
+\subsubsection[{process\+\_\+block()}]{\setlength{\rightskip}{0pt plus 5cm}bool bz2outbuf\+::process\+\_\+block (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}\label{classbz2outbuf_af40665a45501362030a2bbda91da622f}
+\hypertarget{classbz2outbuf_ae108159927323a49053efd36603a9e27}{}\index{bz2outbuf@{bz2outbuf}!sync@{sync}}
+\index{sync@{sync}!bz2outbuf@{bz2outbuf}}
+\subsubsection[{sync()}]{\setlength{\rightskip}{0pt plus 5cm}virtual int bz2outbuf\+::sync (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}\label{classbz2outbuf_ae108159927323a49053efd36603a9e27}
+\hypertarget{classbz2outbuf_a6fc601d2a68654c045f650acedd450d9}{}\index{bz2outbuf@{bz2outbuf}!xsputn@{xsputn}}
+\index{xsputn@{xsputn}!bz2outbuf@{bz2outbuf}}
+\subsubsection[{xsputn(const char $\ast$p, std\+::streamsize num)}]{\setlength{\rightskip}{0pt plus 5cm}virtual std\+::streamsize bz2outbuf\+::xsputn (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{p, }
+\item[{std\+::streamsize}]{num}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}\label{classbz2outbuf_a6fc601d2a68654c045f650acedd450d9}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classbz2outbuf_ad5f7c46abb433b5fcc88e62849169cb9}{}\index{bz2outbuf@{bz2outbuf}!buffer@{buffer}}
+\index{buffer@{buffer}!bz2outbuf@{bz2outbuf}}
+\subsubsection[{buffer}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$char$>$ bz2outbuf\+::buffer\hspace{0.3cm}{\ttfamily [protected]}}\label{classbz2outbuf_ad5f7c46abb433b5fcc88e62849169cb9}
+\hypertarget{classbz2outbuf_ab2010bc7f9fdd85a0fa988cf92cf7411}{}\index{bz2outbuf@{bz2outbuf}!cstream@{cstream}}
+\index{cstream@{cstream}!bz2outbuf@{bz2outbuf}}
+\subsubsection[{cstream}]{\setlength{\rightskip}{0pt plus 5cm}bz\+\_\+stream bz2outbuf\+::cstream\hspace{0.3cm}{\ttfamily [protected]}}\label{classbz2outbuf_ab2010bc7f9fdd85a0fa988cf92cf7411}
+\hypertarget{classbz2outbuf_a44445968ae24691baabe3303e11dfe9a}{}\index{bz2outbuf@{bz2outbuf}!dest@{dest}}
+\index{dest@{dest}!bz2outbuf@{bz2outbuf}}
+\subsubsection[{dest}]{\setlength{\rightskip}{0pt plus 5cm}std\+::streambuf$\ast$ bz2outbuf\+::dest\hspace{0.3cm}{\ttfamily [protected]}}\label{classbz2outbuf_a44445968ae24691baabe3303e11dfe9a}
+\hypertarget{classbz2outbuf_a8634b0224b7912495b80d02963573c65}{}\index{bz2outbuf@{bz2outbuf}!out\+\_\+buffer@{out\+\_\+buffer}}
+\index{out\+\_\+buffer@{out\+\_\+buffer}!bz2outbuf@{bz2outbuf}}
+\subsubsection[{out\+\_\+buffer}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$char$>$ bz2outbuf\+::out\+\_\+buffer\hspace{0.3cm}{\ttfamily [protected]}}\label{classbz2outbuf_a8634b0224b7912495b80d02963573c65}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{bz2stream_8h}{bz2stream.\+h}\end{DoxyCompactItemize}

@@ -1,0 +1,95 @@
+\hypertarget{classArrayValueHandler}{}\section{Array\+Value\+Handler$<$ T, N, countindex $>$ Class Template Reference}
+\label{classArrayValueHandler}\index{Array\+Value\+Handler$<$ T, N, countindex $>$@{Array\+Value\+Handler$<$ T, N, countindex $>$}}
+
+
+{\ttfamily \#include $<$patternstore.\+h$>$}
+
+Inheritance diagram for Array\+Value\+Handler$<$ T, N, countindex $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classArrayValueHandler}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual std\+::string \hyperlink{classArrayValueHandler_ac82e2a0341b8f0e66b36a07b91fbed42}{id} ()
+\item 
+void \hyperlink{classArrayValueHandler_a35c445a9b0de620ca4b032e0a34d0dee}{read} (std\+::istream $\ast$in, std\+::array$<$ T, N $>$ \&a)
+\item 
+void \hyperlink{classArrayValueHandler_ab081c8ac7e02d523bb8198611c90284c}{write} (std\+::ostream $\ast$out, std\+::array$<$ T, N $>$ \&a)
+\item 
+std\+::string \hyperlink{classArrayValueHandler_a51b18a3051bc51765731601edbdc8e34}{tostring} (std\+::array$<$ T, N $>$ \&a)
+\item 
+unsigned int \hyperlink{classArrayValueHandler_aa0b5815b513c2886172d0a028ffb2ff3}{count} (std\+::array$<$ T, N $>$ \&a) const 
+\item 
+void \hyperlink{classArrayValueHandler_a11702281d720f428e59b38f25790b68e}{add} (std\+::array$<$ T, N $>$ $\ast$value, const \hyperlink{classIndexReference}{Index\+Reference} \&ref) const 
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const bool \hyperlink{classArrayValueHandler_a89c7c6a8820236bc45f71f446400b851}{indexed} = false
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classArrayValueHandler_a11702281d720f428e59b38f25790b68e}{}\index{Array\+Value\+Handler@{Array\+Value\+Handler}!add@{add}}
+\index{add@{add}!Array\+Value\+Handler@{Array\+Value\+Handler}}
+\subsubsection[{add(std\+::array$<$ T, N $>$ $\ast$value, const Index\+Reference \&ref) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T , size\+\_\+t N, int countindex = 0$>$ void {\bf Array\+Value\+Handler}$<$ T, N, countindex $>$\+::add (
+\begin{DoxyParamCaption}
+\item[{std\+::array$<$ T, N $>$ $\ast$}]{value, }
+\item[{const {\bf Index\+Reference} \&}]{ref}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classArrayValueHandler_a11702281d720f428e59b38f25790b68e}
+\hypertarget{classArrayValueHandler_aa0b5815b513c2886172d0a028ffb2ff3}{}\index{Array\+Value\+Handler@{Array\+Value\+Handler}!count@{count}}
+\index{count@{count}!Array\+Value\+Handler@{Array\+Value\+Handler}}
+\subsubsection[{count(std\+::array$<$ T, N $>$ \&a) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T , size\+\_\+t N, int countindex = 0$>$ unsigned int {\bf Array\+Value\+Handler}$<$ T, N, countindex $>$\+::count (
+\begin{DoxyParamCaption}
+\item[{std\+::array$<$ T, N $>$ \&}]{a}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classArrayValueHandler_aa0b5815b513c2886172d0a028ffb2ff3}
+\hypertarget{classArrayValueHandler_ac82e2a0341b8f0e66b36a07b91fbed42}{}\index{Array\+Value\+Handler@{Array\+Value\+Handler}!id@{id}}
+\index{id@{id}!Array\+Value\+Handler@{Array\+Value\+Handler}}
+\subsubsection[{id()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T , size\+\_\+t N, int countindex = 0$>$ virtual std\+::string {\bf Array\+Value\+Handler}$<$ T, N, countindex $>$\+::id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classArrayValueHandler_ac82e2a0341b8f0e66b36a07b91fbed42}
+
+
+Reimplemented from \hyperlink{classAbstractValueHandler_a6e2f7abe130cdec1062e51d56e4f9fac}{Abstract\+Value\+Handler$<$ T $>$}.
+
+\hypertarget{classArrayValueHandler_a35c445a9b0de620ca4b032e0a34d0dee}{}\index{Array\+Value\+Handler@{Array\+Value\+Handler}!read@{read}}
+\index{read@{read}!Array\+Value\+Handler@{Array\+Value\+Handler}}
+\subsubsection[{read(std\+::istream $\ast$in, std\+::array$<$ T, N $>$ \&a)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T , size\+\_\+t N, int countindex = 0$>$ void {\bf Array\+Value\+Handler}$<$ T, N, countindex $>$\+::read (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{std\+::array$<$ T, N $>$ \&}]{a}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classArrayValueHandler_a35c445a9b0de620ca4b032e0a34d0dee}
+\hypertarget{classArrayValueHandler_a51b18a3051bc51765731601edbdc8e34}{}\index{Array\+Value\+Handler@{Array\+Value\+Handler}!tostring@{tostring}}
+\index{tostring@{tostring}!Array\+Value\+Handler@{Array\+Value\+Handler}}
+\subsubsection[{tostring(std\+::array$<$ T, N $>$ \&a)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T , size\+\_\+t N, int countindex = 0$>$ std\+::string {\bf Array\+Value\+Handler}$<$ T, N, countindex $>$\+::tostring (
+\begin{DoxyParamCaption}
+\item[{std\+::array$<$ T, N $>$ \&}]{a}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classArrayValueHandler_a51b18a3051bc51765731601edbdc8e34}
+\hypertarget{classArrayValueHandler_ab081c8ac7e02d523bb8198611c90284c}{}\index{Array\+Value\+Handler@{Array\+Value\+Handler}!write@{write}}
+\index{write@{write}!Array\+Value\+Handler@{Array\+Value\+Handler}}
+\subsubsection[{write(std\+::ostream $\ast$out, std\+::array$<$ T, N $>$ \&a)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T , size\+\_\+t N, int countindex = 0$>$ void {\bf Array\+Value\+Handler}$<$ T, N, countindex $>$\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out, }
+\item[{std\+::array$<$ T, N $>$ \&}]{a}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classArrayValueHandler_ab081c8ac7e02d523bb8198611c90284c}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classArrayValueHandler_a89c7c6a8820236bc45f71f446400b851}{}\index{Array\+Value\+Handler@{Array\+Value\+Handler}!indexed@{indexed}}
+\index{indexed@{indexed}!Array\+Value\+Handler@{Array\+Value\+Handler}}
+\subsubsection[{indexed}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T , size\+\_\+t N, int countindex = 0$>$ const bool {\bf Array\+Value\+Handler}$<$ T, N, countindex $>$\+::indexed = false\hspace{0.3cm}{\ttfamily [static]}}\label{classArrayValueHandler_a89c7c6a8820236bc45f71f446400b851}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{patternstore_8h}{patternstore.\+h}\end{DoxyCompactItemize}

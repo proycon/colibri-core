@@ -1,0 +1,57 @@
+\hypertarget{setup_8py}{}\section{setup.\+py File Reference}
+\label{setup_8py}\index{setup.\+py@{setup.\+py}}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespacesetup}{setup}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacesetup_a45ed25e6d3ed2d5c64905e3e728b582c}{setup.\+read} (fname)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+tuple \hyperlink{namespacesetup_a5fe113a6f371a2919041a1bf9b992b22}{setup.\+H\+O\+M\+E\+D\+I\+R} = expanduser(\char`\"{}$\sim$\char`\"{})
+\item 
+tuple \hyperlink{namespacesetup_a62a0bb453fa5e76f22937f922ab4ad95}{setup.\+R\+O\+O\+T\+D\+I\+R} = os.\+path.\+abspath(os.\+path.\+dirname(\+\_\+\+\_\+file\+\_\+\+\_\+))
+\item 
+tuple \hyperlink{namespacesetup_ae70690c3c654eccddc040793c94421fe}{setup.\+found} = line.\+find(\textquotesingle{}@include\textquotesingle{})
+\item 
+list \hyperlink{namespacesetup_afbe58294e6cd18c22164662529495f97}{setup.\+includefilename} = line\mbox{[}found+9\+:\mbox{]}
+\item 
+list \hyperlink{namespacesetup_a13490f828556311947276bea73714ae8}{setup.\+includedirs} = \mbox{[}\char`\"{}/usr/include/colibri-\/core\char`\"{}, \char`\"{}/usr/include/libxml2\char`\"{}\mbox{]}
+\item 
+list \hyperlink{namespacesetup_ab9de893f1a15246aa1d0172dd4ec87df}{setup.\+libdirs} = \mbox{[}\char`\"{}/usr/lib\char`\"{}\mbox{]}
+\item 
+\hyperlink{namespacesetup_a69aaefa467dfdcf65b2d794e63c13139}{setup.\+prefix} = None
+\item 
+tuple \hyperlink{namespacesetup_a06ee05034472b3a3588ff7e39df2e4c3}{setup.\+r} = os.\+system(\char`\"{}bash bootstrap\char`\"{})
+\item 
+list \hyperlink{namespacesetup_ab6b72d56ff85e52faea3f1487c6904f8}{setup.\+extensions}
+\item 
+string \hyperlink{namespacesetup_a61de3710bf6c9d78c0afa352263f8b09}{setup.\+name} = \textquotesingle{}colibricore\textquotesingle{}
+\item 
+string \hyperlink{namespacesetup_ac83393287a89728d636e4ae9f4ac914f}{setup.\+author} = \char`\"{}Maarten van Gompel\char`\"{}
+\item 
+string \hyperlink{namespacesetup_aa144ac52ed417d5c65d7377e0e75673e}{setup.\+author\+\_\+email} = \char`\"{}proycon@anaproy.\+nl\char`\"{}
+\item 
+tuple \hyperlink{namespacesetup_aa4fb878ed283f922b9ad84355a3b7dbf}{setup.\+description} = (\char`\"{}Colibri core is an N\+L\+P tool as well as a C++ and Python library for working with basic linguistic constructions such as n-\/grams and skipgrams (i.\+e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-\/efficient way. At the core is the tool ``colibri-\/patternmodeller`` which allows you to build, view, manipulate and query pattern models.\char`\"{})
+\item 
+string \hyperlink{namespacesetup_aae5aa7c9d1cf462778a54e8f6a874c6f}{setup.\+license} = \char`\"{}G\+P\+L\char`\"{}
+\item 
+string \hyperlink{namespacesetup_a13f1455f03aed281ae4f7619aaa7f57b}{setup.\+keywords} = \char`\"{}nlp computational\+\_\+linguistics frequency ngram skipgram pmi cooccurrence linguistics\char`\"{}
+\item 
+tuple \hyperlink{namespacesetup_acaf26e8be236d4bfa129f4c0f4f53baf}{setup.\+long\+\_\+description} = read(\textquotesingle{}R\+E\+A\+D\+M\+E.\+rst\textquotesingle{})
+\item 
+string \hyperlink{namespacesetup_ab177531e7a80674a3db3de2d79eb8be7}{setup.\+version} = \textquotesingle{}0.\+5.\+11\textquotesingle{}
+\item 
+\hyperlink{namespacesetup_a1bf56ea61d1e9865f316116dca2fbfea}{setup.\+ext\+\_\+modules} = extensions,
+\item 
+dictionary \hyperlink{namespacesetup_ad23e0b4fd9e5e6f20f8313d75832d1e2}{setup.\+cmdclass} = \{\textquotesingle{}build\+\_\+ext\textquotesingle{}\+: build\+\_\+ext\}
+\item 
+list \hyperlink{namespacesetup_a2d96dddd66b7833bbb2db38dbbe55a02}{setup.\+classifiers}
+\item 
+list \hyperlink{namespacesetup_a7cd8314075060c603cd2622ada2c2fbe}{setup.\+install\+\_\+requires} = \mbox{[}\textquotesingle{}Cython $>$= 0.\+23\textquotesingle{}\mbox{]}
+\end{DoxyCompactItemize}

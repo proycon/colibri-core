@@ -1,0 +1,67 @@
+\hypertarget{classbz2istream}{}\section{bz2istream Class Reference}
+\label{classbz2istream}\index{bz2istream@{bz2istream}}
+
+
+An input stream decompressing data compressed with the bz2 algorithm.  
+
+
+
+
+{\ttfamily \#include $<$bz2stream.\+h$>$}
+
+Inheritance diagram for bz2istream\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=5.000000cm]{classbz2istream}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classbz2istream_a3acc9bb0c5ff34be2ca375ec446f206b}{bz2istream} (std\+::streambuf $\ast$source, unsigned int verbosity=0, bool small\+\_\+but\+\_\+slow=false, \hyperlink{bz2stream_8h_ad84a886ecf0c0c00445cdd219beb6a7b}{bzalloc\+\_\+ptr} bzalloc=N\+U\+L\+L, \hyperlink{bz2stream_8h_a3ae1e0ffde629a32e954abecc8cd7bb2}{bzfree\+\_\+ptr} bzfree=N\+U\+L\+L, void $\ast$opaque=N\+U\+L\+L, size\+\_\+t buffer\+\_\+size=1024, size\+\_\+t in\+\_\+buffer\+\_\+size=1024, size\+\_\+t max\+\_\+putback\+\_\+size=64)
+\begin{DoxyCompactList}\small\item\em Creates a new \hyperlink{classbz2istream}{bz2istream}, using source as the stream buffer to read data from. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classbz2inbuf}{bz2inbuf} \hyperlink{classbz2istream_aeac9ec32bd8a9e9fc179f0d7db9be81a}{buf}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+An input stream decompressing data compressed with the bz2 algorithm. 
+
+The actual decompression is achieved in the underlying \hyperlink{classbz2inbuf}{bz2inbuf} stream buffer; you should read its documentation before using this class.
+
+The data is read from a supplied stream buffer. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classbz2istream_a3acc9bb0c5ff34be2ca375ec446f206b}{}\index{bz2istream@{bz2istream}!bz2istream@{bz2istream}}
+\index{bz2istream@{bz2istream}!bz2istream@{bz2istream}}
+\subsubsection[{bz2istream(std\+::streambuf $\ast$source, unsigned int verbosity=0, bool small\+\_\+but\+\_\+slow=false, bzalloc\+\_\+ptr bzalloc=\+N\+U\+L\+L, bzfree\+\_\+ptr bzfree=\+N\+U\+L\+L, void $\ast$opaque=\+N\+U\+L\+L, size\+\_\+t buffer\+\_\+size=1024, size\+\_\+t in\+\_\+buffer\+\_\+size=1024, size\+\_\+t max\+\_\+putback\+\_\+size=64)}]{\setlength{\rightskip}{0pt plus 5cm}bz2istream\+::bz2istream (
+\begin{DoxyParamCaption}
+\item[{std\+::streambuf $\ast$}]{source, }
+\item[{unsigned int}]{verbosity = {\ttfamily 0}, }
+\item[{bool}]{small\+\_\+but\+\_\+slow = {\ttfamily false}, }
+\item[{{\bf bzalloc\+\_\+ptr}}]{bzalloc = {\ttfamily NULL}, }
+\item[{{\bf bzfree\+\_\+ptr}}]{bzfree = {\ttfamily NULL}, }
+\item[{void $\ast$}]{opaque = {\ttfamily NULL}, }
+\item[{size\+\_\+t}]{buffer\+\_\+size = {\ttfamily 1024}, }
+\item[{size\+\_\+t}]{in\+\_\+buffer\+\_\+size = {\ttfamily 1024}, }
+\item[{size\+\_\+t}]{max\+\_\+putback\+\_\+size = {\ttfamily 64}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classbz2istream_a3acc9bb0c5ff34be2ca375ec446f206b}
+
+
+Creates a new \hyperlink{classbz2istream}{bz2istream}, using source as the stream buffer to read data from. 
+
+See \hyperlink{classbz2inbuf_a25f60f9742732d40bff5d5c01f93b8c3}{bz2inbuf\+::bz2inbuf} for an explanation of the parameters. 
+
+\subsection{Member Data Documentation}
+\hypertarget{classbz2istream_aeac9ec32bd8a9e9fc179f0d7db9be81a}{}\index{bz2istream@{bz2istream}!buf@{buf}}
+\index{buf@{buf}!bz2istream@{bz2istream}}
+\subsubsection[{buf}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bz2inbuf} bz2istream\+::buf\hspace{0.3cm}{\ttfamily [protected]}}\label{classbz2istream_aeac9ec32bd8a9e9fc179f0d7db9be81a}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{bz2stream_8h}{bz2stream.\+h}\end{DoxyCompactItemize}

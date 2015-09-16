@@ -1,0 +1,218 @@
+\hypertarget{classIndexedData}{}\section{Indexed\+Data Class Reference}
+\label{classIndexedData}\index{Indexed\+Data@{Indexed\+Data}}
+
+
+Collection of references to position in the corpus (\hyperlink{classIndexReference}{Index\+Reference}). Used by Indexed \hyperlink{classPattern}{Pattern} models.  
+
+
+
+
+{\ttfamily \#include $<$datatypes.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::vector$<$ \hyperlink{classIndexReference}{Index\+Reference} $>$\+::\hyperlink{classIndexedData_a92375fc0f92911f92908da2251d70fde}{iterator} \hyperlink{classIndexedData_a92375fc0f92911f92908da2251d70fde}{iterator}
+\item 
+typedef std\+::vector$<$ \hyperlink{classIndexReference}{Index\+Reference} $>$\+::\hyperlink{classIndexedData_a8fb4f6765def0ce366381f0b0aa5c04a}{const\+\_\+iterator} \hyperlink{classIndexedData_a8fb4f6765def0ce366381f0b0aa5c04a}{const\+\_\+iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classIndexedData_a9973db49f518c5e9fdad7985954eb1ea}{Indexed\+Data} ()
+\item 
+\hyperlink{classIndexedData_aec9e0aea5473b75d0f6829fc2cad3b5b}{Indexed\+Data} (std\+::istream $\ast$in)
+\item 
+void \hyperlink{classIndexedData_aef2cabec34661920b1ba7b8448775d08}{write} (std\+::ostream $\ast$out) const 
+\item 
+bool \hyperlink{classIndexedData_ae92cdda206269f83ca4484093c4a7553}{has} (const \hyperlink{classIndexReference}{Index\+Reference} \&ref, bool sorted=false) const 
+\item 
+unsigned int \hyperlink{classIndexedData_acbb191cebf775273bc94c0a51c9ef2ec}{count} () const 
+\item 
+void \hyperlink{classIndexedData_a59a7f803269610b024bcd8ea87d2752b}{insert} (\hyperlink{classIndexReference}{Index\+Reference} ref)
+\item 
+size\+\_\+t \hyperlink{classIndexedData_af88d0d05140d9fb457de89a3f22029b7}{size} () const 
+\item 
+\hyperlink{classIndexedData_a92375fc0f92911f92908da2251d70fde}{iterator} \hyperlink{classIndexedData_a8ce48c918c26d42a159848b4e8b99290}{begin} ()
+\item 
+\hyperlink{classIndexedData_a8fb4f6765def0ce366381f0b0aa5c04a}{const\+\_\+iterator} \hyperlink{classIndexedData_a0b68538179655b6c9102888bf49dd066}{begin} () const 
+\item 
+\hyperlink{classIndexedData_a92375fc0f92911f92908da2251d70fde}{iterator} \hyperlink{classIndexedData_a6278593e0a56312059c5439b0006b145}{end} ()
+\item 
+\hyperlink{classIndexedData_a8fb4f6765def0ce366381f0b0aa5c04a}{const\+\_\+iterator} \hyperlink{classIndexedData_ad0d4c4eb8604b50f3121a3ae54212792}{end} () const 
+\item 
+\hyperlink{classIndexedData_a92375fc0f92911f92908da2251d70fde}{iterator} \hyperlink{classIndexedData_afa9e1fb27eaa8a86c311b9971c534504}{find} (const \hyperlink{classIndexReference}{Index\+Reference} \&ref)
+\item 
+\hyperlink{classIndexedData_a8fb4f6765def0ce366381f0b0aa5c04a}{const\+\_\+iterator} \hyperlink{classIndexedData_a69de178795dc5f698e25f1c04f1cad80}{find} (const \hyperlink{classIndexReference}{Index\+Reference} \&ref) const 
+\item 
+std\+::set$<$ int $>$ \hyperlink{classIndexedData_aad19648fb455c7331b978c3c8edb5d95}{sentences} () const 
+\item 
+std\+::set$<$ \hyperlink{classIndexReference}{Index\+Reference} $>$ \hyperlink{classIndexedData_a006113bf89af3c679ba662e81e6a8195}{set} () const 
+\item 
+void \hyperlink{classIndexedData_a50ea650221c0ced471d47c0281e8a99b}{sort} ()
+\item 
+void \hyperlink{classIndexedData_a5c313c46241aeffc7719604bd9718ea8}{reserve} (size\+\_\+t \hyperlink{classIndexedData_af88d0d05140d9fb457de89a3f22029b7}{size})
+\item 
+void \hyperlink{classIndexedData_ab425918fcc283699452d3120e83323e5}{shrink\+\_\+to\+\_\+fit} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ \hyperlink{classIndexReference}{Index\+Reference} $>$ \hyperlink{classIndexedData_a9f509602ab26d3ba012b6d3fc461c4e7}{data}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Collection of references to position in the corpus (\hyperlink{classIndexReference}{Index\+Reference}). Used by Indexed \hyperlink{classPattern}{Pattern} models. 
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classIndexedData_a8fb4f6765def0ce366381f0b0aa5c04a}{}\index{Indexed\+Data@{Indexed\+Data}!const\+\_\+iterator@{const\+\_\+iterator}}
+\index{const\+\_\+iterator@{const\+\_\+iterator}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{const\+\_\+iterator}]{\setlength{\rightskip}{0pt plus 5cm}typedef std\+::vector$<${\bf Index\+Reference}$>$\+::{\bf const\+\_\+iterator} {\bf Indexed\+Data\+::const\+\_\+iterator}}\label{classIndexedData_a8fb4f6765def0ce366381f0b0aa5c04a}
+\hypertarget{classIndexedData_a92375fc0f92911f92908da2251d70fde}{}\index{Indexed\+Data@{Indexed\+Data}!iterator@{iterator}}
+\index{iterator@{iterator}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}typedef std\+::vector$<${\bf Index\+Reference}$>$\+::{\bf iterator} {\bf Indexed\+Data\+::iterator}}\label{classIndexedData_a92375fc0f92911f92908da2251d70fde}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classIndexedData_a9973db49f518c5e9fdad7985954eb1ea}{}\index{Indexed\+Data@{Indexed\+Data}!Indexed\+Data@{Indexed\+Data}}
+\index{Indexed\+Data@{Indexed\+Data}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{Indexed\+Data()}]{\setlength{\rightskip}{0pt plus 5cm}Indexed\+Data\+::\+Indexed\+Data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_a9973db49f518c5e9fdad7985954eb1ea}
+\hypertarget{classIndexedData_aec9e0aea5473b75d0f6829fc2cad3b5b}{}\index{Indexed\+Data@{Indexed\+Data}!Indexed\+Data@{Indexed\+Data}}
+\index{Indexed\+Data@{Indexed\+Data}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{Indexed\+Data(std\+::istream $\ast$in)}]{\setlength{\rightskip}{0pt plus 5cm}Indexed\+Data\+::\+Indexed\+Data (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in}
+\end{DoxyParamCaption}
+)}\label{classIndexedData_aec9e0aea5473b75d0f6829fc2cad3b5b}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classIndexedData_a8ce48c918c26d42a159848b4e8b99290}{}\index{Indexed\+Data@{Indexed\+Data}!begin@{begin}}
+\index{begin@{begin}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{begin()}]{\setlength{\rightskip}{0pt plus 5cm}{\bf iterator} Indexed\+Data\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_a8ce48c918c26d42a159848b4e8b99290}
+\hypertarget{classIndexedData_a0b68538179655b6c9102888bf49dd066}{}\index{Indexed\+Data@{Indexed\+Data}!begin@{begin}}
+\index{begin@{begin}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{begin() const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf const\+\_\+iterator} Indexed\+Data\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_a0b68538179655b6c9102888bf49dd066}
+\hypertarget{classIndexedData_acbb191cebf775273bc94c0a51c9ef2ec}{}\index{Indexed\+Data@{Indexed\+Data}!count@{count}}
+\index{count@{count}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{count() const }]{\setlength{\rightskip}{0pt plus 5cm}unsigned int Indexed\+Data\+::count (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_acbb191cebf775273bc94c0a51c9ef2ec}
+Returns the number of indices in the collection, i.\+e. the occurrence count. \hypertarget{classIndexedData_a6278593e0a56312059c5439b0006b145}{}\index{Indexed\+Data@{Indexed\+Data}!end@{end}}
+\index{end@{end}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{end()}]{\setlength{\rightskip}{0pt plus 5cm}{\bf iterator} Indexed\+Data\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_a6278593e0a56312059c5439b0006b145}
+\hypertarget{classIndexedData_ad0d4c4eb8604b50f3121a3ae54212792}{}\index{Indexed\+Data@{Indexed\+Data}!end@{end}}
+\index{end@{end}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{end() const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf const\+\_\+iterator} Indexed\+Data\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_ad0d4c4eb8604b50f3121a3ae54212792}
+\hypertarget{classIndexedData_afa9e1fb27eaa8a86c311b9971c534504}{}\index{Indexed\+Data@{Indexed\+Data}!find@{find}}
+\index{find@{find}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{find(const Index\+Reference \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf iterator} Indexed\+Data\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_afa9e1fb27eaa8a86c311b9971c534504}
+\hypertarget{classIndexedData_a69de178795dc5f698e25f1c04f1cad80}{}\index{Indexed\+Data@{Indexed\+Data}!find@{find}}
+\index{find@{find}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{find(const Index\+Reference \&ref) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf const\+\_\+iterator} Indexed\+Data\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{ref}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_a69de178795dc5f698e25f1c04f1cad80}
+\hypertarget{classIndexedData_ae92cdda206269f83ca4484093c4a7553}{}\index{Indexed\+Data@{Indexed\+Data}!has@{has}}
+\index{has@{has}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{has(const Index\+Reference \&ref, bool sorted=false) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Indexed\+Data\+::has (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{ref, }
+\item[{bool}]{sorted = {\ttfamily false}}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_ae92cdda206269f83ca4484093c4a7553}
+\hypertarget{classIndexedData_a59a7f803269610b024bcd8ea87d2752b}{}\index{Indexed\+Data@{Indexed\+Data}!insert@{insert}}
+\index{insert@{insert}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{insert(\+Index\+Reference ref)}]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Data\+::insert (
+\begin{DoxyParamCaption}
+\item[{{\bf Index\+Reference}}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_a59a7f803269610b024bcd8ea87d2752b}
+\hypertarget{classIndexedData_a5c313c46241aeffc7719604bd9718ea8}{}\index{Indexed\+Data@{Indexed\+Data}!reserve@{reserve}}
+\index{reserve@{reserve}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{reserve(size\+\_\+t size)}]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Data\+::reserve (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_a5c313c46241aeffc7719604bd9718ea8}
+\hypertarget{classIndexedData_aad19648fb455c7331b978c3c8edb5d95}{}\index{Indexed\+Data@{Indexed\+Data}!sentences@{sentences}}
+\index{sentences@{sentences}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{sentences() const }]{\setlength{\rightskip}{0pt plus 5cm}std\+::set$<$int$>$ Indexed\+Data\+::sentences (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_aad19648fb455c7331b978c3c8edb5d95}
+Returns a set of all unique sentences covered by this collection of references. \hypertarget{classIndexedData_a006113bf89af3c679ba662e81e6a8195}{}\index{Indexed\+Data@{Indexed\+Data}!set@{set}}
+\index{set@{set}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{set() const }]{\setlength{\rightskip}{0pt plus 5cm}std\+::set$<${\bf Index\+Reference}$>$ Indexed\+Data\+::set (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_a006113bf89af3c679ba662e81e6a8195}
+Conversion to std\+::set$<$\+Index\+Reference$>$ \hypertarget{classIndexedData_ab425918fcc283699452d3120e83323e5}{}\index{Indexed\+Data@{Indexed\+Data}!shrink\+\_\+to\+\_\+fit@{shrink\+\_\+to\+\_\+fit}}
+\index{shrink\+\_\+to\+\_\+fit@{shrink\+\_\+to\+\_\+fit}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{shrink\+\_\+to\+\_\+fit()}]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Data\+::shrink\+\_\+to\+\_\+fit (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_ab425918fcc283699452d3120e83323e5}
+\hypertarget{classIndexedData_af88d0d05140d9fb457de89a3f22029b7}{}\index{Indexed\+Data@{Indexed\+Data}!size@{size}}
+\index{size@{size}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t Indexed\+Data\+::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_af88d0d05140d9fb457de89a3f22029b7}
+\hypertarget{classIndexedData_a50ea650221c0ced471d47c0281e8a99b}{}\index{Indexed\+Data@{Indexed\+Data}!sort@{sort}}
+\index{sort@{sort}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{sort()}]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Data\+::sort (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedData_a50ea650221c0ced471d47c0281e8a99b}
+Sort the indices, in-\/place, in proper order of occurence \hypertarget{classIndexedData_aef2cabec34661920b1ba7b8448775d08}{}\index{Indexed\+Data@{Indexed\+Data}!write@{write}}
+\index{write@{write}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{write(std\+::ostream $\ast$out) const }]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Data\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out}
+\end{DoxyParamCaption}
+) const}\label{classIndexedData_aef2cabec34661920b1ba7b8448775d08}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classIndexedData_a9f509602ab26d3ba012b6d3fc461c4e7}{}\index{Indexed\+Data@{Indexed\+Data}!data@{data}}
+\index{data@{data}!Indexed\+Data@{Indexed\+Data}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<${\bf Index\+Reference}$>$ Indexed\+Data\+::data}\label{classIndexedData_a9f509602ab26d3ba012b6d3fc461c4e7}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{datatypes_8h}{datatypes.\+h}\end{DoxyCompactItemize}

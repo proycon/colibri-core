@@ -1,0 +1,128 @@
+\hypertarget{classAbstractValueHandler}{}\section{Abstract\+Value\+Handler$<$ Value\+Type $>$ Class Template Reference}
+\label{classAbstractValueHandler}\index{Abstract\+Value\+Handler$<$ Value\+Type $>$@{Abstract\+Value\+Handler$<$ Value\+Type $>$}}
+
+
+Abstract value handler class, all value handlers are derived from this. Value handlers are interfaces to the values in \hyperlink{classPattern}{Pattern} Maps. They are used to abstract from the actual value data type and provide some common methods required for all values, as well at methods for serialisation from/to binary file. All are derived from the abstract class \hyperlink{classAbstractValueHandler}{Abstract\+Value\+Handler}.  
+
+
+
+
+{\ttfamily \#include $<$datatypes.\+h$>$}
+
+Inheritance diagram for Abstract\+Value\+Handler$<$ Value\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classAbstractValueHandler}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual std\+::string \hyperlink{classAbstractValueHandler_a6e2f7abe130cdec1062e51d56e4f9fac}{id} ()
+\item 
+virtual void \hyperlink{classAbstractValueHandler_ac7921fae157361b054e467bf96785654}{read} (std\+::istream $\ast$in, Value\+Type \&value)=0
+\item 
+virtual void \hyperlink{classAbstractValueHandler_aecd2820bc132f8065babbec5cd7458b8}{write} (std\+::ostream $\ast$out, Value\+Type \&value)=0
+\item 
+virtual std\+::string \hyperlink{classAbstractValueHandler_a8e56e3bbccc464a47a666352249e6a1b}{tostring} (Value\+Type \&value)=0
+\item 
+virtual unsigned int \hyperlink{classAbstractValueHandler_a1d5941f6ff2afaee0c0bfc89ccb5188e}{count} (Value\+Type \&value) const  =0
+\item 
+virtual void \hyperlink{classAbstractValueHandler_a72ecec2580cb5a9a3ba1495a98d08d98}{add} (Value\+Type $\ast$value, const \hyperlink{classIndexReference}{Index\+Reference} \&ref) const  =0
+\item 
+virtual void \hyperlink{classAbstractValueHandler_ae89579ec77805153a0acc617202f89b4}{convertto} (Value\+Type $\ast$source, Value\+Type $\ast$\&target) const 
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Value\+Type$>$class Abstract\+Value\+Handler$<$ Value\+Type $>$}
+
+Abstract value handler class, all value handlers are derived from this. Value handlers are interfaces to the values in \hyperlink{classPattern}{Pattern} Maps. They are used to abstract from the actual value data type and provide some common methods required for all values, as well at methods for serialisation from/to binary file. All are derived from the abstract class \hyperlink{classAbstractValueHandler}{Abstract\+Value\+Handler}. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classAbstractValueHandler_a72ecec2580cb5a9a3ba1495a98d08d98}{}\index{Abstract\+Value\+Handler@{Abstract\+Value\+Handler}!add@{add}}
+\index{add@{add}!Abstract\+Value\+Handler@{Abstract\+Value\+Handler}}
+\subsubsection[{add(\+Value\+Type $\ast$value, const Index\+Reference \&ref) const  =0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type$>$ virtual void {\bf Abstract\+Value\+Handler}$<$ Value\+Type $>$\+::add (
+\begin{DoxyParamCaption}
+\item[{Value\+Type $\ast$}]{value, }
+\item[{const {\bf Index\+Reference} \&}]{ref}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classAbstractValueHandler_a72ecec2580cb5a9a3ba1495a98d08d98}
+
+
+Implemented in \hyperlink{classPatternStoreValueHandler_af05f8053a126fa4a0b100a2a70258977}{Pattern\+Store\+Value\+Handler$<$ Pattern\+Store\+Type $>$}, \hyperlink{classPatternStoreValueHandler_af05f8053a126fa4a0b100a2a70258977}{Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$}, \hyperlink{classPatternFeatureVectorMapHandler_ab234259fb46c86986d41b0ef81a3b0c0}{Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$}, \hyperlink{classIndexedDataHandler_a242beac1d0b430238e3259556d2b1426}{Indexed\+Data\+Handler}, and \hyperlink{classBaseValueHandler_a260db19187a4f3fdd6dcf1fed7ac6a59}{Base\+Value\+Handler$<$ Value\+Type $>$}.
+
+\hypertarget{classAbstractValueHandler_ae89579ec77805153a0acc617202f89b4}{}\index{Abstract\+Value\+Handler@{Abstract\+Value\+Handler}!convertto@{convertto}}
+\index{convertto@{convertto}!Abstract\+Value\+Handler@{Abstract\+Value\+Handler}}
+\subsubsection[{convertto(\+Value\+Type $\ast$source, Value\+Type $\ast$\&target) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type$>$ virtual void {\bf Abstract\+Value\+Handler}$<$ Value\+Type $>$\+::convertto (
+\begin{DoxyParamCaption}
+\item[{Value\+Type $\ast$}]{source, }
+\item[{Value\+Type $\ast$\&}]{target}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classAbstractValueHandler_ae89579ec77805153a0acc617202f89b4}
+
+
+Reimplemented in \hyperlink{classPatternFeatureVectorMapHandler_ad69265b8885d3fba7e557a39c3632768}{Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$}, \hyperlink{classIndexedDataHandler_a5f4e87e6b1d952f9a1724168786bc99e}{Indexed\+Data\+Handler}, and \hyperlink{classBaseValueHandler_a6b00505c99c8ba21309d8306e423a109}{Base\+Value\+Handler$<$ Value\+Type $>$}.
+
+\hypertarget{classAbstractValueHandler_a1d5941f6ff2afaee0c0bfc89ccb5188e}{}\index{Abstract\+Value\+Handler@{Abstract\+Value\+Handler}!count@{count}}
+\index{count@{count}!Abstract\+Value\+Handler@{Abstract\+Value\+Handler}}
+\subsubsection[{count(\+Value\+Type \&value) const  =0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type$>$ virtual unsigned int {\bf Abstract\+Value\+Handler}$<$ Value\+Type $>$\+::count (
+\begin{DoxyParamCaption}
+\item[{Value\+Type \&}]{value}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classAbstractValueHandler_a1d5941f6ff2afaee0c0bfc89ccb5188e}
+
+
+Implemented in \hyperlink{classPatternStoreValueHandler_af967671eda3e9ab05c0bf05ca9d0dfae}{Pattern\+Store\+Value\+Handler$<$ Pattern\+Store\+Type $>$}, \hyperlink{classPatternStoreValueHandler_af967671eda3e9ab05c0bf05ca9d0dfae}{Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$}, \hyperlink{classPatternFeatureVectorMapHandler_a67a49821f7c2b8b4d6e1e5be81c36bd4}{Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$}, \hyperlink{classIndexedDataHandler_a9ce91a864dceb5e7de23ee89d1083037}{Indexed\+Data\+Handler}, and \hyperlink{classBaseValueHandler_a841fab906106fcfdef995e7b9c594ef4}{Base\+Value\+Handler$<$ Value\+Type $>$}.
+
+\hypertarget{classAbstractValueHandler_a6e2f7abe130cdec1062e51d56e4f9fac}{}\index{Abstract\+Value\+Handler@{Abstract\+Value\+Handler}!id@{id}}
+\index{id@{id}!Abstract\+Value\+Handler@{Abstract\+Value\+Handler}}
+\subsubsection[{id()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type$>$ virtual std\+::string {\bf Abstract\+Value\+Handler}$<$ Value\+Type $>$\+::id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classAbstractValueHandler_a6e2f7abe130cdec1062e51d56e4f9fac}
+
+
+Reimplemented in \hyperlink{classPatternStoreValueHandler_a8f1745d36fe84bd8b96854a30b3bc5f7}{Pattern\+Store\+Value\+Handler$<$ Pattern\+Store\+Type $>$}, \hyperlink{classPatternStoreValueHandler_a8f1745d36fe84bd8b96854a30b3bc5f7}{Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$}, \hyperlink{classArrayValueHandler_ac82e2a0341b8f0e66b36a07b91fbed42}{Array\+Value\+Handler$<$ T, N, countindex $>$}, \hyperlink{classPatternFeatureVectorMapHandler_ac3a86c293fbc3417ae6d8dc13389be82}{Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$}, \hyperlink{classIndexedDataHandler_a858b6661224371858487adf4515a929c}{Indexed\+Data\+Handler}, and \hyperlink{classBaseValueHandler_a7bc1637a355d28baa52bc3f1e069bfb7}{Base\+Value\+Handler$<$ Value\+Type $>$}.
+
+\hypertarget{classAbstractValueHandler_ac7921fae157361b054e467bf96785654}{}\index{Abstract\+Value\+Handler@{Abstract\+Value\+Handler}!read@{read}}
+\index{read@{read}!Abstract\+Value\+Handler@{Abstract\+Value\+Handler}}
+\subsubsection[{read(std\+::istream $\ast$in, Value\+Type \&value)=0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type$>$ virtual void {\bf Abstract\+Value\+Handler}$<$ Value\+Type $>$\+::read (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{Value\+Type \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classAbstractValueHandler_ac7921fae157361b054e467bf96785654}
+
+
+Implemented in \hyperlink{classPatternStoreValueHandler_a1ee31fd587f60c2c10200581724fbee6}{Pattern\+Store\+Value\+Handler$<$ Pattern\+Store\+Type $>$}, \hyperlink{classPatternStoreValueHandler_a1ee31fd587f60c2c10200581724fbee6}{Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$}, \hyperlink{classPatternFeatureVectorMapHandler_a3956b0d0deccf1a3f36135d084a30627}{Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$}, \hyperlink{classIndexedDataHandler_ab24da9862e5572a9d6f58e51f62fb5c7}{Indexed\+Data\+Handler}, and \hyperlink{classBaseValueHandler_ae55dd264dd8dcd4e9105a36fa8211df8}{Base\+Value\+Handler$<$ Value\+Type $>$}.
+
+\hypertarget{classAbstractValueHandler_a8e56e3bbccc464a47a666352249e6a1b}{}\index{Abstract\+Value\+Handler@{Abstract\+Value\+Handler}!tostring@{tostring}}
+\index{tostring@{tostring}!Abstract\+Value\+Handler@{Abstract\+Value\+Handler}}
+\subsubsection[{tostring(\+Value\+Type \&value)=0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type$>$ virtual std\+::string {\bf Abstract\+Value\+Handler}$<$ Value\+Type $>$\+::tostring (
+\begin{DoxyParamCaption}
+\item[{Value\+Type \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classAbstractValueHandler_a8e56e3bbccc464a47a666352249e6a1b}
+
+
+Implemented in \hyperlink{classPatternStoreValueHandler_ac976813f02dcad60eb8cb700c6ba0753}{Pattern\+Store\+Value\+Handler$<$ Pattern\+Store\+Type $>$}, \hyperlink{classPatternStoreValueHandler_ac976813f02dcad60eb8cb700c6ba0753}{Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$}, \hyperlink{classPatternFeatureVectorMapHandler_a27faed3107244e4ab0f53e3acea201de}{Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$}, \hyperlink{classIndexedDataHandler_a7a3fd16bf83956b3fbc2fe46578aa958}{Indexed\+Data\+Handler}, and \hyperlink{classBaseValueHandler_a486eb004615965908cf2a5e670d55293}{Base\+Value\+Handler$<$ Value\+Type $>$}.
+
+\hypertarget{classAbstractValueHandler_aecd2820bc132f8065babbec5cd7458b8}{}\index{Abstract\+Value\+Handler@{Abstract\+Value\+Handler}!write@{write}}
+\index{write@{write}!Abstract\+Value\+Handler@{Abstract\+Value\+Handler}}
+\subsubsection[{write(std\+::ostream $\ast$out, Value\+Type \&value)=0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type$>$ virtual void {\bf Abstract\+Value\+Handler}$<$ Value\+Type $>$\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out, }
+\item[{Value\+Type \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classAbstractValueHandler_aecd2820bc132f8065babbec5cd7458b8}
+
+
+Implemented in \hyperlink{classPatternStoreValueHandler_a64d152c70a8ffd4f5ffdb09abb570b2d}{Pattern\+Store\+Value\+Handler$<$ Pattern\+Store\+Type $>$}, \hyperlink{classPatternStoreValueHandler_a64d152c70a8ffd4f5ffdb09abb570b2d}{Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$}, \hyperlink{classPatternFeatureVectorMapHandler_a188df59b0fe05271e3ee90ba20204ffa}{Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$}, \hyperlink{classIndexedDataHandler_adac292491ac7e7e59d15f0a8a76bfac7}{Indexed\+Data\+Handler}, and \hyperlink{classBaseValueHandler_a56854e807c698507ddfeab331abd0482}{Base\+Value\+Handler$<$ Value\+Type $>$}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{datatypes_8h}{datatypes.\+h}\end{DoxyCompactItemize}

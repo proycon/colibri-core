@@ -1,0 +1,319 @@
+\hypertarget{classPatternMapStore}{}\section{Pattern\+Map\+Store$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$ Class Template Reference}
+\label{classPatternMapStore}\index{Pattern\+Map\+Store$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$@{Pattern\+Map\+Store$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}}
+
+
+Abstract class for map-\/like pattern stores, do not instantiate directly.  
+
+
+
+
+{\ttfamily \#include $<$patternstore.\+h$>$}
+
+Inheritance diagram for Pattern\+Map\+Store$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classPatternMapStore}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef Container\+Type\+::iterator \hyperlink{classPatternMapStore_a918b5de9d2deb6fcc2080a0bb9f53877}{iterator}
+\item 
+typedef Container\+Type\+::const\+\_\+iterator \hyperlink{classPatternMapStore_a41a18b827340283e8a643a1d526320f4}{const\+\_\+iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPatternMapStore_af246953d72bedb9ef3741eddb1768ff6}{Pattern\+Map\+Store} ()
+\item 
+virtual \hyperlink{classPatternMapStore_aa15df2207721ea9d43952add6e5a1ebc}{$\sim$\+Pattern\+Map\+Store} ()
+\item 
+virtual void \hyperlink{classPatternMapStore_a37bcf7aae1c40ccdea57e9a57533a555}{insert} (const \hyperlink{classPattern}{Pattern} \&pattern, Value\+Type \&value)=0
+\item 
+virtual bool \hyperlink{classPatternMapStore_ad9c07c57785e95edbe057e79f94be2c9}{has} (const \hyperlink{classPattern}{Pattern} \&) const  =0
+\item 
+virtual bool \hyperlink{classPatternMapStore_a00d47f8640efaeb3ce85558b3ee4a6a2}{has} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&) const  =0
+\item 
+virtual bool \hyperlink{classPatternMapStore_a60f2926144fbd408b86d9ff5481fd140}{erase} (const \hyperlink{classPattern}{Pattern} \&)=0
+\item 
+virtual size\+\_\+t \hyperlink{classPatternMapStore_ab6dc590b4b102f1464301a3fc6c4ec73}{size} () const  =0
+\item 
+virtual Value\+Type \& \hyperlink{classPatternMapStore_ac4e8b5a15bb4e3d0f205a979f0d272ab}{operator\mbox{[}$\,$\mbox{]}} (const \hyperlink{classPattern}{Pattern} \&pattern)=0
+\item 
+virtual Value\+Type \& \hyperlink{classPatternMapStore_ac4f6c5ef2bd7397a33adeb2e72f6d38c}{operator\mbox{[}$\,$\mbox{]}} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&pattern)=0
+\item 
+virtual Container\+Type\+::iterator \hyperlink{classPatternMapStore_a2a0a8463a6faa2f2b6636167c06e19af}{begin} ()=0
+\item 
+virtual Container\+Type\+::iterator \hyperlink{classPatternMapStore_a363c63981ea34474b28b2e3a95d376ce}{end} ()=0
+\item 
+virtual Container\+Type\+::iterator \hyperlink{classPatternMapStore_ae50e3cdbbf9a503d3381971daec92b54}{find} (const \hyperlink{classPattern}{Pattern} \&pattern)=0
+\item 
+virtual void \hyperlink{classPatternMapStore_aa672214575c57ba24f51996e1eb26902}{write} (std\+::ostream $\ast$out)
+\item 
+virtual void \hyperlink{classPatternMapStore_abefd53c729c5cdd4916edfc8be1054b2}{write} (std\+::string filename)
+\item 
+{\footnotesize template$<$class Read\+Value\+Type  = Value\+Type, class Read\+Value\+Handler  = Value\+Handler$>$ }\\void \hyperlink{classPatternMapStore_af6b2ea5515c974d47212bd84b0d39f15}{read} (std\+::istream $\ast$in, int M\+I\+N\+T\+O\+K\+E\+N\+S=0, int M\+I\+N\+L\+E\+N\+G\+T\+H=0, int M\+A\+X\+L\+E\+N\+G\+T\+H=999999, \hyperlink{classPatternStoreInterface}{Pattern\+Store\+Interface} $\ast$constrainstore=N\+U\+L\+L, bool D\+O\+N\+G\+R\+A\+M\+S=true, bool D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S=true, bool D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S=true, bool D\+O\+R\+E\+S\+E\+T=false, bool D\+E\+B\+U\+G=false)
+\item 
+void \hyperlink{classPatternMapStore_af105b594e52f6f730cc5b15d10f145fe}{read} (std\+::string filename, int M\+I\+N\+T\+O\+K\+E\+N\+S=0, int M\+I\+N\+L\+E\+N\+G\+T\+H=0, int M\+A\+X\+L\+E\+N\+G\+T\+H=999999, \hyperlink{classPatternStoreInterface}{Pattern\+Store\+Interface} $\ast$constrainstore=N\+U\+L\+L, bool D\+O\+N\+G\+R\+A\+M\+S=true, bool D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S=true, bool D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S=true, bool D\+O\+R\+E\+S\+E\+T=false, bool D\+E\+B\+U\+G=false)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Value\+Handler \hyperlink{classPatternMapStore_abdbe9beb478e1719f6edb64272424e5f}{valuehandler}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$class Pattern\+Map\+Store$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}
+
+Abstract class for map-\/like pattern stores, do not instantiate directly. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Container\+Type} & The low-\/level container type used (an S\+T\+L container such as set/map). \\
+\hline
+{\em Value\+Type} & The type of Value this container stores \\
+\hline
+{\em Value\+Handler} & A handler class for this type of value \\
+\hline
+{\em Read\+Write\+Size\+Type} & Data type for addressing, influences only the maximum number of items that can be stored (2$\ast$$\ast$64) in the container, as this will be represented in the very beginning of the binary file. No reason to change this unless the container is very deeply nested in others and contains only few items. \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classPatternMapStore_a41a18b827340283e8a643a1d526320f4}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!const\+\_\+iterator@{const\+\_\+iterator}}
+\index{const\+\_\+iterator@{const\+\_\+iterator}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{const\+\_\+iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ typedef Container\+Type\+::const\+\_\+iterator {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::{\bf const\+\_\+iterator}}\label{classPatternMapStore_a41a18b827340283e8a643a1d526320f4}
+\hypertarget{classPatternMapStore_a918b5de9d2deb6fcc2080a0bb9f53877}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!iterator@{iterator}}
+\index{iterator@{iterator}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ typedef Container\+Type\+::iterator {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::{\bf iterator}}\label{classPatternMapStore_a918b5de9d2deb6fcc2080a0bb9f53877}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classPatternMapStore_af246953d72bedb9ef3741eddb1768ff6}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{Pattern\+Map\+Store()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::{\bf Pattern\+Map\+Store} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternMapStore_af246953d72bedb9ef3741eddb1768ff6}
+\hypertarget{classPatternMapStore_aa15df2207721ea9d43952add6e5a1ebc}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!````~Pattern\+Map\+Store@{$\sim$\+Pattern\+Map\+Store}}
+\index{````~Pattern\+Map\+Store@{$\sim$\+Pattern\+Map\+Store}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{$\sim$\+Pattern\+Map\+Store()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::$\sim${\bf Pattern\+Map\+Store} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMapStore_aa15df2207721ea9d43952add6e5a1ebc}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPatternMapStore_a2a0a8463a6faa2f2b6636167c06e19af}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!begin@{begin}}
+\index{begin@{begin}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{begin()=0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual Container\+Type\+::iterator {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternMapStore_a2a0a8463a6faa2f2b6636167c06e19af}
+
+
+Implements \hyperlink{classPatternStore_a9dfc403ac576e1904f4ec326fec1adaa}{Pattern\+Store$<$ Container\+Type, Read\+Write\+Size\+Type $>$}.
+
+
+
+Implemented in \hyperlink{classHashOrderedPatternMap_ac103913725b7036ba414453b2204b955}{Hash\+Ordered\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a6e536f5947c4e1752f91166922c4ae16}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a6e536f5947c4e1752f91166922c4ae16}{Pattern\+Map$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$, Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$, uint64\+\_\+t $>$}, \hyperlink{classPatternMap_a6e536f5947c4e1752f91166922c4ae16}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$}, and \hyperlink{classPatternMap_a6e536f5947c4e1752f91166922c4ae16}{Pattern\+Map$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$, Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternMapStore_a363c63981ea34474b28b2e3a95d376ce}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!end@{end}}
+\index{end@{end}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{end()=0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual Container\+Type\+::iterator {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternMapStore_a363c63981ea34474b28b2e3a95d376ce}
+
+
+Implements \hyperlink{classPatternStore_aed5adf38c88543123f705e44b4cddfee}{Pattern\+Store$<$ Container\+Type, Read\+Write\+Size\+Type $>$}.
+
+
+
+Implemented in \hyperlink{classHashOrderedPatternMap_aa2a8090eed690299d4abeb36ea16fb3d}{Hash\+Ordered\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_aa5a92eab727e74e54b93f7f7916e26cb}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_aa5a92eab727e74e54b93f7f7916e26cb}{Pattern\+Map$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$, Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$, uint64\+\_\+t $>$}, \hyperlink{classPatternMap_aa5a92eab727e74e54b93f7f7916e26cb}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$}, and \hyperlink{classPatternMap_aa5a92eab727e74e54b93f7f7916e26cb}{Pattern\+Map$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$, Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternMapStore_a60f2926144fbd408b86d9ff5481fd140}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!erase@{erase}}
+\index{erase@{erase}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{erase(const Pattern \&)=0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual bool {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::erase (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternMapStore_a60f2926144fbd408b86d9ff5481fd140}
+
+
+Implements \hyperlink{classPatternStore_ad8b6d8e1eba917d45e8667ace70f1b1e}{Pattern\+Store$<$ Container\+Type, Read\+Write\+Size\+Type $>$}.
+
+
+
+Implemented in \hyperlink{classHashOrderedPatternMap_acc3231c8b727c982ef11c80d3390f8ec}{Hash\+Ordered\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a96e5a77a5c782f340fe38f5c05ae30c4}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a96e5a77a5c782f340fe38f5c05ae30c4}{Pattern\+Map$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$, Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$, uint64\+\_\+t $>$}, \hyperlink{classPatternMap_a96e5a77a5c782f340fe38f5c05ae30c4}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$}, and \hyperlink{classPatternMap_a96e5a77a5c782f340fe38f5c05ae30c4}{Pattern\+Map$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$, Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternMapStore_ae50e3cdbbf9a503d3381971daec92b54}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!find@{find}}
+\index{find@{find}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{find(const Pattern \&pattern)=0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual Container\+Type\+::iterator {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternMapStore_ae50e3cdbbf9a503d3381971daec92b54}
+
+
+Implements \hyperlink{classPatternStore_ac8cf692af151c3aad6aea81fa5748957}{Pattern\+Store$<$ Container\+Type, Read\+Write\+Size\+Type $>$}.
+
+
+
+Implemented in \hyperlink{classHashOrderedPatternMap_ab0391b67630d9c20ee0069f7197ca9da}{Hash\+Ordered\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a4f36d73514e80d18f93395a72f81e6bc}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a4f36d73514e80d18f93395a72f81e6bc}{Pattern\+Map$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$, Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$, uint64\+\_\+t $>$}, \hyperlink{classPatternMap_a4f36d73514e80d18f93395a72f81e6bc}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$}, and \hyperlink{classPatternMap_a4f36d73514e80d18f93395a72f81e6bc}{Pattern\+Map$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$, Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternMapStore_ad9c07c57785e95edbe057e79f94be2c9}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!has@{has}}
+\index{has@{has}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{has(const Pattern \&) const  =0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual bool {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::has (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternMapStore_ad9c07c57785e95edbe057e79f94be2c9}
+Does the pattern occur in the pattern store? 
+
+Implements \hyperlink{classPatternStore_abdebd74a21912e436531a64fe8b09a6c}{Pattern\+Store$<$ Container\+Type, Read\+Write\+Size\+Type $>$}.
+
+
+
+Implemented in \hyperlink{classHashOrderedPatternMap_a8682c2810f85d0c80ed015e388b571ef}{Hash\+Ordered\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a038d49e8aed58a207c3e106b086cdab0}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a038d49e8aed58a207c3e106b086cdab0}{Pattern\+Map$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$, Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$, uint64\+\_\+t $>$}, \hyperlink{classPatternMap_a038d49e8aed58a207c3e106b086cdab0}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$}, \hyperlink{classPatternMap_a038d49e8aed58a207c3e106b086cdab0}{Pattern\+Map$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$, Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$ $>$}, and \hyperlink{classPatternAlignmentModel_a4822a730be0dabeebd06771c803b8254}{Pattern\+Alignment\+Model$<$ Feature\+Type $>$}.
+
+\hypertarget{classPatternMapStore_a00d47f8640efaeb3ce85558b3ee4a6a2}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!has@{has}}
+\index{has@{has}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{has(const Pattern\+Pointer \&) const  =0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual bool {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::has (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternMapStore_a00d47f8640efaeb3ce85558b3ee4a6a2}
+Does the pattern occur in the pattern store? 
+
+Implements \hyperlink{classPatternStore_ad9c8afcf7b7da6acd257c52336751bd2}{Pattern\+Store$<$ Container\+Type, Read\+Write\+Size\+Type $>$}.
+
+
+
+Implemented in \hyperlink{classHashOrderedPatternMap_ae2b83d2bcc1378b817044c205bd60651}{Hash\+Ordered\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a18587e4b3c6143749b4b96e8f4808cdb}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a18587e4b3c6143749b4b96e8f4808cdb}{Pattern\+Map$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$, Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$, uint64\+\_\+t $>$}, \hyperlink{classPatternMap_a18587e4b3c6143749b4b96e8f4808cdb}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$}, \hyperlink{classPatternMap_a18587e4b3c6143749b4b96e8f4808cdb}{Pattern\+Map$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$, Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$ $>$}, and \hyperlink{classPatternAlignmentModel_ad81e599091c476a9cb121e7e04a4da5a}{Pattern\+Alignment\+Model$<$ Feature\+Type $>$}.
+
+\hypertarget{classPatternMapStore_a37bcf7aae1c40ccdea57e9a57533a555}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!insert@{insert}}
+\index{insert@{insert}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{insert(const Pattern \&pattern, Value\+Type \&value)=0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual void {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::insert (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{Value\+Type \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternMapStore_a37bcf7aae1c40ccdea57e9a57533a555}
+
+
+Implemented in \hyperlink{classHashOrderedPatternMap_aec9cfa54723fbe49e75a4e93109ed0bf}{Hash\+Ordered\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a67628e669cf2995a44769cda83bf8e85}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a67628e669cf2995a44769cda83bf8e85}{Pattern\+Map$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$, Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$, uint64\+\_\+t $>$}, \hyperlink{classPatternMap_a67628e669cf2995a44769cda83bf8e85}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$}, and \hyperlink{classPatternMap_a67628e669cf2995a44769cda83bf8e85}{Pattern\+Map$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$, Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternMapStore_ac4e8b5a15bb4e3d0f205a979f0d272ab}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!operator\mbox{[}$\,$\mbox{]}@{operator[]}}
+\index{operator\mbox{[}$\,$\mbox{]}@{operator[]}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{operator[](const Pattern \&pattern)=0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual Value\+Type\& {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::operator\mbox{[}$\,$\mbox{]} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternMapStore_ac4e8b5a15bb4e3d0f205a979f0d272ab}
+
+
+Implemented in \hyperlink{classHashOrderedPatternMap_ac37c92e91eb149eaa271054156264328}{Hash\+Ordered\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_af08cad16a81aede5cf12f9601b75d697}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_af08cad16a81aede5cf12f9601b75d697}{Pattern\+Map$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$, Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$, uint64\+\_\+t $>$}, \hyperlink{classPatternMap_af08cad16a81aede5cf12f9601b75d697}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$}, and \hyperlink{classPatternMap_af08cad16a81aede5cf12f9601b75d697}{Pattern\+Map$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$, Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternMapStore_ac4f6c5ef2bd7397a33adeb2e72f6d38c}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!operator\mbox{[}$\,$\mbox{]}@{operator[]}}
+\index{operator\mbox{[}$\,$\mbox{]}@{operator[]}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{operator[](const Pattern\+Pointer \&pattern)=0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual Value\+Type\& {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::operator\mbox{[}$\,$\mbox{]} (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternMapStore_ac4f6c5ef2bd7397a33adeb2e72f6d38c}
+
+
+Implemented in \hyperlink{classHashOrderedPatternMap_a65a2aa5b240f6d88b205273331f212b9}{Hash\+Ordered\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a790d9a4673f3971c644b120660bfab22}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_a790d9a4673f3971c644b120660bfab22}{Pattern\+Map$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$, Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$, uint64\+\_\+t $>$}, \hyperlink{classPatternMap_a790d9a4673f3971c644b120660bfab22}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$}, and \hyperlink{classPatternMap_a790d9a4673f3971c644b120660bfab22}{Pattern\+Map$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$, Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$ $>$}.
+
+\hypertarget{classPatternMapStore_af6b2ea5515c974d47212bd84b0d39f15}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!read@{read}}
+\index{read@{read}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{read(std\+::istream $\ast$in, int M\+I\+N\+T\+O\+K\+E\+N\+S=0, int M\+I\+N\+L\+E\+N\+G\+T\+H=0, int M\+A\+X\+L\+E\+N\+G\+T\+H=999999, Pattern\+Store\+Interface $\ast$constrainstore=\+N\+U\+L\+L, bool D\+O\+N\+G\+R\+A\+M\+S=true, bool D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S=true, bool D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S=true, bool D\+O\+R\+E\+S\+E\+T=false, bool D\+E\+B\+U\+G=false)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ template$<$class Read\+Value\+Type  = Value\+Type, class Read\+Value\+Handler  = Value\+Handler$>$ void {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::read (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{int}]{M\+I\+N\+T\+O\+K\+E\+N\+S = {\ttfamily 0}, }
+\item[{int}]{M\+I\+N\+L\+E\+N\+G\+T\+H = {\ttfamily 0}, }
+\item[{int}]{M\+A\+X\+L\+E\+N\+G\+T\+H = {\ttfamily 999999}, }
+\item[{{\bf Pattern\+Store\+Interface} $\ast$}]{constrainstore = {\ttfamily NULL}, }
+\item[{bool}]{D\+O\+N\+G\+R\+A\+M\+S = {\ttfamily true}, }
+\item[{bool}]{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S = {\ttfamily true}, }
+\item[{bool}]{D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S = {\ttfamily true}, }
+\item[{bool}]{D\+O\+R\+E\+S\+E\+T = {\ttfamily false}, }
+\item[{bool}]{D\+E\+B\+U\+G = {\ttfamily false}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternMapStore_af6b2ea5515c974d47212bd84b0d39f15}
+Read a map from input stream (in binary format) \hypertarget{classPatternMapStore_af105b594e52f6f730cc5b15d10f145fe}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!read@{read}}
+\index{read@{read}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{read(std\+::string filename, int M\+I\+N\+T\+O\+K\+E\+N\+S=0, int M\+I\+N\+L\+E\+N\+G\+T\+H=0, int M\+A\+X\+L\+E\+N\+G\+T\+H=999999, Pattern\+Store\+Interface $\ast$constrainstore=\+N\+U\+L\+L, bool D\+O\+N\+G\+R\+A\+M\+S=true, bool D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S=true, bool D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S=true, bool D\+O\+R\+E\+S\+E\+T=false, bool D\+E\+B\+U\+G=false)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ void {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::read (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{filename, }
+\item[{int}]{M\+I\+N\+T\+O\+K\+E\+N\+S = {\ttfamily 0}, }
+\item[{int}]{M\+I\+N\+L\+E\+N\+G\+T\+H = {\ttfamily 0}, }
+\item[{int}]{M\+A\+X\+L\+E\+N\+G\+T\+H = {\ttfamily 999999}, }
+\item[{{\bf Pattern\+Store\+Interface} $\ast$}]{constrainstore = {\ttfamily NULL}, }
+\item[{bool}]{D\+O\+N\+G\+R\+A\+M\+S = {\ttfamily true}, }
+\item[{bool}]{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S = {\ttfamily true}, }
+\item[{bool}]{D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S = {\ttfamily true}, }
+\item[{bool}]{D\+O\+R\+E\+S\+E\+T = {\ttfamily false}, }
+\item[{bool}]{D\+E\+B\+U\+G = {\ttfamily false}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternMapStore_af105b594e52f6f730cc5b15d10f145fe}
+Read a map from file (in binary format) \hypertarget{classPatternMapStore_ab6dc590b4b102f1464301a3fc6c4ec73}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!size@{size}}
+\index{size@{size}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{size() const  =0}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual size\+\_\+t {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternMapStore_ab6dc590b4b102f1464301a3fc6c4ec73}
+How many patterns are in the pattern store? 
+
+Implements \hyperlink{classPatternStore_a586751d731a509da5865d5863d56a8e4}{Pattern\+Store$<$ Container\+Type, Read\+Write\+Size\+Type $>$}.
+
+
+
+Implemented in \hyperlink{classHashOrderedPatternMap_a5a48798964b7d667950f41630d3bf708}{Hash\+Ordered\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_aed30070f31256d0c1335fa9bd3b5db1c}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}, \hyperlink{classPatternMap_aed30070f31256d0c1335fa9bd3b5db1c}{Pattern\+Map$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$, Pattern\+Store\+Value\+Handler$<$ Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$ $>$, uint64\+\_\+t $>$}, \hyperlink{classPatternMap_aed30070f31256d0c1335fa9bd3b5db1c}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Nested\+Size\+Type $>$}, \hyperlink{classPatternMap_aed30070f31256d0c1335fa9bd3b5db1c}{Pattern\+Map$<$ Pattern\+Feature\+Vector\+Map$<$ Feature\+Type $>$, Pattern\+Feature\+Vector\+Map\+Handler$<$ Feature\+Type $>$ $>$}, and \hyperlink{classPatternAlignmentModel_a7e4b2a69fd2e0852af0ed6ffaf6c51dc}{Pattern\+Alignment\+Model$<$ Feature\+Type $>$}.
+
+\hypertarget{classPatternMapStore_aa672214575c57ba24f51996e1eb26902}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!write@{write}}
+\index{write@{write}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{write(std\+::ostream $\ast$out)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual void {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMapStore_aa672214575c57ba24f51996e1eb26902}
+Write the map to stream output (in binary format) 
+
+Implements \hyperlink{classPatternStore_ac491b99964c6b4c99f5c40519d0c8ccc}{Pattern\+Store$<$ Container\+Type, Read\+Write\+Size\+Type $>$}.
+
+
+
+Reimplemented in \hyperlink{classPatternAlignmentModel_a335c3f85686db801fafeb328bf8df5e8}{Pattern\+Alignment\+Model$<$ Feature\+Type $>$}.
+
+\hypertarget{classPatternMapStore_abefd53c729c5cdd4916edfc8be1054b2}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!write@{write}}
+\index{write@{write}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{write(std\+::string filename)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ virtual void {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{filename}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMapStore_abefd53c729c5cdd4916edfc8be1054b2}
+Write the map to file (in binary format) 
+
+Reimplemented in \hyperlink{classPatternAlignmentModel_a9648856710033da53fa87f7fd52ddab1}{Pattern\+Alignment\+Model$<$ Feature\+Type $>$}.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classPatternMapStore_abdbe9beb478e1719f6edb64272424e5f}{}\index{Pattern\+Map\+Store@{Pattern\+Map\+Store}!valuehandler@{valuehandler}}
+\index{valuehandler@{valuehandler}!Pattern\+Map\+Store@{Pattern\+Map\+Store}}
+\subsubsection[{valuehandler}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Container\+Type, class Value\+Type, class Value\+Handler, class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ Value\+Handler {\bf Pattern\+Map\+Store}$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::valuehandler\hspace{0.3cm}{\ttfamily [protected]}}\label{classPatternMapStore_abdbe9beb478e1719f6edb64272424e5f}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{patternstore_8h}{patternstore.\+h}\end{DoxyCompactItemize}

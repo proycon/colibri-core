@@ -1,0 +1,125 @@
+\hypertarget{classPatternStoreValueHandler}{}\section{Pattern\+Store\+Value\+Handler$<$ Pattern\+Store\+Type $>$ Class Template Reference}
+\label{classPatternStoreValueHandler}\index{Pattern\+Store\+Value\+Handler$<$ Pattern\+Store\+Type $>$@{Pattern\+Store\+Value\+Handler$<$ Pattern\+Store\+Type $>$}}
+
+
+A complex value handler for values that are themselves pattern stores (allows building nested maps).  
+
+
+
+
+{\ttfamily \#include $<$patternstore.\+h$>$}
+
+Inheritance diagram for Pattern\+Store\+Value\+Handler$<$ Pattern\+Store\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classPatternStoreValueHandler}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual std\+::string \hyperlink{classPatternStoreValueHandler_a8f1745d36fe84bd8b96854a30b3bc5f7}{id} ()
+\item 
+void \hyperlink{classPatternStoreValueHandler_a1ee31fd587f60c2c10200581724fbee6}{read} (std\+::istream $\ast$in, Pattern\+Store\+Type \&value)
+\item 
+void \hyperlink{classPatternStoreValueHandler_a64d152c70a8ffd4f5ffdb09abb570b2d}{write} (std\+::ostream $\ast$out, Pattern\+Store\+Type \&value)
+\item 
+virtual std\+::string \hyperlink{classPatternStoreValueHandler_ac976813f02dcad60eb8cb700c6ba0753}{tostring} (Pattern\+Store\+Type \&value)
+\item 
+unsigned int \hyperlink{classPatternStoreValueHandler_af967671eda3e9ab05c0bf05ca9d0dfae}{count} (Pattern\+Store\+Type \&value) const 
+\item 
+void \hyperlink{classPatternStoreValueHandler_af05f8053a126fa4a0b100a2a70258977}{add} (Pattern\+Store\+Type $\ast$value, const \hyperlink{classIndexReference}{Index\+Reference} \&ref) const 
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const bool \hyperlink{classPatternStoreValueHandler_ad61eccf1c00feb4a743e977f2378768f}{indexed} = false
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Pattern\+Store\+Type$>$class Pattern\+Store\+Value\+Handler$<$ Pattern\+Store\+Type $>$}
+
+A complex value handler for values that are themselves pattern stores (allows building nested maps). 
+
+\subsection{Member Function Documentation}
+\hypertarget{classPatternStoreValueHandler_af05f8053a126fa4a0b100a2a70258977}{}\index{Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}!add@{add}}
+\index{add@{add}!Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}}
+\subsubsection[{add(\+Pattern\+Store\+Type $\ast$value, const Index\+Reference \&ref) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Pattern\+Store\+Type$>$ void {\bf Pattern\+Store\+Value\+Handler}$<$ Pattern\+Store\+Type $>$\+::add (
+\begin{DoxyParamCaption}
+\item[{Pattern\+Store\+Type $\ast$}]{value, }
+\item[{const {\bf Index\+Reference} \&}]{ref}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternStoreValueHandler_af05f8053a126fa4a0b100a2a70258977}
+
+
+Implements \hyperlink{classAbstractValueHandler_a72ecec2580cb5a9a3ba1495a98d08d98}{Abstract\+Value\+Handler$<$ Pattern\+Store\+Type $>$}.
+
+\hypertarget{classPatternStoreValueHandler_af967671eda3e9ab05c0bf05ca9d0dfae}{}\index{Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}!count@{count}}
+\index{count@{count}!Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}}
+\subsubsection[{count(\+Pattern\+Store\+Type \&value) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Pattern\+Store\+Type$>$ unsigned int {\bf Pattern\+Store\+Value\+Handler}$<$ Pattern\+Store\+Type $>$\+::count (
+\begin{DoxyParamCaption}
+\item[{Pattern\+Store\+Type \&}]{value}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternStoreValueHandler_af967671eda3e9ab05c0bf05ca9d0dfae}
+
+
+Implements \hyperlink{classAbstractValueHandler_a1d5941f6ff2afaee0c0bfc89ccb5188e}{Abstract\+Value\+Handler$<$ Pattern\+Store\+Type $>$}.
+
+\hypertarget{classPatternStoreValueHandler_a8f1745d36fe84bd8b96854a30b3bc5f7}{}\index{Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}!id@{id}}
+\index{id@{id}!Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}}
+\subsubsection[{id()}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Pattern\+Store\+Type$>$ virtual std\+::string {\bf Pattern\+Store\+Value\+Handler}$<$ Pattern\+Store\+Type $>$\+::id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternStoreValueHandler_a8f1745d36fe84bd8b96854a30b3bc5f7}
+
+
+Reimplemented from \hyperlink{classAbstractValueHandler_a6e2f7abe130cdec1062e51d56e4f9fac}{Abstract\+Value\+Handler$<$ Pattern\+Store\+Type $>$}.
+
+\hypertarget{classPatternStoreValueHandler_a1ee31fd587f60c2c10200581724fbee6}{}\index{Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}!read@{read}}
+\index{read@{read}!Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}}
+\subsubsection[{read(std\+::istream $\ast$in, Pattern\+Store\+Type \&value)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Pattern\+Store\+Type$>$ void {\bf Pattern\+Store\+Value\+Handler}$<$ Pattern\+Store\+Type $>$\+::read (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{Pattern\+Store\+Type \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternStoreValueHandler_a1ee31fd587f60c2c10200581724fbee6}
+
+
+Implements \hyperlink{classAbstractValueHandler_ac7921fae157361b054e467bf96785654}{Abstract\+Value\+Handler$<$ Pattern\+Store\+Type $>$}.
+
+\hypertarget{classPatternStoreValueHandler_ac976813f02dcad60eb8cb700c6ba0753}{}\index{Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}!tostring@{tostring}}
+\index{tostring@{tostring}!Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}}
+\subsubsection[{tostring(\+Pattern\+Store\+Type \&value)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Pattern\+Store\+Type$>$ virtual std\+::string {\bf Pattern\+Store\+Value\+Handler}$<$ Pattern\+Store\+Type $>$\+::tostring (
+\begin{DoxyParamCaption}
+\item[{Pattern\+Store\+Type \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternStoreValueHandler_ac976813f02dcad60eb8cb700c6ba0753}
+
+
+Implements \hyperlink{classAbstractValueHandler_a8e56e3bbccc464a47a666352249e6a1b}{Abstract\+Value\+Handler$<$ Pattern\+Store\+Type $>$}.
+
+\hypertarget{classPatternStoreValueHandler_a64d152c70a8ffd4f5ffdb09abb570b2d}{}\index{Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}!write@{write}}
+\index{write@{write}!Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}}
+\subsubsection[{write(std\+::ostream $\ast$out, Pattern\+Store\+Type \&value)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Pattern\+Store\+Type$>$ void {\bf Pattern\+Store\+Value\+Handler}$<$ Pattern\+Store\+Type $>$\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out, }
+\item[{Pattern\+Store\+Type \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternStoreValueHandler_a64d152c70a8ffd4f5ffdb09abb570b2d}
+
+
+Implements \hyperlink{classAbstractValueHandler_aecd2820bc132f8065babbec5cd7458b8}{Abstract\+Value\+Handler$<$ Pattern\+Store\+Type $>$}.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classPatternStoreValueHandler_ad61eccf1c00feb4a743e977f2378768f}{}\index{Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}!indexed@{indexed}}
+\index{indexed@{indexed}!Pattern\+Store\+Value\+Handler@{Pattern\+Store\+Value\+Handler}}
+\subsubsection[{indexed}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Pattern\+Store\+Type$>$ const bool {\bf Pattern\+Store\+Value\+Handler}$<$ Pattern\+Store\+Type $>$\+::indexed = false\hspace{0.3cm}{\ttfamily [static]}}\label{classPatternStoreValueHandler_ad61eccf1c00feb4a743e977f2378768f}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{patternstore_8h}{patternstore.\+h}\end{DoxyCompactItemize}

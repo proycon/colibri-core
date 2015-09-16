@@ -1,0 +1,47 @@
+\hypertarget{bz2stream_8h}{}\section{include/bz2stream.h File Reference}
+\label{bz2stream_8h}\index{include/bz2stream.\+h@{include/bz2stream.\+h}}
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$cstdlib$>$}\\*
+{\ttfamily \#include $<$cstring$>$}\\*
+{\ttfamily \#include $<$istream$>$}\\*
+{\ttfamily \#include $<$ostream$>$}\\*
+{\ttfamily \#include $<$stdexcept$>$}\\*
+{\ttfamily \#include $<$streambuf$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$bzlib.\+h$>$}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classbz2outbuf}{bz2outbuf}
+\begin{DoxyCompactList}\small\item\em A stream buffer which takes any form of input, compresses it using the bz2 algorithm and writes it to another stream buffer. \end{DoxyCompactList}\item 
+class \hyperlink{classbz2ostream}{bz2ostream}
+\begin{DoxyCompactList}\small\item\em An output stream compressing all data with the bz2 algorithm. \end{DoxyCompactList}\item 
+class \hyperlink{classbz2inbuf}{bz2inbuf}
+\begin{DoxyCompactList}\small\item\em A stream buffer reading from another stream buffer and decompressing the read data using the bz2 algorithm. \end{DoxyCompactList}\item 
+class \hyperlink{classbz2istream}{bz2istream}
+\begin{DoxyCompactList}\small\item\em An input stream decompressing data compressed with the bz2 algorithm. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void $\ast$($\ast$ \hyperlink{bz2stream_8h_ad84a886ecf0c0c00445cdd219beb6a7b}{bzalloc\+\_\+ptr}) (void $\ast$opaque, int n, int m)
+\begin{DoxyCompactList}\small\item\em A pointer to a custom memory allocation function, to be used by libbzip2. \end{DoxyCompactList}\item 
+typedef void($\ast$ \hyperlink{bz2stream_8h_a3ae1e0ffde629a32e954abecc8cd7bb2}{bzfree\+\_\+ptr}) (void $\ast$opaque, void $\ast$p)
+\begin{DoxyCompactList}\small\item\em A pointer to a custom memory deallocation function, to be used by libbzip2. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{bz2stream_8h_ad84a886ecf0c0c00445cdd219beb6a7b}{}\index{bz2stream.\+h@{bz2stream.\+h}!bzalloc\+\_\+ptr@{bzalloc\+\_\+ptr}}
+\index{bzalloc\+\_\+ptr@{bzalloc\+\_\+ptr}!bz2stream.\+h@{bz2stream.\+h}}
+\subsubsection[{bzalloc\+\_\+ptr}]{\setlength{\rightskip}{0pt plus 5cm}typedef void$\ast$($\ast$ bzalloc\+\_\+ptr) (void $\ast$opaque, int n, int m)}\label{bz2stream_8h_ad84a886ecf0c0c00445cdd219beb6a7b}
+
+
+A pointer to a custom memory allocation function, to be used by libbzip2. 
+
+The opaque pointer specified in the class constructor is passed as first parameter. The function is expected to return a pointer to n $\ast$ m bytes of memory. Notice that this function should be declared as \textquotesingle{}extern \char`\"{}\+C\char`\"{}\textquotesingle{}. \hypertarget{bz2stream_8h_a3ae1e0ffde629a32e954abecc8cd7bb2}{}\index{bz2stream.\+h@{bz2stream.\+h}!bzfree\+\_\+ptr@{bzfree\+\_\+ptr}}
+\index{bzfree\+\_\+ptr@{bzfree\+\_\+ptr}!bz2stream.\+h@{bz2stream.\+h}}
+\subsubsection[{bzfree\+\_\+ptr}]{\setlength{\rightskip}{0pt plus 5cm}typedef void($\ast$ bzfree\+\_\+ptr) (void $\ast$opaque, void $\ast$p)}\label{bz2stream_8h_a3ae1e0ffde629a32e954abecc8cd7bb2}
+
+
+A pointer to a custom memory deallocation function, to be used by libbzip2. 
+
+The opaque pointer specified in the class constructor is passed as first parameter. The function is expected to free the memory pointed to by p. Notice that this function should be declared as \textquotesingle{}extern \char`\"{}\+C\char`\"{}\textquotesingle{}. 
