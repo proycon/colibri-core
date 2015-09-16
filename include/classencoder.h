@@ -34,11 +34,11 @@
  * Licensed under GPLv3
  *
  * @section DESCRIPTION
- * Corpus encoding
- *
+ * Class for encoding plain-text to binary class-encoded data
  */
 
 /**
+ * \brief Class for encoding plain-text to binary class-encoded data.
  * The ClassEncoder maintains a mapping of words to classes (integers). It allows a corpus
  * to be losslessly compressed by substituting words for classes. The classes
  * are distributed based on word frequency, with frequent words receiving a

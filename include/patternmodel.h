@@ -75,7 +75,7 @@ class NoSuchPattern: public std::exception {
 
 
 /**
- * Options for Pattern Model loading and training.
+ * \brief Options for Pattern Model loading and training.
  *
  * This class defines all kinds of parameters that can be set for loading and
  * training Pattern Models, it is passed to various constructors and methods.
@@ -202,7 +202,7 @@ typedef PatternMap<uint32_t,BaseValueHandler<uint32_t>,uint64_t>::iterator t_rel
 typedef PatternMap<double,BaseValueHandler<double>,uint64_t>::iterator t_relationmap_double_iterator; 
 
 /**
- * Basic read-only interface for pattern models, abstract base class.
+ * \brief Basic read-only interface for pattern models, abstract base class.
  */
 class PatternModelInterface: public PatternStoreInterface {
     public:
@@ -262,7 +262,7 @@ class PatternModelInterface: public PatternStoreInterface {
 
 
 /**
- * A pattern model based on an unordered set, does not hold data, only patterns.
+ * \brief A pattern model based on an unordered set, does not hold data, only patterns.
  * Very suitable for loading constraint models. 
  */
 class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface {
@@ -482,7 +482,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
 
 
 /**
- * A model mapping patterns to values. High-level interface.
+ * \brief A model mapping patterns to values, gigh-level interface.
  * @tparam ValueType The type of Value this model stores
  * @tparam ValueHandler A handler class for this type of value
  * @tparam MapType The type of container to use
@@ -2010,7 +2010,8 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
 /**
- * An indexed model mapping patterns to values. High-level interface.
+ * \brief An indexed model mapping patterns to values, high-level interface.
+ * This is a specialised subclass of PatternMap.
  * @tparam MapType The type of container to use
  */
 template<class MapType = PatternMap<IndexedData,IndexedDataHandler>> 

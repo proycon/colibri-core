@@ -23,11 +23,19 @@
  * @section LICENSE
  * Licensed under GPLv3
  *
- * @section DESCRIPTION
- * Corpus decoding
+ * @section BRIEF
+ * Class for decoding binary class-encoded data back to plain-text
  *
  */
 
+/**
+ * \brief Class for decoding binary class-encoded data back to plain-text.
+ * The ClassEncoder maintains a mapping of classes (integers) to words. It allows decoding of a corpus
+ * that was losslessly compressed by substituting words for classes. The classes
+ * are distributed based on word frequency, with frequent words receiving a
+ * lower class number that can be represented in fewer bytes, and rare words
+ * receiving a higher class number.
+ */
 class ClassDecoder {
     private:
      std::unordered_map<unsigned int,std::string> classes;
