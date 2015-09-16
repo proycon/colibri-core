@@ -27,7 +27,9 @@
 #endif
 
 /**
- * @file
+ * @file classencoder.h
+ * \brief Class for encoding plain-text to binary class-encoded data.
+ *
  * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
  * 
  * @section LICENSE

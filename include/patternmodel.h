@@ -13,7 +13,9 @@
 *****************************/
 
 /**
- * @file
+ * @file patternmodel.h
+ * \brief Contains classes for Pattern Models.
+ *
  * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
  * 
  * @section LICENSE

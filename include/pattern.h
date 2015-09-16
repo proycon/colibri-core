@@ -30,16 +30,15 @@
 
 
 /**
- * @file
+ * @file pattern.h
+ * \brief Contains the Pattern class that is ubiquitous throughout Colibri Core.
+ *
  * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
  * 
  * @section LICENSE
  * Licensed under GPLv3
  *
  * @section DESCRIPTION
- * Contains the Pattern class that is ubiquitous throughout Colibri Core
- * 
- * @section BRIEF
  * Contains the Pattern class that is ubiquitous throughout Colibri Core
  *
  */

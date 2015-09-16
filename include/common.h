@@ -6,6 +6,19 @@
 #include <vector>
 #include <exception>
 
+/**
+ * @file common.h
+ * \brief Basic largely trivial functions for the common good.
+ *
+ * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
+ * 
+ * @section LICENSE
+ * Licensed under GPLv3
+ *
+ * @section DESCRIPTION
+ * Basic largely trivial functions for the common good.
+ */
+
 std::string trim(const std::string &t, const std::string &ws);
 std::string get_extension(const std::string& filename);
 bool strip_extension(std::string& filename, const std::string extension);

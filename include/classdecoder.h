@@ -17,20 +17,22 @@
 #include <fstream>
 
 /**
- * @file
+ * @file classdecoder.h
+ * \brief Class for decoding binary class-encoded data back to plain-text.
+ *
  * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
  * 
  * @section LICENSE
  * Licensed under GPLv3
  *
- * @section BRIEF
+ * @section DESCRIPTION
  * Class for decoding binary class-encoded data back to plain-text
  *
  */
 
 /**
  * \brief Class for decoding binary class-encoded data back to plain-text.
- * The ClassEncoder maintains a mapping of classes (integers) to words. It allows decoding of a corpus
+ * The ClassDecoder maintains a mapping of classes (integers) to words. It allows decoding of a corpus
  * that was losslessly compressed by substituting words for classes. The classes
  * are distributed based on word frequency, with frequent words receiving a
  * lower class number that can be represented in fewer bytes, and rare words

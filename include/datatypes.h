@@ -13,14 +13,34 @@
 #include "datatypes.h"
 #include "classdecoder.h"
 
+/**
+ * @file datatypes.h
+ * \brief Classes for data types and handlers for those data types. 
+ *
+ * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
+ * 
+ * @section LICENSE
+ * Licensed under GPLv3
+ *
+ * @section DESCRIPTION
+ * Classes for data types and handlers for those data types. They can be passes
+ * as template parameters to the various containers.
+ */
 
+/**
+ * \brief Reference to a position in the corpus.
+ */
 class IndexReference {
-    /* Reference to a position in the corpus */
    public:
     uint32_t sentence;
     uint16_t token;
     IndexReference() { sentence=0; token = 0; } 
+
+    /**
+     * Constructor for a reference to a position in the corpus, sentences (or whatever other unit delimits your data) start at 1, tokens start at 0
+     */
     IndexReference(uint32_t sentence, uint16_t token ) { this->sentence = sentence; this->token = token; }  
+
     IndexReference(std::istream * in) {
         in->read( (char*) &sentence, sizeof(uint32_t)); 
         in->read( (char*) &token, sizeof(uint16_t)); 
@@ -54,6 +74,10 @@ class IndexReference {
     }
 };
 
+/**
+ * \brief Collection of references to position in the corpus (IndexReference). 
+ * Used by Indexed Pattern models.
+ */
 class IndexedData {
    public:
     std::vector<IndexReference> data;
@@ -68,6 +92,10 @@ class IndexedData {
             return std::find(this->begin(), this->end(), ref) != this->end();
         }
     }
+
+    /**
+     * Returns the number of indices in the collection, i.e. the occurrence count.
+     */
     unsigned int count() const { return data.size(); }
 
     void insert(IndexReference ref) { data.push_back(ref); }
@@ -85,6 +113,9 @@ class IndexedData {
     iterator find(const IndexReference & ref) { return std::find(this->begin(), this->end(), ref); }
     const_iterator find(const IndexReference & ref) const { return std::find(this->begin(), this->end(), ref); }    
 
+    /**
+     * Returns a set of all unique sentences covered by this collection of references.
+     */
     std::set<int> sentences() const {
         std::set<int> sentences;
         for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -94,10 +125,16 @@ class IndexedData {
         return sentences;
     }
 
+    /**
+     * Conversion to std::set<IndexReference>
+     */
     std::set<IndexReference> set() const {
         return std::set<IndexReference>(this->begin(), this->end() );
     }
 
+    /**
+     * Sort the indices, in-place, in proper order of occurence
+     */
     void sort() {
         std::sort(this->begin(), this->end());
     }
@@ -114,14 +151,14 @@ class IndexedData {
 /************* ValueHandler for reading/serialising basic types ********************/
 
 
-/*
- * Value handler deal are interfaces to the values in Pattern Maps. They are
+/**
+ * \brief Abstract value handler class, all value handlers are derived from this.
+ * Value handlers are interfaces to the values in Pattern Maps. They are
  * used to abstract from the actual value data type and provide some common
  * methods required for all values, as well at methods for serialisation
  * from/to binary file. All are derived from the abstract class
  * AbstractValueHandler
 */
-
 template<class ValueType>
 class AbstractValueHandler {
    public:
@@ -135,8 +172,10 @@ class AbstractValueHandler {
     virtual void convertto(ValueType * source, ValueType* & target ) const { target = source; }; //this doesn't really convert as source and target are same type, but it is required!
 };
 
-// This templated class can be used for all numeric base types (such as int, uint16_t,
-// float, etc)
+/**
+ * \brief This templated class can be used for all numeric base types (such as int, uint16_t, float, etc).
+ * @tparam ValueType the actual numeric base type used
+ */
 template<class ValueType>
 class BaseValueHandler: public AbstractValueHandler<ValueType> {
    public:
@@ -167,6 +206,10 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
 /************* ValueHandler for reading/serialising indexed types ********************/
 
 
+/**
+ * \brief Data handler for IndexedData.
+ * Deals with serialisation from/to file and conversions.
+ */
 class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
    public:
     const static bool indexed = true;

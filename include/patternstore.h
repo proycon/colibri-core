@@ -23,14 +23,13 @@
 /***********************************************************************************/
 
 /**
- * @file
+ * @file patternstore.h
+ * \brief Contains lower-level containers for patterns.
+ *
  * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
  * 
  * @section LICENSE
  * Licensed under GPLv3
- *
- * @section BRIEF
- * Contains lower-level containers for patterns
  *
  * @section DESCRIPTION
  * Contains lower-level containers for patterns
