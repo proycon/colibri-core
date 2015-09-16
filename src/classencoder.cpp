@@ -194,15 +194,13 @@ void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<str
 }
 #endif
 
-void ClassEncoder::buildclasses(unordered_map<string,int> & freqlist) {
+void ClassEncoder::buildclasses(const unordered_map<string,int> & freqlist) {
 
         //sort by occurrence count  using intermediate representation
         multimap<const int, const string> revfreqlist;
-        for (unordered_map<string,int>::iterator iter = freqlist.begin(); iter != freqlist.end(); iter++) {
+        for (unordered_map<string,int>::const_iterator iter = freqlist.begin(); iter != freqlist.end(); iter++) {
         	revfreqlist.insert( pair<const int,const string>(-1 * iter->second, iter->first) );
         } 
-        
-        freqlist.clear();
         
         int cls = highestclass;
         for (multimap<const int,const string>::iterator iter = revfreqlist.begin(); iter != revfreqlist.end(); iter++) {
@@ -391,8 +389,8 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
 
 const int buildbuffersize = 65536;
 unsigned char buildbuffer[buildbuffersize];
-Pattern ClassEncoder::buildpattern(const std::string querystring, bool allowunknown,  bool autoaddunknown) { //not thread-safe
-	int buffersize = encodestring(querystring, buildbuffer, allowunknown, autoaddunknown);
+Pattern ClassEncoder::buildpattern(const std::string & patternstring, bool allowunknown,  bool autoaddunknown) { //not thread-safe
+	int buffersize = encodestring(patternstring, buildbuffer, allowunknown, autoaddunknown);
     if (buffersize > buildbuffersize) {
         cerr << "INTERNAL ERROR: Exceeded buildpattern buffer size" << endl;
         exit(2);
@@ -403,9 +401,9 @@ Pattern ClassEncoder::buildpattern(const std::string querystring, bool allowunkn
 
 
 
-Pattern ClassEncoder::buildpattern_safe(const std::string querystring, bool allowunknown,  bool autoaddunknown) { //thread-safe
+Pattern ClassEncoder::buildpattern_safe(const std::string & patternstring, bool allowunknown,  bool autoaddunknown) { //thread-safe
     unsigned char buffer[buildbuffersize];
-	int buffersize = encodestring(querystring, buffer, allowunknown, autoaddunknown);
+	int buffersize = encodestring(patternstring, buffer, allowunknown, autoaddunknown);
     if (buffersize > buildbuffersize) {
         cerr << "INTERNAL ERROR: Exceeded buildpattern buffer size" << endl;
         exit(2);

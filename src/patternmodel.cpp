@@ -19,7 +19,7 @@ int getmodeltype(const std::string filename) {
     return model_type;
 }
 
-/*
+/**
  * Computation of log likelihood  for a single pattern, accross corpora.
  *
  * Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (ACL 2000). 1-8 October 2000, Hong Kong, pp. 1 - 6: http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf
@@ -74,7 +74,7 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
 }
 
 
-/*
+/**
  * Computation of log likelihood between patterns in corpora
  *
  * Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (ACL 2000). 1-8 October 2000, Hong Kong, pp. 1 - 6: http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf

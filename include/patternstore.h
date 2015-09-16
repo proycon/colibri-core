@@ -23,6 +23,18 @@
 /***********************************************************************************/
 
 /**
+ * @file
+ * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
+ * 
+ * @section LICENSE
+ * Licensed under GPLv3
+ *
+ * @section DESCRIPTION
+ * Contains lower-level containers for patterns
+ *
+ */
+
+/**
  * This class corresponds to a single token in a corpus. It holds the token
  * class and the position.
  */

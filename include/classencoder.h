@@ -26,6 +26,25 @@
 #include "libfolia/folia.h"
 #endif
 
+/**
+ * @file
+ * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
+ * 
+ * @section LICENSE
+ * Licensed under GPLv3
+ *
+ * @section DESCRIPTION
+ * Corpus encoding
+ *
+ */
+
+/**
+ * The ClassEncoder maintains a mapping of words to classes (integers). It allows a corpus
+ * to be losslessly compressed by substituting words for classes. The classes
+ * are distributed based on word frequency, with frequent words receiving a
+ * lower class number that can be represented in fewer bytes, and rare words
+ * receiving a higher class number.
+ */
 class ClassEncoder {
     private:
      std::unordered_map<std::string,unsigned int> classes;
@@ -36,45 +55,157 @@ class ClassEncoder {
      unsigned int minlength;
      unsigned int maxlength;
     public:
+    /**
+     * Constructor for an empty ClassEncoder
+     * @param minlength Minimum supported length of words (default: 0)
+     * @param maxlength Maximum supported length of words (default: 0 = unlimited)
+     */
     ClassEncoder(const unsigned int minlength = 0, const unsigned int maxlength = 0);
-    ClassEncoder(const std::string &, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
-    void load(const std::string &, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
-    void build(const std::string & filename); //build a class from this dataset
-    void build(std::vector<std::string> & files, bool quiet=false); //build a class from this dataset
+
+    /**
+     * Constructor for a ClassEncoder read from file
+     * @param filename The filename  (*.colibri.cls)
+     * @param minlength Minimum supported length of words (default: 0)
+     * @param maxlength Maximum supported length of words (default: 0 = unlimited)
+     */
+    ClassEncoder(const std::string & filename, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
+
+    /**
+     * Load a class encoding from file
+     * @param filename The filename  (*.colibri.cls)
+     * @param minlength Minimum supported length of words (default: 0)
+     * @param maxlength Maximum supported length of words (default: 0 = unlimited)
+     */
+    void load(const std::string & filename, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
+    
+    /**
+     * Build a class encoding from a plain-text corpus
+     * @param filename A plain text corpus with the units of interest (e.g sentences) each on one line
+     */
+    void build(const std::string & filename); 
+
+    /**
+     * Build a class encoding from multiple plain-text corpus files
+     * @param files A list of plain text corpus files with the units of interest (e.g sentences) each on one line
+     * @param quiet If true, do not output progress to stderr (default: false)
+     */
+    void build(std::vector<std::string> & files, bool quiet=false); 
     
     //auxiliary functions called by build: first do processcorpus() for each
     //corpus, then call buildclasses() once when done:
-    void buildclasses(std::unordered_map<std::string,int> & freqlist);
+    //
+    
+    /**
+     * Assign classes based on the computed frequency list. This method should
+     * only be called once.
+     * @param freqlist The data structure that will contain the frequency list
+     */
+    void buildclasses(const std::unordered_map<std::string,int> & freqlist);
+
+    /**
+     * Count word frequency in a given plain-text corpus. 
+     * @param filename The corpus file
+     * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
+     */
     void processcorpus(const std::string & filename, std::unordered_map<std::string,int> & freqlist);
-    void processcorpus(std::istream * , std::unordered_map<std::string,int> & freqlist);
+    /**
+     * Count word frequency in a given plain-text corpus. 
+     * @param in The input stream
+     * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
+     */
+    void processcorpus(std::istream * in, std::unordered_map<std::string,int> & freqlist);
     #ifdef WITHFOLIA
+    /**
+     * Count word frequency in a given FoLiA corpus. 
+     * @param filename The corpus file (FoLiA XML)
+     * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
+     */
     void processfoliacorpus(const std::string & filename, std::unordered_map<std::string,int> & freqlist);
     #endif
 
     std::unordered_map<unsigned int, std::string> added;
     
 
+    /**
+     * Computes how many bytes the class repesentation for this input line would take
+     */
     int outputlength(const std::string & line);
+
+    /**
+     * Low-level function to encode a string of words as a binary representation of classes
+     * @param patternstring The string you want to turn into a Pattern
+     * @param outputbuffer Pointer to the output buffer, must be pre-allocated and have enough space
+     * @param allowunknown If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default: false)
+     * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)
+     * @return The number of bytes written to outputbuffer
+     */
     int encodestring(const std::string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown=false);
-    void encodefile(const std::string &, const std::string &, bool allowunknown, bool autoaddunknown=false, bool append=false, bool quiet=false);
+
+    /**
+     * Create a class-encoded corpus file from a plain-text corpus file. Each of the units of interest (e.g sentences) should occupy a single line (i.e., \n delimited)
+     * @param inputfilename Filename of the input file, a plain-text corpus file
+     * @param outputfilename Filename of the output file (binary class-encoded corpus file, *.colibri.dat)
+     * @param allowunknown If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default: false)
+     * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)
+     * @return The number of bytes written to outputbuffer
+     */
+    void encodefile(const std::string & inputfilename, const std::string & outputfilename, bool allowunknown, bool autoaddunknown=false, bool append=false, bool quiet=false);
+    /**
+     * Create a class-encoded corpus file from a plain-text corpus file. Each of the units of interest (e.g sentences) should occupy a single line (i.e., \n delimited)
+     * @param IN Input stream of a plain-text corpus file
+     * @param OUT Output stream of a binary class-encoded corpus file (*.colibri.dat)
+     * @param allowunknown If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default: false)
+     * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)
+     * @return The number of bytes written to outputbuffer
+     */
     void encodefile(std::istream * IN, std::ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet=false);
 
     std::vector<unsigned int> encodeseq(const std::vector<std::string> & seq);
     
-    Pattern buildpattern(const std::string, bool allowunknown=false, bool autoaddunknown = false);  //not thread-safe
-    Pattern buildpattern_safe(const std::string, bool allowunknown=false, bool autoaddunknown = false);  //thread-safe
+    /**
+     * Build a pattern from a string.
+     * **Note:** This function is not thread-safe! Use buildpattern_safe() instead if you need thread safety!
+     * @param patternstring The string you want to turn into a Pattern
+     * @param allowunknown If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default: false)
+     * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)
+     * @return a Pattern
+     */
+    Pattern buildpattern(const std::string & patternstring, bool allowunknown=false, bool autoaddunknown = false);  //not thread-safe
+    /**
+     * Build a pattern from a string (thread-safe variant, slightly slower due to buffer allocation)
+     * @param patternstring The string you want to turn into a Pattern
+     * @param allowunknown If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default: false)
+     * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)
+     * @return a Pattern
+     */
+    Pattern buildpattern_safe(const std::string &  patternstring, bool allowunknown=false, bool autoaddunknown = false);  //thread-safe
 
  
+    /**
+     * Add the word with the specified class to the class encoding
+     */
     void add(std::string, unsigned int cls);
     
-    unsigned int gethighestclass() { return highestclass; }
+    /**
+     * Returns the highest assigned class in the class encoding
+     */
+    unsigned int gethighestclass() { return highestclass; } 
     
+    /**
+     * Save the class encoding to file
+     */
     void save(const std::string & filename);
     
+    /**
+     * Returns the number of classes, i.e. word types
+     */
     int size() const {
         return classes.size();
     }
     
+    /**
+     * Return the class for the given word
+     */
     unsigned int operator[](const std::string & key) {
          return classes[key];
     }
