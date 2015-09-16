@@ -1,0 +1,26 @@
+---
+exclude: [bundle]
+defaults:
+   - 
+    scope:
+     path: ""
+     type: pages
+    values: 
+     layout: lamalayout
+     title: Colibri Core
+     author: Maarten van Gompel (proycon)
+     keywords: ngram, n-grams, nlp, frequency lists
+     description: Colibri Core is a set of tools as well as a C++ and Python library for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. 
+     lang: en
+     menu: 
+      - label: Home
+        url: https://proycon.github.io/colibri-core/
+      - label: Source
+        url: https://github.com/proycon/colibri-core/
+      - label: Documentation &amp; Python API
+        url: doc/ 
+      - label: C++ API
+        url: capi/html/
+      - label: Python Tutorial
+        url: doc/colibricore-python-tutorial.html
+---
