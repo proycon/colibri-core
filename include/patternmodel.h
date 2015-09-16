@@ -832,7 +832,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
             if (options.PRUNENONSUBSUMED) {
                 if (!options.QUIET) std::cerr << "Pruning non-subsumed n-grams"  << std::endl;
-                int begin_n = options.PRUNENONSUBSUMED+1;
+                int begin_n = options.PRUNENONSUBSUMED;
                 if ((begin_n > options.MAXLENGTH)) begin_n = options.MAXLENGTH;
                 for (int n = begin_n; n > 1; n--) {
                     std::unordered_set<Pattern> subsumed; 
