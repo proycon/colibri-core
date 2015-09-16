@@ -133,7 +133,7 @@ class ClassEncoder {
 
     /**
      * Low-level function to encode a string of words as a binary representation of classes
-     * @param patternstring The string you want to turn into a Pattern
+     * @param line The string you want to turn into a Pattern
      * @param outputbuffer Pointer to the output buffer, must be pre-allocated and have enough space
      * @param allowunknown If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default: false)
      * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)

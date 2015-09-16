@@ -289,7 +289,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         /**
          * Load a PatternSetModel from stream
          * @param options The options for loading
-         * @param contrainmodel Load only patterns that occur in this model
+         * @param constrainmodel Load only patterns that occur in this model
          */
         PatternSetModel(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { 
             totaltokens = 0;
@@ -305,7 +305,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * Load a PatternSetModel from file
          * @param filename The name of the file to load
          * @param options The options for loading
-         * @param contrainmodel Load only patterns that occur in this model
+         * @param constrainmodel Load only patterns that occur in this model
          */
         PatternSetModel(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { 
             totaltokens = 0;
@@ -341,7 +341,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * Load a PatternSetModel from file
          * @param filename The name of the file to load
          * @param options The options for loading
-         * @param contrainmodel Load only patterns that occur in this model
+         * @param constrainmodel Load only patterns that occur in this model
          */
         virtual void load(std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
             if (!options.QUIET) std::cerr << "Loading " << filename << " as set-model" << std::endl;
@@ -358,7 +358,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         /**
          * Load a PatternSetModel from stream
          * @param options The options for loading
-         * @param contrainmodel Load only patterns that occur in this model
+         * @param constrainmodel Load only patterns that occur in this model
          */
         virtual void load(std::istream * f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             char null;
@@ -702,9 +702,9 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         /**
          * Train a pattern model on corpus data (given an input stream)
-         * @param f The input stream of the corpus data (*.colibri.dat)
+         * @param in The input stream of the corpus data (*.colibri.dat)
          * @param options Options for training
-         * @param constrainmodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+         * @param constrainbymodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          */
         virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
             if (options.MINTOKENS == -1) options.MINTOKENS = 2;
@@ -952,7 +952,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * Train a pattern model on corpus data
          * @param filename The filename of the corpus data (*.colibri.dat)
          * @param options Options for training
-         * @param constrainmodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+         * @param constrainbymodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          */
         virtual void train(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL) {
             if ((filename.size() > 3) && (filename.substr(filename.size()-3) == ".bz2")) {
@@ -1529,7 +1529,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * is called during training at every time an instance of a pattern is found in the data.
          * @param pattern The pattern to add
          * @param value A pointer to the value for this pattern, what kind of value depends on the ValueType template parameter.
-         * @param IndexReference The position in the corpus where the patterns occurs
+         * @param ref The position in the corpus where the patterns occurs
          */
         virtual void add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
             if (value == NULL) {
@@ -2508,7 +2508,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     /**
      * Returns all patterns in the model that are subsumed by the specified pattern. Subsumed patterns are smaller than the subsuming pattern. Every n-gram (except unigram) by definition subsumes two n-1-grams. 
-    * @param occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+    * @param occurrencethreshold If set above zero, filters to only include patterns occurring above this threshold
     * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
     * @param size Set to any value above zero to only include patterns of the specified length.
     * @return a relation map
@@ -2572,7 +2572,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     /**
      * Returns all patterns in the model that subsume the specified pattern. Subsuming patterns are larger than the subsuming pattern. Every n-gram (except unigram) by definition subsumes two n-1-grams. 
-    * @param occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+    * @param occurrencethreshold If set above zero, filters to only include patterns occurring above this threshold
     * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
     * @param size Set to any value above zero to only include patterns of the specified length.
     * @return a relation map
@@ -2632,7 +2632,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     /**
      * Returns all patterns in the model that directly neighbour the given pattern at the left side
-    * @param occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+    * @param occurrencethreshold If set above zero, filters to only include patterns occurring above this threshold
     * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
     * @param size Set to any value above zero to only include patterns of the specified length.
     * @return a relation map
@@ -2674,7 +2674,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     /**
      * Returns all patterns in the model that directly neighbour the given pattern at the right side
-    * @param occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+    * @param occurrencethreshold If set above zero, filters to only include patterns occurring above this threshold
     * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
     * @param size Set to any value above zero to only include patterns of the specified length.
     * @return a relation map
@@ -2799,7 +2799,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     /**
      * Returns all patterns in the model that co-occur with the given pattern in the same sentence and appear to the right of the given pattern 
-    * @param occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+    * @param occurrencethreshold If set above zero, filters to only include patterns occurring above this threshold
     * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
     * @param size Set to any value above zero to only include patterns of the specified length.
     * @return a relation map
@@ -2843,7 +2843,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     /**
      * Returns all patterns in the model that co-occur with the given pattern in the same sentence and appear to the left of the given pattern 
-    * @param occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+    * @param occurrencethreshold If set above zero, filters to only include patterns occurring above this threshold
     * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
     * @param size Set to any value above zero to only include patterns of the specified length.
     * @return a relation map
@@ -2885,7 +2885,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     /**
      * Returns all patterns in the model that co-occur with the given pattern in the same sentence 
-    * @param occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+    * @param occurrencethreshold If set above zero, filters to only include patterns occurring above this threshold
     * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
     * @param size Set to any value above zero to only include patterns of the specified length.
     * @param ordersignificant If set to true, each co-occuring pair will occur at least once in the result, if false (default) it will appear twice, once in A,B form and once in B,A form.
