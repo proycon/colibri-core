@@ -185,7 +185,17 @@ class PatternModelOptions {
 
 };
 
+/**
+ * A relationmap is just a pattern map, the map is specific for a pattern and
+ * holds patterns that are in a relation with the  first pattern. The value of
+ * the map is an integer that expresses how often the relationship occurs.
+ */
 typedef PatternMap<uint32_t,BaseValueHandler<uint32_t>,uint64_t> t_relationmap; 
+/**
+ * A relationmap_double is just a pattern map, the map is specific for a pattern and
+ * holds patterns that are in a relation with the  first pattern. The value of
+ * the map is an double that expresses the weight of the relation.
+ */
 typedef PatternMap<double,BaseValueHandler<double>,uint64_t> t_relationmap_double;
 
 typedef PatternMap<uint32_t,BaseValueHandler<uint32_t>,uint64_t>::iterator t_relationmap_iterator;  //needed for Cython
@@ -404,7 +414,8 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         }
 
         /**
-         * Write a PatternSetModel to an output file
+         * Write a PatternSetModel to an output file. This is a wrapper around
+         * write(std::ostream *)
          */
         void write(const std::string filename) {
             std::ofstream * out = new std::ofstream(filename.c_str());
@@ -435,39 +446,68 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         typedef typename PatternSet<uint64_t>::iterator iterator;
         typedef typename PatternSet<uint64_t>::const_iterator const_iterator;        
 
+        /**
+         * Return the maximum length of patterns in this model
+         */
         virtual int maxlength() const { return maxn; };
+
+        /**
+         * Return the minimum length of patterns in this model
+         */
         virtual int minlength() const { return minn; };
         
+        /**
+         * Returns the total amount of unigram/word types in the original corpus,
+         * includes types not covered by the model!
+         */
         virtual unsigned int types()  { 
             return totaltypes;
         }
+        /**
+         * Returns the total amount of tokens in the original corpus,
+         * includes tokens not covered by the model!
+         */
         virtual unsigned int tokens() const { return totaltokens; }
 
+        /**
+         * Returns the type of the model, value is of the PatternType
+         * enumeration.
+         */
         unsigned char type() const { return model_type; }
+        /**
+         * Returns the version of the model's implementation and binary serialisation format.
+         */
         unsigned char version() const { return model_version; }
 };
 
+
+/**
+ * A model mapping patterns to values. High-level interface.
+ * @tparam ValueType The type of Value this model stores
+ * @tparam ValueHandler A handler class for this type of value
+ * @tparam MapType The type of container to use
+ */
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class MapType = PatternMap<ValueType, BaseValueHandler<ValueType>>>
 class PatternModel: public MapType, public PatternModelInterface {
     protected:
         unsigned char model_type;
         unsigned char model_version;
-        uint64_t totaltokens; //INCLUDES TOKENS NOT COVERED BY THE MODEL!
-        uint64_t totaltypes; //TOTAL UNIGRAM TYPES, INCLUDING NOT COVERED BY THE MODEL!
+        uint64_t totaltokens; ///< Total number of tokens in the original corpus, so INCLUDES TOKENS NOT COVERED BY THE MODEL!
+        uint64_t totaltypes; ///< Total number of unigram/word types in the original corpus, SO INCLUDING NOT COVERED BY THE MODEL!
 
-        int maxn; 
+        int maxn;
         int minn; 
         
         //std::multimap<IndexReference,Pattern> reverseindex; 
         std::set<int> cache_categories;
         std::set<int> cache_n;
-        std::map<int,std::map<int,unsigned int>> cache_grouptotal; //total occurrences (used for frequency computation, within a group)
-        std::map<int,std::map<int,unsigned int>> cache_grouptotalpatterns ; //total distinct patterns per group
-        std::map<int,std::map<int,unsigned int>> cache_grouptotalwordtypes; //total covered word types per group
-        std::map<int,std::map<int,unsigned int>> cache_grouptotaltokens; //total covered tokens per group
+        std::map<int,std::map<int,unsigned int>> cache_grouptotal; ///< total occurrences (used for frequency computation, within a group)
+        std::map<int,std::map<int,unsigned int>> cache_grouptotalpatterns ; ///< total distinct patterns per group
+        std::map<int,std::map<int,unsigned int>> cache_grouptotalwordtypes; ///< total covered word types per group
+        std::map<int,std::map<int,unsigned int>> cache_grouptotaltokens; ///< total covered tokens per group
         
 
-        std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf;
+        std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf; ///< pre-computed structure of possible gap configurations various pattern lengths
 
         virtual void postread(const PatternModelOptions options) {
             //this function has a specialisation specific to indexed pattern models,
@@ -485,10 +525,13 @@ class PatternModel: public MapType, public PatternModelInterface {
             //sort indices
         }
     public:
-        IndexedCorpus * reverseindex;
-        bool externalreverseindex; //true if reverse index was loaded externally and passed to the model (implies it won't be destroyed when the model is) //only used by IndexedPatternModel but stored here to ease things for cython
-        bool hasskipgrams;
+        IndexedCorpus * reverseindex; ///< Pointer to the reverse index for this model (or NULL)
+        bool externalreverseindex; ///< true if reverse index was loaded externally and passed to the model (implies it won't be destroyed when the model is) //only used by IndexedPatternModel but stored here to ease things for cython
+        bool hasskipgrams; ///< Does this model have skipgrams?
 
+        /**
+         * Begin a new pattern model, optionally pre-setting a reverseindex.
+         */
         PatternModel<ValueType,ValueHandler,MapType>(IndexedCorpus * corpus = NULL) {
             totaltokens = 0;
             totaltypes = 0;
@@ -504,7 +547,15 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
             this->externalreverseindex = true;
         }
-        PatternModel<ValueType,ValueHandler,MapType>(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) { //load from file
+
+        /**
+         * Read a pattern model from an input stream
+         * @param f The input stream
+         * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+         * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+         * @param corpus Pointer to the loaded corpus, used as a reverse index.
+         */
+        PatternModel<ValueType,ValueHandler,MapType>(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -521,6 +572,13 @@ class PatternModel: public MapType, public PatternModelInterface {
             this->externalreverseindex = true;
         }
 
+        /**
+         * Read a pattern model from file
+         * @param filename The input filename
+         * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+         * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+         * @param corpus Pointer to the loaded corpus, used as a reverse index.
+         */
         PatternModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) { //load from file
             //IndexedPatternModel will overload this
             totaltokens = 0;
@@ -547,12 +605,26 @@ class PatternModel: public MapType, public PatternModelInterface {
             delete in;
         }
 
+
+        /**
+        * Returns the type of model (a value from ModelType)
+        */
         virtual int getmodeltype() const { return UNINDEXEDPATTERNMODEL; }
+        /**
+         * Returns the version of the model implementation and binary serialisation format
+         */
         virtual int getmodelversion() const { return 1; }
 
+        /**
+         * Returns the number of distinct patterns in the model
+         */
         virtual size_t size() const {
             return MapType::size();
         }
+
+        /**
+         * Checks whether the given pattern occurs in the model
+         */
         virtual bool has(const Pattern & pattern) const {
             return MapType::has(pattern);
         }
@@ -560,6 +632,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             return MapType::has(pattern);
         }
         
+        /**
+         * Read a pattern model from file
+         * @param filename The input filename
+         * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+         * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+         */
         virtual void load(std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
@@ -572,6 +650,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             delete in;
         }
 
+        /**
+         * Read a pattern model from an input stream
+         * @param f The input stream
+         * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+         * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+         */
         virtual void load(std::istream * f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             char null;
             f->read( (char*) &null, sizeof(char));        
@@ -609,10 +693,19 @@ class PatternModel: public MapType, public PatternModelInterface {
             this->postread(options);
         }
 
+        /**
+         * Returns a more generic but limited PatternModelInterface instance (polymorphism)
+         */
         PatternModelInterface * getinterface() {
             return (PatternModelInterface*) this;
         }
 
+        /**
+         * Train a pattern model on corpus data (given an input stream)
+         * @param f The input stream of the corpus data (*.colibri.dat)
+         * @param options Options for training
+         * @param constrainmodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+         */
         virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
             if (options.MINTOKENS == -1) options.MINTOKENS = 2;
             if (options.MINTOKENS == 0)  options.MINTOKENS = 1;
@@ -721,7 +814,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             iter->first.ngrams(subngrams,1); //get all unigrams
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                                 //check if unigram reaches threshold
-                                if (this->occurrencecount(*iter2) < options.MINTOKENS_UNIGRAMS) { 
+                                if (this->occurrencecount(*iter2) < (unsigned int) options.MINTOKENS_UNIGRAMS) { 
                                     found = false;
                                     break;
                                 }
@@ -840,7 +933,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     PatternModel::iterator iter = this->begin(); 
                     while (iter != this->end()) {
                         const unsigned int pattern_n = iter->first.n();
-                        if (pattern_n == n) {
+                        if (pattern_n == (unsigned int) n) {
                             subngrams.clear();
                             iter->first.ngrams(subngrams, n-1);
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) subsumed.insert(Pattern(*iter2));
@@ -855,6 +948,12 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
+        /**
+         * Train a pattern model on corpus data
+         * @param filename The filename of the corpus data (*.colibri.dat)
+         * @param options Options for training
+         * @param constrainmodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+         */
         virtual void train(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL) {
             if ((filename.size() > 3) && (filename.substr(filename.size()-3) == ".bz2")) {
                 std::ifstream * in = new std::ifstream(filename.c_str(), std::ios::in|std::ios::binary);
@@ -871,9 +970,10 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
-
-
-        
+        /**
+         * Low-level function to compute skipgrams for a given pattern . See
+         * higher-level function instead
+         */
         virtual int computeskipgrams(const Pattern & pattern, int mintokens = 2,  const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, std::vector<Pattern> * targetcontainer = NULL,  const bool exhaustive = false, const bool DEBUG = false) {
 
             //if targetcontainer is NULL, skipgrams will be added to the model,
@@ -1014,11 +1114,18 @@ class PatternModel: public MapType, public PatternModelInterface {
             return foundskipgrams;
         }
 
+        /**
+         * Low-level function to compute skipgrams for a given pattern. See trainskipgrams() instead.
+         */
         virtual int computeskipgrams(const Pattern & pattern, PatternModelOptions & options ,  const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, const bool exhaustive = false) { //backward compatibility
             if (options.MINTOKENS_SKIPGRAMS < options.MINTOKENS) options.MINTOKENS_SKIPGRAMS = options.MINTOKENS;
             return computeskipgrams(pattern, options.MINTOKENS_SKIPGRAMS, singleref, multiplerefs, constrainbymodel, NULL, exhaustive, options.DEBUG);
         }
 
+        /**
+        * Returns a vector of all skipgrams  that can be extracted from the
+        * tigven pattern
+         */
         virtual std::vector<Pattern> findskipgrams(const Pattern & pattern, unsigned int occurrencethreshold = 1) {
             //given the pattern, find all skipgrams in it that occur in the model
 
@@ -1028,6 +1135,9 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
+        /**
+         * Train skipgrams, for indexed models only
+         */
         virtual void trainskipgrams(const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) { 
             std::cerr << "Can not compute skipgrams on unindexed model (except exhaustively during train() )" << std::endl;
             throw InternalError();
@@ -1038,6 +1148,9 @@ class PatternModel: public MapType, public PatternModelInterface {
         // remaining fragments are 'uncovered'
         void test(MapType & target, std::istream * in);
 
+        /**
+         * Write the pattern model to output stream
+         */
         void write(std::ostream * out) {
             const char null = 0;
             out->write( (char*) &null, sizeof(char));       
@@ -1051,6 +1164,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             MapType::write(out); //write PatternStore
         }
 
+        /**
+         * Save the entire pattern model to file
+         */
         void write(const std::string filename) {
             std::ofstream * out = new std::ofstream(filename.c_str());
             this->write(out);
@@ -1061,8 +1177,18 @@ class PatternModel: public MapType, public PatternModelInterface {
         typedef typename MapType::iterator iterator;
         typedef typename MapType::const_iterator const_iterator;        
 
+        /**
+         * Returns the maximum length of patterns in this model
+         */
         virtual int maxlength() const { return this->maxn; };
+        /**
+         * Returns the minimum length of patterns in this model
+         */
         virtual int minlength() const { return this->minn; };
+        /**
+         * Returns the occurrenc count of the specified pattern, will return 0
+         * if it does not exist in the model
+         */
         virtual unsigned int occurrencecount(const Pattern & pattern)  { 
             ValueType * data = getdata(pattern);
             if (data != NULL) {
@@ -1072,6 +1198,10 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
         
+        /**
+         * Get the value stored for the specified pattern.
+         * @param makeifnew Add the pattern with empty value if it does not exist (default: false)
+         **/
         virtual ValueType * getdata(const Pattern & pattern, bool makeifnew=false) { 
             typename MapType::iterator iter = this->find(pattern);
             if (iter != this->end()) {
@@ -1095,11 +1225,17 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
 
+        /**
+         * Return the total amount of word/unigram types in the model
+         */
         virtual unsigned int types() { 
             if ((totaltypes == 0) && (!this->data.empty())) totaltypes = this->totalwordtypesingroup(0, 0);
             return totaltypes; 
         }
 
+        /**
+         * Return the total amount of word/unigram tokens in the model
+         */
         virtual unsigned int tokens() const { return totaltokens; }
 
         unsigned char type() const { return model_type; }
@@ -1108,14 +1244,30 @@ class PatternModel: public MapType, public PatternModelInterface {
         void output(std::ostream *);
         
         
+        /**
+         * Returns the coverage count for the given pattern, for unindexed
+         * models, the coverage count is a mere maximum projection equal to the
+         * product of the occurence count and the size.
+         */
         unsigned int coveragecount(const Pattern &  key) {
            return this->occurrencecount(key) * key.size();
         }
+        /**
+         * Return coverage as a fraction of the total number of tokens in the
+         * model. For unindexed models this is a maximal projection rather than
+         * exact number.
+         */
         double coverage(const Pattern & key) {
             return this->coveragecount(key) / (double) this->tokens();
         }
        
-
+        /**
+         * Given a position in the corpus , return a vector of all the patterns that cover this position.
+         * @pattern ref The position in the corpus
+         * @pattern occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+         * @pattern category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
+         * @pattern size Set to any value above zero to only include patterns of the specified length.
+         */
         std::vector<Pattern> getreverseindex(const IndexReference ref, int occurrencecount = 0, int category = 0, unsigned int size = 0) {
             //Auxiliary function
             std::vector<Pattern> result;
@@ -1171,6 +1323,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             return result;
         }*/
 
+        /**
+         * Returns pairs of positions and patterns, consisting of all patterns
+         * found in the specified sentence (or whatever unit delimites your
+         * corpus)
+         * @param sentence The sentence index (starts at 1)
+         */
         std::vector<std::pair<IndexReference,Pattern>> getreverseindex_bysentence(int sentence) {
             //Auxiliary function
             std::vector<std::pair<IndexReference,Pattern>> result;
@@ -1185,6 +1343,10 @@ class PatternModel: public MapType, public PatternModelInterface {
             return result;
         }
 
+        /**
+         * Given a position in the corpus , return a vector of all the positions and patterns (as pairs) that occur to the right of this position
+         * @pattern ref The position in the corpus
+         */
         std::vector<std::pair<IndexReference,Pattern>> getreverseindex_right(const IndexReference ref) {
             //Auxiliary function
             std::vector<std::pair<IndexReference,Pattern>> result;
@@ -1199,6 +1361,10 @@ class PatternModel: public MapType, public PatternModelInterface {
             return result;
         }
 
+        /**
+         * Given a position in the corpus , return a vector of all the positions and patterns (as pairs) that occur to the left of this position
+         * @pattern ref The position in the corpus
+         */
         std::vector<std::pair<IndexReference,Pattern>> getreverseindex_left(const IndexReference ref) {
             //Auxiliary function
             std::vector<std::pair<IndexReference,Pattern>> result;
@@ -1213,6 +1379,11 @@ class PatternModel: public MapType, public PatternModelInterface {
             return result;
         }
 
+        /**
+         * Compute statistics on the model, will generally be called
+         * automatically by methods who use it, and the statistics are cached
+         * after computation.
+         */
         void computestats() {
             cache_categories.clear();
             cache_n.clear();
@@ -1247,6 +1418,11 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
         
 
+        /**
+         * Compute coverage statistics on the model, will generally be called
+         * automatically by methods who use it, and the statistics are cached
+         * after computation.
+         */
         virtual void computecoveragestats() {
             if ((cache_grouptotal.empty()) && (!this->data.empty())) this->computestats();
             //bool hasunigrams = false;
@@ -1293,24 +1469,44 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
         
 
+        /**
+         * Obtains statistics of the model: returns the total amount of occurrences within the specified group, the group consist of a category and a size.
+         * @pattern category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) or to 0 to cover all
+         * @pattern n Set to any value above zero to only cover only patterns of the specified length. (0 for all sizes)
+         */
         unsigned int totaloccurrencesingroup(int category, int n) {
             //category and n can be set to 0 to loop over all
             if ((cache_grouptotal.empty()) && (!this->data.empty())) this->computestats();
             return cache_grouptotal[category][n];
         }
 
+        /**
+         * Obtains statistics of the model: returns the total amount of distinct patterns within the specified group, the group consist of a category and a size.
+         * @pattern category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) or to 0 to cover all
+         * @pattern n Set to any value above zero to only cover only patterns of the specified length. (0 for all sizes)
+         */
         unsigned int totalpatternsingroup(int category, int n) {
             //category and n can be set to 0 to loop over all
             if ((cache_grouptotalpatterns.empty()) && (!this->data.empty())) this->computestats();
             return cache_grouptotalpatterns[category][n];
         }
 
+        /**
+         * Obtains statistics of the model: returns the total amount of word/unigtams types within the specified group, the group consist of a category and a size.
+         * @pattern category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) or to 0 to cover all
+         * @pattern n Set to any value above zero to only cover only patterns of the specified length. (0 for all sizes)
+         */
         unsigned int totalwordtypesingroup(int category, int n) {
             //total covered word/unigram types
             //category and n can be set to 0 to loop over all
             if ((cache_grouptotalwordtypes.empty()) && (!this->data.empty())) this->computecoveragestats();
             return cache_grouptotalwordtypes[category][n];
         }
+        /**
+         * Obtains statistics of the model: returns the total amount of covered tokens within the specified group, the group consist of a category and a size.
+         * @pattern category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) or to 0 to cover all
+         * @pattern n Set to any value above zero to only cover only patterns of the specified length. (0 for all sizes)
+         */
         unsigned int totaltokensingroup(int category, int n) {
             //total COVERED tokens
             //category and n can be set to 0 to loop over all
@@ -1318,6 +1514,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             return cache_grouptotaltokens[category][n];
         }
         
+        /**
+         * Returns the frequency of a pattern within its own group (category and size). For instance, if you pass a bigram you will get the occurence count as a fraction of the total occurrences of bigrams.
+         */
         double frequency(const Pattern & pattern) {
             //frequency within the same n and category class
             return this->occurrencecount(pattern) / (double) totaloccurrencesingroup(pattern.category(),pattern.n());
@@ -1325,6 +1524,13 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
 
+        /**
+         * Add a pattern, with a given position, and a value to the model. This
+         * is called during training at every time an instance of a pattern is found in the data.
+         * @param pattern The pattern to add
+         * @param value A pointer to the value for this pattern, what kind of value depends on the ValueType template parameter.
+         * @param IndexReference The position in the corpus where the patterns occurs
+         */
         virtual void add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
             if (value == NULL) {
                 std::cerr << "Add() value is NULL!" << std::endl;
@@ -1340,6 +1546,14 @@ class PatternModel: public MapType, public PatternModelInterface {
             this->valuehandler.add(value, ref);
         }
 
+        /**
+         * Prune all patterns under the specified occurrence threshold (or -1
+         * for all). Pruning can be limited to patterns of a particular size
+         * only.
+         * @param threshold The occurrence threshold (set to -1 to prune everything)
+         * @param _n The size constraint, limit to patterns of this size only (set to 0 for no constraint, default)
+         * @return the number of distinct patterns pruned
+         */
         unsigned int prune(int threshold,int _n=0) {
             //prune all patterns under the specified threshold (set -1 for
             //all) and of the specified length (set _n==0 for all)
@@ -1361,6 +1575,14 @@ class PatternModel: public MapType, public PatternModelInterface {
             return pruned;
         }
 
+        /**
+         * Prune all skipgrams under the specified occurrence threshold (or -1
+         * for all). Pruning can be limited to patterns of a particular size
+         * only.
+         * @param threshold The occurrence threshold (set to -1 to prune everything)
+         * @param _n The size constraint, limit to patterns of this size only (set to 0 for no constraint, default)
+         * @return the number of distinct patterns pruned
+         */
         virtual unsigned int pruneskipgrams(unsigned int threshold, int minskiptypes=2, int _n = 0) {
             //NOTE: minskiptypes is completely ignored! that only works for indexed models
             unsigned int pruned = 0;
@@ -1381,8 +1603,13 @@ class PatternModel: public MapType, public PatternModelInterface {
             return pruned;
         }
 
+        /**
+         * Prune all patterns that are not in the specified set.
+         * @param s The set containing the patterns not to prune
+         * @param _n The size constraint, limit to patterns of this size only (set to 0 for no constraint, default)
+         * @return the number of distinct patterns pruned
+         */
         unsigned int prunenotinset(const std::unordered_set<Pattern> & s, int _n) {
-            //prune all non-subsumed patterns given a pre-computed set of subsumed patterns
             unsigned int pruned = 0;
             if (s.empty()) {
                 return pruned;
@@ -1404,6 +1631,10 @@ class PatternModel: public MapType, public PatternModelInterface {
             return pruned;
         }
 
+        /**
+         * Prune all patterns that are not in the second model
+         * @return the number of distinct patterns pruned
+         */
         template<class ValueType2,class ValueHandler2,class MapType2>
         unsigned int prunebymodel(PatternModel<ValueType2,ValueHandler2,MapType2> & secondmodel) {
             //is not used by default when working with constraint models
@@ -1424,8 +1655,11 @@ class PatternModel: public MapType, public PatternModelInterface {
             return pruned;
         }
 
-
-        std::vector<std::pair<Pattern, int> > getpatterns(const Pattern & pattern) { //get all patterns in pattern that occur in the patternmodel
+        /**
+         * get all patterns in pattern that occur in the patternmodel as a
+         * vector of pairs of Patterns and occurrence count.
+         */
+        std::vector<std::pair<Pattern, int> > getpatterns(const Pattern & pattern) { 
             //get all patterns in pattern
             std::vector<std::pair<Pattern, int> > v;   
             std::vector<std::pair<Pattern, int> > ngrams;
@@ -1439,6 +1673,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             return v;
         }
 
+        /**
+         * Print the contents of the pattern model, i.e. all patterns and
+         * associated counts, to the output stream.
+         * @param out The output stream
+         * @param decoder The class decoder to use
+         */
         virtual void print(std::ostream * out, ClassDecoder & decoder) {
             bool haveoutput = false;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -1462,6 +1702,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
 
+        /**
+         * Print the full reverse index, a mapping of indices and all patterns
+         * that occur at those positions.
+         * @param out The output stream
+         * @param decoder The class decoder to use
+         */
         virtual void printreverseindex(std::ostream * out, ClassDecoder & decoder) {
             if (!this->reverseindex) return;
             for (IndexedCorpus::iterator iter = reverseindex->begin(); iter != reverseindex->end(); iter++) {
@@ -1478,10 +1724,18 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
+        /**
+         * Just an alias for print()
+         */
         void printmodel(std::ostream * out, ClassDecoder & decoder) { //an alias because cython can't deal with a method named print
             this->print(out, decoder); 
         }
 
+        /**
+         * Print for one pattern only.
+         * @param out The output stream
+         * @param decoder The class decoder to use
+         */
         virtual void print(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool endline = true) {
             const std::string pattern_s = pattern.tostring(decoder);
             const unsigned int count = this->occurrencecount(pattern); 
@@ -1502,11 +1756,22 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
         
+        /**
+         * Alias for per-pattern print()
+         */
         void printpattern(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool endline = true) {  //another alias for cython who can't deal with methods named print
             return this->print(out,decoder,pattern,endline);
         }
 
 
+        /**
+         * Generate a histogram for the occurrence count of patterns
+         * @param hist This will contain the to-be-computed histogram
+         * @param threshold Include only patterns at or above this occurrence threshold
+         * @param cap Include only this many of the top frequencies (0=unconstrained)
+         * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to filter or to 0 to cover all
+         * @param size Set to any value above zero to only include only patterns of the specified length. (0 for all sizes)
+         */
         void histogram(std::map<unsigned int,unsigned int> & hist, unsigned int threshold = 0, unsigned int cap = 0, int category = 0, unsigned int size = 0) {
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern pattern = iter->first;
@@ -1539,9 +1804,17 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
-        void histogram(std::ostream * OUT, unsigned int threshold = 0, unsigned int cap = 0) {
+        /**
+         * Generate a histogram for the occurrence count of patterns and output it to the output stream.
+         * @param OUT the output stream
+         * @param threshold Include only patterns at or above this occurrence threshold
+         * @param cap Include only this many of the top frequencies (0=unconstrained)
+         * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to filter or to 0 to cover all
+         * @param size Set to any value above zero to only include only patterns of the specified length. (0 for all sizes)
+         */
+        void histogram(std::ostream * OUT, unsigned int threshold = 0, unsigned int cap = 0 , int category = 0, unsigned int size = 0) {
             std::map<unsigned int,unsigned int> hist;
-            histogram(hist);
+            histogram(hist,threshold,cap,category,size);
             *OUT << "HISTOGRAM" << std::endl;
             *OUT << "------------------------------" << std::endl;
             *OUT << "OCCURRENCES\tPATTERNS" << std::endl;
@@ -1550,6 +1823,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
 
+        /**
+         * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
+         */
         void info(std::ostream * OUT) {
             if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
                 *OUT << "Type: indexed" << std::endl;
@@ -1600,6 +1876,10 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
         }
 
+        /**
+         * Output an elaborate statistical report to the output stream.
+         * Computes on first call when necessary.
+         */
         void report(std::ostream * OUT) {
             if ((cache_grouptotaltokens.empty()) && (!this->data.empty())) {
                 std::cerr << "Computing statistics..." << std::endl;
@@ -1612,8 +1892,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                 *OUT << "            assuming no overlap at all!!! Use an indexed model for accurate coverage counts" << std::endl;
             }
             *OUT << "----------------------------------" << std::endl;
-            *OUT << "                          " << std::setw(10) << "PATTERNS" << std::setw(10) << "TOKENS" << std::setw(10) << "COVERAGE" << std::setw(10) << "TYPES" << std::setw(10) << std::endl;
-            *OUT << "Total:                    " << std::setw(10) << "-" << std::setw(10) << this->tokens() << std::setw(10) << "-" << std::setw(10) << this->types() <<  std::endl;
+            *OUT << "                          " << std::setw(15) << "PATTERNS" << std::setw(15) << "TOKENS" << std::setw(15) << "COVERAGE" << std::setw(15) << "TYPES" << std::setw(15) << std::endl;
+            *OUT << "Total:                    " << std::setw(15) << "-" << std::setw(15) << this->tokens() << std::setw(15) << "-" << std::setw(15) << this->types() <<  std::endl;
 
             unsigned int coveredtypes = totalwordtypesingroup(0,0);  //will also word when no unigrams in model
             unsigned int coveredtokens = totaltokensingroup(0,0);
@@ -1621,8 +1901,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (coveredtokens > this->tokens()) coveredtokens = this->tokens();
             unsigned int uncoveredtokens = this->tokens() - coveredtokens;
             if (uncoveredtokens < 0) uncoveredtokens = 0;
-            *OUT << "Uncovered:                " << std::setw(10) << "-" << std::setw(10) << uncoveredtokens << std::setw(10) << uncoveredtokens / (double) this->tokens() << std::setw(10) << this->types() - coveredtypes <<  std::endl;
-            *OUT << "Covered:                  " << std::setw(10) << this->size() << std::setw(10) << coveredtokens << std::setw(10) << coveredtokens / (double) this->tokens() <<  std::setw(10) << coveredtypes <<  std::endl << std::endl;
+            *OUT << "Uncovered:                " << std::setw(15) << "-" << std::setw(15) << uncoveredtokens << std::setw(15) << uncoveredtokens / (double) this->tokens() << std::setw(15) << this->types() - coveredtypes <<  std::endl;
+            *OUT << "Covered:                  " << std::setw(15) << this->size() << std::setw(15) << coveredtokens << std::setw(15) << coveredtokens / (double) this->tokens() <<  std::setw(15) << coveredtypes <<  std::endl << std::endl;
             
             
            
@@ -1635,39 +1915,39 @@ class PatternModel: public MapType, public PatternModelInterface {
                     if (cache_grouptotalpatterns[c].count(n)) {
                         if (!haveoutput) {
                             //output headers
-                            *OUT << std::setw(10) << "CATEGORY" << std::setw(10) << "N (SIZE) "<< std::setw(10) << "PATTERNS";
-                            if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) *OUT << std::setw(10) << "TOKENS" << std::setw(10) << "COVERAGE";
-                            *OUT << std::setw(10) << "TYPES" << std::setw(12) << "OCCURRENCES" << std::endl;
+                            *OUT << std::setw(15) << "CATEGORY" << std::setw(15) << "N (SIZE) "<< std::setw(15) << "PATTERNS";
+                            if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) *OUT << std::setw(15) << "TOKENS" << std::setw(15) << "COVERAGE";
+                            *OUT << std::setw(15) << "TYPES" << std::setw(15) << "OCCURRENCES" << std::endl;
                             haveoutput = true;
                         }
                         //category
                         if (c == 0) {
-                            *OUT << std::setw(10) << "all";
+                            *OUT << std::setw(15) << "all";
                         } else if (c == NGRAM) {
-                            *OUT << std::setw(10) << "n-gram";
+                            *OUT << std::setw(15) << "n-gram";
                         } else if (c == SKIPGRAM) {
-                            *OUT << std::setw(10) << "skipgram";
+                            *OUT << std::setw(15) << "skipgram";
                         } else if (c == FLEXGRAM) {
-                            *OUT << std::setw(10) << "flexgram";
+                            *OUT << std::setw(15) << "flexgram";
                         }
                         //size
                         if (n == 0) {
-                            *OUT << std::setw(10) << "all";
+                            *OUT << std::setw(15) << "all";
                         } else {
-                            *OUT << std::setw(10) << n;
+                            *OUT << std::setw(15) << n;
                         }
                         //patterns
-                        *OUT << std::setw(10) << cache_grouptotalpatterns[c][n];
+                        *OUT << std::setw(15) << cache_grouptotalpatterns[c][n];
                         if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) {
                             //tokens
-                            *OUT << std::setw(10) << cache_grouptotaltokens[c][n];
+                            *OUT << std::setw(15) << cache_grouptotaltokens[c][n];
                             //coverage
-                            *OUT << std::setw(10) << cache_grouptotaltokens[c][n] / (double) this->tokens();
+                            *OUT << std::setw(15) << cache_grouptotaltokens[c][n] / (double) this->tokens();
                         }
                         //types
-                        *OUT << std::setw(10) << cache_grouptotalwordtypes[c][n];
+                        *OUT << std::setw(15) << cache_grouptotalwordtypes[c][n];
                         //occurrences
-                        *OUT << std::setw(12) << cache_grouptotal[c][n] << std::endl;;
+                        *OUT << std::setw(15) << cache_grouptotal[c][n] << std::endl;;
                     }
                 }
             }
@@ -1685,11 +1965,13 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
         
 
+        /**
+         * Returns a PatternSet containing patterns of the specified length.
+         * Patterns are actively reconstructed from patterns in the model,
+         * if necessary. So this includes patterns that are not in the model
+         * explicitly (i.e, smaller patterns that have been pruned.
+         */
         PatternSet<uint64_t> extractset(int minlength = 1, int maxlength = 1) {
-            //Returns a PatternSet containing patterns of the specified length.
-            //Patterns are actively reconstructed from patterns in the model,
-            //if necessary. So this includes patterns that are not in the model
-            //explicitly (i.e, smaller patterns that have been pruned.
 
             PatternSet<uint64_t> result;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -1727,6 +2009,10 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
 
+/**
+ * An indexed model mapping patterns to values. High-level interface.
+ * @tparam MapType The type of container to use
+ */
 template<class MapType = PatternMap<IndexedData,IndexedDataHandler>> 
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType> {
     protected:
@@ -1749,10 +2035,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         }
    public:
+        /**
+          * build reverse index, requires options.DOREVERSEINDEX to be set or
+          * won't do anything. Also won't build a reverse index if one is loaded
+          * already. Note that pre-loading a reverse index when
+          * loading/training your model is generally quicker.
+         */
         void buildreverseindex(const PatternModelOptions options) {
-            //build reverse index, requires options.DOREVERSEINDEX to be set or
-            //won't act. Also won't build a reverse index if one is loaded
-            //already
             if ((this->reverseindex) && (this->reverseindex->empty())) {
                 if (!options.QUIET) std::cerr << "Building reverse index... (Consider preloading a reverse index to skip this (-r) )" << std::endl;
                 for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -1775,6 +2064,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
 
        
+    /**
+    * Begin a new pattern model, optionally pre-setting a reverseindex.
+    */
     IndexedPatternModel<MapType>(IndexedCorpus * corpus = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType>() {
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
@@ -1787,6 +2079,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
+    /**
+    * Read a pattern model from an input stream
+    * @param f The input stream
+    * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+    * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+    * @param corpus Pointer to the loaded corpus, used as a reverse index.
+    */
     IndexedPatternModel<MapType>(std::istream *f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<IndexedData,IndexedDataHandler,MapType>(){ //load from file
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
@@ -1800,6 +2099,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         this->load(f,options, constrainmodel);
     }
 
+    /**
+    * Read a pattern model from file
+    * @param filename The filename
+    * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+    * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+    * @param corpus Pointer to the loaded corpus, used as a reverse index.
+    */
     IndexedPatternModel<MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType>() { //load from file
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
@@ -1828,6 +2134,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     int getmodelversion() const { return 1;} 
 
 
+    /**
+     * Add a pattern, with a given position, and a value to the model. This
+     * is called during training at every time an instance of a pattern is found in the data.
+     * @param pattern The pattern to add
+     * @param value A pointer to the value for this pattern, set to NULL and it will be automatically determined
+     * @param IndexReference The position in the corpus where the patterns occurs
+     */
     void add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
         if (value == NULL) {
             value = getdata(pattern,true);
@@ -1841,6 +2154,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         this->valuehandler.add(value, ref);
     }
     
+    /**
+     * Get the indices stored for the specified pattern.
+     * @param makeifnew Add the pattern with empty value if it does not exist (default: false)
+     **/
     IndexedData * getdata(const Pattern & pattern, bool makeifnew=false)  { 
         typename MapType::iterator iter = this->find(pattern);
         if (iter != this->end()) {
@@ -1867,6 +2184,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
 
+    /**
+     * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
+     */
     void info(std::ostream * OUT) {
         if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
             *OUT << "Type: indexed" << std::endl;
@@ -1919,6 +2239,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
 
+    /**
+    * Print the contents of the pattern model, i.e. all patterns and
+    * associated counts, to the output stream.
+    * @param out The output stream
+    * @param decoder The class decoder to use
+    */
     void print(std::ostream * out, ClassDecoder & decoder) {
         bool haveoutput = false;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -1969,6 +2295,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
 
+    /**
+     * Train skipgrams, for indexed models only
+     * @pattern options Pattern model options
+     * @pattern constrainbymodel Pointer to a pattern model to use as contraint: only include skipgrams that occur in the constraint model (default: NULL)
+     */
     virtual void trainskipgrams(PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
         if (options.MINTOKENS == -1) options.MINTOKENS = 2;
         this->cache_grouptotal.clear(); //forces recomputation of statistics
@@ -1996,15 +2327,22 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
+    /** 
+     * Return the unigram Pattern that occurs on the specified position, using
+     * the reverse index.
+     */
     Pattern getpatternfromtoken(IndexReference ref) {
         return this->reverseindex->getpattern(ref,1);
     }
     
 
 
+    /**
+     * Given a skipgram, returns patterns which would instantiate the skipgram
+     * if inserted into the gaps. For skipgrams with multiple gaps, these skip content patterns are themselves skipgrams. Skipgram and skip content complement eachother
+     * @returns A relation map
+     */
     t_relationmap getskipcontent(const Pattern & pattern) {
-        //NOTE: skipcontent patterns of skipgrams with multiple gaps are
-        //themselves skipgrams!
         unsigned char fixedgapbuffer[101];
         for (int i = 0; i< 100; i++) fixedgapbuffer[i] = 128;
 
@@ -2066,8 +2404,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return skipcontent;
     }
     
+    /**
+     * Given a relation map, prune relations below the specified occurrence threshold
+     * @param relations The relationmap to manipulate
+     * @param occurrencethreshold The occurrence threshold
+     */
     void prunerelations(t_relationmap & relations, unsigned int occurrencethreshold) {
-        //prune relations below the specified occurrence threshold
         t_relationmap::iterator eraseiter;
         t_relationmap::iterator iter = relations.begin();
         while (iter != relations.end()) {
@@ -2081,6 +2423,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
+    /**
+     * Returns all skipgrams and flexgrams in the model that are an abstraction of the
+     * specified pattern. Pattern itself may be a skipgram too. An optional
+     * occurrence threshold may be used to filter.
+     * @return a relation map
+     */
     t_relationmap gettemplates(const Pattern & pattern, unsigned int occurrencethreshold = 0) {
         //returns patterns that are an abstraction of the specified pattern
         //skipgrams
@@ -2116,6 +2464,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return templates;
     }
 
+    /**
+     * Returns all ngrams in the model that instantiate the given
+     * skipgram/flexgram. If all the gaps in a skipgram/flexgram are filled, we
+     * speak of such an instantiation.
+     * An occurrence threshold may be used to filter.
+     * @return a relation map
+     */
     t_relationmap getinstances(const Pattern & pattern, unsigned int occurrencethreshold = 0) {
         //returns patterns that instantiate the specified pattern
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
@@ -2150,9 +2505,14 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return instances;
     }
 
+    /**
+     * Returns all patterns in the model that are subsumed by the specified pattern. Subsumed patterns are smaller than the subsuming pattern. Every n-gram (except unigram) by definition subsumes two n-1-grams. 
+    * @pattern occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+    * @pattern category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
+    * @pattern size Set to any value above zero to only include patterns of the specified length.
+    * @return a relation map
+    */
     t_relationmap getsubchildren(const Pattern & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0) {
-        //returns patterns that are subsumed by the specified pattern (i.e.
-        //smaller patterns)
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -2209,6 +2569,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         return subchildren;
     }
 
+    /**
+     * Returns all patterns in the model that subsume the specified pattern. Subsuming patterns are larger than the subsuming pattern. Every n-gram (except unigram) by definition subsumes two n-1-grams. 
+    * @pattern occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+    * @pattern category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
+    * @pattern size Set to any value above zero to only include patterns of the specified length.
+    * @return a relation map
+    */
     t_relationmap getsubparents(const Pattern & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0) {
         //returns patterns that subsume the specified pattern (i.e. larger
         //patterns)

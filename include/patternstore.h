@@ -22,17 +22,31 @@
 
 /***********************************************************************************/
 
+/**
+ * This class corresponds to a single token in a corpus. It holds the token
+ * class and the position.
+ */
 class IndexPattern { 
     public:
-        IndexReference ref;
-        uint32_t cls;
+        IndexReference ref; ///< The position of this token in the corpus
+        uint32_t cls; ///< The content of this token (a class from a particular class encoding)
     
+        /**
+         * Constructor from a unigram Pattern 
+         * @param ref The position in the corpus
+         * @param pattern A unigram
+         */
         IndexPattern(const IndexReference & ref, const Pattern & pattern) {
             this->ref = ref;
             //grab only the first class
             unsigned char size = pattern.data[0];
             this->cls = bytestoint(pattern.data + 1, size);
         }
+        /**
+         * Constructor from an integer 
+         * @param ref The position in the corpus
+         * @param cls A class from a particular class encoding
+         */
         IndexPattern(const IndexReference & ref, uint32_t cls) {
             this->ref = ref;
             this->cls = cls;
@@ -42,6 +56,9 @@ class IndexPattern {
             this->cls = 0;
         }
 
+        /**
+         * Obtain a unigram Pattern
+         */
         Pattern pattern() {
             unsigned char * buffer = new unsigned char[16]; //small buffer, but cls can't be too big anyhow
             unsigned char * data = inttopatterndata(buffer, (unsigned int) cls);
@@ -51,9 +68,12 @@ class IndexPattern {
             return p;
         }
 
-        //Will match only the reference part (the key), unsuitable for use in
-        //containers where one reference is ambiguous! Designed for
-        //IndexedCorpus (unigrams)
+        /**
+         * Tests if two IndexPatterns describe the same position, in which case
+         * they are considered equal regardless of the class content!
+         * Unsuitable for use in containers where one reference is ambiguous,
+         * designed for IndexedCorpus
+         */
         bool operator==(const IndexPattern &other) const { return (this->ref == other.ref); };
         bool operator==(const IndexReference &other) const { return (this->ref == other); };
         bool operator!=(const IndexPattern &other) const { return (this->ref != other.ref); };
@@ -75,43 +95,91 @@ class IndexPattern {
 
 /**
  * Class for reading an entire (class encoded) corpus into memory, providing a
- * reverse index by IndexReference
+ * reverse index by IndexReference. The reverse index stores positions and unigrams.
  */
 class IndexedCorpus {
     protected:
         std::vector<IndexPattern> data;
     public:
         IndexedCorpus() {};
+
+        /*
+         * Read an indexed corpus from stream. The stream must correspond to an
+         * encoded corpus (*.colibri.dat)
+         */
         IndexedCorpus(std::istream *in, bool debug = false);
+        /*
+         * Read an indexed corpus from file. The filename must correspond to an
+         * encoded corpus (*.colibri.dat)
+         */
         IndexedCorpus(std::string filename, bool debug = false);
         
+        /*
+         * Read an indexed corpus from stream. The stream must correspond to an
+         * encoded corpus (*.colibri.dat)
+         */
         void load(std::istream *in, bool debug = false);
+
+        /*
+         * Read an indexed corpus from file. The filename must correspond to an
+         * encoded corpus (*.colibri.dat)
+         */
         void load(std::string filename, bool debug = false);
         typedef std::vector<IndexPattern>::iterator iterator;
         typedef std::vector<IndexPattern>::const_iterator const_iterator;
         
 
+        /*
+         * Returns the begin iterator over the corpus
+         */
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
 
+        /*
+         * Returns the end iterator over the corpus
+         */
         iterator end() { return data.end(); }
         const_iterator end() const { return data.end(); }
 
+        /**
+         * Returns an iterator starting at the given position. Correspond to
+         * end() when no such position is found.
+         */
         iterator find(const IndexReference & ref) {
             return std::lower_bound(this->begin(), this->end(), IndexPattern(ref) ); //does binary search
         }
+        /**
+         * Returns a const iterator starting at the given position. Correspond to
+         * end() when no such position is found.
+         */
         const_iterator find(const IndexReference & ref) const {
             return std::lower_bound(this->begin(), this->end(), IndexPattern(ref) ); //does binary search
         }
         
+        /**
+         * Does the provided position occur in the corpus? 
+         */
         bool has(const IndexReference & ref) const {
             return std::binary_search(this->begin(), this->end(), IndexPattern(ref) );
         }
 
+        /**
+         * Returns the number of tokens in the corpus
+         */
         size_t size() const { return data.size(); } 
+
+        /**
+         * Is the corpus empty?
+         */
         bool empty() const { return data.empty(); }
 
 
+        /**
+         * Returns the token at the provided position. The token is returned as
+         * an integer corresponding to the class in a particular class
+         * encoding. Use getpattern() if you want a Pattern instance.
+         * @see getpattern
+         */
         uint32_t operator [](const IndexReference ref) { 
             iterator found = this->find(ref);
             if (found != this->end()) {
@@ -121,19 +189,50 @@ class IndexedCorpus {
             }
         } 
 
+        /**
+         * Returns a pattern starting at the provided position and of the
+         * specified length.
+         */
         Pattern getpattern(const IndexReference & begin, int length=1) const;
+
+        /**
+         * Get the sentence (or whatever other unit your data employs)
+         * specified by the given index. Sentences start at 1.
+         */
         Pattern getsentence(int sentence) const; //returns sentence as a pattern
          
-        std::vector<IndexReference> findpattern(const Pattern & pattern, int maxmatches=0); //by far not as efficient as a pattern model obviously
+        /**
+         * Returns all positions at which the pattern occurs. Up to a certain
+         * number of maximum matches if desired. Note that this iterates over
+         * the entire corpus and is by far not as efficient as a proper pattern
+         * model.
+         */
+        std::vector<IndexReference> findpattern(const Pattern & pattern, int maxmatches=0); 
 
-        int sentencelength(int sentence) const;  //returns the length of a sentence (0-indexed)
+        /**
+         * Returns the length of the sentence (or whatever other unit your data
+         * employs) at the given sentence index (starts at 1)
+         */
+        int sentencelength(int sentence) const;  
+
+        /**
+         * Return the total number of sentences (or whatever other unit
+         * delimites your data) in the corpus.
+         */
         unsigned int sentences() const; //returns the number of sentences (1-indexed)
 
 
+        /**
+         * Add a unigram to the corpus at the given position (it's up to you to ensure this is called in proper order, or call sort() afterwards)
+         */
         void push_back(const IndexReference ref, const Pattern & pattern) {
             data.push_back(IndexPattern(ref,pattern));
         }
 
+        /**
+         *  Ensures the data is in proper order. May be needed after
+         *  out-of-order use of push_back()
+         */
         void sort() {
             //sort data (in-place)
             std::sort(data.begin(), data.end());
@@ -145,7 +244,7 @@ class IndexedCorpus {
 /************* Base abstract container for pattern storage  ********************/
 
 /**
- * Limited interface to pattern stores
+ * Limited virtual interface to pattern stores
  */
 class PatternStoreInterface {
     public:
@@ -207,6 +306,10 @@ class PatternStore: public PatternStoreInterface {
 
 /**
  * Abstract class for map-like pattern stores, do not instantiate directly
+ * @tparam ContainerType The low-level container type used (an STL container such as set/map). 
+ * @tparam ValueType The type of Value this container stores
+ * @tparam ValueHandler A handler class for this type of value
+ * @tparam ReadWriteSizeType Data type for addressing, influences only the maximum number of items that can be stored (2**64) in the container, as this will be represented in the very beginning of the binary file. No reason to change this unless the container is very deeply nested in others and contains only few items.
  */
 template<class ContainerType, class ValueType, class ValueHandler,class ReadWriteSizeType = uint32_t>
 class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> { 
@@ -566,6 +669,14 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
 };
 
 
+/**
+ * A pattern map stored patterns and their values in a hash map (unordered_map). 
+ * @tparam ValueType The type of Value this container stores
+ * @tparam ValueHandler A handler class for this type of value
+ * @tparam ReadWriteSizeType The data type for addressing, determines the
+ * maximum amount of patterns that can be held, only used in
+ * serialisation/deserialisation
+ */
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class ReadWriteSizeType = uint64_t>
 class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,ValueType,ValueHandler,ReadWriteSizeType> {
     protected:
@@ -684,7 +795,10 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
 };
 
 
-//using a PatternStore as value in a PatternMap requires a special valuehandler:
+/**
+ * A complex value handler for values that are themselves pattern stores
+ * (allows building nested maps)
+ */
 template<class PatternStoreType>
 class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
   public:
@@ -709,6 +823,10 @@ class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
     }
 };
 
+/**
+ * A nested pattern map, useful for storing patterns that map to other
+ * patterns, which in turn map to values. An example is phrase-translation tables in Machine Translation.
+ */
 template<class ValueType,class ValueHandler=BaseValueHandler<ValueType>, class NestedSizeType = uint16_t >
 class AlignedPatternMap: public PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>>, uint64_t > {
     public:
