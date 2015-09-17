@@ -114,11 +114,11 @@ setup(
     license = "GPL",
     keywords = "nlp computational_linguistics frequency ngram skipgram pmi cooccurrence linguistics",
     long_description=read('README.rst'),
-    version = '0.5.11',
+    version = '1.0',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Topic :: Text Processing :: Linguistic",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
