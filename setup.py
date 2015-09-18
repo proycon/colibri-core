@@ -34,8 +34,8 @@ def read(fname):
 #not the most elegant hack, but we're going to try compile colibri-core here before we continue with the rest:
 
 #defaults:
-includedirs = ["/usr/include/colibri-core", "/usr/include/libxml2"]
-libdirs = ["/usr/lib"]
+includedirs = ["/usr/local/include/colibri-core","/usr/include/colibri-core", "/usr/include/libxml2"]
+libdirs = ["/usr/local/lib","/usr/lib"]
 if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' in sys.argv[1:]:
     if '-n' in sys.argv[1:]:
         print("Dry run not supported for colibri-core compilation",file=sys.stderr)
@@ -87,12 +87,8 @@ if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' i
         sys.exit(2)
 
     if prefix:
-        includedirs += [prefix + "/include/colibri-core", prefix + "/include", prefix + "/include/libxml2"]
-        libdirs += [prefix + "/lib"]
-
-
-
-
+        includedirs = [prefix + "/include/colibri-core", prefix + "/include", prefix + "/include/libxml2"] + includedirs
+        libdirs = [prefix + "/lib"] + libdirs
 
 
 
