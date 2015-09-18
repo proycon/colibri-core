@@ -97,7 +97,8 @@ to running Python for the Python binding to function (replace ``$VIRTUAL_ENV`` w
 the directory you used as a prefix if you do not use Python Virtual
 Environment). Otherwise, you will be confronted with an error: ``ImportError:
 libcolibricore.so.0: cannot open shared object file: No such file or
-directory``
+directory``. If you get this error after a global installaton, run ``sudo
+ldconfig``.
 
 Installation from Github
 -----------------------------

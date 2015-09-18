@@ -118,7 +118,8 @@ to running Python for the Python binding to function (replace <code class="docut
 the directory you used as a prefix if you do not use Python Virtual
 Environment). Otherwise, you will be confronted with an error: <code class="docutils literal"><span class="pre">ImportError:</span>
 <span class="pre">libcolibricore.so.0:</span> <span class="pre">cannot</span> <span class="pre">open</span> <span class="pre">shared</span> <span class="pre">object</span> <span class="pre">file:</span> <span class="pre">No</span> <span class="pre">such</span> <span class="pre">file</span> <span class="pre">or</span>
-<span class="pre">directory</span></code></p>
+<span class="pre">directory</span></code>. If you get this error after a global installaton, run <code class="docutils literal"><span class="pre">sudo</span>
+<span class="pre">ldconfig</span></code>.</p>
 </div>
 <div class="section" id="installation-from-github">
 <h3>Installation from Github<a class="headerlink" href="#installation-from-github" title="Permalink to this headline">¶</a></h3>
@@ -953,7 +954,7 @@ to the static, read-only, version <a class="reference external" href="http://pro
 
 <dl class="attribute">
 <dt id="colibricore.Category.__dict__">
-<code class="descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'colibricore', '__dict__': &lt;attribute '__dict__' of 'Category' objects&gt;, '__doc__': 'Pattern Category', '__weakref__': &lt;attribute '__weakref__' of 'Category' objects&gt;, 'NGRAM': 1, 'SKIPGRAM': 2, 'FLEXGRAM': 3})</em><a class="headerlink" href="#colibricore.Category.__dict__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__dict__</code><em class="property"> = mappingproxy({'FLEXGRAM': 3, '__dict__': &lt;attribute '__dict__' of 'Category' objects&gt;, '__module__': 'colibricore', '__weakref__': &lt;attribute '__weakref__' of 'Category' objects&gt;, '__doc__': 'Pattern Category', 'SKIPGRAM': 2, 'NGRAM': 1})</em><a class="headerlink" href="#colibricore.Category.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
