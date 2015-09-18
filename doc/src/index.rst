@@ -37,50 +37,155 @@ This documentation will illustrate how to work with the various tools and the li
 Installation
 ===============
 
-Colibri is hosted on `github <http://github.com/proycon/colibri-core/>`_ and should be retrieved through the versioning control system ``git``. Provided git is installed on your system, this is done as follows::
+Installation via LaMachine
+------------------------------------------------------------
 
-	$ git clone http://github.com/proycon/colibri-core.git
-	
-You need to compile the software, if you want FoLiA support you will need to first to install the following dependency. By default FoLiA support is disabled.
+Colibri Core is included in the `LaMachine <https://proycon.github.io/LaMachine>`_ distribution. This includes all dependencies and other NLP software. LaMachine can also run as a virtual machine on any host OS.
+
+Installing dependencies
+-------------------------------
+
+To compile Colibri Core, you need a sane build environment, install the necessary dependencies for your distribution.
+
+For Debian/Ubuntu::
+
+    $ sudo apt-get install make gcc g++ pkg-config autoconf-archive libtool autotools-dev libbz2-dev zlib1g-dev libtar-dev python3 python3-dev cython3" 
+
+For RedHat-based systems (run as root)::
+
+    # yum install pkgconfig libtool autoconf automake autoconf-archive make gcc gcc-c++ libtar libtar-devel python3 python3-devel zlib zlib-devel python3-pip bzip2 bzip2-devel cython3 
+
+For Mac OS X with `homebrew <http://brew.sh>`_::
+
+    $ brew install autoconf automake libtool autoconf-archive python3
+
+Arch Linux users can simply install Colibri Core and all dependencies directly from the `Arch User Repository <https://aur.archlinux.org/packages/colibri-core-git>`_ , no further installation is necessary in this case.
+
+Installation via the Python Package Index
+------------------------------------------------------------
+
+Colibri Core can be installed from the `Python Package Index
+<https://pypi.python.org/pypi/colibricore>`_ using the ``pip`` tool, often
+named ``pip3`` for the Python 3 version, which we recommend. This procedure
+will automatically download, compile, and install all of Colibi Core.
+
+First ensure you installed all dependencies from the previous section!
+
+Colibri Core requires an up-to-date version of Cython first (0.23 or above), or the installation will fail, we use ``pip`` to compile it from scratch::
+
+    $ sudo pip3 install cython
+
+Then we can install Colibri Core itself::
+
+    $ sudo pip3 install colibricore
+
+For installation without root privileges we recommend creating a `Python Virtual environment,
+<https://virtualenv.pypa.io/en/latest/>`_ , in which case all of Colibri Code will be installed under it::
+
+    $ virtualenv --python=python3 coco
+    $ . coco/bin/activate       #you will need to do this each time you want to use Colibri Core
+    (coco)$ pip install cython
+    (coco)$ pip install colibricore
+
+Alternatively, pass a prefix::
+
+    $ pip3 install --install-option="--prefix=/my/installation/directory" colibricore
+
+**Important Note:** If you install Colibri Core locally (in a Python Virtual Environment
+or elsewhere), then you need to set ``LD_LIBRARY_PATH=$VIRTUAL_ENV/lib/`` prior
+to running Python for the Python binding to function (replace ``$VIRTUAL_ENV`` with
+the directory you used as a prefix if you do not use Python Virtual
+Environment). Otherwise, you will be confronted with an error: ``ImportError:
+libcolibricore.so.0: cannot open shared object file: No such file or
+directory``
+
+Installation from Github
+-----------------------------
+
+First ensure you installed all dependencies from the dependencies section!
+
+Colibri Core is hosted on `github <https//github.com/proycon/colibri-core/>`_
+and should ideally be retrieved through the versioning control system ``git``.
+Provided git is installed on your system, this is done as follows::
+
+	$ git clone https://github.com/proycon/colibri-core.git
+
+Alternatively, you can download and extract release archives from the
+aforementioned Github page.
+
+Now we can install Colibri Core itself, the following will install everything globally under ``/usr/`` and hence requires administrative privileges::
+
+    $ sudo python3 setup.py install
+
+If you install from within a `Python Virtual environment,
+<https://virtualenv.pypa.io/en/latest/>`_ everything will be
+installed under it. This does not require root privileges::
+
+    $ virtualenv --python=python3 coco
+    $ . coco/bin/activate       #you will need to do this each time you want to use Colibri Core
+    (coco)$ pip install cython
+    (coco)$ pip install colibricore
+
+For local installation elsewhere, pass a prefix, for example::
+
+    $ python3 setup.py install --prefix=/home/yourname/local
+
+The note at the end of the previous section applies for any non-global installation!
+
+Manual compilation and installation (advanced)
+-------------------------------------------------
+
+Installation via the Python Package Index or Github invokes compilation of the C++ source for you.
+You can however to compile everything yourself. This is especially relevant if
+you are not only interested in command-line tools or C++ library, and do not
+care about the Python library.
+
+Moreover, this route is also needed if you want FoLiA support (optional), for which you
+then first to install the following dependency. By default FoLiA support is disabled.
 
  * **libfolia**; obtainable from `the FoLiA website <http://proycon.github.com/folia>`_,  follow the instructions included with libfolia to install it.
 
-In addition to the C/C++ compiler (``gcc``), the build process for colibri makes use of ``autoconf`` and ``automake``. Make sure these are installed on your system. Also install the package ``autoconf-archive`` if available on your distribution. Colibri can now be compiled and installed::
+Including pulling the sources from github, Colibri Core can be compiled and
+installed as follows::
 
-  $ cd colibri
+  $ git clone https://github.com/proycon/colibri-core.git
+  $ cd colibri-core
   $ bash bootstrap
-  $ ./configure [--with-folia --with-folia-path=/path/to/libfolia]
+  $ ./configure [--prefix=/usr] [--with-folia --with-folia-path=/path/to/libfolia]
   $ make
-  $ make install
-  
-You can optionally pass a prefix if you want to install colibri in a different location::
+  $ sudo make install
 
-  $ ./configure --prefix=/usr/local/
+If not prefix is set, installation will be under ``/usr/local/`` by default. 
 
-To install the Colibri Core Python library, you require Python 3 or higher with Cython 0.19 or above. On Debian/Ubuntu systems you will find these in the packages
-``python3`` and ``cython3``. To compile and install the Python library, issue
-the following command::
+To compile the Python binding manually, we first create an empty file
+``manual`` which signals the build process to not attempt to recompile the C++
+library itself::
 
-  $ python3 ./setup.py install
+  $ touch manual
 
-If you want to install in a customised non-global location, use ``--prefix``
-along with ``--include-dirs`` and ``--library-dirs`` to point to where the
-C++ headers and the library are installed::
+Then build as follows, provided Colibri Core is in a globally accessible
+location already::
+
+  $ sudo python3 ./setup.py install
+
+If you used a prefix and want to install in a customised non-global location,
+again use ``--prefix`` along with ``--include-dirs`` and ``--library-dirs`` to
+point to where the C++ headers and the library are installed::
 
   $ python3 ./setup.py build_ext --include-dirs=/path/to/include/colibri-core  --library-dirs=/path/to/lib/  install --prefix=/path/to/somewhere/
 
-If you plan to use Colibri-Core from Python with virtualenv or a distribution
-such as Anaconda, we recommend to install all of colibri-core in this specific
-location. To do this, you need need to call ``configure`` with ``--prefix``, where the prefix is the directory where your
-virtual environment, or Anaconda resides. The ``--prefix`` for ``setup.py`` is
-the same, and the include-dirs and library-dirs should point to respectively
-to the ``include/colibri-core`` and ``lib`` directories within this directory.
-
+Update ``$LD_LIBRARY_PATH`` and ``$PYTHONPATH`` where necessary.
  
 Keeping colibri up to date
 -----------------------------
 
-Colibri is always under heavy development. Update your colibri copy by issuing a git pull::
+It is recommended to often check back for new versions of Colibri Core.
+
+If you used, ``pip`` just run::
+
+ $ pip3 install -U colibricore
+
+For the git version::
 
  $ git pull
  
@@ -89,7 +194,11 @@ And then recompile as per the above instructions.
 General usage instructions
 ---------------------------------
 
-Colibri consist of various programs and scripts, each of which will output an extensive overview of available parameters if the parameter ``-h`` is passed. Each program is designed for a specialised purpose, with specific input and output formats. It is often needed to call multiple programs in succession to obtain the final analysis or model you desire. 
+Colibri consist of various programs and scripts, each of which will output an
+extensive overview of available parameters if the parameter ``-h`` is passed.
+Each program is designed for a specialised purpose, with specific input and
+output formats. It is often needed to call multiple programs in succession to
+obtain the final analysis or model you desire. 
 
 Quick start: High-level scripts
 =================================
