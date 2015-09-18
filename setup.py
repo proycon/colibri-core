@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import print_function
-from distutils.core import setup, Extension
-from Cython.Distutils import build_ext
 import glob
 import os
 import sys
+from distutils.core import setup, Extension
+try: 
+    from Cython.Distutils import build_ext
+except ImportError:
+    print("Cython was not found, install Cython first through your package manager or using: pip install cython",file=sys.stderr)
+    sys.exit(3)
 
 
 from os.path import expanduser
@@ -43,6 +47,7 @@ if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' i
 
     os.chdir(ROOTDIR)
 
+
     #see if we got a prefix:
     prefix = None
     for i, arg in enumerate(sys.argv):
@@ -62,6 +67,9 @@ if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' i
 
     if 'VIRTUAL_ENV' in os.environ and not prefix:
         prefix = os.environ['VIRTUAL_ENV']
+
+    if prefix is None:
+        prefix = "/usr" #default location is /usr rather than /usr/local
 
     if not os.path.exists(ROOTDIR + "/configure") or '-f' in sys.argv[1:] or '--force' in sys.argv[1:]:
         print("Bootstrapping colibri-core",file=sys.stderr)
@@ -85,12 +93,17 @@ if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' i
     if r != 0:
         print("Make install of colibri-core failed",file=sys.stderr)
         sys.exit(2)
+    else:
+        print("\nInstallation of Colibri Core C++ library and tools completed succesfully.",file=sys.stderr)
 
-    if prefix:
+    if prefix != "/usr":
         includedirs = [prefix + "/include/colibri-core", prefix + "/include", prefix + "/include/libxml2"] + includedirs
         libdirs = [prefix + "/lib"] + libdirs
 
-
+        print("--------------------------------------------------------------------------------------------------------------------",file=sys.stderr)
+        print("**NOTE:** You may need to set LD_LIBRARY_PATH=\"" + prefix + "/lib\", prior to running Python,",file=sys.stderr)
+        print("          for it to be able to find the Colibri Core shared library!",file=sys.stderr)
+        print("--------------------------------------------------------------------------------------------------------------------\n",file=sys.stderr)
 
 extensions = [ Extension("colibricore",
                 ["unordered_map.pxd", "colibricore_classes.pxd", "colibricore_wrapper.pyx"],
@@ -106,7 +119,7 @@ setup(
     name = 'colibricore',
     author = "Maarten van Gompel",
     author_email = "proycon@anaproy.nl",
-    description = ("Colibri core is an NLP tool as well as a C++ and Python library for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. At the core is the tool ``colibri-patternmodeller`` which allows you to build, view, manipulate and query pattern models."),
+    description = ("Colibri Core is an NLP tool as well as a C++ and Python library (all included in this package) for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. At the core is the tool ``colibri-patternmodeller`` which allows you to build, view, manipulate and query pattern models."),
     license = "GPL",
     keywords = "nlp computational_linguistics frequency ngram skipgram pmi cooccurrence linguistics",
     long_description=read('README.rst'),
