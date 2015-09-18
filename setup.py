@@ -39,24 +39,30 @@ compilerversion = open(compilerversionfile,'r').read()
 # cython's include is sucky unfortunately :( 
 # And we need some conditional includes based on gcc vs clang
 # We'll have our own:
-for filename in glob.glob(os.path.join(ROOTDIR ,"*.in.pyx")):
+for filename in glob.glob(os.path.join(ROOTDIR ,"*.in.p??")):
+    extension = filename[-3:]
+    print("(Writing " + filename[:-6]+extension + ")" ,file=sys.stderr)
     with open(filename,'r') as f_in:
-        with open(filename[:-6]+'pyx','w') as f_out:
+        with open(filename[:-6]+extension,'w') as f_out:
             for line in f_in:
                 found = line.find('@include') #generic include'
                 foundlen = 8
+    
                 foundgcc = line.find('@includegcc') #gcc-only include
+                if foundgcc != -1:
+                    if compilerversion.find('clang') == -1: #anything that is not clang is gcc for our purposes
+                        found = foundgcc
+                        foundlen = 11
+                    else:
+                        continue
+
                 foundclang = line.find('@includeclang') #clang-only include
-                if foundgcc != -1 and compilerversion.find('clang') == -1: #anything that is not clang is gcc for our purposes
-                    found = foundgcc
-                    foundlen = 1
-                else:
-                    continue
-                if foundclang != -1 and compilerversion.find('clang') != -1:
-                    found = foundclang
-                    foundlen = 13
-                else:
-                    continue
+                if foundclang != -1:
+                    if compilerversion.find('clang') != -1:
+                        found = foundclang
+                        foundlen = 13
+                    else:
+                        continue
 
                 if found != -1:
                     includefilename = line[found+foundlen+1:].strip()
