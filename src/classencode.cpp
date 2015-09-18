@@ -3,6 +3,7 @@
 #include "classencoder.h"
 #include "getopt.h"
 #include <common.h>
+#include <config.h>
 
 /*****************************
 * Colibri Core
@@ -17,14 +18,17 @@
 using namespace std;
 
 void usage() {
+    cerr << "Colibri Core " << VERSION << " - Class Encoder" << endl;
+    cerr << "  by Maarten van Gompel, Language Machines, Centre for Language Studies, Radboud University Nijmegen" << endl;
+    cerr << "  https://proycon.github.io/colibri-core" << endl << endl;
     cerr << "Syntax: colibri-classencode [ -c classmodel ] corpus [corpus2 etc..]" << endl;
-    cerr << "Description: Encodes a corpus. If used with -c, encodes a corpus according to the specified pre-existing class model" << endl;
+    cerr << "Description: Encodes a corpus. If used with -c, encodes a corpus according to the specified pre-existing class model" << endl << endl;
     cerr << "The corpus file should be in one of the following formats:" << endl;
     cerr << " - plain text, preferably tokenised (tokens space delimited)" << endl;
     cerr << "   one sentence per line, unix newlines, encoding agnostic." << endl;
     cerr << " - as above, but bzip2 compressed (bz2 extension)" << endl;
 #ifdef WITHFO
-    cerr << " - FoLiA XML (xml extension)" << endl;
+    cerr << " - FoLiA XML (xml extension)" << endl << endl;
 #endif
     cerr << "Options: -o    outputprefix for class file" << endl;
     cerr << "         -d    output directory, including trailing slash" << endl;

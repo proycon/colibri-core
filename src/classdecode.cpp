@@ -2,6 +2,7 @@
 #include <iostream>
 #include "classdecoder.h"
 #include "getopt.h"
+#include <config.h>
 
 /*****************************
 * Colibri Core
@@ -16,8 +17,11 @@
 using namespace std;
 
 void usage() {
+    cerr << "Colibri Core " << VERSION << " - Class Decoder" << endl;
+    cerr << "  by Maarten van Gompel, Language Machines, Centre for Language Studies, Radboud University Nijmegen" << endl;
+    cerr << "  https://proycon.github.io/colibri-core" << endl << endl;
     cerr << "Syntax: colibri-classdecode -f encoded-corpus -c class-file" << endl;
-    cerr << "Descriptions: Decodes an encoded corpus" << endl;
+    cerr << "Description: Decodes an encoded corpus" << endl << endl;
     cerr << "Options:" << endl;
     cerr << "\t-s 	start line number (default: 0)" << endl;
     cerr << "\t-e 	end line number (default: infinite)" << endl;

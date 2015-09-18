@@ -23,30 +23,47 @@ using namespace std;
 
 
 void usage() {
+    cerr << "Colibri Core " << VERSION << " - Pattern Modeller" << endl;
+    cerr << "  by Maarten van Gompel, Language Machines, Centre for Language Studies, Radboud University Nijmegen" << endl;
+    cerr << "  https://proycon.github.io/colibri-core" << endl << endl;
+    cerr << "Syntax: colibri-patternmodeller [options]" << endl << endl;
+    cerr << "Description: Extract, model and compare recurring patterns (n-grams, skipgrams, flexgrams) and their frequencies in text corpus data." << endl << endl;
     cerr << "Input/output options:" << endl;
     cerr << "\t-i [modelfile]   Input model" << endl;
     cerr << "\t-o [modelfile]   Output model" << endl;
     cerr << "\t-f [datafile]    Corpus data file (encoded from plain text or other sources with colibri-classencode)" << endl;
     cerr << "\t-c [classfile]   Class file (created with colibri-classencode)"<< endl;
     cerr << "\t-j [modelfile]   Joined input model, i.e. constraint model/training model. Result will be the *intersection* of this (training) model and the input model or constructed model." << endl;
-    cerr << "\t-r [datafile]    Corpus data file to be used as reverse index. Not mandatory but may be specified when loading a patternmodel (even unindexed ones!), with indexed pattern models, specifying this options prevents the reverse index from being computed on-the-fly from the forward index, which is far more time consuming (especially on large models). For unindexed models, reverse indices are always disabled unless explicitly specified using this option" << endl;
+    cerr << "\t-r [datafile]    Corpus data file to be used as reverse index. Not mandatory but may be specified when loading a patternmodel (even unindexed ones!), with indexed pattern models," << endl;
+    cerr << "\t                 specifying this options prevents the reverse index from being computed on-the-fly from the forward index, which is far more time consuming (especially on large models). " << endl;
+    cerr << "\t                 For unindexed models, reverse indices are always disabled unless explicitly specified using this option" << endl;
+    cerr << endl;
     cerr << " Building a model:  colibri-patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
-    cerr << "\t-2               Enable two-stage building (for indexed models), takes longer but saves a lot of memory on large corpora! First builds an unindexed model and reuses that (via -I) to build an indexed model (View options are ignored in two-stage building, whereas an output model (-o) is mandatory)" << endl;    
+    cerr << "\t-2               Enable two-stage building (for indexed models), takes longer but saves a lot of memory on large corpora! First builds an unindexed model and reuses that (via -I) to" << endl;
+    cerr << "\t                 build an indexed model (View options are ignored in two-stage building, whereas an output model (-o) is mandatory)" << endl;    
     cerr << "\t-t <number>      Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
     cerr << "\t-u               Build an unindexed model (default is indexed)" << endl;    
     cerr << "\t-m <number>      Minimum pattern length (default: 1)" << endl;
     cerr << "\t-l <number>      Maximum pattern length (default: 100)" << endl;
     cerr << "\t-b <number>      Maximum back-off length (default: 100). Only makes sense to set lower than minimum pattern length and may conserve memory during training then" << endl;
-    cerr << "\t-W <number>      Word occurrence threshold (secondary threshold): only count patterns in which the words/unigrams occur at least this many times, only effective when the primary occurrence threshold (-t) is lower than this threshold (default: disabled)" << endl;    
+    cerr << "\t-W <number>      Word occurrence threshold (secondary threshold): only count patterns in which the words/unigrams occur at least this many times, only effective when the primary " << endl;
+    cerr << "\t                 occurrence threshold (-t) is lower than this threshold (default: disabled)" << endl;    
     cerr << "\t-p <number>      Prune all lower-order n-grams below the specified order that are *NOT* subsumed by higher order n-grams (default: 0, disabled). Only effective when used with -l, usually set to equal values" << endl;
     cerr << "\t-s               Compute skipgrams (costs extra memory and time)" << endl;    
     cerr << "\t-y <number>      Occurrence threshold for skipgrams (overrides -t for skipgrams, defaults to -t). Skipgrams occurring less than this will be pruned. Value must be equal to or higher than -t." << endl;    
-    cerr << "\t-T <number>      Skip type threshold (for use with -s): only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram will be pruned  (default: 2, unindexed models always act as if fixed to 1). Also note that only types that occur above the occurrent threshold (-t) are counted here! Requires indexed models" << endl;
+    cerr << "\t-T <number>      Skip type threshold (for use with -s): only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram " << endl;
+    cerr << "\t                 will be pruned  (default: 2, unindexed models always act as if fixed to 1). Also note that only types that occur above the occurrent threshold (-t) are counted here! Requires indexed models" << endl;
     cerr << "\t-S S             Compute flexgrams by abstracting over skipgrams (implies -s)." << endl; 
     cerr << "\t-S <number>      Compute flexgrams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
     cerr << "\t-L               Input data file (-f) is a list of one pattern per line. No subgrams will be stored, implies -t 1" <<endl;
-    cerr << "\t-I               Builds a new model from an input model (-i) and corpus data (-f).  Only patterns present in the input model will be present in the final model, making the input model the trining model and the corpus data the test data. This method uses memory-efficient in-place building, and does not hold two models (unlike -j). Input model (-i) and or output model (-o) may be indexed or unindexed (-u), this option also allows for constructing indexed models from unindexed models (given the same source corpus), and is used in two-stage building (-2)." <<endl;  
+    cerr << "\t-I               Builds a new model from an input model (-i) and corpus data (-f).  Only patterns present in the input model will be present in the final model, making" << endl;
+    cerr << "\t                 the input model the training model and the corpus data the test data. This method uses memory-efficient in-place building, and does not hold " << endl;
+    cerr << "\t                 two models (unlike -j). Input model (-i) and or output model (-o) may be indexed or unindexed (-u), this option also allows for constructing indexed models " << endl;
+    cerr << "\t                 from unindexed models (given the same source corpus), and is used in two-stage building (-2)." <<endl;  
     cerr << "\t--ssr            Perform Statistical Substring reduction, prunes n-grams that are only part of larger n-grams (TO BE IMPLEMENTED STILL)" << endl; //TODO
+    cerr << endl;
+    cerr << " Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
+    cerr << endl;
     cerr << " Viewing a model:  colibri-patternmodeller -i [modelfile] -c [classfile] -[PRHQ]" << endl;
     cerr << "\t-P               Print the entire model" << endl;
     cerr << "\t-R               Generate a (statistical/coverage) report" << endl;
@@ -60,15 +77,17 @@ void usage() {
     cerr << "\t-Y <threshold>   Compute and show normalised pointwise mutual information co-occurrence  above the specified threshold [-1,1]. Only for indexed models." << endl;
     //cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
-    cerr << "Editing a model:  colibri-patternmodeller -o [modelfile] -i [modelfile]" << endl;
+    cerr << endl;
+    cerr << " Editing a model:  colibri-patternmodeller -o [modelfile] -i [modelfile]" << endl;
     cerr << "\t-x               Delete all skipgrams from the model" << endl;    
     cerr << "\t-X               Delete all flexgrams from the model" << endl;    
     cerr << "\t-N               Delete all ngrams from the model" << endl;    
     cerr << "\tOptions -tlTmxXN can be used to filter the model, -u can be used to remove the index, -j can be used to take the intersection with another model, -S to compute and add flexgrams" << endl;
-    cerr << "Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
+    cerr << endl;
+    cerr << " Other options:" << endl;
     cerr << "\t-h               This help message" << endl;
     cerr << "\t-v               Version information" << endl;
-    cerr << "\t-D               Enable Debug mode" << endl;
+    cerr << "\t-D               Enable debug mode" << endl;
 }
 
 template<class ModelType = IndexedPatternModel<>>
@@ -412,8 +431,13 @@ int main( int argc, char *argv[] ) {
 
         bool didsomething = false;
         if ((inputmodelfile.empty()) && (corpusfile.empty())) {
-            cerr << "ERROR: No input model (-i) or corpus data file specified (-f), specify at least one. Issue colibri-patternmodeller -h for extensive usage options" << classfile << endl;
-            exit(2);
+            if (argc <= 1) {
+                usage();
+                exit(0);
+            } else {
+                cerr << "ERROR: No input model (-i) or corpus data file specified (-f), specify at least one. Issue colibri-patternmodeller -h for extensive usage options" << classfile << endl;
+                exit(2);
+            }
         }
 
         if (options.DOPATTERNPERLINE) options.MINTOKENS = 1;
