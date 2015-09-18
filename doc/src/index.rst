@@ -5,7 +5,7 @@
 
 
 ****************************
-Colibri Documentation 
+Colibri Core Documentation 
 ****************************
 
 .. toctree::
