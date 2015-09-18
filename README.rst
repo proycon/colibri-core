@@ -4,6 +4,9 @@ Colibri Core
 .. image:: https://travis-ci.org/proycon/colibri-core.svg?branch=master
     :target: https://travis-ci.org/proycon/colibri-core
 
+.. image:: https://badge.fury.io/py/colibricore.svg
+    :target: http://badge.fury.io/py/colibricore
+
 .. image:: https://zenodo.org/badge/doi/10.5281/zenodo.31163.svg
    :target: http://dx.doi.org/10.5281/zenodo.31163
 
