@@ -4,6 +4,9 @@ Colibri Core
 .. image:: https://travis-ci.org/proycon/colibri-core.svg?branch=master
     :target: https://travis-ci.org/proycon/colibri-core
 
+.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.31163.svg
+   :target: http://dx.doi.org/10.5281/zenodo.31163
+
 *by Maarten van Gompel, proycon@anaproy.nl, Radboud University Nijmegen*
 
 *Licensed under GPLv3 (See http://www.gnu.org/licenses/gpl-3.0.html)*
