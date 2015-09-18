@@ -35,7 +35,6 @@ if r != 0:
     sys.exit(2)
 
 compilerversion = open(compilerversionfile,'r',encoding='utf-8').read()
-print("Detected compiler: ", compilerversion,file=sys.stderr)
 
 # cython's include is sucky unfortunately :( 
 # And we need some conditional includes based on gcc vs clang
@@ -79,12 +78,14 @@ def read(fname):
 includedirs = ["/usr/local/include/colibri-core","/usr/include/colibri-core", "/usr/include/libxml2"]
 libdirs = ["/usr/local/lib","/usr/lib"]
 if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' in sys.argv[1:] and not os.path.exists('manual'):
+
     if '-n' in sys.argv[1:]:
         print("Dry run not supported for colibri-core compilation",file=sys.stderr)
         sys.exit(2)
 
     os.chdir(ROOTDIR)
 
+    print("Detected compiler: ", compilerversion,file=sys.stderr)
 
     #see if we got a prefix:
     prefix = None
