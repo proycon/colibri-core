@@ -34,7 +34,7 @@ if r != 0:
     print("No C++ Compiler found!",file=sys.stderr)
     sys.exit(2)
 
-compilerversion = open(compilerversionfile,'r',encoding='utf-8').read()
+compilerversion = open(compilerversionfile,'r').read()
 
 # cython's include is sucky unfortunately :( 
 # And we need some conditional includes based on gcc vs clang
