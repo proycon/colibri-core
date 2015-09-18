@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+
+# This is a bit of a non-traditional setup, it does some fancy things such as
+# invoking compilation of the C++ part of Colibri Core
+
 from __future__ import print_function
 import glob
 import os
@@ -16,26 +20,60 @@ HOMEDIR = expanduser("~")
 
 ROOTDIR = os.path.abspath(os.path.dirname(__file__))
 
-#cython's include is sucky unfortunately :( We'll have our own:
+
+
+#attempt to pre-detect compiler (gcc vs clang)
+cxx = 'c++'
+if 'CXX' in os.environ:
+    cxx = os.environ['CXX']
+
+
+compilerversionfile = os.path.join(ROOTDIR,"compilerversion")
+r = os.system(cxx + " --version > " + compilerversionfile)
+if r != 0:
+    print("No C++ Compiler found!",file=sys.stderr)
+    sys.exit(2)
+
+compilerversion = open(compilerversionfile,'r',encoding='utf-8').read()
+print("Detected compiler: ", compilerversion,file=sys.stderr)
+
+# cython's include is sucky unfortunately :( 
+# And we need some conditional includes based on gcc vs clang
+# We'll have our own:
 for filename in glob.glob(os.path.join(ROOTDIR ,"*.in.pyx")):
     with open(filename,'r') as f_in:
         with open(filename[:-6]+'pyx','w') as f_out:
             for line in f_in:
-                found = line.find('@include')
-                if found == -1:
-                    f_out.write(line)
+                found = line.find('@include') #generic include'
+                foundlen = 8
+                foundgcc = line.find('@includegcc') #gcc-only include
+                foundclang = line.find('@includeclang') #clang-only include
+                if foundgcc != -1 and compilerversion.find('clang') == -1: #anything that is not clang is gcc for our purposes
+                    found = foundgcc
+                    foundlen = 1
                 else:
-                    includefilename = line[found+9:].strip()
+                    continue
+                if foundclang != -1 and compilerversion.find('clang') != -1:
+                    found = foundclang
+                    foundlen = 13
+                else:
+                    continue
+
+                if found != -1:
+                    includefilename = line[found+foundlen+1:].strip()
                     with open(os.path.join(ROOTDIR,includefilename)) as f_inc:
                         for incline in f_inc:
                             f_out.write(" " * found + incline)
+                else:
+                    f_out.write(line)
 
 
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-#not the most elegant hack, but we're going to try compile colibri-core here before we continue with the rest:
+#Not the most elegant hack, but we're going to try compile colibri-core here before we continue with the rest:
+#  create an empty file 'manual' to skip this:
 
 #defaults:
 includedirs = ["/usr/local/include/colibri-core","/usr/include/colibri-core", "/usr/include/libxml2"]
