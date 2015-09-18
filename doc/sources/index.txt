@@ -15,7 +15,7 @@ Introduction
 ===================
 
 
-Colibri Core is software, consisting of command line tools as well as programming libraries. to quickly and efficiently count and extract patterns from large corpus data, to extract various statistics on the extracted patterns, and to compute relations between the extracted patterns. The employed notion of pattern or construction encompasses the following categories:
+Colibri Core is software consisting of command line tools as well as programming libraries. to quickly and efficiently count and extract patterns from large corpus data, to extract various statistics on the extracted patterns, and to compute relations between the extracted patterns. The employed notion of pattern or construction encompasses the following categories:
 
  * **n-gram** -- n consecutive words
  * **skipgram** -- An abstract pattern of predetermined length with one or multiple gaps (of specific size).
