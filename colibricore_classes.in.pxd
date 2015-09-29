@@ -293,10 +293,8 @@ cdef extern from "patternmodel.h":
         unsigned int tokens()
 
 
-    ctypedef PatternMap[unsigned int,BaseValueHandler[uint],unsigned long] t_relationmap
-    ctypedef PatternMap[double,BaseValueHandler[double],unsigned long] t_relationmap_double
-    ctypedef PatternMap[unsigned int,BaseValueHandler[uint],unsigned long].iterator t_relationmap_iterator
-    ctypedef PatternMap[double,BaseValueHandler[double],unsigned long].iterator t_relationmap_double_iterator
+    @includegcc colibricore_relationmap.gcc.pxi
+    @includeclang colibricore_relationmap.clang.pxi
 
 
     cdef cppclass PatternSetModel:

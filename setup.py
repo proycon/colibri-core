@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
+
+# This is a bit of a non-traditional setup, it does some fancy things such as
+# invoking compilation of the C++ part of Colibri Core
+
 from __future__ import print_function
-from distutils.core import setup, Extension
-from Cython.Distutils import build_ext
 import glob
 import os
 import sys
+from distutils.core import setup, Extension
+try: 
+    from Cython.Distutils import build_ext
+except ImportError:
+    print("Cython was not found, install Cython first through your package manager or using: pip install cython",file=sys.stderr)
+    sys.exit(3)
 
 
 from os.path import expanduser
@@ -12,36 +20,78 @@ HOMEDIR = expanduser("~")
 
 ROOTDIR = os.path.abspath(os.path.dirname(__file__))
 
-#cython's include is sucky unfortunately :( We'll have our own:
-for filename in glob.glob(os.path.join(ROOTDIR ,"*.in.pyx")):
+
+
+#attempt to pre-detect compiler (gcc vs clang)
+cxx = 'c++'
+if 'CXX' in os.environ:
+    cxx = os.environ['CXX']
+
+
+compilerversionfile = os.path.join(ROOTDIR,"compilerversion")
+r = os.system(cxx + " --version > " + compilerversionfile)
+if r != 0:
+    print("No C++ Compiler found!",file=sys.stderr)
+    sys.exit(2)
+
+compilerversion = open(compilerversionfile,'r').read()
+
+# cython's include is sucky unfortunately :( 
+# And we need some conditional includes based on gcc vs clang
+# We'll have our own:
+for filename in glob.glob(os.path.join(ROOTDIR ,"*.in.p??")):
+    extension = filename[-3:]
+    print("(Writing " + filename[:-6]+extension + ")" ,file=sys.stderr)
     with open(filename,'r') as f_in:
-        with open(filename[:-6]+'pyx','w') as f_out:
+        with open(filename[:-6]+extension,'w') as f_out:
             for line in f_in:
-                found = line.find('@include')
-                if found == -1:
-                    f_out.write(line)
-                else:
-                    includefilename = line[found+9:].strip()
+                found = line.find('@include') #generic include'
+                foundlen = 8
+    
+                foundgcc = line.find('@includegcc') #gcc-only include
+                if foundgcc != -1:
+                    if compilerversion.find('clang') == -1: #anything that is not clang is gcc for our purposes
+                        found = foundgcc
+                        foundlen = 11
+                    else:
+                        continue
+
+                foundclang = line.find('@includeclang') #clang-only include
+                if foundclang != -1:
+                    if compilerversion.find('clang') != -1:
+                        found = foundclang
+                        foundlen = 13
+                    else:
+                        continue
+
+                if found != -1:
+                    includefilename = line[found+foundlen+1:].strip()
                     with open(os.path.join(ROOTDIR,includefilename)) as f_inc:
                         for incline in f_inc:
                             f_out.write(" " * found + incline)
+                else:
+                    f_out.write(line)
 
 
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-#not the most elegant hack, but we're going to try compile colibri-core here before we continue with the rest:
+#Not the most elegant hack, but we're going to try compile colibri-core here before we continue with the rest:
+#  create an empty file 'manual' to skip this:
 
 #defaults:
-includedirs = ["/usr/include/colibri-core", "/usr/include/libxml2"]
-libdirs = ["/usr/lib"]
-if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' in sys.argv[1:]:
+includedirs = ["/usr/local/include/colibri-core","/usr/include/colibri-core", "/usr/include/libxml2"]
+libdirs = ["/usr/local/lib","/usr/lib"]
+if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' in sys.argv[1:] and not os.path.exists('manual'):
+
     if '-n' in sys.argv[1:]:
         print("Dry run not supported for colibri-core compilation",file=sys.stderr)
         sys.exit(2)
 
     os.chdir(ROOTDIR)
+
+    print("Detected compiler: ", compilerversion,file=sys.stderr)
 
     #see if we got a prefix:
     prefix = None
@@ -62,6 +112,9 @@ if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' i
 
     if 'VIRTUAL_ENV' in os.environ and not prefix:
         prefix = os.environ['VIRTUAL_ENV']
+
+    if prefix is None:
+        prefix = "/usr" #default location is /usr rather than /usr/local
 
     if not os.path.exists(ROOTDIR + "/configure") or '-f' in sys.argv[1:] or '--force' in sys.argv[1:]:
         print("Bootstrapping colibri-core",file=sys.stderr)
@@ -85,16 +138,17 @@ if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' i
     if r != 0:
         print("Make install of colibri-core failed",file=sys.stderr)
         sys.exit(2)
+    else:
+        print("\nInstallation of Colibri Core C++ library and tools completed succesfully.",file=sys.stderr)
 
-    if prefix:
-        includedirs += [prefix + "/include/colibri-core", prefix + "/include", prefix + "/include/libxml2"]
-        libdirs += [prefix + "/lib"]
+    if prefix != "/usr":
+        includedirs = [prefix + "/include/colibri-core", prefix + "/include", prefix + "/include/libxml2"] + includedirs
+        libdirs = [prefix + "/lib"] + libdirs
 
-
-
-
-
-
+        print("--------------------------------------------------------------------------------------------------------------------",file=sys.stderr)
+        print("**NOTE:** You may need to set LD_LIBRARY_PATH=\"" + prefix + "/lib\", prior to running Python,",file=sys.stderr)
+        print("          for it to be able to find the Colibri Core shared library!",file=sys.stderr)
+        print("--------------------------------------------------------------------------------------------------------------------\n",file=sys.stderr)
 
 extensions = [ Extension("colibricore",
                 ["unordered_map.pxd", "colibricore_classes.pxd", "colibricore_wrapper.pyx"],
@@ -110,7 +164,7 @@ setup(
     name = 'colibricore',
     author = "Maarten van Gompel",
     author_email = "proycon@anaproy.nl",
-    description = ("Colibri core is an NLP tool as well as a C++ and Python library for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. At the core is the tool ``colibri-patternmodeller`` which allows you to build, view, manipulate and query pattern models."),
+    description = ("Colibri Core is an NLP tool as well as a C++ and Python library (all included in this package) for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. At the core is the tool ``colibri-patternmodeller`` which allows you to build, view, manipulate and query pattern models."),
     license = "GPL",
     keywords = "nlp computational_linguistics frequency ngram skipgram pmi cooccurrence linguistics",
     long_description=read('README.rst'),
