@@ -1,4 +1,5 @@
-cdef getdata(self, Pattern pattern):
+cpdef getdata(self, Pattern pattern):
+    """Return the indices at which the pattern occurs"""
     cdef cIndexedData cvalue
     if pattern in self:
         cvalue = self.data[pattern.cpattern]
