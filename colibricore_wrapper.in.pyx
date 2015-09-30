@@ -877,6 +877,11 @@ cdef class PatternModelOptions:
     * DOSKIPGRAMS_EXHAUSTIVE - Compute skipgrams exhaustively?
     * MINSKIPTYPES - Minimum amount of different skip content types
     * DOREVERSEINDEX - Build reverse index? (default: True)
+    * DOPATTERNPERLINE - Assume each line holds one single pattern.
+    * MINTOKENS_UNIGRAMS - Word occurrence threshold (secondary threshold): only count patterns in which the words/unigrams occur at least this many times, only effective when the       primary
+    * DOREMOVENGRAMS - Remove n-grams from the model
+    * DOREMOVESKIPGRAMS - Remove skipgrams from the model
+    * DOREMOVEFLEXGRAMS - Remove flexgrams from the model
     * DEBUG
     * QUIET (default: False)
 
