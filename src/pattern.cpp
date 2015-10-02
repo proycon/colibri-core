@@ -717,6 +717,7 @@ PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //sl
     data = ref.data + begin_b;
     if (length_b > 255) {
         std::cerr << "ERROR: Pattern too long for pattern pointer [length_b=" << length_b << ",begin=" << begin << ",length=" << length << ", reference_length_b=" << ref.bytesize() << "]  (did you set MAXLENGTH (-l)?)" << std::endl;
+        std::cerr << "Reference=" << ref.out() << std::endl;
         throw InternalError();
     }
     bytes = length_b;
