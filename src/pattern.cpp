@@ -716,7 +716,7 @@ PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //sl
 
     data = ref.data + begin_b;
     if (length_b > 255) {
-        std::cerr << "ERROR: Pattern too long for pattern pointer" << std::endl;
+        std::cerr << "ERROR: Pattern too long for pattern pointer [length_b=" << length_b << ",begin=" << begin << ",length=" << length << ", reference_length_b=" << ref.bytesize() << "]  (did you set MAXLENGTH (-l)?)" << std::endl;
         throw InternalError();
     }
     bytes = length_b;
@@ -772,7 +772,7 @@ Pattern::Pattern(const Pattern& ref) { //copy constructor
 
 Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
     if (ref.bytesize() > 255) {
-        std::cerr << "ERROR: Pattern too long for pattern pointer" << std::endl;
+        std::cerr << "ERROR: Pattern too long for pattern pointer (Pattern from PatternPointer)" << std::endl;
         throw InternalError();
     }
     data = new unsigned char[ref.bytesize() + 1];
