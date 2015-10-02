@@ -121,7 +121,7 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
 }
 
 
-void ClassEncoder::processcorpus(const string & filename, unordered_map<string,int> & freqlist) {
+void ClassEncoder::processcorpus(const string & filename, unordered_map<string,unsigned int> & freqlist) {
 	   //compute frequency list of all words        
        ifstream IN;
 	   if (filename.rfind(".bz2") != string::npos) {
@@ -143,7 +143,7 @@ void ClassEncoder::processcorpus(const string & filename, unordered_map<string,i
        IN.close();
 }
 
-void ClassEncoder::processcorpus(istream * IN , unordered_map<string,int> & freqlist) {
+void ClassEncoder::processcorpus(istream * IN , unordered_map<string,unsigned int> & freqlist) {
         while (IN->good()) {
           string line;
           getline(*IN, line);         
@@ -173,7 +173,7 @@ void ClassEncoder::processcorpus(istream * IN , unordered_map<string,int> & freq
 }
 
 #ifdef WITHFOLIA
-void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<string,int> & freqlist) {
+void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<string,unsigned int> & freqlist) {
     folia::Document doc;
     doc.readFromFile(filename);
     
@@ -194,16 +194,16 @@ void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<str
 }
 #endif
 
-void ClassEncoder::buildclasses(const unordered_map<string,int> & freqlist) {
+void ClassEncoder::buildclasses(const unordered_map<string,unsigned int> & freqlist, unsigned int threshold) {
 
         //sort by occurrence count  using intermediate representation
-        multimap<const int, const string> revfreqlist;
-        for (unordered_map<string,int>::const_iterator iter = freqlist.begin(); iter != freqlist.end(); iter++) {
-        	revfreqlist.insert( pair<const int,const string>(-1 * iter->second, iter->first) );
+        multimap<const unsigned int, const string> revfreqlist;
+        for (unordered_map<string,unsigned int>::const_iterator iter = freqlist.begin(); iter != freqlist.end(); iter++) {
+            if (iter->second > threshold) revfreqlist.insert( pair<const unsigned int,const string>(-1 * iter->second, iter->first) );
         } 
         
         int cls = highestclass;
-        for (multimap<const int,const string>::iterator iter = revfreqlist.begin(); iter != revfreqlist.end(); iter++) {
+        for (multimap<const unsigned int,const string>::const_iterator iter = revfreqlist.begin(); iter != revfreqlist.end(); iter++) {
             if (!classes.count(iter->second)) { //check if it doesn't already exist, in case we are expanding on existing classes 
         	    cls++;
         	    classes[iter->second] = cls;
@@ -212,8 +212,8 @@ void ClassEncoder::buildclasses(const unordered_map<string,int> & freqlist) {
         highestclass = cls;
 }
 
-void ClassEncoder::build(const string & filename) {
-	    unordered_map<string,int> freqlist;
+void ClassEncoder::build(const string & filename, unsigned int threshold) {
+	    unordered_map<string,unsigned int> freqlist;
 	    if (filename.rfind(".xml") != string::npos) {
             #ifdef WITHFOLIA
 	        processfoliacorpus(filename, freqlist);
@@ -224,12 +224,12 @@ void ClassEncoder::build(const string & filename) {
 	    } else {
 	        processcorpus(filename, freqlist); //also handles bz2
 	    }
-        buildclasses(freqlist);
+        buildclasses(freqlist, threshold);
 }
 
 
-void ClassEncoder::build(vector<string> & files, bool quiet) {
-	    unordered_map<string,int> freqlist;
+void ClassEncoder::build(vector<string> & files, bool quiet, unsigned int threshold) {
+	    unordered_map<string,unsigned int> freqlist;
 	    	    
 	    for (vector<string>::iterator iter = files.begin(); iter != files.end(); iter++) {
 	        const string filename = *iter;
@@ -246,7 +246,7 @@ void ClassEncoder::build(vector<string> & files, bool quiet) {
 	        }
 	        
 	    } 	    	    
-        buildclasses(freqlist);
+        buildclasses(freqlist, threshold);
 }
 
 void ClassEncoder::save(const string & filename) {

@@ -36,6 +36,7 @@ void usage() {
     cerr << "         -u    produce one unified encoded corpus (in case multiple corpora are specified)" << endl;
     cerr << "         -e    extend specified class file with unseen classes" << endl;
     cerr << "         -U    encode all unseen classes using one special unknown class" << endl;
+    cerr << "         -t    word occurrence threshold (default: 1)" << endl;
 }
 
 int main( int argc, char *argv[] ) {    
@@ -47,11 +48,12 @@ int main( int argc, char *argv[] ) {
     bool unified = false;
     bool extend = false;
     bool allowunknown = false;
+    int threshold = 0;
     ifstream listin;
     string tmpfilename;
     
     char c;    
-    while ((c = getopt(argc, argv, "f:hc:o:d:ul:eU")) != -1) {
+    while ((c = getopt(argc, argv, "f:hc:o:d:ul:eUt:")) != -1) {
         switch (c)
         {
         case 'f': //keep for backward compatibility
@@ -75,6 +77,9 @@ int main( int argc, char *argv[] ) {
             break;
         case 'U':
             allowunknown = true;
+            break;
+        case 't':
+            threshold = atoi(optarg);
             break;
         case 'l':
             listin.open(optarg);
@@ -130,14 +135,14 @@ int main( int argc, char *argv[] ) {
         classencoder = ClassEncoder(classfile);
         if (extend) {
             cerr << "Building classes from corpus (extending existing classes)" << endl;
-            classencoder.build(corpusfiles);
+            classencoder.build(corpusfiles, threshold);
             classencoder.save(prefixedoutputprefix + ".colibri.cls");
             cerr << "Built " << prefixedoutputprefix << ".colibri.cls , extending " << classfile << endl;
         }
     } else {
         cerr << "Building classes from corpus" << endl;
         classencoder = ClassEncoder();
-        classencoder.build(corpusfiles);
+        classencoder.build(corpusfiles, threshold);
         classencoder.save(prefixedoutputprefix + ".colibri.cls");
         cerr << "Built " << prefixedoutputprefix << ".colibri.cls" << endl;
     }   

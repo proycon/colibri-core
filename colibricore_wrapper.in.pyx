@@ -47,7 +47,7 @@ cdef class ClassEncoder:
 
     cdef cClassEncoder data
     cdef str _filename
-    cdef unordered_map[string,int] freqlist
+    cdef unordered_map[string,unsigned int] freqlist
     cdef int minlength
     cdef int maxlength
 

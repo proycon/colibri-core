@@ -880,7 +880,7 @@ int main( int argc, char *argv[] ) {
         ClassEncoder classencoder = ClassEncoder();
         stringstream sscls;
         sscls << poem;
-        unordered_map<string,int> freqlist;
+        unordered_map<string,unsigned int> freqlist;
         classencoder.processcorpus((istream*) &sscls, freqlist);
         classencoder.buildclasses(freqlist);
 

@@ -83,15 +83,17 @@ class ClassEncoder {
     /**
      * Build a class encoding from a plain-text corpus
      * @param filename A plain text corpus with the units of interest (e.g sentences) each on one line
+     * @param threshold Occurrence threshold, words occurring less will be pruned
      */
-    void build(const std::string & filename); 
+    void build(const std::string & filename, unsigned int threshold=0); 
 
     /**
      * Build a class encoding from multiple plain-text corpus files
      * @param files A list of plain text corpus files with the units of interest (e.g sentences) each on one line
      * @param quiet If true, do not output progress to stderr (default: false)
+     * @param threshold Occurrence threshold, words occurring less will be pruned
      */
-    void build(std::vector<std::string> & files, bool quiet=false); 
+    void build(std::vector<std::string> & files, bool quiet=false, unsigned int threshold =0); 
     
     //auxiliary functions called by build: first do processcorpus() for each
     //corpus, then call buildclasses() once when done:
@@ -101,28 +103,29 @@ class ClassEncoder {
      * Assign classes based on the computed frequency list. This method should
      * only be called once.
      * @param freqlist The data structure that will contain the frequency list
+     * @param threshold Occurrence threshold, words occurring less will be pruned
      */
-    void buildclasses(const std::unordered_map<std::string,int> & freqlist);
+    void buildclasses(const std::unordered_map<std::string,unsigned int> & freqlist, unsigned int threshold =0);
 
     /**
      * Count word frequency in a given plain-text corpus. 
      * @param filename The corpus file
      * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
      */
-    void processcorpus(const std::string & filename, std::unordered_map<std::string,int> & freqlist);
+    void processcorpus(const std::string & filename, std::unordered_map<std::string,unsigned int> & freqlist);
     /**
      * Count word frequency in a given plain-text corpus. 
      * @param in The input stream
      * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
      */
-    void processcorpus(std::istream * in, std::unordered_map<std::string,int> & freqlist);
+    void processcorpus(std::istream * in, std::unordered_map<std::string,unsigned int> & freqlist);
     #ifdef WITHFOLIA
     /**
      * Count word frequency in a given FoLiA corpus. 
      * @param filename The corpus file (FoLiA XML)
      * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
      */
-    void processfoliacorpus(const std::string & filename, std::unordered_map<std::string,int> & freqlist);
+    void processfoliacorpus(const std::string & filename, std::unordered_map<std::string,unsigned int> & freqlist);
     #endif
 
     std::unordered_map<unsigned int, std::string> added;

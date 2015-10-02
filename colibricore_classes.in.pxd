@@ -249,9 +249,9 @@ cdef extern from "classencoder.h":
         ClassEncoder(string, int minlength=0, int maxlength=0) nogil except +
         void load(string, int minlength, int maxlength) nogil
         int size() nogil
-        void processcorpus(string filename, unordered_map[string,int]) nogil
-        void buildclasses(unordered_map[string,int]) nogil
-        void build(string filename) nogil #build a class from this dataset
+        void processcorpus(string filename, unordered_map[string,unsigned int]) nogil
+        void buildclasses(unordered_map[string,unsigned int], int threshold=0) nogil
+        void build(string filename,int threshold=0) nogil #build a class from this dataset
         void encodefile(string, string, bool allowunknown, bool autoaddunknown, bool append) nogil
         void save(string)
         Pattern buildpattern(string, bool allowunknown, bool autoaddunknown) nogil
