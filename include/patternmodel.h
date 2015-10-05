@@ -869,7 +869,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             const Pattern pattern = Pattern(iter->first);
                             ValueType * data = getdata(pattern, true);
                             add(pattern, data, ref );
-                            if ((options.DOREVERSEINDEX) && (n == 1) && (reverseindex != NULL) && (!externalreverseindex)) {
+                            if ((options.DOREVERSEINDEX) && (pattern.n() == 1) && (reverseindex != NULL) && (!externalreverseindex)) {
                                reverseindex->push_back(ref, pattern); //TODO: make patternpointer
                             }
                         } 
