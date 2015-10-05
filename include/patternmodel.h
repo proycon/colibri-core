@@ -780,11 +780,10 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (continued) {
                     if ((options.MINTOKENS > 1) && (constrainbymodel == NULL)) {
                        if (cache_grouptotal[NGRAM][n] > 0) {
-                           if (!options.QUIET) std::cerr << "Skipping " << n << "-grams, already in model" << std::endl; 
                            if ((options.DOSKIPGRAMS_EXHAUSTIVE) && (cache_grouptotal[SKIPGRAM][n] == 0) ) {
-                               if (!options.QUIET) std::cerr << " .. but counting skipgrams" << std::endl; 
                                skipgramsonly= true;
                            } else {
+                                if (!options.QUIET) std::cerr << "Skipping " << n << "-grams, already in model" << std::endl; 
                                continue;
                            }
                        } 
@@ -803,6 +802,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                         std::cerr << "Counting n-grams that occur in constraint model" << std::endl;
                     } else if (options.MINTOKENS > 1) {
                         std::cerr << "Counting " << n << "-grams" << std::endl; 
+                        if (skipgramsonly) std::cerr << "(only counting skipgrams actually, n-grams already counted earlier)" << std::endl; 
                     } else {
                         std::cerr << "Counting *all* n-grams (occurrence threshold=1)" << std::endl;
                     }
@@ -855,52 +855,53 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 continue;
                             }
 
+                            if (!skipgramsonly) { 
+                                //check against constraint model 
+                                if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter->first))) continue; 
+                                
 
-                            //check against constraint model 
-                            if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter->first))) continue; 
-                            
+                                found = true; //are the submatches in order? (default to true, attempt to falsify, needed for mintokens==1) 
 
-                            found = true; //are the submatches in order? (default to true, attempt to falsify, needed for mintokens==1) 
-
-                            //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
-                            if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS) && ((n > 1) || (singlepass)) ) { 
-                                subngrams.clear();
-                                iter->first.ngrams(subngrams,1); //get all unigrams
-                                for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                                    //check if unigram reaches threshold
-                                    if (this->occurrencecount(*iter2) < (unsigned int) options.MINTOKENS_UNIGRAMS) { 
-                                        found = false;
-                                        break;
+                                //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
+                                if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS) && ((n > 1) || (singlepass)) ) { 
+                                    subngrams.clear();
+                                    iter->first.ngrams(subngrams,1); //get all unigrams
+                                    for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                        //check if unigram reaches threshold
+                                        if (this->occurrencecount(*iter2) < (unsigned int) options.MINTOKENS_UNIGRAMS) { 
+                                            found = false;
+                                            break;
+                                        }
                                     }
                                 }
-                            }
 
 
-                            //ngram (n-1) lookback
-                            if ((found) && (n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) { 
-                                //check if sub-parts were counted
-                                subngrams.clear();
-                                backoffn = n - 1;
-                                if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
-                                    iter->first.ngrams(subngrams, backoffn);
-                                for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                                    if (!this->has(*iter2)) { 
-                                        found = false;
-                                        break;
+                                //ngram (n-1) lookback
+                                if ((found) && (n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) { 
+                                    //check if sub-parts were counted
+                                    subngrams.clear();
+                                    backoffn = n - 1;
+                                    if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
+                                        iter->first.ngrams(subngrams, backoffn);
+                                    for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                        if (!this->has(*iter2)) { 
+                                            found = false;
+                                            break;
+                                        }
                                     }
                                 }
+
+
+                                ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
+                                if ((found) && (!skipgramsonly)) {
+                                    const Pattern pattern = Pattern(iter->first);
+                                    ValueType * data = getdata(pattern, true);
+                                    add(pattern, data, ref );
+                                    if ((options.DOREVERSEINDEX) && (pattern.n() == 1) && (reverseindex != NULL) && (!externalreverseindex)) {
+                                        reverseindex->push_back(ref, pattern); //TODO: make patternpointer
+                                    }
+                                } 
                             }
-
-
-                            ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
-                            if ((found) && (!skipgramsonly)) {
-                                const Pattern pattern = Pattern(iter->first);
-                                ValueType * data = getdata(pattern, true);
-                                add(pattern, data, ref );
-                                if ((options.DOREVERSEINDEX) && (pattern.n() == 1) && (reverseindex != NULL) && (!externalreverseindex)) {
-                                reverseindex->push_back(ref, pattern); //TODO: make patternpointer
-                                }
-                            } 
                             if (((n >= 3) || (options.MINTOKENS == 1)) //n is always 1 when mintokens == 1 !!
                                     && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
                                 int foundskipgrams_thisround = this->computeskipgrams(iter->first, options, &ref, NULL, constrainbymodel, true);
@@ -908,7 +909,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 foundskipgrams += foundskipgrams_thisround; 
                             }
                         } catch (std::exception &e) {
-                            std::cerr << "ERROR: An internal error has occured!!!" << std::endl;
+                            std::cerr << "ERROR: An internal error has occured during training!!!" << std::endl;
                             if (ignoreerrors) continue;
                             throw InternalError();
                         }
@@ -919,12 +920,12 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (!iter_unigramsonly) {
                     foundngrams = this->size() - foundskipgrams - prevsize;
             
-                    if (foundngrams) {
+                    if ((foundngrams) || (foundskipgrams)) {
                         if (n > this->maxn) this->maxn = n;
                         if (n < this->minn) this->minn = n;
                     } else {
                         if (!options.QUIET) std::cerr << "None found" << std::endl;
-                        break;
+                        if (!continued) break;
                     }
                     if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngrams...";
                     if (options.DOSKIPGRAMS_EXHAUSTIVE && !options.QUIET) std::cerr << foundskipgrams << " skipgram occurrences...";
