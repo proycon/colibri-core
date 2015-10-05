@@ -63,6 +63,7 @@
 #include <set>
 #include <sstream>
 #include <array>
+#include <exception>
 #include "bz2stream.h"
 
 
@@ -733,8 +734,9 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param constrainbymodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          * @param continued Continued training on the same corpus data 
          * @param firstsentence First sentence index, useful for augmenting a model with another corpus (keep continued set to false in this case), defaults to 1
+         * @param ignoreerrors Try to ignore errors (use for debug only)
          */
-        virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1) {
+        virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
             if (options.MINTOKENS == -1) options.MINTOKENS = 2;
             if (options.MINTOKENS == 0)  options.MINTOKENS = 1;
             if (options.MINTOKENS_SKIPGRAMS < options.MINTOKENS) options.MINTOKENS_SKIPGRAMS = options.MINTOKENS;            
@@ -879,7 +881,13 @@ class PatternModel: public MapType, public PatternModelInterface {
                             subngrams.clear();
                             backoffn = n - 1;
                             if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
-                            iter->first.ngrams(subngrams, backoffn);
+                            try {
+                                iter->first.ngrams(subngrams, backoffn);
+                            } catch (std::exception &e) {
+                                std::cerr << "ERROR: Exception occurred in ngram lookback, ngrams() method" << std::endl;
+                                if (ignoreerrors) continue;
+                                throw InternalError();
+                            }
                             for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                                 if (!this->has(*iter2)) { 
                                     found = false;
@@ -1005,16 +1013,16 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param options Options for training
          * @param constrainbymodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          */
-        virtual void train(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1) {
+        virtual void train(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
             if ((filename.size() > 3) && (filename.substr(filename.size()-3) == ".bz2")) {
                 std::ifstream * in = new std::ifstream(filename.c_str(), std::ios::in|std::ios::binary);
                 bz2istream * decompressor = new bz2istream(in->rdbuf());
-                this->train( (std::istream*) decompressor, options, constrainbymodel, continued, firstsentence);
+                this->train( (std::istream*) decompressor, options, constrainbymodel, continued, firstsentence, ignoreerrors);
                 delete decompressor;
                 delete in;
             } else {
                 std::ifstream * in = new std::ifstream(filename.c_str());
-                this->train((std::istream*) in, options, constrainbymodel, continued, firstsentence);
+                this->train((std::istream*) in, options, constrainbymodel, continued, firstsentence, ignoreerrors);
                 in->close();
                 delete in;
             }

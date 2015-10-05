@@ -249,9 +249,10 @@ int main( int argc, char *argv[] ) {
     double COOCTHRESHOLD = 0;
     int DOCOOC = 0; //1= absolute, 2= npmi
     bool continued = false;
+    bool ignoreerrors = false;
     uint32_t firstsentence = 1;
     char c;    
-    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vb:y:W:p:Ee:")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vb:y:W:p:Ee:0")) != -1)
         switch (c)
         {
         case 'c':
@@ -380,6 +381,9 @@ int main( int argc, char *argv[] ) {
         case 'v':
             cerr << VERSION << endl; 
             exit(0);
+        case '0':
+            ignoreerrors = true;
+            break;
         case '?':
             if (optopt == 'c') {
                 cerr <<  "Option -" << optopt << " requires an argument." << endl;
@@ -544,7 +548,7 @@ int main( int argc, char *argv[] ) {
 
                 //build new model from corpus
                 cerr << "Building new indexed model from  " << corpusfile <<endl;
-                model.train(corpusfile, options, model.getinterface(), continued,firstsentence);
+                model.train(corpusfile, options, model.getinterface(), continued,firstsentence,ignoreerrors);
 
                 if (DOFLEXFROMSKIP) {
                     cerr << "Computing flexgrams from skipgrams" << corpusfile <<endl;
@@ -570,7 +574,7 @@ int main( int argc, char *argv[] ) {
                 }
                 //build new model from corpus
                 cerr << "Building new unindexed model from  " << corpusfile <<endl;
-                model.train(corpusfile, options, model.getinterface(), continued, firstsentence);
+                model.train(corpusfile, options, model.getinterface(), continued, firstsentence,ignoreerrors);
 
                 if (!outputmodelfile.empty()) {
                     didsomething = true;
@@ -592,7 +596,7 @@ int main( int argc, char *argv[] ) {
 
             if (!corpusfile.empty()) {
                 cerr << "Expanding indexed model on  " << corpusfile <<endl;
-                inputmodel.train(corpusfile, options, constrainbymodel, continued,firstsentence);
+                inputmodel.train(corpusfile, options, constrainbymodel, continued,firstsentence,ignoreerrors);
                 if (constrainbymodel) {
                     cerr << "Unloading constraint model" << endl;
                     delete constrainbymodel;
@@ -640,7 +644,7 @@ int main( int argc, char *argv[] ) {
 
             if (!corpusfile.empty()) {
                 cerr << "Expanding unindexed model on  " << corpusfile <<endl;
-                inputmodel.train(corpusfile, options, constrainbymodel, continued,firstsentence);
+                inputmodel.train(corpusfile, options, constrainbymodel, continued,firstsentence,ignoreerrors);
                 if (constrainbymodel) {
                     cerr << "Unloading constraint model" << endl;
                     delete constrainbymodel;
@@ -713,7 +717,7 @@ int main( int argc, char *argv[] ) {
                 if (!corpusfile.empty()) {
                     //build new model from corpus
                     cerr << "Building new unindexed model from  " << corpusfile <<endl;
-                    outputmodel.train(corpusfile, options, (PatternModelInterface*) constrainbymodel, continued, firstsentence);
+                    outputmodel.train(corpusfile, options, (PatternModelInterface*) constrainbymodel, continued, firstsentence,ignoreerrors);
                 }
                 if (constrainbymodel) {
                     cerr << "Unloading constraint model" << endl;
