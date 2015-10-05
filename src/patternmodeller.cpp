@@ -62,7 +62,8 @@ void usage() {
     cerr << "\t                 from unindexed models (given the same source corpus), and is used in two-stage building (-2)." <<endl;  
     cerr << "\t--ssr            Perform Statistical Substring reduction, prunes n-grams that are only part of larger n-grams (TO BE IMPLEMENTED STILL)" << endl; //TODO
     cerr << "\t-E               Expand the loaded pattern model *ON THE SAME CORPUS DATA*, allows you to add, for example, larger order ngrams to an existing model or skipgrams to an n-gram only model." << endl;
-    cerr << "\t-e <number>      Expand the loaded pattern model *ON DIFFERENT CORPUS DATA*, the number is the sentence offset to use in the model (be careful not to overlap with existing sentence indices!)" << endl;
+    cerr << "\t-e <number>      Expand the loaded pattern model *ON DIFFERENT CORPUS DATA*, the number is the sentence offset to use in the model (be careful not to overlap with existing sentence indices!)." << endl;
+    cerr << "\t                 The offset is only relevant for indexed models, for unindexed models any value will do." << endl;
     cerr << endl;
     cerr << " Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
     cerr << endl;
@@ -588,13 +589,21 @@ int main( int argc, char *argv[] ) {
             cerr << "Loading indexed pattern model " << inputmodelfile << " as input model..."<<endl;
             IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options, (PatternModelInterface*) constrainbymodel, reverseindex);
             inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
-            if (constrainbymodel) {
-                cerr << "Unloading constraint model" << endl;
-                delete constrainbymodel;
-                constrainbymodel = NULL;
-            }
 
-            if (options.DOSKIPGRAMS) {
+            if (!corpusfile.empty()) {
+                cerr << "Expanding indexed model on  " << corpusfile <<endl;
+                inputmodel.train(corpusfile, options, constrainbymodel, continued,firstsentence);
+                if (constrainbymodel) {
+                    cerr << "Unloading constraint model" << endl;
+                    delete constrainbymodel;
+                    constrainbymodel = NULL;
+                }
+            } else if (options.DOSKIPGRAMS) {
+                if (constrainbymodel) {
+                    cerr << "Unloading constraint model" << endl;
+                    delete constrainbymodel;
+                    constrainbymodel = NULL;
+                }
                 cerr << "Computing skipgrams" << endl;
                 if (!inputmodelfile2.empty()) cerr << "WARNING: Can not compute skipgrams constrained by " << inputmodelfile2 << "!" << endl;
                 inputmodel.trainskipgrams(options);
@@ -603,8 +612,15 @@ int main( int argc, char *argv[] ) {
                     int found = inputmodel.computeflexgrams_fromskipgrams();
                     cerr << found << " flexgrams found" << corpusfile <<endl;
                 }
+            } else {
+                if (constrainbymodel) {
+                    cerr << "Unloading constraint model" << endl;
+                    delete constrainbymodel;
+                    constrainbymodel = NULL;
+                }
             }
             
+
             if (!outputmodelfile.empty()) {
                 cerr << "Writing model to " << outputmodelfile << endl;
                 didsomething = true;
@@ -620,16 +636,29 @@ int main( int argc, char *argv[] ) {
         } else if (inputmodeltype == UNINDEXEDPATTERNMODEL) {
             cerr << "Loading unindexed pattern model " << inputmodelfile << " as input model..."<<endl;
             PatternModel<uint32_t> inputmodel = PatternModel<uint32_t>(inputmodelfile, options, (PatternModelInterface*) constrainbymodel, reverseindex);
-            if (constrainbymodel) {
-                cerr << "Unloading constraint model" << endl;
-                delete constrainbymodel;
-                constrainbymodel = NULL;
-            }
 
 
-
-            if (options.DOSKIPGRAMS || options.DOSKIPGRAMS_EXHAUSTIVE || DOFLEXFROMSKIP){
+            if (!corpusfile.empty()) {
+                cerr << "Expanding unindexed model on  " << corpusfile <<endl;
+                inputmodel.train(corpusfile, options, constrainbymodel, continued,firstsentence);
+                if (constrainbymodel) {
+                    cerr << "Unloading constraint model" << endl;
+                    delete constrainbymodel;
+                    constrainbymodel = NULL;
+                }
+            } else if (options.DOSKIPGRAMS || options.DOSKIPGRAMS_EXHAUSTIVE || DOFLEXFROMSKIP) {
+                if (constrainbymodel) {
+                    cerr << "Unloading constraint model" << endl;
+                    delete constrainbymodel;
+                    constrainbymodel = NULL;
+                }
                 cerr << "WARNING: Can not compute skipgrams/flexgrams on unindexed models after initial model training!" << endl;
+            } else {
+                if (constrainbymodel) {
+                    cerr << "Unloading constraint model" << endl;
+                    delete constrainbymodel;
+                    constrainbymodel = NULL;
+                }
             }
 
             if (!outputmodelfile.empty()) {

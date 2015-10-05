@@ -765,7 +765,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             std::vector<PatternPointer> subngrams;
             bool found;
             IndexReference ref;
-            int prevsize = 0;
+            int prevsize = this->size();
             int backoffn = 0;
             
             if (!this->data.empty()) {
