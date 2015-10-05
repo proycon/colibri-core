@@ -849,68 +849,68 @@ class PatternModel: public MapType, public PatternModelInterface {
                     // *** ITERATION OVER ALL NGRAMS OF CURRENT ORDER (n) IN THE LINE/SENTENCE ***
                     for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
 
-                        if ((singlepass) && (options.MINLENGTH == 1) && (skipunigrams) && (iter->first.n() == 1)) {
-                            //prevent double counting of unigrams after a iter_unigramsonly run with mintokens==1
-                            continue;
-                        }
+                        try {
+                            if ((singlepass) && (options.MINLENGTH == 1) && (skipunigrams) && (iter->first.n() == 1)) {
+                                //prevent double counting of unigrams after a iter_unigramsonly run with mintokens==1
+                                continue;
+                            }
 
 
-                        //check against constraint model 
-                        if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter->first))) continue; 
-                        
+                            //check against constraint model 
+                            if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter->first))) continue; 
+                            
 
-                        found = true; //are the submatches in order? (default to true, attempt to falsify, needed for mintokens==1) 
+                            found = true; //are the submatches in order? (default to true, attempt to falsify, needed for mintokens==1) 
 
-                        //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
-                        if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS) && ((n > 1) || (singlepass)) ) { 
-                            subngrams.clear();
-                            iter->first.ngrams(subngrams,1); //get all unigrams
-                            for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                                //check if unigram reaches threshold
-                                if (this->occurrencecount(*iter2) < (unsigned int) options.MINTOKENS_UNIGRAMS) { 
-                                    found = false;
-                                    break;
+                            //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
+                            if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS) && ((n > 1) || (singlepass)) ) { 
+                                subngrams.clear();
+                                iter->first.ngrams(subngrams,1); //get all unigrams
+                                for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                    //check if unigram reaches threshold
+                                    if (this->occurrencecount(*iter2) < (unsigned int) options.MINTOKENS_UNIGRAMS) { 
+                                        found = false;
+                                        break;
+                                    }
                                 }
                             }
-                        }
 
 
-                        //ngram (n-1) lookback
-                        if ((found) && (n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) { 
-                            //check if sub-parts were counted
-                            subngrams.clear();
-                            backoffn = n - 1;
-                            if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
-                            try {
-                                iter->first.ngrams(subngrams, backoffn);
-                            } catch (std::exception &e) {
-                                std::cerr << "ERROR: Exception occurred in ngram lookback, ngrams() method" << std::endl;
-                                if (ignoreerrors) continue;
-                                throw InternalError();
-                            }
-                            for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                                if (!this->has(*iter2)) { 
-                                    found = false;
-                                    break;
+                            //ngram (n-1) lookback
+                            if ((found) && (n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) { 
+                                //check if sub-parts were counted
+                                subngrams.clear();
+                                backoffn = n - 1;
+                                if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
+                                    iter->first.ngrams(subngrams, backoffn);
+                                for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                    if (!this->has(*iter2)) { 
+                                        found = false;
+                                        break;
+                                    }
                                 }
                             }
-                        }
 
 
-                        ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
-                        if ((found) && (!skipgramsonly)) {
-                            const Pattern pattern = Pattern(iter->first);
-                            ValueType * data = getdata(pattern, true);
-                            add(pattern, data, ref );
-                            if ((options.DOREVERSEINDEX) && (pattern.n() == 1) && (reverseindex != NULL) && (!externalreverseindex)) {
-                               reverseindex->push_back(ref, pattern); //TODO: make patternpointer
+                            ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
+                            if ((found) && (!skipgramsonly)) {
+                                const Pattern pattern = Pattern(iter->first);
+                                ValueType * data = getdata(pattern, true);
+                                add(pattern, data, ref );
+                                if ((options.DOREVERSEINDEX) && (pattern.n() == 1) && (reverseindex != NULL) && (!externalreverseindex)) {
+                                reverseindex->push_back(ref, pattern); //TODO: make patternpointer
+                                }
+                            } 
+                            if (((n >= 3) || (options.MINTOKENS == 1)) //n is always 1 when mintokens == 1 !!
+                                    && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
+                                int foundskipgrams_thisround = this->computeskipgrams(iter->first, options, &ref, NULL, constrainbymodel, true);
+                                if (foundskipgrams_thisround > 0) hasskipgrams = true;
+                                foundskipgrams += foundskipgrams_thisround; 
                             }
-                        } 
-                        if (((n >= 3) || (options.MINTOKENS == 1)) //n is always 1 when mintokens == 1 !!
-                                && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
-                            int foundskipgrams_thisround = this->computeskipgrams(iter->first, options, &ref, NULL, constrainbymodel, true);
-                            if (foundskipgrams_thisround > 0) hasskipgrams = true;
-                            foundskipgrams += foundskipgrams_thisround; 
+                        } catch (std::exception &e) {
+                            std::cerr << "ERROR: An internal error has occured!!!" << std::endl;
+                            if (ignoreerrors) continue;
+                            throw InternalError();
                         }
                     }
                 }
