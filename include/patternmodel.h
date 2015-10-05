@@ -731,8 +731,10 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param in The input stream of the corpus data (*.colibri.dat)
          * @param options Options for training
          * @param constrainbymodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+         * @param continued Continued training on the same corpus data 
+         * @param firstsentence First sentence index, useful for augmenting a model with another corpus (keep continued set to false in this case), defaults to 1
          */
-        virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
+        virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1) {
             if (options.MINTOKENS == -1) options.MINTOKENS = 2;
             if (options.MINTOKENS == 0)  options.MINTOKENS = 1;
             if (options.MINTOKENS_SKIPGRAMS < options.MINTOKENS) options.MINTOKENS_SKIPGRAMS = options.MINTOKENS;            
@@ -740,7 +742,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 totaltypes = 0;
                 totaltokens = 0;
             }
-            uint32_t sentence = 0;
+            uint32_t sentence = firstsentence-1;
             if (!in->good()) {
                 std::cerr << "ERROR: inputstream not good, file does not exist?" << std::endl;
                 throw InternalError();
@@ -766,8 +768,26 @@ class PatternModel: public MapType, public PatternModelInterface {
             int prevsize = 0;
             int backoffn = 0;
             
+            if (!this->data.empty()) {
+                if ((continued) && (!options.QUIET)) std::cerr << "Continuing training on preloaded model, computing statistics..." << std::endl;
+                this->computestats();
+            }
 
             for (int n = 1; n <= options.MAXLENGTH; n++) { 
+                bool skipgramsonly = false; //only used when continued==true, prevent double counting of n-grams whilst allowing skipgrams to be counted later
+                if (continued) {
+                    if ((options.MINTOKENS > 1) && (constrainbymodel == NULL)) {
+                       if (cache_grouptotal[NGRAM][n] > 0) {
+                           if (!options.QUIET) std::cerr << "Skipping " << n << "-grams, already in model" << std::endl; 
+                           if ((options.DOSKIPGRAMS_EXHAUSTIVE) && (cache_grouptotal[SKIPGRAM][n] == 0) ) {
+                               if (!options.QUIET) std::cerr << " .. but counting skipgrams" << std::endl; 
+                               skipgramsonly= true;
+                           } else {
+                               continue;
+                           }
+                       } 
+                    }
+                }
                 int foundngrams = 0;
                 int foundskipgrams = 0;
                 in->clear();
@@ -790,7 +810,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 
 
 
-                sentence = 0; //reset
+                sentence = firstsentence-1; //reset
                 bool singlepass = false;
                 while (!in->eof()) {
                     //read line
@@ -803,7 +823,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                         continue;
                     }
                     //count total tokens
-                    if (n==1) totaltokens += linesize;
+                    if ((n==1) && (!continued)) totaltokens += linesize;
+
 
                     ngrams.clear();
                     if (options.DOPATTERNPERLINE) {
@@ -816,9 +837,12 @@ class PatternModel: public MapType, public PatternModelInterface {
                             line.ngrams(ngrams, n);
                         } else {
                             singlepass = true;
-                            line.subngrams(ngrams,options.MINLENGTH,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1 or a constraint model is set, no need to look back anyway, only one iteration over corpus
+                            int minlength = options.MINLENGTH;
+                            if (continued) minlength = this->maxn + 1;
+                            line.subngrams(ngrams,minlength,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1 or a constraint model is set, no need to look back anyway, only one iteration over corpus
                         }
                     }
+
 
                     // *** ITERATION OVER ALL NGRAMS OF CURRENT ORDER (n) IN THE LINE/SENTENCE ***
                     for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
@@ -831,6 +855,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                         //check against constraint model 
                         if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter->first))) continue; 
+                        
 
                         found = true; //are the submatches in order? (default to true, attempt to falsify, needed for mintokens==1) 
 
@@ -865,7 +890,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
                         ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
-                        if (found) {
+                        if ((found) && (!skipgramsonly)) {
                             const Pattern pattern = Pattern(iter->first);
                             ValueType * data = getdata(pattern, true);
                             add(pattern, data, ref );
@@ -980,16 +1005,16 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param options Options for training
          * @param constrainbymodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          */
-        virtual void train(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL) {
+        virtual void train(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1) {
             if ((filename.size() > 3) && (filename.substr(filename.size()-3) == ".bz2")) {
                 std::ifstream * in = new std::ifstream(filename.c_str(), std::ios::in|std::ios::binary);
                 bz2istream * decompressor = new bz2istream(in->rdbuf());
-                this->train( (std::istream*) decompressor, options, constrainbymodel);
+                this->train( (std::istream*) decompressor, options, constrainbymodel, continued, firstsentence);
                 delete decompressor;
                 delete in;
             } else {
                 std::ifstream * in = new std::ifstream(filename.c_str());
-                this->train((std::istream*) in, options, constrainbymodel);
+                this->train((std::istream*) in, options, constrainbymodel, continued, firstsentence);
                 in->close();
                 delete in;
             }

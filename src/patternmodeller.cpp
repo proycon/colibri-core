@@ -61,6 +61,8 @@ void usage() {
     cerr << "\t                 two models (unlike -j). Input model (-i) and or output model (-o) may be indexed or unindexed (-u), this option also allows for constructing indexed models " << endl;
     cerr << "\t                 from unindexed models (given the same source corpus), and is used in two-stage building (-2)." <<endl;  
     cerr << "\t--ssr            Perform Statistical Substring reduction, prunes n-grams that are only part of larger n-grams (TO BE IMPLEMENTED STILL)" << endl; //TODO
+    cerr << "\t-E               Expand the loaded pattern model *ON THE SAME CORPUS DATA*, allows you to add, for example, larger order ngrams to an existing model or skipgrams to an n-gram only model." << endl;
+    cerr << "\t-e <number>      Expand the loaded pattern model *ON DIFFERENT CORPUS DATA*, the number is the sentence offset to use in the model (be careful not to overlap with existing sentence indices!)" << endl;
     cerr << endl;
     cerr << " Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
     cerr << endl;
@@ -245,8 +247,10 @@ int main( int argc, char *argv[] ) {
     bool DOINPLACEREBUILD = false;
     double COOCTHRESHOLD = 0;
     int DOCOOC = 0; //1= absolute, 2= npmi
+    bool continued = false;
+    uint32_t firstsentence = 1;
     char c;    
-    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vb:y:W:p:")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vb:y:W:p:Ee:")) != -1)
         switch (c)
         {
         case 'c':
@@ -363,6 +367,12 @@ int main( int argc, char *argv[] ) {
         case 'G':
             cerr << "Option -G NOT IMPLEMENTED YET!" << endl;
             exit(2);
+        case 'E':
+            continued = true;
+            break;
+        case 'e':
+            firstsentence = atoi(optarg);
+            break;
         case 'h':
             usage();
             exit(0);
@@ -533,7 +543,7 @@ int main( int argc, char *argv[] ) {
 
                 //build new model from corpus
                 cerr << "Building new indexed model from  " << corpusfile <<endl;
-                model.train(corpusfile, options, model.getinterface());
+                model.train(corpusfile, options, model.getinterface(), continued,firstsentence);
 
                 if (DOFLEXFROMSKIP) {
                     cerr << "Computing flexgrams from skipgrams" << corpusfile <<endl;
@@ -559,7 +569,7 @@ int main( int argc, char *argv[] ) {
                 }
                 //build new model from corpus
                 cerr << "Building new unindexed model from  " << corpusfile <<endl;
-                model.train(corpusfile, options, model.getinterface());
+                model.train(corpusfile, options, model.getinterface(), continued, firstsentence);
 
                 if (!outputmodelfile.empty()) {
                     didsomething = true;
@@ -644,7 +654,7 @@ int main( int argc, char *argv[] ) {
                 if (!corpusfile.empty()) {
                     //build new model from corpus
                     cerr << "Building new indexed model from  " << corpusfile <<endl;
-                    outputmodel.train(corpusfile, options, (PatternModelInterface*) constrainbymodel);
+                    outputmodel.train(corpusfile, options, (PatternModelInterface*) constrainbymodel, continued, firstsentence);
                 }
                 
                 if (constrainbymodel) {
@@ -674,7 +684,7 @@ int main( int argc, char *argv[] ) {
                 if (!corpusfile.empty()) {
                     //build new model from corpus
                     cerr << "Building new unindexed model from  " << corpusfile <<endl;
-                    outputmodel.train(corpusfile, options, (PatternModelInterface*) constrainbymodel);
+                    outputmodel.train(corpusfile, options, (PatternModelInterface*) constrainbymodel, continued, firstsentence);
                 }
                 if (constrainbymodel) {
                     cerr << "Unloading constraint model" << endl;
