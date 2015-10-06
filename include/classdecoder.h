@@ -30,6 +30,7 @@
  *
  */
 
+
 /**
  * \brief Class for decoding binary class-encoded data back to plain-text.
  * The ClassDecoder maintains a mapping of classes (integers) to words. It allows decoding of a corpus
@@ -41,12 +42,12 @@
 class ClassDecoder {
     private:
      std::unordered_map<unsigned int,std::string> classes;
-     unsigned char delimiterclass;
-     unsigned char unknownclass;
-     unsigned char skipclass;
-     unsigned char flexclass;
      unsigned int highestclass;
     public:
+     static const unsigned char delimiterclass = 0;
+     static const unsigned char unknownclass = 2;
+     static const unsigned char skipclass = 3;
+     static const unsigned char flexclass = 4;
     
     /**
      * Constructor for an empty class decoder 

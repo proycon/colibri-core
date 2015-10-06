@@ -65,11 +65,7 @@ unsigned int bytestoint_v1(const unsigned char* a, const int l) {
 
 
 ClassDecoder::ClassDecoder() {
-       delimiterclass = 0;
-       unknownclass = 2;
        highestclass = 0;
-       skipclass = 3;
-       flexclass = 4;
        classes[unknownclass] = "{?}";
        classes[skipclass] = "{*}";
        classes[flexclass] = "{**}";
@@ -81,11 +77,7 @@ ClassDecoder::ClassDecoder(const string & filename) {
 
 
 void ClassDecoder::load(const string & filename) {
-       delimiterclass = 0;
-       unknownclass = 2;
        highestclass = 0;
-       skipclass = 3;
-       flexclass = 4;
 
        classes[unknownclass] = "{?}";
        classes[skipclass] = "{*}";

@@ -50,14 +50,14 @@
 class ClassEncoder {
     private:
      std::unordered_map<std::string,unsigned int> classes;
-     unsigned char delimiterclass;
-     unsigned char unknownclass;
-     unsigned char skipclass;
-     unsigned char flexclass;
      unsigned int highestclass;
      unsigned int minlength;
      unsigned int maxlength;
     public:
+     static const unsigned char delimiterclass = 0;
+     static const unsigned char unknownclass = 2;
+     static const unsigned char skipclass = 3;
+     static const unsigned char flexclass = 4;
     /**
      * Constructor for an empty ClassEncoder
      * @param minlength Minimum supported length of words (default: 0)

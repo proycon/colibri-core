@@ -107,8 +107,8 @@ class Pattern: public PatternInterface {
       * @param in The input stream
       * @param ignoreeol Ignore end of line markers and read on until the end of the file, storing corpus data in one pattern
       */
-     Pattern(std::istream * in, bool ignoreeol = false, bool debug = false); 
-     Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, bool ignoreeol = false, bool debug = false);
+     Pattern(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, bool debug = false); 
+     Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, bool ignoreeol = false, const unsigned char version = 2, bool debug = false);
 
 
      ~Pattern();
@@ -195,7 +195,7 @@ class Pattern: public PatternInterface {
       * Convert the pattern to a vector of integers, where the integers
       * correspond to the token classes.
       */
-     std::vector<int> tovector() const;
+     std::vector<unsigned int> tovector() const;
 
      bool operator==(const Pattern & other) const;
      bool operator!=(const Pattern & other) const;
