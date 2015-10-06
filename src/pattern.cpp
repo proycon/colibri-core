@@ -274,53 +274,18 @@ std::string datatostring(unsigned char * data, const ClassDecoder& classdecoder,
     std::string result = ""; 
     int i = 0;
     int gapsize = 0;
+    unsigned int length; 
     do {
         if ((maxbytes > 0) && (i == maxbytes)) {
-            if (gapsize > 0) {
-                if (!result.empty()) result += " ";
-                result += std::string("{*") + to_string(gapsize) + std::string("*}");                
-                gapsize = 0;
-            }
             return result;
         }
-        const unsigned char c = data[i];
-        if (c == ENDMARKER) {
-            //end marker
-            if (gapsize > 0) {
-                if (!result.empty()) result += " ";
-                result += std::string("{*") + to_string(gapsize) + std::string("*}");                
-                gapsize = 0;
-            }
-            return result;
-        } else if (c < 128) {
-            //we have a size
-            if (gapsize > 0) {
-                if (!result.empty()) result += " ";
-                result += std::string("{*") + to_string(gapsize) + std::string("*}");                
-                gapsize = 0;
-            }
-            unsigned int cls =  bytestoint(data + i +1, c);
-            //cerr << (int) c << ":" << (int) *(data+i + 1) << ":" << (int) data[i+1] << ":" << cls << endl;
-            i += c + 1;
-            if (!result.empty()) result += " ";
-            if (classdecoder.hasclass(cls)) {
-                result += classdecoder[cls];
-            } else {
-                result += "{UNKNOWN}";
-            }
-        } else if (c == SKIPMARKER) {
-            gapsize++;
-            i++;
-        } else if (c == FLEXMARKER) {
-            if (result.empty()) {
-                result += "{*}";
-            } else {
-                result += " {*}";
-            }
-            i++;
+        const unsigned int cls =  bytestoint(data + i, &length);
+        i += length;
+        if (!result.empty()) result += " ";
+        if (classdecoder.hasclass(cls)) {
+            result += classdecoder[cls];
         } else {
-            //we have another marker
-            i++;
+            result += "{?}";
         }
     } while (1);
     return result;  

@@ -16,10 +16,11 @@
 *****************************/
 using namespace std;
 
-unsigned int bytestoint(const unsigned char* a) {
+unsigned int bytestoint(const unsigned char* a, unsigned int * length) {
     unsigned int result = 0;
     unsigned char b;
     unsigned int i = 0;
+    *length = 0;
     do {
         b = *(a+i);
         if (b >> 7) {
@@ -27,6 +28,7 @@ unsigned int bytestoint(const unsigned char* a) {
             result += (b ^ 128)* pow(256,i);
         } else {
             result += b * pow(256,i);
+            if (length != NULL) *length = i;
             break;
         }
         i++;

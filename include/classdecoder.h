@@ -143,7 +143,7 @@ class ClassDecoder {
 };
 
 unsigned int bytestoint(istream* IN);
-unsigned int bytestoint(const unsigned char* a);
+unsigned int bytestoint(const unsigned char* a, unsigned int * length = NULL);
 
 unsigned int bytestoint_v1(const unsigned char* a, const int l);
 int readline(std::istream* IN, unsigned char* buffer, const int);
