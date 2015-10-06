@@ -50,9 +50,10 @@
 class ClassEncoder {
     private:
      std::unordered_map<std::string,unsigned int> classes;
-     unsigned int unknownclass;
-     unsigned int bosclass;
-     unsigned int eosclass;
+     unsigned char delimiterclass;
+     unsigned char unknownclass;
+     unsigned char skipclass;
+     unsigned char flexclass;
      unsigned int highestclass;
      unsigned int minlength;
      unsigned int maxlength;
@@ -225,7 +226,7 @@ class ClassEncoder {
     }
 };    
 
-unsigned char * inttobytes(unsigned int, int & length);
+unsigned int  inttobytes(unsigned char * buffer, unsigned int cls);
 unsigned char * inttobytes_v1(unsigned int, int & length);
 int readline(std::istream* IN, unsigned char* buffer, const int);
 

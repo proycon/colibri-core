@@ -18,25 +18,26 @@
 *****************************/
 using namespace std;
 
-unsigned char * inttobytes(unsigned int cls, int & length) {	
+unsigned int inttobytes(unsigned char * buffer, unsigned int cls) {	
 	unsigned int cls2 = cls;
-	length = 0;
+	unsigned int length = 0;
 	do {
 		cls2 = cls2 / 128;
 		length++;
 	} while (cls2 > 0);
-	unsigned char * byterep = new unsigned char[length];
-	int i = 0;
-    do {
-    	int r = cls % 128;
-        if (i != length - 1) {
-            byterep[i++] = (unsigned char) r | 128; //high
-        } else {
-            byterep[i++] = (unsigned char) r; //low
-        }
-    	cls = cls / 128;
-    } while (cls > 0);
-	return byterep;    
+    if (buffer != NULL) {
+        int i = 0;
+        do {
+            int r = cls % 128;
+            if (i != length - 1) {
+                buffer[i++] = (unsigned char) r | 128; //high
+            } else {
+                buffer[i++] = (unsigned char) r; //low
+            }
+            cls = cls / 128;
+        } while (cls > 0);
+    }
+	return length;    
 }
 
 unsigned char * inttobytes_v1(unsigned int cls, int & length) {	
@@ -77,6 +78,7 @@ int utf8_strlen(const string& str)
 
 
 ClassEncoder::ClassEncoder(const unsigned int minlength, unsigned const int maxlength) {
+    delimiterclass = 0;
     unknownclass = 2;
     skipclass = 3;
     flexclass = 4;
@@ -91,6 +93,7 @@ ClassEncoder::ClassEncoder(const string & filename,const unsigned int minlength,
 }
 
 void ClassEncoder::load(const string & filename,const unsigned int minlength, unsigned const int maxlength) {
+       delimiterclass = 0;
        unknownclass = 2;
        highestclass = 0; 
        skipclass = 3;
@@ -118,9 +121,6 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
                     if (((minlength > 0) && (l < minlength)) || ((maxlength > 0) && (l > maxlength))) continue;
                   }
                   classes[word] = cls;
-                  if (cls == 2) {
-                    unknownclass = 0;
-                  }
                   if (cls > (unsigned int) highestclass) highestclass = cls;
                   //cerr << "CLASS=" << cls << " WORD=" << word << endl;
               }
@@ -129,15 +129,9 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
         }        
         IN.close();  
         
-        if (unknownclass == 0) {
-            highestclass++;
-            unknownclass = highestclass;
-            classes["{?}"] = unknownclass;
-        } else {        
-            classes["{?}"] = unknownclass;
-            classes["{*}"] = skipclass;
-            classes["{***}"] = flexclass;
-        }
+        classes["{?}"] = unknownclass;
+        classes["{*}"] = skipclass;
+        classes["{**}"] = flexclass;
 }
 
 
@@ -291,6 +285,7 @@ int ClassEncoder::outputlength(const string & line) {
 	  int outputcursor = 0;
       int begin = 0;      
       int tmphighestclass = highestclass;
+      unsigned int classlength;
       const int l = line.length();
       for (int i = 0; i < l; i++) {
       	  if ((line[i] == ' ') || (i == l - 1)) {
@@ -304,12 +299,12 @@ int ClassEncoder::outputlength(const string & line) {
           	  begin = i+1;
           	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
           	    unsigned int cls;
-                if (word == "{*}") {
-                    //variable length skip
+                if ((word == "{*}") || (word == "{**}")) {
+                    //length skip
                     outputcursor++;
                     continue;
                 } else if (word == "{?}") {
-                    //single tokenskip
+                    //unknown word
                     outputcursor++;
                     continue;
                 } else if ((word.substr(0,2) == "{*")  && (word.substr(word.size() - 2,2) == "*}")) {
@@ -323,17 +318,8 @@ int ClassEncoder::outputlength(const string & line) {
           	    } else {
           	  		cls = classes[word];
           	  	}
-          	  	int length = 0;
-  	        	const unsigned char * byterep = inttobytes(cls, length);
-  	        	if (length == 0) {
-  	        		cerr << "INTERNAL ERROR: Error whilst encoding '" << word << "' (class " << cls << "), length==0, not possible!" << endl;
-  	        		exit(13);
-  	        	} else if (length > 128) {
-  	        		cerr << "INTERNAL ERROR: Error whilst encoding '" << word << "' (class " << cls << "), length exceeds 128, not possible!" << endl;
-  	        		exit(13);
-                }
-                outputcursor += length + 1;
-  	        	delete [] byterep;
+          	  	classlength = inttobytes(NULL, cls);
+                outputcursor += classlength;
           	  }			 
           }
       }
@@ -345,6 +331,7 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
 	  int outputcursor = 0;
       int begin = 0;      
       const int l = line.length();
+      unsigned int classlength;
       for (int i = 0; i < l; i++) {
       	  if ((line[i] == ' ') || (i == l - 1)) {
           	  string word;
@@ -358,17 +345,21 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
           	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
           	    unsigned int cls;
                 if (word == "{*}") {
+                    //fixed length skip
+                    outputbuffer[outputcursor++] = skipclass; 
+                    continue;
+                } else if (word == "{**}") {
                     //variable length skip
-                    outputbuffer[outputcursor++] = 129; //DYNAMICGAP MARKER 
+                    outputbuffer[outputcursor++] = flexclass;
                     continue;
                 } else if (word == "{?}") {
-                    //single tokenskip
-                    outputbuffer[outputcursor++] = 128; //FIXEDGAP MARKER
+                    //unknown word
+                    outputbuffer[outputcursor++] = unknownclass; 
                     continue;
                 } else if ((word.substr(0,2) == "{*")  && (word.substr(word.size() - 2,2) == "*}")) {
                     const int skipcount = atoi(word.substr(2,word.size() - 4).c_str()); 
                     for (int j = 0; j < skipcount; j++) {
-                        outputbuffer[outputcursor++] = 128; //FIXEDGAP MARKER                     
+                        outputbuffer[outputcursor++] = skipclass; //FIXEDGAP MARKER                     
                     }                
                     continue;
                 } else if (classes.count(word) == 0) {
@@ -386,20 +377,8 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
           	    } else {
           	  		cls = classes[word];
           	  	}
-          	  	int length = 0;
-  	        	const unsigned char * byterep = inttobytes(cls, length);
-  	        	if (length == 0) {
-  	        		cerr << "INTERNAL ERROR: Error whilst encoding '" << word << "' (class " << cls << "), length==0, not possible!" << endl;
-  	        		exit(13);
-  	        	} else if (length > 128) {
-  	        		cerr << "INTERNAL ERROR: Error whilst encoding '" << word << "' (class " << cls << "), length exceeds 128, not possible!" << endl;
-  	        		exit(13);
-                }
-                outputbuffer[outputcursor++] = length;
-  	        	for (int j = 0; j < length; j++) {
-  	        		outputbuffer[outputcursor++] = byterep[j];
-  	        	}  	        	
-  	        	delete [] byterep;
+  	        	classlength = inttobytes(outputbuffer + outputcursor, cls);
+                outputcursor += classlength;
           	  }			 
           }
       }

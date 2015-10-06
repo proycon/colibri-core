@@ -16,21 +16,43 @@
 *****************************/
 using namespace std;
 
-unsigned int bytestoint(const unsigned char* a, const int l) {
+unsigned int bytestoint(const unsigned char* a) {
     unsigned int result = 0;
     unsigned char b;
-    unsigned int l = 0;
+    unsigned int i = 0;
     do {
         b = *(a+i);
         if (b >> 7) {
             //high
-            result += (b << 2 >> 1)* pow(256,i);
+            result += (b ^ 128)* pow(256,i);
         } else {
             result += b * pow(256,i);
+            break;
         }
+        i++;
     } while (true);
     return result;
 }
+
+unsigned int bytestoint(istream* IN) {
+    unsigned int result = 0;
+    unsigned char b;
+    unsigned int i = 0;
+    do {
+        IN->read((char*) &b,sizeof(unsigned char));
+        if (!IN->good()) break;
+        if (b >> 7) {
+            //high
+            result += (b ^ 128)* pow(256,i);
+        } else {
+            result += b * pow(256,i);
+            break;
+        }
+        i++;
+    } while (IN->good());
+    return result;
+}
+
 unsigned int bytestoint_v1(const unsigned char* a, const int l) {
     int result = 0;
     for (int i = 0; i < l; i++) {
@@ -41,13 +63,14 @@ unsigned int bytestoint_v1(const unsigned char* a, const int l) {
 
 
 ClassDecoder::ClassDecoder() {
+       delimiterclass = 0;
        unknownclass = 2;
        highestclass = 0;
        skipclass = 3;
        flexclass = 4;
        classes[unknownclass] = "{?}";
        classes[skipclass] = "{*}";
-       classes[flexclass] = "{***}";
+       classes[flexclass] = "{**}";
 }
 
 ClassDecoder::ClassDecoder(const string & filename) {
@@ -56,14 +79,15 @@ ClassDecoder::ClassDecoder(const string & filename) {
 
 
 void ClassDecoder::load(const string & filename) {
+       delimiterclass = 0;
        unknownclass = 2;
        highestclass = 0;
-       bosclass = 3;
-       eosclass = 4;
+       skipclass = 3;
+       flexclass = 4;
 
-       classes[unknownclass] = "{UNKNOWN}";
-       classes[bosclass] = "{BEGIN}";
-       classes[eosclass] = "{END}";
+       classes[unknownclass] = "{?}";
+       classes[skipclass] = "{*}";
+       classes[flexclass] = "{**}";
 
        ifstream *IN =  new ifstream( filename.c_str() );    
        if (!(*IN)) {
@@ -129,8 +153,43 @@ string decodestring(const unsigned char * data, unsigned char datasize) {
 	}
 } */
 
-
 void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsigned int start, unsigned int end, bool quiet) {
+    unsigned char buffer[1024]; //bit large, only for one token
+    ifstream *IN = new ifstream(filename.c_str()); //, ios::in | ios::binary);
+    unsigned int linenumber = 1;
+    unsigned char c;
+    unsigned int cls;
+    unsigned char version;
+    if (IN->good()) {
+        IN->read( (char* ) &c, sizeof(char));
+        if (c != 0xa2) {
+            cerr << "ERROR: This is not a Colibri Core 2 corpus data file! Did you pass a plain text file or older dat file? Convert older datafiles first using colibri-datconvert .." << endl;
+            return;
+        }
+        IN->read( (char* ) &version, sizeof(char));
+        if (version != 2) {
+            cerr << "ERROR: This is not a Colibri Core 2 corpus data file (incorrect version)! Did you pass a plain text file or older dat file? Convert older datafiles first using colibri-datconvert .." << endl;
+            return;
+        }
+    }
+    while (IN->good()) {
+        cls = bytestoint(IN); 
+        if (!IN->good()) break;
+        if (cls == 0) { //endmarker
+            if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
+                *out << endl;
+            }
+            linenumber++;
+        } else {
+            *out << classes[cls] << endl;
+        }
+    }
+    IN->close();
+    linenumber--;
+    if (!quiet) cerr << "Processed " << linenumber  << " lines" << endl;               
+} 
+
+void ClassDecoder::decodefile_v1(const string & filename,  std::ostream* out , unsigned int start, unsigned int end, bool quiet) {
     unsigned char buffer[1024]; //bit large, only for one token
     ifstream *IN = new ifstream(filename.c_str()); //, ios::in | ios::binary);
     unsigned int linenumber = 1;
@@ -149,18 +208,18 @@ void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsi
             //we have a size, load token
             IN->read( (char*) buffer, c);
             if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
-                int cls = bytestoint(buffer, (int) c);
+                int cls = bytestoint_v1(buffer, (int) c);
                 if (!first) *out << " ";
                 *out << classes[cls];
                 first = false;
             }
         } else if (c == 128) {
             if (!first) *out << " ";
-            *out << "{?}";
+            *out << "{*}";
             first = false;
         } else if (c == 129) {
             if (!first) *out << " ";
-            *out << "{*}";
+            *out << "{**}";
             first = false;
         }
     }
@@ -176,20 +235,6 @@ std::string ClassDecoder::decodefiletostring(const std::string & filename,   uns
     return ss.str();
 }
 
-const int countwords(const unsigned char* data, const int l) {
-	if (l == 0) return 0;	
-    int words = 1; 
-    bool empty = true;
-    for (int i = 0; i < l; i++) {
-        if ( (data[i] == 0) && (i > 0) && (i < l - 1) ) words++;
-        if (data[i] != 0) empty = false;
-    }
-    if (empty) {
-     	return 0;
-    } else {
-     	return words;
-    }
-}
 
 void ClassDecoder::add(unsigned int cls, std::string s) {
     classes[cls] = s;
@@ -197,36 +242,6 @@ void ClassDecoder::add(unsigned int cls, std::string s) {
 }
 
 
-pair<int,int> getwords(const unsigned char* data, const int datasize, const int n, const int begin) {
-    //cerr << "IN DATASIZE=" << datasize << " N=" << n << " BEGIN=" << begin << endl;
-    int words = 0; 
-    int beginsize = 0;
-    for (int i = 0; i < datasize; i++) {
-        if (data[i] == 0) {
-            words++;
-            if (words == begin) {
-                beginsize = i+1;
-                //cerr << "BEGINSIZE: " << beginsize << endl;
-            }
-            //cerr << words << " vs " << beginsize+n << endl;
-            if (words == begin+n) {                
-                //cerr << "BEGIN: "<<  beginsize << endl;
-                //cerr << "LENGTH: "<<  i - beginsize << endl;
-                return pair<int,int>(beginsize,i - beginsize );
-            }
-        } 
-    }
-    words++;
-    if (words == begin+n) {
-        //cerr << "BEGIN: "<<  beginsize << endl;
-        //cerr << "LENGTH: "<<  datasize - beginsize << endl;
-        return pair<int,int>(beginsize, datasize - beginsize);
-    } else {
-        //cerr << "WARNING: getwords not found" << endl;
-        //cerr << "DEBUG WORDS=" << words << endl;;
-        return pair<int,int>(0,0); //fragment too small
-    }
-}
 
 void ClassDecoder::prune(unsigned int threshold) {
     for (unsigned int i = threshold; i <= highestclass; i++) {

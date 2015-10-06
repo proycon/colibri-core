@@ -41,9 +41,10 @@
 class ClassDecoder {
     private:
      std::unordered_map<unsigned int,std::string> classes;
-     unsigned int unknownclass;
-     unsigned int skipclass;
-     unsigned int flexclass;
+     unsigned char delimiterclass;
+     unsigned char unknownclass;
+     unsigned char skipclass;
+     unsigned char flexclass;
      unsigned int highestclass;
     public:
     
@@ -93,14 +94,14 @@ class ClassDecoder {
     
     /**
      * Return the word pertaining to the given class. Unknown classes will be
-     * decoded as {UNKNOWN}.
+     * decoded as {?}.
      */
     std::string operator[](unsigned int key) const {
          std::unordered_map<unsigned int, std::string>::const_iterator it = classes.find(key);
          if (it != classes.end()) {
              return it->second;
          } else {
-             return "{UNKNOWN}";
+             return "{?}";
          }
     }
     
@@ -141,9 +142,9 @@ class ClassDecoder {
 
 };
 
-unsigned int bytestoint(const unsigned char* a, const int l);
-int readline(std::istream* IN, unsigned char* buffer, const int);
+unsigned int bytestoint(istream* IN);
+unsigned int bytestoint(const unsigned char* a);
 
-const int countwords(const unsigned char* data, const int l);
-std::pair<int,int> getwords(const unsigned char* data, const int datasize, const int n, const int begin = 0);
+unsigned int bytestoint_v1(const unsigned char* a, const int l);
+int readline(std::istream* IN, unsigned char* buffer, const int);
 #endif
