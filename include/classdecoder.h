@@ -42,8 +42,8 @@ class ClassDecoder {
     private:
      std::unordered_map<unsigned int,std::string> classes;
      unsigned int unknownclass;
-     unsigned int bosclass;
-     unsigned int eosclass;
+     unsigned int skipclass;
+     unsigned int flexclass;
      unsigned int highestclass;
     public:
     

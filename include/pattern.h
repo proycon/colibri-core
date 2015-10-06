@@ -378,12 +378,15 @@ Pattern patternfromfile(const std::string & filename); //helper function to read
 class PatternPointer {
     public:
      unsigned char * data; /** Pointer to Pattern data */
-     unsigned char bytes; //number of bytes
+     uint32_t bytes; //number of bytes
+     uint32_t mask; //0 == NGRAM
+                    //first bit high = flexgram, right-aligned, 0 = gap
+                    //first bit low = skipgram, right-aligned, 0 = gap , max skipgram length 31 tokens
     
      PatternPointer(unsigned char* dataref, const int bytesize) {
          data = dataref;
-         if (bytesize > 255) {
-             std::cerr << "ERROR: Pattern too long for pattern pointeri [" << bytesize << ",explicit]" << std::endl;
+         if (bytesize > 2**32) {
+             std::cerr << "ERROR: Pattern too long for pattern pointer [" << bytesize << ",explicit]" << std::endl;
              throw InternalError();
          }
          bytes = bytesize;
@@ -392,7 +395,7 @@ class PatternPointer {
      PatternPointer(const Pattern * ref) {
          data = ref->data;
          const size_t b = ref->bytesize();
-         if (b > 255) {
+         if (b > 2**32) {
              std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << ",implicit]" << std::endl;
              throw InternalError();
          }
@@ -401,10 +404,12 @@ class PatternPointer {
      PatternPointer(const PatternPointer& ref) {
          data = ref.data;
          bytes = ref.bytes;
+         mask = ref.mask;
      }
      PatternPointer & operator =(const PatternPointer other) {
          data = other.data;
          bytes = other.bytes;
+         mask = other.mask;
          // by convention, always return *this (for chaining)
          return *this;
      }
@@ -423,10 +428,21 @@ class PatternPointer {
      bool out() const;
      
      bool operator==(const PatternPointer & other) const {
-         return ((data == other.data) && (bytes == other.bytes));
+         return ((data == other.data) && (bytes == other.bytes) && (mask == other.mask));
      }
      bool operator!=(const PatternPointer & other) const { return !(*this == other); }
 
+     bool operator<(const PatternPointer & other) const {
+         if (data == other.data) {
+             if (bytes == other.bytes) {
+                 return mask < other.mask;
+             } else {
+                 return bytes < other.bytes;
+             }
+         } else {
+            return data < other.data;
+        }
+     }
 
      int ngrams(std::vector<PatternPointer> & container, const int n) const; 
      int subngrams(std::vector<PatternPointer> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
@@ -435,18 +451,13 @@ class PatternPointer {
 };
 
 
-const unsigned char tmp_skipmarker = SKIPMARKER;
-const unsigned char tmp_flexmarker = FLEXMARKER;
-//const uint16_t tmp_unk = 0x0102; //0x01 0x02
-//const uint16_t tmp_bos = 0x0103; //0x01 0x03
-//const uint16_t tmp_eos = 0x0104; //0x01 0x04
-static const unsigned char * tmp_unk = (const unsigned char *) "\1\2";
-static const unsigned char * tmp_bos = (const unsigned char *) "\1\3";
-static const unsigned char * tmp_eos = (const unsigned char *) "\1\4";
+static const unsigned char * tmp_unk = (const unsigned char *) "\2";
+static const unsigned char * tmp_skipmarker = (const unsigned char *) "\3";
+static const unsigned char * tmp_flexmarker = (const unsigned char *) "\4";
 const Pattern SKIPPATTERN = Pattern(&tmp_skipmarker,1);
 const Pattern FLEXPATTERN = Pattern(&tmp_flexmarker,1);
-static const Pattern BEGINPATTERN = Pattern((const unsigned char *) tmp_bos,2);
-static const Pattern ENDPATTERN = Pattern((const unsigned  char *) tmp_eos,2);
+//static const Pattern BEGINPATTERN = Pattern((const unsigned char *) tmp_bos,2);
+//static const Pattern ENDPATTERN = Pattern((const unsigned  char *) tmp_eos,2);
 static const Pattern UNKPATTERN = Pattern((const unsigned char* ) tmp_unk,2);
 
 namespace std {

@@ -18,8 +18,28 @@
 *****************************/
 using namespace std;
 
-
 unsigned char * inttobytes(unsigned int cls, int & length) {	
+	unsigned int cls2 = cls;
+	length = 0;
+	do {
+		cls2 = cls2 / 128;
+		length++;
+	} while (cls2 > 0);
+	unsigned char * byterep = new unsigned char[length];
+	int i = 0;
+    do {
+    	int r = cls % 128;
+        if (i != length - 1) {
+            byterep[i++] = (unsigned char) r | 128; //high
+        } else {
+            byterep[i++] = (unsigned char) r; //low
+        }
+    	cls = cls / 128;
+    } while (cls > 0);
+	return byterep;    
+}
+
+unsigned char * inttobytes_v1(unsigned int cls, int & length) {	
 	//compute length of byte array
 	unsigned int cls2 = cls;
 	length = 0;
@@ -58,8 +78,8 @@ int utf8_strlen(const string& str)
 
 ClassEncoder::ClassEncoder(const unsigned int minlength, unsigned const int maxlength) {
     unknownclass = 2;
-    bosclass = 3;
-    eosclass = 4;
+    skipclass = 3;
+    flexclass = 4;
     highestclass = 5; //5 and lower are reserved
 
     this->minlength = minlength;
@@ -73,8 +93,8 @@ ClassEncoder::ClassEncoder(const string & filename,const unsigned int minlength,
 void ClassEncoder::load(const string & filename,const unsigned int minlength, unsigned const int maxlength) {
        unknownclass = 2;
        highestclass = 0; 
-       bosclass = 3;
-       eosclass = 4;
+       skipclass = 3;
+       flexclass = 4;
        this->minlength = minlength;
        this->maxlength = maxlength;
        
@@ -112,11 +132,11 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
         if (unknownclass == 0) {
             highestclass++;
             unknownclass = highestclass;
-            classes["{UNKNOWN}"] = unknownclass;
+            classes["{?}"] = unknownclass;
         } else {        
-            classes["{UNKNOWN}"] = unknownclass;
-            classes["{BEGIN}"] = bosclass;
-            classes["{END}"] = eosclass;
+            classes["{?}"] = unknownclass;
+            classes["{*}"] = skipclass;
+            classes["{***}"] = flexclass;
         }
 }
 

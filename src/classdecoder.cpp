@@ -17,6 +17,21 @@
 using namespace std;
 
 unsigned int bytestoint(const unsigned char* a, const int l) {
+    unsigned int result = 0;
+    unsigned char b;
+    unsigned int l = 0;
+    do {
+        b = *(a+i);
+        if (b >> 7) {
+            //high
+            result += (b << 2 >> 1)* pow(256,i);
+        } else {
+            result += b * pow(256,i);
+        }
+    } while (true);
+    return result;
+}
+unsigned int bytestoint_v1(const unsigned char* a, const int l) {
     int result = 0;
     for (int i = 0; i < l; i++) {
         result += *(a + i) * pow(256,i);
@@ -28,11 +43,11 @@ unsigned int bytestoint(const unsigned char* a, const int l) {
 ClassDecoder::ClassDecoder() {
        unknownclass = 2;
        highestclass = 0;
-       bosclass = 3;
-       eosclass = 4;
-       classes[unknownclass] = "{UNKNOWN}";
-       classes[bosclass] = "{BEGIN}";
-       classes[eosclass] = "{END}";
+       skipclass = 3;
+       flexclass = 4;
+       classes[unknownclass] = "{?}";
+       classes[skipclass] = "{*}";
+       classes[flexclass] = "{***}";
 }
 
 ClassDecoder::ClassDecoder(const string & filename) {

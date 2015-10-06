@@ -226,6 +226,7 @@ class ClassEncoder {
 };    
 
 unsigned char * inttobytes(unsigned int, int & length);
+unsigned char * inttobytes_v1(unsigned int, int & length);
 int readline(std::istream* IN, unsigned char* buffer, const int);
 
 const int countwords(const unsigned char* data, const int l);
