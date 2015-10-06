@@ -50,9 +50,7 @@ class IndexPattern {
          */
         IndexPattern(const IndexReference & ref, const Pattern & pattern) {
             this->ref = ref;
-            //grab only the first class
-            unsigned char size = pattern.data[0];
-            this->cls = bytestoint(pattern.data + 1, size);
+            this->cls = bytestoint(pattern.data + 1);
         }
         /**
          * Constructor from an integer 
