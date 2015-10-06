@@ -56,41 +56,6 @@ enum PatternCategory {
     FLEXGRAM = 3, /**< For flexgrams, i.e. patterns with dynamic-width gaps */
 };
 
-/**
- * Not really used much yet, but reserved for encoding structural markup later
- * on.
- */
-enum StructureType { 
-    STRUCT_PATTERN = 0, //undefined pattern (if n==1 -> token)
-    STRUCT_SENTENCE = 1,
-    STRUCT_PARAGRAPH = 2,
-    STRUCT_HEADER = 3, //like paragraph
-    STRUCT_TEXT = 4, //aka document
-    STRUCT_QUOTE = 5,
-    STRUCT_DIV = 6,
-};
-
-
-//Markers (en lieu of the size marker with byte value <128)
-enum Markers { // <128 size
-    ENDMARKER = 0, //marks the end of each pattern (necessary!)
-
-    TEXTMARKER = 255, //aka begin document 
-    SENTENCEMARKER = 254,
-    PARAGRAPHMARKER = 253,
-    BEGINDIVMARKER = 252,
-    ENDDIVMARKER = 251,
-    HEADERMARKER = 250,
-   
-
-
-    FLEXMARKER = 129,
-    SKIPMARKER = 128,
-};
-
-
-
-
 
 void readanddiscardpattern(std::istream * in);
 int reader_passmarker(const unsigned char c, std::istream * in); 
@@ -101,7 +66,7 @@ class PatternPointer;
  * \brief Pattern class, represents a pattern (ngram, skipgram or flexgram).
  * Encoded in a memory-saving fashion. Allows numerous operations.
  */
-class Pattern {
+class Pattern: public PatternInterface {
     protected:
      void reader_marker(unsigned char * _data, std::istream * in);
     public:
@@ -488,9 +453,5 @@ namespace std {
     };
 
 }
-
-
-unsigned char * inttopatterndata(unsigned char * buffer,unsigned int cls);
-
 
 #endif

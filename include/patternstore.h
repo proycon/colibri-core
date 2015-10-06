@@ -73,9 +73,8 @@ class IndexPattern {
          */
         Pattern pattern() {
             unsigned char * buffer = new unsigned char[16]; //small buffer, but cls can't be too big anyhow
-            unsigned char * data = inttopatterndata(buffer, (unsigned int) cls);
-            const int bsize = data-buffer; //pointer arithmetic
-            Pattern p = Pattern(buffer, bsize);
+            const unsigned char classlength = inttobytes(buffer, (unsigned int) cls);
+            Pattern p = Pattern(buffer, classlength);
             delete[] buffer;
             return p;
         }

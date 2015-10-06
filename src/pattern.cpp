@@ -20,28 +20,6 @@ using namespace std;
 
 unsigned char mainpatternbuffer[MAINPATTERNBUFFERSIZE+1];
 
-unsigned char * inttopatterndata(unsigned char * buffer,unsigned int cls) {
-    //can be chained, encodes length byte (unlike inttobytes)
-	unsigned int cls2 = cls;
-	unsigned char length = 0;
-	do {
-		cls2 = cls2 / 256;
-        if (length == 255) {
-            cerr << "ERROR: inttopatterndata() LENGTH OVERFLOW" << endl;
-            throw InternalError();
-        }
-		length++;
-	} while (cls2 > 0);
-	int i = 0;
-    buffer[i++] = length;
-    do {
-    	int r = cls % 256;
-    	buffer[i++] = (unsigned char) r;
-    	cls = cls / 256;
-    } while (cls > 0);
-	return buffer + i;    
-}
-
 const PatternCategory datacategory(const unsigned char * data, int maxbytes = 0) {
     PatternCategory category = NGRAM;
     int i = 0;
@@ -1332,13 +1310,15 @@ Pattern IndexedCorpus::getpattern(const IndexReference & begin, int length) cons
     //std::cerr << "getting pattern " << begin.sentence << ":" << begin.token << " length " << length << std::endl;
     const_iterator iter = this->find(begin);
     unsigned char * buffer = mainpatternbuffer;
+    unsigned char classlength;
     int i = 0;
     while (i < length) {
         if ((iter == this->end()) || (iter->ref != begin + i)) {
             //std::cerr << "ERROR: Specified index " << (begin + i).tostring() << " (pivot " << begin.tostring() << ", offset " << i << ") does not exist"<< std::endl;
             throw KeyError();
         }
-        buffer = inttopatterndata(buffer, iter->cls);
+        classlength = intotobytes(buffer, iter->cls);
+        buffer += classlength;
         i++;
         iter++;
     }
@@ -1346,7 +1326,7 @@ Pattern IndexedCorpus::getpattern(const IndexReference & begin, int length) cons
         //std::cerr << "ERROR: Specified index " << begin.tostring() << " does not exist"<< std::endl;
         throw KeyError();
     }
-    int buffersize = buffer - mainpatternbuffer; //pointer arithmetic
+    unsigned int buffersize = buffer - mainpatternbuffer; //pointer arithmetic
     return Pattern(mainpatternbuffer, buffersize);
 }
 
