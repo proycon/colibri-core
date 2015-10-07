@@ -148,7 +148,6 @@ string decodestring(const unsigned char * data, unsigned char datasize) {
 } */
 
 void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsigned int start, unsigned int end, bool quiet) {
-    unsigned char buffer[1024]; //bit large, only for one token
     ifstream *IN = new ifstream(filename.c_str()); //, ios::in | ios::binary);
     unsigned int linenumber = 1;
     unsigned char c;

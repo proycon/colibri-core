@@ -424,7 +424,6 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	    if (append) {
 	        OUT.open(outputfilename.c_str(), ios::app | ios::binary);
 	        if (OUT.tellp() > 0) {
-	            OUT.write(&one, sizeof(char)); //newline          
           	    OUT.write(&zero, sizeof(char)); //write separator
 	        }
 	    } else {
@@ -480,7 +479,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
                 exit(2);
             }
             bz2istream * decompressor = new bz2istream(IN.rdbuf());
-            encodefile((istream*) decompressor, (ostream*) &OUT, allowunknown, autoaddunknown, quiet);
+            encodefile((istream*) decompressor, (ostream*) &OUT, allowunknown, autoaddunknown, quiet, append);
             delete decompressor;
         } else {
             IN.open(inputfilename.c_str());
@@ -488,14 +487,20 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
                 cerr << "No such file: " << inputfilename << endl;
                 exit(2);
             }
-            encodefile((istream*) &IN, (ostream*) &OUT, allowunknown, autoaddunknown, quiet);
+            encodefile((istream*) &IN, (ostream*) &OUT, allowunknown, autoaddunknown, quiet, append);
         }
 	    IN.close();
 	    OUT.close();
 	}
 }
 
-void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet) {
+void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet, bool append) {
+    if (!append) {
+        const char mark = 0x2a;
+        const char version = 2;
+        OUT->write(&mark,1);
+        OUT->write(&version,1);
+    }
     const char zero = 0;
     size_t outputbuffersize = 65536;
     unsigned char * outputbuffer = new unsigned char[outputbuffersize];
