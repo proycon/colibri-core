@@ -490,21 +490,14 @@ Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructo
     do {
         const unsigned char c = ref.data[i];
         
-        if ((n - begin == length) || (c == ENDMARKER)) {
+        if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
             length_b = i - begin_b;
             break;
         } else if (c < 128) {
-            //we have a size
-            i += c + 1;
-            n++;
-            if (n == begin) begin_b = i;
-        } else if ((c == SKIPMARKER) || (c == FLEXMARKER)) {
+            //we have a token
+            n++; 
             i++;
-            n++;
             if (n == begin) begin_b = i;
-        } else {
-            //we have another marker
-            i++;
         }
     } while (1);
 
@@ -514,7 +507,7 @@ Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructo
     for (int i = begin_b; i < begin_b + length_b; i++) {
         data[j++] = ref.data[i];
     }
-    data[j++] = ENDMARKER;
+    data[j++] = ClassDecoder::delimiterclass;
 }
 
 
@@ -528,21 +521,14 @@ PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //sl
     do {
         const unsigned char c = ref.data[i];
         
-        if ((n - begin == length) || (c == ENDMARKER)) {
+        if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
             length_b = i - begin_b;
             break;
         } else if (c < 128) {
-            //we have a size
-            i += c + 1;
-            n++;
-            if (n == begin) begin_b = i;
-        } else if ((c == SKIPMARKER) || (c == FLEXMARKER)) {
+            //we have a token
+            n++; 
             i++;
-            n++;
             if (n == begin) begin_b = i;
-        } else {
-            //we have another marker
-            i++;
         }
     } while (1);
 
@@ -574,21 +560,14 @@ PatternPointer::PatternPointer(const PatternPointer& ref, int begin, int length)
         }
         const unsigned char c = ref.data[i];
         
-        if ((n - begin == length) || (c == ENDMARKER)) {
+        if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
             length_b = i - begin_b;
             break;
         } else if (c < 128) {
-            //we have a size
-            i += c + 1;
-            n++;
-            if (n == begin) begin_b = i;
-        } else if ((c == SKIPMARKER) || (c == FLEXMARKER)) {
+            //we have a token
+            n++; 
             i++;
-            n++;
             if (n == begin) begin_b = i;
-        } else {
-            //we have another marker
-            i++;
         }
     } while (1);
 
@@ -602,7 +581,7 @@ Pattern::Pattern(const Pattern& ref) { //copy constructor
     for (int i = 0; i < s; i++) {
         data[i] = ref.data[i];
     }
-    data[s] = ENDMARKER;
+    data[s] = ClassDecoder::delimiterclass;
 }
 
 Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
@@ -614,7 +593,7 @@ Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
     for (unsigned int i = 0; i < ref.bytesize(); i++) {
         data[i] = ref.data[i];
     }
-    data[ref.bytesize()] = ENDMARKER;
+    data[ref.bytesize()] = ClassDecoder::delimiterclass;
 }
 
 Pattern::~Pattern() {
@@ -674,7 +653,7 @@ void Pattern::operator =(const Pattern & other) {
     for (int i = 0; i < s; i++) {
         data[i] = other.data[i];
     }  
-    data[s] = ENDMARKER;
+    data[s] = ClassDecoder::delimiterclass;
 }
 
 Pattern Pattern::operator +(const Pattern & other) const {
@@ -851,7 +830,7 @@ int PatternPointer::subngrams(vector<pair<PatternPointer,int>> & container, int 
     return found;
 }
 
-int Pattern::parts(vector<pair<int,int>> & container) const {
+int Pattern::parts(vector<pair<int,int>> & container) const { 
     //to be computed in bytes
     int partbegin = 0;
     int partlength = 0;
@@ -862,18 +841,14 @@ int Pattern::parts(vector<pair<int,int>> & container) const {
     do {
         const unsigned char c = data[i];
         
-        if (c == ENDMARKER) {
+        if (c == ClassDecoder::delimiterclass) {
             partlength = n - partbegin;
             if (partlength > 0) {
                 container.push_back(pair<int,int>(partbegin,partlength));
                 found++;
             }
             break;
-        } else if (c < 128) {
-            //we have a size
-            i += c + 1;
-            n++;
-        } else if ((c == SKIPMARKER) || (c == FLEXMARKER)) {        
+        } else if ((c == ClassDecoder::skipclass) || (c == ClassDecoder::flexclass)) {        
             partlength = n - partbegin;
             if (partlength > 0) {
                 container.push_back(pair<int,int>(partbegin,partlength));
@@ -882,6 +857,10 @@ int Pattern::parts(vector<pair<int,int>> & container) const {
             i++;
             n++; 
             partbegin = n; //for next part
+        } else if (c < 128) {
+            //we have a size
+            i++;
+            n++;
         } else {
             //we have another marker
             i++;
@@ -903,7 +882,7 @@ int Pattern::parts(vector<Pattern> & container) const {
     return found;
 }
 
-const unsigned int Pattern::skipcount() const {
+const unsigned int Pattern::skipcount() const { //TODO: convert to v2
     int count = 0;
     int i = 0;
     do {
@@ -922,7 +901,7 @@ const unsigned int Pattern::skipcount() const {
     } while (1); 
 }
 
-int Pattern::gaps(vector<pair<int,int> > & container) const {
+int Pattern::gaps(vector<pair<int,int> > & container) const { //TODO: convert to v2
     vector<pair<int,int> > partscontainer;
     parts(partscontainer);
 
@@ -955,7 +934,7 @@ int Pattern::gaps(vector<pair<int,int> > & container) const {
     return container.size();
 }
 
-Pattern Pattern::extractskipcontent(Pattern & instance) const {
+Pattern Pattern::extractskipcontent(Pattern & instance) const { //TODO: convert to v2
     if (this->category() == FLEXGRAM) {
         cerr << "Extractskipcontent not supported on Pattern with dynamic gaps!" << endl;
         throw InternalError();
@@ -1086,7 +1065,7 @@ Pattern Pattern::addflexgaps(std::vector<std::pair<int,int> > & gaps) const {
 }
 
 
-Pattern Pattern::reverse() const {
+Pattern Pattern::reverse() const { //TODO: convert to v2
     const unsigned char _size = bytesize() + 1;
     unsigned char * newdata = new unsigned char[_size];
 
