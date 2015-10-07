@@ -14,6 +14,7 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <istream>
 #include <fstream>
 
 /**
@@ -75,6 +76,7 @@ class ClassDecoder {
      * @param quiet Do not report decoding problems to stderr
      */
     void decodefile(const std::string & filename, std::ostream*,  unsigned int start = 0, unsigned int end = 0, bool quiet=false);
+    void decodefile_v1(const std::string & filename,  std::ostream* out , unsigned int start=0, unsigned int end=0, bool quiet=false);
 
     /**
      * Create a plain-text corpus file from a class-encoded corpus file (*.colibri.dat)
@@ -143,7 +145,7 @@ class ClassDecoder {
 
 };
 
-unsigned int bytestoint(istream* IN);
+unsigned int bytestoint(std::istream* IN);
 unsigned int bytestoint(const unsigned char* a, unsigned int * length = NULL);
 
 unsigned int bytestoint_v1(const unsigned char* a, const int l);

@@ -25,6 +25,7 @@
 #include <iomanip> // contains setprecision()
 #include <exception>
 #include <algorithm>
+#include <math>
 #include "common.h"
 #include "classdecoder.h"
 
@@ -44,7 +45,8 @@
  */
 
 const int MAINPATTERNBUFFERSIZE = 40960;
-
+const unsigned int B32 = pow(2,32);
+const unsigned int B64 = pow(2,64);
 
 /**
  * Pattern categories
@@ -66,7 +68,7 @@ class PatternPointer;
  * \brief Pattern class, represents a pattern (ngram, skipgram or flexgram).
  * Encoded in a memory-saving fashion. Allows numerous operations.
  */
-class Pattern: public PatternInterface {
+class Pattern {
     protected:
      void reader_marker(unsigned char * _data, std::istream * in);
     public:
@@ -76,7 +78,7 @@ class Pattern: public PatternInterface {
       * Default/empty Pattern constructor. Creates an empty pattern. Still consumes one
       * byte (the end-marker)
       */
-     Pattern() { data = new unsigned char[1]; data[0] = ENDMARKER; }
+     Pattern() { data = new unsigned char[1]; data[0] = ClassDecoder::delimiterclass; }
 
      /**
       * Low-level pattern constructor from character array. The size is in
@@ -122,8 +124,8 @@ class Pattern: public PatternInterface {
      Pattern(int size) {
          //pattern consisting only of fixed skips
          data = new unsigned char[size+1];
-         for (int i = 0; i < size; i++) data[i] = SKIPMARKER;
-         data[size] = ENDMARKER;
+         for (int i = 0; i < size; i++) data[i] = ClassDecoder::skipclass;
+         data[size] = ClassDecoder::delimiterclass;
      }
 
      /**
@@ -351,7 +353,7 @@ class PatternPointer {
     
      PatternPointer(unsigned char* dataref, const int bytesize) {
          data = dataref;
-         if (bytesize > 2**32) {
+         if (bytesize > B32) {
              std::cerr << "ERROR: Pattern too long for pattern pointer [" << bytesize << ",explicit]" << std::endl;
              throw InternalError();
          }
@@ -361,7 +363,7 @@ class PatternPointer {
      PatternPointer(const Pattern * ref) {
          data = ref->data;
          const size_t b = ref->bytesize();
-         if (b > 2**32) {
+         if (b > B32) {
              std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << ",implicit]" << std::endl;
              throw InternalError();
          }
