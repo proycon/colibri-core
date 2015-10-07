@@ -89,7 +89,7 @@ enum ReverseIndexType {
 /**
  * Extracts the model type (one of ModelType) from a file
  */
-int getmodeltype(const std::string filename);
+int getmodeltype(const std::string & filename);
 
 
 
@@ -334,7 +334,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * @param options The options for loading
          * @param constrainmodel Load only patterns that occur in this model
          */
-        PatternSetModel(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { 
+        PatternSetModel(const std::string & filename, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) { 
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -370,7 +370,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * @param options The options for loading
          * @param constrainmodel Load only patterns that occur in this model
          */
-        virtual void load(std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
+        virtual void load(std::string & filename, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) {
             if (!options.QUIET) std::cerr << "Loading " << filename << " as set-model" << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
             if (!in->good()) {
@@ -387,7 +387,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * @param options The options for loading
          * @param constrainmodel Load only patterns that occur in this model
          */
-        virtual void load(std::istream * f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        virtual void load(std::istream * f, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) { //load from file
             char null;
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
@@ -444,7 +444,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * Write a PatternSetModel to an output file. This is a wrapper around
          * write(std::ostream *)
          */
-        void write(const std::string filename) {
+        void write(const std::string & filename) {
             std::ofstream * out = new std::ofstream(filename.c_str());
             this->write(out);
             out->close();
@@ -606,7 +606,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          * @param corpus Pointer to the loaded corpus, used as a reverse index.
          */
-        PatternModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) { //load from file
+        PatternModel<ValueType,ValueHandler,MapType>(const std::string & filename, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) { //load from file
             //IndexedPatternModel will overload this
             totaltokens = 0;
             totaltypes = 0;
@@ -665,7 +665,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
          * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          */
-        virtual void load(std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
+        virtual void load(std::string & filename, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) {
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
             if (!in->good()) {
@@ -683,7 +683,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
          * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          */
-        virtual void load(std::istream * f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        virtual void load(std::istream * f, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) { //load from file
             char null;
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
@@ -1014,7 +1014,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param options Options for training
          * @param constrainbymodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          */
-        virtual void train(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
+        virtual void train(const std::string & filename, PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
             if ((filename.size() > 3) && (filename.substr(filename.size()-3) == ".bz2")) {
                 std::ifstream * in = new std::ifstream(filename.c_str(), std::ios::in|std::ios::binary);
                 bz2istream * decompressor = new bz2istream(in->rdbuf());
@@ -3275,8 +3275,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 };
 
 
-double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternModel<uint32_t>* > models);      
-void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > models, PatternMap<double> * resultmap, bool conjunctiononly = false, std::ostream * output = NULL, ClassDecoder * classdecoder = NULL );      
+double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternModel<uint32_t>* > & models);      
+void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > & models, PatternMap<double> * resultmap, bool conjunctiononly = false, std::ostream * output = NULL, ClassDecoder * classdecoder = NULL );      
 
 
 #endif
