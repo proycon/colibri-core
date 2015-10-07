@@ -320,7 +320,7 @@ class Pattern {
      /**
       * Given a skipgram and an ngram instantation of it (i.e, both of the same length), extract a pattern from the instance that would fill the gaps. Raise an exception if the instance can not be matched with the skipgram
       */
-     Pattern extractskipcontent(Pattern & instance) const; 
+     Pattern extractskipcontent(const Pattern & instance) const; 
 
      /**
       * Replace the tokens from begin (0-indexed), up to the specified length,
@@ -333,19 +333,19 @@ class Pattern {
       * Effectively turns a pattern into a skipgram.
       * @param gap The position and size of the skip/gap: a pair consisting of a begin index (0-indexed) and a length, i.e. the size of the skip
       */
-     Pattern addskip(std::pair<int,int> gap) const;
+     Pattern addskip(const std::pair<int,int> & gap) const;
      /**
       * Replaces multiple series of tokens with skips/gaps of particular sizes.  Effectively turns a pattern into a skipgram.
       * @param gaps The positions and sizes of the gaps: a vector of pairs, each pair consisting of a begin index (0-indexed) and a length, indicating where to place the gap
       * @return A skipgram
       */
-     Pattern addskips(std::vector<std::pair<int,int> > & gaps) const;
+     Pattern addskips(const std::vector<std::pair<int,int> > & gaps) const;
      /**
       * Replaces multiple series of tokens with skips/gaps of undefined variable size.  Effectively turns a pattern into a flexgram.
       * @param gaps The positions and sizes of the gaps: a vector of pairs, each pair consisting of a begin index (0-indexed) and a length, indicating where to place the gap
       * @return A flexgram
       */
-     Pattern addflexgaps(std::vector<std::pair<int,int> > & gaps) const;
+     Pattern addflexgaps(const std::vector<std::pair<int,int> > & gaps) const;
 
      /**
       * Returns a pattern with the tokens in reverse order

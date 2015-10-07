@@ -1123,7 +1123,7 @@ int Pattern::gaps(vector<pair<int,int> > & container) const {
     return container.size();
 }
 
-Pattern Pattern::extractskipcontent(Pattern & instance) const {
+Pattern Pattern::extractskipcontent(const Pattern & instance) const {
     if (this->category() == FLEXGRAM) {
         cerr << "Extractskipcontent not supported on Pattern with dynamic gaps!" << endl;
         throw InternalError();
@@ -1145,8 +1145,7 @@ Pattern Pattern::extractskipcontent(Pattern & instance) const {
     const Pattern skip = Pattern(&a,1);
 
     std::vector<std::pair<int,int> >::iterator iter = gapcontainer.begin();
-    Pattern subngram = Pattern(instance,iter->first, iter->second);
-    Pattern pattern = subngram;
+    Pattern pattern = Pattern(instance,iter->first, iter->second);
     int cursor = iter->first + iter->second;
     iter++;
     while (iter != gapcontainer.end()) {  
@@ -1156,7 +1155,7 @@ Pattern Pattern::extractskipcontent(Pattern & instance) const {
                 pattern = pattern + skip;
             }
         }    
-        subngram = Pattern(instance,iter->first, iter->second);
+        Pattern subngram = Pattern(instance,iter->first, iter->second);
         pattern = pattern + subngram;
         cursor = iter->first + iter->second;
         iter++;
@@ -1216,7 +1215,7 @@ Pattern Pattern::replace(int begin, int length, const Pattern & replacement) con
 }
 
 
-Pattern Pattern::addskip(std::pair<int,int> gap) const {
+Pattern Pattern::addskip(const std::pair<int,int> & gap) const {
     //Returns a pattern with the specified span replaced by a fixed skip
     const unsigned int _n = n();
     Pattern pattern = *this;
@@ -1229,11 +1228,11 @@ Pattern Pattern::addskip(std::pair<int,int> gap) const {
     return pattern;
 }
 
-Pattern Pattern::addskips(std::vector<std::pair<int,int> > & gaps) const {
+Pattern Pattern::addskips(const std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     const unsigned int _n = n();
     Pattern pattern = *this;
-    for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
+    for (vector<pair<int,int> >::const_iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
         const Pattern replacement = Pattern(iter->second);
         pattern = pattern.replace(iter->first, iter->second, replacement);
         if (pattern.n() != _n) {
@@ -1244,10 +1243,10 @@ Pattern Pattern::addskips(std::vector<std::pair<int,int> > & gaps) const {
     return pattern;
 }
 
-Pattern Pattern::addflexgaps(std::vector<std::pair<int,int> > & gaps) const {
+Pattern Pattern::addflexgaps(const std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     Pattern pattern = *this;
-    for (vector<pair<int,int>>::iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
+    for (vector<pair<int,int> >::const_iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
         pattern = pattern.replace(iter->first, iter->second, FLEXPATTERN);
     }
     return pattern;
