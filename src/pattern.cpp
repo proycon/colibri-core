@@ -54,7 +54,7 @@ const size_t Pattern::bytesize() const {
     unsigned int length;
     do {
         const unsigned int cls = bytestoint(data + i, &length);
-        i += *length;
+        i += length;
         if (cls == ClassDecoder::delimiterclass) {
             //end marker
             return i;
@@ -90,26 +90,25 @@ const size_t PatternPointer::n() const {
 }
 
 
-bool Pattern::isgap(int index) const { //is the word at this position a gap?
+bool Pattern::isgap(int index) const { //is the word at this position a gap? 
     int i = 0;
     int n = 0;
     do {
         const unsigned char c = data[i];
-        if (c == ENDMARKER) {
+        if (c == ClassDecoder::delimiterclass) {
             //end marker
             return false;
-        } else if (c < 128) {
-            //we have a size
-            if (n == index) return false;
-            i += c + 1;
-            n++;
-        } else if ((c == SKIPMARKER)  || (c == FLEXMARKER)) {
+        } else if ((c == ClassDecoder::skipclass)  || (c == ClassDecoder::flexclass)) {
             //FLEXMARKER is counted as 1, the minimum fill
             if (n == index) return true;
             i++;
             n++;
+        } else if (c < 128) {
+            //we have a size
+            if (n == index) return false;
+            i++;
+            n++;
         } else {
-            //we have another marker
             i++;
         }
     } while (1);
@@ -131,20 +130,17 @@ Pattern Pattern::toflexgram() const { //converts a fixed skipgram into a dynamic
             mainpatternbuffer[j++] = c;
             copybytes--;
         } else if (copybytes == 0) {
-            if (c == ENDMARKER) {
+            if (c == ClassDecoder::delimiterclass) {
                 mainpatternbuffer[j++] = c;
                 break;
-            } else if (c < 128) {
-                mainpatternbuffer[j++] = c;
-                copybytes = c;
-                skipgap = false;
-            } else if (c == SKIPMARKER) {
+            } else if (c == ClassDecoder::skipclass) {
                 if (!skipgap) {
-                    mainpatternbuffer[j++] = 129; //store a DYNAMIC GAP instead
+                    mainpatternbuffer[j++] = ClassDecoder::flexclass; //store a DYNAMIC GAP instead
                     skipgap = true; //skip next consecutive gap markers
                 }
             } else {
                 mainpatternbuffer[j++] = c;
+                skipgap = false;
             }
         }
     } while (1);
@@ -156,6 +152,7 @@ Pattern Pattern::toflexgram() const { //converts a fixed skipgram into a dynamic
 const size_t Pattern::hash() const {
 
     int s = 0;
+    int i = 0;
     unsigned int length;
     do {
         const unsigned int cls = bytestoint(data + i, &length);
@@ -163,7 +160,7 @@ const size_t Pattern::hash() const {
         if (cls == ClassDecoder::delimiterclass) {
             break;
         } else {
-            s += cls
+            s += cls;
         }
     } while (1);
 
@@ -213,12 +210,12 @@ std::string Pattern::tostring(const ClassDecoder& classdecoder) const {
 
 
 std::string PatternPointer::tostring(const ClassDecoder& classdecoder) const {
-    return datatostring(data, classdecoder, bytes);
+    return datatostring(data, classdecoder, bytesize());
 }
 
 bool dataout(unsigned char * data, int maxbytes = 0) {
     int i = 0;
-    unsigned char length;
+    unsigned int length;
     do {
         if ((maxbytes > 0) && (i >= maxbytes)) {
             return true;
@@ -240,12 +237,12 @@ bool Pattern::out() const {
 }
 
 bool PatternPointer::out() const { 
-    return dataout(data, bytes);
+    return dataout(data, bytesize());
 }
 
 const bool Pattern::unknown() const {
     int i = 0;
-    unsigned char length;
+    unsigned int length;
     do {
         const unsigned int cls = bytestoint(data + i, &length);
         i += length;
@@ -261,7 +258,7 @@ const bool Pattern::unknown() const {
 vector<unsigned int> Pattern::tovector() const { 
     vector<unsigned int> v;
     int i = 0;
-    unsigned char length;
+    unsigned int length;
     do {
         const unsigned int cls = bytestoint(data + i, &length);
         i += length;
@@ -348,7 +345,6 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
 
         //stage 2 -- read buffer
         int i = 0;
-        readingdata = 0;
         if (debug) std::cerr << "STARTING STAGE 2: BEGINPOS=" << beginpos << ", LENGTH=" << length << std::endl;
         if (!gotbeginpos) {
             std::cerr << "ERROR: Invalid position in input stream whilst Reading pattern" << std::endl;
@@ -1140,14 +1136,14 @@ Pattern IndexedCorpus::getpattern(const IndexReference & begin, int length) cons
     //std::cerr << "getting pattern " << begin.sentence << ":" << begin.token << " length " << length << std::endl;
     const_iterator iter = this->find(begin);
     unsigned char * buffer = mainpatternbuffer;
-    unsigned char classlength;
+    unsigned int classlength;
     int i = 0;
     while (i < length) {
         if ((iter == this->end()) || (iter->ref != begin + i)) {
             //std::cerr << "ERROR: Specified index " << (begin + i).tostring() << " (pivot " << begin.tostring() << ", offset " << i << ") does not exist"<< std::endl;
             throw KeyError();
         }
-        classlength = intotobytes(buffer, iter->cls);
+        classlength = inttobytes(buffer, iter->cls);
         buffer += classlength;
         i++;
         iter++;

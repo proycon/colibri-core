@@ -173,7 +173,7 @@ class Pattern {
      /**
       * Compute a hash value for this pattern
       */
-     const size_t hash(bool stripmarkers = false) const;
+     const size_t hash() const;
 
      /**
       * Converts this pattern back into its string representation, using a
@@ -421,11 +421,9 @@ class PatternPointer {
 static const unsigned char * tmp_unk = (const unsigned char *) "\2";
 static const unsigned char * tmp_skipmarker = (const unsigned char *) "\3";
 static const unsigned char * tmp_flexmarker = (const unsigned char *) "\4";
-const Pattern SKIPPATTERN = Pattern(&tmp_skipmarker,1);
-const Pattern FLEXPATTERN = Pattern(&tmp_flexmarker,1);
-//static const Pattern BEGINPATTERN = Pattern((const unsigned char *) tmp_bos,2);
-//static const Pattern ENDPATTERN = Pattern((const unsigned  char *) tmp_eos,2);
-static const Pattern UNKPATTERN = Pattern((const unsigned char* ) tmp_unk,2);
+const Pattern SKIPPATTERN = Pattern((const unsigned char *) tmp_skipmarker,1);
+const Pattern FLEXPATTERN = Pattern((const unsigned char*) tmp_flexmarker,1);
+static const Pattern UNKPATTERN = Pattern((const unsigned char* ) tmp_unk,1);
 
 namespace std {
 

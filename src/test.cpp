@@ -144,8 +144,6 @@ int main( int argc, char *argv[] ) {
         
         {
             ClassDecoder classdecoder2 = ClassDecoder();
-            cerr << "Decoding beginpattern: " << BEGINPATTERN.tostring(classdecoder2) << endl;
-            cerr << "Decoding endpattern: " << ENDPATTERN.tostring(classdecoder2) << endl;
 
             cerr << "Decoding non-existing classes (should return UNKNOWNS):" << ngram.tostring(classdecoder2) << endl;
 

@@ -79,10 +79,6 @@ int utf8_strlen(const string& str)
 
 
 ClassEncoder::ClassEncoder(const unsigned int minlength, unsigned const int maxlength) {
-    delimiterclass = 0;
-    unknownclass = 2;
-    skipclass = 3;
-    flexclass = 4;
     highestclass = 5; //5 and lower are reserved
 
     this->minlength = minlength;
@@ -94,11 +90,7 @@ ClassEncoder::ClassEncoder(const string & filename,const unsigned int minlength,
 }
 
 void ClassEncoder::load(const string & filename,const unsigned int minlength, unsigned const int maxlength) {
-       delimiterclass = 0;
-       unknownclass = 2;
        highestclass = 0; 
-       skipclass = 3;
-       flexclass = 4;
        this->minlength = minlength;
        this->maxlength = maxlength;
        
@@ -688,7 +680,8 @@ unsigned char * convert_v1_v2(istream * in, bool ignoreeol, bool debug) {
         if (in->good()) in->unget();
     }
 
-    unsigned char * newdata = convert_v1_v2(data);
+    unsigned int newlength;
+    unsigned char * newdata = convert_v1_v2(data, newlength);
     delete[] data;
     return newdata;
 }
