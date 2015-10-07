@@ -190,7 +190,7 @@ class ClassEncoder {
     /**
      * Add the word with the specified class to the class encoding
      */
-    void add(std::string, unsigned int cls);
+    void add(const std::string &, const unsigned int cls);
     
     /**
      * Returns the highest assigned class in the class encoding

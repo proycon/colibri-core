@@ -109,7 +109,7 @@ class ClassDecoder {
     /**
      * Add the class with the given word string to the class encoding
      */
-    void add( unsigned int, std::string); 
+    void add(const unsigned int, const std::string &); 
 
     /**
      * Return the highest class in the class encoding
