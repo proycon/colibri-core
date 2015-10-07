@@ -176,7 +176,7 @@ const int countwords(const unsigned char* data, const int l) {
     }
 }
 
-void ClassDecoder::add(unsigned int cls, std::string s) {
+void ClassDecoder::add(const unsigned int cls, const std::string & s) {
     classes[cls] = s;
     if (cls > highestclass) highestclass = cls;
 }

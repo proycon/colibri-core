@@ -413,7 +413,7 @@ Pattern ClassEncoder::buildpattern_safe(const std::string & patternstring, bool 
 }
 
 
-void ClassEncoder::add(std::string s, unsigned int cls) {
+void ClassEncoder::add(const std::string & s, const unsigned int cls) {
     classes[s] = cls;
     if (cls > highestclass) highestclass = cls;
 }
