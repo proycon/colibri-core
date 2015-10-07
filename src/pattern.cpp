@@ -1028,9 +1028,8 @@ Pattern Pattern::replace(int begin, int length, const Pattern & replacement) con
 Pattern Pattern::addskip(const std::pair<int,int> & gap) const {
     //Returns a pattern with the specified span replaced by a fixed skip
     const unsigned int _n = n();
-    Pattern pattern = *this;
     const Pattern replacement = Pattern(gap.second);
-    pattern = pattern.replace(gap.first, gap.second, replacement);
+    Pattern pattern = replace(gap.first, gap.second, replacement);
     if (pattern.n() != _n) {
         std::cerr << "ERROR: addskip(): Pattern length changed from " << _n << " to " << pattern.n() << " after substituting slice (" << gap.first << "," <<gap.second << ")" << std::endl;
         throw InternalError();
@@ -1041,7 +1040,7 @@ Pattern Pattern::addskip(const std::pair<int,int> & gap) const {
 Pattern Pattern::addskips(const std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     const unsigned int _n = n();
-    Pattern pattern = *this;
+    Pattern pattern = *this; //needless copy?
     for (vector<pair<int,int> >::const_iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
         const Pattern replacement = Pattern(iter->second);
         pattern = pattern.replace(iter->first, iter->second, replacement);
@@ -1055,7 +1054,7 @@ Pattern Pattern::addskips(const std::vector<std::pair<int,int> > & gaps) const {
 
 Pattern Pattern::addflexgaps(const std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
-    Pattern pattern = *this;
+    Pattern pattern = *this; //needless copy? 
     for (vector<pair<int,int> >::const_iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
         pattern = pattern.replace(iter->first, iter->second, FLEXPATTERN);
     }
