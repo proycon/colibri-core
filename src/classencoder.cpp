@@ -529,3 +529,165 @@ void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bo
     delete[] outputbuffer;
 }
 
+unsigned char * convert_v1_v2(const unsigned char * olddata, unsigned int & newlength) {
+
+	std::vector<unsigned int> classes;
+
+    //get new length
+	newlength = 0;
+    int i = 0;
+    do {
+        const unsigned char c = olddata[i];
+        if (c == 0) {
+			classes.push_back(ClassEncoder::delimiterclass);
+		    break;
+        } else if (c < 128) {
+            //we have a size
+			unsigned int cls = bytestoint_v1(olddata + i +1, c);
+			classes.push_back(cls);
+            newlength += inttobytes( NULL, cls);
+            i += c + 1;
+        } else if (c == 128) { //SKIPMARKER (v1)
+			newlength++;
+			classes.push_back(ClassEncoder::skipclass);
+            i++;
+        } else if (c == 129) { //FLEXMARKER (v1)
+			newlength++;
+			classes.push_back(ClassEncoder::flexclass);
+            i++;
+        } else {
+            //we have another marker
+            i++;
+        }
+    } while (1);
+
+	//allocate new data
+	unsigned char * data  = new unsigned char[newlength];
+	unsigned char * datacursor = data;
+    unsigned int classlength;
+	for (std::vector<unsigned int>::iterator iter = classes.begin(); iter != classes.end(); iter++) {
+		classlength = inttobytes(datacursor, *iter);
+		datacursor += classlength;
+	}
+    return data;   
+}
+
+unsigned char * convert_v1_v2(istream * in, bool ignoreeol, bool debug) {
+    int readingdata = 0;
+    unsigned char c = 0;
+
+    std::streampos beginpos = 0;
+    bool gotbeginpos = false;
+
+    //stage 1 -- get length
+    int length = 0;
+    readingdata = 0;
+    do {
+        if (in->good()) {
+            if (!gotbeginpos) {
+                beginpos = in->tellg();
+                gotbeginpos = true;
+            }
+            in->read( (char* ) &c, sizeof(char));
+            if (debug) std::cerr << "DEBUG read1=" << (int) c << endl;
+        } else {
+            if (ignoreeol) {
+                break;
+            } else {
+                std::cerr << "WARNING: Unexpected end of file (stage 1, length=" << length << "), no EOS marker found (adding and continuing)" << std::endl;
+                in->clear(); //clear error bits
+                break;
+            }
+        }
+        length++;
+        if (readingdata) {
+            readingdata--;
+        } else {
+            if (c == 0) {
+                if (!ignoreeol) break;
+            } else if (c < 128) {
+                //we have a size
+                if (c == 0) {
+                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 1)" << std::endl;
+                    throw InternalError();
+                } else {
+                    readingdata = c;
+                }
+            }
+        }
+    } while (1);
+
+    if (length == 0) {
+        std::cerr << "ERROR: Attempting to read pattern from file, but file is empty?" << std::endl;
+        throw InternalError();
+    }
+
+    unsigned char * data;
+    //allocate buffer
+    if (c == 0) {
+        data  = new unsigned char[length];
+    } else {
+        data  = new unsigned char[length+1];
+    }
+
+    //stage 2 -- read buffer
+    int i = 0;
+    readingdata = 0;
+    if (debug) std::cerr << "STARTING STAGE 2: BEGINPOS=" << beginpos << ", LENGTH=" << length << std::endl;
+    if (!gotbeginpos) {
+        std::cerr << "ERROR: Invalid position in input stream whilst Reading pattern" << std::endl;
+        throw InternalError();
+    }
+    in->seekg(beginpos, ios::beg);
+    std::streampos beginposcheck = in->tellg();
+    if ((beginposcheck != beginpos) && (beginposcheck >= 18446744073709551000)) {
+        std::cerr << "ERROR: Resetting read pointer for stage 2 failed! (" << (unsigned long) beginposcheck << " != " << (unsigned long) beginpos << ")" << std::endl;
+        throw InternalError();
+    } else if (!in->good()) {
+        std::cerr << "ERROR: After resetting readpointer for stage 2, istream is not 'good': eof=" << (int) in->eof() << ", fail=" << (int) in->fail() << ", badbit=" << (int) in->bad() << std::endl;
+        throw InternalError();
+    }
+    while (i < length) {
+        if (in->good()) {
+            in->read( (char* ) &c, sizeof(char));
+            if (debug) std::cerr << "DEBUG read2=" << (int) c << endl;
+        } else {
+            std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 2,i=" << i << ",length=" << length << ",beginpos=" << beginpos << ",eof=" << (int) in->eof() << ",fail=" << (int) in->fail() << ",badbit=" << (int) in->bad() << ")" << std::endl;
+            throw InternalError();
+        }
+        data[i++] = c;
+        if (readingdata) {
+            readingdata--;
+        } else {
+            if (c == 0) {
+                if (!ignoreeol) break;
+            } else if (c < 128) {
+                //we have a size
+                if (c == 0) {
+                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 2)" << std::endl;
+                    throw InternalError();
+                } else {
+                    readingdata = c;
+                }
+            }
+        }
+    }
+
+    if (c != 0) { //add endmarker
+        data[i++] = 0;
+    }
+
+    if (debug) std::cerr << "DEBUG: DONE READING PATTERN" << std::endl;
+
+    //if this is the end of file, we want the eof bit set already, so we try to
+    //read one more byte (and wind back if succesful):
+    if (in->good()) {
+        if (debug) std::cerr << "DEBUG: (TESTING EOF)" << std::endl;
+        in->read( (char* ) &c, sizeof(char));
+        if (in->good()) in->unget();
+    }
+
+    unsigned char * newdata = convert_v1_v2(data);
+    delete[] data;
+    return newdata;
+}

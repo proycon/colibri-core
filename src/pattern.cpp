@@ -303,10 +303,7 @@ void readanddiscardpattern_v1(std::istream * in) {
 
 Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version, bool debug) {
     if (version == 2) {
-
-    } else if (version == 1) { 
-        //***** old *******
-        int readingdata = 0;
+        //stage 1 -- get length
         unsigned char c = 0;
 
         std::streampos beginpos = 0;
@@ -314,7 +311,6 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
 
         //stage 1 -- get length
         int length = 0;
-        readingdata = 0;
         do {
             if (in->good()) {
                 if (!gotbeginpos) {
@@ -333,20 +329,8 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
                 }
             }
             length++;
-            if (readingdata) {
-                readingdata--;
-            } else {
-                if (c == 0) {
-                    if (!ignoreeol) break;
-                } else if (c < 128) {
-                    //we have a size
-                    if (c == 0) {
-                        std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 1)" << std::endl;
-                        throw InternalError();
-                    } else {
-                        readingdata = c;
-                    }
-                }
+            if (c == 0) {
+                if (!ignoreeol) break;
             }
         } while (1);
 
@@ -362,8 +346,6 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
             data  = new unsigned char[length+1];
         }
 
-
-
         //stage 2 -- read buffer
         int i = 0;
         readingdata = 0;
@@ -374,7 +356,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
         }
         in->seekg(beginpos, ios::beg);
         std::streampos beginposcheck = in->tellg();
-        if ((beginposcheck != beginpos) && (beginposcheck >= 18446744073709551000)) {
+        if ((beginposcheck != beginpos) && (beginposcheck >= 0xffffffffffffffff)) {
             std::cerr << "ERROR: Resetting read pointer for stage 2 failed! (" << (unsigned long) beginposcheck << " != " << (unsigned long) beginpos << ")" << std::endl;
             throw InternalError();
         } else if (!in->good()) {
@@ -390,21 +372,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
                 throw InternalError();
             }
             data[i++] = c;
-            if (readingdata) {
-                readingdata--;
-            } else {
-                if (c == 0) {
-                    if (!ignoreeol) break;
-                } else if (c < 128) {
-                    //we have a size
-                    if (c == 0) {
-                        std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 2)" << std::endl;
-                        throw InternalError();
-                    } else {
-                        readingdata = c;
-                    }
-                }
-            }
+            if ((c == 0) && (!ignoreeol)) break;
         }
 
         if (c != 0) { //add endmarker
@@ -420,6 +388,9 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
             in->read( (char* ) &c, sizeof(char));
             if (in->good()) in->unget();
         }
+
+    } else if (version == 1) { 
+        data = convert_v1_v2(in, ignoreeol, debug);
     } else {
         std::cerr << "ERROR: Unknown version " << (int) version << std::endl;
         throw InternalError();
@@ -428,62 +399,71 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
 }
 
 
-Pattern::Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, bool ignoreeol, bool debug) {
+/*
+Pattern::Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, bool ignoreeol, const unsigned char version, bool debug) {
     //read pattern using a buffer
-    int i = 0;
-    int readingdata = 0;
-    unsigned char c = 0;
-    do {
-        if (in->good()) {
-            in->read( (char* ) &c, sizeof(char));
-            if (debug) std::cerr << "DEBUG read=" << (int) c << endl;
-        } else {
-            std::cerr << "ERROR: Invalid pattern data, unexpected end of file i=" << i << std::endl;
-            throw InternalError();
-        }
-        if (i >= maxbuffersize) {
-            std::cerr << "ERROR: Pattern read would exceed supplied buffer size (" << maxbuffersize << ")! Aborting prior to segmentation fault..." << std::endl;
-            throw InternalError();
-        }
-        buffer[i++] = c;
-        if (readingdata) {
-            readingdata--;
-        } else {
-            if (c == ENDMARKER) {
-                if (!ignoreeol) break;
-            } else if (c < 128) {
-                //we have a size
-                if (c == 0) {
-                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 2)" << std::endl;
-                    throw InternalError();
-                } else {
-                    readingdata = c;
+    if (version == 2) {
+    } else if (version == 1){ 
+        int i = 0;
+        int readingdata = 0;
+        unsigned char c = 0;
+        do {
+            if (in->good()) {
+                in->read( (char* ) &c, sizeof(char));
+                if (debug) std::cerr << "DEBUG read=" << (int) c << endl;
+            } else {
+                std::cerr << "ERROR: Invalid pattern data, unexpected end of file i=" << i << std::endl;
+                throw InternalError();
+            }
+            if (i >= maxbuffersize) {
+                std::cerr << "ERROR: Pattern read would exceed supplied buffer size (" << maxbuffersize << ")! Aborting prior to segmentation fault..." << std::endl;
+                throw InternalError();
+            }
+            buffer[i++] = c;
+            if (readingdata) {
+                readingdata--;
+            } else {
+                if (c == ENDMARKER) {
+                    if (!ignoreeol) break;
+                } else if (c < 128) {
+                    //we have a size
+                    if (c == 0) {
+                        std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 2)" << std::endl;
+                        throw InternalError();
+                    } else {
+                        readingdata = c;
+                    }
                 }
             }
+        } while (1);
+
+        if (c != ENDMARKER) { //add endmarker
+            buffer[i++] = ENDMARKER;
         }
-    } while (1);
 
-    if (c != ENDMARKER) { //add endmarker
-        buffer[i++] = ENDMARKER;
+
+        if (debug) std::cerr << "DEBUG: Copying from buffer" << std::endl;
+
+        data  = new unsigned char[i];
+        for (int j = 0; j < i; j++) {
+            data[j] = buffer[j];
+        }
+        
+        if (debug) std::cerr << "DEBUG: DONE READING PATTERN" << std::endl;
+    } else {
+        std::cerr << "ERROR: Unknown version " << (int) version << std::endl;
+        throw InternalError();
     }
 
-
-    if (debug) std::cerr << "DEBUG: Copying from buffer" << std::endl;
-
-    data  = new unsigned char[i];
-    for (int j = 0; j < i; j++) {
-        data[j] = buffer[j];
-    }
-    
-    if (debug) std::cerr << "DEBUG: DONE READING PATTERN" << std::endl;
 }
+*/
 
 Pattern::Pattern(const unsigned char * dataref, const int _size) {
     data = new unsigned char[_size+1];
     for (int i = 0; i < _size; i++) {
         data[i] = dataref[i];
     }
-    data[_size] = ENDMARKER;
+    data[_size] = ClassEncoder::delimiterclass;
 }
 
 
@@ -496,7 +476,7 @@ void Pattern::set(const unsigned char * dataref, const int _size) {
     for (int i = 0; i < _size; i++) {
         data[i] = dataref[i];
     }
-    data[_size] = ENDMARKER;
+    data[_size] = ClassEncoder::delimiterclass;
 }
 
 
