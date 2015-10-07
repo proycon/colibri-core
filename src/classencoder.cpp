@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <unordered_map>
+#include <climits>
 #include "bz2stream.h"
 
 /*****************************
@@ -640,7 +641,7 @@ unsigned char * convert_v1_v2(istream * in, bool ignoreeol, bool debug) {
     }
     in->seekg(beginpos, ios::beg);
     std::streampos beginposcheck = in->tellg();
-    if ((beginposcheck != beginpos) && (beginposcheck >= 18446744073709551000)) {
+    if ((beginposcheck != beginpos) && (beginposcheck >= ULLONG_MAX)) {
         std::cerr << "ERROR: Resetting read pointer for stage 2 failed! (" << (unsigned long) beginposcheck << " != " << (unsigned long) beginpos << ")" << std::endl;
         throw InternalError();
     } else if (!in->good()) {

@@ -25,7 +25,7 @@
 #include <iomanip> // contains setprecision()
 #include <exception>
 #include <algorithm>
-#include <math>
+#include <climits>
 #include "common.h"
 #include "classdecoder.h"
 
@@ -45,8 +45,6 @@
  */
 
 const int MAINPATTERNBUFFERSIZE = 40960;
-const unsigned int B32 = pow(2,32);
-const unsigned int B64 = pow(2,64);
 
 /**
  * Pattern categories
@@ -163,7 +161,6 @@ class Pattern {
      const PatternCategory category() const;
 
 
-     const StructureType type() const;
      const bool isskipgram() const { return category() == SKIPGRAM; }
      const bool isflexgram() const { return category() == FLEXGRAM; }
      const bool unknown() const;
@@ -351,13 +348,14 @@ class PatternPointer {
                     //first bit high = flexgram, right-aligned, 0 = gap
                     //first bit low = skipgram, right-aligned, 0 = gap , max skipgram length 31 tokens
     
-     PatternPointer(unsigned char* dataref, const int bytesize) {
+     PatternPointer(unsigned char* dataref, const unsigned int bytesize) {
          data = dataref;
          if (bytesize > B32) {
              std::cerr << "ERROR: Pattern too long for pattern pointer [" << bytesize << ",explicit]" << std::endl;
              throw InternalError();
          }
          bytes = bytesize;
+         mask = 0;
      }
 
      PatternPointer(const Pattern * ref) {
@@ -368,6 +366,7 @@ class PatternPointer {
              throw InternalError();
          }
          bytes = b;
+         mask = 0;
      }
      PatternPointer(const PatternPointer& ref) {
          data = ref.data;

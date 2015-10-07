@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <exception>
+#include <cmath>
 
 /**
  * @file common.h
@@ -18,6 +19,8 @@
  * @section DESCRIPTION
  * Basic largely trivial functions for the common good.
  */
+
+const unsigned long long B32 = pow(2,32);
 
 std::string trim(const std::string &t, const std::string &ws);
 std::string get_extension(const std::string& filename);
