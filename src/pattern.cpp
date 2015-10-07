@@ -882,26 +882,25 @@ int Pattern::parts(vector<Pattern> & container) const {
     return found;
 }
 
-const unsigned int Pattern::skipcount() const { //TODO: convert to v2
+const unsigned int Pattern::skipcount() const { 
     int count = 0;
     int i = 0;
     do {
         const unsigned char c = data[i];
-        if (c == ENDMARKER) {
+        if (c == ClassDecoder::delimiterclass) {
             //end marker
             return count;
-        } else if (c < 128) {
-            //we have a size
-            i += c + 1;
-        } else if (((c == FLEXMARKER) || (c == SKIPMARKER)) && ((i > 0) || ((data[i-1] != FLEXMARKER) && (data[i-1] != SKIPMARKER))))   {
+        } else if (((c == ClassDecoder::skipclass) || (c == ClassDecoder::flexclass)) && ((i > 0) || ((data[i-1] != ClassDecoder::skipclass) && (data[i-1] != ClassDecoder::flexclass))))   {
             //we have a marker
             count++;
+            i++;
+        } else {
             i++;
         }
     } while (1); 
 }
 
-int Pattern::gaps(vector<pair<int,int> > & container) const { //TODO: convert to v2
+int Pattern::gaps(vector<pair<int,int> > & container) const { 
     vector<pair<int,int> > partscontainer;
     parts(partscontainer);
 
@@ -923,7 +922,7 @@ int Pattern::gaps(vector<pair<int,int> > & container) const { //TODO: convert to
     
     int endskip = 0;
     for (int i = bs; i > 0; i--) {
-        if ((data[i] == SKIPMARKER) || (data[i] == FLEXMARKER)) {
+        if ((data[i] == ClassDecoder::skipclass) || (data[i] == ClassDecoder::flexclass)) {
             endskip++;
         } else {
             break;
@@ -934,7 +933,7 @@ int Pattern::gaps(vector<pair<int,int> > & container) const { //TODO: convert to
     return container.size();
 }
 
-Pattern Pattern::extractskipcontent(Pattern & instance) const { //TODO: convert to v2
+Pattern Pattern::extractskipcontent(Pattern & instance) const { 
     if (this->category() == FLEXGRAM) {
         cerr << "Extractskipcontent not supported on Pattern with dynamic gaps!" << endl;
         throw InternalError();
@@ -952,7 +951,7 @@ Pattern Pattern::extractskipcontent(Pattern & instance) const { //TODO: convert 
     std::vector<std::pair<int,int> > gapcontainer;
     gaps(gapcontainer);
     
-    unsigned char a = 128;
+    unsigned char a = ClassDecoder::skipclass;
     const Pattern skip = Pattern(&a,1);
 
     std::vector<std::pair<int,int> >::iterator iter = gapcontainer.begin();
@@ -1070,7 +1069,7 @@ Pattern Pattern::reverse() const { //TODO: convert to v2
     unsigned char * newdata = new unsigned char[_size];
 
     //set endmarker
-    newdata[_size - 1] = ENDMARKER;
+    newdata[_size - 1] = ClassDecoder::delimiterclass;
 
     //we fill the newdata from right to left
     unsigned char cursor = _size - 1;
@@ -1078,7 +1077,7 @@ Pattern Pattern::reverse() const { //TODO: convert to v2
     int i = 0;
     do {
         const unsigned char c = data[i];
-        if (c == ENDMARKER) {
+        if (c == ClassDecoder::delimiterclass) {
             //end marker
             break;
         } else if (c < 128) {
