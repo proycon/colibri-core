@@ -150,29 +150,20 @@ Pattern Pattern::toflexgram() const { //converts a fixed skipgram into a dynamic
 }
 
 const size_t Pattern::hash() const {
-
-    int s = 0;
-    int i = 0;
-    unsigned int length;
-    do {
-        const unsigned int cls = bytestoint(data + i, &length);
-        i += length;
-        if (cls == ClassDecoder::delimiterclass) {
-            break;
-        } else {
-            s += cls;
-        }
-    } while (1);
-
-    //clean, no markers (we don't want include markers except final \0
-    //marker in our hash)
     if (sizeof(size_t) == 8) {
-        return SpookyHash::Hash64((const void*) data , s);
+        return SpookyHash::Hash64((const void*) data , bytesize());
     } else if (sizeof(size_t) == 4) {
-        return SpookyHash::Hash32((const void*) data , s);
+        return SpookyHash::Hash32((const void*) data , bytesize());
     }
 }
 
+const size_t PatternPointer::hash() const {
+    if (sizeof(size_t) == 8) {
+        return SpookyHash::Hash64((const void*) data , bytesize());
+    } else if (sizeof(size_t) == 4) {
+        return SpookyHash::Hash32((const void*) data , bytesize());
+    }
+}
 
 
 void Pattern::write(ostream * out) const {

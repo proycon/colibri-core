@@ -201,6 +201,7 @@ int main( int argc, char *argv[] ) {
             cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref[i]);
             i += 1;
         }
+		cerr << "Count check "; test(i,6);
 
         cerr << "----------------------------------------------------" << endl;
         cerr << "Subgrams of ngram #1: " << endl;
@@ -236,6 +237,7 @@ int main( int argc, char *argv[] ) {
             cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), subngramref[i]);
             i += 1;
         }
+		cerr << "Count check "; test(i,21);
         
         
         string substring = "or not";     	
@@ -270,8 +272,16 @@ int main( int argc, char *argv[] ) {
         cerr << "Pattern Pointer tests" << endl;
         PatternPointer pngram = PatternPointer(&ngram);
         cerr << "Testing equivalence between pointer and pattern"; test(ngram == pngram);
+        cerr << "Testing hash equivalence between pointer and pattern"; test(ngram.hash() == pngram.hash());
         Pattern derefngram = Pattern(pngram);
         cerr << "Testing equivalence after pointer construction and derefence"; test(ngram == derefngram);
+
+        cerr << "Bytesize: "; test(pngram.bytesize(),6);
+        cerr << "Size (n): "; test(pngram.n(), 6);
+        cerr << "Category==ngram: "; test(pngram.category(), NGRAM);
+        cerr << "Raw: " << endl;
+        ngram.out();
+        cerr << "Decoded: "; test(pngram.decode(classdecoder),"To be or not to be");
 
         cerr << "Tokens of ngram #1 (as patternpointers): " << endl;
         vector<PatternPointer> ptokens;
@@ -283,25 +293,31 @@ int main( int argc, char *argv[] ) {
             cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref[i]);
             i += 1;
         }
+		cerr << "Count check "; test(i,6);
 
-        cerr << "Subgrams of ngram #1 (as patternpointers): " << endl;
+        cerr << "Subgrams of ngram #1 (as patternpointers, from patternpointer): " << endl;
         vector<PatternPointer> psubngrams;
         pngram.subngrams(psubngrams);
 		i = 0;
         for (vector<PatternPointer>::iterator iter2 = psubngrams.begin(); iter2 != psubngrams.end(); iter2++) {                
             const PatternPointer psubngram = *iter2;
-            cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), subngramref[i]);
+            cerr << "#" << i << " -- "; test(psubngram.decode(classdecoder), subngramref[i]);
             i += 1;
         }
+		cerr << "Count check "; test(i,21);
+		
 
 
         cerr << "Subgrams of ngram #1 (as patternpointers, from pattern): " << endl;
         vector<PatternPointer> psubngrams2;
         ngram.subngrams(psubngrams2);
+		i = 0;
         for (vector<PatternPointer>::iterator iter2 = psubngrams2.begin(); iter2 != psubngrams2.end(); iter2++) {                
             const PatternPointer psubngram2 = *iter2;
-            cerr << "'" << psubngram2.tostring(classdecoder) << "'" << endl;
+            cerr << "#" << i << " -- "; test(psubngram2.decode(classdecoder), subngramref[i]);
+            i += 1;
         }
+		cerr << "Count check "; test(i,21);
 
 
         cerr << "----------------------------------------------------" << endl;

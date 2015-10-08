@@ -387,6 +387,11 @@ class PatternPointer {
      const size_t n() const;
      const size_t bytesize() const { return bytes; }
      const size_t size() const { return n(); }
+
+     /**
+      * Compute a hash value for this pattern
+      */
+     const size_t hash() const;
      
      const PatternCategory category() const;
 
@@ -448,6 +453,31 @@ namespace std {
     struct hash<const Pattern *> {
      public: 
           size_t operator()(const Pattern * pattern) const throw() {                            
+              return pattern->hash();              
+          }
+    };
+
+    template <>
+    struct hash<PatternPointer> {
+     public: 
+          size_t operator()(PatternPointer pattern) const throw() {                            
+              return pattern.hash();              
+          }
+    };
+
+    template <>
+    struct hash<const PatternPointer> {
+     public: 
+          size_t operator()(const PatternPointer pattern) const throw() {                            
+              return pattern.hash();              
+          }
+    };
+
+
+    template <>
+    struct hash<const PatternPointer *> {
+     public: 
+          size_t operator()(const PatternPointer * pattern) const throw() {                            
               return pattern->hash();              
           }
     };
