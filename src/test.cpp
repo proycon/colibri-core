@@ -578,15 +578,16 @@ int main( int argc, char *argv[] ) {
         cerr << "gaps: " << endl;
         gaps.clear();
         skipgram7.gaps(gaps);
+        vector<int> skipgram7gaprefbegin = {1,3};
+        vector<int> skipgram7gapreflength = {1,2};
+        i = 0;
         for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); iter2++) {
-            cerr << iter2->first << ':' << iter2->second << endl; 
+            cerr << "#" << i << " -- begin "; test(iter2->first, skipgram7gaprefbegin[i]);
+            cerr << "#" << i << " -- length "; test(iter2->second, skipgram7gapreflength[i]);	
+			i++;
         }
-        cerr << "parts: " << endl;
-        p.clear();
-        skipgram7.parts(p);
-        for (vector<pair<int,int >>::iterator iter2 = p.begin(); iter2 != p.end(); iter2++) {
-            cerr << iter2->first << ':' << iter2->second << endl; 
-        }	
+		cerr << "Count check "; test(i,2);
+
         /*cerr << "mask: " << endl;
         m.clear();
         skipgram7.mask(m);
@@ -599,35 +600,42 @@ int main( int argc, char *argv[] ) {
         }		*/
         cerr << endl;
         
-        cerr << "slice(5,1): " << endl;
+        cerr << "slice(5,1): ";
         token = Pattern(skipgram7,5,1);
-        cerr << token.decode(classdecoder) << endl;
+        test(token.decode(classdecoder),"blah");
         
         cerr << "----------------------------------------------------" << endl;
         string querystring8 = "{*1*} or blah {*2*}";
         Pattern skipgram8 = encoder.buildpattern(querystring8, true);
-        cerr << skipgram8.decode(classdecoder) << endl;
+        cerr << "Skipgram: ";
+        test(skipgram8.decode(classdecoder),"{*} or blah {*} {*}");
         
             
         cerr << "Parts: " << endl;
         parts2.clear();
         skipgram8.parts(parts2);
+        vector<string> skipgram8partsref = {"or blah"};
+        i = 0;
         for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
-            const Pattern subngram = *iter2;
-            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
+            const Pattern part = *iter2;
+            cerr << "#" << i << " -- "; test(part.decode(classdecoder), skipgram8partsref[i]);
+            i++;
         }    	 
+		cerr << "Count check "; test(i,1);
+
         cerr << "gaps: " << endl;
         gaps.clear();
         skipgram8.gaps(gaps); //TODO: FIX!!
+        vector<int> skipgram8gaprefbegin= {0,3};
+        vector<int> skipgram8gapreflength= {1,2};
+        i = 0;
         for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); iter2++) {
-            cerr << iter2->first << ':' << iter2->second << endl; 
+            cerr << "#" << i << " -- begin "; test(iter2->first, skipgram8gaprefbegin[i]);
+            cerr << "#" << i << " -- length "; test(iter2->second, skipgram8gapreflength[i]);	
+            i++;
         }
-        cerr << "parts: " << endl;
-        p.clear();
-        skipgram8.parts(p);
-        for (vector<pair<int,int >>::iterator iter2 = p.begin(); iter2 != p.end(); iter2++) {
-            cerr << iter2->first << ':' << iter2->second << endl; 
-        }	
+		cerr << "Count check "; test(i,2);
+        
         /*cerr << "mask: " << endl;
         m.clear();
         skipgram8.mask(m);
@@ -640,43 +648,45 @@ int main( int argc, char *argv[] ) {
         }*/		
         cerr << endl;
         
-        cerr << "slice(2,1): " << endl;
+        cerr << "slice(2,1): ";
         token = Pattern(skipgram8,2,1);
-        cerr << token.decode(classdecoder) << endl;	   
-        cerr << endl;
+        test(token.decode(classdecoder),"blah");	   
         
-        cerr << "slice(0,4): " << endl;	    
+        cerr << "slice(0,4): ";	    
         Pattern s8slice1 = Pattern(skipgram8,0,4);
-        cerr << s8slice1.decode(classdecoder) << endl;
+        test(s8slice1.decode(classdecoder),"{*} or blah {*}");
         cerr << endl; 
 
-        cerr << "slice(1,2): " << endl;	    
+        cerr << "slice(1,2): ";	    
         Pattern s8slice2 = Pattern(skipgram8,1,2);
-        cerr << s8slice2.decode(classdecoder) << endl;
-        cerr << endl; 
+        test(s8slice2.decode(classdecoder),"or blah");	   
 
-        cerr << "slice(1,4): " << endl;	    
+        cerr << "slice(1,4): ";	    
         Pattern s8slice3 = Pattern(skipgram8,1,4);
-        cerr << s8slice3.decode(classdecoder) << endl;
-        cerr << endl;
+        test(s8slice3.decode(classdecoder),"or blah {*} {*}");	   
 
 
         cerr << "----------------------------------------------------" << endl;
-        Pattern dynskipgram5 = skipgram5.toflexgram();
+        Pattern flexgram5 = skipgram5.toflexgram();
         cerr << "Converting skipgram '" << querystring5 << "' to flexgram:" << endl;	    
-        cerr << dynskipgram5.decode(classdecoder) << endl;
-        cerr << "Size (n): " << (int) dynskipgram5.n() << endl; //== size()
-        cerr << "Bytesize: " << (int) dynskipgram5.bytesize() << endl;
-        cerr << "Category==flexgram: "; test(dynskipgram5.category() == FLEXGRAM);
+        cerr << flexgram5.decode(classdecoder) << endl;
+        cerr << "Size (n): "; test(flexgram5.n(),5); //== size()
+        cerr << "Bytesize: "; test(flexgram5.bytesize(),5);
+        cerr << "Category==flexgram: "; test(flexgram5.category() == FLEXGRAM);
         cerr << "Raw" << endl;
-        dynskipgram5.out();
+        flexgram5.out();
         cerr << "Parts: " << endl;
-        vector<Pattern> dynparts;
-        dynskipgram5.parts(dynparts);
-        for (vector<Pattern>::iterator iter2 = dynparts.begin(); iter2 != dynparts.end(); iter2++) {                
-            const Pattern subngram = *iter2;
-            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
+        vector<Pattern> flexparts;
+        flexgram5.parts(flexparts);
+        
+        vector<string> flexrefparts = {"be","not","be"};
+        i = 0;
+        for (vector<Pattern>::iterator iter2 = flexparts.begin(); iter2 != flexparts.end(); iter2++) {                
+            const Pattern part = *iter2;
+            cerr << "#" << i << " -- "; test(part.decode(classdecoder), flexrefparts[i]);
+            i++;
         }    	 
+		cerr << "Count check "; test(i,3);
 
         cerr << "----------------------------------------------------" << endl;
         
@@ -698,10 +708,10 @@ int main( int argc, char *argv[] ) {
         
         PatternMap<uint32_t> map1;
         map1[ngram] = 1;
-        map1[dynskipgram5] = 2;
+        map1[flexgram5] = 2;
         cerr << "Integrity for PatternMap" ; test(map1.size() , 2);
         cerr << "Integrity for PatternMap" ; test(map1[ngram], 1);
-        cerr << "Integrity for PatternMap" ; test(map1[dynskipgram5] , 2);
+        cerr << "Integrity for PatternMap" ; test(map1[flexgram5] , 2);
         cerr << "Saving patternmap" << endl; 
         map1.write("/tmp/patternmap.tmp");
 
@@ -711,14 +721,14 @@ int main( int argc, char *argv[] ) {
         map2.read("/tmp/patternmap.tmp");
         cerr << "Integrity for PatternMap" ; test(map2.size() , 2);
         cerr << "Integrity for PatternMap" ; test(map2[ngram] , 1);
-        cerr << "Integrity for PatternMap" ; test(map2[dynskipgram5] , 2);
+        cerr << "Integrity for PatternMap" ; test(map2[flexgram5] , 2);
 
         AlignedPatternMap<uint32_t> amap1;
         amap1[ngram][ngram] = 1;
-        amap1[dynskipgram5][dynskipgram5] = 2;
+        amap1[flexgram5][flexgram5] = 2;
         cerr << "Integrity for AlignedPatternMap" ; test(amap1.size(), 2);
         cerr << "Integrity for AlignedPatternMap" ; test(amap1[ngram][ngram], 1);
-        cerr << "Integrity for AlignedPatternMap" ; test(amap1[dynskipgram5][dynskipgram5], 2);
+        cerr << "Integrity for AlignedPatternMap" ; test(amap1[flexgram5][flexgram5], 2);
         cerr << "Saving AlignedPatternMap" << endl; 
         amap1.write("/tmp/alignedpatternmap.tmp");
 
@@ -728,7 +738,7 @@ int main( int argc, char *argv[] ) {
         amap2.read("/tmp/alignedpatternmap.tmp");
         cerr << "Integrity for AlignedPatternMap" ; test(amap2.size() , 2);
         cerr << "Integrity for AlignedPatternMap" ; test(amap2[ngram][ngram] , 1);
-        cerr << "Integrity for AlignedPatternMap" ; test(amap2[dynskipgram5][dynskipgram5] , 2);
+        cerr << "Integrity for AlignedPatternMap" ; test(amap2[flexgram5][flexgram5] , 2);
         }
         
         { 
