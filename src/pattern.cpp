@@ -54,11 +54,11 @@ const size_t Pattern::bytesize() const {
     unsigned int length;
     do {
         const unsigned int cls = bytestoint(data + i, &length);
-        i += length;
         if (cls == ClassDecoder::delimiterclass) {
             //end marker
             return i;
         }
+        i += length;
     } while (1);
 }
 

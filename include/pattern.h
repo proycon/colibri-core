@@ -243,10 +243,10 @@ class Pattern {
      /**
       * Adds all patterns (not just ngrams) of all sizes that are contained within the pattern to
       * container. Does not extract skipgrams that are not directly present in
-      * the pattern.
+      * the pattern. Also returns the full ngram itself by default. Set maxn and minn to constrain.
       */
-     int subngrams(std::vector<Pattern> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
-     int subngrams(std::vector<PatternPointer> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
+     int subngrams(std::vector<Pattern> & container, int minn = 1, int maxn=99) const; //return all subsumed ngrams (variable n)
+     int subngrams(std::vector<PatternPointer> & container, int minn = 1, int maxn=99) const; //return all subsumed ngrams (variable n)
 
      /**
       * Adds all pairs of all patterns (not just ngrams) of size n that are

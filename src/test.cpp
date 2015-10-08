@@ -52,7 +52,7 @@ void test(string value , string ref) {
 int main( int argc, char *argv[] ) {
 	//string model = argv[1];
 	//string classfile = argv[1];
-    
+    int i; 
 
     const char * poem = 
     "To be or not to be , that is the question ;\n"
@@ -152,7 +152,7 @@ int main( int argc, char *argv[] ) {
 
 
         cerr << "Ngram #1:" << endl;
-        cerr << "Bytesize: "; test(ngram.bytesize(),7);
+        cerr << "Bytesize: "; test(ngram.bytesize(),6);
         cerr << "Size (n): "; test(ngram.n(), 6);
         cerr << "Category==ngram: "; test(ngram.category(), NGRAM);
         cerr << "Hash: "; testgt(ngram.hash(),0);
@@ -170,20 +170,21 @@ int main( int argc, char *argv[] ) {
         cerr << "----------------------------------------------------" << endl;
         cerr << "Copy constructor" << endl;
         Pattern ngramcopy = Pattern(ngram);
+		cerr << "Testing equality "; test(ngram == ngramcopy);
         cerr << endl;
         
 
         cerr << "Slice constructor, specific subngram" << endl;
         Pattern ngram2 = Pattern(ngram, 2, 2);
         
-        cerr << "Ngram: " << ngram2.decode(classdecoder) << endl;
-        cerr << "N: " << (int) ngram2.n() << endl;
-        cerr << "Bytesize: " << (int) ngram2.bytesize() << endl;
+        cerr << "Ngram: "; test( ngram2.decode(classdecoder),"or not");
+        cerr << "N: "; test(ngram2.n(),2);
+        cerr << "Bytesize: ", test(ngram2.bytesize(),2);
 
         cerr << "Empty/null pattern" << endl;
         Pattern emptypattern;
-        cerr << "N: " << (int) emptypattern.n() << endl;
-        cerr << "Bytesize: " << (int) emptypattern.bytesize() << endl;
+        cerr << "N: "; test(emptypattern.n(),0);
+        cerr << "Bytesize: "; test(emptypattern.bytesize(),0);
 
 
         cerr << "----------------------------------------------------" << endl;
@@ -193,9 +194,12 @@ int main( int argc, char *argv[] ) {
         vector<Pattern> tokens;
         ngram.ngrams(tokens,1);
         cerr << "Testing correct size "; test(tokens.size() == 6);
+        i = 0;
+        vector<string> tokenref = {"To","be","or","not","to","be"};
         for (vector<Pattern>::iterator iter2 = tokens.begin(); iter2 != tokens.end(); iter2++) {                
             const Pattern subngram = *iter2;
-            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
+            cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref[i]);
+            i += 1;
         }
 
         cerr << "----------------------------------------------------" << endl;
@@ -204,12 +208,35 @@ int main( int argc, char *argv[] ) {
         
         vector<Pattern> subngrams;
         ngram.subngrams(subngrams);
+        i = 0;
+        vector <string> subngramref = {
+            "To",
+			"be",
+			"or",
+			"not",
+			"to",
+			"be",
+			"To be",
+			"be or",
+			"or not",
+			"not to",
+			"to be",
+			"To be or",
+			"be or not",
+			"or not to",
+			"not to be",
+			"To be or not",
+			"be or not to",
+			"or not to be",
+			"To be or not to",
+			"be or not to be",
+			"To be or not to be"};
         for (vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {                
             const Pattern subngram = *iter2;
-            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
+            cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), subngramref[i]);
+            i += 1;
         }
         
-        cerr << "Below tests should all return 1" << endl;
         
         string substring = "or not";     	
         Pattern subngram = encoder.buildpattern(substring, true);
@@ -235,13 +262,14 @@ int main( int argc, char *argv[] ) {
         cerr << "Reverse of ngram #1: " << endl;
 
         Pattern revngram = ngram.reverse();
-        cerr << "Reverse ngram: " << revngram.decode(classdecoder) << endl;
-        cerr << "N: " << (int) revngram.n() << endl;
+        cerr << "Reverse ngram: "; test(revngram.decode(classdecoder), "be to not or be To");
+        cerr << "N: "; test(revngram.n(),6);
 
 
         cerr << "----------------------------------------------------" << endl;
         cerr << "Pattern Pointer tests" << endl;
         PatternPointer pngram = PatternPointer(&ngram);
+        cerr << "Testing equivalence between pointer and pattern"; test(ngram == pngram);
         Pattern derefngram = Pattern(pngram);
         cerr << "Testing equivalence after pointer construction and derefence"; test(ngram == derefngram);
 
@@ -249,17 +277,21 @@ int main( int argc, char *argv[] ) {
         vector<PatternPointer> ptokens;
         ngram.ngrams(ptokens,1);
         cerr << "Testing correct size "; test(ptokens.size() == 6);
+		i = 0;
         for (vector<PatternPointer>::iterator iter2 = ptokens.begin(); iter2 != ptokens.end(); iter2++) {                
             const PatternPointer subngram = *iter2;
-            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
+            cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref[i]);
+            i += 1;
         }
 
         cerr << "Subgrams of ngram #1 (as patternpointers): " << endl;
         vector<PatternPointer> psubngrams;
         pngram.subngrams(psubngrams);
+		i = 0;
         for (vector<PatternPointer>::iterator iter2 = psubngrams.begin(); iter2 != psubngrams.end(); iter2++) {                
             const PatternPointer psubngram = *iter2;
-            cerr << "'" << psubngram.tostring(classdecoder) << "'" << endl;
+            cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), subngramref[i]);
+            i += 1;
         }
 
 
