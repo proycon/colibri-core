@@ -197,12 +197,13 @@ std::string datatostring(unsigned char * data, const ClassDecoder& classdecoder,
             throw InternalError();
         }
         i += length;
-        if (!result.empty()) result += " ";
         if ((maxbytes == 0) && (cls == ClassDecoder::delimiterclass)) {
             return result;
         } else if (classdecoder.hasclass(cls)) {
+            if (!result.empty()) result += " ";
             result += classdecoder[cls];
         } else {
+            if (!result.empty()) result += " ";
             result += "{?}";
         }
     } while (1);

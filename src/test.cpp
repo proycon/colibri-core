@@ -23,7 +23,7 @@ void test(bool r) {
     }
 }
 
-void test(int value , int ref) {
+void test(unsigned int value , unsigned int ref) {
     if (value != ref) {
         cerr << value << " .... FAILED! expected " << ref << endl;
         exit(2);
@@ -32,6 +32,14 @@ void test(int value , int ref) {
     }
 }
 
+void testgt(unsigned int value , unsigned int ref) {
+    if (value <= ref) {
+        cerr << value << " .... FAILED! expected " << ref << endl;
+        exit(2);
+    } else {
+        cerr << value << " .... ok" << endl;
+    }
+}
 void test(string value , string ref) {
     if (value != ref) {
         cerr << value << " .... FAILED! expected " << ref << endl;
@@ -144,10 +152,10 @@ int main( int argc, char *argv[] ) {
 
 
         cerr << "Ngram #1:" << endl;
-        cerr << "Bytesize: " << (int) ngram.bytesize() << endl;
+        cerr << "Bytesize: "; test(ngram.bytesize(),7);
         cerr << "Size (n): "; test(ngram.n(), 6);
-        cerr << "Category==ngram: " << (int) (ngram.category() == NGRAM) << endl;
-        cerr << "Hash: " << ngram.hash() << endl;
+        cerr << "Category==ngram: "; test(ngram.category(), NGRAM);
+        cerr << "Hash: "; testgt(ngram.hash(),0);
         cerr << "Raw: " << endl;
         ngram.out();
         cerr << "Decoded: "; test(ngram.decode(classdecoder),"To be or not to be");
