@@ -68,7 +68,7 @@ const size_t datasize(unsigned char * data, int maxbytes = 0) {
     int n = 0;
     unsigned int length;
     do {
-        if ((maxbytes > 0) && (maxbytes >= i)) {
+        if ((maxbytes > 0) && (i >= maxbytes)) {
             return n;
         }
         const unsigned int cls = bytestoint(data + i, &length);

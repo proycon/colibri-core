@@ -274,7 +274,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Testing equivalence between pointer and pattern"; test(ngram == pngram);
         cerr << "Testing hash equivalence between pointer and pattern"; test(ngram.hash() == pngram.hash());
         Pattern derefngram = Pattern(pngram);
-        cerr << "Testing equivalence after pointer construction and derefence"; test(ngram == derefngram);
+        cerr << "Testing equivalence after pointer construction and dereference"; test(ngram == derefngram);
 
         cerr << "Bytesize: "; test(pngram.bytesize(),6);
         cerr << "Size (n): "; test(pngram.n(), 6);
@@ -326,9 +326,9 @@ int main( int argc, char *argv[] ) {
         Pattern ngramconc = ngrambegin; 
         ngramconc = ngramconc + subngram;
         ngramconc = ngramconc + subngram3;
-        cerr << "Ngram: " << ngramconc.decode(classdecoder) << endl;
-        cerr << "N: " << (int) ngramconc.n() << endl;
-        cerr << "Bytesize: " << (int) ngramconc.bytesize() << endl;
+        cerr << "Ngram: "; test(ngramconc.decode(classdecoder),"To be or not to be");
+        cerr << "N: "; test(ngramconc.n(),6);
+        cerr << "Bytesize: "; test(ngramconc.bytesize());
         cerr << "Raw: " << endl;
         ngramconc.out();
         cerr << "----------------------------------------------------" << endl;
@@ -353,41 +353,51 @@ int main( int argc, char *argv[] ) {
 
         Pattern skipgram = encoder.buildpattern(querystring2, true);
         
-        cerr << "Skipgram: " << skipgram.decode(classdecoder) << endl;
-        cerr << "N: " << (int) skipgram.n() << endl;
-        cerr << "Bytesize: " << (int) skipgram.bytesize() << endl;
+        cerr << "Skipgram decoded: "; test(skipgram.decode(classdecoder),"To {*} or {*} to be");
+        cerr << "N: "; test(skipgram.n(),6);
+        cerr << "Bytesize: "; test(skipgram.bytesize(),6);
         cerr << "Category==skipgram? " ; test(skipgram.category() == SKIPGRAM) ;
         cerr << "Skipcount==2? " ; test(skipgram.skipcount() == 2) ;
     
         cerr << "Parts: " << endl;
         vector<Pattern> parts;
         skipgram.parts(parts);
+		vector<string> partsref = {"To","or","to be"};
+		i = 0;
         for (vector<Pattern>::iterator iter2 = parts.begin(); iter2 != parts.end(); iter2++) {                
             const Pattern part = *iter2;
-            cerr << "'" << part.decode(classdecoder) << "'" << endl;
+            cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref[i]);
+            i += 1;
         }
+		cerr << "Count check "; test(i,3);
 
 
         cerr << "Gaps: " << endl;
         std::vector<std::pair<int,int> > gapcontainer;
         skipgram.gaps(gapcontainer);
         skipgram.parts(parts);
+		vector<int> gaprefbegin = {1,3};
+		vector<int> gapreflength = {1,1};
+		i = 0;
         for (vector<std::pair<int,int>>::iterator iter2 = gapcontainer.begin(); iter2 != gapcontainer.end(); iter2++) {                
-            cerr << iter2->first << "-" << iter2->second << endl;
+            cerr << "#" << i << " -- begin "; test(iter2->first, gaprefbegin[i]);
+            cerr << "#" << i << " -- length "; test(iter2->second, gapreflength[i]);
+            i += 1;
         }
+		cerr << "Count check "; test(i,2);
         
         Pattern revskipgram = skipgram.reverse();
-        cerr << "Reverse skipgram: " << revskipgram.decode(classdecoder) << endl;
-        cerr << "N: " << (int) revskipgram.n() << endl;
+        cerr << "Reverse skipgram: "; test(revskipgram.decode(classdecoder),"be to {*} or {*} To");
+        cerr << "N: "; test(revskipgram.n(),6);
         
         cerr << "----------------------------------------------------" << endl;
 
         cerr << "Extracting skip content based on skip gram and full instance" << endl;
         Pattern skipcontent = skipgram.extractskipcontent(ngram);
         
-        cerr << "Skipcontent: " << skipcontent.decode(classdecoder) << endl;
-        cerr << "N: " << (int) skipcontent.n() << endl;
-        cerr << "Bytesize: " << (int) skipcontent.bytesize() << endl;
+        cerr << "Skipcontent: "; test(skipcontent.decode(classdecoder),"be {*} not");
+        cerr << "N: "; test(skipcontent.n(),3);
+        cerr << "Bytesize: "; test(skipcontent.bytesize(),3);
         
         cerr << "----------------------------------------------------" << endl;
 
@@ -412,21 +422,25 @@ int main( int argc, char *argv[] ) {
         cerr << "----------------------------------------------------" << endl;
 
         cerr << "Encoding skip-gram from string input" << endl;
-        string querystring4 = "be {*1*} not";
+        string querystring4 = "be {*} not";
         
         Pattern skipgraminv2 = encoder.buildpattern(querystring4, true);
         
-        cerr << "Skipgram: " << skipgraminv2.decode(classdecoder) << endl;
-        cerr << "N: " << (int) skipgraminv2.n() << endl;
-        cerr << "Bytesize: " << (int) skipgraminv2.bytesize() << endl;	
+        cerr << "Skipgram: "; test(skipgraminv2.decode(classdecoder),"be {*} not");
+        cerr << "N: "; test(skipgraminv2.n(),3);
+        cerr << "Bytesize: "; test(skipgraminv2.bytesize(),3);
         
         cerr << "Parts: " << endl;
         parts2.clear();
         skipgraminv2.parts(parts2);
+		vector<string> partsref2 = {"be","not"};
+		i = 0;
         for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
-            const Pattern subngram = *iter2;
-            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
-        }    
+            const Pattern part = *iter2;
+            cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref2[i]);
+            i += 1;
+        }
+		cerr << "Count check "; test(i,2);
         cerr << "----------------------------------------------------" << endl;
         /*cerr << "Re-instantiating skipgram with skipcontent" << endl;
         Pattern rengram = skipgram.instantiate(&skipgraminv2, parts2);
