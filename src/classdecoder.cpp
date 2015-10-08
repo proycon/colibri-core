@@ -26,9 +26,9 @@ unsigned int bytestoint(const unsigned char* a, unsigned int * length) {
         b = *(a+i);
         if (b >> 7) {
             //high
-            result += (b ^ 128)* pow(256,i);
+            result += (b ^ 128)* pow(128,i);
         } else {
-            result += b * pow(256,i);
+            result += b * pow(128,i);
             if (length != NULL) *length = i+1;
             break;
         }
