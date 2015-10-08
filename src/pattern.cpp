@@ -1065,7 +1065,7 @@ Pattern Pattern::addflexgaps(const std::vector<std::pair<int,int> > & gaps) cons
 }
 
 
-Pattern Pattern::reverse() const { //TODO: convert to v2
+Pattern Pattern::reverse() const { 
     const unsigned char _size = bytesize() + 1;
     unsigned char * newdata = new unsigned char[_size];
 
@@ -1075,6 +1075,7 @@ Pattern Pattern::reverse() const { //TODO: convert to v2
     //we fill the newdata from right to left
     unsigned char cursor = _size - 1;
 
+	unsigned int high = 0;
     int i = 0;
     do {
         const unsigned char c = data[i];
@@ -1082,13 +1083,13 @@ Pattern Pattern::reverse() const { //TODO: convert to v2
             //end marker
             break;
         } else if (c < 128) {
+		    cursor = cursor - high - 1;	
             //we have a size
-            cursor = cursor - c - 1; //move newdata cursor to the left (place of insertion)
-            strncpy((char*) newdata + cursor, (char*) data + i, c + 1);
-            i += c + 1;
+            strncpy((char*) newdata + cursor, (char*) data + i, high + 1);
+            i += high + 1;
+			high = 0;
         } else {
-            //we have another marker
-            newdata[--cursor] = c;
+			high++;
             i++;
         }
     } while (1);
