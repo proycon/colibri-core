@@ -825,7 +825,6 @@ int PatternPointer::subngrams(vector<pair<PatternPointer,int>> & container, int 
 }
 
 int Pattern::parts(vector<pair<int,int>> & container) const { 
-    //to be computed in bytes
     int partbegin = 0;
     int partlength = 0;
 

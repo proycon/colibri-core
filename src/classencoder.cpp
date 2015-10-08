@@ -355,7 +355,7 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
                         outputbuffer[outputcursor++] = skipclass; //FIXEDGAP MARKER                     
                     }                
                     continue;
-                } else if (classes.count(word) == 0) {
+                } else if (classes.find(word) == classes.end()) {
                     if (autoaddunknown) {
                         cls = ++highestclass;
                         classes[word] = cls;  

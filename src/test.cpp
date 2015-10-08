@@ -159,6 +159,20 @@ int main( int argc, char *argv[] ) {
         cerr << "Raw: " << endl;
         ngram.out();
         cerr << "Decoded: "; test(ngram.decode(classdecoder),"To be or not to be");
+		cerr << endl;
+
+
+
+        cerr << "Ngram with high classes:" << endl;
+        querystring = "blah or blah";
+        Pattern ngramhigh = encoder.buildpattern(querystring, true); 	
+        cerr << "Bytesize: "; test(ngramhigh.bytesize(),9);
+        cerr << "Size (n): "; test(ngramhigh.n(), 3);
+        cerr << "Category==ngram: "; test(ngramhigh.category(), NGRAM);
+        cerr << "Hash: "; testgt(ngramhigh.hash(),0);
+        cerr << "Raw: " << endl;
+        ngramhigh.out();
+        cerr << "Decoded: "; test(ngramhigh.decode(classdecoder),"blah or blah");
 
         
         {
@@ -540,13 +554,18 @@ int main( int argc, char *argv[] ) {
 
         cerr << "----------------------------------------------------" << endl;
         string querystring7 = "blah {*1*} or {*2*} blah";
-        Pattern skipgram7 = encoder.buildpattern(querystring7, true);
-        cerr <<  "Skipgram with unknown words";
-	    test(skipgram7.decode(classdecoder),"{?} {*} or {*} {*} {?}");
+        Pattern skipgram7 = encoder.buildpattern(querystring7, true); //allowunknown=true
+        cerr <<  "Skipgram with low-frequency/high-byte words: ";
+	    test(skipgram7.decode(classdecoder),"blah {*} or {*} {*} blah");
+        skipgram7.out();
         
+		cerr << "Size: "; test(skipgram7.n(),6);
+		cerr << "Bytesize: "; test(skipgram7.bytesize(),6);
+
         cerr << "Parts: " << endl;
         parts2.clear();
         skipgram7.parts(parts2);
+		cerr << "(computed)" << endl;
 		vector<string> skipgram7partsref = {"{?}","or","{?}"};
 		i = 0;
         for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
@@ -555,6 +574,7 @@ int main( int argc, char *argv[] ) {
 			i += 1;
         }    	 
 		cerr << "Count check "; test(i,3);
+
         cerr << "gaps: " << endl;
         gaps.clear();
         skipgram7.gaps(gaps);
