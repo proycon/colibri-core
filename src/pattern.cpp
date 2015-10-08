@@ -492,6 +492,8 @@ Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructo
             n++; 
             i++;
             if (n == begin) begin_b = i;
+        } else {
+            i++;
         }
     } while (1);
 
@@ -523,6 +525,8 @@ PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //sl
             n++; 
             i++;
             if (n == begin) begin_b = i;
+        } else {
+            i++;
         }
     } while (1);
 
@@ -562,6 +566,8 @@ PatternPointer::PatternPointer(const PatternPointer& ref, int begin, int length)
             n++; 
             i++;
             if (n == begin) begin_b = i;
+        } else {
+            i++;
         }
     } while (1);
 
@@ -833,7 +839,6 @@ int Pattern::parts(vector<pair<int,int>> & container) const {
     int n = 0;
     do {
         const unsigned char c = data[i];
-        
         if (c == ClassDecoder::delimiterclass) {
             partlength = n - partbegin;
             if (partlength > 0) {
@@ -851,11 +856,11 @@ int Pattern::parts(vector<pair<int,int>> & container) const {
             n++; 
             partbegin = n; //for next part
         } else if (c < 128) {
-            //we have a size
+            //low byte, end of token
             i++;
             n++;
         } else {
-            //we have another marker
+            //high byte
             i++;
         }
     } while (1);

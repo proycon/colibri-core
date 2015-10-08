@@ -560,13 +560,13 @@ int main( int argc, char *argv[] ) {
         skipgram7.out();
         
 		cerr << "Size: "; test(skipgram7.n(),6);
-		cerr << "Bytesize: "; test(skipgram7.bytesize(),6);
+		cerr << "Bytesize: "; test(skipgram7.bytesize(),12);
 
         cerr << "Parts: " << endl;
         parts2.clear();
         skipgram7.parts(parts2);
 		cerr << "(computed)" << endl;
-		vector<string> skipgram7partsref = {"{?}","or","{?}"};
+		vector<string> skipgram7partsref = {"blah","or","blah"};
 		i = 0;
         for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
             const Pattern part = *iter2;
