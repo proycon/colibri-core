@@ -192,9 +192,15 @@ std::string datatostring(unsigned char * data, const ClassDecoder& classdecoder,
             return result;
         }
         const unsigned int cls = bytestoint(data + i, &length);
+        if (length == 0) {
+            cerr << "ERROR: Class length==0, shouldn't happen" << endl;
+            throw InternalError();
+        }
         i += length;
         if (!result.empty()) result += " ";
-        if (classdecoder.hasclass(cls)) {
+        if ((maxbytes == 0) && (cls == ClassDecoder::delimiterclass)) {
+            return result;
+        } else if (classdecoder.hasclass(cls)) {
             result += classdecoder[cls];
         } else {
             result += "{?}";

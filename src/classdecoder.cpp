@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
+#include <common.h>
 
 /*****************************
 * Colibri Core
@@ -20,7 +21,7 @@ unsigned int bytestoint(const unsigned char* a, unsigned int * length) {
     unsigned int result = 0;
     unsigned char b;
     unsigned int i = 0;
-    *length = 0;
+    if (length != NULL) *length = 0;
     do {
         b = *(a+i);
         if (b >> 7) {
@@ -28,11 +29,15 @@ unsigned int bytestoint(const unsigned char* a, unsigned int * length) {
             result += (b ^ 128)* pow(256,i);
         } else {
             result += b * pow(256,i);
-            if (length != NULL) *length = i;
+            if (length != NULL) *length = i+1;
             break;
         }
         i++;
     } while (true);
+    if ((length != NULL) && ((*length == 0)))  {
+        cerr << "bytestoint: No class found, length == 0" << endl;
+        throw InternalError();
+    }
     return result;
 }
 

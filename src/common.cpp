@@ -2,6 +2,7 @@
 #include <glob.h>
 #include <sstream>
 #include <vector>
+#include <common.h>
 
 using namespace std;
 

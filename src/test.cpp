@@ -32,6 +32,14 @@ void test(int value , int ref) {
     }
 }
 
+void test(string value , string ref) {
+    if (value != ref) {
+        cerr << value << " .... FAILED! expected " << ref << endl;
+        exit(2);
+    } else {
+        cerr << value << " .... ok" << endl;
+    }
+}
 
 int main( int argc, char *argv[] ) {
 	//string model = argv[1];
@@ -132,20 +140,23 @@ int main( int argc, char *argv[] ) {
         cerr << "Encoding n-gram from string input" << endl;
         string querystring = "To be or not to be";
         Pattern ngram = encoder.buildpattern(querystring, true); 	
+        cerr << "(Pattern built)" << endl;
 
-        cerr << "Ngram #1: " << ngram.decode(classdecoder) << endl;
-        cerr << "Size (n): "; test(ngram.n(), 6);
+
+        cerr << "Ngram #1:" << endl;
         cerr << "Bytesize: " << (int) ngram.bytesize() << endl;
+        cerr << "Size (n): "; test(ngram.n(), 6);
         cerr << "Category==ngram: " << (int) (ngram.category() == NGRAM) << endl;
         cerr << "Hash: " << ngram.hash() << endl;
         cerr << "Raw: " << endl;
         ngram.out();
+        cerr << "Decoded: "; test(ngram.decode(classdecoder),"To be or not to be");
 
         
         {
             ClassDecoder classdecoder2 = ClassDecoder();
 
-            cerr << "Decoding non-existing classes (should return UNKNOWNS):" << ngram.tostring(classdecoder2) << endl;
+            cerr << "Decoding non-existing classes (should return {?}):"; test(ngram.tostring(classdecoder2),"{?} {?} {?} {?} {?} {?}");
 
         }
         cerr << "----------------------------------------------------" << endl;
