@@ -16,36 +16,36 @@ using namespace std;
 
 void test(bool r) {
     if (r) {
-        cerr << string( ".... ok") << endl;
+        cerr << string( ".... \33[1;32mok\33[m") << endl;
     } else {
-        cerr << ".... FAILED!" << endl;
+        cerr << ".... \33[1;31mFAILED!\33[m" << endl;
         exit(2);
     }
 }
 
 void test(unsigned int value , unsigned int ref) {
     if (value != ref) {
-        cerr << value << " .... FAILED! expected " << ref << endl;
+        cerr << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
         exit(2);
     } else {
-        cerr << value << " .... ok" << endl;
+        cerr << value << " .... \33[1;32mok\33[m" << endl;
     }
 }
 
 void testgt(unsigned int value , unsigned int ref) {
     if (value <= ref) {
-        cerr << value << " .... FAILED! expected " << ref << endl;
+        cerr << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
         exit(2);
     } else {
-        cerr << value << " .... ok" << endl;
+        cerr << value << " .... \33[1;32mok\33[m" << endl;
     }
 }
 void test(string value , string ref) {
     if (value != ref) {
-        cerr << value << " .... FAILED! expected " << ref << endl;
+        cerr << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
         exit(2);
     } else {
-        cerr << value << " .... ok" << endl;
+        cerr << value << " .... \33[1;32mok\33[m" << endl;
     }
 }
 
@@ -452,27 +452,45 @@ int main( int argc, char *argv[] ) {
         cerr << "----------------------------------------------------" << endl;
         string querystring5 = "be {*1*} not {*2*} be";
         Pattern skipgram5 = encoder.buildpattern(querystring5, true);
-        cerr << skipgram5.decode(classdecoder) << endl;
+        cerr << "Skipgram: "; test(skipgram5.decode(classdecoder),"be {*} not {*} {*} be");
         
         cerr << "Parts: " << endl;
         parts2.clear();
         skipgram5.parts(parts2);
+		vector<string> skipgram5partsref = {"be","not","be"};
+     	i = 0;
         for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
-            const Pattern subngram = *iter2;
-            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
+            const Pattern part = *iter2;
+            cerr << "#" << i << " -- "; test(part.decode(classdecoder), skipgram5partsref[i]);
+            i += 1;
         }    	 
+		cerr << "Count check "; test(i,3);
+
         cerr << "getgaps: " << endl;
         vector<pair<int,int> > gaps;
         skipgram5.gaps(gaps);
+		vector<int> skipgram5gaprefbegin = {1,3};
+		vector<int> skipgram5gapreflength = {1,2};
+		i = 0;
         for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); iter2++) {
-            cerr << iter2->first << ':' << iter2->second << endl; 
+            cerr << "#" << i << " -- begin "; test(iter2->first, skipgram5gaprefbegin[i]);
+            cerr << "#" << i << " -- length "; test(iter2->second, skipgram5gapreflength[i]);
+            i += 1;
         }
+		cerr << "Count check "; test(i,2);
+
         cerr << "getparts: " << endl;
         vector<pair<int,int> > p;
         skipgram5.parts(p);
+		vector<int> skipgram5partrefbegin = {0,2,5};
+		vector<int> skipgram5partreflength = {1,1,1};
+		i = 0;
         for (vector<pair<int,int >>::iterator iter2 = p.begin(); iter2 != p.end(); iter2++) {
-            cerr << iter2->first << ':' << iter2->second << endl; 
+            cerr << "#" << i << " -- begin "; test(iter2->first, skipgram5partrefbegin[i]);
+            cerr << "#" << i << " -- length "; test(iter2->second, skipgram5partreflength[i]);	
+			i++;
         }	
+		cerr << "Count check "; test(i,3);
         /*cerr << "mask: " << endl;
         vector<bool> m;
         skipgram5.mask(m);
@@ -485,63 +503,58 @@ int main( int argc, char *argv[] ) {
         }*/		
         cerr << endl;
         
-        cerr << "slice(5,1): " << endl;
+        cerr << "slice(5,1): ";
         Pattern token = Pattern(skipgram5,5,1);
-        cerr << token.decode(classdecoder) << endl;
+		test(token.decode(classdecoder),"be");
+
         
 
-        cerr << "slice(2,4): " << endl;	    
+        cerr << "slice(2,4): ";	    
         Pattern s5slice2 = Pattern(skipgram5,2,4);
-        cerr << s5slice2.decode(classdecoder) << endl;
-        cerr << endl; 
-        
+		test(s5slice2.decode(classdecoder),"not {*} {*} be");
         
         cerr << "slice(1,3): " << endl;	    
         Pattern s5slice3 = Pattern(skipgram5,1,3);
-        cerr << s5slice3.decode(classdecoder) << endl;
-        cerr << endl;     
+		test(s5slice3.decode(classdecoder),"{*} not {*}");
 
         
         cerr << "----------------------------------------------------" << endl;
         string querystring6 = "be {*1*} not";
         Pattern skipgram6 = encoder.buildpattern(querystring6, true);
-        cerr << skipgram6.decode(classdecoder) << endl;
+        cerr << "Skipgram: ";
+		test(skipgram6.decode(classdecoder),"be {*} not");
         skipgram6.out();
         
         cerr << "Parts: " << endl;
         parts2.clear();
         skipgram6.parts(parts2);
+		i = 0;
         for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
-            const Pattern subngram = *iter2;
-            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
-        }    	 
-        cerr << "Gaps: " << endl;
-        vector<pair<int,int> > gaps6;
-        skipgram6.gaps(gaps6);
-        for (vector<pair<int,int >>::iterator iter2 = gaps6.begin(); iter2 != gaps6.end(); iter2++) {
-            cerr << iter2->first << ':' << iter2->second << endl; 
+            const Pattern part = *iter2;
+            cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref2[i]);
+            i += 1;
         }
-        cerr << "parts: " << endl;
-        vector<pair<int,int> > p6;
-        skipgram6.parts(p6);
-        for (vector<pair<int,int >>::iterator iter2 = p6.begin(); iter2 != p6.end(); iter2++) {
-            cerr << iter2->first << ':' << iter2->second << endl; 
-        }	
+		cerr << "Count check "; test(i,2);
 
 
 
         cerr << "----------------------------------------------------" << endl;
         string querystring7 = "blah {*1*} or {*2*} blah";
         Pattern skipgram7 = encoder.buildpattern(querystring7, true);
-        cerr << skipgram7.decode(classdecoder) << endl;
+        cerr <<  "Skipgram with unknown words";
+	    test(skipgram7.decode(classdecoder),"{?} {*} or {*} {*} {?}");
         
         cerr << "Parts: " << endl;
         parts2.clear();
         skipgram7.parts(parts2);
+		vector<string> skipgram7partsref = {"{?}","or","{?}"};
+		i = 0;
         for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {                
-            const Pattern subngram = *iter2;
-            cerr << "'" << subngram.decode(classdecoder) << "'" << endl;
+            const Pattern part = *iter2;
+            cerr << "#" << i << " -- "; test(part.decode(classdecoder), skipgram7partsref[i]);
+			i += 1;
         }    	 
+		cerr << "Count check "; test(i,3);
         cerr << "gaps: " << endl;
         gaps.clear();
         skipgram7.gaps(gaps);
