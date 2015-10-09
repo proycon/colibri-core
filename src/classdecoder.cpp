@@ -50,9 +50,9 @@ unsigned int bytestoint(istream* IN) {
         if (!IN->good()) break;
         if (b >> 7) {
             //high
-            result += (b ^ 128)* pow(256,i);
+            result += (b ^ 128)* pow(128,i);
         } else {
-            result += b * pow(256,i);
+            result += b * pow(128,i);
             break;
         }
         i++;
