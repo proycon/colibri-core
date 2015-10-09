@@ -640,7 +640,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Returns the version of the model implementation and binary serialisation format
          */
-        virtual int getmodelversion() const { return 1; }
+        virtual int getmodelversion() const { return 2; }
 
         /**
          * Returns the number of distinct patterns in the model
