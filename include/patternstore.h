@@ -50,7 +50,7 @@ class IndexPattern {
          */
         IndexPattern(const IndexReference & ref, const Pattern & pattern) {
             this->ref = ref;
-            this->cls = bytestoint(pattern.data + 1);
+            this->cls = bytestoint(pattern.data);
         }
         /**
          * Constructor from an integer 
@@ -279,7 +279,7 @@ class PatternStoreInterface {
  * @tparam ContainerType The low-level container type used (an STL container such as set/map). 
  * @tparam ReadWriteSizeType Data type for addressing, influences only the maximum number of items that can be stored (2**64) in the container, as this will be represented in the very beginning of the binary file. No reason to change this unless the container is very deeply nested in others and contains only few items.
  */
-template<class ContainerType,class ReadWriteSizeType = uint64_t>
+template<class ContainerType,class ReadWriteSizeType = uint64_t> //,class PatternType = Pattern>
 class PatternStore: public PatternStoreInterface {
     public:
         PatternStore<ContainerType,ReadWriteSizeType>() {};

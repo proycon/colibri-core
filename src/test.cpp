@@ -773,16 +773,11 @@ int main( int argc, char *argv[] ) {
         IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
         cerr << "Total number of tokens: " << corpus.size() << endl;
         Pattern firstword = corpus.getpattern(IndexReference(1,0),1);
-        cerr << "First word:  " << firstword.tostring(classdecoder) << endl;
+        cerr << "First word:  "; test(firstword.tostring(classdecoder),"To");
         Pattern needle = classencoder.buildpattern(string("fair Ophelia"));
+        cerr << "Finding pattern: ";
         vector<IndexReference> matches = corpus.findpattern(needle);
-        if (matches.empty()) {
-            cerr << "*************** ERROR: No matches found ************" << endl;
-            exit(2);
-        } else {
-            cerr << "'fair Ophelia' found at " << matches[0].tostring() << endl;
-        }
-        cerr << endl;
+        test(matches.size(), 1);
 
 
         PatternModelOptions options;
