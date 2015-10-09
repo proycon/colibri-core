@@ -605,15 +605,12 @@ Pattern::~Pattern() {
 
 
 bool Pattern::operator==(const Pattern &other) const {
-        const int s = bytesize();
-        if (bytesize() == other.bytesize()) {
-            for (int i = 0; i < s+1; i++) { //+1 for endmarker
-                if (data[i] != other.data[i]) return false;
-            }
-            return true;
-        } else {
-            return false;
-        }        
+    unsigned int i = 0;
+    do {
+        if (data[i] != other.data[i]) return false;
+        if ((data[i] == 0) || (other.data[i] == 0)) return data[i] == other.data[i];
+        i++;
+    } while (true);
 }
 
 bool Pattern::operator!=(const Pattern &other) const {
