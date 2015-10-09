@@ -41,23 +41,35 @@ unsigned int bytestoint(const unsigned char* a, unsigned int * length) {
     return result;
 }
 
-unsigned int bytestoint(istream* IN) {
-    unsigned int result = 0;
-    unsigned char b;
-    unsigned int i = 0;
-    do {
-        IN->read((char*) &b,sizeof(unsigned char));
-        if (!IN->good()) break;
-        if (b >> 7) {
-            //high
-            result += (b ^ 128)* pow(128,i);
-        } else {
-            result += b * pow(128,i);
-            break;
+unsigned int bytestoint(istream* IN, unsigned char version) {
+    if (version == 1) {
+        unsigned char length;
+        IN->read((char*) &length,sizeof(unsigned char));
+        unsigned char * buffer = new unsigned char[length];;
+        for (int i = 0; i < length; i++) {
+            IN->read((char*) buffer[i], sizeof(unsigned char));
         }
-        i++;
-    } while (IN->good());
-    return result;
+        unsigned int result = bytestoint_v1(buffer, (int) length);
+        delete[] buffer;
+        return result;
+    } else {
+        unsigned int result = 0;
+        unsigned char b;
+        unsigned int i = 0;
+        do {
+            IN->read((char*) &b,sizeof(unsigned char));
+            if (!IN->good()) break;
+            if (b >> 7) {
+                //high
+                result += (b ^ 128)* pow(128,i);
+            } else {
+                result += b * pow(128,i);
+                break;
+            }
+            i++;
+        } while (IN->good());
+        return result;
+    }
 }
 
 unsigned int bytestoint_v1(const unsigned char* a, const int l) {
@@ -157,22 +169,10 @@ void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsi
     unsigned int linenumber = 1;
     unsigned char c;
     unsigned int cls;
-    unsigned char version;
+    unsigned char version = getdataversion(IN);
     bool first = true;
-    if (IN->good()) {
-        IN->read( (char* ) &c, sizeof(char));
-        if (c != 0xa2) {
-            cerr << "ERROR: This is not a Colibri Core 2 corpus data file! Did you pass a plain text file or older dat file? Convert older datafiles first using colibri-datconvert .." << endl;
-            return;
-        }
-        IN->read( (char* ) &version, sizeof(char));
-        if (version != 2) {
-            cerr << "ERROR: This is not a Colibri Core 2 corpus data file (incorrect version)! Did you pass a plain text file or older dat file? Convert older datafiles first using colibri-datconvert .." << endl;
-            return;
-        }
-    }
     while (IN->good()) {
-        cls = bytestoint(IN); 
+        cls = bytestoint(IN,version); 
         if (!IN->good()) break;
         if (cls == delimiterclass) { //endmarker
             if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
@@ -250,4 +250,31 @@ void ClassDecoder::prune(unsigned int threshold) {
         classes.erase(i);
     } 
     highestclass = threshold - 1;
+}
+
+unsigned char getdataversion(std::istream * in) {
+    unsigned char b;
+    unsigned char version = 1;
+    version = 0;
+    if (!in->good())  {
+        cerr << "ERROR: Supplied data file can not be opened. Check whether it exists and whether you have proper permissions..." << endl;
+        throw InternalError();
+    }
+    if (in->tellg() > 0) {
+        in->seekg(0);
+    }
+    in->read((char*) &b,sizeof(unsigned char));
+    if (b == 0xa2) {
+        //version 2 or higher
+        in->read((char*) &version, sizeof(unsigned char));
+    } else {
+        //no metadata, version 1, first byte is a length marker
+        version = 1;
+        if (b > 5) {
+            cerr << "ERROR: Supplied data file is not a valid Colibri Data file, did you pass plain-text instead perhaps?..." << endl;
+            throw InternalError();
+        }
+        in->seekg(0); //reset
+    }
+    return version;
 }

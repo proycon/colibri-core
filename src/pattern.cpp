@@ -1107,22 +1107,10 @@ IndexedCorpus::IndexedCorpus(std::string filename, bool debug){
 void IndexedCorpus::load(std::istream *in, bool debug) {
     int sentence = 0;
     unsigned char c;
-    unsigned char version;
-    if (in->good()) {
-        in->read( (char* ) &c, sizeof(char));
-        if (c != 0xa2) {
-            cerr << "ERROR: This is not a Colibri Core 2 corpus data file! Did you pass a plain text file or older dat file? Convert older datafiles first using colibri-datconvert .." << endl;
-            return;
-        }
-        in->read( (char* ) &version, sizeof(char));
-        if (version != 2) {
-            cerr << "ERROR: This is not a Colibri Core 2 corpus data file (incorrect version)! Did you pass a plain text file or older dat file? Convert older datafiles first using colibri-datconvert .." << endl;
-            return;
-        }
-    }
+    unsigned char version = getdataversion(in);
     while (in->good()) {
         sentence++;
-        Pattern line = Pattern(in);
+        Pattern line = Pattern(in, false, version, debug);
         int linesize = line.size();
         for (int i = 0; i < linesize; i++) {
             const Pattern unigram = line[i];
