@@ -34,14 +34,14 @@ unsigned int bytestoint(const unsigned char* a, unsigned int * length) {
         }
         i++;
     } while (true);
-    if ((length != NULL) && ((*length == 0)))  {
+    /*if ((length != NULL) && ((*length == 0)))  {
         cerr << "bytestoint: No class found, length == 0" << endl;
         throw InternalError();
-    }
+    }*/
     return result;
 }
 
-unsigned int bytestoint(istream* IN, unsigned char version) {
+unsigned int bytestoint(istream* IN, const unsigned char version) {
     if (version == 1) {
         unsigned char length;
         IN->read((char*) &length,sizeof(unsigned char));
