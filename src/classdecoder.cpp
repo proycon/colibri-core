@@ -166,10 +166,14 @@ string decodestring(const unsigned char * data, unsigned char datasize) {
 
 void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsigned int start, unsigned int end, bool quiet) {
     ifstream *IN = new ifstream(filename.c_str()); //, ios::in | ios::binary);
+    unsigned char version = getdataversion(IN);
+    if (version == 1) {
+        decodefile_v1(IN,out,start,end,quiet);
+        return;
+    }
     unsigned int linenumber = 1;
     unsigned char c;
     unsigned int cls;
-    unsigned char version = getdataversion(IN);
     bool first = true;
     while (IN->good()) {
         cls = bytestoint(IN,version); 
@@ -191,9 +195,8 @@ void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsi
     if (!quiet) cerr << "Processed " << linenumber  << " lines" << endl;               
 } 
 
-void ClassDecoder::decodefile_v1(const string & filename,  std::ostream* out , unsigned int start, unsigned int end, bool quiet) {
+void ClassDecoder::decodefile_v1(ifstream *IN,  std::ostream* out , unsigned int start, unsigned int end, bool quiet) {
     unsigned char buffer[1024]; //bit large, only for one token
-    ifstream *IN = new ifstream(filename.c_str()); //, ios::in | ios::binary);
     unsigned int linenumber = 1;
     bool first = true;
     unsigned char c;

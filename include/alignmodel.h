@@ -66,7 +66,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
         }
 
         virtual int getmodeltype() const { return PATTERNALIGNMENTMODEL; }
-        virtual int getmodelversion() const { return 1; }
+        virtual int getmodelversion() const { return 2; }
 
         virtual size_t size() const {
             return PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::size();
@@ -93,6 +93,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
         virtual void load(std::istream * f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             options.MINTOKENS = 1; //other values would be meaningless
 
+            unsigned char classencodingversion = 2;
             char null;
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
@@ -100,6 +101,9 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             if ((null != 0) || (model_type != PATTERNALIGNMENTMODEL ))  {
                 std::cerr << "File is not a colibri alignment model file (did you try to load a different type of pattern model?)" << std::endl;
                 throw InternalError();
+            }
+            if (model_version > 2) {
+                std::cerr << "WARNING: Model is created with a newer version of Colibri Core! Attempting to continue but failure is likely..." << std::endl;
             }
             f->read( (char*) &totaltokens, sizeof(uint64_t));        
             f->read( (char*) &totaltypes, sizeof(uint64_t)); 
@@ -112,7 +116,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             PatternStoreInterface * constrainstore = NULL;
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
-            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, options.DEBUG);  
+            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, classencodingversion, options.DEBUG);  
             if (options.DEBUG) std::cerr << "Read " << this->size() << " patterns" << std::endl;
             this->postread(options);
         }

@@ -76,7 +76,7 @@ class ClassDecoder {
      * @param quiet Do not report decoding problems to stderr
      */
     void decodefile(const std::string & filename, std::ostream*,  unsigned int start = 0, unsigned int end = 0, bool quiet=false);
-    void decodefile_v1(const std::string & filename,  std::ostream* out , unsigned int start=0, unsigned int end=0, bool quiet=false);
+    void decodefile_v1(std::ifstream* in,  std::ostream* out , unsigned int start=0, unsigned int end=0, bool quiet=false);
 
     /**
      * Create a plain-text corpus file from a class-encoded corpus file (*.colibri.dat)

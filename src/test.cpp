@@ -809,12 +809,10 @@ int main( int argc, char *argv[] ) {
 
 
         cerr << endl;
-        cerr << "Writing to file" << endl;
+        cerr << "Writing unindexed pattern model to file" << endl;
         unindexedmodel.write(outputfilename);
-
-
         options.DEBUG = true;
-        cerr << "Reading from file" << endl;
+        cerr << "Reading unindexed pattern modelfrom file" << endl;
         PatternModel<uint32_t> unindexedmodel2 = PatternModel<uint32_t>(outputfilename, options);
         options.DEBUG = false;
         cerr << "Outputting report again" << endl;
@@ -848,10 +846,12 @@ int main( int argc, char *argv[] ) {
         }
 
 
-        cerr << "Writing to file" << endl;
+        cerr << "Writing indexed model to file" << endl;
         indexedmodel.write(outputfilename);
-        cerr << "Reading from file" << endl;
+        cerr << "Reading indexed model from file" << endl;
+        options.DEBUG = true;
         IndexedPatternModel<> indexedmodel2 = IndexedPatternModel<>(outputfilename, options);
+        options.DEBUG = false;
         cerr << "Outputting report again" << endl;
         indexedmodel2.report(&std::cerr);
 

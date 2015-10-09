@@ -352,7 +352,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             delete in;
         }
         virtual int getmodeltype() const { return PATTERNSETMODEL; }
-        virtual int getmodelversion() const { return 1; }
+        virtual int getmodelversion() const { return 2; }
 
         virtual size_t size() const {
             return PatternSet<uint64_t>::size();
@@ -408,7 +408,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
             if (options.DEBUG) { 
-                std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << std::endl;   
+                std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << ", classencodingversion" << (int) classencodingversion << std::endl;   
                 std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;   
             }
             if (model_type == PATTERNSETMODEL) {
@@ -690,7 +690,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          */
         virtual void load(std::istream * f, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) { //load from file
             char null;
-            unsigned char classencodingversion;
+            unsigned char classencodingversion = 2;
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
             f->read( (char*) &model_version, sizeof(char));        
@@ -709,7 +709,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
             if (options.DEBUG) { 
-                std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << std::endl;   
+                std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << ", classencodingversion=" << (int) classencodingversion << std::endl;   
                 std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;   
             }
 
@@ -2210,7 +2210,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
     int getmodeltype() const { return INDEXEDPATTERNMODEL; }
-    int getmodelversion() const { return 1;} 
+    int getmodelversion() const { return 2;} 
 
 
     /**

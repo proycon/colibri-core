@@ -378,11 +378,11 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
         void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, const unsigned char classencodingversion=2, bool DEBUG=false) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
+            Pattern p;
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
-            std::cerr << "Reading " << s << " patterns" << std::endl;
+            if (DEBUG) std::cerr << "Reading " << s << " patterns, classencodingversion=" << classencodingversion << std::endl;
             if (MINTOKENS == -1) MINTOKENS = 0;
             for (ReadWriteSizeType i = 0; i < s; i++) {
-                Pattern p;
                 try {
                     p = Pattern(in, false, classencodingversion);
                 } catch (std::exception &e) {
@@ -394,7 +394,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
                     if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
                 }
                 const int n = p.size();
-                if (DEBUG) std::cerr << "Read pattern #" << (i+1) << ", size=" << n << ", valuehandler=" << readvaluehandler.id();
+                if (DEBUG) std::cerr << "Read pattern #" << (i+1) << ", size=" << n << ", valuehandler=" << readvaluehandler.id() << ", classencodingversion="<<(int)classencodingversion;
                 ReadValueType readvalue;
                 readvaluehandler.read(in, readvalue);
                 if (n >= MINLENGTH && n <= MAXLENGTH)  {
