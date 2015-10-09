@@ -754,7 +754,9 @@ int main( int argc, char *argv[] ) {
 
 
         cerr << "Class decoding corpus..." << endl;
-        system("colibri-classdecode -c /tmp/hamlet.colibri.cls -f /tmp/hamlet.colibri.dat");
+        system("colibri-classdecode -c /tmp/hamlet.colibri.cls -f /tmp/hamlet.colibri.dat > /tmp/hamlet.decoded.txt");
+        int r = system("diff /tmp/hamlet.txt /tmp/hamlet.decoded.txt");
+        cerr << "Checking equivalence after decoding: "; test(r,0);
 
 
 

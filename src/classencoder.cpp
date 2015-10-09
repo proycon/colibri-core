@@ -497,7 +497,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 
 void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet, bool append) {
     if (!append) {
-        const char mark = 0x2a;
+        const char mark = 0xa2;
         const char version = 2;
         OUT->write(&mark,1);
         OUT->write(&version,1);
