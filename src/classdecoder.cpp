@@ -158,6 +158,7 @@ void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsi
     unsigned char c;
     unsigned int cls;
     unsigned char version;
+    bool first = true;
     if (IN->good()) {
         IN->read( (char* ) &c, sizeof(char));
         if (c != 0xa2) {
@@ -173,13 +174,16 @@ void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsi
     while (IN->good()) {
         cls = bytestoint(IN); 
         if (!IN->good()) break;
-        if (cls == 0) { //endmarker
+        if (cls == delimiterclass) { //endmarker
             if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
                 *out << endl;
             }
+            first = true;
             linenumber++;
-        } else {
-            *out << classes[cls] << endl;
+        } else if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
+            if (!first) *out << " ";
+            *out << classes[cls];
+            first = false;
         }
     }
     IN->close();
