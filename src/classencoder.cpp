@@ -375,7 +375,6 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
           	  }			 
           }
       }
-      outputbuffer[outputcursor++] = delimiterclass; 
       return outputcursor; 
 }
 

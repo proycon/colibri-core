@@ -369,8 +369,8 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
             if ((c == 0) && (!ignoreeol)) break;
         }
 
-        if (c != 0) { //add endmarker
-            data[i++] = 0;
+        if (c != ClassDecoder::delimiterclass) { //add endmarker
+            data[i++] = ClassDecoder::delimiterclass;
         }
 
         if (debug) std::cerr << "DEBUG: DONE READING PATTERN" << std::endl;
