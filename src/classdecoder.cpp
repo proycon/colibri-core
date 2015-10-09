@@ -172,7 +172,6 @@ void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsi
         return;
     }
     unsigned int linenumber = 1;
-    unsigned char c;
     unsigned int cls;
     bool first = true;
     while (IN->good()) {
