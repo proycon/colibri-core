@@ -50,15 +50,12 @@ const PatternCategory PatternPointer::category() const {
 
 const size_t Pattern::bytesize() const {
     //return the size of the pattern (in bytes)
-    int i = 0;
-    unsigned int length;
+    unsigned int i = 0;
     do {
-        const unsigned int cls = bytestoint(data + i, &length);
-        if (cls == ClassDecoder::delimiterclass) {
-            //end marker
+        if (data[i] == ClassDecoder::delimiterclass) { //end marker
             return i;
         }
-        i += length;
+        i++;
     } while (1);
 }
 
