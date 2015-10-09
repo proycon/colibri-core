@@ -693,6 +693,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Writing patterns to file: " << endl;
         ofstream * out = new ofstream("/tmp/patterns.tmp");
         ngram.write(out);
+        ngramhigh.write(out);
         skipgram.write(out);
         out->close();
 
