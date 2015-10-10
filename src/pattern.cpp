@@ -547,12 +547,13 @@ PatternPointer::PatternPointer(const PatternPointer& ref, int begin, int length)
 
     int i = 0;
     int n = 0;
+    unsigned char c;
     do {
         if (i >= ref.bytes) {
             length_b = i - begin_b;
             break;
         }
-        const unsigned char c = ref.data[i];
+        c = ref.data[i];
         
         if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
             length_b = i - begin_b;
