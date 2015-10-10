@@ -68,13 +68,12 @@ const size_t datasize(unsigned char * data, int maxbytes = 0) {
         if ((maxbytes > 0) && (i >= maxbytes)) {
             return n;
         }
-        const unsigned int cls = bytestoint(data + i, &length);
-        i += length;
-        if (cls == ClassDecoder::delimiterclass) {
+        if (data[i] == ClassDecoder::delimiterclass) {
             return n;
-        } else {
+        } else if (data[i] < 128) {
             n += 1;
         }
+        i++;
     } while (1);
 }
 
