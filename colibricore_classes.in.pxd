@@ -230,8 +230,6 @@ cdef extern from "patternstore.h":
 
     extern Pattern SKIPPATTERN
     extern Pattern FLEXPATTERN
-    extern Pattern BEGINPATTERN
-    extern Pattern ENDPATTERN
     extern Pattern UNKPATTERN
 
 
