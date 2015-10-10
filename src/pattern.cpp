@@ -510,8 +510,9 @@ PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //sl
 
     int i = 0;
     int n = 0;
+    unsigned char c;
     do {
-        const unsigned char c = ref.data[i];
+        c = ref.data[i];
         
         if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
             length_b = i - begin_b;
@@ -527,15 +528,14 @@ PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //sl
     } while (1);
 
     data = ref.data + begin_b;
-    if (length_b > 255) {
+    /*if (length_b >= B32) {
         std::cerr << "ERROR: Pattern too long for pattern pointer [length_b=" << length_b << ",begin=" << begin << ",length=" << length << ", reference_length_b=" << ref.bytesize() << "]  (did you set MAXLENGTH (-l)?)" << std::endl;
         std::cerr << "Reference=";
         ref.out();
         std::cerr << std::endl;
         throw InternalError();
-    }
+    }*/
     bytes = length_b;
-    
 }
 
 
