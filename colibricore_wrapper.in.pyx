@@ -437,7 +437,7 @@ cdef class Pattern:
 
     def tolist(self):
         """Returns a list representing the raw classes in the pattern"""
-        cdef vector[int] state = self.cpattern.tovector()
+        cdef vector[unsigned int] state = self.cpattern.tovector()
         return state
 
     def __bytes__(self):
