@@ -753,6 +753,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (constrainbymodel == this) {
                 totaltypes = 0;
                 totaltokens = 0;
+            } else if (constrainbymodel != NULL) {
+                totaltypes = constrainbymodel->types();
+                totaltokens = constrainbymodel->tokens();
             }
             uint32_t sentence = firstsentence-1;
             const unsigned char version = getdataversion(in);
@@ -940,7 +943,15 @@ class PatternModel: public MapType, public PatternModelInterface {
                     }
                     if (!options.QUIET) std::cerr << " Found " << foundngrams << " ngrams...";
                     if (options.DOSKIPGRAMS_EXHAUSTIVE && !options.QUIET) std::cerr << foundskipgrams << " skipgram occurrences...";
-                    if ((options.MINTOKENS > 1) && (n == 1)) totaltypes += this->size(); //total unigrams, also those not in model
+					if ((!continued) && ((constrainbymodel == NULL) or (constrainbymodel == this))) {
+						if ((options.MINTOKENS > 1) && (n == 1)) {
+							totaltypes = this->size(); //total unigrams, also those not in model
+						} else if ((options.MINTOKENS == 1) && (options.MINLENGTH == 1)) {
+							if (!options.QUIET) std::cerr << " computing total word types prior to pruning...";
+							totaltypes = totalwordtypesingroup(NGRAM,1);	
+							if (!options.QUIET) std::cerr << totaltypes << "...";							
+						}
+					}
                     unsigned int pruned;
                     if (singlepass) {
                         pruned = this->prune(options.MINTOKENS,0); //prune regardless of size
@@ -970,6 +981,12 @@ class PatternModel: public MapType, public PatternModelInterface {
                     if (((options.MINTOKENS == 1) || (constrainbymodel != NULL))) break; //no need for further n iterations, we did all in one pass since there's no point in looking back
                 } else { //iter_unigramsonly
                     if (!options.QUIET) std::cerr <<  "found " << this->size() << std::endl;
+
+					if ((!continued) && ((constrainbymodel == NULL) or (constrainbymodel == this))) {
+						if (!options.QUIET) std::cerr << " computing total word types prior to pruning...";
+						totaltypes = this->size();	
+						if (!options.QUIET) std::cerr << totaltypes << "...";							
+					}
                     //prune the unigrams based on the word occurrence threshold
                     this->prune(options.MINTOKENS_UNIGRAMS,1);
                     //normal behaviour next round
