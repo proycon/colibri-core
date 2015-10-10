@@ -1284,8 +1284,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
         
-        virtual ValueType * getdata(const PatternPointer & patternpointer, bool makeifnew=false) { 
-            const Pattern pattern = Pattern(patternpointer);
+        virtual ValueType * getdata(const PatternPointer & pattern, bool makeifnew=false) { 
             typename MapType::iterator iter = this->find(pattern);
             if (iter != this->end()) {
                 return &(iter->second); 
@@ -2228,7 +2227,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
     void add(const PatternPointer & patternpointer, IndexedData * value, const IndexReference & ref) {
         if (value == NULL) {
-            value = getdata(Pattern(patternpointer),true);
+            value = getdata(patternpointer,true);
         }
         this->valuehandler.add(value, ref);
     }
@@ -2248,8 +2247,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
-    IndexedData * getdata(const PatternPointer & patternpointer, bool makeifnew=false) { 
-        const Pattern pattern = Pattern(patternpointer);
+    IndexedData * getdata(const PatternPointer & pattern, bool makeifnew=false) { 
         typename MapType::iterator iter = this->find(pattern);
         if (iter != this->end()) {
             return &(iter->second); 

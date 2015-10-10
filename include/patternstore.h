@@ -509,7 +509,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
         /**
          * Checks if a pattern is in the set
          */
-        bool has(const PatternPointer & pattern) const { return data.count(Pattern(pattern)); }
+        bool has(const PatternPointer & pattern) const { return data.count(pattern); }
 
         /**
          * Returns the number of patterns in the set
@@ -633,7 +633,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         }
 
         bool has(const Pattern & pattern) const { return data.count(pattern); }
-        bool has(const PatternPointer & pattern) const { return data.count(Pattern(pattern)); }
+        bool has(const PatternPointer & pattern) const { return data.count(pattern); }
         size_t size() const { return data.size(); } 
 
         typedef t_hashorderedpatternset::iterator iterator;
@@ -705,12 +705,12 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
         bool has(const Pattern & pattern) const { 
             return data.count(pattern);
         }
-        bool has(const PatternPointer & pattern) const { return data.count(Pattern(pattern)); }
+        bool has(const PatternPointer & pattern) const { return data.count(pattern); }
 
         size_t size() const { return data.size(); } 
 
         ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
-        ValueType& operator [](const PatternPointer & pattern) { return data[Pattern(pattern)]; } 
+        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; } 
         
         typedef typename std::unordered_map<Pattern,ValueType>::iterator iterator;
         typedef typename std::unordered_map<Pattern,ValueType>::const_iterator const_iterator;
@@ -744,12 +744,12 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
         void insert(const Pattern & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType
 
         bool has(const Pattern & pattern) const { return data.count(pattern); }
-        bool has(const PatternPointer & pattern) const { return data.count(Pattern(pattern)); }
+        bool has(const PatternPointer & pattern) const { return data.count(pattern); }
 
         size_t size() const { return data.size(); } 
 
         ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
-        ValueType& operator [](const PatternPointer & pattern) { return data[Pattern(pattern)]; } 
+        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; } 
         
         typedef typename std::map<const Pattern,ValueType>::iterator iterator;
         typedef typename std::map<const Pattern,ValueType>::const_iterator const_iterator;
