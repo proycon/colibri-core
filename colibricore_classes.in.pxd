@@ -46,7 +46,7 @@ cdef extern from "pattern.h":
         int subngrams(vector[Pattern]& container,int minn=0,int maxn=9)
         bool contains(Pattern&) nogil
         Pattern toflexgram() nogil
-        vector[int] tovector() nogil
+        vector[unsigned int] tovector() nogil
         void set(unsigned char *,int ) nogil
         bool isgap(int) nogil
         bool isskipgram() nogil
