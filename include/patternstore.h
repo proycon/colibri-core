@@ -292,6 +292,7 @@ class PatternStore: public PatternStoreInterface {
         virtual bool erase(const Pattern &) =0;
         
         virtual size_t size() const =0; 
+        virtual void reserve(size_t) =0; //might be a noop in some implementations
         
         
         typedef typename ContainerType::iterator iterator;
@@ -333,8 +334,10 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
         virtual bool has(const Pattern &) const =0;
         virtual bool has(const PatternPointer &) const =0;
         virtual bool erase(const Pattern &) =0;
+
         
         virtual size_t size() const =0; 
+        virtual void reserve(size_t) =0;
         
         
         virtual ValueType & operator [](const Pattern & pattern)=0;
@@ -380,6 +383,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType> {
             ReadWriteSizeType s; //read size:
             Pattern p;
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            reserve(s);
             if (DEBUG) std::cerr << "Reading " << s << " patterns, classencodingversion=" << classencodingversion << std::endl;
             if (MINTOKENS == -1) MINTOKENS = 0;
             for (ReadWriteSizeType i = 0; i < s; i++) {
@@ -515,6 +519,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
          * Returns the number of patterns in the set
          */
         size_t size() const { return data.size(); } 
+        void reserve(size_t s) { data.reserve(s); }
 
         typedef t_patternset::iterator iterator;
         typedef t_patternset::const_iterator const_iterator;
@@ -560,6 +565,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
         void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true,const unsigned char classencodingversion = 2) {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            reserve(s);
             for (unsigned int i = 0; i < s; i++) {
                 Pattern p = Pattern(in, false, classencodingversion);
                 if (!DONGRAMS || !DOSKIPGRAMS || !DOFLEXGRAMS) {
@@ -582,6 +588,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType> {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            reserve(s);
             //std::cerr << "Reading " << (int) s << " patterns" << std::endl;
             for (ReadWriteSizeType i = 0; i < s; i++) {
                 Pattern p;
@@ -635,6 +642,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         bool has(const Pattern & pattern) const { return data.count(pattern); }
         bool has(const PatternPointer & pattern) const { return data.count(pattern); }
         size_t size() const { return data.size(); } 
+        void reserve(size_t s) {} //noop
 
         typedef t_hashorderedpatternset::iterator iterator;
         typedef t_hashorderedpatternset::const_iterator const_iterator;
@@ -664,6 +672,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true,const unsigned char classencodingversion = 2) {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            reserve(s);
             for (unsigned int i = 0; i < s; i++) {
                 Pattern p = Pattern(in, false, classencodingversion);
                 if (!DONGRAMS || !DOSKIPGRAMS || !DOFLEXGRAMS) {
@@ -708,6 +717,8 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
         bool has(const PatternPointer & pattern) const { return data.count(pattern); }
 
         size_t size() const { return data.size(); } 
+        void reserve(size_t s) { data.reserve(s); }
+
 
         ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
         ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; } 
@@ -747,6 +758,7 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
         bool has(const PatternPointer & pattern) const { return data.count(pattern); }
 
         size_t size() const { return data.size(); } 
+        void reserve(size_t s) {} //noop
 
         ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
         ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; } 
