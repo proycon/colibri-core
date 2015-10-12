@@ -381,6 +381,8 @@ class PatternPointer {
          return *this;
      }
 
+     //slice construtors:
+     PatternPointer(const unsigned char *, int,int);
      PatternPointer(const PatternPointer&, int,int);
      PatternPointer(const Pattern&, int,int);
 

@@ -72,7 +72,9 @@
  */
 enum ModelType {
 	UNINDEXEDPATTERNMODEL = 10, 
+	UNINDEXEDPATTERNPOINTERMODEL = 11, 
     INDEXEDPATTERNMODEL = 20,
+    INDEXEDPATTERNPOINTERMODEL = 21,
     PATTERNSETMODEL = 30,
     PATTERNALIGNMENTMODEL = 40,
 };
@@ -255,7 +257,7 @@ class PatternModelInterface: public PatternStoreInterface {
         virtual unsigned int occurrencecount(const Pattern & pattern)=0;
 
         /**
-         * Returns the number of times the frequency of the pattern in the
+         * Returns the frequency of the pattern in the
          * model, a relative/normalised value
          */
         virtual double frequency(const Pattern &) =0;

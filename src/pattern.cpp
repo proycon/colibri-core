@@ -502,6 +502,33 @@ Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructo
     data[j++] = ClassDecoder::delimiterclass;
 }
 
+PatternPointer::PatternPointer(const unsigned char * ref, int begin, int length) { //slice constructor
+    //to be computed in bytes
+    int begin_b = 0;
+    int length_b = 0;
+
+    int i = 0;
+    int n = 0;
+    unsigned char c;
+    do {
+        c = ref[i];
+        
+        if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
+            length_b = i - begin_b;
+            break;
+        } else if (c < 128) {
+            //we have a token
+            n++; 
+            i++;
+            if (n == begin) begin_b = i;
+        } else {
+            i++;
+        }
+    } while (1);
+
+    data = ref + begin_b;
+    bytes = length_b;
+}
 
 PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //slice constructor
     //to be computed in bytes
@@ -965,7 +992,7 @@ Pattern Pattern::extractskipcontent(const Pattern & instance) const {
     return pattern;
 }
 
-bool Pattern::instanceof(const Pattern & skipgram) const { 
+bool Pattern::instanceof(const Pattern & skipgram) const {  //TODO: refactor for v2
     //Is this an instantiation of the skipgram?
     //Instantiation is not necessarily full, aka: A ? B C is also an instantiation
     //of A ? ? C
@@ -1102,18 +1129,35 @@ void IndexedCorpus::load(std::istream *in, bool debug) {
     int sentence = 0;
     unsigned char c;
     unsigned char version = getdataversion(in);
-    while (in->good()) {
-        sentence++;
-        Pattern line = Pattern(in, false, version, debug);
-        int linesize = line.size();
-        for (int i = 0; i < linesize; i++) {
-            const Pattern unigram = line[i];
-            const IndexReference ref = IndexReference(sentence,i);
-            data.push_back(IndexPattern(ref,unigram));
-        }
+    if (version == 2) {
+        in->seekg(0,ios_base::end);
+        corpussize = in->tellg();
+        in->seekg(2);
+        corpus = new unsigned char[corpussize-2];
+        unsigned int i = 0;
+        in->read((char*) corpus,sizeof(unsigned char) * corpussize);
+    } else {
+        //old version
+        in->seekg(0);
+        corpus = convert_v1_v2(in,true);
     }
-    if (debug) cerr << "Loaded " << sentence << " sentences" << endl;
-    data.shrink_to_fit();
+
+    //constructing sentence index
+    uint32_t sentence = 1;
+    unsigned char * cursor = corpus;
+    bool prevdelimiter = true;
+    while (cursor < corpus + corpussize) {
+        if (prevdelimiter) {
+            sentenceindex.insert(pair<uint32_t,unsigned char *>(sentence,cursor));
+            sentence++;
+            prevdelimiter = false;
+        }
+        if (*cursor == ClassDecoder::classdelimiter) {
+            prevdelimiter = true;
+        }
+        cursor++;
+    }
+    if (debug) cerr << "Loaded " << sentenceindex.size() << " sentences" << endl;
 }
 
 
@@ -1128,79 +1172,82 @@ void IndexedCorpus::load(std::string filename, bool debug) {
     delete in;
 }
 
-Pattern IndexedCorpus::getpattern(const IndexReference & begin, int length) const {
-    //warning: will segfault if mainpatternbuffer overflows!!
-    //length in tokens
-    //
-    //std::cerr << "getting pattern " << begin.sentence << ":" << begin.token << " length " << length << std::endl;
-    const_iterator iter = this->find(begin);
-    unsigned char * buffer = mainpatternbuffer;
-    unsigned int classlength;
-    int i = 0;
-    while (i < length) {
-        if ((iter == this->end()) || (iter->ref != begin + i)) {
-            //std::cerr << "ERROR: Specified index " << (begin + i).tostring() << " (pivot " << begin.tostring() << ", offset " << i << ") does not exist"<< std::endl;
-            throw KeyError();
+unsigned char * IndexedCorpus::getpointer(const IndexReference & begin) const {
+    std::map<uint32_t,unsigned char*>::const_iterator iter = sentenceindex.find(begin.sentence);
+    if (iter == sentenceindex.end()) {
+        return NULL;
+    }
+    unsigned char * i = iter->second;
+    unsigned int n = 0;
+    do {
+        if (begin.token == n) return i;
+        if (*i == 0) {
+            break;
+        } else if (*i < 128) {
+            n++;
         }
-        classlength = inttobytes(buffer, iter->cls);
-        buffer += classlength;
         i++;
-        iter++;
-    }
-    if (buffer == mainpatternbuffer) {
-        //std::cerr << "ERROR: Specified index " << begin.tostring() << " does not exist"<< std::endl;
-        throw KeyError();
-    }
-    unsigned int buffersize = buffer - mainpatternbuffer; //pointer arithmetic
-    return Pattern(mainpatternbuffer, buffersize);
+    } while (i < corpus + corpussize);
+    return NULL;
 }
 
-std::vector<IndexReference> IndexedCorpus::findpattern(const Pattern & pattern, int maxmatches) {
-    //far more inefficient than a pattrn model obviously
+PatternPointer IndexedCorpus::getpattern(const IndexReference & begin, int length) const { 
+    const unsigned char * data = getpointer(begin);
+    if (data == NULL) throw KeyError();
+    return PatternPointer(data,false,length);
+}
+
+Pattern IndexedCorpus::getpattern(const IndexReference & begin, int length) const {
+    PatternPointer pp = getpattern(begin,length);
+    return pp.pattern();
+}
+
+void IndexedCorpus::findpattern(std::vector<IndexReference> & result, const Pattern & pattern,  uint32_t sentence, const PatternPointer & sentencedata, int maxmatches) {
+    //TODO: no flexgrams supported yet
+    const int _n = pattern.size();
+    vector<PatternPointer,int> ngrams;
+    sentencedata.ngrams(ngrams,_n);
+    for (vector<PatternPointer,int>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) { 
+        if ((iter->first == pattern) || ((pattern.category() > NGRAM) && iter->first.instanceof(pattern))) {
+            result.push_back(IndexReference(sentence,iter->second));
+        }
+    }
+}
+
+std::vector<IndexReference> IndexedCorpus::findpattern(const Pattern & pattern, uint32_t sentence, int maxmatches) {
+    //far more inefficient than a pattern model obviously
     std::vector<IndexReference> result;
     const int _n = pattern.size();
     if (_n == 0) return result;
-
+ 
     IndexReference ref;
-    int i = 0;
-    bool moved = false;
-    Pattern matchunigram = pattern[i];
-    for (iterator iter = this->begin(); iter != this->end(); iter++) {
-        Pattern unigram = iter->pattern(); 
-        if (matchunigram == unigram) {
-            if (i ==0) ref = iter->ref;
-            i++;
-            if (i == _n) {
-                result.push_back(ref);
-                if ((maxmatches != 0) && (result.size() == (unsigned int) maxmatches)) break;
-            }
-            matchunigram = pattern[i];
-            moved = true;
-        } else {
-            i = 0;
-            if (moved) matchunigram = pattern[i];
-            moved = false;
+    if (sentence == 0) {
+        for (std::map<uint32_t,unsigned char*>::iterator iter = sentenceindex.begin; iter != sentenceindex.end(); iter++) {
+            const PatternPointer sentence_pp = getsentence(iter->second);
+            findpattern(result, pattern, iter->first, sentence_pp,maxmatches);
         }
+    } else {
+        const PatternPointer sentence_pp = getsentence(iter->second);
+        findpattern(result, pattern, sentence, sentence_pp,maxmatches);
     }
     return result;
 }
 
 int IndexedCorpus::sentencelength(int sentence) const {
-    IndexReference ref = IndexReference(sentence, 0);
-    int length = 0;
-    for (const_iterator iter = this->find(ref); iter != this->end(); iter++) {
-        if (iter->ref.sentence != (unsigned int) sentence) return length;
-        length++;
-    }
-    return length;
+    return sentencelength(getpointer(IndexReference(sentence,0)));
 }
 
-unsigned int IndexedCorpus::sentences() const {
-    unsigned int max = 0;
-    for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
-        if (iter->ref.sentence > max) max = iter->ref.sentence;
-    }
-    return max;
+int IndexedCorpus::sentencelength(unsigned char * cursor) const {
+    unsigned int n = 0;
+    do {
+        if (*cursor == ClassDecoder::classdelimiter) return n;
+        if (*cursor < 128) n++;
+        cursor++;
+    } while (cursor < corpus + corpussize);
+}
+
+PatternPointer IndexedCorpus::getsentence(int sentence) const { 
+    return getpattern(IndexReference(sentence,0), sentencelength(sentence));
 }
 
 Pattern IndexedCorpus::getsentence(int sentence) const { 

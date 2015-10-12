@@ -23,3 +23,17 @@ new:
             data        shared
         n           1 byte
         
+
+PatternModel
+    - class encoding version
+    - stores patterns? 
+    - stores pointers?  If yes, then it also has a corpus included
+
+
+read  PatternPointerModel as PatternModel: yes
+write PatternPointermodel as PatternModel: yes
+
+read PatternModel as PatternPointerModel: no
+write PatternModel as PatternPointerModel: no
+
+
