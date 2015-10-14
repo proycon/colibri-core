@@ -771,6 +771,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (constrainbymodel != NULL) std::cerr << ", constrained by another model";
                 std::cerr << ", occurrence threshold: " << options.MINTOKENS;
                 if (iter_unigramsonly) std::cerr << ", secondary word occurrence threshold: " << options.MINTOKENS_UNIGRAMS;
+                if (version < 2) std::cerr << ", class encoding version: " << (int) version;
                 std::cerr << std::endl; 
             }
             std::vector<std::pair<PatternPointer,int> > ngrams;
@@ -830,7 +831,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 bool singlepass = false;
                 while (!in->eof()) {
                     //read line
-                    Pattern line = Pattern(in,false, version);
+                    Pattern line = Pattern(in,false, version, options.DEBUG);
                     sentence++;
                     //if (in->eof()) break;
                     const int linesize = line.size();

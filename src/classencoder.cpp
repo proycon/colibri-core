@@ -560,7 +560,8 @@ unsigned char * convert_v1_v2(const unsigned char * olddata, unsigned int & newl
     } while (1);
 
 	//allocate new data
-	unsigned char * data  = new unsigned char[newlength];
+    //cerr<<"DEBUG: Newlength=" << newlength << endl;
+	unsigned char * data  = new unsigned char[newlength+1];
 	unsigned char * datacursor = data;
     unsigned int classlength;
 	for (std::vector<unsigned int>::iterator iter = classes.begin(); iter != classes.end(); iter++) {
