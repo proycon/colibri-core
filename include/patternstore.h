@@ -54,7 +54,7 @@ class IndexedCorpus {
         std::map<uint32_t,unsigned char*> sentenceindex; //sentence pointers
     public:
         IndexedCorpus() {
-            corpus = NULL
+            corpus = NULL;
             corpussize = 0;
 		    totaltokens = 0;
 			patternpointer = NULL;
@@ -101,17 +101,11 @@ class IndexedCorpus {
          */
         PatternPointer getpattern(const IndexReference & begin, int length=1) const;
 
-        /**
-         * Returns a pattern starting at the provided position and of the
-         * specified length.
-         */
-        Pattern getpattern(const IndexReference & begin, int length=1) const;
 
         /**
          * Get the sentence (or whatever other unit your data employs)
          * specified by the given index. Sentences start at 1.
          */
-        Pattern getsentence(int sentence) const; //returns sentence as a pattern
         PatternPointer getsentence(int sentence) const; //returns sentence as a pattern pointer
          
         /**
@@ -149,28 +143,41 @@ class IndexedCorpus {
                 typedef PatternPointer* pointer;
                 typedef std::forward_iterator_tag iterator_category;
                 typedef int difference_type;
-                iterator(pointer ptr) : ptr_(ptr) { }
-                iterator(reference ref) : ptr_(ref) { }
-				self_type operator++() { (*ptr_)++; return *this; }
-                self_type operator++(int junk) { self_type tmpiter = *this; (*ptr_)++; return *tmpiter; }
+                iterator(pointer ptr) : ptr_(ptr) { cleanup = false; }
+                iterator(reference ref) { 
+					ptr_ = new PatternPointer(ref);
+					cleanup = true;
+				}
+   				~iterator() {
+					if ((cleanup) && (ptr_ != NULL)) delete ptr_;
+				}
+				self_type operator++() { ++(*ptr_); return *this; } //prefix
+                self_type operator++(int junk) { self_type tmpiter = *this; ++(*ptr_); return *tmpiter; } //postfix
                 reference operator*() { return *ptr_; }
-                pointer operator->() { return ptr_; }
-                bool operator==(const self_type& rhs) { return *ptr_ == *rhs; }
-                bool operator!=(const self_type& rhs) { return *ptr_ != *rhs; }
+                pointer operator->()  { return ptr_; }
+                bool operator==(self_type& rhs) { return *ptr_ == *rhs; }
+                bool operator!=(self_type& rhs) { return *ptr_ != *rhs; }
             private:
                 pointer ptr_;
+				bool cleanup;
         };
     
         /*
          * Returns the begin iterator over the corpus
          */
-        iterator begin() { return iterator(getpattern(0,1)); }
+        iterator begin() { 
+			PatternPointer p = getpattern(0,1);
+			return iterator(p); 
+		}
         //const_iterator begin() const { return data.begin(); }
 
         /*
          * Returns the end iterator over the corpus
          */
-        iterator end() { return iterator(PatternPointer(corpus,corpussize+1)); }
+        iterator end() { 
+			PatternPointer p = PatternPointer(corpus,corpussize+1);
+			return iterator(p); 
+		}
         //const_iterator end() const { return data.end(); }
 
         /**
@@ -179,7 +186,8 @@ class IndexedCorpus {
          */
         iterator find(const IndexReference & ref) {
 			try {
-				return iterator(getpattern(ref));
+				PatternPointer p = getpattern(ref);
+				return iterator(p);
 			} catch (KeyError &e) {
 				return end();
 			}
@@ -203,7 +211,7 @@ class IndexedCorpus {
          * Returns the number of tokens in the corpus
          */
         size_t size() const {
-			return patternpointer.n();
+			return patternpointer->n();
 		} 
 
         /**
@@ -221,10 +229,10 @@ class IndexedCorpus {
         unsigned int operator [](const IndexReference & ref) { 
 			try {
 				PatternPointer pp = getpattern(ref);
+				return bytestoint(pp.data);
 			} catch (KeyError &e) {
 				throw e;
 			}
-			return bytestoint(pp.data,pp.bytes);
         } 
 
 };

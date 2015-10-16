@@ -1276,9 +1276,6 @@ PatternPointer IndexedCorpus::getsentence(int sentence) const {
     return getpattern(IndexReference(sentence,0), sentencelength(sentence));
 }
 
-Pattern IndexedCorpus::getsentence(int sentence) const { 
-    return getpattern(IndexReference(sentence,0), sentencelength(sentence));
-}
 
 
 Pattern patternfromfile(const std::string & filename) {//helper function to read pattern from file, mostly for Cython
