@@ -60,6 +60,9 @@ enum PatternCategory {
 void readanddiscardpattern(std::istream * in);
 int reader_passmarker(const unsigned char c, std::istream * in); 
 
+
+const uint32_t[] bitmask = { 1, 1<<1,1<<2,1<<3,1<<4,1<<5,1<<6,1<<7,1<<8,1<<9,1<<10,1<<11,1<<12,1<<13,1<<14,1<<15,1<<16,1<<17,1<<18,1<<19,1<<20,1<<21,1<<22,1<<23,1<<24,1<<25,1<<26,1<<27,1<<28,1<<29,1<<30 };
+
 class PatternPointer;
 
 /**
@@ -270,6 +273,7 @@ class Pattern {
       * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container... Thus 'to be {*} not {*} be' has three parts 
       */
      int parts(std::vector<Pattern> & container) const; 
+     int parts(std::vector<PatternPointer> & container) const; 
      
      /**
       * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container as begin,length pairs... Thus 'to be {*} not {*} be' has three parts 
@@ -357,22 +361,22 @@ class PatternPointer {
      PatternPointer(unsigned char* dataref, const unsigned int bytesize) {
          data = dataref;
          if (bytesize > B32) {
-             std::cerr << "ERROR: Pattern too long for pattern pointer [" << bytesize << ",explicit]" << std::endl;
+             std::cerr << "ERROR: Pattern too long for pattern pointer [" << bytesize << " bytes,explicit]" << std::endl;
              throw InternalError();
          }
          bytes = bytesize;
-         mask = 0;
+         mask = computemask();
      }
 
      PatternPointer(const Pattern * ref) {
          data = ref->data;
          const size_t b = ref->bytesize();
          if (b > B32) {
-             std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << ",implicit]" << std::endl;
+             std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << " bytes,implicit]" << std::endl;
              throw InternalError();
          }
          bytes = b;
-         mask = 0;
+         mask = computemask();
      }
      PatternPointer(const PatternPointer& ref) {
          data = ref.data;
@@ -397,6 +401,8 @@ class PatternPointer {
      PatternPointer(const PatternPointer&, int,int);
      PatternPointer(const Pattern&, int,int);
 
+     uint32_t computemask() const;
+
      const size_t n() const;
      const size_t bytesize() const { return bytes; }
      const size_t size() const { return n(); }
@@ -407,6 +413,8 @@ class PatternPointer {
      const size_t hash() const;
      
      const PatternCategory category() const;
+     const bool isskipgram() const { return category() == SKIPGRAM; }
+     const bool isflexgram() const { return category() == FLEXGRAM; }
 
      std::string tostring(const ClassDecoder& classdecoder) const; //pattern to string (decode)
      std::string decode(const ClassDecoder& classdecoder) const { return tostring(classdecoder); } //pattern to string (decode)
@@ -419,6 +427,10 @@ class PatternPointer {
 
      bool operator==(const Pattern & other) const;
      bool operator!=(const Pattern & other) const { return !(*this == other); }
+
+     PatternPointer toflexgram() const;
+     bool isgap(int i) const; 
+
 
 	 /**
 	  * Return a new patternpointer one token to the right, maintaining the same token length and same skip configuration (if any).
@@ -443,6 +455,30 @@ class PatternPointer {
      int subngrams(std::vector<PatternPointer> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
      int ngrams(std::vector<std::pair<PatternPointer,int>> & container, const int n) const; //return multiple ngrams
      int subngrams(std::vector<std::pair<PatternPointer,int>> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
+
+     /**
+      * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container... Thus 'to be {*} not {*} be' has three parts 
+      */
+     int parts(std::vector<PatternPointer> & container) const; 
+     
+     /**
+      * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container as begin,length pairs... Thus 'to be {*} not {*} be' has three parts 
+      */
+     int parts(std::vector<std::pair<int,int> > & container) const; 
+
+     /**
+      * Replaces a series of tokens with a skip/gap of a particular size.
+      * Effectively turns a pattern into a skipgram.
+      * @param gap The position and size of the skip/gap: a pair consisting of a begin index (0-indexed) and a length, i.e. the size of the skip
+      */
+     PatternPointer addskip(const std::pair<int,int> & gap) const;
+
+     /**
+      * Replaces multiple series of tokens with skips/gaps of particular sizes.  Effectively turns a pattern into a skipgram.
+      * @param gaps The positions and sizes of the gaps: a vector of pairs, each pair consisting of a begin index (0-indexed) and a length, indicating where to place the gap
+      * @return A skipgram
+      */
+     PatternPointer addskips(const std::vector<std::pair<int,int> > & gaps) const;
 
      bool instanceof(const Pattern & skipgram) const; 
 

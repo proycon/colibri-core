@@ -34,7 +34,7 @@ const PatternCategory datacategory(const unsigned char * data, int maxbytes = 0)
         } else if (cls == ClassDecoder::skipclass) {
             return SKIPGRAM;
         } else if (cls == ClassDecoder::flexclass) {
-            return FLEXGRAM;;
+            return FLEXGRAM;
         }
     } while (1);
 }
@@ -44,7 +44,13 @@ const PatternCategory Pattern::category() const {
 }
 
 const PatternCategory PatternPointer::category() const {
-    return datacategory(data, bytes);
+    if (mask == 0) {
+        return datacategory(data, bytes);
+    } else if (mask > B32 / 2) {
+        return FLEXGRAM;
+    } else {
+        return SKIPGRAM;
+    }
 }
 
 
@@ -110,6 +116,11 @@ bool Pattern::isgap(int index) const { //is the word at this position a gap?
     } while (1);
 }
 
+bool PatternPointer::isgap(int index) const { //is the word at this position a gap? 
+    if ((mask == 0) || (index > 30)) return false;
+    return (mask & bitmask[index]);
+}
+
 Pattern Pattern::toflexgram() const { //converts a fixed skipgram into a dynamic one, ngrams just come out unchanged
     //to be computed in bytes
     int i = 0;
@@ -144,6 +155,30 @@ Pattern Pattern::toflexgram() const { //converts a fixed skipgram into a dynamic
     //copy from mainpatternbuffer
     return Pattern(mainpatternbuffer,j-1);
 }
+
+PatternPointer PatternPointer::toflexgram() const { //converts a fixed skipgram into a flexgram, ngrams just come out unchanged
+    PatternPointer copy = *this;
+    if (mask != 0) copy.mask = mask | (1<<31);
+    return copy;
+}
+
+uint32_t PatternPointer::computemask() const {
+    uint32_t mask = 0;
+    bool isflex = false;
+    for (unsigned int i = 0; (i < bytes) && (i < 31); i++) {
+        if (data[i] == ClassDecoder::flexclass)) {
+            isflex = true;
+            mask |= (1 << i);
+        } else if (data[i] == ClassDecoder::skipclass)) || (data[i] == ClassDecoder::flexclass)) {
+            mask |= (1 << i);
+        }
+    }
+    if (isflex) mask |= (1 << 31);
+    return mask;
+}
+
+
+
 
 const size_t Pattern::hash() const {
     if (sizeof(size_t) == 8) {
@@ -528,6 +563,7 @@ PatternPointer::PatternPointer(unsigned char * ref, int begin, int length) { //s
 
     data = ref + begin_b;
     bytes = length_b;
+    mask = computemask();
 }
 
 PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //slice constructor
@@ -563,6 +599,7 @@ PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //sl
         throw InternalError();
     }*/
     bytes = length_b;
+    mask = computemask();
 }
 
 
@@ -597,6 +634,7 @@ PatternPointer::PatternPointer(const PatternPointer& ref, int begin, int length)
 
     data = ref.data + begin_b;
     bytes = length_b;
+    mask = computemask();
 }
 
 Pattern::Pattern(const Pattern& ref) { //copy constructor
@@ -618,6 +656,20 @@ Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
         data[i] = ref.data[i];
     }
     data[ref.bytesize()] = ClassDecoder::delimiterclass;
+
+    if (ref.mask != 0) {
+        const bool flex = ref.isflexgram();
+        for (unsigned int i = 0; i < ref.bytesize(); i++) {
+            if (ref.isgap(i)) {
+                if (flex) {
+                    data[i] = ClassDecoder::flexclass;
+                } else {
+                    data[i] = ClassDecoder::skipclass;
+                }
+            }
+        }
+
+    }
 }
 
 Pattern::~Pattern() {
@@ -919,15 +971,139 @@ int Pattern::parts(vector<pair<int,int>> & container) const {
     return found;
 }
 
-int Pattern::parts(vector<Pattern> & container) const {
-    vector<pair<int,int>> partoffsets; 
-    int found = parts(partoffsets);
+int Pattern::parts(vector<Pattern> & container) const { 
+    int partbegin = 0;
+    int partlength = 0;
 
-    for (vector<pair<int,int>>::iterator iter = partoffsets.begin(); iter != partoffsets.end(); iter++) {
-        const int begin = iter->first;
-        const int length = iter->second;
-        Pattern pattern = Pattern(*this,begin, length);
-        container.push_back( pattern );
+    int found = 0;
+    int i = 0;
+    int n = 0;
+    do {
+        const unsigned char c = data[i];
+        if (c == ClassDecoder::delimiterclass) {
+            partlength = n - partbegin;
+            if (partlength > 0) {
+                container.push_back(Pattern(*this,partbegin,partlength));
+                found++;
+            }
+            break;
+        } else if ((c == ClassDecoder::skipclass) || (c == ClassDecoder::flexclass)) {        
+            partlength = n - partbegin;
+            if (partlength > 0) {
+                container.push_back(Pattern(*this,partbegin,partlength));
+                found++;
+            }
+            i++;
+            n++; 
+            partbegin = n; //for next part
+        } else if (c < 128) {
+            //low byte, end of token
+            i++;
+            n++;
+        } else {
+            //high byte
+            i++;
+        }
+    } while (1);
+    return found;
+}
+
+int Pattern::parts(vector<PatternPointer> & container) const { 
+    int partbegin = 0;
+    int partlength = 0;
+
+    int found = 0;
+    int i = 0;
+    int n = 0;
+    do {
+        const unsigned char c = data[i];
+        if (c == ClassDecoder::delimiterclass) {
+            partlength = n - partbegin;
+            if (partlength > 0) {
+                container.push_back(PatternPointer(*this,partbegin,partlength));
+                found++;
+            }
+            break;
+        } else if ((c == ClassDecoder::skipclass) || (c == ClassDecoder::flexclass)) {        
+            partlength = n - partbegin;
+            if (partlength > 0) {
+                container.push_back(PatternPointer(*this,partbegin,partlength));
+                found++;
+            }
+            i++;
+            n++; 
+            partbegin = n; //for next part
+        } else if (c < 128) {
+            //low byte, end of token
+            i++;
+            n++;
+        } else {
+            //high byte
+            i++;
+        }
+    } while (1);
+    return found;
+}
+
+int PatternPointer::parts(vector<pair<int,int>> & container) const { 
+    int partbegin = 0;
+    int partlength = 0;
+
+    int found = 0;
+    int n = 0;
+    for (int i = 0; (i<bytes) && (i<31); i++) {
+        const unsigned char c = data[i];
+        if (mask & bitmask[i] == 0) {
+            partlength = n - partbegin
+            if (partlength > 0) {
+                container.push_back(pair<int,int>(partbegin,partlength));
+                found++;
+            }
+            n++;
+            partbegin = n;
+        } else if (c < 128) {
+            //low byte, end of token
+            n++;
+        } else {
+            //high byte
+        }
+    } 
+    partlength = n - partbegin
+    if (partlength > 0) {
+        container.push_back(pair<int,int>(partbegin,partlength));
+        found++
+    }
+    return found;
+}
+
+
+int PatternPointer::parts(vector<PatternPointer> & container) const { 
+    int partbegin = 0;
+    int partlength = 0;
+
+    int found = 0;
+    int n = 0;
+    for (int i = 0; (i<bytes) && (i<31); i++) {
+        const unsigned char c = data[i];
+        if (mask & bitmask[i] == 0) {
+            partlength = n - partbegin
+            if (partlength > 0) {
+                container.push_back(PatternPointer(*this,partbegin,partlength));
+                found++;
+            }
+            n++;
+            partbegin = n;
+        } else if (c < 128) {
+            //low byte, end of token
+            n++;
+        } else {
+            //high byte
+        }
+    } 
+    partlength = n - partbegin
+    if (partlength > 0) {
+        container.push_back(pair<int,int>(partbegin,partlength));
+        found++
     }
     return found;
 }
@@ -1127,6 +1303,25 @@ Pattern Pattern::addskips(const std::vector<std::pair<int,int> > & gaps) const {
     return pattern;
 }
 
+PatternPointer PatternPointer::addskip(const std::pair<int,int> & gap) const {
+    //Returns a patternpointer with the specified span replaced by a fixed skip
+    PatternPointer copy = *this;
+    for (unsigned int i = gap.first; i < (gap.first + gap.second) && (i < 31); i++ ) {
+        copy.mask |= bitmask[i];
+    }
+    return copy;
+}
+
+PatternPointer PatternPointer::addskips(const std::vector<std::pair<int,int> > & gaps) const {
+    //Returns a patternpointer with the specified spans replaced by fixed skips
+    PatternPointer copy = *this;
+    for (vector<pair<int,int> >::const_iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
+        for (unsigned int i = gap.first; i < (gap.first + gap.second) && (i < 31); i++ ) {
+            copy.mask |= bitmask[i];
+        }
+    }
+    return pattern;
+}
 Pattern Pattern::addflexgaps(const std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     Pattern pattern = *this; //needless copy? 
