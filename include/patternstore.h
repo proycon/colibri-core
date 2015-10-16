@@ -317,6 +317,7 @@ class PatternStore: public PatternStoreInterface {
         virtual typename ContainerType::iterator begin()=0;
         virtual typename ContainerType::iterator end()=0;
         virtual typename ContainerType::iterator find(const Pattern & pattern)=0;
+        virtual typename ContainerType::iterator find(const PatternPointer & pattern)=0;
         
         virtual void write(std::ostream * out)=0;
         //virtual void read(std::istream * in, int MINTOKENS)=0;
@@ -676,6 +677,8 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
 
         iterator find(const Pattern & pattern) { return data.find(pattern); }
         const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+        iterator find(const PatternPointer & pattern) { return data.find(pattern); }
+        const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
 
         bool erase(const Pattern & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
@@ -846,6 +849,8 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
 
         iterator find(const Pattern & pattern) { return data.find(pattern); }
         const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+        iterator find(const PatternPointer & pattern) { return data.find(pattern); }
+        const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
 
         bool erase(const Pattern & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }

@@ -2140,23 +2140,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
          */
         void buildreverseindex(const PatternModelOptions options) {
             if ((this->reverseindex) && (this->reverseindex->empty())) {
-                if (!options.QUIET) std::cerr << "Building reverse index... (Consider preloading a reverse index to skip this (-r) )" << std::endl;
-                for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
-                    const Pattern p = iter->first;
-                    const int n = p.n();
-                    if (n > this->maxn) this->maxn = n;
-                    if (n < this->minn) this->minn = n;
-                    if ((n == 1) && (options.DOREVERSEINDEX)) {
-                        IndexedData * data = this->getdata(p);
-                        //construct the reverse index
-                        for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
-                            const IndexReference ref = *iter2;
-                            this->reverseindex->push_back(ref,p);
-                        }
-                    }
-                }
-                if (!options.QUIET) std::cerr << "Sorting reverse index... (Consider preloading a reverse index to skip this (-r) )" << std::endl;
-                this->reverseindex->sort();
+                if (!options.QUIET) std::cerr << "WARNING: No reverse indexed passed! Pass one explicitly! Reverse index functions will be disabled for now..." << std::endl;
             }
         }
 

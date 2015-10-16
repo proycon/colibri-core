@@ -959,8 +959,8 @@ int main( int argc, char *argv[] ) {
         model.train("/tmp/hamlet.colibri.dat", options);
         
         for (IndexedCorpus::iterator iter = corpus.begin(); iter != corpus.end(); iter++) {
-            cerr << iter->ref.tostring() << endl;
-            vector<Pattern> patterns = model.getreverseindex(iter->ref);
+            cerr << iter->first.tostring() << endl;
+            vector<Pattern> patterns = model.getreverseindex(iter->first);
             for (Pattern p : patterns) {
                 cerr << p.tostring(classdecoder) << endl;
             }
