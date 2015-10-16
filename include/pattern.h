@@ -445,6 +445,9 @@ class PatternPointer {
      int subngrams(std::vector<std::pair<PatternPointer,int>> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
 
      bool instanceof(const Pattern & skipgram) const; 
+
+     operator Pattern() { return Pattern(*this); } //cast overload
+     Pattern pattern() const { return Pattern(*this); } //cast overload
 };
 
 

@@ -960,8 +960,8 @@ int main( int argc, char *argv[] ) {
         
         for (IndexedCorpus::iterator iter = corpus.begin(); iter != corpus.end(); iter++) {
             cerr << iter->first.tostring() << endl;
-            vector<Pattern> patterns = model.getreverseindex(iter->first);
-            for (Pattern p : patterns) {
+            vector<PatternPointer> patterns = model.getreverseindex(iter->first);
+            for (PatternPointer p : patterns) {
                 cerr << p.tostring(classdecoder) << endl;
             }
         }
