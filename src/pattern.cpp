@@ -1102,8 +1102,8 @@ int PatternPointer::parts(vector<PatternPointer> & container) const {
     } 
     partlength = n - partbegin;
     if (partlength > 0) {
-        container.push_back(pair<int,int>(partbegin,partlength));
-        found++
+        container.push_back(PatternPointer(*this,partbegin,partlength));
+        found++;
     }
     return found;
 }
@@ -1320,7 +1320,7 @@ PatternPointer PatternPointer::addskips(const std::vector<std::pair<int,int> > &
             copy.mask |= bitmask[i];
         }
     }
-    return pattern;
+    return copy;
 }
 Pattern Pattern::addflexgaps(const std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips

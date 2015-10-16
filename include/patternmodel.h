@@ -163,7 +163,7 @@ class PatternModelOptions {
             MAXBACKOFFLENGTH = 100;
 
             MINSKIPTYPES = 2;
-            MAXSKIPS = 3
+            MAXSKIPS = 3;
             DOSKIPGRAMS = false;
             DOSKIPGRAMS_EXHAUSTIVE = false;
 
@@ -823,7 +823,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     }
                 }
 
-                if ((options.DOSKIPGRAMS_EXHAUSTIVE) && (gapconf[n].empty())) compute_multi_skips(gapconf[n], std::vector<std::pair<int,int> >(), n);
+                if ((options.DOSKIPGRAMS_EXHAUSTIVE) && (gapconf[n].empty())) compute_skip_configurations(gapconf[n], gapmasks[n], std::vector<std::pair<int,int> >(),  n);
                 
 
 
@@ -1081,7 +1081,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
             //loop over all possible gap configurations
             int gapconf_i = 0;
-            for (std::vector<uint32_t>::iterator iter2 =  gapmasks[n].begin(); iter2 != gapmasks[n].end(); iter2++; gapconf_i++) {
+            for (std::vector<uint32_t>::iterator iter2 =  gapmasks[n].begin(); iter2 != gapmasks[n].end(); iter2++, gapconf_i++) {
 
                 //integrity check
                 /*for (std::vector<std::pair<int,int>>::iterator giter = gapconfiguration->begin(); giter != gapconfiguration->end(); giter++) {
@@ -1147,10 +1147,10 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                                 //test whether parts occur in model, otherwise skip
                                 //can't occur either and we can discard it
-                                std::vector<Pattern> parts;
+                                std::vector<PatternPointer> parts;
                                 skipgram.parts(parts);
-                                for (std::vector<Pattern>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
-                                    const Pattern part = *iter3;
+                                for (std::vector<PatternPointer>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
+                                    const PatternPointer part = *iter3;
                                     if (!this->has(part)) {
                                         skipgram_valid = false;
                                         break;
@@ -1162,7 +1162,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             //check whether the gaps with single token context (X * Y) occur in model,
                             //otherwise skipgram can't occur
                             const std::vector<std::pair<int,int>> gapconfiguration = gapconf[n][gapconf_i];
-                            for (std::vector<std::pair<int,int>>::const_iterator iter3 = gapconfiguration->begin(); iter3 != gapconfiguration->end(); iter3++) { 
+                            for (std::vector<std::pair<int,int>>::const_iterator iter3 = gapconfiguration.begin(); iter3 != gapconfiguration.end(); iter3++) { 
                                 if (!((iter3->first - 1 == 0) && (iter3->first + iter3->second + 1 == n))) { //entire skipgram is already X * Y format
                                     const PatternPointer subskipgram = PatternPointer(skipgram, iter3->first - 1, iter3->second + 2);
                                     if (DEBUG) {
@@ -2385,7 +2385,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             if (!options.QUIET) std::cerr << "Counting " << n << "-skipgrams" << std::endl; 
             int foundskipgrams = 0;
             for (typename MapType::iterator iter = this->begin(); iter != this->end(); iter++) {
-                const PatternPointer = iter->first;
+                const PatternPointer pattern = iter->first;
                 const IndexedData multirefs = iter->second;
                 if (((int) pattern.n() == n) && (pattern.category() == NGRAM) ) foundskipgrams += this->computeskipgrams(pattern,options, NULL, &multirefs, constrainbymodel, NULL, false, options.MAXSKIPS,options.DEBUG);
             }
