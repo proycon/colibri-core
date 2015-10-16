@@ -771,12 +771,16 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class ReadWriteSizeType = uint64_t>
 class PatternPointerMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,ValueType,ValueHandler,ReadWriteSizeType,PatternPointer> {
     protected:
-        unsigned char * corpus;
-        unsigned int corpussize; //bytes
         std::map<PatternPointer, ValueType> data;
     public:
+		IndexedCorpus * corpus;
         //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
-        PatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
+        PatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>(IndexedCorpus * corpus) {
+			this->corpus = corpus;
+		};
+
+        PatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>() { corpus = NULL; }
+
 
         void insert(const PatternPointer & pattern, ValueType & value) { 
             data[pattern] = value;
