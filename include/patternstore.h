@@ -49,7 +49,7 @@ class IndexedCorpus {
     protected:
         unsigned char * corpus;
         unsigned int corpussize; //in bytes
-		PatternPointer * patternpointer;
+		PatternPointer * patternpointer; //pattern pointer covering the whole corpus
         unsigned int totaltokens;
         std::map<uint32_t,unsigned char*> sentenceindex; //sentence pointers
     public:
@@ -107,6 +107,7 @@ class IndexedCorpus {
          * specified by the given index. Sentences start at 1.
          */
         PatternPointer getsentence(int sentence) const; //returns sentence as a pattern pointer
+        PatternPointer getsentence(unsigned char * sentencedata) const; //returns sentence as a pattern pointer
          
         /**
          * Returns all positions at which the pattern occurs. Up to a certain
@@ -115,9 +116,9 @@ class IndexedCorpus {
          * model.
          * @param sentence Restrict to a particular sentence (0=all sentences, default)
          */
-        std::vector<IndexReference> findpattern(const Pattern & pattern, int maxmatches=0, uint32_t sentence = 0); 
+        std::vector<IndexReference> findpattern(const Pattern & pattern, uint32_t sentence = 0, int maxmatches=0); 
+		void findpattern(std::vector<IndexReference> & result, const Pattern & pattern,  uint32_t sentence, const PatternPointer & sentencedata, int maxmatches=0);
 
-        void findpattern(const Pattern & pattern, uint32_t sentence, unsigned char * sentencedata, int maxmatches=0); 
         /**
          * Returns the length of the sentence (or whatever other unit your data
          * employs) at the given sentence index (starts at 1)
@@ -210,8 +211,10 @@ class IndexedCorpus {
         /**
          * Returns the number of tokens in the corpus
          */
-        size_t size() const {
-			return patternpointer->n();
+        size_t size() {
+			if (totaltokens > 0) return totaltokens;
+			totaltokens =  patternpointer->n();
+			return totaltokens;
 		} 
 
         /**
@@ -270,8 +273,8 @@ class PatternStoreInterface {
 template<class ContainerType,class ReadWriteSizeType = uint64_t,class PatternType = Pattern> //,class PatternType = Pattern>
 class PatternStore: public PatternStoreInterface {
     public:
-        PatternStore<ContainerType,ReadWriteSizeType>() {};
-        virtual ~PatternStore<ContainerType,ReadWriteSizeType>() {};
+        PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {};
+        virtual ~PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {};
     
         virtual void insert(const PatternType & pattern)=0; //might be a noop in some implementations that require a value
 
@@ -316,7 +319,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
         ValueHandler valuehandler;
      public:
         PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType,PatternType>(): PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {};
-        virtual ~PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType>() {};
+        virtual ~PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType,PatternType>() {};
 
         virtual void insert(const PatternType & pattern, ValueType & value)=0;
 
@@ -782,7 +785,7 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<Pattern,Value
         
         bool erase(const Pattern & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
-}
+};
 
 
 template<class ValueType,class ValueHandler = BaseValueHandler<ValueType>,class ReadWriteSizeType = uint64_t>

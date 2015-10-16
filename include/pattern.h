@@ -387,7 +387,7 @@ class PatternPointer {
      }
 
      //slice construtors:
-     PatternPointer(const unsigned char *, int,int);
+     PatternPointer(unsigned char *, int,int);
      PatternPointer(const PatternPointer&, int,int);
      PatternPointer(const Pattern&, int,int);
 
@@ -410,6 +410,9 @@ class PatternPointer {
          return ((data == other.data) && (bytes == other.bytes) && (mask == other.mask));
      }
      bool operator!=(const PatternPointer & other) const { return !(*this == other); }
+
+     bool operator==(const Pattern & other) const;
+     bool operator!=(const Pattern & other) const { return !(*this == other); }
 
 	 /**
 	  * Return a new patternpointer one token to the right, maintaining the same token length and same skip configuration (if any).
@@ -434,6 +437,8 @@ class PatternPointer {
      int subngrams(std::vector<PatternPointer> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
      int ngrams(std::vector<std::pair<PatternPointer,int>> & container, const int n) const; //return multiple ngrams
      int subngrams(std::vector<std::pair<PatternPointer,int>> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
+
+     bool instanceof(const Pattern & skipgram) const; 
 };
 
 
