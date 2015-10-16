@@ -1,10 +1,11 @@
 #include <vector>
 #include <utility>
+#include "algorithms.h"
 
 using namespace std;
 
 
-vector< pair<int,int> > get_consecutive_gaps(const int n, const int leftmargin=1, const int rightmargin=1) {
+vector< pair<int,int> > get_consecutive_gaps(const int n, const int leftmargin, const int rightmargin) {
     vector< pair<int,int> > gaps;
     int begin = leftmargin;
     while (begin < n) {
@@ -35,9 +36,9 @@ void compute_skip_configurations(vector< vector<pair<int,int> > > & skips, vecto
                     mask |= bitmask[i];
                 }
             }
-            masks.push_bask(mask);
+            masks.push_back(mask);
          } else {
-            compute_multi_skips(skips, masks, newpath, n, maxskips, skipnum + 1, newleftmargin);
+            compute_skip_configurations(skips, masks, newpath, n, maxskips, skipnum + 1, newleftmargin);
          }
     }
 }
