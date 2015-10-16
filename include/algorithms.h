@@ -4,7 +4,8 @@
 #include <unordered_map>
 #include <vector>
 #include <utility>
+#include "common.h"
 
 std::vector< std::pair<int,int> > get_consecutive_gaps(const int n, const int leftmargin=0, const int rightmargin=0);
-void compute_multi_skips(std::vector< std::vector<std::pair<int,int> > > & skips, const std::vector<std::pair<int,int> > & path, const int n, const int maxskips=3, const int skipnum = 0, const int leftmargin = 1);
+void compute_skip_configurations(std::vector< std::vector<std::pair<int,int> > > & skips,std::vector<uint32_t> & masks, const std::vector<std::pair<int,int> > & path, const int n, const int maxskips=3, const int skipnum = 0, const int leftmargin = 1);
 #endif
