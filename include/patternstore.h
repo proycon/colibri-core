@@ -41,6 +41,7 @@ enum StoreType { //TODO: check if used?
 };
 
 
+typedef std::pair<IndexReference,PatternPointer> IndexPattern;
 /**
  * \brief Class for reading an entire (class encoded) corpus into memory. 
  * It provides a reverse index by IndexReference. The reverse index stores positions and unigrams.
@@ -134,50 +135,73 @@ class IndexedCorpus {
 
 
 		/**
-		* Iterators
+		* Iterator
 		*/
         class iterator {
             public:
                 typedef iterator self_type;
-                typedef PatternPointer value_type;
-                typedef PatternPointer& reference;
-                typedef PatternPointer* pointer;
+                typedef IndexPattern value_type;
+                typedef IndexPattern & reference;
+                typedef IndexPattern * pointer;
                 typedef std::forward_iterator_tag iterator_category;
                 typedef int difference_type;
-                iterator(pointer ptr) : ptr_(ptr) { cleanup = false; }
+                iterator(pointer ptr) : pairpointer(ptr) { cleanup = false; }
+                iterator(IndexReference iref, PatternPointer pp) { 
+					pairpointer = new std::pair<IndexReference,PatternPointer>(iref, pp);
+					cleanup = true;
+				}
                 iterator(reference ref) { 
-					ptr_ = new PatternPointer(ref);
+					pairpointer = new std::pair<IndexReference,PatternPointer>(ref.first, ref.second);
 					cleanup = true;
 				}
    				~iterator() {
-					if ((cleanup) && (ptr_ != NULL)) delete ptr_;
+					if ((cleanup) && (pairpointer != NULL)) delete pairpointer;
 				}
-				self_type operator++() { ++(*ptr_); return *this; } //prefix
-                self_type operator++(int junk) { self_type tmpiter = *this; ++(*ptr_); return *tmpiter; } //postfix
-                reference operator*() { return *ptr_; }
-                pointer operator->()  { return ptr_; }
-                bool operator==(self_type& rhs) { return *ptr_ == *rhs; }
-                bool operator!=(self_type& rhs) { return *ptr_ != *rhs; }
+				self_type operator++() { 
+					next();
+					return *this; 
+				} //prefix
+
+				void next() {
+					++(pairpointer->second);
+					if (pairpointer->second.data == ClassDecoder::delimiterclass) {
+						//we never stop at delimiterclasses, iterate again:
+						pairpointer->first.sentence++;
+						pairpointer->first.token = 0;
+						++(pairpointer->second);
+					} else {
+						pairpointer->first.token++;	
+					}
+					//Note: At the end of the data, the patternpointer is out of bounds, checking against end() should work fine though
+				}
+                self_type operator++(int junk) { self_type tmpiter = *this; next(); return *tmpiter; } //postfix
+                reference operator*() { return *pairpointer; }
+                pointer operator->()  { return pairpointer; }
+                bool operator==(self_type rhs) { return pairpointer->first == rhs->first; }
+                bool operator!=(self_type rhs) { return pairpointer->first != rhs->first; }
             private:
-                pointer ptr_;
+                pointer pairpointer;
 				bool cleanup;
+				unsigned int tokensleft; //tokens left till end of sentence, INCLUDING 0 token
         };
     
         /*
          * Returns the begin iterator over the corpus
          */
         iterator begin() { 
-			PatternPointer p = getpattern(0,1);
-			return iterator(p); 
+			IndexReference iref = IndexReference(1,0);
+			PatternPointer p = getpattern(iref,1);
+			return iterator(iref,p); 
 		}
         //const_iterator begin() const { return data.begin(); }
 
         /*
-         * Returns the end iterator over the corpus
+         * Returns the end iterator of the corpus
          */
         iterator end() { 
-			PatternPointer p = PatternPointer(corpus,corpussize+1);
-			return iterator(p); 
+			IndexReference iref = IndexReference(sentences() + 1,0);
+			PatternPointer p = PatternPointer(corpus,corpussize+1); //will be an invalid pointer, should never be used though
+			return iterator(iref,p); 
 		}
         //const_iterator end() const { return data.end(); }
 
@@ -188,7 +212,7 @@ class IndexedCorpus {
         iterator find(const IndexReference & ref) {
 			try {
 				PatternPointer p = getpattern(ref);
-				return iterator(p);
+				return iterator(ref,p);
 			} catch (KeyError &e) {
 				return end();
 			}

@@ -348,6 +348,12 @@ class PatternPointer {
                     //first bit high = flexgram, right-aligned, 0 = gap
                     //first bit low = skipgram, right-aligned, 0 = gap , max skipgram length 31 tokens
     
+	 PatternPointer() {
+		data = NULL;
+		bytes = 0;
+		mask = 0;
+     }
+
      PatternPointer(unsigned char* dataref, const unsigned int bytesize) {
          data = dataref;
          if (bytesize > B32) {

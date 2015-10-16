@@ -913,9 +913,9 @@ class PatternModel: public MapType, public PatternModelInterface {
                                     const Pattern pattern = Pattern(iter->first);
                                     ValueType * data = getdata(pattern, true);
                                     add(pattern, data, ref );
-                                    if ((options.DOREVERSEINDEX) && (pattern.n() == 1) && (reverseindex != NULL) && (!externalreverseindex)) {
+                                    /*if ((options.DOREVERSEINDEX) && (pattern.n() == 1) && (reverseindex != NULL) && (!externalreverseindex)) {
                                         reverseindex->push_back(ref, pattern); //TODO: make patternpointer
-                                    }
+                                    }*/
                                 } 
                             }
                             if (((n >= 3) || (options.MINTOKENS == 1)) //n is always 1 when mintokens == 1 !!
@@ -1807,7 +1807,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual void printreverseindex(std::ostream * out, ClassDecoder & decoder) {
             if (!this->reverseindex) return;
             for (IndexedCorpus::iterator iter = reverseindex->begin(); iter != reverseindex->end(); iter++) {
-                const IndexReference ref = iter->ref;
+                const IndexReference ref = iter->first;
                 std::vector<Pattern> rindex = this->getreverseindex(ref);
                 *out << ref.tostring();
                 for (std::vector<Pattern>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
@@ -1960,7 +1960,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             unsigned int ri_totalvaluebs = 0;
             if (this->reverseindex) {
                 for (IndexedCorpus::iterator iter = this->reverseindex->begin(); iter != this->reverseindex->end(); iter++) {
-                    ri_totalkeybs += sizeof(iter->ref.sentence) + sizeof(iter->ref.token);
+                    ri_totalkeybs += sizeof(iter->first.sentence) + sizeof(iter->first.token);
                     ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
                 }
                 *OUT << "Total key bytesize in reverse index (references): " <<  ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
@@ -2323,7 +2323,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         unsigned int ri_totalvaluebs = 0;
         if (this->reverseindex) {
             for (IndexedCorpus::iterator iter = this->reverseindex->begin(); iter != this->reverseindex->end(); iter++) {
-                ri_totalkeybs += sizeof(iter->ref.sentence) + sizeof(iter->ref.token);
+                ri_totalkeybs += sizeof(iter->first.sentence) + sizeof(iter->first.token);
                 ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
             }
             *OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
