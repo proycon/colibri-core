@@ -691,6 +691,26 @@ Pattern Pattern::operator +(const Pattern & other) const {
 }
 
 
+PatternPointer& PatternPointer::operator++() {
+	const size_t _n = n();
+	unsigned char * cursor  = data;
+	unsigned char * newdata  = NULL;
+	unsigned int newn = 0;
+	do {
+		if (*cursor < 128) {
+			if (newdata == NULL) {
+				newdata = cursor + 1;
+			} else {
+				newn++;
+			}
+		}
+		cursor++;	
+	} while (newn < _n);
+	data = newdata;
+	bytes = cursor-newdata;
+	return *this;
+}
+
 int Pattern::find(const Pattern & pattern) const { //returns the index, -1 if not fount 
     const int s = bytesize();
     const int s2 = pattern.bytesize();
@@ -1158,6 +1178,7 @@ void IndexedCorpus::load(std::istream *in, bool debug) {
         cursor++;
     }
     if (debug) cerr << "Loaded " << sentenceindex.size() << " sentences" << endl;
+	patternpointer = new PatternPointer(corpus,corpussize);
 }
 
 
@@ -1189,6 +1210,11 @@ unsigned char * IndexedCorpus::getpointer(const IndexReference & begin) const {
         i++;
     } while (i < corpus + corpussize);
     return NULL;
+}
+
+
+size_t IndexedCorpus::size() const {
+	if (totaltokens != 0) return totaltokens; //cache
 }
 
 PatternPointer IndexedCorpus::getpattern(const IndexReference & begin, int length) const { 

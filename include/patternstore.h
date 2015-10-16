@@ -119,12 +119,16 @@ class IndexPattern {
 class IndexedCorpus {
     protected:
         unsigned char * corpus;
-        unsigned int corpussize;
+        unsigned int corpussize; //in bytes
+		PatternPointer * patternpointer;
+        unsigned int totaltokens;
         std::map<uint32_t,unsigned char*> sentenceindex; //sentence pointers
     public:
         IndexedCorpus() {
             corpus = NULL
             corpussize = 0;
+		    totaltokens = 0;
+			patternpointer = NULL;
         };
 
         /*
@@ -138,7 +142,10 @@ class IndexedCorpus {
          */
         IndexedCorpus(std::string filename, bool debug = false);
 
-        ~IndexedCorpus() { if (corpus != NULL) delete[] corpus; }
+        ~IndexedCorpus() { 
+			if (corpus != NULL) delete[] corpus; 
+			if (patternpointer != NULL) delete patternpointer; 
+		}
         
         /*
          * Read an indexed corpus from stream. The stream must correspond to an
@@ -151,69 +158,6 @@ class IndexedCorpus {
          * encoded corpus (*.colibri.dat)
          */
         void load(std::string filename, bool debug = false);
-        typedef std::vector<IndexPattern>::iterator iterator;
-        typedef std::vector<IndexPattern>::const_iterator const_iterator;
-        
-
-        /*
-         * Returns the begin iterator over the corpus
-         */
-        iterator begin() { return data.begin(); }
-        const_iterator begin() const { return data.begin(); }
-
-        /*
-         * Returns the end iterator over the corpus
-         */
-        iterator end() { return data.end(); }
-        const_iterator end() const { return data.end(); }
-
-        /**
-         * Returns an iterator starting at the given position. Correspond to
-         * end() when no such position is found.
-         */
-        iterator find(const IndexReference & ref) {
-            return std::lower_bound(this->begin(), this->end(), IndexPattern(ref) ); //does binary search
-        }
-        /**
-         * Returns a const iterator starting at the given position. Correspond to
-         * end() when no such position is found.
-         */
-        const_iterator find(const IndexReference & ref) const {
-            return std::lower_bound(this->begin(), this->end(), IndexPattern(ref) ); //does binary search
-        }
-        
-        /**
-         * Does the provided position occur in the corpus? 
-         */
-        bool has(const IndexReference & ref) const {
-            return std::binary_search(this->begin(), this->end(), IndexPattern(ref) );
-        }
-
-        /**
-         * Returns the number of tokens in the corpus
-         */
-        size_t size() const { return data.size(); } 
-
-        /**
-         * Is the corpus empty?
-         */
-        bool empty() const { return data.empty(); }
-
-
-        /**
-         * Returns the token at the provided position. The token is returned as
-         * an integer corresponding to the class in a particular class
-         * encoding. Use getpattern() if you want a Pattern instance.
-         * @see getpattern
-         */
-        uint32_t operator [](const IndexReference ref) { 
-            iterator found = this->find(ref);
-            if (found != this->end()) {
-                return found->cls;
-            } else {
-                return 0; //no such index
-            }
-        } 
 
         /** 
          * Low-level function, returns a data pointer given an IndexReference.
@@ -265,12 +209,94 @@ class IndexedCorpus {
         unsigned int sentences() const { return sentenceindex.size(); }  //returns the number of sentences (1-indexed)
 
 
-        /**
-         * Add a unigram to the corpus at the given position (it's up to you to ensure this is called in proper order, or call sort() afterwards)
+		/**
+		* Iterators
+		*/
+        class iterator {
+            public:
+                typedef iterator self_type;
+                typedef PatternPointer value_type;
+                typedef PatternPointer& reference;
+                typedef PatternPointer* pointer;
+                typedef std::forward_iterator_tag iterator_category;
+                typedef int difference_type;
+                iterator(pointer ptr) : ptr_(ptr) { }
+                iterator(reference ref) : ptr_(ref) { }
+				self_type operator++() { (*ptr_)++; return *this; }
+                self_type operator++(int junk) { self_type tmpiter = *this; (*ptr_)++; return *tmpiter; }
+                reference operator*() { return *ptr_; }
+                pointer operator->() { return ptr_; }
+                bool operator==(const self_type& rhs) { return *ptr_ == *rhs; }
+                bool operator!=(const self_type& rhs) { return *ptr_ != *rhs; }
+            private:
+                pointer ptr_;
+        };
+    
+        /*
+         * Returns the begin iterator over the corpus
          */
-        void push_back(const IndexReference ref, const Pattern & pattern) {
-            data.push_back(IndexPattern(ref,pattern));
+        iterator begin() { return iterator(getpattern(0,1)); }
+        //const_iterator begin() const { return data.begin(); }
+
+        /*
+         * Returns the end iterator over the corpus
+         */
+        iterator end() { return iterator(PatternPointer(corpus,corpussize+1)); }
+        //const_iterator end() const { return data.end(); }
+
+        /**
+         * Returns an iterator starting at the given position. Correspond to
+         * end() when no such position is found.
+         */
+        iterator find(const IndexReference & ref) {
+			try {
+				return iterator(getpattern(ref));
+			} catch (KeyError &e) {
+				return end();
+			}
         }
+        /**
+         * Returns a const iterator starting at the given position. Correspond to
+         * end() when no such position is found.
+         */
+        /*const_iterator find(const IndexReference & ref) const {
+            return std::lower_bound(this->begin(), this->end(), IndexPattern(ref) ); //does binary search
+        }*/
+        
+        /**
+         * Does the provided position occur in the corpus? 
+         */
+        bool has(const IndexReference & ref) const {
+			return (getpointer(ref) != NULL);
+        }
+
+        /**
+         * Returns the number of tokens in the corpus
+         */
+        size_t size() const {
+			return patternpointer.n();
+		} 
+
+        /**
+         * Is the corpus empty?
+         */
+        bool empty() const { return (corpussize <= 1); }
+
+
+        /**
+         * Returns the token at the provided position. The token is returned as
+         * an integer corresponding to the class in a particular class
+         * encoding. Use getpattern() if you want a Pattern instance.
+         * @see getpattern
+         */
+        unsigned int operator [](const IndexReference & ref) { 
+			try {
+				PatternPointer pp = getpattern(ref);
+			} catch (KeyError &e) {
+				throw e;
+			}
+			return bytestoint(pp.data,pp.bytes);
+        } 
 
 };
 

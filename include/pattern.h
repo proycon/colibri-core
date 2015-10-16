@@ -373,6 +373,11 @@ class PatternPointer {
          bytes = ref.bytes;
          mask = ref.mask;
      }
+     PatternPointer(const PatternPointer* ref) {
+		data = ref->data;
+		bytes = ref->bytes;
+		mask = ref->mask;
+	 }
      PatternPointer & operator =(const PatternPointer other) {
          data = other.data;
          bytes = other.bytes;
@@ -405,6 +410,13 @@ class PatternPointer {
          return ((data == other.data) && (bytes == other.bytes) && (mask == other.mask));
      }
      bool operator!=(const PatternPointer & other) const { return !(*this == other); }
+
+	 /**
+	  * Return a new patternpointer one token to the right, maintaining the same token length and same skip configuration (if any).
+	  * Note that this will cause segmentation faults if the new PatternPointer exceeds the original data!!!
+	  * It's up to the caller to check this!
+	  */
+	 PatternPointer& operator++();
 
      bool operator<(const PatternPointer & other) const {
          if (data == other.data) {
