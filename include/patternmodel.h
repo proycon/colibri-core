@@ -1215,7 +1215,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Low-level function to compute skipgrams for a given pattern. See trainskipgrams() instead.
          */
-        virtual int computeskipgrams(const Pattern & pattern, PatternModelOptions & options ,  const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, const bool exhaustive = false) { //backward compatibility
+        virtual int computeskipgrams(const PatternPointer & pattern, PatternModelOptions & options ,  const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, const bool exhaustive = false) { //backward compatibility
             if (options.MINTOKENS_SKIPGRAMS < options.MINTOKENS) options.MINTOKENS_SKIPGRAMS = options.MINTOKENS;
             return computeskipgrams(pattern, options.MINTOKENS_SKIPGRAMS, singleref, multiplerefs, constrainbymodel, NULL, exhaustive, options.MAXSKIPS,options.DEBUG);
         }
@@ -1224,7 +1224,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         * Returns a vector of all skipgrams  that can be extracted from the
         * tigven pattern
          */
-        virtual std::vector<PatternPointer> findskipgrams(const Pattern & pattern, unsigned int occurrencethreshold = 1, int maxskips = 3) {
+        virtual std::vector<PatternPointer> findskipgrams(const PatternPointer & pattern, unsigned int occurrencethreshold = 1, int maxskips = 3) {
             //given the pattern, find all skipgrams in it that occur in the model
 
             std::vector<PatternPointer> skipgrams;
