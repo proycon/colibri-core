@@ -919,7 +919,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             }
                             if (((n >= 3) || (options.MINTOKENS == 1)) //n is always 1 when mintokens == 1 !!
                                     && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
-                                int foundskipgrams_thisround = this->computeskipgrams(iter->first, options, &ref, NULL, constrainbymodel, NULL, true, options.MAXSKIPS,options.DEBUG );
+                                int foundskipgrams_thisround = this->computeskipgrams(iter->first, options, &ref, NULL, constrainbymodel, true );
                                 if (foundskipgrams_thisround > 0) hasskipgrams = true;
                                 foundskipgrams += foundskipgrams_thisround; 
                             }
@@ -1217,7 +1217,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          */
         virtual int computeskipgrams(const Pattern & pattern, PatternModelOptions & options ,  const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, const bool exhaustive = false) { //backward compatibility
             if (options.MINTOKENS_SKIPGRAMS < options.MINTOKENS) options.MINTOKENS_SKIPGRAMS = options.MINTOKENS;
-            return computeskipgrams(pattern, options.MINTOKENS_SKIPGRAMS, singleref, multiplerefs, constrainbymodel, NULL, exhaustive, options.DEBUG);
+            return computeskipgrams(pattern, options.MINTOKENS_SKIPGRAMS, singleref, multiplerefs, constrainbymodel, NULL, exhaustive, options.MAXSKIPS,options.DEBUG);
         }
 
         /**
