@@ -686,8 +686,6 @@ Pattern::Pattern(const PatternPointer& ref, int begin, int length) { //slice con
     int n = 0;
     do {
         const unsigned char c = ref.data[i];
-       
-        if (i < bytes) {
         if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
             length_b = i - begin_b;
             break;
