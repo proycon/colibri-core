@@ -657,19 +657,79 @@ Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
     }
     data[ref.bytesize()] = ClassDecoder::delimiterclass;
 
-    if (ref.mask != 0) {
+    if (ref.mask != 0) { 
         const bool flex = ref.isflexgram();
-        for (unsigned int i = 0; i < ref.bytesize(); i++) {
-            if (ref.isgap(i)) {
-                if (flex) {
-                    data[i] = ClassDecoder::flexclass;
-                } else {
-                    data[i] = ClassDecoder::skipclass;
+        unsigned int i = 0;
+        unsigned int n = 0;
+        do {
+            if (ref.data[i] < 128) {
+                if (ref.isgap(n)) {
+                    if (flex) {
+                        data[i] = ClassDecoder::flexclass;
+                    } else {
+                        data[i] = ClassDecoder::skipclass;
+                    }
                 }
+                n++;
             }
-        }
-
+            i++;
+        } while (i < ref.bytesize()); 
     }
+}
+
+Pattern::Pattern(const PatternPointer& ref, int begin, int length) { //slice constructor from patternpointer
+    //to be computed in bytes
+    int begin_b = 0;
+    int length_b = 0;
+
+    int i = 0;
+    int n = 0;
+    do {
+        const unsigned char c = ref.data[i];
+       
+        if (i < bytes) {
+        if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
+            length_b = i - begin_b;
+            break;
+        } else if (c < 128) {
+            //we have a token
+            n++; 
+            i++;
+            if (n == begin) begin_b = i;
+        } else {
+            i++;
+        }
+    } while (1);
+
+    const unsigned char _size = length_b + 1;
+    data = new unsigned char[_size];
+    int j = 0;
+    for (int i = begin_b; i < begin_b + length_b; i++) {
+        data[j++] = ref.data[i];
+    }
+    data[j++] = ClassDecoder::delimiterclass;
+
+    if (ref.mask != 0) { 
+        const bool flex = ref.isflexgram();
+        i = 0;
+        n = 0;
+        do {
+            if (ref.data[i] < 128) {
+                if ((i >= begin_b) && (i < begin_b + length_b)) {
+                    if (ref.isgap(n)) {
+                        if (flex) {
+                            data[i-begin_b] = ClassDecoder::flexclass;
+                        } else {
+                            data[i-begin_b] = ClassDecoder::skipclass;
+                        }
+                    }
+                }
+                n++;
+            }
+            i++;
+        } while (i < ref.bytesize()); 
+    }
+
 }
 
 Pattern::~Pattern() {
