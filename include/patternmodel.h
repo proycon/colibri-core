@@ -1093,7 +1093,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                 //add skips
                 try {
-                    const PatternPointer skipgram = pattern; 
+                    PatternPointer skipgram = pattern; 
                     skipgram.mask = *iter2;
 
                     if (DEBUG) {
@@ -2381,13 +2381,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         if (options.MINTOKENS == -1) options.MINTOKENS = 2;
         this->cache_grouptotal.clear(); //forces recomputation of statistics
         for (int n = 3; n <= options.MAXLENGTH; n++) {
-            if (this->gapconf[n].empty()) compute_multi_skips(this->gapconf[n], std::vector<std::pair<int,int> >(), n);
+            if (this->gapconf[n].empty()) compute_skip_configurations(this->gapconf[n], this->gapmasks[n], std::vector<std::pair<int,int> >(), n);
             if (!options.QUIET) std::cerr << "Counting " << n << "-skipgrams" << std::endl; 
             int foundskipgrams = 0;
             for (typename MapType::iterator iter = this->begin(); iter != this->end(); iter++) {
-                const PatternPointer pattern = iter->first;
+                const PatternPointer pattern = PatternPointer(&(iter->first));
                 const IndexedData multirefs = iter->second;
-                if (((int) pattern.n() == n) && (pattern.category() == NGRAM) ) foundskipgrams += this->computeskipgrams(pattern,options, NULL, &multirefs, constrainbymodel, NULL, false, options.MAXSKIPS,options.DEBUG);
+                if (((int) pattern.n() == n) && (pattern.category() == NGRAM) ) foundskipgrams += this->computeskipgrams(pattern,options, NULL, &multirefs, constrainbymodel, false);
             }
             if (!foundskipgrams) {
                 std::cerr << " None found" << std::endl;

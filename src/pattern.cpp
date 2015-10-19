@@ -1503,6 +1503,9 @@ PatternPointer IndexedCorpus::getsentence(unsigned char * sentencedata) const {
 }
 
 
+Pattern::operator PatternPointer() {
+    return PatternPointer(*this);
+}
 
 Pattern patternfromfile(const std::string & filename) {//helper function to read pattern from file, mostly for Cython
     std::ifstream * in = new std::ifstream(filename.c_str());
