@@ -2409,6 +2409,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * the reverse index.
      */
     Pattern getpatternfromtoken(IndexReference ref) {
+        if (this->reverseindex == NULL) {
+            std::cerr << "ERROR: getpatternfromtoken() No reverse index loaded" << std::endl;
+            throw InternalError();
+        }
         return this->reverseindex->getpattern(ref,1);
     }
     
