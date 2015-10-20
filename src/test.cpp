@@ -932,7 +932,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Found " << unindexedmodel3.size() << " patterns, " << unindexedmodel3.types() << " types, " << unindexedmodel3.tokens() << " tokens" << endl;
 
 
-        cerr << "Testing low-level PatternSet" << endl;
+        cerr << "Testing low-level PatternSet...";
         PatternSet<uint32_t> set;
         for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
             set.insert(iter->first);
@@ -942,6 +942,7 @@ int main( int argc, char *argv[] ) {
         for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
             set.insert(iter->first);
         }
+        test(set.size(), 147);
 
 
     }
@@ -961,13 +962,15 @@ int main( int argc, char *argv[] ) {
         options.MAXLENGTH = 5;
         options.MINTOKENS = 1;
 
+        cerr << "Training model" << endl;
         model.train("/tmp/hamlet.colibri.dat", options);
         
+        cerr << "Iterating over reverse index..." << endl;
         for (IndexedCorpus::iterator iter = corpus.begin(); iter != corpus.end(); iter++) {
-            cerr << iter->first.tostring() << endl;
+            cerr << "\tGetting pattern for index " << iter->first.tostring() << endl;
             vector<PatternPointer> patterns = model.getreverseindex(iter->first);
             for (PatternPointer p : patterns) {
-                cerr << p.tostring(classdecoder) << endl;
+                cerr << "\t\t" << p.tostring(classdecoder) << endl;
             }
         }
 
