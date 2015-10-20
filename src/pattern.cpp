@@ -1441,7 +1441,8 @@ void IndexedCorpus::load(std::istream *in, bool debug) {
         in->seekg(0,ios_base::end);
         corpussize = in->tellg();
         in->seekg(2);
-        corpus = new unsigned char[corpussize-2];
+        corpussize = corpussize - 2;
+        corpus = new unsigned char[corpussize];
         in->read((char*) corpus,sizeof(unsigned char) * corpussize);
     } else {
         //old version

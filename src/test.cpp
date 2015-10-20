@@ -954,7 +954,7 @@ int main( int argc, char *argv[] ) {
         IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
 
         cerr << "Checking sentence count";
-        test(corpus.sentences(),41);
+        test(corpus.sentences(),40);
 
         IndexedCorpus::iterator ri_iter = corpus.begin();
         cerr << "Testing first word (index)";
@@ -966,6 +966,9 @@ int main( int argc, char *argv[] ) {
         test(ri_iter->first == IndexReference(1,1));
         cerr << "Testing second word (string)";
         test(ri_iter->second.tostring(classdecoder), "be");
+        cerr << "Testing sentence by index: ";
+        test(corpus.getsentence(33).tostring(classdecoder), "And lose the name of action .");
+
 
         cerr << "Building pattern model, passing corpus as reverse index" << endl;
         PatternModel<uint32_t> model = PatternModel<uint32_t>(&corpus);
