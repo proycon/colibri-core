@@ -166,9 +166,8 @@ class IndexedCorpus {
 				} //prefix
 
 				void next() {
-                    std::cerr << "DEBUG NEXT: (pairpointer==" << (size_t) pairpointer << ")";
 					++(pairpointer->second);
-					if (pairpointer->second.data == ClassDecoder::delimiterclass) {
+					if (*(pairpointer->second.data) == ClassDecoder::delimiterclass) {
 						//we never stop at delimiterclasses, iterate again:
 						pairpointer->first.sentence++;
 						pairpointer->first.token = 0;
@@ -176,7 +175,6 @@ class IndexedCorpus {
 					} else {
 						pairpointer->first.token++;	
 					}
-                    std::cerr << pairpointer->first << std::endl;
 					//Note: At the end of the data, the patternpointer is out of bounds, checking against end() should work fine though
 				}
                 self_type operator++(int junk) { self_type tmpiter = *this; next(); return *tmpiter; } //postfix
