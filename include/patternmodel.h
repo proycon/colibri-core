@@ -1373,14 +1373,14 @@ class PatternModel: public MapType, public PatternModelInterface {
             //std::cerr << "DEBUG: getreverseindex sentencelength(" << ref.sentence << ")=" << sl << std::endl;
             const unsigned int minn = this->minlength();
             const unsigned int maxn = this->maxlength();
-            for (unsigned int i = minn; i <= sl && i <= maxn; i++) {
-                if ((size == 0) || (i == size)) {
+            for (unsigned int n = minn; ref.token + n <= sl && n <= maxn; n++) {
+                if ((size == 0) || (n == size)) {
                     try {
-                        //std::cerr << "DEBUG: getreverseindex getpattern " << ref.tostring() << " + " << i << std::endl;
-                        const PatternPointer ngram = this->reverseindex->getpattern(ref,i);
+                        //std::cerr << "DEBUG: getreverseindex getpattern " << ref.tostring() << " + " << n << std::endl;
+                        const PatternPointer ngram = this->reverseindex->getpattern(ref,n);
                         /*std::cerr << "n: " << ngram.n() << std::endl;
                         std::cerr << "bytesize: " << ngram.bytesize() << std::endl;;
-                        std::cerr << "hash: " << ngram.hash() << std::endl;;*/
+                        std::cerr << "hash: " << ngram.hash() << std::endl;*/
                         if ( (((occurrencecount == 0) && this->has(ngram)) || (this->occurrencecount(ngram) >= (unsigned int) occurrencecount))
                             && ((category == 0) || (ngram.category() >= category)) ) {
                             result.push_back(ngram);
@@ -1395,6 +1395,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 for (auto skipgram : skipgrams) {
                                     result.push_back(skipgram);
                                 }
+
+                                //TODO: flexgrams
 
                             }
                         }
@@ -2532,9 +2534,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const IndexReference ref = *iter;
 
             //search in reverse index
-            std::vector<Pattern> rindex = this->getreverseindex(ref);
-            for (std::vector<Pattern>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
-                const Pattern candidate = *iter2;
+            std::vector<PatternPointer> rindex = this->getreverseindex(ref);
+            for (std::vector<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
+                const PatternPointer candidate = *iter2;
 
                 if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == SKIPGRAM)  && ((occurrencethreshold == 0) || (this->occurrencecount(pattern) >= occurrencethreshold)) ) {
                     templates[candidate] += 1;
@@ -2573,9 +2575,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const IndexReference ref = *iter;
 
             //search in reverse index
-            std::vector<Pattern> rindex = this->getreverseindex(ref);
-            for (std::vector<Pattern>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
-                const Pattern candidate = *iter2;
+            std::vector<PatternPointer> rindex = this->getreverseindex(ref);
+            for (std::vector<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
+                const PatternPointer candidate = *iter2;
 
                 if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == NGRAM) && ((occurrencethreshold == 0) || (this->occurrencecount(pattern) >= occurrencethreshold))  ) {
                     instances[candidate] += 1;
