@@ -395,7 +395,7 @@ class PatternPointer {
          // by convention, always return *this (for chaining)
          return *this;
      }
-     PatternPointer(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, const unsigned char * corpusstart = NULL, bool debug = false); 
+     PatternPointer(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, unsigned char * corpusstart = NULL, bool debug = false); 
 
      /**
       * Write Pattern to output stream (in binary form)

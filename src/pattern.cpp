@@ -448,7 +448,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
 }
 
 
-PatternPointer::PatternPointer(std::istream * in, bool ignoreeol, const unsigned char version , const unsigned char * corpusstart, bool debug) {
+PatternPointer::PatternPointer(std::istream * in, bool ignoreeol, const unsigned char version , unsigned char * corpusstart, bool debug) {
     if (corpusstart == NULL) {
         std::cerr << "ERROR: Can not read Pattern as PatternPointer!" << std::endl;
         throw InternalError();
