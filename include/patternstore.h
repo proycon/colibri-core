@@ -57,9 +57,19 @@ class IndexedCorpus {
         IndexedCorpus() {
             corpus = NULL;
             corpussize = 0;
-		    totaltokens = 0;
+		    totaltokens = 0; //will be computed when queried
 			patternpointer = NULL;
         };
+
+        /*
+         * Low-level constructor
+         */
+        IndexedCorpus(unsigned char * corpus, unsigned int corpussize) {
+            this->corpus = corpus;
+            this->corpussize = 0;
+            totaltokens = 0; //will be computed when queried
+            patternpointer = new PatternPointer(corpus,corpussize);
+        }
 
         /*
          * Read an indexed corpus from stream. The stream must correspond to an
@@ -89,6 +99,8 @@ class IndexedCorpus {
          */
         void load(std::string filename, bool debug = false);
 
+
+
         /** 
          * Low-level function, returns a data pointer given an IndexReference.
          * Returns NULL when the index does not exist.
@@ -102,6 +114,9 @@ class IndexedCorpus {
          */
         PatternPointer getpattern(const IndexReference & begin, int length=1) const;
 
+        PatternPointer getpattern() const {
+            return *patternpointer;
+        }
 
         /**
          * Get the sentence (or whatever other unit your data employs)
@@ -265,6 +280,9 @@ class IndexedCorpus {
 				throw e;
 			}
         } 
+
+
+
 
 };
 

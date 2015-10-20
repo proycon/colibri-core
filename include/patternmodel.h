@@ -562,7 +562,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             //sort indices
         }
     public:
-        IndexedCorpus * reverseindex; ///< Pointer to the reverse index for this model (or NULL)
+        IndexedCorpus * reverseindex; ///< Pointer to the reverse index and corpus data for this model (or NULL)
+        bool reverseindex_internal;
         bool hasskipgrams; ///< Does this model have skipgrams?
 
         /**
@@ -581,6 +582,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             } else {
                 this->reverseindex = NULL;
             }
+            reverseindex_internal = false;
         }
 
         /**
@@ -604,8 +606,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             } else {
                 this->reverseindex = NULL;
             }
+            reverseindex_internal = false;
         }
 
+        ~PatternModel<ValueType,ValueHandler,MapType,PatternType>() {
+            if (reverseindex_internal && reverseindex != NULL) delete reverseindex;
+        }
         /**
          * Read a pattern model from file
          * @param filename The input filename
@@ -627,6 +633,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             } else {
                 this->reverseindex = NULL;
             }
+            reverseindex_internal = false;
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
             if (!in->good()) {
@@ -696,12 +703,24 @@ class PatternModel: public MapType, public PatternModelInterface {
             f->read( (char*) &model_type, sizeof(char));        
             f->read( (char*) &model_version, sizeof(char));        
             if (model_version == 1) classencodingversion = 1;
-            if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) && (model_type != PATTERNALIGNMENTMODEL) ))  {
+            if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != UNINDEXEDPATTERNPOINTERMODEL) && (model_type != INDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNPOINTERMODEL) && (model_type != PATTERNALIGNMENTMODEL) ))  {
                 std::cerr << "File is not a colibri model file (or a very old one)" << std::endl;
                 throw InternalError();
             }
             if (model_version > 2) {
                 std::cerr << "WARNING: Model is created with a newer version of Colibri Core! Attempting to continue but failure is likely..." << std::endl;
+            }
+            if (options.DEBUG) {
+                std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << ", classencodingversion=" << (int) classencodingversion << std::endl;   
+            }
+            if ((model_type == UNINDEXEDPATTERNPOINTERMODEL) || (model_type == INDEXEDPATTERNPOINTERMODEL)) {
+                if (options.DEBUG) std::cerr << "Reading corpus data" << std::endl;
+                unsigned int corpussize;
+                f->read( (char*) &corpussize, sizeof(unsigned int));
+                unsigned char * corpusdata = new unsigned char[corpussize];
+                f->read((char*) corpusdata,sizeof(unsigned char) * corpussize);
+                reverseindex = new IndexedCorpus(corpusdata, corpussize);
+                reverseindex_internal = true;
             }
             f->read( (char*) &totaltokens, sizeof(uint64_t));        
             f->read( (char*) &totaltypes, sizeof(uint64_t)); 
@@ -710,7 +729,6 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
             if (options.DEBUG) { 
-                std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << ", classencodingversion=" << (int) classencodingversion << std::endl;   
                 std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;   
             }
 
@@ -1256,6 +1274,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             out->write( (char*) &t, sizeof(char));        
             unsigned char v = this->getmodelversion();
             out->write( (char*) &v, sizeof(char));        
+            if ((this->getmodeltype()== UNINDEXEDPATTERNPOINTERMODEL) || (this->getmodeltype() == INDEXEDPATTERNPOINTERMODEL)) {
+                PatternPointer corpusdata = reverseindex->getpattern();
+                unsigned int corpussize = corpusdata.bytesize();
+                out->write( (char*) &corpussize, sizeof(unsigned int));
+                out->write((char*) corpusdata.data, sizeof(unsigned char) * corpussize);
+            }
             out->write( (char*) &totaltokens, sizeof(uint64_t));        
             const uint64_t tp = this->types(); //use this instead of totaltypes, as it may need to be computed on-the-fly still
             out->write( (char*) &tp, sizeof(uint64_t)); 
@@ -2111,6 +2135,21 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual int computeflexgrams_fromcooc() {return 0; }//does nothing for unindexed models
         virtual void outputcooc_npmi(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {}
         virtual void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {}
+};
+
+
+template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class MapType = PatternPointerMap<ValueType, BaseValueHandler<ValueType>>>
+class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,PatternPointer> {
+    PatternPointerModel<ValueType,ValueHandler,MapType>(IndexedCorpus * corpus): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() {
+        this->model_type = this->getmodeltype();
+        this->model_version = this->getmodelversion();
+        if (corpus) {
+            this->reverseindex = corpus;
+        } else {
+            this->reverseindex = NULL;
+        }
+    }
+
 };
 
 
