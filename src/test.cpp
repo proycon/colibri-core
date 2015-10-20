@@ -829,9 +829,14 @@ int main( int argc, char *argv[] ) {
         options.DOSKIPGRAMS_EXHAUSTIVE = false;
         options.DOSKIPGRAMS = true ;
         cerr << "Building indexed model" << endl;
-        IndexedPatternModel<> indexedmodel;
+        IndexedPatternModel<> indexedmodel(&corpus);
         indexedmodel.train(infilename, options);
         cerr << "Found " << indexedmodel.size() << " patterns, " << indexedmodel.types() << " types, " << indexedmodel.tokens() << " tokens" << endl;
+        cerr << "Equal tokens? " ; test(unindexedmodel.tokens() == indexedmodel.tokens() );
+        cerr << "Equal types? " ; test(unindexedmodel.types() == indexedmodel.types() );
+        //cerr << "Equal size? " ; test(unindexedmodel.size() == indexedmodel.size() ); //difference in skipgrams
+        cerr << "Testing indexedmodel.has()"; test( indexedmodel.has(ngram) );
+        cerr << "Testing indexedmodel.occurrencecount()"; test( indexedmodel.occurrencecount(ngram),6 );
         indexedmodel.print(&std::cerr, classdecoder);
         cerr << endl;
         indexedmodel.report(&std::cerr);
@@ -902,7 +907,7 @@ int main( int argc, char *argv[] ) {
 
         cerr << "Building indexed model with mintokens=1" << endl;
         options.MINTOKENS = 1;
-        IndexedPatternModel<> indexedmodel1;
+        IndexedPatternModel<> indexedmodel1(&corpus);
         indexedmodel1.train(infilename, options);
         cerr << "Found " << indexedmodel1.size() << " patterns, " << indexedmodel1.types() << " types, " << indexedmodel1.tokens() << " tokens" << endl;
 
