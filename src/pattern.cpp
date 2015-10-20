@@ -1550,6 +1550,7 @@ int IndexedCorpus::sentencelength(unsigned char * cursor) const {
         if (*cursor < 128) n++;
         cursor++;
     } while (cursor < corpus + corpussize);
+    return n;
 }
 
 PatternPointer IndexedCorpus::getsentence(int sentence) const { 

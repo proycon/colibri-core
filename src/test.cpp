@@ -962,7 +962,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Testing first word (string)";
         test(ri_iter->second.tostring(classdecoder), "To");
         ri_iter++;
-        cerr << "Testing second word (index)";
+        cerr << "Testing second word (index) " << ri_iter->first;
         test(ri_iter->first == IndexReference(1,1));
         cerr << "Testing second word (string)";
         test(ri_iter->second.tostring(classdecoder), "be");

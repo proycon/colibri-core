@@ -72,6 +72,11 @@ class IndexReference {
     std::string tostring() const {
         return std::to_string((unsigned int) sentence) + ":" + std::to_string((unsigned int) token);
     }
+
+    friend std::ostream& operator<<(std::ostream & out, const IndexReference & iref) {
+        out << iref.tostring();
+        return out;
+    }
 };
 
 /**
