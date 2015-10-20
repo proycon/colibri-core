@@ -961,8 +961,12 @@ int main( int argc, char *argv[] ) {
         test(ri_iter->first == IndexReference(1,0));
         cerr << "Testing first word (string)";
         test(ri_iter->second.tostring(classdecoder), "To");
+        cerr << "Pre-iter" << ri_iter->first << endl;
         ri_iter++;
-        cerr << "Testing second word (index) " << ri_iter->first;
+        cerr << "Post-iter" << ri_iter->first << endl;
+        IndexedCorpus::iterator ri_iter2 = ri_iter;
+        cerr << "Copy: " << ri_iter2->first << endl;
+        cerr << "Testing second word (index)";
         test(ri_iter->first == IndexReference(1,1));
         cerr << "Testing second word (string)";
         test(ri_iter->second.tostring(classdecoder), "be");

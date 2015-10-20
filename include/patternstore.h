@@ -145,17 +145,20 @@ class IndexedCorpus {
                 typedef IndexPattern * pointer;
                 typedef std::forward_iterator_tag iterator_category;
                 typedef int difference_type;
-                iterator(pointer ptr) : pairpointer(ptr) { cleanup = false; }
+                iterator(const self_type & ref) { //copy constructor
+					pairpointer = new std::pair<IndexReference,PatternPointer>(*ref.pairpointer);
+                }
+                iterator(pointer ptr) { 
+					pairpointer = new std::pair<IndexReference,PatternPointer>(*ptr);
+                }
                 iterator(IndexReference iref, PatternPointer pp) { 
 					pairpointer = new std::pair<IndexReference,PatternPointer>(iref, pp);
-					cleanup = true;
 				}
                 iterator(reference ref) { 
 					pairpointer = new std::pair<IndexReference,PatternPointer>(ref.first, ref.second);
-					cleanup = true;
 				}
    				~iterator() {
-					if ((cleanup) && (pairpointer != NULL)) delete pairpointer;
+					if (pairpointer != NULL) delete pairpointer;
 				}
 				self_type operator++() { 
 					next();
@@ -163,7 +166,7 @@ class IndexedCorpus {
 				} //prefix
 
 				void next() {
-                    std::cerr << "DEBUG NEXT: ";
+                    std::cerr << "DEBUG NEXT: (pairpointer==" << (size_t) pairpointer << ")";
 					++(pairpointer->second);
 					if (pairpointer->second.data == ClassDecoder::delimiterclass) {
 						//we never stop at delimiterclasses, iterate again:
@@ -173,7 +176,7 @@ class IndexedCorpus {
 					} else {
 						pairpointer->first.token++;	
 					}
-                    std::cerr << pairpointer->first.sentence << ":" << pairpointer->first.token << std::endl;
+                    std::cerr << pairpointer->first << std::endl;
 					//Note: At the end of the data, the patternpointer is out of bounds, checking against end() should work fine though
 				}
                 self_type operator++(int junk) { self_type tmpiter = *this; next(); return *tmpiter; } //postfix
@@ -181,9 +184,11 @@ class IndexedCorpus {
                 pointer operator->()  { return pairpointer; }
                 bool operator==(self_type rhs) { return pairpointer->first == rhs->first; }
                 bool operator!=(self_type rhs) { return pairpointer->first != rhs->first; }
+                void debug() {
+                    std::cerr << (size_t) pairpointer << std::endl;
+                }
             protected:
                 pointer pairpointer;
-				bool cleanup;
         };
     
         /*
