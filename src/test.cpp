@@ -25,27 +25,27 @@ void test(bool r) {
 
 void test(unsigned int value , unsigned int ref) {
     if (value != ref) {
-        cerr << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
+        cerr << " " << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
         exit(2);
     } else {
-        cerr << value << " .... \33[1;32mok\33[m" << endl;
+        cerr << " " << value << " .... \33[1;32mok\33[m" << endl;
     }
 }
 
 void testgt(unsigned int value , unsigned int ref) {
     if (value <= ref) {
-        cerr << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
+        cerr << " " << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
         exit(2);
     } else {
-        cerr << value << " .... \33[1;32mok\33[m" << endl;
+        cerr << " " <<value << " .... \33[1;32mok\33[m" << endl;
     }
 }
 void test(string value , string ref) {
     if (value != ref) {
-        cerr << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
+        cerr << " " << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
         exit(2);
     } else {
-        cerr << value << " .... \33[1;32mok\33[m" << endl;
+        cerr << " " << value << " .... \33[1;32mok\33[m" << endl;
     }
 }
 
@@ -953,6 +953,19 @@ int main( int argc, char *argv[] ) {
         cerr << "Loading corpus as IndexedCorpus" << endl;
         IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
 
+        cerr << "Checking sentence count";
+        test(corpus.sentences(),41);
+
+        IndexedCorpus::iterator ri_iter = corpus.begin();
+        cerr << "Testing first word (index)";
+        test(ri_iter->first == IndexReference(1,0));
+        cerr << "Testing first word (string)";
+        test(ri_iter->second.tostring(classdecoder), "To");
+        ri_iter++;
+        cerr << "Testing second word (index)";
+        test(ri_iter->first == IndexReference(1,1));
+        cerr << "Testing second word (string)";
+        test(ri_iter->second.tostring(classdecoder), "be");
 
         cerr << "Building pattern model, passing corpus as reverse index" << endl;
         PatternModel<uint32_t> model = PatternModel<uint32_t>(&corpus);
