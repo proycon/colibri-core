@@ -418,11 +418,11 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
         /**
          * Read a map from input stream (in binary format)
          */
-        template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler>
+        template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler,class ReadPatternType=PatternType>
         void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, const unsigned char classencodingversion=2, bool DEBUG=false) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
-            PatternType p;
+            ReadPatternType p;
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
             if (DEBUG) std::cerr << "Reading " << s << " patterns, classencodingversion=" << classencodingversion << std::endl;

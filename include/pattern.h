@@ -57,7 +57,7 @@ enum PatternCategory {
 };
 
 
-void readanddiscardpattern(std::istream * in);
+void readanddiscardpattern(std::istream * in, bool pointerformat = false);
 int reader_passmarker(const unsigned char c, std::istream * in); 
 
 
@@ -69,8 +69,6 @@ class PatternPointer;
  * Encoded in a memory-saving fashion. Allows numerous operations.
  */
 class Pattern {
-    protected:
-     void reader_marker(unsigned char * _data, std::istream * in);
     public:
      unsigned char * data; /**< This array holds the variable-width byte representation, it is always terminated by \0 (ENDMARKER). Though public, you usually do not want to access it directly */
      
@@ -109,8 +107,9 @@ class Pattern {
       * @param in The input stream
       * @param ignoreeol Ignore end of line markers and read on until the end of the file, storing corpus data in one pattern
       * @param version Version of file format (default: 2)
+      * @param corpusoffset not used
       */
-     Pattern(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, bool debug = false); 
+     Pattern(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, const unsigned char * corpusstart = NULL, bool debug = false); 
      //Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, bool ignoreeol = false, const unsigned char version = 2, bool debug = false);
 
 
@@ -132,7 +131,7 @@ class Pattern {
       * Write Pattern to output stream (in binary form)
       * @param out The output stream
       */
-     void write(std::ostream * out) const; 
+     void write(std::ostream * out, const unsigned char * corpusstart = NULL) const; 
 
      /**
       * return the size of the pattern in tokens (will count flex gaps gaps as size 1)
@@ -396,6 +395,13 @@ class PatternPointer {
          // by convention, always return *this (for chaining)
          return *this;
      }
+     PatternPointer(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, const unsigned char * corpusstart = NULL, bool debug = false); 
+
+     /**
+      * Write Pattern to output stream (in binary form)
+      * @param out The output stream
+      */
+     void write(std::ostream * out, const unsigned char * corpusstart = NULL) const; 
 
      //slice construtors:
      PatternPointer(unsigned char *, int,int);

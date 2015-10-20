@@ -197,10 +197,28 @@ const size_t PatternPointer::hash() const {
 }
 
 
-void Pattern::write(ostream * out) const {
+void Pattern::write(ostream * out, const unsigned char * corpusstart) const {
+    if (corpusstart != NULL) {
+        cerr << "ERROR: Pattern can not be written in pointer format!" << endl;
+        throw InternalError();
+    }
     const int s = bytesize();
     if (s > 0) {
         out->write( (char*) data , (int) s + 1); //+1 to include the \0 marker
+    }
+}
+
+void PatternPointer::write(ostream * out, const unsigned char * corpusstart) const {
+    if (corpusstart != NULL) {
+        const unsigned int offset = data - corpusstart;
+        out->write((char*) &offset, sizeof(unsigned int));
+        out->write((char*) &bytes, sizeof(uint32_t));
+        out->write((char*) &mask, sizeof(uint32_t));
+    } else {
+        const int s = bytesize();
+        if (s > 0) {
+            out->write( (char*) data , (int) s + 1); //+1 to include the \0 marker
+        }
     }
 }
 
@@ -299,14 +317,20 @@ vector<unsigned int> Pattern::tovector() const {
     } while (1);
 }
 
-void readanddiscardpattern(std::istream * in) {
+void readanddiscardpattern(std::istream * in, bool pointerformat) {
     unsigned char c;
-    do {
-        const unsigned int cls = bytestoint(in);
-        if (cls == ClassDecoder::delimiterclass) {
-            return;
-        }
-    } while (1);
+    if (pointerformat) {
+        in->read( (char*) &c, sizeof(unsigned int)); 
+        in->read( (char*) &c, sizeof(uint32_t));
+        in->read( (char*) &c, sizeof(uint32_t));
+    } else {
+        do {
+            in->read( (char*) &c, sizeof(char));
+            if (c == ClassDecoder::delimiterclass) {
+                return;
+            }
+        } while (1);
+    }
 }
 
 void readanddiscardpattern_v1(std::istream * in) {
@@ -327,7 +351,7 @@ void readanddiscardpattern_v1(std::istream * in) {
 
 
 
-Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version, bool debug) {
+Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version, const unsigned char * corpusstart, bool debug) {
     if (version == 2) {
         //stage 1 -- get length
         unsigned char c = 0;
@@ -424,6 +448,18 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
 }
 
 
+PatternPointer::PatternPointer(std::istream * in, bool ignoreeol, const unsigned char version , const unsigned char * corpusstart, bool debug) {
+    if (corpusstart == NULL) {
+        std::cerr << "ERROR: Can not read Pattern as PatternPointer!" << std::endl;
+        throw InternalError();
+    } else {
+        unsigned int corpusoffset;
+        in->read( (char* ) &corpusoffset, sizeof(size_t));
+        data = corpusstart + corpusoffset;
+        in->read( (char* ) &bytes, sizeof(uint32_t));
+        in->read( (char* ) &mask, sizeof(uint32_t));
+    }
+}
 /*
 Pattern::Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, bool ignoreeol, const unsigned char version, bool debug) {
     //read pattern using a buffer
