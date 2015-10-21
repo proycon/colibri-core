@@ -216,7 +216,7 @@ class Pattern {
 
      Pattern operator +(const Pattern&) const;
 
-     operator PatternPointer() const;
+     PatternPointer getpointer() const;
 
      /**
       * Finds the specified subpattern in the this pattern. Returns the index
@@ -368,6 +368,16 @@ class PatternPointer {
          mask = computemask();
      }
 
+     PatternPointer(const Pattern & ref) {
+         data = ref.data;
+         const size_t b = ref.bytesize();
+         if (b > B32) {
+             std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << " bytes,implicit]" << std::endl;
+             throw InternalError();
+         }
+         bytes = b;
+         mask = computemask();
+     }
      PatternPointer(const Pattern * ref) {
          data = ref->data;
          const size_t b = ref->bytesize();

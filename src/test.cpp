@@ -1064,7 +1064,7 @@ int main( int argc, char *argv[] ) {
         options.DOSKIPGRAMS_EXHAUSTIVE = true;
         options.DOSKIPGRAMS = false ;
 
-        cerr << "Building unindexed model" << endl;
+        cerr << "Building unindexed POINTER model" << endl;
         PatternPointerModel<uint32_t> ppmodel(&corpus);
 
         cerr << endl;
