@@ -743,6 +743,14 @@ int main( int argc, char *argv[] ) {
         cerr << "Integrity for AlignedPatternMap" ; test(amap2.size() , 2);
         cerr << "Integrity for AlignedPatternMap" ; test(amap2[ngram][ngram] , 1);
         cerr << "Integrity for AlignedPatternMap" ; test(amap2[flexgram5][flexgram5] , 2);
+
+        PatternPointerMap<uint32_t> ppmap;
+        ppmap[pngram] = 1;
+        cerr << "Integrity for PatternPointerMap" ; test(ppmap.size() , 1);
+        cerr << "Integrity for PatternPointerMap" ; test(ppmap[pngram], 1);
+        cerr << "Saving patternpointermap" << endl; 
+        ppmap.write("/tmp/patternpointermap.tmp");
+
         }
         
         { 
