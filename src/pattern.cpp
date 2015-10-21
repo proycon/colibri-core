@@ -1599,7 +1599,7 @@ PatternPointer IndexedCorpus::getsentence(unsigned char * sentencedata) const {
 }
 
 
-Pattern::operator PatternPointer() {
+Pattern::operator PatternPointer() const {
     return PatternPointer(*this);
 }
 

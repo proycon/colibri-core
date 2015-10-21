@@ -117,6 +117,9 @@ class IndexedCorpus {
         PatternPointer getpattern() const {
             return *patternpointer;
         }
+        unsigned char * beginpointer() const {
+            return corpus;
+        }
 
         /**
          * Get the sentence (or whatever other unit your data employs)
@@ -419,7 +422,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
          * Read a map from input stream (in binary format)
          */
         template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler,class ReadPatternType=PatternType>
-        void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, const unsigned char classencodingversion=2, bool DEBUG=false) {
+        void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, const unsigned char classencodingversion=2, unsigned char * corpusstart = NULL, bool DEBUG=false) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             ReadPatternType p;
@@ -429,7 +432,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
             if (MINTOKENS == -1) MINTOKENS = 0;
             for (ReadWriteSizeType i = 0; i < s; i++) {
                 try {
-                    p = PatternType(in, false, classencodingversion);
+                    p = ReadPatternType(in, false, classencodingversion, corpusstart);
                 } catch (std::exception &e) {
                     std::cerr << "ERROR: Exception occurred at pattern " << (i+1) << " of " << s << std::endl;
                     throw InternalError();
@@ -476,9 +479,9 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
         /**
          * Read a map from file (in binary format)
          */
-        void read(std::string filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET = false, const unsigned char classencodingversion = 2, bool DEBUG=false) { //no templates for this one, easier on python/cython
+        void read(std::string filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET = false, const unsigned char classencodingversion = 2, unsigned char * corpusstart = NULL,bool DEBUG=false) { //no templates for this one, easier on python/cython
             std::ifstream * in = new std::ifstream(filename.c_str());
-            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET, classencodingversion, DEBUG);
+            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET, classencodingversion, corpusstart, DEBUG);
             in->close();
             delete in;
         }
@@ -791,9 +794,9 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
 
 
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class ReadWriteSizeType = uint64_t>
-class PatternPointerMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,ValueType,ValueHandler,ReadWriteSizeType,PatternPointer> {
+class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointer,ValueType>,ValueType,ValueHandler,ReadWriteSizeType,PatternPointer> {
     protected:
-        std::map<PatternPointer, ValueType> data;
+        std::unordered_map<PatternPointer, ValueType> data;
     public:
 		IndexedCorpus * corpus;
         //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
@@ -831,12 +834,12 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<Pattern,Value
         iterator end() { return data.end(); }
         const_iterator end() const { return data.end(); }
 
-        iterator find(const Pattern & pattern) { return data.find(pattern); }
-        const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+        iterator find(const Pattern & pattern) { return data.find((PatternPointer) pattern); }
+        const_iterator find(const Pattern & pattern) const { return data.find((PatternPointer) pattern); }
         iterator find(const PatternPointer & pattern) { return data.find(pattern); }
         const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
         
-        bool erase(const Pattern & pattern) { return data.erase(pattern); }
+        bool erase(const PatternPointer & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
 };
 

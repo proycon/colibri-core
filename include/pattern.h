@@ -216,7 +216,7 @@ class Pattern {
 
      Pattern operator +(const Pattern&) const;
 
-     operator PatternPointer();
+     operator PatternPointer() const;
 
      /**
       * Finds the specified subpattern in the this pattern. Returns the index

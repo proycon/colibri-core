@@ -1050,6 +1050,34 @@ int main( int argc, char *argv[] ) {
 
 
     }
+    {
+        cerr << "Loading class decoders/encoders" << endl;
+        const string classfile = "/tmp/hamlet.colibri.cls";
+        ClassDecoder classdecoder = ClassDecoder(classfile);
+        ClassEncoder classencoder = ClassEncoder(classfile);
+
+        cerr << "Loading corpus as IndexedCorpus" << endl;
+        IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
+
+        PatternModelOptions options;
+        options.DOREVERSEINDEX = true;
+        options.DOSKIPGRAMS_EXHAUSTIVE = true;
+        options.DOSKIPGRAMS = false ;
+
+        cerr << "Building unindexed model" << endl;
+        PatternPointerModel<uint32_t> ppmodel(&corpus);
+
+        cerr << endl;
+        std::string infilename = "/tmp/hamlet.colibri.dat";
+        std::string outputfilename = "/tmp/data.colibri.patternmodel";
+        ppmodel.train(infilename, options);
+        cerr << "Found " << ppmodel.size() << " patterns, " << ppmodel.types() << " types, " << ppmodel.tokens() << " tokens" << endl;
+        ppmodel.print(&std::cerr, classdecoder);
+        cerr << endl;
+        ppmodel.report(&std::cerr);
+        cerr << endl;
+        ppmodel.histogram(&std::cerr);
+    }
 
 
 }
