@@ -437,9 +437,7 @@ class PatternPointer {
      std::string decode(const ClassDecoder& classdecoder) const { return tostring(classdecoder); } //pattern to string (decode)
      bool out() const;
      
-     bool operator==(const PatternPointer & other) const {
-         return ((data == other.data) && (bytes == other.bytes) && (mask == other.mask));
-     }
+     bool operator==(const PatternPointer & other) const;
      bool operator!=(const PatternPointer & other) const { return !(*this == other); }
 
      bool operator==(const Pattern & other) const;
