@@ -1043,7 +1043,8 @@ int main( int argc, char *argv[] ) {
     }
 
     {
-        cerr << endl << "************************** PatternPointerModel Tests ***************************************" << endl << endl;
+
+        cerr << endl << "************************** Stream tests  ***************************************" << endl << endl;
 
         ClassEncoder classencoder = ClassEncoder();
         stringstream sscls;
@@ -1058,20 +1059,14 @@ int main( int argc, char *argv[] ) {
         stringstream ssdat;
         classencoder.encodefile((istream*) &sstxt, (ostream*) &ssdat,false, false);
 
-            
 
         PatternModelOptions options;
         stringstream ss2;
         PatternModel<uint32_t> model = PatternModel<uint32_t>();
         model.train((istream*) &ssdat, options);
-
-        
-        
-
-
-
     }
     {
+        cerr << endl << "************************** PatternPointerModel Tests ***************************************" << endl << endl;
         cerr << "Loading class decoders/encoders" << endl;
         const string classfile = "/tmp/hamlet.colibri.cls";
         ClassDecoder classdecoder = ClassDecoder(classfile);
@@ -1084,6 +1079,7 @@ int main( int argc, char *argv[] ) {
         options.DOREVERSEINDEX = true;
         options.DOSKIPGRAMS_EXHAUSTIVE = true;
         options.DOSKIPGRAMS = false ;
+        options.DEBUG = true;
 
         cerr << "Building unindexed POINTER model" << endl;
         PatternPointerModel<uint32_t> ppmodel(&corpus);
