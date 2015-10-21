@@ -144,6 +144,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Loading class encoder" << endl;
         ClassEncoder encoder = ClassEncoder(classfile);
         
+        cerr << endl << "************************** Ngram tests  ***************************************" << endl << endl; 
         
         cerr << "Encoding n-gram from string input" << endl;
         string querystring = "To be or not to be";
@@ -361,7 +362,8 @@ int main( int argc, char *argv[] ) {
 
         
 
-        cerr << "----------------------------------------------------" << endl;
+        cerr << endl << "************************** Skipgram tests  ***************************************" << endl << endl;
+
         cerr << "Encoding skip-gram from string input" << endl;
         string querystring2 = "To {*1*} or {*1*} to be";
 
@@ -666,7 +668,8 @@ int main( int argc, char *argv[] ) {
         test(s8slice3.decode(classdecoder),"or blah {*} {*}");	   
 
 
-        cerr << "----------------------------------------------------" << endl;
+        cerr << endl <<"************************** Flexgram tests  ***************************************" << endl << endl;
+
         Pattern flexgram5 = skipgram5.toflexgram();
         cerr << "Converting skipgram '" << querystring5 << "' to flexgram:" << endl;	    
         cerr << flexgram5.decode(classdecoder) << endl;
@@ -688,7 +691,7 @@ int main( int argc, char *argv[] ) {
         }    	 
 		cerr << "Count check "; test(i,3);
 
-        cerr << "----------------------------------------------------" << endl;
+        cerr << endl << "************************** Serialisation and low-level map test  ***************************************" << endl << endl;
         
         cerr << "Writing patterns to file: " << endl;
         ofstream * out = new ofstream("/tmp/patterns.tmp");
@@ -754,6 +757,7 @@ int main( int argc, char *argv[] ) {
         }
         
         { 
+        cerr << endl << "************************** Unindexed PatternModel Tests ***************************************" << endl << endl;
 
         string rawcorpusfile = "/tmp/hamlet.txt";
         ofstream * out = new ofstream(rawcorpusfile);
@@ -833,7 +837,7 @@ int main( int argc, char *argv[] ) {
 
 
 
-        cerr << endl;
+        cerr << endl << "************************** Indexed PatternModel & Relations Tests ***************************************" << endl << endl;
         options.DOSKIPGRAMS_EXHAUSTIVE = false;
         options.DOSKIPGRAMS = true ;
         cerr << "Building indexed model" << endl;
@@ -929,6 +933,8 @@ int main( int argc, char *argv[] ) {
         indexedmodel.report(&std::cerr);
 
 
+        cerr << endl << "************************** HashOrderedPatternMap Test  ***************************************" << endl << endl;
+
         options.DOREVERSEINDEX = false;
         options.DOSKIPGRAMS_EXHAUSTIVE = false;
         options.DOSKIPGRAMS = false ;
@@ -939,6 +945,7 @@ int main( int argc, char *argv[] ) {
         unindexedmodel3.train(infilename, options);
         cerr << "Found " << unindexedmodel3.size() << " patterns, " << unindexedmodel3.types() << " types, " << unindexedmodel3.tokens() << " tokens" << endl;
 
+        cerr << endl << "************************** PatternSet Test ***************************************" << endl << endl;
 
         cerr << "Testing low-level PatternSet...";
         PatternSet<uint32_t> set;
@@ -955,6 +962,8 @@ int main( int argc, char *argv[] ) {
 
     }
     {
+        cerr << endl << "************************** IndexCorpus & Reverse Index Iteration Tests ***************************************" << endl << endl;
+
         const string classfile = "/tmp/hamlet.colibri.cls";
         ClassDecoder classdecoder = ClassDecoder(classfile);
 
@@ -1000,6 +1009,8 @@ int main( int argc, char *argv[] ) {
 
     }
     {
+        cerr << endl << "************************** PatternAlignModel Tests ***************************************" << endl << endl;
+
         const string classfile = "/tmp/hamlet.colibri.cls";
         ClassDecoder classdecoder = ClassDecoder(classfile);
         ClassEncoder classencoder = ClassEncoder(classfile);
@@ -1032,6 +1043,8 @@ int main( int argc, char *argv[] ) {
     }
 
     {
+        cerr << endl << "************************** PatternPointerModel Tests ***************************************" << endl << endl;
+
         ClassEncoder classencoder = ClassEncoder();
         stringstream sscls;
         sscls << poem;
