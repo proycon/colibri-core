@@ -855,7 +855,6 @@ class PatternModel: public MapType, public PatternModelInterface {
                 sentence = firstsentence-1; //reset
                 bool singlepass = false;
                 const unsigned int sentences = (reverseindex != NULL) ? reverseindex->sentences() : 0;
-                std::cerr <<"SENTENCES="<< sentences << std::endl;
                 while (((reverseindex != NULL) && (sentence < sentences)) ||  ((reverseindex == NULL) && (in != NULL) && (!in->eof())))  {
                     sentence++;
                     //read line
