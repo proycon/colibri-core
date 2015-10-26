@@ -1718,6 +1718,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (( (_n == 0) || (pattern.n() == (unsigned int) _n) )&& ((threshold == -1) || (occurrencecount(pattern) < (unsigned int) threshold))) {
                     //std::cerr << occurrencecount(pattern) << std::endl;
                     //std::cerr << "preprune:" << this->size() << std::endl;
+                    //std::cerr << "DEBUG: pruning " << (int) pattern.category() << ",n=" << pattern.n() << ",skipcount=" << pattern.skipcount() << ",hash=" << pattern.hash() << std::endl;
                     iter = this->erase(iter); 
                     //std::cerr << "postprune:" << this->size() << std::endl;
                     pruned++;
