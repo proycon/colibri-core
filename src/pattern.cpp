@@ -181,18 +181,35 @@ uint32_t PatternPointer::computemask() const {
 
 
 const size_t Pattern::hash() const {
-    if (sizeof(size_t) == 8) {
-        return SpookyHash::Hash64((const void*) data , bytesize());
-    } else if (sizeof(size_t) == 4) {
-        return SpookyHash::Hash32((const void*) data , bytesize());
-    }
+    return SpookyHash::Hash64((const void*) data , bytesize());
 }
 
 const size_t PatternPointer::hash() const {
-    if (sizeof(size_t) == 8) {
+    if (mask == 0) {
         return SpookyHash::Hash64((const void*) data , bytesize());
-    } else if (sizeof(size_t) == 4) {
-        return SpookyHash::Hash32((const void*) data , bytesize());
+    } else {
+        //hashing skipgrams/flexgrams is a bit more expensive cause we need to process the mask before we can compute the hash:
+        unsigned char datacopy[bytes+1];
+        memcpy(datacopy, data, bytes);
+        datacopy[bytes] = ClassDecoder::delimiterclass;
+
+        const bool flex = isflexgram();
+        unsigned int i = 0;
+        unsigned int n = 0;
+        do {
+            if (datacopy[i] < 128) {
+                if (isgap(n)) {
+                    if (flex) {
+                        datacopy[i] = ClassDecoder::flexclass;
+                    } else {
+                        datacopy[i] = ClassDecoder::skipclass;
+                    }
+                }
+                n++;
+            }
+            i++;
+        } while (i < bytes); 
+        return SpookyHash::Hash64((const void*) datacopy , bytes);
     }
 }
 
@@ -683,10 +700,6 @@ Pattern::Pattern(const Pattern& ref) { //copy constructor
 }
 
 Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
-    if (ref.bytesize() > 255) {
-        std::cerr << "ERROR: Pattern too long for pattern pointer (Pattern from PatternPointer)" << std::endl;
-        throw InternalError();
-    }
     data = new unsigned char[ref.bytesize() + 1];
     for (unsigned int i = 0; i < ref.bytesize(); i++) {
         data[i] = ref.data[i];
