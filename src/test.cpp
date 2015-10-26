@@ -415,6 +415,10 @@ int main( int argc, char *argv[] ) {
         cerr << "Bytesize: "; test(pskipgram.bytesize(),6);
         cerr << "Category==skipgram? " ; test(pskipgram.category() == SKIPGRAM) ;
         cerr << "Skipcount==2? " ; test(pskipgram.skipcount(),2) ;
+        cerr << "Testing equivalence between pointer and pattern"; test(skipgram == pskipgram);
+        cerr << "Testing hash equivalence between pointer and pattern"; test(skipgram.hash() == pskipgram.hash());
+        Pattern derefskipgram = Pattern(pskipgram);
+        cerr << "Testing equivalence after pointer construction and dereference"; test(skipgram == derefskipgram);
     
         cerr << "Parts: " << endl;
         vector<PatternPointer> pparts;
