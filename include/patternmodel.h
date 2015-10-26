@@ -2206,11 +2206,15 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
             patternpointer.out();
             std::cerr << std::endl;
             this->add(patternpointer, data, ref );
-            std::cerr << "  Hash recheck: " << patternpointer.hash() << std::endl;
+            std::cerr << "  Hash recheck: " << patternpointer.hash() << std::endl; //TODO: Remove debug
             std::cerr << "  Pattern hash recheck: " << Pattern(patternpointer).hash() << std::endl;
             std::cerr << "  Equivalence with Pattern: " << (int) (patternpointer == Pattern(patternpointer)) << std::endl;
             std::cerr << "  Equivalence with Pattern 2: " << (int) (Pattern(patternpointer) == patternpointer) << std::endl;
-            std::cerr << "  Equivalence with PatternPointer from Pattern: " << (int) (patternpointer == PatternPointer(Pattern(patternpointer))) << std::endl;
+            PatternPointer ptest = PatternPointer(Pattern(patternpointer));
+            std::cerr << "  Equivalence with PatternPointer from Pattern: " << (int) (patternpointer == ptest) << std::endl;
+            std::cerr << "    ptest hash: " << ptest.hash() << std::endl;
+            std::cerr << "    ptest bytesize: " << ptest.bytesize() << std::endl;
+            std::cerr << "    ptest mask: " << ptest.mask << std::endl;
             std::cerr << "  New value verification: " << this->occurrencecount(patternpointer) << " == " << *data << std::endl;
             ValueType * data2 = this->getdata(patternpointer, true); 
             std::cerr << "  New value verification (2): " << *data << " == " << *data2 << std::endl;
