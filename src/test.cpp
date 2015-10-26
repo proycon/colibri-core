@@ -1074,6 +1074,9 @@ int main( int argc, char *argv[] ) {
         ClassDecoder classdecoder = ClassDecoder(classfile);
         ClassEncoder classencoder = ClassEncoder(classfile);
 
+        Pattern ngram = classencoder.buildpattern("not");
+        PatternPointer pngram = PatternPointer(ngram);
+
         cerr << "Loading corpus as IndexedCorpus" << endl;
         IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
 
@@ -1091,6 +1094,8 @@ int main( int argc, char *argv[] ) {
         std::string outputfilename = "/tmp/data.colibri.patternmodel";
         ppmodel.train(infilename, options);
         cerr << "Found " << ppmodel.size() << " patterns, " << ppmodel.types() << " types, " << ppmodel.tokens() << " tokens" << endl;
+        cerr << "Checking presence of PatternPointer" ; test(ppmodel[pngram], 1);
+        cerr << "Checking presence of Pattern" ; test(ppmodel[ngram], 1);
         ppmodel.print(&std::cerr, classdecoder);
         cerr << endl;
         ppmodel.report(&std::cerr);
