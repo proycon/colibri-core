@@ -1321,13 +1321,22 @@ class PatternModel: public MapType, public PatternModelInterface {
          * if it does not exist in the model
          */
         virtual unsigned int occurrencecount(const Pattern & pattern)  { 
-            ValueType * data = getdata(pattern);
+            ValueType * data = this->getdata(pattern);
             if (data != NULL) {
                 return this->valuehandler.count(*data); 
             } else {
                 return 0;
             }
         }
+
+        /*virtual unsigned int occurrencecount(const PatternPointer & pattern)  { 
+            ValueType * data = this->getdata(pattern);
+            if (data != NULL) {
+                return this->valuehandler.count(*data); 
+            } else {
+                return 0;
+            }
+        }*/
         
         /**
          * Get the value stored for the specified pattern.
@@ -2197,7 +2206,13 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
             patternpointer.out();
             std::cerr << std::endl;
             this->add(patternpointer, data, ref );
+            std::cerr << "  Hash recheck: " << patternpointer.hash() << std::endl;
+            std::cerr << "  Pattern hash recheck: " << Pattern(patternpointer).hash() << std::endl;
+            std::cerr << "  Equivalence with Pattern: " << (int) (patternpointer == Pattern(patternpointer)) << std::endl;
             std::cerr << "  New value verification: " << this->occurrencecount(patternpointer) << " == " << *data << std::endl;
+            ValueType * data2 = this->getdata(patternpointer, true); 
+            std::cerr << "  New value verification (2): " << *data << " == " << *data2 << std::endl;
+            std::cerr << "  New value verification (pointer): " << (size_t) data << " == " << (size_t) data2 << std::endl;
         }
 
         virtual void add(const PatternPointer & pattern, ValueType * value, const IndexReference & ref) {

@@ -201,6 +201,9 @@ class Pattern {
      bool operator==(const Pattern & other) const;
      bool operator!=(const Pattern & other) const;
 
+     bool operator==(const PatternPointer & other) const; 
+     bool operator!=(const PatternPointer & other) const; 
+
      /**
       * Assignment operator
       */
@@ -398,7 +401,7 @@ class PatternPointer {
 		bytes = ref->bytes;
 		mask = ref->mask;
 	 }
-     PatternPointer & operator =(const PatternPointer other) {
+     PatternPointer & operator =(const PatternPointer & other) {
          data = other.data;
          bytes = other.bytes;
          mask = other.mask;

@@ -1143,6 +1143,11 @@ int main( int argc, char *argv[] ) {
         ppmodel.print(&std::cerr, classdecoder);
         cerr << "Checking presence of Pattern" ; test(ppmodel[ngram], 7);
         cerr << "Checking presence of PatternPointer" ; test(ppmodel[pngram], 7);
+        cerr << "Querying occurrencecount with Pattern (ngram)" ; test(ppmodel.occurrencecount(ngram), 7);
+        cerr << "Querying occurrencecount with PatternPointer (ngram)" ; test(ppmodel.occurrencecount(pngram), 7);
+        string querystring = "To {*1*} or not";
+        Pattern skipgram = classencoder.buildpattern(querystring, true);
+        cerr << "Querying occurrencecount with Pattern (skipgram)" ; test(ppmodel.occurrencecount(skipgram), 7);
         ppmodel.report(&std::cerr);
         cerr << endl;
         cerr << endl;

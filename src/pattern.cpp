@@ -787,15 +787,33 @@ bool Pattern::operator==(const Pattern &other) const {
         i++;
     } while (true);
 }
+bool Pattern::operator==(const PatternPointer &other) const {
+    return other == *this;
+}
 
 bool PatternPointer::operator==(const Pattern &other) const {
     unsigned int i = 0;
+    unsigned int n = 0;
+    unsigned int gapclass;
+    if (mask != 0) {
+        if (isflexgram()) {
+            gapclass = ClassDecoder::flexclass;
+        } else {
+            gapclass = ClassDecoder::skipclass;
+        }
+    }
     while (i<bytes){
 	    if (other.data[i] == 0) return false;
-        if (data[i] != other.data[i]) return false;
+        if ((mask != 0) && (data[i] < 128))  {
+            if (isgap(n)) {
+                if (other.data[i] != gapclass)  return false;
+            } else if (data[i] != other.data[i]) return false;
+            n++;
+        } else if (data[i] != other.data[i]) return false;
         i++;
     }
     return true;
+
 }
 
 bool PatternPointer::operator==(const PatternPointer & other) const {
@@ -813,6 +831,9 @@ bool PatternPointer::operator==(const PatternPointer & other) const {
 
 bool Pattern::operator!=(const Pattern &other) const {
     return !(*this == other);
+}
+bool Pattern::operator!=(const PatternPointer &other) const {
+    return !(other == *this);
 }
 
 bool Pattern::operator<(const Pattern & other) const {
