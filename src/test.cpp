@@ -287,9 +287,13 @@ int main( int argc, char *argv[] ) {
         cerr << "Pattern Pointer tests" << endl;
         PatternPointer pngram = PatternPointer(&ngram);
         cerr << "Testing equivalence between pointer and pattern"; test(ngram == pngram);
+        cerr << "Testing equivalence between pointer and pattern (rev)"; test(pngram == ngram);
         cerr << "Testing hash equivalence between pointer and pattern"; test(ngram.hash() == pngram.hash());
         Pattern derefngram = Pattern(pngram);
         cerr << "Testing equivalence after pointer construction and dereference"; test(ngram == derefngram);
+        cerr << "Testing equivalence after pointer construction and dereference (rev)"; test(derefngram == ngram);
+        cerr << "Testing equivalence between pointer from pattern and pointer"; test(PatternPointer(ngram) == pngram);
+        cerr << "Testing equivalence between pointer from pattern and pointer (rev)"; test(pngram == PatternPointer(ngram));
 
         cerr << "Bytesize: "; test(pngram.bytesize(),6);
         cerr << "Size (n): "; test(pngram.n(), 6);
@@ -416,9 +420,13 @@ int main( int argc, char *argv[] ) {
         cerr << "Category==skipgram? " ; test(pskipgram.category() == SKIPGRAM) ;
         cerr << "Skipcount==2? " ; test(pskipgram.skipcount(),2) ;
         cerr << "Testing equivalence between pointer and pattern"; test(skipgram == pskipgram);
+        cerr << "Testing equivalence between pointer and pattern (rev)"; test(pskipgram == skipgram);
         cerr << "Testing hash equivalence between pointer and pattern"; test(skipgram.hash() == pskipgram.hash());
         Pattern derefskipgram = Pattern(pskipgram);
         cerr << "Testing equivalence after pointer construction and dereference"; test(skipgram == derefskipgram);
+        cerr << "Testing equivalence after pointer construction and dereference (rev)"; test(derefskipgram==skipgram);
+        cerr << "Testing equivalence between pointer from pattern and pointer"; test(PatternPointer(skipgram) == pskipgram);
+        cerr << "Testing equivalence between pointer from pattern and pointer (rev)"; test(pskipgram == PatternPointer(skipgram));
     
         cerr << "Parts: " << endl;
         vector<PatternPointer> pparts;
