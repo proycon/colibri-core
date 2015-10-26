@@ -748,10 +748,14 @@ int main( int argc, char *argv[] ) {
         cerr << "Integrity for AlignedPatternMap" ; test(amap2[flexgram5][flexgram5] , 2);
 
         PatternPointerMap<uint32_t> ppmap;
+        PatternPointer pskipgram = PatternPointer(skipgram);
         ppmap[pngram] = 1;
-        cerr << "Integrity for PatternPointerMap" ; test(ppmap.size() , 1);
+        ppmap[pskipgram] = 3;
+        cerr << "Integrity for PatternPointerMap" ; test(ppmap.size() , 2);
         cerr << "Integrity for PatternPointerMap" ; test(ppmap[pngram], 1);
-        cerr << "Querying PatternPointerMap with Pattern" ; test(ppmap[ngram], 1);
+        cerr << "Integrity for PatternPointerMap" ; test(ppmap[pskipgram], 3);
+        cerr << "Querying PatternPointerMap with Pattern (ngram)" ; test(ppmap[ngram], 1);
+        cerr << "Querying PatternPointerMap with Pattern (skipgram))" ; test(ppmap[skipgram], 3);
         cerr << "Querying PatternPointerMap for non-existing pattern" ; test(ppmap[flexgram5], 0);
         cerr << "Saving patternpointermap" << endl; 
         ppmap.write("/tmp/patternpointermap.tmp");
@@ -1100,11 +1104,11 @@ int main( int argc, char *argv[] ) {
         std::string outputfilename = "/tmp/data.colibri.patternmodel";
         ppmodel.train(infilename, options);
         cerr << "Found " << ppmodel.size() << " patterns, " << ppmodel.types() << " types, " << ppmodel.tokens() << " tokens" << endl;
-        cerr << "Checking presence of PatternPointer" ; test(ppmodel[pngram], 1);
-        cerr << "Checking presence of Pattern" ; test(ppmodel[ngram], 1);
         ppmodel.print(&std::cerr, classdecoder);
-        cerr << endl;
+        cerr << "Checking presence of Pattern" ; test(ppmodel[ngram], 7);
+        cerr << "Checking presence of PatternPointer" ; test(ppmodel[pngram], 7);
         ppmodel.report(&std::cerr);
+        cerr << endl;
         cerr << endl;
         ppmodel.histogram(&std::cerr);
     }

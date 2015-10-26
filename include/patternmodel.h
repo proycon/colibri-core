@@ -938,9 +938,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                                 ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
                                 if ((found) && (!skipgramsonly)) {
-                                    const Pattern pattern = Pattern(iter->first);
-                                    ValueType * data = getdata(pattern, true);
-                                    add(pattern, data, ref );
+                                    add(iter->first, ref);
                                     /*if ((options.DOREVERSEINDEX) && (pattern.n() == 1) && (reverseindex != NULL) && (!externalreverseindex)) {
                                         reverseindex->push_back(ref, pattern); //TODO: make patternpointer
                                     }*/
@@ -1215,13 +1213,12 @@ class PatternModel: public MapType, public PatternModelInterface {
                         if (targetcontainer == NULL) {
                             //put in model
                             if  (!has(skipgram)) foundskipgrams++;
-                            ValueType * data = this->getdata(skipgram,true);
                             if (singleref != NULL) {
-                                add(skipgram, data, *singleref ); //counts the actual skipgram, will add it to the model
+                                add(skipgram, *singleref ); //counts the actual skipgram, will add it to the model
                             } else if (multiplerefs != NULL) {
                                 for (IndexedData::const_iterator refiter =  multiplerefs->begin(); refiter != multiplerefs->end(); refiter++) {
                                     const IndexReference ref = *refiter;
-                                    add(skipgram, data, ref ); //counts the actual skipgram, will add it to the model
+                                    add(skipgram, ref ); //counts the actual skipgram, will add it to the model
                                 }
                             } else {
                                 std::cerr << "ERROR: computeskipgrams() called with no singleref and no multiplerefs" << std::endl;
@@ -1252,7 +1249,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         /**
         * Returns a vector of all skipgrams  that can be extracted from the
-        * tigven pattern
+        * given pattern
          */
         virtual std::vector<PatternPointer> findskipgrams(const PatternPointer & pattern, unsigned int occurrencethreshold = 1, int maxskips = 3) {
             //given the pattern, find all skipgrams in it that occur in the model
@@ -1667,8 +1664,22 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
         /**
+         * Add a pattern, with a given position, to the model. This
+         * is called during training at every time an instance of a pattern is found in the data. 
+         * This is the high-level version.
+         * @param pattern The pattern to add (a patternpointer)
+         * @param ref The position in the corpus where the patterns occurs
+         */
+        virtual void add(const PatternPointer & patternpointer, const IndexReference & ref) {
+            const Pattern pattern = Pattern(patternpointer);
+            ValueType * data = getdata(pattern, true); 
+            this->add(pattern, data, ref );
+        }
+
+        /**
          * Add a pattern, with a given position, and a value to the model. This
          * is called during training at every time an instance of a pattern is found in the data.
+         * This is the low-level version.
          * @param pattern The pattern to add
          * @param value A pointer to the value for this pattern, what kind of value depends on the ValueType template parameter.
          * @param ref The position in the corpus where the patterns occurs
@@ -1687,6 +1698,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
             this->valuehandler.add(value, ref);
         }
+
 
         /**
          * Prune all patterns under the specified occurrence threshold (or -1
@@ -2167,6 +2179,32 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
         int getmodeltype() const { return UNINDEXEDPATTERNPOINTERMODEL; }
         int getmodelversion() const { return 2;} 
 
+        /**
+         * Add a pattern, with a given position, to the model. This
+         * is called during training at every time an instance of a pattern is found in the data. 
+         * This is the high-level version.
+         * @param pattern The pattern to add (a patternpointer)
+         * @param ref The position in the corpus where the patterns occurs
+         */
+        virtual void add(const PatternPointer & patternpointer, const IndexReference & ref) {
+            if ((patternpointer.data < this->reverseindex->beginpointer()) || (patternpointer.data > this->reverseindex->beginpointer() + this->reverseindex->bytesize())) {
+                std::cerr << "Pattern Pointer points outside contained corpus data..." << std::endl;
+                throw InternalError();
+            }
+            ValueType * data = this->getdata(patternpointer, true); 
+            //std::cerr << "Adding: n="<< patternpointer.n() << ",b=" << patternpointer.bytesize() << ",value=" << *data << ",valuetype="<< (size_t) data << ",pattern=";
+            //patternpointer.out();
+            //std::cerr << std::endl;
+            this->add(patternpointer, data, ref );
+        }
+
+        virtual void add(const PatternPointer & pattern, ValueType * value, const IndexReference & ref) {
+            if (value == NULL) {
+                std::cerr << "Add() value is NULL!" << std::endl;
+                throw InternalError();
+            }
+            this->valuehandler.add(value, ref);
+        }
 };
 
 

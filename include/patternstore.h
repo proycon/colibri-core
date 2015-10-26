@@ -120,6 +120,9 @@ class IndexedCorpus {
         unsigned char * beginpointer() const {
             return corpus;
         }
+        unsigned int bytesize() const {
+            return corpussize;
+        }
 
         /**
          * Get the sentence (or whatever other unit your data employs)
