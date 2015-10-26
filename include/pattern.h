@@ -482,6 +482,16 @@ class PatternPointer {
      int parts(std::vector<std::pair<int,int> > & container) const; 
 
      /**
+      * Finds all the gaps of a skipgram or flexgram., parts are the portions that are not skips and adds them to container as begin,length pairs... Thus 'to be {*} not {*} be' has three parts. The gap-length of a flexgram will always be its minimum length one.
+      */
+     int gaps(std::vector<std::pair<int,int> > & container) const; 
+
+     /**
+      * return the number of skips in this pattern
+      */
+     const unsigned int skipcount() const;
+
+     /**
       * Replaces a series of tokens with a skip/gap of a particular size.
       * Effectively turns a pattern into a skipgram.
       * @param gap The position and size of the skip/gap: a pair consisting of a begin index (0-indexed) and a length, i.e. the size of the skip

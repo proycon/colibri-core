@@ -1193,19 +1193,17 @@ int PatternPointer::parts(vector<PatternPointer> & container) const {
     int n = 0;
     for (int i = 0; (i<bytes) && (i<31); i++) {
         const unsigned char c = data[i];
-        if (mask & bitmask[i] == 0) {
-            partlength = n - partbegin;
-            if (partlength > 0) {
-                container.push_back(PatternPointer(*this,partbegin,partlength));
-                found++;
+        if (c < 128) {
+            if (isgap(n)) {
+                partlength = n - partbegin;
+                if (partlength > 0) {
+                    container.push_back(PatternPointer(*this,partbegin,partlength));
+                    found++;
+                }
+                partbegin = n+1;
             }
-            n++;
-            partbegin = n;
-        } else if (c < 128) {
             //low byte, end of token
             n++;
-        } else {
-            //high byte
         }
     } 
     partlength = n - partbegin;
@@ -1232,6 +1230,55 @@ const unsigned int Pattern::skipcount() const {
             i++;
         }
     } while (1); 
+}
+
+const unsigned int PatternPointer::skipcount() const { 
+    if (mask == 0) return 0;
+    unsigned int skipcount = 0;
+    unsigned int i = 0;
+    unsigned int n = 0;
+    bool prevskip = false;
+    do {
+        if (data[i] < 128) {
+            if (isgap(n)) {
+                if (!prevskip) skipcount++;
+                prevskip = true;
+            } else {
+                prevskip = false;
+            }
+            n++;
+        }
+        i++;
+    } while (i < bytes); 
+    return skipcount;
+}
+
+int PatternPointer::gaps(vector<pair<int,int> > & container) const { 
+    if (mask == 0) return 0;
+    int i = 0;
+    int n = 0;
+    bool prevskip = false;
+    int beginskip = -1;
+    int skiplength = 0;
+    do {
+        if (data[i] < 128) {
+            if (isgap(n)) {
+                if (beginskip > 0) { 
+                    skiplength++;
+                } else {
+                    beginskip = i;
+                    skiplength = 1;
+                }
+            } else {
+                if (beginskip > -1) container.push_back(pair<int,int>(beginskip,skiplength));
+                beginskip = -1;
+            }
+            n++;
+        }
+        i++;
+    } while (i < bytes); 
+    if (beginskip > -1) container.push_back(pair<int,int>(beginskip,skiplength));
+    return container.size();
 }
 
 int Pattern::gaps(vector<pair<int,int> > & container) const { 

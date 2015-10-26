@@ -373,7 +373,7 @@ int main( int argc, char *argv[] ) {
         cerr << "N: "; test(skipgram.n(),6);
         cerr << "Bytesize: "; test(skipgram.bytesize(),6);
         cerr << "Category==skipgram? " ; test(skipgram.category() == SKIPGRAM) ;
-        cerr << "Skipcount==2? " ; test(skipgram.skipcount() == 2) ;
+        cerr << "Skipcount==2? " ; test(skipgram.skipcount(), 2) ;
     
         cerr << "Parts: " << endl;
         vector<Pattern> parts;
@@ -405,6 +405,39 @@ int main( int argc, char *argv[] ) {
         Pattern revskipgram = skipgram.reverse();
         cerr << "Reverse skipgram: "; test(revskipgram.decode(classdecoder),"be to {*} or {*} To");
         cerr << "N: "; test(revskipgram.n(),6);
+        
+        cerr << "--- Skipgram as pattern pointer ---" << endl;
+
+        PatternPointer pskipgram = PatternPointer(skipgram);;
+        
+        cerr << "Skipgram decoded: "; test(pskipgram.decode(classdecoder),"To {*} or {*} to be");
+        cerr << "N: "; test(pskipgram.n(),6);
+        cerr << "Bytesize: "; test(pskipgram.bytesize(),6);
+        cerr << "Category==skipgram? " ; test(pskipgram.category() == SKIPGRAM) ;
+        cerr << "Skipcount==2? " ; test(pskipgram.skipcount(),2) ;
+    
+        cerr << "Parts: " << endl;
+        vector<PatternPointer> pparts;
+        pskipgram.parts(pparts);
+		i = 0;
+        for (vector<PatternPointer>::iterator iter2 = pparts.begin(); iter2 != pparts.end(); iter2++) {                
+            const Pattern part = *iter2;
+            cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref[i]);
+            i += 1;
+        }
+		cerr << "Count check "; test(i,3);
+
+
+        cerr << "Gaps: " << endl;
+        std::vector<std::pair<int,int> > pgapcontainer;
+        pskipgram.gaps(pgapcontainer);
+		i = 0;
+        for (vector<std::pair<int,int>>::iterator iter2 = pgapcontainer.begin(); iter2 != pgapcontainer.end(); iter2++) {                
+            cerr << "#" << i << " -- begin "; test(iter2->first, gaprefbegin[i]);
+            cerr << "#" << i << " -- length "; test(iter2->second, gapreflength[i]);
+            i += 1;
+        }
+		cerr << "Count check "; test(i,2);
         
         cerr << "----------------------------------------------------" << endl;
 
@@ -748,14 +781,13 @@ int main( int argc, char *argv[] ) {
         cerr << "Integrity for AlignedPatternMap" ; test(amap2[flexgram5][flexgram5] , 2);
 
         PatternPointerMap<uint32_t> ppmap;
-        PatternPointer pskipgram = PatternPointer(skipgram);
         ppmap[pngram] = 1;
         ppmap[pskipgram] = 3;
         cerr << "Integrity for PatternPointerMap" ; test(ppmap.size() , 2);
         cerr << "Integrity for PatternPointerMap" ; test(ppmap[pngram], 1);
         cerr << "Integrity for PatternPointerMap" ; test(ppmap[pskipgram], 3);
         cerr << "Querying PatternPointerMap with Pattern (ngram)" ; test(ppmap[ngram], 1);
-        cerr << "Querying PatternPointerMap with Pattern (skipgram))" ; test(ppmap[skipgram], 3);
+        cerr << "Querying PatternPointerMap with Pattern (skipgram)" ; test(ppmap[skipgram], 3);
         cerr << "Querying PatternPointerMap for non-existing pattern" ; test(ppmap[flexgram5], 0);
         cerr << "Saving patternpointermap" << endl; 
         ppmap.write("/tmp/patternpointermap.tmp");
