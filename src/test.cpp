@@ -751,6 +751,8 @@ int main( int argc, char *argv[] ) {
         ppmap[pngram] = 1;
         cerr << "Integrity for PatternPointerMap" ; test(ppmap.size() , 1);
         cerr << "Integrity for PatternPointerMap" ; test(ppmap[pngram], 1);
+        cerr << "Querying PatternPointerMap with Pattern" ; test(ppmap[ngram], 1);
+        cerr << "Querying PatternPointerMap for non-existing pattern" ; test(ppmap[flexgram5], 0);
         cerr << "Saving patternpointermap" << endl; 
         ppmap.write("/tmp/patternpointermap.tmp");
 
