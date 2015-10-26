@@ -1110,7 +1110,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             //loop over all possible gap configurations
             int gapconf_i = 0;
             for (std::vector<uint32_t>::iterator iter2 =  gapmasks[n].begin(); iter2 != gapmasks[n].end(); iter2++, gapconf_i++) {
-
+                if (*iter2 == 0) continue; //precaution
                 //integrity check
                 /*for (std::vector<std::pair<int,int>>::iterator giter = gapconfiguration->begin(); giter != gapconfiguration->end(); giter++) {
                     if (giter->first + giter->second > n) {
@@ -1716,11 +1716,11 @@ class PatternModel: public MapType, public PatternModelInterface {
             while (iter != this->end()) {
                 const PatternType pattern = iter->first;
                 if (( (_n == 0) || (pattern.n() == (unsigned int) _n) )&& ((threshold == -1) || (occurrencecount(pattern) < (unsigned int) threshold))) {
-                    //std::cerr << occurrencecount(pattern) << std::endl;
-                    //std::cerr << "preprune:" << this->size() << std::endl;
-                    //std::cerr << "DEBUG: pruning " << (int) pattern.category() << ",n=" << pattern.n() << ",skipcount=" << pattern.skipcount() << ",hash=" << pattern.hash() << std::endl;
+                    std::cerr << "preprune:" << this->size() << std::endl; //TODO: remove debug
+                    std::cerr << "DEBUG: pruning " << (int) pattern.category() << ",n=" << pattern.n() << ",skipcount=" << pattern.skipcount() << ",hash=" << pattern.hash() << std::endl;
+                    std::cerr << occurrencecount(pattern) << std::endl;
                     iter = this->erase(iter); 
-                    //std::cerr << "postprune:" << this->size() << std::endl;
+                    std::cerr << "postprune:" << this->size() << std::endl;
                     pruned++;
                 } else {
                     iter++;
@@ -2193,10 +2193,11 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
                 throw InternalError();
             }
             ValueType * data = this->getdata(patternpointer, true); 
-            //std::cerr << "Adding: n="<< patternpointer.n() << ",b=" << patternpointer.bytesize() << ",value=" << *data << ",valuetype="<< (size_t) data << ",pattern=";
-            //patternpointer.out();
-            //std::cerr << std::endl;
+            std::cerr << "Adding: n="<< patternpointer.n() << ",b=" << patternpointer.bytesize() << ",hash="<<patternpointer.hash()<<", value=" << *data << ",valuetype="<< (size_t) data << ",mask=" << patternpointer.mask << ",pattern=";
+            patternpointer.out();
+            std::cerr << std::endl;
             this->add(patternpointer, data, ref );
+            std::cerr << "  New value verification: " << this->occurrencecount(patternpointer) << " == " << *data << std::endl;
         }
 
         virtual void add(const PatternPointer & pattern, ValueType * value, const IndexReference & ref) {

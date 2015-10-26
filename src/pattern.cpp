@@ -790,13 +790,12 @@ bool Pattern::operator==(const Pattern &other) const {
 
 bool PatternPointer::operator==(const Pattern &other) const {
     unsigned int i = 0;
-    do {
-		if (i == bytes) {
-			return other.data[i] == 0;
-		}
+    while (i<bytes){
+	    if (other.data[i] == 0) return false;
         if (data[i] != other.data[i]) return false;
         i++;
-    } while (true);
+    }
+    return true;
 }
 
 bool PatternPointer::operator==(const PatternPointer & other) const {
@@ -806,7 +805,7 @@ bool PatternPointer::operator==(const PatternPointer & other) const {
         while (i<bytes) {
             if (data[i] != other.data[i]) return false;
             i++;
-        };
+        }
         return true;
     }
     return false;
