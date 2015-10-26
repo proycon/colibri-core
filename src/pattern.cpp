@@ -538,9 +538,7 @@ Pattern::Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, b
 
 Pattern::Pattern(const unsigned char * dataref, const int _size) {
     data = new unsigned char[_size+1];
-    for (int i = 0; i < _size; i++) {
-        data[i] = dataref[i];
-    }
+    memcpy(data, dataref, _size);
     data[_size] = ClassEncoder::delimiterclass;
 }
 
@@ -551,9 +549,7 @@ void Pattern::set(const unsigned char * dataref, const int _size) {
         data = NULL;
     }
     data = new unsigned char[_size+1];
-    for (int i = 0; i < _size; i++) {
-        data[i] = dataref[i];
-    }
+    memcpy(data, dataref, _size);
     data[_size] = ClassEncoder::delimiterclass;
 }
 
@@ -693,17 +689,13 @@ PatternPointer::PatternPointer(const PatternPointer& ref, int begin, int length)
 Pattern::Pattern(const Pattern& ref) { //copy constructor
     const int s = ref.bytesize();
     data = new unsigned char[s + 1];
-    for (int i = 0; i < s; i++) {
-        data[i] = ref.data[i];
-    }
+    memcpy(data, ref.data, s);
     data[s] = ClassDecoder::delimiterclass;
 }
 
 Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
     data = new unsigned char[ref.bytesize() + 1];
-    for (unsigned int i = 0; i < ref.bytesize(); i++) {
-        data[i] = ref.data[i];
-    }
+    memcpy(data, ref.data, ref.bytesize());
     data[ref.bytesize()] = ClassDecoder::delimiterclass;
 
     if (ref.mask != 0) { 
@@ -854,9 +846,7 @@ void Pattern::operator =(const Pattern & other) {
     //set new data
     const int s = other.bytesize();        
     data = new unsigned char[s+1];   
-    for (int i = 0; i < s; i++) {
-        data[i] = other.data[i];
-    }  
+    memcpy(data, other.data, s);
     data[s] = ClassDecoder::delimiterclass;
 }
 
@@ -864,9 +854,7 @@ Pattern Pattern::operator +(const Pattern & other) const {
     const int s = bytesize();
     const int s2 = other.bytesize();
     unsigned char buffer[s+s2]; 
-    for (int i = 0; i < s; i++) {
-        buffer[i] = data[i];
-    }
+    memcpy(buffer, data, s);
     for (int i = 0; i < s2; i++) {
         buffer[s+i] = other.data[i];
     }
