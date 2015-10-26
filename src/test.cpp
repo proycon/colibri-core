@@ -799,14 +799,20 @@ int main( int argc, char *argv[] ) {
         options.DOSKIPGRAMS_EXHAUSTIVE = true;
         options.DOSKIPGRAMS = false ;
 
-        cerr << "Building unindexed model" << endl;
-        PatternModel<uint32_t> unindexedmodel;
-
-        cerr << endl;
         std::string infilename = "/tmp/hamlet.colibri.dat";
         std::string outputfilename = "/tmp/data.colibri.patternmodel";
+
+        cerr << "Building unindexed model (from preloaded corpus)" << endl;
+        PatternModel<uint32_t> unindexedmodelR(&corpus);
+        unindexedmodelR.train(infilename, options);
+
+        cerr << "Building unindexed model (without preloaded corpus)" << endl;
+        PatternModel<uint32_t> unindexedmodel;
+
         unindexedmodel.train(infilename, options);
         cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
+
+
         unindexedmodel.print(&std::cerr, classdecoder);
         cerr << endl;
         unindexedmodel.report(&std::cerr);
@@ -825,10 +831,10 @@ int main( int argc, char *argv[] ) {
         cerr << endl;
         cerr << "Writing unindexed pattern model to file" << endl;
         unindexedmodel.write(outputfilename);
-        options.DEBUG = true;
+        //options.DEBUG = true;
         cerr << "Reading unindexed pattern modelfrom file" << endl;
         PatternModel<uint32_t> unindexedmodel2 = PatternModel<uint32_t>(outputfilename, options);
-        options.DEBUG = false;
+        //options.DEBUG = false;
         cerr << "Outputting report again" << endl;
         unindexedmodel2.report(&std::cerr);
         cerr << "Equal tokens? " ; test(unindexedmodel.tokens() == unindexedmodel2.tokens() );

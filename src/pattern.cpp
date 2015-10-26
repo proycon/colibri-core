@@ -77,7 +77,7 @@ const size_t datasize(unsigned char * data, int maxbytes = 0) {
         if (data[i] == ClassDecoder::delimiterclass) {
             return n;
         } else if (data[i] < 128) {
-            n += 1;
+            n++;
         }
         i++;
     } while (1);

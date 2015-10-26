@@ -762,7 +762,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         /**
          * Train a pattern model on corpus data (given an input stream)
-         * @param in The input stream of the corpus data (*.colibri.dat)
+         * @param in The input stream of the corpus data (*.colibri.dat), may be NULL if a reverse index is loaded.
          * @param options Options for training
          * @param constrainbymodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          * @param continued Continued training on the same corpus data 
@@ -781,7 +781,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 totaltokens = constrainbymodel->tokens();
             }
             uint32_t sentence = firstsentence-1;
-            const unsigned char version = getdataversion(in);
+            const unsigned char version = (in != NULL) ? getdataversion(in) : 2;
 
             bool iter_unigramsonly = false; //only needed for counting unigrams when we need them but they would be discarded
             bool skipunigrams = false; //will be set to true later only when MINTOKENS=1,MINLENGTH=1 to prevent double counting of unigrams
@@ -802,6 +802,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             IndexReference ref;
             int prevsize = this->size();
             int backoffn = 0;
+            Pattern * linepattern = NULL;
             
             if (!this->data.empty()) {
                 if ((continued) && (!options.QUIET)) std::cerr << "Continuing training on preloaded model, computing statistics..." << std::endl;
@@ -824,11 +825,13 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
                 int foundngrams = 0;
                 int foundskipgrams = 0;
-                in->clear();
-                if (version >= 2) {
-                    in->seekg(2);
-                } else {
-                    in->seekg(0);
+                if (in != NULL) {
+                    in->clear();
+                    if (version >= 2) {
+                        in->seekg(2);
+                    } else {
+                        in->seekg(0);
+                    }
                 }
                 if (!options.QUIET) {
                     if (iter_unigramsonly) {
@@ -851,12 +854,17 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                 sentence = firstsentence-1; //reset
                 bool singlepass = false;
-                while (!in->eof()) {
-                    //read line
-                    Pattern line = Pattern(in,false, version);
+                const unsigned int sentences = (reverseindex != NULL) ? reverseindex->sentences() : 0;
+                std::cerr <<"SENTENCES="<< sentences << std::endl;
+                while (((reverseindex != NULL) && (sentence < sentences)) ||  ((reverseindex == NULL) && (in != NULL) && (!in->eof())))  {
                     sentence++;
+                    //read line
+                    if (linepattern != NULL) delete linepattern;
+                    if (reverseindex == NULL) linepattern = new Pattern(in,false,version);
+                    PatternPointer line = (reverseindex != NULL) ? reverseindex->getsentence(sentence) : PatternPointer(linepattern);
                     //if (in->eof()) break;
-                    const int linesize = line.size();
+                    const unsigned int linesize = line.n();
+                    if (options.DEBUG) std::cerr << "Processing line " << sentence << ", size (tokens) " << linesize << " (bytes) " << line.bytesize() << ", n=" << n <<  std::endl;
                     if (linesize == 0) {
                         //skip empty lines
                         continue;
@@ -867,8 +875,8 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                     ngrams.clear();
                     if (options.DOPATTERNPERLINE) {
-                        if (linesize > options.MAXLENGTH) continue;
-                        ngrams.push_back(std::pair<PatternPointer,int>(PatternPointer(&line),0));
+                        if (linesize > (unsigned int) options.MAXLENGTH) continue;
+                        ngrams.push_back(std::pair<PatternPointer,int>(line,0));
                     } else {
                         if (iter_unigramsonly) {
                             line.ngrams(ngrams, n);
@@ -1056,6 +1064,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
             }
             this->posttrain(options);
+            if (linepattern != NULL) delete linepattern;
         }
 
 
