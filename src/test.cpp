@@ -1093,11 +1093,11 @@ int main( int argc, char *argv[] ) {
         PatternModelOptions options;
         options.DOREVERSEINDEX = true;
         options.DOSKIPGRAMS_EXHAUSTIVE = true;
-        options.DOSKIPGRAMS = false ;
-        options.DEBUG = true;
+        options.DOSKIPGRAMS = false;
 
         cerr << "Building unindexed POINTER model" << endl;
         PatternPointerModel<uint32_t> ppmodel(&corpus);
+        PatternModel<uint32_t> refmodel(&corpus);
 
         cerr << endl;
         std::string infilename = "/tmp/hamlet.colibri.dat";
@@ -1111,6 +1111,13 @@ int main( int argc, char *argv[] ) {
         cerr << endl;
         cerr << endl;
         ppmodel.histogram(&std::cerr);
+
+        cerr << "Training reference PatternModel" << endl;
+        refmodel.train(infilename, options);
+        cerr << "Verifying equal size" ; test(ppmodel.size(), refmodel.size());
+        cerr << "Verifying equal token count" ; test(ppmodel.tokens(), refmodel.tokens());
+        cerr << "Verifying equal type count" ; test(ppmodel.types(), refmodel.types());
+
     }
 
 
