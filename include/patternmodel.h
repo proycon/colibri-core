@@ -2209,6 +2209,8 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
             std::cerr << "  Hash recheck: " << patternpointer.hash() << std::endl;
             std::cerr << "  Pattern hash recheck: " << Pattern(patternpointer).hash() << std::endl;
             std::cerr << "  Equivalence with Pattern: " << (int) (patternpointer == Pattern(patternpointer)) << std::endl;
+            std::cerr << "  Equivalence with Pattern 2: " << (int) (Pattern(patternpointer) == patternpointer) << std::endl;
+            std::cerr << "  Equivalence with PatternPointer from Pattern: " << (int) (patternpointer == PatternPointer(Pattern(patternpointer))) << std::endl;
             std::cerr << "  New value verification: " << this->occurrencecount(patternpointer) << " == " << *data << std::endl;
             ValueType * data2 = this->getdata(patternpointer, true); 
             std::cerr << "  New value verification (2): " << *data << " == " << *data2 << std::endl;
