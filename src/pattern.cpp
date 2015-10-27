@@ -274,7 +274,43 @@ std::string Pattern::tostring(const ClassDecoder& classdecoder) const {
 
 
 std::string PatternPointer::tostring(const ClassDecoder& classdecoder) const {
-    return datatostring(data, classdecoder, bytesize());
+    std::string result = ""; 
+    int i = 0;
+    unsigned int n =0;
+    int gapsize = 0;
+    unsigned int length; 
+    unsigned int cls;
+    bool flex;
+    if (mask != 0) flex = isflexgram();
+    do {
+        if ((bytes > 0) && (i >= bytes)) {
+            return result;
+        }
+        cls = bytestoint(data + i, &length);
+        if ((mask != 0) && (isgap(n)))  {
+            if (flex) {
+                cls = ClassDecoder::flexclass;
+            } else {
+                cls = ClassDecoder::skipclass;
+            }
+        }
+        n++;
+        if (length == 0) {
+            cerr << "ERROR: Class length==0, shouldn't happen" << endl;
+            throw InternalError();
+        }
+        i += length;
+        if ((bytes == 0) && (cls == ClassDecoder::delimiterclass)) {
+            return result;
+        } else if (classdecoder.hasclass(cls)) {
+            if (!result.empty()) result += " ";
+            result += classdecoder[cls];
+        } else {
+            if (!result.empty()) result += " ";
+            result += "{?}";
+        }
+    } while (1);
+    return result;  
 }
 
 bool dataout(unsigned char * data, int maxbytes = 0) {

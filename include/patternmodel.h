@@ -1329,14 +1329,14 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
 
-        /*virtual unsigned int occurrencecount(const PatternPointer & pattern)  { 
+        virtual unsigned int occurrencecount(const PatternPointer & pattern)  { 
             ValueType * data = this->getdata(pattern);
             if (data != NULL) {
                 return this->valuehandler.count(*data); 
             } else {
                 return 0;
             }
-        }*/
+        }
         
         /**
          * Get the value stored for the specified pattern.
@@ -2202,18 +2202,18 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
                 throw InternalError();
             }
             ValueType * data = this->getdata(patternpointer, true); 
-            std::cerr << "Adding: n="<< patternpointer.n() << ",b=" << patternpointer.bytesize() << ",hash="<<patternpointer.hash()<<", value=" << *data << ",valuetype="<< (size_t) data << ",mask=" << patternpointer.mask << ",pattern=";
+            /*std::cerr << "Adding: n="<< patternpointer.n() << ",b=" << patternpointer.bytesize() << ",hash="<<patternpointer.hash()<<", value=" << *data << ",valuetype="<< (size_t) data << ",mask=" << patternpointer.mask << ",pattern=";
             patternpointer.out();
-            std::cerr << std::endl;
+            std::cerr << std::endl;*/
             this->add(patternpointer, data, ref );
-            std::cerr << "  Hash recheck: " << patternpointer.hash() << std::endl; //TODO: Remove debug
+            /*std::cerr << "  Hash recheck: " << patternpointer.hash() << std::endl; //TODO: Remove debug
             std::cerr << "  Pattern hash recheck: " << Pattern(patternpointer).hash() << std::endl;
             std::cerr << "  Equivalence with Pattern: " << (int) (patternpointer == Pattern(patternpointer)) << std::endl;
             std::cerr << "  Equivalence with Pattern 2: " << (int) (Pattern(patternpointer) == patternpointer) << std::endl;
             std::cerr << "  New value verification: " << this->occurrencecount(patternpointer) << " == " << *data << std::endl;
             ValueType * data2 = this->getdata(patternpointer, true); 
             std::cerr << "  New value verification (2): " << *data << " == " << *data2 << std::endl;
-            std::cerr << "  New value verification (pointer): " << (size_t) data << " == " << (size_t) data2 << std::endl;
+            std::cerr << "  New value verification (pointer): " << (size_t) data << " == " << (size_t) data2 << std::endl;*/
         }
 
         virtual void add(const PatternPointer & pattern, ValueType * value, const IndexReference & ref) {
