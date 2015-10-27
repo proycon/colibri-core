@@ -527,18 +527,11 @@ namespace std {
     template <>
     struct hash<Pattern> {
      public: 
-          size_t operator()(Pattern pattern) const throw() {                            
+          size_t operator()(const Pattern &pattern) const throw() {                            
               return pattern.hash();              
           }
     };
 
-    template <>
-    struct hash<const Pattern> {
-     public: 
-          size_t operator()(const Pattern pattern) const throw() {                            
-              return pattern.hash();              
-          }
-    };
 
 
     template <>
@@ -552,18 +545,11 @@ namespace std {
     template <>
     struct hash<PatternPointer> {
      public: 
-          size_t operator()(PatternPointer pattern) const throw() {                            
+          size_t operator()(const PatternPointer &pattern) const throw() {                            
               return pattern.hash();              
           }
     };
 
-    template <>
-    struct hash<const PatternPointer> {
-     public: 
-          size_t operator()(const PatternPointer pattern) const throw() {                            
-              return pattern.hash();              
-          }
-    };
 
 
     template <>
