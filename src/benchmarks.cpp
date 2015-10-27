@@ -10,86 +10,201 @@
 #include <patternmodel.h>
 #include <alignmodel.h>
 #include <sys/time.h>
-#include <sys/resource.h>
 
 using namespace std;
 
-typedef struct {
-    unsigned long size,resident,share,text,lib,data,dt;
-} statm_t;
 
-void readmem(statm_t& result)
+///==================== BEGIN MEMORY PROFILING CODE ============
+
+/*
+ * Author:  David Robert Nadeau
+ * Site:    http://NadeauSoftware.com/
+ * License: Creative Commons Attribution 3.0 Unported License
+ *          http://creativecommons.org/licenses/by/3.0/deed.en_US
+ */
+
+#if defined(_WIN32)
+#include <windows.h>
+#include <psapi.h>
+
+#elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
+#include <unistd.h>
+#include <sys/resource.h>
+
+#if defined(__APPLE__) && defined(__MACH__)
+#include <mach/mach.h>
+
+#elif (defined(_AIX) || defined(__TOS__AIX__)) || (defined(__sun__) || defined(__sun) || defined(sun) && (defined(__SVR4) || defined(__svr4__)))
+#include <fcntl.h>
+#include <procfs.h>
+
+#elif defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
+#include <stdio.h>
+
+#endif
+
+#else
+#error "Cannot define getPeakRSS( ) or getCurrentRSS( ) for an unknown OS."
+#endif
+
+
+/**
+ * Returns the peak (maximum so far) resident set size (physical
+ * memory use) measured in bytes, or zero if the value cannot be
+ * determined on this OS.
+ */
+size_t getPeakRSS( )
 {
-  const char* statm_path = "/proc/self/statm";
+#if defined(_WIN32)
+    /* Windows -------------------------------------------------- */
+    PROCESS_MEMORY_COUNTERS info;
+    GetProcessMemoryInfo( GetCurrentProcess( ), &info, sizeof(info) );
+    return (size_t)info.PeakWorkingSetSize;
 
-  FILE *f = fopen(statm_path,"r");
-  if(!f){
-    perror(statm_path);
-    abort();
-  }
-  if(7 != fscanf(f,"%ld %ld %ld %ld %ld %ld %ld",
-    &result.size,&result.resident,&result.share,&result.text,&result.lib,&result.data,&result.dt))
-  {
-    perror(statm_path);
-    abort();
-  }
-  fclose(f);
+#elif (defined(_AIX) || defined(__TOS__AIX__)) || (defined(__sun__) || defined(__sun) || defined(sun) && (defined(__SVR4) || defined(__svr4__)))
+    /* AIX and Solaris ------------------------------------------ */
+    struct psinfo psinfo;
+    int fd = -1;
+    if ( (fd = open( "/proc/self/psinfo", O_RDONLY )) == -1 )
+        return (size_t)0L;      /* Can't open? */
+    if ( read( fd, &psinfo, sizeof(psinfo) ) != sizeof(psinfo) )
+    {
+        close( fd );
+        return (size_t)0L;      /* Can't read? */
+    }
+    close( fd );
+    return (size_t)(psinfo.pr_rssize * 1024L);
+
+#elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
+    /* BSD, Linux, and OSX -------------------------------------- */
+    struct rusage rusage;
+    getrusage( RUSAGE_SELF, &rusage );
+#if defined(__APPLE__) && defined(__MACH__)
+    return (size_t)rusage.ru_maxrss;
+#else
+    return (size_t)(rusage.ru_maxrss * 1024L);
+#endif
+
+#else
+    /* Unknown OS ----------------------------------------------- */
+    return (size_t)0L;          /* Unsupported. */
+#endif
 }
+
+
+/**
+ * Returns the current resident set size (physical memory use) measured
+ * in bytes, or zero if the value cannot be determined on this OS.
+ */
+size_t getCurrentRSS( )
+{
+#if defined(_WIN32)
+    /* Windows -------------------------------------------------- */
+    PROCESS_MEMORY_COUNTERS info;
+    GetProcessMemoryInfo( GetCurrentProcess( ), &info, sizeof(info) );
+    return (size_t)info.WorkingSetSize;
+
+#elif defined(__APPLE__) && defined(__MACH__)
+    /* OSX ------------------------------------------------------ */
+    struct mach_task_basic_info info;
+    mach_msg_type_number_t infoCount = MACH_TASK_BASIC_INFO_COUNT;
+    if ( task_info( mach_task_self( ), MACH_TASK_BASIC_INFO,
+        (task_info_t)&info, &infoCount ) != KERN_SUCCESS )
+        return (size_t)0L;      /* Can't access? */
+    return (size_t)info.resident_size;
+
+#elif defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
+    /* Linux ---------------------------------------------------- */
+    long rss = 0L;
+    FILE* fp = NULL;
+    if ( (fp = fopen( "/proc/self/statm", "r" )) == NULL )
+        return (size_t)0L;      /* Can't open? */
+    if ( fscanf( fp, "%*s%ld", &rss ) != 1 )
+    {
+        fclose( fp );
+        return (size_t)0L;      /* Can't read? */
+    }
+    fclose( fp );
+    return (size_t)rss * (size_t)sysconf( _SC_PAGESIZE);
+
+#else
+    /* AIX, BSD, Solaris, and Unknown OS ------------------------ */
+    return (size_t)0L;          /* Unsupported. */
+#endif
+}
+
+//===== END MEMORY PROFILING CODE ======== 
+
+
+
 
 struct Measurement {
     clock_t begintime;
     double duration;
-    statm_t beginmem;
-    statm_t endmem;
+    size_t beginmem;
+    size_t endmem;
 };
 
 Measurement begin(const string &  title) {
     cout << "====== " << title << "======" << endl;
     Measurement m;
     m.begintime = clock();
-	readmem(m.beginmem);
+	m.beginmem = getCurrentRSS();
 	return m;
 }
 
 void end(Measurement& m) {
     m.duration = (clock() - m.begintime) / (double) CLOCKS_PER_SEC;
-	readmem(m.endmem);
-    const double mem = ((unsigned long long) (m.endmem.size - m.beginmem.size)) / (double) 1024;
-    cout << "---> " <<  m.duration << " s " << mem << " MB" << endl << endl;
+	m.endmem = getCurrentRSS();
+	const size_t peakmem = getPeakRSS();
+	const double peak = peakmem / 1024.0 / 1024.0;
+	const size_t memdiff = m.endmem-m.beginmem;
+    const double mem = memdiff / 1024.0 / 1024.0;
+    cout << "---> time: " <<  m.duration << " s res: " << mem << " MB peak: " << peak << " MB" << endl << endl;
 }
 
 int main( int argc, char *argv[] ) {
-    if (argc != 2) {
-        cerr<<"Syntax: colibri-benchmarks textfile"<<endl;
+    if (argc != 3) {
+        cerr<<"Syntax: colibri-benchmarks textfile testnr"<<endl;
         exit(2);
     }
     const string textfile = argv[1];
 	const string datafile = textfile + ".colibri.dat";
 	const string classfile = textfile + ".colibri.cls";
 
-    ClassEncoder classencoder;
-    {
-        Measurement m = begin(string("Building class encoding"));
-        classencoder.build(textfile);
-        end(m);
-    }
-    {
-        Measurement m = begin(string("Encoding corpus"));
-        classencoder.encodefile(textfile,datafile,false);
-        end(m);
-    }
-    classencoder.save(classfile);
-    ClassDecoder classdecoder(classfile);
+	const int testnr = atoi(argv[2]);
+	
 
-	IndexedCorpus corpus;
-	{
-        Measurement m = begin(string("Loading corpus data (IndexedCorpus)"));
-		corpus.load(datafile);
-		end(m);
+
+    ClassEncoder classencoder;
+
+	if (testnr == 0) {
+		{
+			Measurement m = begin(string("0 - Building class encoding"));
+			classencoder.build(textfile);
+			end(m);
+		}
+
+		{
+			Measurement m = begin(string("0 - Encoding corpus"));
+			classencoder.encodefile(textfile,datafile,false);
+			end(m);
+			classencoder.save(classfile);
+		}
 	}
 
-    {
-        Measurement m = begin(string("Training unindexed PatternModel from file: threshold 2, up to 8-grams, no skipgrams"));
+	IndexedCorpus corpus;
+
+	if (testnr == 3) {
+        Measurement m = begin(string("3 - Loading corpus data (IndexedCorpus)"));
+		corpus.load(datafile);
+		end(m);
+	} else {
+		corpus.load(datafile);
+	}
+
+    if (testnr == 4) {
+        Measurement m = begin(string("4 - Training unindexed PatternModel from file: threshold 2, up to 8-grams, no skipgrams"));
         PatternModelOptions options;
         options.MINTOKENS = 2; options.MAXLENGTH = 8; options.DOSKIPGRAMS = false;
         PatternModel<uint32_t> model;
@@ -97,8 +212,8 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
 
-    {
-        Measurement m = begin(string("Training unindexed PatternModel from preloaded corpus: threshold 2, up to 8-grams, no skipgrams"));
+    if (testnr == 5) {
+        Measurement m = begin(string("5 - Training unindexed PatternModel from preloaded corpus: threshold 2, up to 8-grams, no skipgrams"));
         PatternModelOptions options;
         options.MINTOKENS = 2; options.MAXLENGTH = 8; options.DOSKIPGRAMS = false;
         PatternModel<uint32_t> model(&corpus);
@@ -106,8 +221,9 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
 
-    {
-        Measurement m = begin(string("Training unindexed PatternModel from file: threshold 2, up to 8-grams, with skipgrams (exhaustive)"));
+
+    if (testnr == 6) {
+        Measurement m = begin(string("6 - Training unindexed PatternModel from file: threshold 2, up to 8-grams, with skipgrams (exhaustive)"));
         PatternModelOptions options;
         options.MINTOKENS = 2; options.MAXLENGTH = 8; options.DOSKIPGRAMS = true; options.DOSKIPGRAMS_EXHAUSTIVE = true;
         PatternModel<uint32_t> model;
@@ -115,8 +231,8 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
 
-    {
-        Measurement m = begin(string("Training unindexed PatternModel from preloaded corpus: threshold 2, up to 8-grams, with skipgrams (exhaustive)"));
+    if (testnr == 7) {
+        Measurement m = begin(string("7 - Training unindexed PatternModel from preloaded corpus: threshold 2, up to 8-grams, with skipgrams (exhaustive)"));
         PatternModelOptions options;
         options.MINTOKENS = 2; options.MAXLENGTH = 8; options.DOSKIPGRAMS = true; options.DOSKIPGRAMS_EXHAUSTIVE = true;
         PatternModel<uint32_t> model(&corpus);
@@ -124,8 +240,8 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
 
-	{
-        Measurement m = begin(string("Training unindexed PatternModel from file: threshold 1, up to 8-grams, no skipgrams"));
+	if (testnr == 8) {
+        Measurement m = begin(string("8 - Training unindexed PatternModel from file: threshold 1, up to 8-grams, no skipgrams"));
         PatternModelOptions options;
         options.MINTOKENS = 1; options.MAXLENGTH = 8; 
         PatternModel<uint32_t> model;
@@ -133,8 +249,8 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
 
-    {
-        Measurement m = begin(string("Training indexed PatternModel from preloaded corpus: threshold 2, up to 8-grams, no skipgrams"));
+    if (testnr == 9) {
+        Measurement m = begin(string("9 - Training indexed PatternModel from preloaded corpus: threshold 2, up to 8-grams, no skipgrams"));
         PatternModelOptions options;
         options.MINTOKENS = 2; options.MAXLENGTH = 8; options.DOSKIPGRAMS = false;
         IndexedPatternModel<> model(&corpus);
@@ -142,8 +258,8 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
 
-    {
-        Measurement m = begin(string("Training indexed PatternModel from preloaded corpus: threshold 2, up to 8-grams, with skipgrams"));
+    if (testnr == 10) {
+        Measurement m = begin(string("10 - Training indexed PatternModel from preloaded corpus: threshold 2, up to 8-grams, with skipgrams"));
         PatternModelOptions options;
         options.MINTOKENS = 2; options.MAXLENGTH = 8; options.DOSKIPGRAMS = true;
         IndexedPatternModel<> model(&corpus);
@@ -151,8 +267,8 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
 
-    {
-        Measurement m = begin(string("Training unindexed PatternPointerModel from preloaded corpus: threshold 2, up to 8-grams, no skipgrams"));
+    if (testnr == 11) {
+        Measurement m = begin(string("11 - Training unindexed PatternPointerModel from preloaded corpus: threshold 2, up to 8-grams, no skipgrams"));
         PatternModelOptions options;
         options.MINTOKENS = 2; options.MAXLENGTH = 8;
         PatternPointerModel<uint32_t> model(&corpus);
@@ -160,8 +276,8 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
 
-    {
-        Measurement m = begin(string("Training unindexed PatternPointerModel from preloaded corpus: threshold 2, up to 8-grams, with skipgrams (exhaustive)"));
+    if (testnr == 12) {
+        Measurement m = begin(string("12 - Training unindexed PatternPointerModel from preloaded corpus: threshold 2, up to 8-grams, with skipgrams (exhaustive)"));
         PatternModelOptions options;
         options.MINTOKENS = 2; options.MAXLENGTH = 8; options.DOSKIPGRAMS = true; options.DOSKIPGRAMS_EXHAUSTIVE = true;
         PatternPointerModel<uint32_t> model(&corpus);
