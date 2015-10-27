@@ -413,12 +413,16 @@ int main( int argc, char *argv[] ) {
         cerr << "--- Skipgram as pattern pointer ---" << endl;
 
         PatternPointer pskipgram = PatternPointer(skipgram);;
+
+        Pattern skipgramcopy = encoder.buildpattern(querystring2, true);
+        PatternPointer pskipgram2 = PatternPointer(skipgramcopy);
         
         cerr << "Skipgram decoded: "; test(pskipgram.decode(classdecoder),"To {*} or {*} to be");
         cerr << "N: "; test(pskipgram.n(),6);
         cerr << "Bytesize: "; test(pskipgram.bytesize(),6);
         cerr << "Category==skipgram? " ; test(pskipgram.category() == SKIPGRAM) ;
         cerr << "Skipcount==2? " ; test(pskipgram.skipcount(),2) ;
+        cerr << "Testing equivalence between pointer and different-source pointer"; test(pskipgram == pskipgram2);
         cerr << "Testing equivalence between pointer and pattern"; test(skipgram == pskipgram);
         cerr << "Testing equivalence between pointer and pattern (rev)"; test(pskipgram == skipgram);
         cerr << "Testing hash equivalence between pointer and pattern"; test(skipgram.hash() == pskipgram.hash());
@@ -805,7 +809,6 @@ int main( int argc, char *argv[] ) {
         ppmap.write("/tmp/patternpointermap.tmp");
 
         }
-        
         { 
         cerr << endl << "************************** Unindexed PatternModel Tests ***************************************" << endl << endl;
 
@@ -1149,13 +1152,30 @@ int main( int argc, char *argv[] ) {
         ppmodel.train(infilename, options);
         cerr << "Found " << ppmodel.size() << " patterns, " << ppmodel.types() << " types, " << ppmodel.tokens() << " tokens" << endl;
         ppmodel.print(&std::cerr, classdecoder);
+
+        cerr << "Sanity check: ";
+        unsigned int i = 0;
+        for (PatternPointerModel<uint32_t>::iterator iter = ppmodel.begin(); iter != ppmodel.end(); iter++) {
+            const PatternPointer p = iter->first;
+            cerr << "Pattern #" << (i+1) << ", hash=" << p.hash() << ", mask=" << p.mask << "...";
+            test(ppmodel.occurrencecount(p),iter->second);
+            i++;
+        }
+		cerr << "Count check "; test(i, ppmodel.size());
+
+
         cerr << "Checking presence of Pattern" ; test(ppmodel[ngram], 7);
         cerr << "Checking presence of PatternPointer" ; test(ppmodel[pngram], 7);
         cerr << "Querying occurrencecount with Pattern (ngram)" ; test(ppmodel.occurrencecount(ngram), 7);
         cerr << "Querying occurrencecount with PatternPointer (ngram)" ; test(ppmodel.occurrencecount(pngram), 7);
-        string querystring = "To {*1*} or not";
-        Pattern skipgram = classencoder.buildpattern(querystring, true);
-        cerr << "Querying occurrencecount with Pattern (skipgram)" ; test(ppmodel.occurrencecount(skipgram), 7);
+        string querystring2 = "see or not to see";
+        Pattern ngram2 = classencoder.buildpattern(querystring2);
+        cerr << "Querying occurrencecount with Pattern (ngram) (2)" ; test(ppmodel.occurrencecount(ngram2), 2);
+        string querystring = "or not to {*} .";
+        Pattern skipgram = classencoder.buildpattern(querystring, false);
+        PatternPointer pskipgram = PatternPointer(skipgram);
+        cerr << "Querying occurrencecount with PatternPointer (skipgram)" ; test(ppmodel.occurrencecount(pskipgram), 4);
+        cerr << "Querying occurrencecount with Pattern (skipgram)" ; test(ppmodel.occurrencecount(skipgram), 4);
         ppmodel.report(&std::cerr);
         cerr << endl;
         cerr << endl;

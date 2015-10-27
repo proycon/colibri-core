@@ -837,8 +837,17 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
         iterator end() { return data.end(); }
         const_iterator end() const { return data.end(); }
 
-        iterator find(const Pattern & pattern) { return data.find((PatternPointer) pattern); }
-        const_iterator find(const Pattern & pattern) const { return data.find((PatternPointer) pattern); }
+        iterator find(const Pattern & pattern) { 
+            PatternPointer pp = pattern.getpointer();
+            //validation:
+            if (pp.hash() != pattern.hash()) {
+                std::cerr << "HASH MISMATCH!!" << std::endl;
+                throw InternalError();
+            }
+            return data.find(pp);
+        }
+        //const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+
         iterator find(const PatternPointer & pattern) { return data.find(pattern); }
         const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
         

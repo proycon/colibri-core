@@ -856,8 +856,14 @@ bool PatternPointer::operator==(const PatternPointer & other) const {
     if ((bytes == other.bytes) && (mask == other.mask)) {
         if (data == other.data) return true; //shortcut
         unsigned int i = 0;
+        unsigned int n = 0;
         while (i<bytes) {
-            if (data[i] != other.data[i]) return false;
+            if ((mask != 0) && (data[i] < 128))  {
+                if (isgap(n)) {
+                    if (!other.isgap(n)) return false;
+                } else if (data[i] != other.data[i]) return false;
+                n++;
+            } else if (data[i] != other.data[i]) return false;
             i++;
         }
         return true;

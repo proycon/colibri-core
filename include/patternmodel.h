@@ -1725,11 +1725,11 @@ class PatternModel: public MapType, public PatternModelInterface {
             while (iter != this->end()) {
                 const PatternType pattern = iter->first;
                 if (( (_n == 0) || (pattern.n() == (unsigned int) _n) )&& ((threshold == -1) || (occurrencecount(pattern) < (unsigned int) threshold))) {
-                    std::cerr << "preprune:" << this->size() << std::endl; //TODO: remove debug
+                    /*std::cerr << "preprune:" << this->size() << std::endl; 
                     std::cerr << "DEBUG: pruning " << (int) pattern.category() << ",n=" << pattern.n() << ",skipcount=" << pattern.skipcount() << ",hash=" << pattern.hash() << std::endl;
-                    std::cerr << occurrencecount(pattern) << std::endl;
+                    std::cerr << occurrencecount(pattern) << std::endl;*/
                     iter = this->erase(iter); 
-                    std::cerr << "postprune:" << this->size() << std::endl;
+                    //std::cerr << "postprune:" << this->size() << std::endl;
                     pruned++;
                 } else {
                     iter++;
@@ -1917,6 +1917,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
             *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq;
             if (endline) *out << std::endl;
+            //*out << pattern.hash() << "\t" << (size_t) pattern.data << std::endl;
         }
 
         
@@ -2438,12 +2439,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     */
     void print(std::ostream * out, ClassDecoder & decoder) {
         bool haveoutput = false;
-        for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
+        for (typename PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             if (!haveoutput) {
                 *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY\tREFERENCES" << std::endl;
                 haveoutput = true;
             }
-            const Pattern pattern = iter->first;
+            const PatternPointer pattern = iter->first;
             this->print(out, decoder, pattern, true);
         }
         if (haveoutput) {
@@ -2459,7 +2460,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
-    void print(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool endline = true) {
+    void print(std::ostream* out, ClassDecoder &decoder, const PatternPointer & pattern, bool endline = true) {
             const std::string pattern_s = pattern.tostring(decoder);
             const unsigned int count = this->occurrencecount(pattern); 
             const unsigned int covcount = this->coveragecount(pattern);
