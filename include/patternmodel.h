@@ -1855,7 +1855,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
             if (haveoutput) {
                 std::cerr << std::endl << "Legend:" << std::endl;
-                std::cerr << " - PATTERN    : The pattern, Gaps in skipgrams are represented as {*x*} where x is a number representing the size of the skip. Variable-width gaps in flexgrams are shown using  {*}." << std::endl;
+                std::cerr << " - PATTERN    : The pattern, Gaps in skipgrams are represented as {*}. Variable-width gaps in flexgrams are shown using  {**}." << std::endl;
                 std::cerr << " - COUNT      : The occurrence count - the amount of times the pattern occurs in the data" << std::endl;
                 std::cerr << " - TOKENS     : The maximum number of tokens in the corpus that this pattern covers. *THIS IS JUST A MAXIMUM PROJECTION* rather than an exact number because your model is not indexed" << std::endl;
                 std::cerr << " - COVERAGE   : The maximum number of tokens covered, as a fraction of the total in the corpus (projection)" << std::endl;
@@ -2448,7 +2448,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
         if (haveoutput) {
             std::cerr << std::endl << "Legend:" << std::endl;
-            std::cerr << " - PATTERN    : The pattern, Gaps in skipgrams are represented as {*x*} where x is a number representing the size of the skip. Variable-width gaps in flexgrams are shown using  {*}." << std::endl;
+            std::cerr << " - PATTERN    : The pattern, Gaps in skipgrams are represented as {*}. Variable-width gaps in flexgrams are shown using {**}." << std::endl;
             std::cerr << " - COUNT      : The occurrence count - the amount of times the pattern occurs in the data" << std::endl;
             std::cerr << " - TOKENS     : The number of tokens in the corpus that this pattern covers" << std::endl;
             std::cerr << " - COVERAGE   : The number of tokens covered, as a fraction of the total in the corpus" << std::endl;
