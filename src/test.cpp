@@ -981,7 +981,23 @@ int main( int argc, char *argv[] ) {
             Pattern ngram_ne = classencoder.buildpattern("give us fortune", true); 	
             cerr << "Testing !unindexedmodel.has()"; test( !unindexedmodel.has(ngram_ne) );
             cerr << "Testing unindexedmodel.occurencecount()"; test( unindexedmodel.occurrencecount(ngram),  6);
+
+
+            cerr << endl << " --- extracting skipgrams from single ngram ---" << endl << endl;
+            Pattern queryngram = classencoder.buildpattern(string("to be or not to be"), true); 	
+            vector<PatternPointer> skipgrams;
+            int i = 0;
+            unindexedmodel.computeskipgrams(queryngram,1,NULL,NULL,NULL,&skipgrams,true,3);
+            for (vector<PatternPointer>::iterator iter = skipgrams.begin(); iter != skipgrams.end();iter++) {
+                cerr << iter->tostring(classdecoder) << endl;
+                i++;
+            }
+            cerr << "Count check "; test(i,25); //TODO: find real value
+
+
+
         }
+
 
 
 
