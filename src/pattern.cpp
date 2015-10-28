@@ -623,11 +623,14 @@ Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructo
         const unsigned char c = ref.data[i];
         if (c < 128) {
             //we have a token
-            if ((n - begin == length) || ((c == ClassDecoder::delimiterclass) && (!prevhigh)) ) {
+            n++; 
+            if (n - begin == length) {
+                length_b = (i + 1) - begin_b;
+                break;
+            } else if ((c == ClassDecoder::delimiterclass) && (!prevhigh) ) {
                 length_b = i - begin_b;
                 break;
             }
-            n++; 
             i++;
             if (n == begin) begin_b = i;
             prevhigh = false;
@@ -659,11 +662,14 @@ PatternPointer::PatternPointer(unsigned char * ref, int begin, int length) { //s
         c = ref[i];
         if (c < 128) {
             //we have a token
-            if ((n - begin == length) || ((c == ClassDecoder::delimiterclass) && (!prevhigh)) ) {
+            n++; 
+            if (n - begin == length) {
+                length_b = (i + 1) - begin_b;
+                break;
+            } else if ((c == ClassDecoder::delimiterclass) && (!prevhigh) ) {
                 length_b = i - begin_b;
                 break;
             }
-            n++; 
             i++;
             if (n == begin) begin_b = i;
             prevhigh = false;
@@ -691,11 +697,14 @@ PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //sl
         c = ref.data[i];
         if (c < 128) {
             //we have a token
-            if ((n - begin == length) || ((c == ClassDecoder::delimiterclass) && (!prevhigh)) ) {
+            n++;
+            if (n - begin == length) {
+                length_b = (i + 1) - begin_b;
+                break;
+            } else if ((c == ClassDecoder::delimiterclass) && (!prevhigh) ) {
                 length_b = i - begin_b;
                 break;
             }
-            n++; 
             i++;
             if (n == begin) begin_b = i;
             prevhigh = false;
@@ -736,12 +745,15 @@ PatternPointer::PatternPointer(const PatternPointer& ref, int begin, int length)
         c = ref.data[i];
         
         if (c < 128) {
-            if ((n - begin == length) || ((c == ClassDecoder::delimiterclass) && (!prevhigh)) ) {
+            //we have a token
+            n++; 
+            if (n - begin == length) {
+                length_b = (i + 1) - begin_b;
+                break;
+            } else if ((c == ClassDecoder::delimiterclass) && (!prevhigh) ) {
                 length_b = i - begin_b;
                 break;
             }
-            //we have a token
-            n++; 
             i++;
             if (n == begin) begin_b = i;
             prevhigh = false;
@@ -755,9 +767,9 @@ PatternPointer::PatternPointer(const PatternPointer& ref, int begin, int length)
     bytes = length_b;
     mask = computemask();
     
-    std::cerr << "Created patternpointer: b=" << bytes << " n=" << this->n() << " (begin="<<begin<<",length="<<length<<")" <<endl; //TODO: remove debug
+    /*std::cerr << "Created patternpointer: b=" << bytes << " n=" << this->n() << " (begin="<<begin<<",length="<<length<<")" <<endl; 
     this->out();
-    std::cerr << std::endl;
+    std::cerr << std::endl;*/
 }
 
 Pattern::Pattern(const Pattern& ref) { //copy constructor
@@ -804,11 +816,14 @@ Pattern::Pattern(const PatternPointer& ref, int begin, int length) { //slice con
         const unsigned char c = ref.data[i];
          if (c < 128) {
             //we have a token
-            if ((n - begin == length) || ((c == ClassDecoder::delimiterclass) && (!prevhigh)) ) {
+            n++; 
+            if (n - begin == length) {
+                length_b = (i + 1) - begin_b;
+                break;
+            } else if ((c == ClassDecoder::delimiterclass) && (!prevhigh) ) {
                 length_b = i - begin_b;
                 break;
             }
-            n++; 
             i++;
             if (n == begin) begin_b = i;
             prevhigh = false;

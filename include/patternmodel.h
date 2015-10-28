@@ -892,15 +892,6 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                     // *** ITERATION OVER ALL NGRAMS OF CURRENT ORDER (n) IN THE LINE/SENTENCE ***
                     for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
-                        if ((iter->first.isskipgram()) || (iter->first.isflexgram())) { //TODO: remove
-                            std::cerr << "Adding skipgram!" << std::endl; 
-                            std::cerr << "sentence=" << sentence << std::endl;
-                            std::cerr << "line=";
-                            line.out();
-                            std::cerr << "mask=" << iter->first.mask << std::endl;
-                            iter->first.out();
-                            throw InternalError();
-                        }
 
                         try {
                             if ((singlepass) && (options.MINLENGTH == 1) && (skipunigrams) && (iter->first.n() == 1)) {
@@ -1690,7 +1681,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          */
         virtual void add(const PatternPointer & patternpointer, const IndexReference & ref) {
             const Pattern pattern = Pattern(patternpointer);
-            if ((pattern.isskipgram()) || (pattern.isflexgram())) { //TODO: remove
+            /*if ((pattern.isskipgram()) || (pattern.isflexgram())) { //TODO: remove
                 std::cerr << "Adding skipgram!" << std::endl; 
                 std::cerr << "pp.mask=" << patternpointer.mask << std::endl;
                 std::cerr << "pp.b=" << patternpointer.bytesize() << std::endl;
@@ -1699,7 +1690,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 std::cerr << std::endl;
                 pattern.out();
                 throw InternalError();
-            }
+            }*/
             ValueType * data = getdata(pattern, true); 
             this->add(pattern, data, ref );
         }
@@ -2226,7 +2217,7 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
             patternpointer.out();
             std::cerr << std::endl;*/
             this->add(patternpointer, data, ref );
-            /*std::cerr << "  Hash recheck: " << patternpointer.hash() << std::endl; //TODO: Remove debug
+            /*std::cerr << "  Hash recheck: " << patternpointer.hash() << std::endl; 
             std::cerr << "  Pattern hash recheck: " << Pattern(patternpointer).hash() << std::endl;
             std::cerr << "  Equivalence with Pattern: " << (int) (patternpointer == Pattern(patternpointer)) << std::endl;
             std::cerr << "  Equivalence with Pattern 2: " << (int) (Pattern(patternpointer) == patternpointer) << std::endl;
