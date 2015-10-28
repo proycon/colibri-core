@@ -132,14 +132,14 @@ int main( int argc, char *argv[] ) {
         string classfile = "/tmp/colibritest";    
         ofstream f;
         f.open(classfile.c_str(), ios::out);
-        f << "5\tbe\n6\tTo\n7\tto\n8\tor\n9\tnot\n73477272\tblah\n";            
+        f << "5\tbe\n6\tTo\n7\tto\n8\tor\n9\tnot\n73477272\tblah\n131\ttest\n";            
         f.close();
 
         
             
         cerr << "Loading class decoder" << endl;
         ClassDecoder classdecoder = ClassDecoder(classfile);
-        cerr << "  Number of classes: " << classdecoder.size() << endl;
+        cerr << "  Number of classes: "; test(classdecoder.size(),10); //including reserved classes
 
         cerr << "Loading class encoder" << endl;
         ClassEncoder encoder = ClassEncoder(classfile);
@@ -175,6 +175,43 @@ int main( int argc, char *argv[] ) {
         ngramhigh.out();
         cerr << "Decoded: "; test(ngramhigh.decode(classdecoder),"blah or blah");
 
+        cerr << "Ngram with high classes (2):" << endl;
+        querystring = "to test or not to test";
+        Pattern ngramhigh2 = encoder.buildpattern(querystring, true); 	
+        cerr << "Bytesize: "; test(ngramhigh2.bytesize(),8);
+        cerr << "Size (n): "; test(ngramhigh2.n(), 6);
+        cerr << "Category==ngram: "; test(ngramhigh2.category(), NGRAM);
+        cerr << "Hash: "; testgt(ngramhigh2.hash(),0);
+        cerr << "Raw: " << endl;
+        ngramhigh2.out();
+        cerr << "Decoded: "; test(ngramhigh2.decode(classdecoder),"to test or not to test");
+
+        cerr << "Slice constructor ngram #1, specific subngram (low)" << endl;
+        Pattern ngram2 = Pattern(ngram, 2, 2);
+        
+        cerr << "Ngram: "; test( ngram2.decode(classdecoder),"or not");
+        cerr << "N: "; test(ngram2.n(),2);
+        cerr << "Bytesize: ", test(ngram2.bytesize(),2);
+        cerr << "Raw: " << endl;
+        ngram2.out();
+        cerr << endl;
+
+        cerr << "Slice constructor, specific subngram (high)" << endl;
+        Pattern ngramhighslice = Pattern(ngramhigh, 1, 2);
+        cerr << "Ngram: "; test( ngramhighslice.decode(classdecoder),"or blah");
+        cerr << "N: "; test(ngramhighslice.n(),2);
+        cerr << "Raw: " << endl;
+        ngramhighslice.out();
+        cerr << endl;
+
+        cerr << "Slice constructor (2), specific subngram (high)" << endl;
+        Pattern ngramhighslice2 = Pattern(ngramhigh2, 0, 2);
+        cerr << "Ngram: "; test( ngramhighslice2.decode(classdecoder),"to test");
+        cerr << "N: "; test(ngramhighslice2.n(),2);
+        cerr << "Bytesize: "; test(ngramhighslice2.bytesize(),3);
+        cerr << "Raw: " << endl;
+        ngramhighslice2.out();
+        cerr << endl;
         
         {
             ClassDecoder classdecoder2 = ClassDecoder();
@@ -189,12 +226,6 @@ int main( int argc, char *argv[] ) {
         cerr << endl;
         
 
-        cerr << "Slice constructor, specific subngram" << endl;
-        Pattern ngram2 = Pattern(ngram, 2, 2);
-        
-        cerr << "Ngram: "; test( ngram2.decode(classdecoder),"or not");
-        cerr << "N: "; test(ngram2.n(),2);
-        cerr << "Bytesize: ", test(ngram2.bytesize(),2);
 
         cerr << "Empty/null pattern" << endl;
         Pattern emptypattern;
@@ -214,6 +245,21 @@ int main( int argc, char *argv[] ) {
         for (vector<Pattern>::iterator iter2 = tokens.begin(); iter2 != tokens.end(); iter2++) {                
             const Pattern subngram = *iter2;
             cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref[i]);
+            i += 1;
+        }
+		cerr << "Count check "; test(i,6);
+
+        cerr << "----------------------------------------------------" << endl;
+        cerr << "Tokens of ngram \"to test or not to test\": " << endl;
+
+        tokens.clear();
+        ngramhigh2.ngrams(tokens,1);
+        cerr << "Testing correct size "; test(tokens.size() == 6);
+        i = 0;
+        vector<string> tokenref2 = {"to","test","or","not","to","test"};
+        for (vector<Pattern>::iterator iter2 = tokens.begin(); iter2 != tokens.end(); iter2++) {                
+            const Pattern subngram = *iter2;
+            cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref2[i]);
             i += 1;
         }
 		cerr << "Count check "; test(i,6);
@@ -301,6 +347,64 @@ int main( int argc, char *argv[] ) {
         cerr << "Raw: " << endl;
         ngram.out();
         cerr << "Decoded: "; test(pngram.decode(classdecoder),"To be or not to be");
+
+        cerr << "Slice constructor, specific subngram (low only)" << endl;
+        PatternPointer pngramslice = PatternPointer(pngram, 2, 2);
+        cerr << "Ngram: "; test( pngramslice.decode(classdecoder),"or not");
+        cerr << "N: "; test(pngramslice.n(),2);
+        cerr << "Bytesize: ", test(pngramslice.bytesize(),2);
+        cerr << "Raw: " << endl;
+        pngram.out();
+        cerr << endl;
+
+
+        cerr << "Ngram (pointer) with high classes:" << endl;
+        PatternPointer pngramhigh = PatternPointer(ngramhigh); //blah or blah
+        cerr << "Bytesize: "; test(pngramhigh.bytesize(),9);
+        cerr << "Size (n): "; test(pngramhigh.n(), 3);
+        cerr << "Category==ngram: "; test(pngramhigh.category(), NGRAM);
+        cerr << "Hash: "; testgt(pngramhigh.hash(),0);
+        cerr << "Raw: " << endl;
+        pngramhigh.out();
+        cerr << "Decoded: "; test(pngramhigh.decode(classdecoder),"blah or blah");
+
+
+        cerr << "Slice constructor, specific subngram (high)" << endl;
+        Pattern pngramhighslice = PatternPointer(pngramhigh, 1, 2);
+        cerr << "Ngram: "; test( pngramhighslice.decode(classdecoder),"or blah");
+        cerr << "N: "; test(pngramhighslice.n(),2);
+        cerr << "Raw: " << endl;
+        pngramhighslice.out();
+        cerr << endl;
+
+        cerr << "Ngram (pointer) with high classes (2):" << endl;
+        Pattern pngramhigh2 = encoder.buildpattern(querystring, true); 	
+        cerr << "Bytesize: "; test(pngramhigh2.bytesize(),8);
+        cerr << "Size (n): "; test(pngramhigh2.n(), 6);
+        cerr << "Category==ngram: "; test(pngramhigh2.category(), NGRAM);
+        cerr << "Hash: "; testgt(pngramhigh2.hash(),0);
+        cerr << "Raw: " << endl;
+        pngramhigh2.out();
+        cerr << "Decoded: "; test(pngramhigh2.decode(classdecoder),"to test or not to test");
+ 
+        cerr << "Slice constructor, specific subngram (high 2)" << endl;
+        PatternPointer pngramhighslice2 = PatternPointer(pngramhigh2, 0, 2);
+        cerr << "Ngram: "; test( pngramhighslice2.decode(classdecoder),"to test");
+        cerr << "N: "; test(pngramhighslice2.n(),2);
+        cerr << "Bytesize: "; test(pngramhighslice2.bytesize(),3);
+        cerr << "Raw: " << endl;
+        pngramhighslice2.out();
+        cerr << endl;
+
+        cerr << "Slice constructor, specific subngram (high 3)" << endl;
+        Pattern ngramhighslice3 = Pattern(ngramhigh2, 0, 2);
+        cerr << "Ngram: "; test( ngramhighslice3.decode(classdecoder),"to test");
+        cerr << "N: "; test(ngramhighslice3.n(),2);
+        cerr << "Bytesize: "; test(ngramhighslice3.bytesize(),3);
+        cerr << "Raw: " << endl;
+        ngramhighslice3.out();
+        cerr << endl;
+
 
         cerr << "Tokens of ngram #1 (as patternpointers): " << endl;
         vector<PatternPointer> ptokens;
@@ -844,20 +948,49 @@ int main( int argc, char *argv[] ) {
         vector<IndexReference> matches = corpus.findpattern(needle);
         test(matches.size(), 1);
 
-
-        PatternModelOptions options;
-        options.DOREVERSEINDEX = true;
-        options.DOSKIPGRAMS_EXHAUSTIVE = true;
-        options.DOSKIPGRAMS = false ;
-
         std::string infilename = "/tmp/hamlet.colibri.dat";
         std::string outputfilename = "/tmp/data.colibri.patternmodel";
 
-        cerr << "Building unindexed model (from preloaded corpus)" << endl;
+        {
+            cerr << endl << " --- unindexed model without skipgrams ---" << endl << endl;
+            PatternModelOptions options;
+
+            cerr << "Building unindexed model (from preloaded corpus, no skipgrams)" << endl;
+            PatternModel<uint32_t> unindexedmodelR(&corpus);
+            unindexedmodelR.train(infilename, options);
+
+            cerr << "Building unindexed model (without preloaded corpus, no skipgrams)" << endl;
+            PatternModel<uint32_t> unindexedmodel;
+
+            unindexedmodel.train(infilename, options);
+            cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
+
+
+            unindexedmodel.print(&std::cerr, classdecoder);
+            cerr << endl;
+            unindexedmodel.report(&std::cerr);
+            cerr << endl;
+
+            Pattern ngram = classencoder.buildpattern(string("or not to"), true); 	
+            cerr << "Testing unindexedmodel.has()"; test( unindexedmodel.has(ngram) );
+            Pattern ngram_ne = classencoder.buildpattern("give us fortune", true); 	
+            cerr << "Testing !unindexedmodel.has()"; test( !unindexedmodel.has(ngram_ne) );
+            cerr << "Testing unindexedmodel.occurencecount()"; test( unindexedmodel.occurrencecount(ngram),  6);
+        }
+
+
+
+        cerr << endl << " --- unindexed model with skipgrams ---" << endl << endl;
+        PatternModelOptions options;
+        options.DOSKIPGRAMS_EXHAUSTIVE = true;
+        options.DOSKIPGRAMS = false ;
+
+
+        cerr << "Building unindexed model (from preloaded corpus, with skipgrams)" << endl;
         PatternModel<uint32_t> unindexedmodelR(&corpus);
         unindexedmodelR.train(infilename, options);
 
-        cerr << "Building unindexed model (without preloaded corpus)" << endl;
+        cerr << "Building unindexed model (without preloaded corpus, with skipgrams)" << endl;
         PatternModel<uint32_t> unindexedmodel;
 
         unindexedmodel.train(infilename, options);
@@ -869,6 +1002,8 @@ int main( int argc, char *argv[] ) {
         unindexedmodel.report(&std::cerr);
         cerr << endl;
         unindexedmodel.histogram(&std::cerr);
+
+
 
 
         

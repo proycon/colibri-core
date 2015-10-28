@@ -892,8 +892,8 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                     // *** ITERATION OVER ALL NGRAMS OF CURRENT ORDER (n) IN THE LINE/SENTENCE ***
                     for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
-                        if (iter->first.isskipgram()) {
-                            std::cerr << "Adding skipgram!" << std::endl; //TODO: remove
+                        if ((iter->first.isskipgram()) || (iter->first.isflexgram())) { //TODO: remove
+                            std::cerr << "Adding skipgram!" << std::endl; 
                             std::cerr << "sentence=" << sentence << std::endl;
                             std::cerr << "line=";
                             line.out();
@@ -1690,6 +1690,16 @@ class PatternModel: public MapType, public PatternModelInterface {
          */
         virtual void add(const PatternPointer & patternpointer, const IndexReference & ref) {
             const Pattern pattern = Pattern(patternpointer);
+            if ((pattern.isskipgram()) || (pattern.isflexgram())) { //TODO: remove
+                std::cerr << "Adding skipgram!" << std::endl; 
+                std::cerr << "pp.mask=" << patternpointer.mask << std::endl;
+                std::cerr << "pp.b=" << patternpointer.bytesize() << std::endl;
+                std::cerr << "p.b=" << pattern.bytesize() << std::endl;
+                patternpointer.out();
+                std::cerr << std::endl;
+                pattern.out();
+                throw InternalError();
+            }
             ValueType * data = getdata(pattern, true); 
             this->add(pattern, data, ref );
         }
