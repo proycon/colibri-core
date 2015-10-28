@@ -958,12 +958,17 @@ int main( int argc, char *argv[] ) {
             cerr << "Building unindexed model (from preloaded corpus, no skipgrams)" << endl;
             PatternModel<uint32_t> unindexedmodelR(&corpus);
             unindexedmodelR.train(infilename, options);
+            cerr << "Patterns"; test(unindexedmodelR.size(),111);
+            cerr << "Types"; test(unindexedmodelR.types(),186);
+            cerr << "Tokens"; test(unindexedmodelR.tokens(),354);
 
             cerr << "Building unindexed model (without preloaded corpus, no skipgrams)" << endl;
             PatternModel<uint32_t> unindexedmodel;
 
             unindexedmodel.train(infilename, options);
-            cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
+            cerr << "Patterns"; test(unindexedmodel.size(),111);
+            cerr << "Types"; test(unindexedmodel.types(),186);
+            cerr << "Tokens"; test(unindexedmodel.tokens(),354);
 
 
             unindexedmodel.print(&std::cerr, classdecoder);
@@ -989,12 +994,17 @@ int main( int argc, char *argv[] ) {
         cerr << "Building unindexed model (from preloaded corpus, with skipgrams)" << endl;
         PatternModel<uint32_t> unindexedmodelR(&corpus);
         unindexedmodelR.train(infilename, options);
+        cerr << "Patterns"; test(unindexedmodelR.size(),355); 
+        cerr << "Types"; test(unindexedmodelR.types(),186);
+        cerr << "Tokens"; test(unindexedmodelR.tokens(),354);
 
         cerr << "Building unindexed model (without preloaded corpus, with skipgrams)" << endl;
         PatternModel<uint32_t> unindexedmodel;
 
         unindexedmodel.train(infilename, options);
-        cerr << "Found " << unindexedmodel.size() << " patterns, " << unindexedmodel.types() << " types, " << unindexedmodel.tokens() << " tokens" << endl;
+        cerr << "Patterns"; test(unindexedmodel.size(),355); 
+        cerr << "Types"; test(unindexedmodel.types(),186);
+        cerr << "Tokens"; test(unindexedmodel.tokens(),354);
 
 
         unindexedmodel.print(&std::cerr, classdecoder);
@@ -1151,7 +1161,7 @@ int main( int argc, char *argv[] ) {
         for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
             set.insert(iter->first);
         }
-        test(set.size(), 147);
+        test(set.size(), 147); //TODO: adapt to real output
 
 
     }
