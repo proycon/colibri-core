@@ -599,12 +599,12 @@ Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructo
     int n = 0;
     do {
         const unsigned char c = ref.data[i];
-        
-        if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
-            length_b = i - begin_b;
-            break;
-        } else if (c < 128) {
+        if (c < 128) {
             //we have a token
+            if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
+                length_b = i - begin_b;
+                break;
+            }
             n++; 
             i++;
             if (n == begin) begin_b = i;
@@ -632,12 +632,12 @@ PatternPointer::PatternPointer(unsigned char * ref, int begin, int length) { //s
     unsigned char c;
     do {
         c = ref[i];
-        
-        if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
-            length_b = i - begin_b;
-            break;
-        } else if (c < 128) {
+        if (c < 128) {
             //we have a token
+            if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
+                length_b = i - begin_b;
+                break;
+            }
             n++; 
             i++;
             if (n == begin) begin_b = i;
@@ -661,12 +661,12 @@ PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //sl
     unsigned char c;
     do {
         c = ref.data[i];
-        
-        if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
-            length_b = i - begin_b;
-            break;
-        } else if (c < 128) {
+        if (c < 128) {
             //we have a token
+            if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
+                length_b = i - begin_b;
+                break;
+            }
             n++; 
             i++;
             if (n == begin) begin_b = i;
@@ -698,16 +698,17 @@ PatternPointer::PatternPointer(const PatternPointer& ref, int begin, int length)
     int n = 0;
     unsigned char c;
     do {
-        if (i >= ref.bytes) {
+        if (i == ref.bytes) {
             length_b = i - begin_b;
             break;
         }
         c = ref.data[i];
         
-        if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
-            length_b = i - begin_b;
-            break;
-        } else if (c < 128) {
+        if (c < 128) {
+            if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
+                length_b = i - begin_b;
+                break;
+            }
             //we have a token
             n++; 
             i++;
@@ -763,11 +764,12 @@ Pattern::Pattern(const PatternPointer& ref, int begin, int length) { //slice con
     int n = 0;
     do {
         const unsigned char c = ref.data[i];
-        if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
-            length_b = i - begin_b;
-            break;
-        } else if (c < 128) {
+         if (c < 128) {
             //we have a token
+            if ((n - begin == length) || (c == ClassDecoder::delimiterclass)) {
+                length_b = i - begin_b;
+                break;
+            }
             n++; 
             i++;
             if (n == begin) begin_b = i;
@@ -995,7 +997,7 @@ int PatternPointer::ngrams(vector<PatternPointer> & container, const int n) cons
     if (n > _n) return 0;
     int found = 0;
     for (int i = 0; i < (_n - n) + 1; i++) {
-        container.push_back(  PatternPointer(*this,i,n));
+        container.push_back(PatternPointer(*this,i,n));
         found++;
     }
     return found;
@@ -1032,6 +1034,15 @@ int PatternPointer::ngrams(vector<pair<PatternPointer,int>> & container, const i
     
     int found = 0;
     for (int i = 0; i < (_n - n)+1; i++) {
+        const PatternPointer pp =   PatternPointer(*this,i,n); 
+        if (pp.isskipgram()) {
+            std::cerr << "Adding skipgram!" << std::endl; //TODO: remove
+            std::cerr << "i=" << i << std::endl;
+            std::cerr << "n=" << n << std::endl;
+            std::cerr << "mask=" << pp.mask << std::endl;
+            pp.out();
+            throw InternalError();
+        }
         container.push_back( pair<PatternPointer,int>(PatternPointer(*this,i,n),i) );
         found++;
     }
@@ -1223,17 +1234,19 @@ int PatternPointer::parts(vector<pair<int,int>> & container) const {
     int n = 0;
     for (int i = 0; (i<bytes) && (i<31); i++) {
         const unsigned char c = data[i];
-        if (mask & bitmask[i] == 0) {
-            partlength = n - partbegin;
-            if (partlength > 0) {
-                container.push_back(pair<int,int>(partbegin,partlength));
-                found++;
-            }
-            n++;
-            partbegin = n;
-        } else if (c < 128) {
+        if (c < 128) {
             //low byte, end of token
-            n++;
+            if (mask & bitmask[i] == 0) {
+                partlength = n - partbegin;
+                if (partlength > 0) {
+                    container.push_back(pair<int,int>(partbegin,partlength));
+                    found++;
+                }
+                n++;
+                partbegin = n;
+            } else {
+                n++;
+            }
         } else {
             //high byte
         }

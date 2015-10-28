@@ -892,6 +892,15 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                     // *** ITERATION OVER ALL NGRAMS OF CURRENT ORDER (n) IN THE LINE/SENTENCE ***
                     for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
+                        if (iter->first.isskipgram()) {
+                            std::cerr << "Adding skipgram!" << std::endl; //TODO: remove
+                            std::cerr << "sentence=" << sentence << std::endl;
+                            std::cerr << "line=";
+                            line.out();
+                            std::cerr << "mask=" << iter->first.mask << std::endl;
+                            iter->first.out();
+                            throw InternalError();
+                        }
 
                         try {
                             if ((singlepass) && (options.MINLENGTH == 1) && (skipunigrams) && (iter->first.n() == 1)) {
