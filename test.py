@@ -151,11 +151,12 @@ print("Size: ", test(len(flexgram),6))
 print("Bytesize: ", test(flexgram.bytesize(),6))
 print("Category==SKIPGRAM", test(flexgram.category() == colibricore.Category.FLEXGRAM) )
 print("Hash: ", test(hash(flexgram)))
-print("Skipcount check...", test(lexgram.skipcount() == 2))
+print("Skipcount check...", test(flexgram.skipcount() == 2))
 
 print("Parts:")
-for part in flexgram.parts():
-    print(part.tostring(decoder))
+partsref = ["To","or","to be"]
+for part,partref in zip(flexgram.parts(),partsref) :
+    print(test(part.tostring(decoder),partref))
 
 hamlet = """
 To be or not to be , that is the question ;
