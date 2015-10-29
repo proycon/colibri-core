@@ -329,6 +329,8 @@ class Pattern {
       */
      Pattern toflexgram() const;
 
+
+
      /**
       * Is the word at the specified index (0 indexed) a gap?
       */
