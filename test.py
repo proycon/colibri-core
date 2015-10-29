@@ -267,12 +267,25 @@ print("Extracting count for specific pattern")
 print(test(unindexedmodel[encoder.buildpattern("to be")],2))
 
 
+print("\n======= Loading corpus data =========\n")
+
+corpus = colibricore.IndexedCorpus("/tmp/hamlet.colibri.dat")
+print("Sentence count", test(corpus.sentencecount(),40))
+i = 0
+for sentence in corpus.sentences():
+    print(sentence.tostring(decoder))
+    i += 1
+print("Count check",test(i,40))
+
 print("\n======= Building indexed model =========\n")
 options = colibricore.PatternModelOptions(doskipgrams=True)
-indexedmodel = colibricore.IndexedPatternModel()
+indexedmodel = colibricore.IndexedPatternModel(reverseindex=corpus)
 indexedmodel.train("/tmp/hamlet.colibri.dat",options)
 
-print("Found ", len(indexedmodel), " patterns, " , indexedmodel.types()," types, " , indexedmodel.tokens(), " tokens")
+print("Pattern count", test(len(indexedmodel), 133))
+print("Type count", test(indexedmodel.types(), 186))
+print("Token count", test(indexedmodel.tokens(), 354))
+
 indexedmodel.printmodel(decoder)
 print("REPORT:")
 indexedmodel.report()
