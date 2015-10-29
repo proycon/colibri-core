@@ -1191,17 +1191,12 @@ int main( int argc, char *argv[] ) {
         
         cerr << endl;
 
-        cerr << "Building indexed model with mintokens=1" << endl;
-        options.MINTOKENS = 1;
-        IndexedPatternModel<> indexedmodel1(&corpus);
-        indexedmodel1.train(infilename, options);
-        cerr << "Found " << indexedmodel1.size() << " patterns, " << indexedmodel1.types() << " types, " << indexedmodel1.tokens() << " tokens" << endl;
-
 
         cerr << "Computing flexgrams out of skipgrams";
         int foundflex = indexedmodel.computeflexgrams_fromskipgrams();
 		test(foundflex, 22);
 		test(indexedmodel.size(), 155);
+		//cerr << "Size test (2) "; test(indexedmodel.size(), unindexedmodelNS.size() + indexedmodel.totalpatternsingroup(SKIPGRAM,0) + indexedmodel.totalpatternsingroup(FLEXGRAM,0) ) ;
 
 
         if (verbose) {
@@ -1232,6 +1227,13 @@ int main( int argc, char *argv[] ) {
         cerr << "Outputting report again, now with flexgrams" << endl;
         indexedmodel.report(&std::cerr);
 
+
+
+        cerr << "Building indexed model with mintokens=1" << endl;
+        options.MINTOKENS = 1;
+        IndexedPatternModel<> indexedmodel1(&corpus);
+        indexedmodel1.train(infilename, options);
+        cerr << "Found " << indexedmodel1.size() << " patterns, " << indexedmodel1.types() << " types, " << indexedmodel1.tokens() << " tokens" << endl;
 
         cerr << endl << "************************** HashOrderedPatternMap Test  ***************************************" << endl << endl;
 
