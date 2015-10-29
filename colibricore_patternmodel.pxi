@@ -218,7 +218,6 @@ def load(self, str filename, PatternModelOptions options=None, constrainmodel = 
 
 def loadreverseindex(self, IndexedCorpus reverseindex):
     self.data.reverseindex = reverseindex.data
-    self.data.externalreverseindex = True
 
 
 cpdef loadconstrainedbyindexedmodel(self, str filename, PatternModelOptions options, IndexedPatternModel constrainmodel):
@@ -328,11 +327,11 @@ def getreverseindex(self, indexreference):
     cdef int sentence = indexreference[0]
     cdef int token = indexreference[1]
     cdef cIndexReference ref = cIndexReference(sentence, token)
-    cdef vector[cPattern] results = self.data.getreverseindex(ref)
-    cdef vector[cPattern].iterator resit = results.begin()
+    cdef vector[cPatternPointer] results = self.data.getreverseindex(ref)
+    cdef vector[cPatternPointer].iterator resit = results.begin()
     cdef cPattern cpattern
     while resit != results.end():
-        cpattern = deref(resit)
+        cpattern = deref(resit).pattern()
         pattern = Pattern()
         pattern.bind(cpattern)
         yield pattern
@@ -344,14 +343,15 @@ def getreverseindex_bysentence(self, int sentence):
     :param sentence: a sentence number
     """
 
-    cdef vector[pair[cIndexReference,cPattern]] results = self.data.getreverseindex_bysentence(sentence)
-    cdef vector[pair[cIndexReference,cPattern]].iterator resit = results.begin()
-    cdef pair[cIndexReference,cPattern] p
+    cdef vector[pair[cIndexReference,cPatternPointer]] results = self.data.getreverseindex_bysentence(sentence)
+    cdef vector[pair[cIndexReference,cPatternPointer]].iterator resit = results.begin()
+    cdef pair[cIndexReference,cPatternPointer] p
     cdef cPattern cpattern
     while resit != results.end():
         p = deref(resit)
         pattern = Pattern()
-        pattern.bind(p.second)
+        cpattern = p.second.pattern()
+        pattern.bind(cpattern)
         yield (p.first.sentence, p.first.token), pattern
         inc(resit)
 

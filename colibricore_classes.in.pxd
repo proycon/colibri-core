@@ -30,6 +30,8 @@ cdef extern from "pattern.h":
         Pattern() nogil
         Pattern(Pattern&, int,int) nogil
         Pattern(Pattern&) nogil
+        #Pattern(PatternPointer&) nogil
+        #Pattern(PatternPointer&, int,int) nogil
         string tostring(ClassDecoder&) nogil
         int n() nogil
         int bytesize() nogil
@@ -37,6 +39,7 @@ cdef extern from "pattern.h":
         int category() nogil
         int hash() nogil
         bint operator==(Pattern&) nogil
+        bint operator==(PatternPointer&) nogil
         bint operator<(Pattern&) nogil
         bint operator>(Pattern&) nogil
         Pattern operator+(Pattern&) nogil
@@ -55,6 +58,34 @@ cdef extern from "pattern.h":
         Pattern reverse() nogil
 
     Pattern patternfromfile(const string&)
+
+    cdef cppclass PatternPointer:
+        PatternPointer() nogil
+        PatternPointer(Pattern&, int,int) nogil
+        PatternPointer(Pattern&) nogil
+        PatternPointer(PatternPointer&, int,int) nogil
+        PatternPointer(PatternPointer&) nogil
+        Pattern pattern() nogil
+        string tostring(ClassDecoder&) nogil
+        int n() nogil
+        int bytesize() nogil
+        int skipcount() nogil
+        int category() nogil
+        int hash() nogil
+        bint operator==(PatternPointer&) nogil
+        bint operator==(Pattern&) nogil
+        int ngrams(vector[PatternPointer]& container,int n)
+        int parts(vector[PatternPointer]& container) nogil
+        int gaps(vector[pair[int,int]]& container) nogil
+        int subngrams(vector[PatternPointer]& container,int minn=0,int maxn=9)
+        PatternPointer toflexgram() nogil
+        vector[unsigned int] tovector() nogil
+        void set(unsigned char *,int ) nogil
+        bool isgap(int) nogil
+        bool isskipgram() nogil
+        bool isflexgram() nogil
+        bool unknown() nogil
+        PatternPointer reverse() nogil
 
 
 
@@ -184,9 +215,7 @@ cdef extern from "patternstore.h":
         void read(string filename) nogil
         void write(string filename) nogil
 
-    cdef cppclass IndexPattern:
-        IndexReference ref
-        Pattern pattern()
+    ctypedef pair[IndexReference,PatternPointer] IndexPattern
 
     cdef cppclass IndexedCorpus:
         cppclass iterator:
@@ -201,12 +230,12 @@ cdef extern from "patternstore.h":
         IndexedCorpus() nogil
         void load(string, bool) nogil
         bool has(IndexReference&) nogil
-        Pattern getpattern(IndexReference&,int)  except +KeyError
+        Pattern getpattern(IndexReference&,int)  except +KeyError #PatternPointer in reality
         vector[IndexReference] findpattern(Pattern&,int) nogil
         int operator[](IndexReference&) nogil except +KeyError
         int sentencelength(int) nogil
         int sentences() nogil
-        Pattern getsentence(int) nogil except +KeyError
+        Pattern getsentence(int) nogil except +KeyError #PatternPointer in reality
 
     cdef cppclass AlignedPatternMap[ValueType, ValueHandler, NestedSizeType]:
         cppclass iterator:
@@ -339,7 +368,6 @@ cdef extern from "patternmodel.h":
         void add(Pattern&, ValueType*, IndexReference&)
 
         IndexedCorpus * reverseindex
-        bool externalreverseindex
 
         PatternModelInterface * getinterface() nogil
         void train(string filename, PatternModelOptions options, PatternModelInterface *)
@@ -377,8 +405,8 @@ cdef extern from "patternmodel.h":
         t_relationmap getleftcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
         t_relationmap getrightcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
 
-        vector[Pattern] getreverseindex(IndexReference&)
-        vector[pair[IndexReference,Pattern]] getreverseindex_bysentence(int)
+        vector[PatternPointer] getreverseindex(IndexReference&)
+        vector[pair[IndexReference,PatternPointer]] getreverseindex_bysentence(int)
 
     cdef cppclass IndexedPatternModel[MapType]:
         cppclass iterator:
@@ -430,8 +458,8 @@ cdef extern from "patternmodel.h":
 
         void add(Pattern&, IndexedData*, IndexReference&)
 
-        vector[Pattern] getreverseindex(IndexReference&)
-        vector[pair[IndexReference,Pattern]] getreverseindex_bysentence(int)
+        vector[PatternPointer] getreverseindex(IndexReference&)
+        vector[pair[IndexReference,PatternPointer]] getreverseindex_bysentence(int)
 
         t_relationmap getsubchildren(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
         t_relationmap getsubparents(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError

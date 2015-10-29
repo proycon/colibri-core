@@ -62,9 +62,9 @@ def covered(self, indexreference):
     cdef int token = indexreference[1]
     cdef cIndexReference ref = cIndexReference(sentence, token)
     cdef cIndexReference ref2
-    cdef vector[cPattern] results = self.data.getreverseindex(ref)
-    cdef vector[cPattern] results2
-    cdef vector[cPattern].iterator resit
+    cdef vector[cPatternPointer] results = self.data.getreverseindex(ref)
+    cdef vector[cPatternPointer] results2
+    cdef vector[cPatternPointer].iterator resit
     cdef cPattern cpattern
     if not results.empty():
         return True
@@ -75,7 +75,7 @@ def covered(self, indexreference):
                 results2 = self.data.getreverseindex(ref2)
                 resit = results2.begin()
                 while resit != results2.end():
-                    cpattern = deref(resit)
+                    cpattern = deref(resit).pattern()
                     if cpattern.n() >= token+1:
                         return True
                     inc(resit)
