@@ -907,7 +907,7 @@ bool PatternPointer::operator==(const Pattern &other) const {
         prevhigh = (data[i] >= 128);
         i++;
     }
-    return true;
+    return other.data[i] == ClassDecoder::delimiterclass;
 
 }
 
