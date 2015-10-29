@@ -55,8 +55,10 @@ print("Category==NGRAM", test(ngram.category() == colibricore.Category.NGRAM) )
 print("Hash: ", test(hash(ngram)))
 print("Raw bytes: ",repr(bytes(ngram)))
 
+print("Third token ", test(ngram[2].tostring(decoder), "or"))
+print("Last token ", test(ngram[-1].tostring(decoder), "be"))
 
-print("Slicing ngram", test(ngram[2:2].tostring(decoder), "or not"))
+print("Slicing ngram[2:4]", test(ngram[2:4].tostring(decoder), "or not"))
 
 
 print("Copying n-gram:", test(copy(ngram) == ngram))
@@ -73,9 +75,40 @@ if sys.version[0] != '2':
 
     print("Equality check", test(ngram == unpickledngram))
 
+
+
+
+print("Tokens of ngram:")
+tokens =["To","be","or","not","to","be"]
+for token,tokenref in zip(ngram,tokens):
+    test(token.tostring(decoder),tokenref)
+print("Count check", test(len(list(iter(ngram))), len(tokens)))
+
+subngrams = [
+"To",
+"be",
+"or",
+"not",
+"to",
+"be",
+"To be",
+"be or",
+"or not",
+"not to",
+"to be",
+"To be or",
+"be or not",
+"or not to",
+"not to be",
+"To be or not",
+"be or not to",
+"or not to be",
+"To be or not to",
+"be or not to be"]
 print("Subgrams of ngram:")
-for subngram in ngram.subngrams():
-    print(subngram.tostring(decoder))
+for subngram,subngramref in zip(ngram.subngrams(),subngrams):
+    print(test(subngram.tostring(decoder),subngramref) )
+print("Count check", test(len(list(ngram.subngrams())), len(subngrams)))
 
 subngram = encoder.buildpattern("or not")
 print("Testing occurrence of substring 'or not'...", test(subngram in ngram))
