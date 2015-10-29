@@ -178,6 +178,9 @@ class IndexedCorpus {
                 iterator(reference ref) { 
 					pairpointer = new std::pair<IndexReference,PatternPointer>(ref.first, ref.second);
 				}
+                iterator() { //default constructor, required for cython
+                    pairpointer = NULL;
+                }
    				~iterator() {
 					if (pairpointer != NULL) delete pairpointer;
 				}
