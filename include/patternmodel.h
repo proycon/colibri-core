@@ -2925,6 +2925,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == SKIPGRAM)) {
                 t_relationmap skipcontent = getskipcontent(pattern);
                 if ((int) skipcontent.size() < minskiptypes) { //will take care of token threshold too, patterns not meeting the token threshold are not included
+                    std::cerr << "Pruning oc=" << skipcontent.size() << " hash=" << pattern.hash() << std::endl; //TODO: remove debug
                     iter = this->erase(iter);
                     pruned++;
                     continue;
