@@ -1009,58 +1009,55 @@ int main( int argc, char *argv[] ) {
         std::string infilename = "/tmp/hamlet.colibri.dat";
         std::string outputfilename = "/tmp/data.colibri.patternmodel";
 
-        {
-            cerr << endl << " --- unindexed model without skipgrams ---" << endl << endl;
-            PatternModelOptions options;
+		cerr << endl << " --- unindexed model without skipgrams ---" << endl << endl;
+		PatternModelOptions options;
 
-            cerr << "Building unindexed model (from preloaded corpus, no skipgrams)" << endl;
-            PatternModel<uint32_t> unindexedmodelR(&corpus);
-            unindexedmodelR.train(infilename, options);
-            cerr << "Patterns"; test(unindexedmodelR.size(),111);
-            cerr << "Types"; test(unindexedmodelR.types(),186);
-            cerr << "Tokens"; test(unindexedmodelR.tokens(),354);
+		cerr << "Building unindexed model (from preloaded corpus, no skipgrams)" << endl;
+		PatternModel<uint32_t> unindexedmodelNSR(&corpus);
+		unindexedmodelNSR.train(infilename, options);
+		cerr << "Patterns"; test(unindexedmodelNSR.size(),111);
+		cerr << "Types"; test(unindexedmodelNSR.types(),186);
+		cerr << "Tokens"; test(unindexedmodelNSR.tokens(),354);
 
-            cerr << "Building unindexed model (without preloaded corpus, no skipgrams)" << endl;
-            PatternModel<uint32_t> unindexedmodel;
+		cerr << "Building unindexed model (without preloaded corpus, no skipgrams)" << endl;
+		PatternModel<uint32_t> unindexedmodelNS;
 
-            unindexedmodel.train(infilename, options);
-            cerr << "Patterns"; test(unindexedmodel.size(),111);
-            cerr << "Types"; test(unindexedmodel.types(),186);
-            cerr << "Tokens"; test(unindexedmodel.tokens(),354);
-
-
-            unindexedmodel.print(&std::cerr, classdecoder);
-            cerr << endl;
-            unindexedmodel.report(&std::cerr);
-            cerr << endl;
-
-            Pattern ngram = classencoder.buildpattern(string("or not to"), true); 	
-            cerr << "Testing unindexedmodel.has()"; test( unindexedmodel.has(ngram) );
-            Pattern ngram_ne = classencoder.buildpattern("give us fortune", true); 	
-            cerr << "Testing !unindexedmodel.has()"; test( !unindexedmodel.has(ngram_ne) );
-            cerr << "Testing unindexedmodel.occurencecount()"; test( unindexedmodel.occurrencecount(ngram),  6);
+		unindexedmodelNS.train(infilename, options);
+		cerr << "Patterns"; test(unindexedmodelNS.size(),111);
+		cerr << "Types"; test(unindexedmodelNS.types(),186);
+		cerr << "Tokens"; test(unindexedmodelNS.tokens(),354);
 
 
-            cerr << endl << " --- extracting skipgrams from single ngram ---" << endl << endl;
-            Pattern queryngram = classencoder.buildpattern(string("to be or not to be"), true); 	
-            vector<PatternPointer> skipgrams;
-            int i = 0;
-            unindexedmodel.computeskipgrams(queryngram,1,NULL,NULL,NULL,&skipgrams,true,3);
-            for (vector<PatternPointer>::iterator iter = skipgrams.begin(); iter != skipgrams.end();iter++) {
-                cerr << iter->tostring(classdecoder) << endl;
-                i++;
-            }
-            cerr << "Count check "; test(i,15); 
+		unindexedmodelNS.print(&std::cerr, classdecoder);
+		cerr << endl;
+		unindexedmodelNS.report(&std::cerr);
+		cerr << endl;
+
+		Pattern ngramNS = classencoder.buildpattern(string("or not to"), true); 	
+		cerr << "Testing unindexedmodel.has()"; test( unindexedmodelNS.has(ngramNS) );
+		Pattern ngramNS_ne = classencoder.buildpattern("give us fortune", true); 	
+		cerr << "Testing !unindexedmodel.has()"; test( !unindexedmodelNS.has(ngramNS_ne) );
+		cerr << "Testing unindexedmodel.occurencecount()"; test( unindexedmodelNS.occurrencecount(ngramNS),  6);
+
+
+		cerr << endl << " --- extracting skipgrams from single ngram ---" << endl << endl;
+		Pattern queryngram = classencoder.buildpattern(string("to be or not to be"), true); 	
+		vector<PatternPointer> skipgrams;
+		int i = 0;
+		unindexedmodelNS.computeskipgrams(queryngram,1,NULL,NULL,NULL,&skipgrams,true,3);
+		for (vector<PatternPointer>::iterator iter = skipgrams.begin(); iter != skipgrams.end();iter++) {
+			cerr << iter->tostring(classdecoder) << endl;
+			i++;
+		}
+		cerr << "Count check "; test(i,15); 
 
 
 
-        }
 
 
 
 
         cerr << endl << " --- unindexed model with skipgrams ---" << endl << endl;
-        PatternModelOptions options;
         options.DOSKIPGRAMS_EXHAUSTIVE = true;
         options.DOSKIPGRAMS = false ;
 
@@ -1122,6 +1119,7 @@ int main( int argc, char *argv[] ) {
         IndexedPatternModel<> indexedmodel(&corpus);
         indexedmodel.train(infilename, options);
 		cerr << "Size test"; test(indexedmodel.size(), 133 );
+		cerr << "Size test (2) "; test(indexedmodel.size(), unindexedmodelNS.size() + indexedmodel.totalpatternsingroup(SKIPGRAM,0) );
         cerr << "Equal tokens? " ; test(unindexedmodel.tokens() == indexedmodel.tokens() );
         cerr << "Equal types? " ; test(unindexedmodel.types() == indexedmodel.types() );
         cerr << "Testing indexedmodel.has()"; test( indexedmodel.has(ngram) );
