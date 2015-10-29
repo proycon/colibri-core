@@ -923,24 +923,23 @@ int main( int argc, char *argv[] ) {
         string querystring = "to be or not to be";
         Pattern ngram = encoder.buildpattern(querystring, true); 	
         
-        vector<vector<pair<int,int>>> skips;
         vector<uint32_t> masks;
 
-        compute_skip_configurations(skips,masks,vector<pair<int,int>>(), 3,3);
-        cerr << "Computing possible gaps in 3-grams: "; test(skips.size(),1); test(masks.size(),1);
+        masks = compute_skip_configurations(3,3);
+        cerr << "Computing possible gaps in 3-grams: "; test(masks.size(),1);
 
-        compute_skip_configurations(skips,masks,vector<pair<int,int>>(), 4,4);
-        cerr << "Computing possible gaps in 4-grams: "; test(skips.size(),3); test(masks.size(),3);
+        masks = compute_skip_configurations(4,4);
+        cerr << "Computing possible gaps in 4-grams: "; test(masks.size(),3);
 
-        skips.clear();
         masks.clear();
 
-        compute_skip_configurations(skips,masks,vector<pair<int,int>>(), 6,6);
+        masks = compute_skip_configurations(6,6);
         cerr << "Computing possible gaps in 6-grams: " << endl; 
         int j = 0;
-        for (vector<vector<pair<int,int>>>::iterator iter = skips.begin(); iter != skips.end(); iter++) {
+        for (vector<uint32_t>::iterator iter = masks.begin(); iter != masks.end(); iter++) {
+            vector<pair<int,int>> gapconfig = mask2vector(*iter,6);
             int data[6] = {0,0,0,0,0,0};
-            for (vector<pair<int,int>>::iterator iter2 = iter->begin(); iter2 != iter->end(); iter2++) {
+            for (vector<pair<int,int>>::iterator iter2 = gapconfig.begin(); iter2 != gapconfig.end(); iter2++) {
                 for (int i = iter2->first; i < iter2->first + iter2->second; i++) {
                     data[i] = 1;
                 }
@@ -949,20 +948,20 @@ int main( int argc, char *argv[] ) {
                 cerr << data[i] << " ";
             }
             cerr << endl;
-            cerr << "   testing mask: ";
-            test(masks[j], compute_mask(*iter));
 
-            Pattern skipgram = ngram.addskips(*iter);
+            Pattern skipgram = ngram.addskips(gapconfig);
             cerr << "   skipgram (pattern): " << skipgram.tostring(decoder) << endl;
-            PatternPointer pskipgram = PatternPointer(skipgram);
+            PatternPointer pskipgram = PatternPointer(ngram);
+            pskipgram.mask = *iter;
             cerr << "   skipgram (patternpointer): " << pskipgram.tostring(decoder) << endl;
+            PatternPointer pskipgram2 = PatternPointer(skipgram);
+            cerr << "   skipgram (patternpointer from pattern): " << pskipgram2.tostring(decoder) << endl;
             cerr << "   pattern vs patternpointer equivalence: "; test(skipgram == pskipgram);
-            cerr << "   pattern from patternpointer: "; test(Pattern(pskipgram) == skipgram);
-            cerr << "   testing mask equivalence: ";
-            test(pskipgram.mask, masks[j]);
+            cerr << "   patternpointer vs patternpointer equivalence: "; test(pskipgram == pskipgram2);
+            cerr << "   pattern from patternpointer equivalence: "; test(Pattern(pskipgram) == skipgram);
             j++;
         }
-        cerr << "Count check: "; test(skips.size(),15); test(masks.size(),15);
+        cerr << "Count check: "; test(masks.size(),15);
 
 
         }
@@ -1045,7 +1044,7 @@ int main( int argc, char *argv[] ) {
                 cerr << iter->tostring(classdecoder) << endl;
                 i++;
             }
-            cerr << "Count check "; test(i,25); //TODO: find real value
+            cerr << "Count check "; test(i,15); 
 
 
 
@@ -1063,7 +1062,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Building unindexed model (from preloaded corpus, with skipgrams)" << endl;
         PatternModel<uint32_t> unindexedmodelR(&corpus);
         unindexedmodelR.train(infilename, options);
-        cerr << "Patterns"; test(unindexedmodelR.size(),355); 
+        cerr << "Patterns"; test(unindexedmodelR.size(),385); 
         cerr << "Types"; test(unindexedmodelR.types(),186);
         cerr << "Tokens"; test(unindexedmodelR.tokens(),354);
 
@@ -1071,7 +1070,7 @@ int main( int argc, char *argv[] ) {
         PatternModel<uint32_t> unindexedmodel;
 
         unindexedmodel.train(infilename, options);
-        cerr << "Patterns"; test(unindexedmodel.size(),355); 
+        cerr << "Patterns"; test(unindexedmodel.size(),385); 
         cerr << "Types"; test(unindexedmodel.types(),186);
         cerr << "Tokens"; test(unindexedmodel.tokens(),354);
 

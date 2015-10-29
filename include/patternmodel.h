@@ -543,8 +543,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::map<int,std::map<int,unsigned int>> cache_grouptotaltokens; ///< total covered tokens per group
         
 
-        std::map<int, std::vector< std::vector< std::pair<int,int> > > > gapconf; ///< pre-computed structure of possible gap configurations for various pattern lengths
-        std::map<int, std::vector< uint32_t > > gapmasks; ///< pre-computed masks representing possible gap configurations for various pattern lengths, parallel to gapconf (indices correspond)
+        std::map<int, std::vector< uint32_t > > gapmasks; ///< pre-computed masks representing possible gap configurations for various pattern lengths
 
         virtual void postread(const PatternModelOptions options) {
             //this function has a specialisation specific to indexed pattern models,
@@ -848,7 +847,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     }
                 }
 
-                if ((options.DOSKIPGRAMS_EXHAUSTIVE) && (gapconf[n].empty())) compute_skip_configurations(gapconf[n], gapmasks[n], std::vector<std::pair<int,int> >(),  n);
+                if ((options.DOSKIPGRAMS_EXHAUSTIVE) && (gapmasks[n].empty())) gapmasks[n] = compute_skip_configurations(n, options.MAXSKIPS);
                 
 
 
@@ -1105,19 +1104,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             const int n = pattern.n();
             std::vector<PatternPointer> subngrams;
 
-            if (gapconf[n].empty()) compute_skip_configurations(gapconf[n], gapmasks[n], std::vector<std::pair<int,int> >(), n, maxskips); 
+            if (gapmasks[n].empty()) gapmasks[n] = compute_skip_configurations(n, maxskips); 
 
             //loop over all possible gap configurations
             int gapconf_i = 0;
             for (std::vector<uint32_t>::iterator iter2 =  gapmasks[n].begin(); iter2 != gapmasks[n].end(); iter2++, gapconf_i++) {
-                if (*iter2 == 0) continue; //precaution
-                //integrity check
-                /*for (std::vector<std::pair<int,int>>::iterator giter = gapconfiguration->begin(); giter != gapconfiguration->end(); giter++) {
-                    if (giter->first + giter->second > n) {
-                        std::cerr << "ERROR: Gapconf is not valid for n=" << n << ": " << giter->first << ","  << giter->second << " is out of bounds!" << std::endl;
-                        throw InternalError();
-                    }
-                }*/
+                if (*iter2 == 0) continue; //precaution (doesn't really happen anyway, but better safe than sorry)
 
                 //add skips
                 try {
@@ -1189,7 +1181,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                             //check whether the gaps with single token context (X * Y) occur in model,
                             //otherwise skipgram can't occur
-                            const std::vector<std::pair<int,int>> gapconfiguration = gapconf[n][gapconf_i];
+                            const std::vector<std::pair<int,int>> gapconfiguration = mask2vector(skipgram.mask, n);
                             for (std::vector<std::pair<int,int>>::const_iterator iter3 = gapconfiguration.begin(); iter3 != gapconfiguration.end(); iter3++) { 
                                 if (!((iter3->first - 1 == 0) && (iter3->first + iter3->second + 1 == n))) { //entire skipgram is already X * Y format
                                     const PatternPointer subskipgram = PatternPointer(skipgram, iter3->first - 1, iter3->second + 2);
@@ -2506,7 +2498,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         if (options.MINTOKENS == -1) options.MINTOKENS = 2;
         this->cache_grouptotal.clear(); //forces recomputation of statistics
         for (int n = 3; n <= options.MAXLENGTH; n++) {
-            if (this->gapconf[n].empty()) compute_skip_configurations(this->gapconf[n], this->gapmasks[n], std::vector<std::pair<int,int> >(), n);
+            if (this->gapmasks[n].empty()) this->gapmasks[n] = compute_skip_configurations(n, options.MAXSKIPS);
             if (!options.QUIET) std::cerr << "Counting " << n << "-skipgrams" << std::endl; 
             int foundskipgrams = 0;
             for (typename MapType::iterator iter = this->begin(); iter != this->end(); iter++) {
