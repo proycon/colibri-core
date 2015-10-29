@@ -913,6 +913,59 @@ int main( int argc, char *argv[] ) {
         ppmap.write("/tmp/patternpointermap.tmp");
 
         }
+        {
+        cerr << endl << "************************** Low-level skipgram tests ***************************************" << endl << endl;
+        
+        const string classfile = "/tmp/colibritest";    
+        ClassEncoder encoder = ClassEncoder(classfile);
+        ClassDecoder decoder = ClassDecoder(classfile);
+        
+        string querystring = "to be or not to be";
+        Pattern ngram = encoder.buildpattern(querystring, true); 	
+        
+        vector<vector<pair<int,int>>> skips;
+        vector<uint32_t> masks;
+
+        compute_skip_configurations(skips,masks,vector<pair<int,int>>(), 3,3);
+        cerr << "Computing possible gaps in 3-grams: "; test(skips.size(),1); test(masks.size(),1);
+
+        compute_skip_configurations(skips,masks,vector<pair<int,int>>(), 4,4);
+        cerr << "Computing possible gaps in 4-grams: "; test(skips.size(),3); test(masks.size(),3);
+
+        skips.clear();
+        masks.clear();
+
+        compute_skip_configurations(skips,masks,vector<pair<int,int>>(), 6,6);
+        cerr << "Computing possible gaps in 6-grams: " << endl; 
+        int j = 0;
+        for (vector<vector<pair<int,int>>>::iterator iter = skips.begin(); iter != skips.end(); iter++) {
+            int data[6] = {0,0,0,0,0,0};
+            for (vector<pair<int,int>>::iterator iter2 = iter->begin(); iter2 != iter->end(); iter2++) {
+                for (int i = iter2->first; i < iter2->first + iter2->second; i++) {
+                    data[i] = 1;
+                }
+            }
+            for (int i = 0; i < 6; i++) {
+                cerr << data[i] << " ";
+            }
+            cerr << endl;
+            cerr << "   testing mask: ";
+            test(masks[j], compute_mask(*iter));
+
+            Pattern skipgram = ngram.addskips(*iter);
+            cerr << "   skipgram (pattern): " << skipgram.tostring(decoder) << endl;
+            PatternPointer pskipgram = PatternPointer(skipgram);
+            cerr << "   skipgram (patternpointer): " << pskipgram.tostring(decoder) << endl;
+            cerr << "   pattern vs patternpointer equivalence: "; test(skipgram == pskipgram);
+            cerr << "   pattern from patternpointer: "; test(Pattern(pskipgram) == skipgram);
+            cerr << "   testing mask equivalence: ";
+            test(pskipgram.mask, masks[j]);
+            j++;
+        }
+        cerr << "Count check: "; test(skips.size(),15); test(masks.size(),15);
+
+
+        }
         { 
         cerr << endl << "************************** Unindexed PatternModel Tests ***************************************" << endl << endl;
 

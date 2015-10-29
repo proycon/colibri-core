@@ -21,6 +21,17 @@ vector< pair<int,int> > get_consecutive_gaps(const int n, const int leftmargin, 
     return gaps;
 }
 
+uint32_t compute_mask(const vector<pair<int,int>> & skips) {
+    //convert path to mask
+    uint32_t mask = 0;
+    for (vector<pair<int,int>>::const_iterator iter2 = skips.begin(); iter2 != skips.end(); iter2++) {
+        for (unsigned int i = iter2->first; i < (iter2->first + iter2->second) && (i < 31); i++ ) {
+            mask |= bitmask[i];
+        }
+    }
+    return mask;
+}
+
 void compute_skip_configurations(vector< vector<pair<int,int> > > & skips, vector<uint32_t> & masks,const vector<pair<int,int> > & path, const int n, const int maxskips, const int skipnum, const int leftmargin) {    
     vector< pair<int,int> > currentskips = get_consecutive_gaps(n, leftmargin);
     for (vector< pair<int,int> >::iterator iter = currentskips.begin(); iter != currentskips.end(); iter++) {                
@@ -29,14 +40,7 @@ void compute_skip_configurations(vector< vector<pair<int,int> > > & skips, vecto
          newpath.push_back( *iter );
          if ((skipnum + 1 == maxskips) || ( n - newleftmargin <= 2)) {
             skips.push_back( newpath );
-            //convert path to mask
-            uint32_t mask = 0;
-            for (vector<pair<int,int>>::iterator iter2 = newpath.begin(); iter2 != newpath.end(); iter2++) {
-                for (unsigned int i = iter2->first; i < (iter2->first + iter2->second) && (i < 31); i++ ) {
-                    mask |= bitmask[i];
-                }
-            }
-            masks.push_back(mask);
+            masks.push_back(compute_mask(newpath));
          } else {
             compute_skip_configurations(skips, masks, newpath, n, maxskips, skipnum + 1, newleftmargin);
          }
