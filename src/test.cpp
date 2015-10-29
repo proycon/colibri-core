@@ -1121,10 +1121,9 @@ int main( int argc, char *argv[] ) {
         cerr << "Building indexed model" << endl;
         IndexedPatternModel<> indexedmodel(&corpus);
         indexedmodel.train(infilename, options);
-        cerr << "Found " << indexedmodel.size() << " patterns, " << indexedmodel.types() << " types, " << indexedmodel.tokens() << " tokens" << endl;
+		cerr << "Size test"; test(indexedmodel.size(), 133 );
         cerr << "Equal tokens? " ; test(unindexedmodel.tokens() == indexedmodel.tokens() );
         cerr << "Equal types? " ; test(unindexedmodel.types() == indexedmodel.types() );
-        //cerr << "Equal size? " ; test(unindexedmodel.size() == indexedmodel.size() ); //difference in skipgrams
         cerr << "Testing indexedmodel.has()"; test( indexedmodel.has(ngram) );
         cerr << "Testing indexedmodel.occurrencecount()"; test( indexedmodel.occurrencecount(ngram),6 );
         indexedmodel.print(&std::cerr, classdecoder);
@@ -1141,12 +1140,16 @@ int main( int argc, char *argv[] ) {
         options.DEBUG = verbose;
         IndexedPatternModel<> indexedmodel2 = IndexedPatternModel<>(outputfilename, options);
         options.DEBUG = false;
-        cerr << "Outputting report again" << endl;
-        indexedmodel2.report(&std::cerr);
+        cerr << "Equal size? " ; test(indexedmodel2.size(), indexedmodel.size() );
+        cerr << "Equal tokens? " ; test(indexedmodel2.tokens(), indexedmodel.tokens() );
+        cerr << "Equal types? " ; test(indexedmodel2.types() , indexedmodel2.types() );
 
 
         cerr << "Reading indexed model as unindexed" << endl;
         PatternModel<uint32_t> indexedasunindexedmodel = PatternModel<uint32_t>(outputfilename, options);
+        cerr << "Equal size? " ; test(indexedasunindexedmodel.size(), indexedmodel.size() );
+        cerr << "Equal tokens? " ; test(indexedasunindexedmodel.tokens(), indexedmodel.tokens() );
+        cerr << "Equal types? " ; test(indexedasunindexedmodel.types() , indexedmodel2.types() );
 
         string querystring  = "To die , to sleep";
         Pattern patterndiesleep = classencoder.buildpattern(querystring, true); 	
@@ -1197,9 +1200,9 @@ int main( int argc, char *argv[] ) {
         cerr << "Found " << indexedmodel1.size() << " patterns, " << indexedmodel1.types() << " types, " << indexedmodel1.tokens() << " tokens" << endl;
 
 
-        cerr << "Computing flexgrams out of skipgrams" << endl;
+        cerr << "Computing flexgrams out of skipgrams";
         int foundflex = indexedmodel.computeflexgrams_fromskipgrams();
-        cerr << "Found " << foundflex << " flexgrams" << endl;
+		test(foundflex, 22);
 
         if (verbose) {
             cerr << "Iterating over all patterns and testing (non-)equivalence" << endl;
