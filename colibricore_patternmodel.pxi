@@ -350,7 +350,8 @@ def getreverseindex_bysentence(self, int sentence):
     while resit != results.end():
         p = deref(resit)
         pattern = Pattern()
-        pattern.bind(p.second.pattern())
+        cpattern = p.second.pattern()
+        pattern.bind(cpattern)
         yield (p.first.sentence, p.first.token), pattern
         inc(resit)
 
