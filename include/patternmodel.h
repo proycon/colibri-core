@@ -2536,62 +2536,31 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
     /**
-     * Given a skipgram, returns patterns which would instantiate the skipgram
+     * Given a skipgram, returns patterns in the model which would instantiate the skipgram
      * if inserted into the gaps. For skipgrams with multiple gaps, these skip content patterns are themselves skipgrams. Skipgram and skip content complement eachother
      * @returns A relation map
      */
-    t_relationmap getskipcontent(const Pattern & pattern) {
-        unsigned char fixedgapbuffer[101];
-        for (int i = 0; i< 100; i++) fixedgapbuffer[i] = 128;
+    t_relationmap getskipcontent(const PatternPointer & pattern) {
+        t_relationmap skipcontent; //will hold all skipcontent
 
-        t_relationmap skipcontent;
         if (pattern.category() == SKIPGRAM) {
-            //find the gaps
-            std::vector<std::pair<int,int>> gapdata;
-            pattern.gaps(gapdata);
+			const unsigned int n = pattern.n();
+			const uint32_t skipcontent_mask = reversemask(pattern.mask,n );
 
-            
-            std::vector<std::pair<int,int>>::iterator gapiter = gapdata.begin();
-            //int offset = gapiter->first;
-            int begin = gapiter->first + gapiter->second; //begin of part in original, gap in content)
-
-            std::vector<std::pair<int,int>> skipcontent_gaps;
-            gapiter++;
-            while (gapiter != gapdata.end()) {
-                int gaplength = gapiter->first - begin;
-                skipcontent_gaps.push_back(std::pair<int,int>(begin,gaplength));
-                begin = gapiter->first + gapiter->second;
-                gapiter++;
-            }
+			const int head = maskheadskip(skipcontent_mask, n); //skip at begin
+			const int tail = masktailskip(skipcontent_mask,n); //skip at end
 
 
-            IndexedData * data = getdata(pattern);
-            for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
+            const IndexedData * data = getdata(pattern);
+            for (IndexedData::const_iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
                 const IndexReference ref = *iter2;
-                Pattern skipcontent_atref;
 
-                bool notoken = false;
-                gapiter = gapdata.begin();
-                std::vector<std::pair<int,int>>::iterator skipcontent_gapiter = skipcontent_gaps.begin();
-                while (gapiter != gapdata.end()) {
-                    Pattern part;
-                    for (int i = gapiter->first; i < gapiter->first + gapiter->second; i++) {
-                        try {
-                            Pattern  p = this->getpatternfromtoken(ref + i);
-                            skipcontent_atref = skipcontent_atref +  p;
-                        } catch (const KeyError &e) { //when token does not exist
-                            notoken=true; break;
-                        }
-                    }
-                    if (notoken) break;
-                    
-                    if (skipcontent_gapiter != skipcontent_gaps.end()) {
-                        skipcontent_atref = skipcontent_atref + Pattern(fixedgapbuffer, skipcontent_gapiter->second);
-                    }
-                    gapiter++;
-                }
-                if (notoken) continue;
-                //std::cerr << "counting skipcontent " << skipcontent_atref.hash() << " at " << ref.sentence << ":" << ref.token << std::endl;
+				//raw skipcontent with leading and trailing skips
+				PatternPointer skipcontent_atref_raw = this->reverseindex->getpattern(ref,n);
+				skipcontent_atref_raw.mask = skipcontent_mask;
+
+				//trim leading and trailing skips
+				Pattern skipcontent_atref = PatternPointer(skipcontent_atref_raw, head, n-head-tail); //pattern from patternpointer
                 skipcontent[skipcontent_atref] += 1;
             }
 
@@ -2924,8 +2893,14 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const PatternType pattern = iter->first;
             if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == SKIPGRAM)) {
                 t_relationmap skipcontent = getskipcontent(pattern);
+                t_relationmap skipcontent2 = getskipcontent(pattern); //TODO: remove debug
+                if (skipcontent2.size() != skipcontent.size()) {
+                    std::cerr << " Pattern " << pattern.hash() << " discrepancy!!! " << skipcontent.size() << " vs " << skipcontent2.size() << std::endl;
+                    throw InternalError();
+                }
+                //std::cerr << " Pattern " << pattern.hash() << " occurs: " << this->occurrencecount(pattern) << " skipcontent=" << skipcontent.size() << std::endl;
                 if ((int) skipcontent.size() < minskiptypes) { //will take care of token threshold too, patterns not meeting the token threshold are not included
-                    std::cerr << "Pruning oc=" << skipcontent.size() << " hash=" << pattern.hash() << std::endl; //TODO: remove debug
+                    //std::cerr << "..pruning" << std::endl;
                     iter = this->erase(iter);
                     pruned++;
                     continue;

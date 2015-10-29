@@ -53,6 +53,9 @@ int main( int argc, char *argv[] ) {
 	//string model = argv[1];
 	//string classfile = argv[1];
     int i; 
+    bool verbose = false;
+
+    if ((argc == 2) && (argv[1] == "-v")) verbose = true;
 
     const char * poem = 
     "To be or not to be , that is the question ;\n"
@@ -1127,32 +1130,34 @@ int main( int argc, char *argv[] ) {
         cerr << endl;
         indexedmodel.histogram(&std::cerr);
 
-        cerr << "Iterating over all patterns and testing (non-)equivalence" << endl;
-        int i = 0;
-        for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
-            const Pattern pattern = iter->first;
-            const PatternPointer pp = PatternPointer(pattern);
-            const IndexedData data = iter->second;
-            int j = 0;
-            cerr << pattern.tostring(classdecoder) << endl;
-            for (IndexedPatternModel<>::iterator iter2 = indexedmodel.begin(); iter2 != indexedmodel.end(); iter2++) {
-                const Pattern pattern2 = iter2->first;
-                const PatternPointer pp2 = PatternPointer(pattern2);
-                cerr << "\t" << pp2.tostring(classdecoder) << endl;
-                cerr << "\t\t...p vs p "; test(pattern == pattern2, i == j);
-                cerr << "\t\t...p vs pp "; test(pattern == pp2, i == j);
-                cerr << "\t\t...pp vs pp "; test(pp == pp2, i == j);
-                cerr << "\t\t...pp vs p "; test(pp == pattern2, i == j);
-                j++;
+        if (verbose) {
+            cerr << "Iterating over all patterns and testing (non-)equivalence" << endl;
+            int i = 0;
+            for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
+                const Pattern pattern = iter->first;
+                const PatternPointer pp = PatternPointer(pattern);
+                const IndexedData data = iter->second;
+                int j = 0;
+                cerr << pattern.tostring(classdecoder) << endl;
+                for (IndexedPatternModel<>::iterator iter2 = indexedmodel.begin(); iter2 != indexedmodel.end(); iter2++) {
+                    const Pattern pattern2 = iter2->first;
+                    const PatternPointer pp2 = PatternPointer(pattern2);
+                    cerr << "\t" << pp2.tostring(classdecoder) << endl;
+                    cerr << "\t\t...p vs p "; test(pattern == pattern2, i == j);
+                    cerr << "\t\t...p vs pp "; test(pattern == pp2, i == j);
+                    cerr << "\t\t...pp vs pp "; test(pp == pp2, i == j);
+                    cerr << "\t\t...pp vs p "; test(pp == pattern2, i == j);
+                    j++;
+                }
+                i++;
             }
-            i++;
         }
 
 
         cerr << "Writing indexed model to file" << endl;
         indexedmodel.write(outputfilename);
         cerr << "Reading indexed model from file" << endl;
-        options.DEBUG = true;
+        options.DEBUG = verbose;
         IndexedPatternModel<> indexedmodel2 = IndexedPatternModel<>(outputfilename, options);
         options.DEBUG = false;
         cerr << "Outputting report again" << endl;
@@ -1196,6 +1201,7 @@ int main( int argc, char *argv[] ) {
 
         t_relationmap relations6 = indexedmodel.getskipcontent(skipgram);
         indexedmodel.outputrelations(skipgram, relations6, classdecoder, &cerr,"INSTANTIATED-BY");
+        cerr << "Verify count: "; test(relations6.size(), 2); //the other 2 are below occurrence threshold
 
 
         cerr << "All relations for  " << querystring3 << " in one go" << endl;
@@ -1243,7 +1249,7 @@ int main( int argc, char *argv[] ) {
         for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
             set.insert(iter->first);
         }
-        test(set.size(), 147); //TODO: adapt to real output
+        test(set.size(), 155); 
 
 
     }

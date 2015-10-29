@@ -55,6 +55,33 @@ vector<pair<int,int>> mask2vector(const uint32_t mask, const int n) {
     return gaps;
 }
 
+uint32_t reversemask(uint32_t mask, const unsigned int n) {
+    uint32_t result = 0;
+	for (int i = 0; i < n; i++) {
+        result <<= 1;         
+        result |= mask & 1;         
+        mask = mask >> 1;
+    }
+    return result;
+}
+
+int maskheadskip(uint32_t mask, const unsigned int n) {
+	unsigned int i = 0;
+	while (mask & bitmask[i]) { 
+		i++;
+	} 	
+	return i;
+}
+
+
+int masktailskip(uint32_t mask, const unsigned int n) {
+	unsigned int i = 0;
+	while (mask & bitmask[n-i-1]) { 
+		i++;
+	} 	
+	return i;
+}
+
 vector<uint32_t> compute_skip_configurations(const int n, const int maxskips) {
     vector<uint32_t> masks;
     if (n < 3) return masks;
