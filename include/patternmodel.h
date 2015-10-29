@@ -2164,7 +2164,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual t_relationmap getsubparents(const Pattern & pattern,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap gettemplates(const Pattern & pattern,int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getinstances(const Pattern & pattern,int = 0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getskipcontent(const Pattern & pattern) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getskipcontent(const PatternPointer & pattern) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getleftneighbours(const Pattern & pattern,int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getrightneighbours(const Pattern & pattern,int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap_double getnpmi(const Pattern & pattern, double threshold) { return t_relationmap_double(); } //does nothing for unindexed models

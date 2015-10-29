@@ -507,6 +507,11 @@ class PatternPointer {
       * @return A skipgram
       */
      PatternPointer addskips(const std::vector<std::pair<int,int> > & gaps) const;
+	
+	 /**
+	  * Low-level function for flexgrams, that returns a collapsed comparable representation of the flexgram in collapseddata (has to be pre-allocated). Return value is the number of bytes of the representation. In the collapsed representation adjacent flexgrams are removed.
+	  */
+	 int flexcollapse(unsigned char * collapseddata) const;
 
      bool instanceof(const Pattern & skipgram) const; 
 

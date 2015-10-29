@@ -203,28 +203,24 @@ const size_t Pattern::hash() const {
 const size_t PatternPointer::hash() const {
     if (mask == 0) {
         return SpookyHash::Hash64((const void*) data , bytesize());
+	} else if (isflexgram()) {
+        //hashing skipgrams/flexgrams is a bit more expensive cause we need to process the mask before we can compute the hash:
+        unsigned char datacopy[bytes+1];
+		int size = flexcollapse(datacopy);
+        datacopy[size] = ClassDecoder::delimiterclass;
+        return SpookyHash::Hash64((const void*) datacopy , size+1);
     } else {
         //hashing skipgrams/flexgrams is a bit more expensive cause we need to process the mask before we can compute the hash:
         unsigned char datacopy[bytes+1];
         memcpy(datacopy, data, bytes);
         datacopy[bytes] = ClassDecoder::delimiterclass;
-
-        const bool flex = isflexgram();
-        unsigned int i = 0;
         unsigned int n = 0;
-        do {
+		for (unsigned int i = 0; i < bytes; i++) {
             if (datacopy[i] < 128) {
-                if (isgap(n)) {
-                    if (flex) {
-                        datacopy[i] = ClassDecoder::flexclass;
-                    } else {
-                        datacopy[i] = ClassDecoder::skipclass;
-                    }
-                }
+                if (isgap(n)) datacopy[i] = ClassDecoder::skipclass;
                 n++;
             }
-            i++;
-        } while (i < bytes); 
+		}
         return SpookyHash::Hash64((const void*) datacopy , bytes);
     }
 }
@@ -296,7 +292,7 @@ std::string PatternPointer::tostring(const ClassDecoder& classdecoder) const {
     int gapsize = 0;
     unsigned int length; 
     unsigned int cls;
-    bool flex;
+    bool flex = false;
     if (mask != 0) flex = isflexgram();
     do {
         if ((bytes > 0) && (i >= bytes)) {
@@ -780,28 +776,29 @@ Pattern::Pattern(const Pattern& ref) { //copy constructor
 }
 
 Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
-    data = new unsigned char[ref.bytesize() + 1];
-    memcpy(data, ref.data, ref.bytesize());
-    data[ref.bytesize()] = ClassDecoder::delimiterclass;
+	if ((ref.mask != 0) && (ref.isflexgram())) {
+		unsigned char tmpdata[ref.bytesize()+1];
+		int size = ref.flexcollapse(tmpdata);
+		data = new unsigned char[size+1];
+		memcpy(data, tmpdata, size);
+		data[size] = ClassDecoder::delimiterclass;
+	} else {
+		data = new unsigned char[ref.bytesize() + 1];
+		memcpy(data, ref.data, ref.bytesize());
+		data[ref.bytesize()] = ClassDecoder::delimiterclass;
 
-    if (ref.mask != 0) { 
-        const bool flex = ref.isflexgram();
-        unsigned int i = 0;
-        unsigned int n = 0;
-        do {
-            if (ref.data[i] < 128) {
-                if (ref.isgap(n)) {
-                    if (flex) {
-                        data[i] = ClassDecoder::flexclass;
-                    } else {
-                        data[i] = ClassDecoder::skipclass;
-                    }
-                }
-                n++;
-            }
-            i++;
-        } while (i < ref.bytesize()); 
-    }
+		if (ref.mask != 0) { 
+			unsigned int n = 0;
+			for (unsigned int i = 0; i < ref.bytesize(); i++) {
+				if (ref.data[i] < 128) {
+					if (ref.isgap(n)) {
+						data[i] = ClassDecoder::skipclass;
+					}
+					n++;
+				}
+			}
+		}
+	}
 }
 
 Pattern::Pattern(const PatternPointer& ref, int begin, int length) { //slice constructor from patternpointer
@@ -887,20 +884,19 @@ bool Pattern::operator==(const PatternPointer &other) const {
 bool PatternPointer::operator==(const Pattern &other) const {
     unsigned int i = 0;
     unsigned int n = 0;
-    unsigned int gapclass;
     bool prevhigh = false;
-    if (mask != 0) {
-        if (isflexgram()) {
-            gapclass = ClassDecoder::flexclass;
-        } else {
-            gapclass = ClassDecoder::skipclass;
-        }
+    if ((mask != 0) && (isflexgram())) {
+		if (!other.isflexgram()) return false;
+		unsigned char data1[bytesize()];
+		const int size1 = flexcollapse(data1);
+		if (size1 != other.bytesize()) return false;
+		return (memcmp(data1,other.data,size1) == 0);
     }
     while (i<bytes){
 	    if ((i>0) && (other.data[i-1] >= 128) && (other.data[i] == 0)) return false;
         if ((mask != 0) && (data[i] < 128))  {
             if (isgap(n)) {
-                if (other.data[i] != gapclass)  return false;
+                if (other.data[i] != ClassDecoder::skipclass)  return false;
             } else if (data[i] != other.data[i]) return false;
             n++;
         } else if (data[i] != other.data[i]) return false;
@@ -911,21 +907,58 @@ bool PatternPointer::operator==(const Pattern &other) const {
 
 }
 
+int PatternPointer::flexcollapse(unsigned char * collapseddata) const {
+	//collapse data
+	bool prevgap = false;
+	int j = 0;
+	int n = 0;
+	for (int i = 0; i < bytes; i++) {
+		if (data[i] < 128) {
+			if (isgap(n)) {
+				if (!prevgap) {
+					collapseddata[j++] = ClassDecoder::flexclass; 
+					prevgap = true;
+				}
+			} else {
+				collapseddata[j++] = data[i];
+				prevgap = false;
+			}
+			n++;
+		} else {
+			collapseddata[j++] = data[i];
+		}
+	}
+	return j;
+}
+
+
 bool PatternPointer::operator==(const PatternPointer & other) const {
-    if ((bytes == other.bytes) && (mask == other.mask)) {
-        if (data == other.data) return true; //shortcut
-        unsigned int i = 0;
-        unsigned int n = 0;
-        while (i<bytes) {
-            if ((mask != 0) && (data[i] < 128))  {
-                if (isgap(n)) {
-                    if (!other.isgap(n)) return false;
-                } else if (data[i] != other.data[i]) return false;
-                n++;
-            } else if (data[i] != other.data[i]) return false;
-            i++;
-        }
-        return true;
+    if (bytes == other.bytes) {
+		if ((mask != 0) && (isflexgram())) {
+			if ((other.mask == 0) || (!other.isflexgram())) return false;  
+			unsigned char data1[bytes];
+			int size1 = flexcollapse(data1);
+			unsigned char data2[other.bytesize()];
+			int size2 = other.flexcollapse(data2);
+			if (size1 != size2) return false;
+			return (memcmp(data1,data2,size1) == 0);
+		} else if (mask != other.mask) {
+			return false;
+		} else {
+			if (data == other.data) return true; //shortcut
+			unsigned int i = 0;
+			unsigned int n = 0;
+			while (i<bytes) {
+				if ((mask != 0) && (data[i] < 128))  {
+					if (isgap(n)) {
+						if (!other.isgap(n)) return false;
+					} else if (data[i] != other.data[i]) return false;
+					n++;
+				} else if (data[i] != other.data[i]) return false;
+				i++;
+			}
+			return true;
+		}
     }
     return false;
 }

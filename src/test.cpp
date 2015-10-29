@@ -55,7 +55,10 @@ int main( int argc, char *argv[] ) {
     int i; 
     bool verbose = false;
 
-    if ((argc == 2) && (argv[1] == "-v")) verbose = true;
+    if (argc == 2) {
+		string option = argv[1];
+		if (option == "-v") verbose = true;
+	}
 
     const char * poem = 
     "To be or not to be , that is the question ;\n"
@@ -1130,28 +1133,6 @@ int main( int argc, char *argv[] ) {
         cerr << endl;
         indexedmodel.histogram(&std::cerr);
 
-        if (verbose) {
-            cerr << "Iterating over all patterns and testing (non-)equivalence" << endl;
-            int i = 0;
-            for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
-                const Pattern pattern = iter->first;
-                const PatternPointer pp = PatternPointer(pattern);
-                const IndexedData data = iter->second;
-                int j = 0;
-                cerr << pattern.tostring(classdecoder) << endl;
-                for (IndexedPatternModel<>::iterator iter2 = indexedmodel.begin(); iter2 != indexedmodel.end(); iter2++) {
-                    const Pattern pattern2 = iter2->first;
-                    const PatternPointer pp2 = PatternPointer(pattern2);
-                    cerr << "\t" << pp2.tostring(classdecoder) << endl;
-                    cerr << "\t\t...p vs p "; test(pattern == pattern2, i == j);
-                    cerr << "\t\t...p vs pp "; test(pattern == pp2, i == j);
-                    cerr << "\t\t...pp vs pp "; test(pp == pp2, i == j);
-                    cerr << "\t\t...pp vs p "; test(pp == pattern2, i == j);
-                    j++;
-                }
-                i++;
-            }
-        }
 
 
         cerr << "Writing indexed model to file" << endl;
@@ -1219,6 +1200,30 @@ int main( int argc, char *argv[] ) {
         cerr << "Computing flexgrams out of skipgrams" << endl;
         int foundflex = indexedmodel.computeflexgrams_fromskipgrams();
         cerr << "Found " << foundflex << " flexgrams" << endl;
+
+        if (verbose) {
+            cerr << "Iterating over all patterns and testing (non-)equivalence" << endl;
+            int i = 0;
+            for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
+                const Pattern pattern = iter->first;
+                const PatternPointer pp = PatternPointer(pattern);
+                const IndexedData data = iter->second;
+                int j = 0;
+                cerr << pattern.tostring(classdecoder) << endl;
+                for (IndexedPatternModel<>::iterator iter2 = indexedmodel.begin(); iter2 != indexedmodel.end(); iter2++) {
+                    const Pattern pattern2 = iter2->first;
+                    const PatternPointer pp2 = PatternPointer(pattern2);
+                    cerr << "\t" << pp2.tostring(classdecoder) << endl;
+                    cerr << "\t\t...p vs p "; test(pattern == pattern2, i == j);
+                    cerr << "\t\t...pp vs pp "; test(pp == pp2, i == j);
+                    cerr << "\t\t...p vs pp "; test(pattern == pp2, i == j);
+                    cerr << "\t\t...pp vs p "; test(pp == pattern2, i == j);
+                    j++;
+                }
+                i++;
+            }
+        }
+
         cerr << "outputting all" << endl;
         indexedmodel.print(&std::cerr, classdecoder);
         cerr << "Outputting report again, now with flexgrams" << endl;
