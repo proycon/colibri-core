@@ -1203,6 +1203,8 @@ int main( int argc, char *argv[] ) {
         cerr << "Computing flexgrams out of skipgrams";
         int foundflex = indexedmodel.computeflexgrams_fromskipgrams();
 		test(foundflex, 22);
+		test(indexedmodel.size(), 155);
+
 
         if (verbose) {
             cerr << "Iterating over all patterns and testing (non-)equivalence" << endl;
