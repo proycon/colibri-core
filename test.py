@@ -224,19 +224,15 @@ for match in corpus.findpattern(needle):
 
 print()
 
-options = colibricore.PatternModelOptions()
-options.DOREVERSEINDEX = True
-options.DOSKIPGRAMS_EXHAUSTIVE = True
-options.DOSKIPGRAMS = False
-print(options.DOSKIPGRAMS)
+options = colibricore.PatternModelOptions(doskipgrams_exhaustive=True)
 
-
-
-print("Building unindexed model")
+print("\n===== Building unindexed model ======\n")
 unindexedmodel = colibricore.UnindexedPatternModel()
 unindexedmodel.train("/tmp/hamlet.colibri.dat",options)
+print("Pattern count", test(len(unindexedmodel), 385))
+print("Type count", test(unindexedmodel.types(), 186))
+print("Token count", test(unindexedmodel.tokens(), 354))
 
-print("Found ", len(unindexedmodel), " patterns, " , unindexedmodel.types()," types, " , unindexedmodel.tokens(), " tokens")
 unindexedmodel.printmodel(decoder)
 print("REPORT:")
 unindexedmodel.report()
@@ -253,21 +249,26 @@ print("REPORT:")
 unindexedmodel.report()
 
 print("iterating over all patterns")
+i = 0
 for pattern in unindexedmodel:
     print(pattern.tostring(decoder))
+    i += 1
+print("Pattern count", test(i, 385))
+
 
 print("iterating over all patterns and values")
+i = 0
 for pattern, value in unindexedmodel.items():
     print(pattern.tostring(decoder), value)
+    i += 1
+print("Pattern count", test(i, 385))
 
 print("Extracting count for specific pattern")
-print(unindexedmodel[encoder.buildpattern("to be")])
+print(test(unindexedmodel[encoder.buildpattern("to be")],2))
 
-options = colibricore.PatternModelOptions()
-options.DOREVERSEINDEX = True
-options.DOSKIPGRAMS_EXHAUSTIVE = False
-options.DOSKIPGRAMS = True
-print("Building indexed model")
+
+print("\n======= Building indexed model =========\n")
+options = colibricore.PatternModelOptions(doskipgrams=True)
 indexedmodel = colibricore.IndexedPatternModel()
 indexedmodel.train("/tmp/hamlet.colibri.dat",options)
 
@@ -290,7 +291,7 @@ for pattern, value in indexedmodel.items():
     print(pattern.tostring(decoder), len(value))
 
 print("Extracting count for specific pattern")
-print(len(indexedmodel[encoder.buildpattern("to be")]))
+print(test(len(indexedmodel[encoder.buildpattern("to be")]),2))
 
 
 print("Test done")
