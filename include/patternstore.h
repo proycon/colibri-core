@@ -824,7 +824,6 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
 };
 
 
-
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class ReadWriteSizeType = uint64_t>
 class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointer,ValueType>,ValueType,ValueHandler,ReadWriteSizeType,PatternPointer> {
     protected:
@@ -868,11 +867,6 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
 
         iterator find(const Pattern & pattern) { 
             PatternPointer pp = pattern.getpointer();
-            //validation:
-            if (pp.hash() != pattern.hash()) {
-                std::cerr << "HASH MISMATCH!!" << std::endl;
-                throw InternalError();
-            }
             return data.find(pp);
         }
         //const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
@@ -884,6 +878,59 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
         iterator erase(const_iterator position) { return data.erase(position); }
 };
 
+template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class ReadWriteSizeType = uint64_t>
+class OrderedPatternPointerMap: public PatternMapStore<std::map<PatternPointer,ValueType>,ValueType,ValueHandler,ReadWriteSizeType,PatternPointer> {
+    protected:
+        std::map<PatternPointer, ValueType> data;
+    public:
+		IndexedCorpus * corpus;
+        //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
+        OrderedPatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>(IndexedCorpus * corpus) {
+			this->corpus = corpus;
+		};
+
+        OrderedPatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>() { corpus = NULL; }
+
+
+        void insert(const PatternPointer & pattern, ValueType & value) { 
+            data[pattern] = value;
+        }
+
+        void insert(const PatternPointer & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
+        
+        bool has(const Pattern & pattern) const { 
+            return data.count(pattern);
+        }
+        bool has(const PatternPointer & pattern) const { return data.count(pattern); }
+
+        size_t size() const { return data.size(); } 
+        void reserve(size_t s) { data.reserve(s); }
+
+
+        ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
+        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; } 
+        
+        typedef typename std::unordered_map<PatternPointer,ValueType>::iterator iterator;
+        typedef typename std::unordered_map<PatternPointer,ValueType>::const_iterator const_iterator;
+        
+        iterator begin() { return data.begin(); }
+        const_iterator begin() const { return data.begin(); }
+
+        iterator end() { return data.end(); }
+        const_iterator end() const { return data.end(); }
+
+        iterator find(const Pattern & pattern) { 
+            PatternPointer pp = pattern.getpointer();
+            return data.find(pp);
+        }
+        //const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+
+        iterator find(const PatternPointer & pattern) { return data.find(pattern); }
+        const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
+        
+        bool erase(const PatternPointer & pattern) { return data.erase(pattern); }
+        iterator erase(const_iterator position) { return data.erase(position); }
+};
 
 template<class ValueType,class ValueHandler = BaseValueHandler<ValueType>,class ReadWriteSizeType = uint64_t>
 class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,ValueType>,ValueType,ValueHandler,ReadWriteSizeType,Pattern> {
