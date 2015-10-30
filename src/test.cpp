@@ -1237,15 +1237,17 @@ int main( int argc, char *argv[] ) {
 
         cerr << endl << "************************** HashOrderedPatternMap Test  ***************************************" << endl << endl;
 
-        options.DOREVERSEINDEX = false;
-        options.DOSKIPGRAMS_EXHAUSTIVE = false;
+        options.MINTOKENS = 2;
+        options.DOSKIPGRAMS_EXHAUSTIVE = true;
         options.DOSKIPGRAMS = false ;
         cerr << "Building unindexed model using ordered patternmap" << endl;
         PatternModel<uint32_t,BaseValueHandler<uint32_t>,HashOrderedPatternMap<uint32_t,BaseValueHandler<uint32_t>>> unindexedmodel3;
 
         cerr << endl;
         unindexedmodel3.train(infilename, options);
-        cerr << "Found " << unindexedmodel3.size() << " patterns, " << unindexedmodel3.types() << " types, " << unindexedmodel3.tokens() << " tokens" << endl;
+        cerr << "Patterns"; test(unindexedmodel3.size(),385); 
+        cerr << "Types"; test(unindexedmodel3.types(),186);
+        cerr << "Tokens"; test(unindexedmodel3.tokens(),354);
 
         cerr << endl << "************************** PatternSet Test ***************************************" << endl << endl;
 
@@ -1381,7 +1383,6 @@ int main( int argc, char *argv[] ) {
         IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
 
         PatternModelOptions options;
-        options.DOREVERSEINDEX = true;
         options.DOSKIPGRAMS_EXHAUSTIVE = true;
         options.DOSKIPGRAMS = false;
 
@@ -1455,7 +1456,6 @@ int main( int argc, char *argv[] ) {
         IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
 
         PatternModelOptions options;
-        options.DOREVERSEINDEX = true;
         options.DOSKIPGRAMS_EXHAUSTIVE = false;
         options.DOSKIPGRAMS = true;
 
