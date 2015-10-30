@@ -25,7 +25,7 @@ uint32_t vector2mask(const vector<pair<int,int>> & skips) {
     //convert path to mask
     uint32_t mask = 0;
     for (vector<pair<int,int>>::const_iterator iter2 = skips.begin(); iter2 != skips.end(); iter2++) {
-        for (unsigned int i = iter2->first; i < (iter2->first + iter2->second) && (i < 31); i++ ) {
+        for (int i = iter2->first; i < (iter2->first + iter2->second) && (i < 31); i++ ) {
             mask |= bitmask[i];
         }
     }
@@ -57,7 +57,7 @@ vector<pair<int,int>> mask2vector(const uint32_t mask, const int n) {
 
 uint32_t reversemask(uint32_t mask, const unsigned int n) {
     uint32_t result = 0;
-	for (int i = 0; i < n; i++) {
+	for (unsigned int i = 0; i < n; i++) {
         result <<= 1;         
         result |= mask & 1;         
         mask = mask >> 1;
@@ -89,7 +89,7 @@ vector<uint32_t> compute_skip_configurations(const int n, const int maxskips) {
     for (uint32_t i = 1; i < order; i++) {
         const uint32_t mask = i << 1;
         if (n-2 >= maxskips) {
-            if (mask2vector(mask,n).size() > maxskips) { //not very efficient but not important here
+            if (mask2vector(mask,n).size() > (unsigned int) maxskips) { //not very efficient but not important here
                 continue;
             }
         }
