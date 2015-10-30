@@ -602,14 +602,14 @@ void Pattern::set(const unsigned char * dataref, const int _size) {
 }
 
 
-Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructor
+Pattern::Pattern(const Pattern& ref, unsigned int begin, unsigned int length) { //slice constructor
     //to be computed in bytes
-    int begin_b = 0;
-    int length_b = 0;
+    unsigned int begin_b = 0;
+    unsigned int length_b = 0;
     bool prevhigh = false;
 
-    int i = 0;
-    int n = 0;
+    unsigned int i = 0;
+    unsigned int n = 0;
     do {
         const unsigned char c = ref.data[i];
         if (c < 128) {
@@ -633,14 +633,11 @@ Pattern::Pattern(const Pattern& ref, int begin, int length) { //slice constructo
 
     const unsigned char _size = length_b + 1;
     data = new unsigned char[_size];
-    int j = 0;
-    for (int i = begin_b; i < begin_b + length_b; i++) { //TODO: use memcpy instead
-        data[j++] = ref.data[i];
-    }
-    data[j++] = ClassDecoder::delimiterclass;
+    memcpy(data, ref.data + begin_b, begin_b+length_b);
+    data[length_b] = ClassDecoder::delimiterclass;
 }
 
-PatternPointer::PatternPointer(unsigned char * ref, int begin, int length) { //slice constructor
+PatternPointer::PatternPointer(unsigned char * ref, unsigned int begin, unsigned int length) { //slice constructor
     //to be computed in bytes
     unsigned int begin_b = 0;
     unsigned int length_b = 0;
@@ -654,7 +651,7 @@ PatternPointer::PatternPointer(unsigned char * ref, int begin, int length) { //s
         if (c < 128) {
             //we have a token
             n++; 
-            if (n - begin == (unsigned int) length) {
+            if (n - begin == length) {
                 length_b = (i + 1) - begin_b;
                 break;
             } else if ((c == ClassDecoder::delimiterclass) && (!prevhigh) ) {
@@ -662,7 +659,7 @@ PatternPointer::PatternPointer(unsigned char * ref, int begin, int length) { //s
                 break;
             }
             i++;
-            if (n == (unsigned int) begin) begin_b = i;
+            if (n ==  begin) begin_b = i;
             prevhigh = false;
         } else {
             prevhigh = true;
@@ -675,14 +672,14 @@ PatternPointer::PatternPointer(unsigned char * ref, int begin, int length) { //s
     mask = computemask();
 }
 
-PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //slice constructor
+PatternPointer::PatternPointer(const Pattern& ref, unsigned int begin, int unsigned length) { //slice constructor
     //to be computed in bytes
     int begin_b = 0;
     int length_b = 0;
     bool prevhigh = false;
 
-    int i = 0;
-    int n = 0;
+    unsigned int i = 0;
+    unsigned int n = 0;
     unsigned char c;
     do {
         c = ref.data[i];
@@ -719,14 +716,14 @@ PatternPointer::PatternPointer(const Pattern& ref, int begin, int length) { //sl
 
 
 
-PatternPointer::PatternPointer(const PatternPointer& ref, int begin, int length) { //slice constructor
+PatternPointer::PatternPointer(const PatternPointer& ref, unsigned int begin, unsigned int length) { //slice constructor
     //to be computed in bytes
-    int begin_b = 0;
-    int length_b = 0;
+    unsigned int begin_b = 0;
+    unsigned int length_b = 0;
     bool prevhigh = false;
 
-    int i = 0;
-    int n = 0;
+    unsigned int i = 0;
+    unsigned int n = 0;
     unsigned char c;
     do {
         if (i == ref.bytes) {
@@ -796,14 +793,14 @@ Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
 	}
 }
 
-Pattern::Pattern(const PatternPointer& ref, int begin, int length) { //slice constructor from patternpointer
+Pattern::Pattern(const PatternPointer& ref, unsigned int begin, unsigned int length) { //slice constructor from patternpointer
     //to be computed in bytes
-    int begin_b = 0;
-    int length_b = 0;
+    unsigned int begin_b = 0;
+    unsigned int length_b = 0;
     bool prevhigh = false;
 
-    int i = 0;
-    int n = 0;
+    unsigned int i = 0;
+    unsigned int n = 0;
     do {
         const unsigned char c = ref.data[i];
          if (c < 128) {
@@ -827,11 +824,8 @@ Pattern::Pattern(const PatternPointer& ref, int begin, int length) { //slice con
 
     const unsigned char _size = length_b + 1;
     data = new unsigned char[_size];
-    int j = 0;
-    for (int i = begin_b; i < begin_b + length_b; i++) {
-        data[j++] = ref.data[i];
-    }
-    data[j++] = ClassDecoder::delimiterclass;
+    memcpy(data, ref.data + begin_b, begin_b+length_b);
+    data[length_b] = ClassDecoder::delimiterclass;
 
     if (ref.mask != 0) { 
         const bool flex = ref.isflexgram();
@@ -879,11 +873,10 @@ bool Pattern::operator==(const PatternPointer &other) const {
 bool PatternPointer::operator==(const Pattern &other) const {
     unsigned int i = 0;
     unsigned int n = 0;
-    bool prevhigh = false;
     if ((mask != 0) && (isflexgram())) {
 		if (!other.isflexgram()) return false;
 		unsigned char data1[bytesize()];
-		const int size1 = flexcollapse(data1);
+		const unsigned int size1 = flexcollapse(data1);
 		if (size1 != other.bytesize()) return false;
 		return (memcmp(data1,other.data,size1) == 0);
     }
@@ -895,7 +888,6 @@ bool PatternPointer::operator==(const Pattern &other) const {
             } else if (data[i] != other.data[i]) return false;
             n++;
         } else if (data[i] != other.data[i]) return false;
-        prevhigh = (data[i] >= 128);
         i++;
     }
     return other.data[i] == ClassDecoder::delimiterclass;
@@ -905,9 +897,9 @@ bool PatternPointer::operator==(const Pattern &other) const {
 int PatternPointer::flexcollapse(unsigned char * collapseddata) const {
 	//collapse data
 	bool prevgap = false;
-	int j = 0;
-	int n = 0;
-	for (int i = 0; i < bytes; i++) {
+	unsigned int j = 0;
+	unsigned int n = 0;
+	for (unsigned int i = 0; i < bytes; i++) {
 		if (data[i] < 128) {
 			if (isgap(n)) {
 				if (!prevgap) {
@@ -1313,12 +1305,12 @@ int PatternPointer::parts(vector<pair<int,int>> & container) const {
     int partlength = 0;
 
     int found = 0;
-    int n = 0;
-    for (int i = 0; (i<bytes) && (i<31); i++) {
+    unsigned int n = 0;
+    for (unsigned int i = 0; (i<bytes) && (i<31); i++) {
         const unsigned char c = data[i];
         if (c < 128) {
             //low byte, end of token
-            if (mask & bitmask[n] == 0) {
+            if ((mask & bitmask[n]) == 0) {
                 partlength = n - partbegin;
                 if (partlength > 0) {
                     container.push_back(pair<int,int>(partbegin,partlength));
@@ -1347,8 +1339,8 @@ int PatternPointer::parts(vector<PatternPointer> & container) const {
     int partlength = 0;
 
     int found = 0;
-    int n = 0;
-    for (int i = 0; (i<bytes) && (i<31); i++) {
+    unsigned int n = 0;
+    for (unsigned int i = 0; (i<bytes) && (i<31); i++) {
         const unsigned char c = data[i];
         if (c < 128) {
             if (isgap(n)) {
@@ -1416,7 +1408,6 @@ int PatternPointer::gaps(vector<pair<int,int> > & container) const {
     if (mask == 0) return 0;
     int i = 0;
     int n = 0;
-    bool prevskip = false;
     int beginskip = -1;
     int skiplength = 0;
     do {
@@ -1435,7 +1426,7 @@ int PatternPointer::gaps(vector<pair<int,int> > & container) const {
             n++;
         }
         i++;
-    } while (i < bytes); 
+    } while ((unsigned int) i < bytes); 
     if (beginskip > -1) container.push_back(pair<int,int>(beginskip,skiplength));
     return container.size();
 }
@@ -1620,7 +1611,7 @@ Pattern Pattern::addskips(const std::vector<std::pair<int,int> > & gaps) const {
 PatternPointer PatternPointer::addskip(const std::pair<int,int> & gap) const {
     //Returns a patternpointer with the specified span replaced by a fixed skip
     PatternPointer copy = *this;
-    for (unsigned int i = gap.first; i < (gap.first + gap.second) && (i < 31); i++ ) {
+    for (int i = gap.first; i < (gap.first + gap.second) && (i < 31); i++ ) {
         copy.mask |= bitmask[i];
     }
     return copy;
@@ -1630,7 +1621,7 @@ PatternPointer PatternPointer::addskips(const std::vector<std::pair<int,int> > &
     //Returns a patternpointer with the specified spans replaced by fixed skips
     PatternPointer copy = *this;
     for (vector<pair<int,int> >::const_iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
-        for (unsigned int i = iter->first; i < (iter->first + iter->second) && (i < 31); i++ ) {
+        for (int i = iter->first; i < (iter->first + iter->second) && (i < 31); i++ ) {
             copy.mask |= bitmask[i];
         }
     }
@@ -1694,7 +1685,6 @@ IndexedCorpus::IndexedCorpus(std::string filename, bool debug){
 
 
 void IndexedCorpus::load(std::istream *in, bool debug) {
-    unsigned char c;
     unsigned char version = getdataversion(in);
     if (version == 2) {
         in->seekg(0,ios_base::end);

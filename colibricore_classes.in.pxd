@@ -28,13 +28,13 @@ cdef extern from "pattern.h":
     cdef cppclass Pattern:
         unsigned char * data
         Pattern() nogil
-        Pattern(Pattern&, int,int) nogil
+        Pattern(Pattern&, unsigned int,unsigned int) nogil
         Pattern(Pattern&) nogil
         #Pattern(PatternPointer&) nogil
         #Pattern(PatternPointer&, int,int) nogil
         string tostring(ClassDecoder&) nogil
-        int n() nogil
-        int bytesize() nogil
+        unsigned int n() nogil
+        unsigned int bytesize() nogil
         int skipcount() nogil
         int category() nogil
         int hash() nogil
@@ -61,14 +61,14 @@ cdef extern from "pattern.h":
 
     cdef cppclass PatternPointer:
         PatternPointer() nogil
-        PatternPointer(Pattern&, int,int) nogil
+        PatternPointer(Pattern&, unsigned int,unsigned int) nogil
         PatternPointer(Pattern&) nogil
-        PatternPointer(PatternPointer&, int,int) nogil
+        PatternPointer(PatternPointer&, unsigned int,unsigned int) nogil
         PatternPointer(PatternPointer&) nogil
         Pattern pattern() nogil
         string tostring(ClassDecoder&) nogil
-        int n() nogil
-        int bytesize() nogil
+        unsigned int n() nogil
+        unsigned int bytesize() nogil
         int skipcount() nogil
         int category() nogil
         int hash() nogil
