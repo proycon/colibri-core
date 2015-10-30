@@ -63,6 +63,7 @@ if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 
 echo -e "\n\nTEST> Loading indexed model">&2
 colibri-patternmodeller -i apology.s.colibri.indexedpatternmodel -f apology.colibri.dat -R
+if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 
 
 
