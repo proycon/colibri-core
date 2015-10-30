@@ -1441,6 +1441,12 @@ int main( int argc, char *argv[] ) {
         cerr << "Verifying equal size" ; test(ppmodel2.size(), ppmodel.size());
         cerr << "Verifying equal token count" ; test(ppmodel2.tokens(), ppmodel.tokens());
         cerr << "Verifying equal type count" ; test(ppmodel2.types(), ppmodel.types());
+
+        cerr << "Loading PatternPointerModel as PatternModel" << endl;
+        PatternModel<uint32_t> ppmodel3 = PatternModel<uint32_t>(ppmodelfile,options);
+        cerr << "Verifying equal size" ; test(ppmodel3.size(), ppmodel.size());
+        cerr << "Verifying equal token count" ; test(ppmodel3.tokens(), ppmodel.tokens());
+        cerr << "Verifying equal type count" ; test(ppmodel3.types(), ppmodel.types());
     }
     {
         cerr << endl << "************************** Indexed PatternPointerModel Tests ***************************************" << endl << endl;

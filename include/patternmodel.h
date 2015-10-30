@@ -51,7 +51,6 @@
  *
  */
 
-//TODO: Reverse index currently does not hold flexgrams
 
 #include "patternstore.h"
 #include "classencoder.h"
@@ -743,7 +742,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             } else if ((model_type == UNINDEXEDPATTERNMODEL) && (this->getmodeltype() == INDEXEDPATTERNMODEL)) {
                //reading unindexed model as indexed, this will load the patterns but lose all the counts
                  MapType::template read<uint32_t,BaseValueHandler<uint32_t>,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
-            //TODO: add reading pointermodel as patternmodel
+            } else if ((model_type == UNINDEXEDPATTERNPOINTERMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) {
+                 //reading pointermodel as patternmodel
+                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>,PatternPointer>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
             } else if (model_type == PATTERNALIGNMENTMODEL)  {
                  //reading pattern alignment model as pattern model, can be
                  //done, but semantics change:  count corresponds to the number of distinct alignments (for unindexed models)

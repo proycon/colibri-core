@@ -514,7 +514,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
 
 PatternPointer::PatternPointer(std::istream * in, bool ignoreeol, const unsigned char version , unsigned char * corpusstart, bool debug) {
     if (corpusstart == NULL) {
-        std::cerr << "ERROR: Can not read Pattern as PatternPointer!" << std::endl;
+        std::cerr << "ERROR: Can not read PatternPointer, no corpusstart passed!" << std::endl;
         throw InternalError();
     } else {
         unsigned int corpusoffset;
