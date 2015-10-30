@@ -904,14 +904,14 @@ class OrderedPatternPointerMap: public PatternMapStore<std::map<PatternPointer,V
         bool has(const PatternPointer & pattern) const { return data.count(pattern); }
 
         size_t size() const { return data.size(); } 
-        void reserve(size_t s) { data.reserve(s); }
+        void reserve(size_t s) { } //noop
 
 
         ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
         ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; } 
         
-        typedef typename std::unordered_map<PatternPointer,ValueType>::iterator iterator;
-        typedef typename std::unordered_map<PatternPointer,ValueType>::const_iterator const_iterator;
+        typedef typename std::map<PatternPointer,ValueType>::iterator iterator;
+        typedef typename std::map<PatternPointer,ValueType>::const_iterator const_iterator;
         
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
