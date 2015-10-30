@@ -2174,103 +2174,6 @@ class PatternModel: public MapType, public PatternModelInterface {
 };
 
 
-template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class MapType = PatternPointerMap<ValueType, BaseValueHandler<ValueType>>>
-class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,PatternPointer> {
-    public:
-
-        PatternPointerModel<ValueType,ValueHandler,MapType>(IndexedCorpus * corpus): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() {
-            this->model_type = this->getmodeltype();
-            this->model_version = this->getmodelversion();
-            if (corpus) {
-                this->reverseindex = corpus;
-                this->attachcorpus(*corpus);
-            } else {
-                this->reverseindex = NULL;
-            }
-        }
-
-
-        /**
-        * Read a pattern model from an input stream
-        * @param f The input stream
-        * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
-        * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
-        * @param corpus Pointer to the loaded corpus, used as a reverse index.
-        */
-        PatternPointerModel<ValueType,ValueHandler,MapType>(std::istream *f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<ValueType,ValueHandler,MapType,PatternPointer>(){ //load from file
-            this->model_type = this->getmodeltype();
-            this->model_version = this->getmodelversion();
-            if (corpus) {
-                this->reverseindex = corpus;
-                this->attachcorpus(*corpus);
-            } else {
-                this->reverseindex = NULL;
-            }
-            this->load(f,options, constrainmodel);
-        }
-
-        /**
-        * Read a pattern model from file
-        * @param filename The filename
-        * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
-        * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
-        * @param corpus Pointer to the loaded corpus, used as a reverse index.
-        */
-        PatternPointerModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() { //load from file
-            this->model_type = this->getmodeltype();
-            this->model_version = this->getmodelversion();
-            if (corpus) {
-                this->reverseindex = corpus;
-                this->attachcorpus(*corpus);
-            } else {
-                this->reverseindex = NULL;
-            }
-            std::ifstream * in = new std::ifstream(filename.c_str());
-            this->load( (std::istream *) in, options, constrainmodel);
-            in->close();
-            delete in;
-        }
-
-        int getmodeltype() const { return UNINDEXEDPATTERNPOINTERMODEL; }
-        int getmodelversion() const { return 2;} 
-
-        /**
-         * Add a pattern, with a given position, to the model. This
-         * is called during training at every time an instance of a pattern is found in the data. 
-         * This is the high-level version.
-         * @param pattern The pattern to add (a patternpointer)
-         * @param ref The position in the corpus where the patterns occurs
-         */
-        virtual void add(const PatternPointer & patternpointer, const IndexReference & ref) {
-            if ((patternpointer.data < this->reverseindex->beginpointer()) || (patternpointer.data > this->reverseindex->beginpointer() + this->reverseindex->bytesize())) {
-                std::cerr << "Pattern Pointer points outside contained corpus data..." << std::endl;
-                throw InternalError();
-            }
-            ValueType * data = this->getdata(patternpointer, true); 
-            /*std::cerr << "Adding: n="<< patternpointer.n() << ",b=" << patternpointer.bytesize() << ",hash="<<patternpointer.hash()<<", value=" << *data << ",valuetype="<< (size_t) data << ",mask=" << patternpointer.mask << ",pattern=";
-            patternpointer.out();
-            std::cerr << std::endl;*/
-            this->add(patternpointer, data, ref );
-            /*std::cerr << "  Hash recheck: " << patternpointer.hash() << std::endl; 
-            std::cerr << "  Pattern hash recheck: " << Pattern(patternpointer).hash() << std::endl;
-            std::cerr << "  Equivalence with Pattern: " << (int) (patternpointer == Pattern(patternpointer)) << std::endl;
-            std::cerr << "  Equivalence with Pattern 2: " << (int) (Pattern(patternpointer) == patternpointer) << std::endl;
-            std::cerr << "  New value verification: " << this->occurrencecount(patternpointer) << " == " << *data << std::endl;
-            ValueType * data2 = this->getdata(patternpointer, true); 
-            std::cerr << "  New value verification (2): " << *data << " == " << *data2 << std::endl;
-            std::cerr << "  New value verification (pointer): " << (size_t) data << " == " << (size_t) data2 << std::endl;*/
-        }
-
-        virtual void add(const PatternPointer & pattern, ValueType * value, const IndexReference & ref) {
-            if (value == NULL) {
-                std::cerr << "Add() value is NULL!" << std::endl;
-                throw InternalError();
-            }
-            this->valuehandler.add(value, ref);
-        }
-
-};
-
 
 
 /**
@@ -2369,13 +2272,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * @param value A pointer to the value for this pattern, set to NULL and it will be automatically determined
      * @param IndexReference The position in the corpus where the patterns occurs
      */
-    void add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
+    virtual void add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
         if (value == NULL) {
             value = getdata(pattern,true);
         }
         this->valuehandler.add(value, ref);
     }
-    void add(const PatternPointer & patternpointer, IndexedData * value, const IndexReference & ref) {
+    virtual void add(const PatternPointer & patternpointer, IndexedData * value, const IndexReference & ref) {
         if (value == NULL) {
             value = getdata(patternpointer,true);
         }
@@ -3428,6 +3331,187 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 };
 
+template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class MapType = PatternPointerMap<ValueType, BaseValueHandler<ValueType>>>
+class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,PatternPointer> {
+    public:
+
+        PatternPointerModel<ValueType,ValueHandler,MapType>(IndexedCorpus * corpus): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() {
+            this->model_type = this->getmodeltype();
+            this->model_version = this->getmodelversion();
+            if (corpus) {
+                this->reverseindex = corpus;
+                this->attachcorpus(*corpus);
+            } else {
+                this->reverseindex = NULL;
+            }
+        }
+
+
+        /**
+        * Read a pattern model from an input stream
+        * @param f The input stream
+        * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+        * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+        * @param corpus Pointer to the loaded corpus, used as a reverse index.
+        */
+        PatternPointerModel<ValueType,ValueHandler,MapType>(std::istream *f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<ValueType,ValueHandler,MapType,PatternPointer>(){ //load from file
+            this->model_type = this->getmodeltype();
+            this->model_version = this->getmodelversion();
+            if (corpus) {
+                this->reverseindex = corpus;
+                this->attachcorpus(*corpus);
+            } else {
+                this->reverseindex = NULL;
+            }
+            this->load(f,options, constrainmodel);
+        }
+
+        /**
+        * Read a pattern model from file
+        * @param filename The filename
+        * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+        * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+        * @param corpus Pointer to the loaded corpus, used as a reverse index.
+        */
+        PatternPointerModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() { //load from file
+            this->model_type = this->getmodeltype();
+            this->model_version = this->getmodelversion();
+            if (corpus) {
+                this->reverseindex = corpus;
+                this->attachcorpus(*corpus);
+            } else {
+                this->reverseindex = NULL;
+            }
+            std::ifstream * in = new std::ifstream(filename.c_str());
+            this->load( (std::istream *) in, options, constrainmodel);
+            in->close();
+            delete in;
+        }
+
+        int getmodeltype() const { return UNINDEXEDPATTERNPOINTERMODEL; }
+        int getmodelversion() const { return 2;} 
+
+        /**
+         * Add a pattern, with a given position, to the model. This
+         * is called during training at every time an instance of a pattern is found in the data. 
+         * This is the high-level version.
+         * @param pattern The pattern to add (a patternpointer)
+         * @param ref The position in the corpus where the patterns occurs
+         */
+        virtual void add(const PatternPointer & patternpointer, const IndexReference & ref) {
+            if ((patternpointer.data < this->reverseindex->beginpointer()) || (patternpointer.data > this->reverseindex->beginpointer() + this->reverseindex->bytesize())) {
+                std::cerr << "Pattern Pointer points outside contained corpus data..." << std::endl;
+                throw InternalError();
+            }
+            ValueType * data = this->getdata(patternpointer, true); 
+            /*std::cerr << "Adding: n="<< patternpointer.n() << ",b=" << patternpointer.bytesize() << ",hash="<<patternpointer.hash()<<", value=" << *data << ",valuetype="<< (size_t) data << ",mask=" << patternpointer.mask << ",pattern=";
+            patternpointer.out();
+            std::cerr << std::endl;*/
+            this->add(patternpointer, data, ref );
+            /*std::cerr << "  Hash recheck: " << patternpointer.hash() << std::endl; 
+            std::cerr << "  Pattern hash recheck: " << Pattern(patternpointer).hash() << std::endl;
+            std::cerr << "  Equivalence with Pattern: " << (int) (patternpointer == Pattern(patternpointer)) << std::endl;
+            std::cerr << "  Equivalence with Pattern 2: " << (int) (Pattern(patternpointer) == patternpointer) << std::endl;
+            std::cerr << "  New value verification: " << this->occurrencecount(patternpointer) << " == " << *data << std::endl;
+            ValueType * data2 = this->getdata(patternpointer, true); 
+            std::cerr << "  New value verification (2): " << *data << " == " << *data2 << std::endl;
+            std::cerr << "  New value verification (pointer): " << (size_t) data << " == " << (size_t) data2 << std::endl;*/
+        }
+
+        virtual void add(const PatternPointer & pattern, ValueType * value, const IndexReference & ref) {
+            if (value == NULL) {
+                std::cerr << "Add() value is NULL!" << std::endl;
+                throw InternalError();
+            }
+            this->valuehandler.add(value, ref);
+        }
+
+};
+
+
+
+template<class MapType=PatternPointerMap<IndexedData, IndexedDataHandler>>
+class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPointer> {
+
+        IndexedPatternPointerModel<MapType>(IndexedCorpus * corpus): IndexedPatternModel<MapType,PatternPointer>() {
+            this->model_type = this->getmodeltype();
+            this->model_version = this->getmodelversion();
+            if (corpus) {
+                this->reverseindex = corpus;
+                this->attachcorpus(*corpus);
+            } else {
+                this->reverseindex = NULL;
+            }
+        }
+
+
+        /**
+        * Read a pattern model from an input stream
+        * @param f The input stream
+        * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+        * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+        * @param corpus Pointer to the loaded corpus, used as a reverse index.
+        */
+        IndexedPatternPointerModel<MapType>(std::istream *f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): IndexedPatternModel<MapType,PatternPointer>(){ //load from file
+            this->model_type = this->getmodeltype();
+            this->model_version = this->getmodelversion();
+            if (corpus) {
+                this->reverseindex = corpus;
+                this->attachcorpus(*corpus);
+            } else {
+                this->reverseindex = NULL;
+            }
+            this->load(f,options, constrainmodel);
+        }
+
+        /**
+        * Read a pattern model from file
+        * @param filename The filename
+        * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+        * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+        * @param corpus Pointer to the loaded corpus, used as a reverse index.
+        */
+        IndexedPatternPointerModel<MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): IndexedPatternModel<MapType,PatternPointer>() { //load from file
+            this->model_type = this->getmodeltype();
+            this->model_version = this->getmodelversion();
+            if (corpus) {
+                this->reverseindex = corpus;
+                this->attachcorpus(*corpus);
+            } else {
+                this->reverseindex = NULL;
+            }
+            std::ifstream * in = new std::ifstream(filename.c_str());
+            this->load( (std::istream *) in, options, constrainmodel);
+            in->close();
+            delete in;
+        }
+
+        int getmodeltype() const { return INDEXEDPATTERNPOINTERMODEL; }
+        int getmodelversion() const { return 2;} 
+
+        /**
+        * Add a pattern, with a given position, and a value to the model. This
+        * is called during training at every time an instance of a pattern is found in the data.
+        * @param pattern The pattern to add
+        * @param value A pointer to the value for this pattern, set to NULL and it will be automatically determined
+        * @param IndexReference The position in the corpus where the patterns occurs
+        */
+        void add(const PatternPointer & patternpointer, const IndexReference & ref) {
+            if ((patternpointer.data < this->reverseindex->beginpointer()) || (patternpointer.data > this->reverseindex->beginpointer() + this->reverseindex->bytesize())) {
+                std::cerr << "Pattern Pointer points outside contained corpus data..." << std::endl;
+                throw InternalError();
+            }
+            IndexedData * data = this->getdata(patternpointer, true); 
+            this->add(patternpointer, data, ref );
+        }
+
+        void add(const PatternPointer & pattern, IndexedData * value, const IndexReference & ref) {
+            if (value == NULL) {
+                value = this->getdata(pattern,true);
+            }
+            this->valuehandler.add(value, ref);
+        }
+};
 
 double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternModel<uint32_t>* > & models);      
 void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > & models, PatternMap<double> * resultmap, bool conjunctiononly = false, std::ostream * output = NULL, ClassDecoder * classdecoder = NULL );      
