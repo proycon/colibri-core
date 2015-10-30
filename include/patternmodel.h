@@ -736,15 +736,18 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
 
 
-            if ((model_type == INDEXEDPATTERNMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) {
-                //reading indexed pattern model as unindexed, ok:
+            if (((model_type == INDEXEDPATTERNMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) || ((model_type == INDEXEDPATTERNPOINTERMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNPOINTERMODEL)))  {
+                //reading indexed pattern model as unindexed, (or indexed patternPOINTErmodels as unindexed patternPOINTERmodels)
                  MapType::template read<IndexedData,IndexedDataHandler,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
             } else if ((model_type == UNINDEXEDPATTERNMODEL) && (this->getmodeltype() == INDEXEDPATTERNMODEL)) {
                //reading unindexed model as indexed, this will load the patterns but lose all the counts
                  MapType::template read<uint32_t,BaseValueHandler<uint32_t>,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
             } else if ((model_type == UNINDEXEDPATTERNPOINTERMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) {
-                 //reading pointermodel as patternmodel
+                 //reading unindexed pointermodel as unindexed patternmodel
                  MapType::template read<uint32_t,BaseValueHandler<uint32_t>,PatternPointer>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
+            } else if ((model_type == INDEXEDPATTERNPOINTERMODEL) && ((this->getmodeltype() == INDEXEDPATTERNMODEL) || (this->getmodeltype() == UNINDEXEDPATTERNMODEL))) {
+                 //reading indexed patternpointermodel as (un)indexed patternmodel
+                 MapType::template read<IndexedData,IndexedDataHandler,PatternPointer>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
             } else if (model_type == PATTERNALIGNMENTMODEL)  {
                  //reading pattern alignment model as pattern model, can be
                  //done, but semantics change:  count corresponds to the number of distinct alignments (for unindexed models)

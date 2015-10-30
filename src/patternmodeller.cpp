@@ -90,6 +90,8 @@ void usage() {
     cerr << "\t-D               Enable debug mode" << endl;
 }
 
+
+
 template<class ModelType = IndexedPatternModel<>>
 void processquerypattern(ModelType & model, ClassDecoder * classdecoder, const Pattern & pattern, bool dorelations) {
     if (!model.has(pattern)) {
@@ -101,11 +103,11 @@ void processquerypattern(ModelType & model, ClassDecoder * classdecoder, const P
 }
 
 template<class ModelType = IndexedPatternModel<>>
-void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, vector<string> & querypatterns, bool dorelations) {
+void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, const vector<string> & querypatterns, bool dorelations) {
     cerr << "Processing " << querypatterns.size() << " queries" << endl;
     const bool allowunknown = true;
     unsigned char buffer[65536];
-    for (vector<string>::iterator iter = querypatterns.begin(); iter != querypatterns.end(); iter++) {
+    for (vector<string>::const_iterator iter = querypatterns.begin(); iter != querypatterns.end(); iter++) {
        const string s = *iter;
        const int buffersize = classencoder->encodestring(s, buffer, allowunknown); 
        const Pattern pattern = Pattern(buffer, buffersize);
@@ -172,7 +174,7 @@ void assert_file_exists(const string & filename) {
 
 
 template<class ModelType = IndexedPatternModel<>>
-bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold = 0.1) {
+void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold = 0.1) {
     cerr << "Generating desired views..." << endl;
 
     if (print) {
@@ -207,9 +209,63 @@ bool viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
     if (info) {
         model.info(&cout);
     }
-    return (print || report || histogram || query || info || cooc || printreverseindex);
 }
 
+template<class ModelType>
+bool loadandprocessmodel(const string & inputmodelfile, int inputmodeltype, const string & outputmodelfile, int outputmodeltype, const string & corpusfile,   PatternSetModel * constrainbymodel, IndexedCorpus * corpus, PatternModelOptions & options, bool continued, bool expand, int firstsentence, bool ignoreerrors, string inputmodelfile2, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold, bool flexfromskip, const vector<string> & querypatterns) {
+        if (!(print || report || histogram || query || info || cooc || printreverseindex || (!querypatterns.empty()) || (!outputmodelfile.empty()) )) {
+            cerr << "Ooops... You didn't really give me anything to do...that can't be right.. Please study the usage options (-h) again! Did you perhaps forget a -P or -o? " << endl;
+            return false;
+        }
+
+
+        cerr << "Loading pattern model " << inputmodelfile << " as input model..."<<endl;
+        ModelType inputmodel = ModelType(inputmodelfile, options, (PatternModelInterface*) constrainbymodel, corpus);
+        if (corpus != NULL) inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
+
+        if ((!corpusfile.empty()) && (expand)) {
+            cerr << "Expanding model on  " << corpusfile <<endl;
+            inputmodel.train(corpusfile, options, constrainbymodel, continued,firstsentence,ignoreerrors);
+            if (constrainbymodel) {
+                cerr << "Unloading constraint model" << endl;
+                delete constrainbymodel;
+                constrainbymodel = NULL;
+            }
+        } else if (options.DOSKIPGRAMS) {
+            if (constrainbymodel) {
+                cerr << "Unloading constraint model" << endl;
+                delete constrainbymodel;
+                constrainbymodel = NULL;
+            }
+            cerr << "Computing skipgrams" << endl;
+            if (!inputmodelfile2.empty()) cerr << "WARNING: Can not compute skipgrams constrained by " << inputmodelfile2 << "!" << endl;
+            inputmodel.trainskipgrams(options);
+            if (flexfromskip) {
+                cerr << "Computing flexgrams from skipgrams" << corpusfile <<endl;
+                int found = inputmodel.computeflexgrams_fromskipgrams();
+                cerr << found << " flexgrams found" << corpusfile <<endl;
+            }
+        } else {
+            if (constrainbymodel) {
+                cerr << "Unloading constraint model" << endl;
+                delete constrainbymodel;
+                constrainbymodel = NULL;
+            }
+        }
+        
+
+        if (!outputmodelfile.empty()) {
+            cerr << "Writing model to " << outputmodelfile << endl;
+            inputmodel.write(outputmodelfile);
+        }
+        //didsomething = viewmodel<ModelType>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD) || didsomething; 
+        viewmodel<ModelType>(inputmodel, classdecoder, classencoder, print, report, histogram, query, relations, info, printreverseindex, cooc, coocthreshold); 
+
+        if (!querypatterns.empty()) {
+            processquerypatterns<ModelType>(inputmodel,  classencoder, classdecoder, querypatterns, relations);
+        }
+        return true;
+}
 
 int main( int argc, char *argv[] ) {
     
@@ -247,6 +303,7 @@ int main( int argc, char *argv[] ) {
     double COOCTHRESHOLD = 0;
     int DOCOOC = 0; //1= absolute, 2= npmi
     bool continued = false;
+    bool expand = false; //on different data
     bool ignoreerrors = false;
     uint32_t firstsentence = 1;
     char c;    
@@ -373,6 +430,7 @@ int main( int argc, char *argv[] ) {
             break;
         case 'e':
             firstsentence = atoi(optarg);
+            expand = true;
             break;
         case 'h':
             usage();
@@ -443,7 +501,6 @@ int main( int argc, char *argv[] ) {
         }
 
 
-        bool didsomething = false;
         if ((inputmodelfile.empty()) && (corpusfile.empty())) {
             if (argc <= 1) {
                 usage();
@@ -472,7 +529,7 @@ int main( int argc, char *argv[] ) {
         if (!inputmodelfile.empty()) {
             assert_file_exists(inputmodelfile);
             inputmodeltype = getmodeltype(inputmodelfile);
-            if ((inputmodeltype == INDEXEDPATTERNMODEL) && (outputmodeltype == UNINDEXEDPATTERNMODEL)) {
+            if ((inputmodeltype == INDEXEDPATTERNMODEL) && (outputmodeltype == UNINDEXEDPATTERNMODEL))   {
                 cerr << "Indexed input model will be read as unindexed because -u was set" << endl;
                 inputmodeltype = UNINDEXEDPATTERNMODEL; //will read indexed models as unindexed automatically
             }
@@ -482,8 +539,6 @@ int main( int argc, char *argv[] ) {
         //operations without input model
         PatternSetModel * constrainbymodel = NULL;
         PatternModelOptions constrainoptions = PatternModelOptions(options);
-        //indices not at all needed to constrain, don't load (saves memory)
-        constrainoptions.DOREVERSEINDEX = false;
         constrainoptions.DOREMOVEINDEX = false;
         if (!inputmodelfile2.empty()) {
             cerr << "Loading constraint model (aka training/intersection model)" << endl;
@@ -493,7 +548,7 @@ int main( int argc, char *argv[] ) {
 
         IndexedCorpus * corpus = NULL;
 
-        if ( ((outputmodeltype == UNINDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNMODEL))) {
+        if ( ((outputmodeltype == UNINDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNMODEL) || (outputmodeltype == UNINDEXEDPATTERNPOINTERMODEL) || (inputmodeltype == UNINDEXEDPATTERNPOINTERMODEL))) {
             if (options.DOSKIPGRAMS) {
                 cerr << "NOTE: Skipgram generation on unindexed pattern models can only be done exhaustively! This does not take the -T parameter into account (-T will always be 1), generates lots of skipgrams, and is therefore far less memory efficient than with indexed models." << endl;
                 options.DOSKIPGRAMS_EXHAUSTIVE = true;
@@ -503,31 +558,35 @@ int main( int argc, char *argv[] ) {
             }
         }
 
-        if (corpusfile.empty()) {
-            if ((DOPRINTREVERSEINDEX) || (options.DOSKIPGRAMS) || (DOFLEXFROMSKIP) || (DORELATIONS) || (DOCOOC)) {
-                cerr << "ERROR: No corpus data file was specified (-f), but this is required for the options you specified..." << endl;
-                exit(2);
+        if ((inputmodeltype != UNINDEXEDPATTERNPOINTERMODEL) && (inputmodeltype != INDEXEDPATTERNPOINTERMODEL)) {
+            if (corpusfile.empty()) {
+                if ((DOPRINTREVERSEINDEX) || (options.DOSKIPGRAMS) || (DOFLEXFROMSKIP) || (DORELATIONS) || (DOCOOC)) {
+                    cerr << "ERROR: No corpus data file was specified (-f), but this is required for the options you specified..." << endl;
+                    exit(2);
+                }
+            } else if (LOADCORPUS) {
+                cerr << "Loading corpus data..." << endl;
+                std::ifstream * f = new ifstream(corpusfile.c_str());
+                if (!f->good()) {
+                    cerr << "Can't open corpus data: " << corpusfile << endl;
+                    exit(2);
+                }
+                corpus = new IndexedCorpus(f);
+                f->close();
             }
-        } else if (LOADCORPUS) {
-            cerr << "Loading corpus data..." << endl;
-            std::ifstream * f = new ifstream(corpusfile.c_str());
-            if (!f->good()) {
-                cerr << "Can't open corpus data: " << corpusfile << endl;
-                exit(2);
-            }
-            corpus = new IndexedCorpus(f);
-            f->close();
         }
             
 
         if (DOINPLACEREBUILD) {
             cerr << "In-place rebuild (-I) enabled" << corpusfile <<endl;
 
-            if (corpusfile.empty()) {
-                cerr << "ERROR: Corpus data file (-f) must be specified when -I is set!." << classfile << endl;
-                exit(2);
-            } else {
-                assert_file_exists(corpusfile);
+            if ((inputmodeltype != UNINDEXEDPATTERNPOINTERMODEL) && (inputmodeltype != INDEXEDPATTERNPOINTERMODEL)) {
+                if (corpusfile.empty()) {
+                    cerr << "ERROR: Corpus data file (-f) must be specified when -I is set!." << classfile << endl;
+                    exit(2);
+                } else {
+                    assert_file_exists(corpusfile);
+                }
             }
 
             if (outputmodeltype == UNINDEXEDPATTERNMODEL) {
@@ -554,10 +613,9 @@ int main( int argc, char *argv[] ) {
                 }
 
                 if (!outputmodelfile.empty()) {
-                    didsomething = true;
                     model.write(outputmodelfile);
                 }
-                didsomething = viewmodel<PatternModel<uint32_t>>(model, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC) || didsomething; 
+                viewmodel<PatternModel<uint32_t>>(model, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC); 
             } else if (outputmodeltype == INDEXEDPATTERNMODEL) {
                 cerr << "Loading model " << inputmodelfile << " as indexed pattern model..."<<endl;
                 PatternModelOptions optionscopy = PatternModelOptions(options);
@@ -574,12 +632,10 @@ int main( int argc, char *argv[] ) {
                 model.train(corpusfile, options, model.getinterface(), continued, firstsentence,ignoreerrors);
 
                 if (!outputmodelfile.empty()) {
-                    didsomething = true;
                     model.write(outputmodelfile);
                 }
-                didsomething = viewmodel<IndexedPatternModel<>>(model, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD) || didsomething; 
+                viewmodel<IndexedPatternModel<>>(model, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD); 
                 if (!querypatterns.empty()) {
-                    didsomething = true;
                     processquerypatterns<IndexedPatternModel<>>(model,  classencoder, classdecoder, querypatterns, DORELATIONS);
                 }
             }
@@ -587,92 +643,12 @@ int main( int argc, char *argv[] ) {
 
 
         } else if (inputmodeltype == INDEXEDPATTERNMODEL) {
-            cerr << "Loading indexed pattern model " << inputmodelfile << " as input model..."<<endl;
-            IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options, (PatternModelInterface*) constrainbymodel, corpus);
-            if (corpus != NULL) inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
-
-            if (!corpusfile.empty()) {
-                cerr << "Expanding indexed model on  " << corpusfile <<endl;
-                inputmodel.train(corpusfile, options, constrainbymodel, continued,firstsentence,ignoreerrors);
-                if (constrainbymodel) {
-                    cerr << "Unloading constraint model" << endl;
-                    delete constrainbymodel;
-                    constrainbymodel = NULL;
-                }
-            } else if (options.DOSKIPGRAMS) {
-                if (constrainbymodel) {
-                    cerr << "Unloading constraint model" << endl;
-                    delete constrainbymodel;
-                    constrainbymodel = NULL;
-                }
-                cerr << "Computing skipgrams" << endl;
-                if (!inputmodelfile2.empty()) cerr << "WARNING: Can not compute skipgrams constrained by " << inputmodelfile2 << "!" << endl;
-                inputmodel.trainskipgrams(options);
-                if (DOFLEXFROMSKIP) {
-                    cerr << "Computing flexgrams from skipgrams" << corpusfile <<endl;
-                    int found = inputmodel.computeflexgrams_fromskipgrams();
-                    cerr << found << " flexgrams found" << corpusfile <<endl;
-                }
-            } else {
-                if (constrainbymodel) {
-                    cerr << "Unloading constraint model" << endl;
-                    delete constrainbymodel;
-                    constrainbymodel = NULL;
-                }
-            }
-            
-
-            if (!outputmodelfile.empty()) {
-                cerr << "Writing model to " << outputmodelfile << endl;
-                didsomething = true;
-                inputmodel.write(outputmodelfile);
-            }
-            didsomething = viewmodel<IndexedPatternModel<>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD) || didsomething; 
-            if (!querypatterns.empty()) {
-                didsomething = true;
-                processquerypatterns<IndexedPatternModel<>>(inputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
-            }
-            
+            loadandprocessmodel<IndexedPatternModel<>>(inputmodelfile, inputmodeltype,  outputmodelfile, outputmodeltype, corpusfile, constrainbymodel,  corpus, options, continued, expand, firstsentence,  ignoreerrors, inputmodelfile2, classdecoder,classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD, DOFLEXFROMSKIP, querypatterns);
+        } else if (inputmodeltype == INDEXEDPATTERNPOINTERMODEL) {
+            loadandprocessmodel<IndexedPatternPointerModel<>>(inputmodelfile, inputmodeltype,  outputmodelfile, outputmodeltype, corpusfile, constrainbymodel,  corpus, options, continued, expand, firstsentence,  ignoreerrors, inputmodelfile2, classdecoder,classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD, DOFLEXFROMSKIP, querypatterns);
             
         } else if (inputmodeltype == UNINDEXEDPATTERNMODEL) {
-            cerr << "Loading unindexed pattern model " << inputmodelfile << " as input model..."<<endl;
-            PatternModel<uint32_t> inputmodel = PatternModel<uint32_t>(inputmodelfile, options, (PatternModelInterface*) constrainbymodel, corpus);
-
-
-            if (!corpusfile.empty()) {
-                cerr << "Expanding unindexed model on  " << corpusfile <<endl;
-                inputmodel.train(corpusfile, options, constrainbymodel, continued,firstsentence,ignoreerrors);
-                if (constrainbymodel) {
-                    cerr << "Unloading constraint model" << endl;
-                    delete constrainbymodel;
-                    constrainbymodel = NULL;
-                }
-            } else if (options.DOSKIPGRAMS || options.DOSKIPGRAMS_EXHAUSTIVE || DOFLEXFROMSKIP) {
-                if (constrainbymodel) {
-                    cerr << "Unloading constraint model" << endl;
-                    delete constrainbymodel;
-                    constrainbymodel = NULL;
-                }
-                cerr << "WARNING: Can not compute skipgrams/flexgrams on unindexed models after initial model training!" << endl;
-            } else {
-                if (constrainbymodel) {
-                    cerr << "Unloading constraint model" << endl;
-                    delete constrainbymodel;
-                    constrainbymodel = NULL;
-                }
-            }
-
-            if (!outputmodelfile.empty()) {
-                cerr << "Writing model to " << outputmodelfile << endl;
-                didsomething = true;
-                inputmodel.write(outputmodelfile);
-            }
-            didsomething = viewmodel<PatternModel<uint32_t>>(inputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS , DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD) || didsomething; 
-            if (!querypatterns.empty()) {
-                didsomething = true;
-                processquerypatterns<PatternModel<uint32_t>>(inputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
-            }
-
+            loadandprocessmodel<PatternModel<uint32_t>>(inputmodelfile, inputmodeltype,  outputmodelfile, outputmodeltype, corpusfile, constrainbymodel,  corpus, options, continued, expand, firstsentence,  ignoreerrors, inputmodelfile2, classdecoder,classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD, DOFLEXFROMSKIP, querypatterns);
         } else if (!inputmodelfile.empty()) {
             cerr << "ERROR: Input model is not a valid colibri pattern model (" << inputmodeltype << ")" << endl;
             exit(2);
@@ -702,11 +678,9 @@ int main( int argc, char *argv[] ) {
                 if (!outputmodelfile.empty()) {
                     cerr << "Saving indexed pattern model to " << outputmodelfile <<endl;
                     outputmodel.write(outputmodelfile);
-                    didsomething = true;
                 }
-                didsomething = viewmodel<IndexedPatternModel<>>(outputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS,DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD) || didsomething; 
+                viewmodel<IndexedPatternModel<>>(outputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS,DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD); 
                 if (!querypatterns.empty()) {
-                    didsomething = true;
                     processquerypatterns<IndexedPatternModel<>>(outputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
                 }
             } else if (outputmodeltype == UNINDEXEDPATTERNMODEL) {
@@ -727,11 +701,9 @@ int main( int argc, char *argv[] ) {
                 if (!outputmodelfile.empty()) {
                     cerr << "Saving unindexed pattern model to " << outputmodelfile <<endl;
                     outputmodel.write(outputmodelfile);
-                    didsomething = true;
                 }
-                didsomething = viewmodel<PatternModel<uint32_t>>(outputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO,DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD) || didsomething; 
+                viewmodel<PatternModel<uint32_t>>(outputmodel, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO,DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD); 
                 if (!querypatterns.empty()) {
-                    didsomething = true;
                     processquerypatterns<PatternModel<uint32_t>>(outputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
                 }
 
@@ -742,10 +714,6 @@ int main( int argc, char *argv[] ) {
 
         if (corpus != NULL) delete corpus;
 
-        if (!didsomething)  {
-            cerr << "Ooops... You didn't really give me anything to do...that can't be right.. Please study the usage options (-h) again! Did you perhaps forget a -P or -o? " << endl;
-            exit(1);
-        }
 
     }
 }
