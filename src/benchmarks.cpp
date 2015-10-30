@@ -303,13 +303,13 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
 
-    if (testnr == 15) {
+/*    if (testnr == 15) {
         Measurement m = begin(string("15 - Training unindexed PatternPointerModel<OrderedPatternPointerMap> from preloaded corpus: threshold 2, up to 8-grams, no skipgrams"));
         PatternModelOptions options;
         options.MINTOKENS = 2; options.MAXLENGTH = 8;
         PatternPointerModel<uint32_t,BaseValueHandler<uint32_t>,OrderedPatternPointerMap<uint32_t>> model(&corpus);
         model.train(datafile, options);
         end(m);
-    }
+    }*/
 }
 

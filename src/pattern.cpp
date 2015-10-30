@@ -71,7 +71,6 @@ const size_t datasize(unsigned char * data, int maxbytes = 0) {
     //return the size of the pattern (in tokens)
     int i = 0;
     int n = 0;
-    unsigned int length;
     bool prevhigh = false;
     do {
         if ((maxbytes > 0) && (i >= maxbytes)) {
@@ -251,7 +250,6 @@ void PatternPointer::write(ostream * out, const unsigned char * corpusstart) con
 std::string datatostring(unsigned char * data, const ClassDecoder& classdecoder, int maxbytes = 0) {
     std::string result = ""; 
     int i = 0;
-    int gapsize = 0;
     unsigned int length; 
     do {
         if ((maxbytes > 0) && (i >= maxbytes)) {
@@ -284,9 +282,8 @@ std::string Pattern::tostring(const ClassDecoder& classdecoder) const {
 
 std::string PatternPointer::tostring(const ClassDecoder& classdecoder) const {
     std::string result = ""; 
-    int i = 0;
+    unsigned int i = 0;
     unsigned int n =0;
-    int gapsize = 0;
     unsigned int length; 
     unsigned int cls;
     bool flex = false;
@@ -657,7 +654,7 @@ PatternPointer::PatternPointer(unsigned char * ref, int begin, int length) { //s
         if (c < 128) {
             //we have a token
             n++; 
-            if (n - begin == length) {
+            if (n - begin == (unsigned int) length) {
                 length_b = (i + 1) - begin_b;
                 break;
             } else if ((c == ClassDecoder::delimiterclass) && (!prevhigh) ) {
@@ -665,7 +662,7 @@ PatternPointer::PatternPointer(unsigned char * ref, int begin, int length) { //s
                 break;
             }
             i++;
-            if (n == begin) begin_b = i;
+            if (n == (unsigned int) begin) begin_b = i;
             prevhigh = false;
         } else {
             prevhigh = true;
