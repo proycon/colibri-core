@@ -578,6 +578,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             model_version = this->getmodelversion();
             if (corpus) {
                 this->reverseindex = corpus;
+                this->attachcorpus(*corpus);
             } else {
                 this->reverseindex = NULL;
             }
@@ -602,6 +603,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             this->load(f,options,constrainmodel);
             if (corpus) {
                 this->reverseindex = corpus;
+                this->attachcorpus(*corpus);
             } else {
                 this->reverseindex = NULL;
             }
@@ -629,6 +631,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             model_version = this->getmodelversion();
             if (corpus) {
                 this->reverseindex = corpus;
+                this->attachcorpus(*corpus);
             } else {
                 this->reverseindex = NULL;
             }
@@ -719,7 +722,9 @@ class PatternModel: public MapType, public PatternModelInterface {
                 unsigned char * corpusdata = new unsigned char[corpussize];
                 f->read((char*) corpusdata,sizeof(unsigned char) * corpussize);
                 reverseindex = new IndexedCorpus(corpusdata, corpussize);
+                this->attachcorpus(*reverseindex);
                 reverseindex_internal = true;
+                if (options.DEBUG) std::cerr << "(read " << corpussize << " bytes)" << std::endl;
             }
             f->read( (char*) &totaltokens, sizeof(uint64_t));        
             f->read( (char*) &totaltypes, sizeof(uint64_t)); 
@@ -731,23 +736,21 @@ class PatternModel: public MapType, public PatternModelInterface {
                 std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;   
             }
 
-            unsigned char * corpusstart = NULL;
-            if (reverseindex != NULL) corpusstart = reverseindex->beginpointer();
 
             if ((model_type == INDEXEDPATTERNMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) {
                 //reading indexed pattern model as unindexed, ok:
-                 MapType::template read<IndexedData,IndexedDataHandler,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, classencodingversion, corpusstart, options.DEBUG);
+                 MapType::template read<IndexedData,IndexedDataHandler,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, classencodingversion,  options.DEBUG);
             } else if ((model_type == UNINDEXEDPATTERNMODEL) && (this->getmodeltype() == INDEXEDPATTERNMODEL)) {
                //reading unindexed model as indexed, this will load the patterns but lose all the counts
-                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, classencodingversion, corpusstart, options.DEBUG);
+                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, classencodingversion,  options.DEBUG);
             //TODO: add reading pointermodel as patternmodel
             } else if (model_type == PATTERNALIGNMENTMODEL)  {
                  //reading pattern alignment model as pattern model, can be
                  //done, but semantics change:  count corresponds to the number of distinct alignments (for unindexed models)
                  //indexed models will lose all counts
-                MapType::template read<PatternFeatureVectorMap<double>,PatternFeatureVectorMapHandler<double>,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS,options.DORESET,classencodingversion, corpusstart, options.DEBUG);
+                MapType::template read<PatternFeatureVectorMap<double>,PatternFeatureVectorMapHandler<double>,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS,options.DORESET,classencodingversion,  options.DEBUG);
             } else {
-                 MapType::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, classencodingversion,corpusstart,  options.DEBUG); //read PatternStore (also works for reading unindexed pattern models as indexed, which will load patterns but lose the counts)
+                 MapType::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, classencodingversion , options.DEBUG); //read PatternStore (also works for reading unindexed pattern models as indexed, which will load patterns but lose the counts)
             }
             this->postread(options);
         }
@@ -2185,9 +2188,52 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
             this->model_version = this->getmodelversion();
             if (corpus) {
                 this->reverseindex = corpus;
+                this->attachcorpus(*corpus);
             } else {
                 this->reverseindex = NULL;
             }
+        }
+
+
+        /**
+        * Read a pattern model from an input stream
+        * @param f The input stream
+        * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+        * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+        * @param corpus Pointer to the loaded corpus, used as a reverse index.
+        */
+        PatternPointerModel<ValueType,ValueHandler,MapType>(std::istream *f, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<ValueType,ValueHandler,MapType,PatternPointer>(){ //load from file
+            this->model_type = this->getmodeltype();
+            this->model_version = this->getmodelversion();
+            if (corpus) {
+                this->reverseindex = corpus;
+                this->attachcorpus(*corpus);
+            } else {
+                this->reverseindex = NULL;
+            }
+            this->load(f,options, constrainmodel);
+        }
+
+        /**
+        * Read a pattern model from file
+        * @param filename The filename
+        * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
+        * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+        * @param corpus Pointer to the loaded corpus, used as a reverse index.
+        */
+        PatternPointerModel<ValueType,ValueHandler,MapType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() { //load from file
+            this->model_type = this->getmodeltype();
+            this->model_version = this->getmodelversion();
+            if (corpus) {
+                this->reverseindex = corpus;
+                this->attachcorpus(*corpus);
+            } else {
+                this->reverseindex = NULL;
+            }
+            std::ifstream * in = new std::ifstream(filename.c_str());
+            this->load( (std::istream *) in, options, constrainmodel);
+            in->close();
+            delete in;
         }
 
         int getmodeltype() const { return UNINDEXEDPATTERNPOINTERMODEL; }
@@ -2227,6 +2273,7 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
             }
             this->valuehandler.add(value, ref);
         }
+
 };
 
 
@@ -2279,6 +2326,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         this->model_version = this->getmodelversion();
         if (corpus) {
             this->reverseindex = corpus;
+            this->attachcorpus(*corpus);
         } else {
             this->reverseindex = NULL;
         }
@@ -2296,6 +2344,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         this->model_version = this->getmodelversion();
         if (corpus) {
             this->reverseindex = corpus;
+            this->attachcorpus(*corpus);
         } else {
             this->reverseindex = NULL;
         }
@@ -2314,6 +2363,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         this->model_version = this->getmodelversion();
         if (corpus) {
             this->reverseindex = corpus;
+            this->attachcorpus(*corpus);
         } else {
             this->reverseindex = NULL;
         }

@@ -325,12 +325,24 @@ class PatternStoreInterface {
  * @tparam ContainerType The low-level container type used (an STL container such as set/map). 
  * @tparam ReadWriteSizeType Data type for addressing, influences only the maximum number of items that can be stored (2**64) in the container, as this will be represented in the very beginning of the binary file. No reason to change this unless the container is very deeply nested in others and contains only few items.
  */
-template<class ContainerType,class ReadWriteSizeType = uint64_t,class PatternType = Pattern> //,class PatternType = Pattern>
+template<class ContainerType,class ReadWriteSizeType = uint64_t,class PatternType = Pattern> 
 class PatternStore: public PatternStoreInterface {
+    protected:
+        unsigned char * corpusstart; //used only when PatternType=PatternPointer
+        unsigned int corpussize;
     public:
-        PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {};
+        PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {corpusstart = NULL; corpussize = 0; };
         virtual ~PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {};
     
+        virtual void attachcorpus(unsigned char * corpusstart, unsigned int corpussize) {
+                this->corpusstart = corpusstart;
+                this->corpussize = corpussize;
+        }
+        virtual void attachcorpus(const IndexedCorpus & corpus) {
+                this->corpusstart = corpus.beginpointer();
+                this->corpussize = corpus.bytesize();
+        }
+
         virtual void insert(const PatternType & pattern)=0; //might be a noop in some implementations that require a value
 
         virtual bool has(const Pattern &) const =0;
@@ -374,8 +386,9 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
      protected:
         ValueHandler valuehandler;
      public:
-        PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType,PatternType>(): PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {};
+        PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType,PatternType>(): PatternStore<ContainerType,ReadWriteSizeType,PatternType>() { };
         virtual ~PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType,PatternType>() {};
+
 
         virtual void insert(const PatternType & pattern, ValueType & value)=0;
 
@@ -408,7 +421,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
                 PatternType p = iter->first;
-                p.write(out);
+                p.write(out, this->corpusstart);
                 this->valuehandler.write(out, iter->second);
             }
         }
@@ -428,17 +441,17 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
          * Read a map from input stream (in binary format)
          */
         template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler,class ReadPatternType=PatternType>
-        void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, const unsigned char classencodingversion=2, unsigned char * corpusstart = NULL, bool DEBUG=false) {
+        void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, const unsigned char classencodingversion=2, bool DEBUG=false) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             ReadPatternType p;
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
-            if (DEBUG) std::cerr << "Reading " << s << " patterns, classencodingversion=" << classencodingversion << std::endl;
+            if (DEBUG) std::cerr << "Reading " << s << " patterns, classencodingversion=" << (int) classencodingversion << ", @corpusstart=" << (size_t) this->corpusstart << std::endl;
             if (MINTOKENS == -1) MINTOKENS = 0;
             for (ReadWriteSizeType i = 0; i < s; i++) {
                 try {
-                    p = ReadPatternType(in, false, classencodingversion, corpusstart);
+                    p = ReadPatternType(in, false, classencodingversion, this->corpusstart, DEBUG);
                 } catch (std::exception &e) {
                     std::cerr << "ERROR: Exception occurred at pattern " << (i+1) << " of " << s << std::endl;
                     throw InternalError();
@@ -485,9 +498,9 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
         /**
          * Read a map from file (in binary format)
          */
-        void read(std::string filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET = false, const unsigned char classencodingversion = 2, unsigned char * corpusstart = NULL,bool DEBUG=false) { //no templates for this one, easier on python/cython
+        void read(std::string filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET = false, const unsigned char classencodingversion = 2, bool DEBUG=false) { //no templates for this one, easier on python/cython
             std::ifstream * in = new std::ifstream(filename.c_str());
-            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET, classencodingversion, corpusstart, DEBUG);
+            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET, classencodingversion,  DEBUG);
             in->close();
             delete in;
         }
@@ -608,7 +621,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
             for (iterator iter = begin(); iter != end(); iter++) {
                 Pattern p = *iter;
-                p.write(out);
+                p.write(out, this->corpusstart);
             }
         }
 
@@ -720,7 +733,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
             for (iterator iter = begin(); iter != end(); iter++) {
                 Pattern p = *iter;
-                p.write(out);
+                p.write(out, this->corpusstart);
             }
         }
 

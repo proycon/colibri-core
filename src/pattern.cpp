@@ -227,10 +227,7 @@ const size_t PatternPointer::hash() const {
 
 
 void Pattern::write(ostream * out, const unsigned char * corpusstart) const {
-    if (corpusstart != NULL) {
-        cerr << "ERROR: Pattern can not be written in pointer format!" << endl;
-        throw InternalError();
-    }
+    //corpusstart is not used must does need to be present so we have the same signature as PatternPointer
     const int s = bytesize();
     if (s > 0) {
         out->write( (char*) data , (int) s + 1); //+1 to include the \0 marker
@@ -524,10 +521,11 @@ PatternPointer::PatternPointer(std::istream * in, bool ignoreeol, const unsigned
         throw InternalError();
     } else {
         unsigned int corpusoffset;
-        in->read( (char* ) &corpusoffset, sizeof(size_t));
+        in->read( (char* ) &corpusoffset, sizeof(unsigned int));
         data = corpusstart + corpusoffset;
         in->read( (char* ) &bytes, sizeof(uint32_t));
         in->read( (char* ) &mask, sizeof(uint32_t));
+        if (debug) std::cerr << "DEBUG read patternpointer @corpusoffset=" << (size_t) data << " bytes=" << (int) bytes << " mask=" << (int) mask << std::endl;
     }
 }
 /*

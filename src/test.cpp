@@ -1430,6 +1430,17 @@ int main( int argc, char *argv[] ) {
         cerr << "Verifying equal token count" ; test(ppmodel.tokens(), refmodel.tokens());
         cerr << "Verifying equal type count" ; test(ppmodel.types(), refmodel.types());
 
+        string ppmodelfile = "/tmp/patternpointermodel.tmp";
+        
+        cerr << "Writing PatternPointerModel to file" << endl;
+        ppmodel.write(ppmodelfile);
+
+        cerr << "Reading PatternPointerModel from file" << endl;
+        options.DEBUG = true;
+        PatternPointerModel<uint32_t> ppmodel2 = PatternPointerModel<uint32_t>(ppmodelfile, options);
+        cerr << "Verifying equal size" ; test(ppmodel2.size(), ppmodel.size());
+        cerr << "Verifying equal token count" ; test(ppmodel2.tokens(), ppmodel.tokens());
+        cerr << "Verifying equal type count" ; test(ppmodel2.types(), ppmodel.types());
     }
 
 
