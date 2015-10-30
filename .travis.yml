@@ -13,5 +13,5 @@ script:
     - colibri-test
     - LD_LIBRARY_PATH="$VIRTUAL_ENV/lib/" python test.py
     - cd exp
-    - LD_LIBRARY_PATH="$VIRTUAL_ENV/lib/" colibri-patternmodeller-test.sh
+    - LD_LIBRARY_PATH="$VIRTUAL_ENV/lib/" ./colibri-patternmodeller-test.sh
     
