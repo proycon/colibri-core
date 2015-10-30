@@ -56,6 +56,10 @@ enum PatternCategory {
     FLEXGRAM = 3, /**< For flexgrams, i.e. patterns with dynamic-width gaps */
 };
 
+enum PatternType {
+    PATTERN = 0,
+    PATTERNPOINTER = 1,
+};
 
 void readanddiscardpattern(std::istream * in, bool pointerformat = false);
 int reader_passmarker(const unsigned char c, std::istream * in); 
@@ -70,6 +74,7 @@ class PatternPointer;
  */
 class Pattern {
     public:
+     const static int patterntype = PATTERN;
      unsigned char * data; /**< This array holds the variable-width byte representation, it is always terminated by \0 (ENDMARKER). Though public, you usually do not want to access it directly */
      
      /**
@@ -351,6 +356,7 @@ Pattern patternfromfile(const std::string & filename); //helper function to read
 
 class PatternPointer {
     public:
+     const static int patterntype = PATTERNPOINTER;
      unsigned char * data; /** Pointer to Pattern data */
      uint32_t bytes; //number of bytes
      uint32_t mask; //0 == NGRAM

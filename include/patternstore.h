@@ -35,11 +35,6 @@
  * Contains lower-level containers for patterns
  */
 
-enum StoreType { //TODO: check if used?
-    PATTERNBASED = 0,
-    POINTERBASED = 1,
-};
-
 
 typedef std::pair<IndexReference,PatternPointer> IndexPattern;
 /**
@@ -331,8 +326,9 @@ class PatternStore: public PatternStoreInterface {
         unsigned char * corpusstart; //used only when PatternType=PatternPointer
         unsigned int corpussize;
         unsigned char classencodingversion;
+        int patterntype;
     public:
-        PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {corpusstart = NULL; corpussize = 0; classencodingversion = 2; };
+        PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {corpusstart = NULL; corpussize = 0; classencodingversion = 2; patterntype = PatternType::patterntype; };
         virtual ~PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {};
     
         virtual void attachcorpus(unsigned char * corpusstart, unsigned int corpussize) {

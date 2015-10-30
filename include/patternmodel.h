@@ -79,6 +79,7 @@ enum ModelType {
     PATTERNALIGNMENTMODEL = 40,
 };
 
+
 /**
  * Defines Reverse Index Types
  */
@@ -714,6 +715,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << ", classencodingversion=" << (int) this->classencodingversion << std::endl;   
             }
             if ((model_type == UNINDEXEDPATTERNPOINTERMODEL) || (model_type == INDEXEDPATTERNPOINTERMODEL)) {
+                this->patterntype = PATTERNPOINTER;
                 if (options.DEBUG) std::cerr << "Reading corpus data" << std::endl;
                 unsigned int corpussize;
                 f->read( (char*) &corpussize, sizeof(unsigned int));
