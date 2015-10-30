@@ -330,8 +330,9 @@ class PatternStore: public PatternStoreInterface {
     protected:
         unsigned char * corpusstart; //used only when PatternType=PatternPointer
         unsigned int corpussize;
+        unsigned char classencodingversion;
     public:
-        PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {corpusstart = NULL; corpussize = 0; };
+        PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {corpusstart = NULL; corpussize = 0; classencodingversion = 2; };
         virtual ~PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {};
     
         virtual void attachcorpus(unsigned char * corpusstart, unsigned int corpussize) {
@@ -342,6 +343,11 @@ class PatternStore: public PatternStoreInterface {
                 this->corpusstart = corpus.beginpointer();
                 this->corpussize = corpus.bytesize();
         }
+
+        /**
+         * Set this to read patterns using the v1 classencoding (pre Colibri Core v2). Only for reading, write actions will always use the newest version.
+         */
+        virtual void use_v1_format() { this->classencodingversion = 1; }
 
         virtual void insert(const PatternType & pattern)=0; //might be a noop in some implementations that require a value
 
@@ -441,17 +447,17 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
          * Read a map from input stream (in binary format)
          */
         template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler,class ReadPatternType=PatternType>
-        void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, const unsigned char classencodingversion=2, bool DEBUG=false) {
+        void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false,  bool DEBUG=false) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             ReadPatternType p;
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
-            if (DEBUG) std::cerr << "Reading " << s << " patterns, classencodingversion=" << (int) classencodingversion << ", @corpusstart=" << (size_t) this->corpusstart << std::endl;
+            if (DEBUG) std::cerr << "Reading " << s << " patterns, classencodingversion=" << (int) this->classencodingversion << ", @corpusstart=" << (size_t) this->corpusstart << std::endl;
             if (MINTOKENS == -1) MINTOKENS = 0;
             for (ReadWriteSizeType i = 0; i < s; i++) {
                 try {
-                    p = ReadPatternType(in, false, classencodingversion, this->corpusstart, DEBUG);
+                    p = ReadPatternType(in, false, this->classencodingversion, this->corpusstart, DEBUG);
                 } catch (std::exception &e) {
                     std::cerr << "ERROR: Exception occurred at pattern " << (i+1) << " of " << s << std::endl;
                     throw InternalError();
@@ -461,7 +467,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
                     if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
                 }
                 const int n = p.size();
-                if (DEBUG) std::cerr << "Read pattern #" << (i+1) << ", size=" << n << ", valuehandler=" << readvaluehandler.id() << ", classencodingversion="<<(int)classencodingversion;
+                if (DEBUG) std::cerr << "Read pattern #" << (i+1) << ", size=" << n << ", valuehandler=" << readvaluehandler.id() << ", classencodingversion="<<(int)this->classencodingversion;
                 ReadValueType readvalue;
                 readvaluehandler.read(in, readvalue);
                 if (n >= MINLENGTH && n <= MAXLENGTH)  {
@@ -498,9 +504,9 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
         /**
          * Read a map from file (in binary format)
          */
-        void read(std::string filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET = false, const unsigned char classencodingversion = 2, bool DEBUG=false) { //no templates for this one, easier on python/cython
+        void read(std::string filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET = false, bool DEBUG=false) { //no templates for this one, easier on python/cython
             std::ifstream * in = new std::ifstream(filename.c_str());
-            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET, classencodingversion,  DEBUG);
+            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET, DEBUG);
             in->close();
             delete in;
         }
@@ -628,12 +634,12 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
         /**
          * Read the set from input stream, in binary format
          */
-        void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true,const unsigned char classencodingversion = 2) {
+        void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
             for (unsigned int i = 0; i < s; i++) {
-                Pattern p = Pattern(in, false, classencodingversion);
+                Pattern p = Pattern(in, false, this->classencodingversion);
                 if (!DONGRAMS || !DOSKIPGRAMS || !DOFLEXGRAMS) {
                     const PatternCategory c = p.category();
                     if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;
@@ -650,7 +656,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
          * and retains only the keys for the set.
          */
         template<class ReadValueType, class ReadValueHandler=BaseValueHandler<ReadValueType>>
-        void readmap(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, const unsigned char classencodingversion = 2) {
+        void readmap(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
@@ -659,7 +665,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
             for (ReadWriteSizeType i = 0; i < s; i++) {
                 Pattern p;
                 try {
-                    p = Pattern(in, false, classencodingversion);
+                    p = Pattern(in, false, this->classencodingversion);
                 } catch (std::exception &e) {
                     std::cerr << "ERROR: Exception occurred at pattern " << (i+1) << " of " << s << std::endl;
                     throw InternalError();
@@ -737,12 +743,12 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
             }
         }
 
-        void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true,const unsigned char classencodingversion = 2) {
+        void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
             for (unsigned int i = 0; i < s; i++) {
-                Pattern p = Pattern(in, false, classencodingversion);
+                Pattern p = Pattern(in, false, this->classencodingversion);
                 if (!DONGRAMS || !DOSKIPGRAMS || !DOFLEXGRAMS) {
                     const PatternCategory c = p.category();
                     if ((!DONGRAMS && c == NGRAM) || (!DOSKIPGRAMS && c == SKIPGRAM) || (!DOFLEXGRAMS && c == FLEXGRAM)) continue;

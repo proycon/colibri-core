@@ -93,11 +93,11 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
         virtual void load(std::istream * f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             options.MINTOKENS = 1; //other values would be meaningless
 
-            unsigned char classencodingversion = 2;
             char null;
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
             f->read( (char*) &model_version, sizeof(char));  
+            if (model_version == 1) this->classencodingversion = 1;
             if ((null != 0) || (model_type != PATTERNALIGNMENTMODEL ))  {
                 std::cerr << "File is not a colibri alignment model file (did you try to load a different type of pattern model?)" << std::endl;
                 throw InternalError();
@@ -116,7 +116,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             PatternStoreInterface * constrainstore = NULL;
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
-            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, classencodingversion, options.DEBUG);  
+            PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, options.DEBUG);  
             if (options.DEBUG) std::cerr << "Read " << this->size() << " patterns" << std::endl;
             this->postread(options);
         }

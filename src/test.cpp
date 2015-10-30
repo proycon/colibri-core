@@ -1436,7 +1436,6 @@ int main( int argc, char *argv[] ) {
         ppmodel.write(ppmodelfile);
 
         cerr << "Reading PatternPointerModel from file" << endl;
-        options.DEBUG = true;
         PatternPointerModel<uint32_t> ppmodel2 = PatternPointerModel<uint32_t>(ppmodelfile, options);
         cerr << "Verifying equal size" ; test(ppmodel2.size(), ppmodel.size());
         cerr << "Verifying equal token count" ; test(ppmodel2.tokens(), ppmodel.tokens());

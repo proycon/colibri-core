@@ -393,11 +393,10 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          */
         virtual void load(std::istream * f, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) { //load from file
             char null;
-            unsigned char classencodingversion = 2;
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
             f->read( (char*) &model_version, sizeof(char));       
-            if (model_version == 1) classencodingversion = 1;
+            if (model_version == 1) this->classencodingversion = 1;
             if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) && (model_type != PATTERNSETMODEL) && (model_type != PATTERNALIGNMENTMODEL) ))  {
                 std::cerr << "ERROR: File is not a colibri patternmodel file" << std::endl;
                 throw InternalError();
@@ -412,21 +411,21 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
             if (options.DEBUG) { 
-                std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << ", classencodingversion" << (int) classencodingversion << std::endl;   
+                std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << ", classencodingversion" << (int) this->classencodingversion << std::endl;   
                 std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;   
             }
             if (model_type == PATTERNSETMODEL) {
                 //reading set
-                PatternSet<uint64_t>::read(f, options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, classencodingversion); //read PatternStore
+                PatternSet<uint64_t>::read(f, options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS); //read PatternStore
             } else if (model_type == INDEXEDPATTERNMODEL) {
                 //reading from indexed pattern model, ok:
-                 readmap<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, classencodingversion);
+                 readmap<IndexedData,IndexedDataHandler>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
             } else if (model_type == UNINDEXEDPATTERNMODEL)  {
                 //reading from unindexed pattern model, ok:
-                 readmap<uint32_t,BaseValueHandler<uint32_t>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, classencodingversion);
+                 readmap<uint32_t,BaseValueHandler<uint32_t>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
             } else if (model_type == PATTERNALIGNMENTMODEL)  {
                  //ok:
-                 readmap<PatternFeatureVectorMap<double>, PatternFeatureVectorMapHandler<double>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, classencodingversion);
+                 readmap<PatternFeatureVectorMap<double>, PatternFeatureVectorMapHandler<double>>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
             } else {
                 std::cerr << "ERROR: Unknown model type" << std::endl;
                 throw InternalError();
@@ -700,11 +699,10 @@ class PatternModel: public MapType, public PatternModelInterface {
          */
         virtual void load(std::istream * f, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) { //load from file
             char null;
-            unsigned char classencodingversion = 2;
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
             f->read( (char*) &model_version, sizeof(char));        
-            if (model_version == 1) classencodingversion = 1;
+            if (model_version == 1) this->classencodingversion = 1;
             if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != UNINDEXEDPATTERNPOINTERMODEL) && (model_type != INDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNPOINTERMODEL) && (model_type != PATTERNALIGNMENTMODEL) ))  {
                 std::cerr << "File is not a colibri model file (or a very old one)" << std::endl;
                 throw InternalError();
@@ -713,7 +711,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 std::cerr << "WARNING: Model is created with a newer version of Colibri Core! Attempting to continue but failure is likely..." << std::endl;
             }
             if (options.DEBUG) {
-                std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << ", classencodingversion=" << (int) classencodingversion << std::endl;   
+                std::cerr << "Debug enabled, loading PatternModel type " << (int) model_type << ", version " << (int) model_version << ", classencodingversion=" << (int) this->classencodingversion << std::endl;   
             }
             if ((model_type == UNINDEXEDPATTERNPOINTERMODEL) || (model_type == INDEXEDPATTERNPOINTERMODEL)) {
                 if (options.DEBUG) std::cerr << "Reading corpus data" << std::endl;
@@ -739,18 +737,18 @@ class PatternModel: public MapType, public PatternModelInterface {
 
             if ((model_type == INDEXEDPATTERNMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) {
                 //reading indexed pattern model as unindexed, ok:
-                 MapType::template read<IndexedData,IndexedDataHandler,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, classencodingversion,  options.DEBUG);
+                 MapType::template read<IndexedData,IndexedDataHandler,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
             } else if ((model_type == UNINDEXEDPATTERNMODEL) && (this->getmodeltype() == INDEXEDPATTERNMODEL)) {
                //reading unindexed model as indexed, this will load the patterns but lose all the counts
-                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, classencodingversion,  options.DEBUG);
+                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
             //TODO: add reading pointermodel as patternmodel
             } else if (model_type == PATTERNALIGNMENTMODEL)  {
                  //reading pattern alignment model as pattern model, can be
                  //done, but semantics change:  count corresponds to the number of distinct alignments (for unindexed models)
                  //indexed models will lose all counts
-                MapType::template read<PatternFeatureVectorMap<double>,PatternFeatureVectorMapHandler<double>,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS,options.DORESET,classencodingversion,  options.DEBUG);
+                MapType::template read<PatternFeatureVectorMap<double>,PatternFeatureVectorMapHandler<double>,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS,options.DORESET,  options.DEBUG);
             } else {
-                 MapType::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, classencodingversion , options.DEBUG); //read PatternStore (also works for reading unindexed pattern models as indexed, which will load patterns but lose the counts)
+                 MapType::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,  options.DEBUG); //read PatternStore (also works for reading unindexed pattern models as indexed, which will load patterns but lose the counts)
             }
             this->postread(options);
         }
