@@ -136,7 +136,7 @@ class PatternModelOptions {
         int MINSKIPTYPES;  ///< Minimum required amount of distinct patterns that can fit in a gap of a skipgram for the skipgram to be included (default: 2)
         int MAXSKIPS; ///< Maximum skips per skipgram
 
-        bool DOREVERSEINDEX; ///< Compute reverse index? Costs memory. This will be way faster when you pass an IndexedCorpus to the PatternModel constructor. (default: true)
+        bool DOREVERSEINDEX; ///< Obsolete now, only here for backward-compatibility with v1
         bool DOPATTERNPERLINE; ///< Assume each line contains one integral pattern, rather than actively extracting all subpatterns on a line (default: false)
 
         int PRUNENONSUBSUMED; //< Prune all n-grams that are not subsumed by higher-order ngrams
@@ -167,7 +167,7 @@ class PatternModelOptions {
             DOSKIPGRAMS = false;
             DOSKIPGRAMS_EXHAUSTIVE = false;
 
-            DOREVERSEINDEX = true; //only for indexed models
+            DOREVERSEINDEX = true; //obsolete
             DOPATTERNPERLINE = false;
             DORESET = false;
 
@@ -198,7 +198,7 @@ class PatternModelOptions {
             DOSKIPGRAMS = ref.DOSKIPGRAMS;
             DOSKIPGRAMS_EXHAUSTIVE = ref.DOSKIPGRAMS_EXHAUSTIVE;
 
-            DOREVERSEINDEX = ref.DOREVERSEINDEX; //only for indexed models
+            DOREVERSEINDEX = ref.DOREVERSEINDEX; 
             DOPATTERNPERLINE = ref.DOPATTERNPERLINE;
             DORESET = ref.DORESET;
 
@@ -940,9 +940,6 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
                                 if ((found) && (!skipgramsonly)) {
                                     add(iter->first, ref);
-                                    /*if ((options.DOREVERSEINDEX) && (pattern.n() == 1) && (reverseindex != NULL) && (!externalreverseindex)) {
-                                        reverseindex->push_back(ref, pattern); //TODO: make patternpointer
-                                    }*/
                                 } 
                             }
                             if (((n >= 3) || (options.MINTOKENS == 1)) //n is always 1 when mintokens == 1 !!
@@ -2292,28 +2289,15 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 if (n < this->minn) this->minn = n;
                 if ((!this->hasskipgrams) && (p.isskipgram())) this->hasskipgrams = true;
             }
-            buildreverseindex(options); //will only act if options.DOREVERSEINDEX is set
         }
         virtual void posttrain(const PatternModelOptions options) {
             if (!options.QUIET) std::cerr << "Sorting all indices..." << std::endl;
             for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
                 iter->second.sort();
             }
-            buildreverseindex(options);//will only act if options.DOREVERSEINDEX is set
 
         }
    public:
-        /**
-          * build reverse index, requires options.DOREVERSEINDEX to be set or
-          * won't do anything. Also won't build a reverse index if one is loaded
-          * already. Note that pre-loading a reverse index when
-          * loading/training your model is generally quicker.
-         */
-        void buildreverseindex(const PatternModelOptions options) {
-            if ((this->reverseindex) && (this->reverseindex->empty())) {
-                if (!options.QUIET) std::cerr << "WARNING: No reverse indexed passed! Pass one explicitly! Reverse index functions will be disabled for now..." << std::endl;
-            }
-        }
 
        
     /**
@@ -2604,6 +2588,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      */
     t_relationmap getskipcontent(const PatternPointer & pattern) {
         t_relationmap skipcontent; //will hold all skipcontent
+        if (this->reverseindex == NULL) {
+            std::cerr << "ERROR: No corpus data loaded! (in PatternModel::getskipcontent)" << std::endl;
+            throw InternalError();
+        }
 
         if (pattern.category() == SKIPGRAM) {
 			const unsigned int n = pattern.n();

@@ -34,9 +34,6 @@ void usage() {
     cerr << "\t-f [datafile]    Corpus data file (encoded from plain text or other sources with colibri-classencode)" << endl;
     cerr << "\t-c [classfile]   Class file (created with colibri-classencode)"<< endl;
     cerr << "\t-j [modelfile]   Joined input model, i.e. constraint model/training model. Result will be the *intersection* of this (training) model and the input model or constructed model." << endl;
-    cerr << "\t-r [datafile]    Corpus data file to be used as reverse index. Not mandatory but may be specified when loading a patternmodel (even unindexed ones!), with indexed pattern models," << endl;
-    cerr << "\t                 specifying this options prevents the reverse index from being computed on-the-fly from the forward index, which is far more time consuming (especially on large models). " << endl;
-    cerr << "\t                 For unindexed models, reverse indices are always disabled unless explicitly specified using this option" << endl;
     cerr << endl;
     cerr << " Building a model:  colibri-patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
     cerr << "\t-2               Enable two-stage building (for indexed models), takes longer but saves a lot of memory on large corpora! First builds an unindexed model and reuses that (via -I) to" << endl;
@@ -67,7 +64,7 @@ void usage() {
     cerr << endl;
     cerr << " Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
     cerr << endl;
-    cerr << " Viewing a model:  colibri-patternmodeller -i [modelfile] -c [classfile] -[PRHQ]" << endl;
+    cerr << " Viewing a model:  colibri-patternmodeller -i [modelfile] -f [datafile] -c [classfile] -[PRHQ]" << endl;
     cerr << "\t-P               Print the entire model" << endl;
     cerr << "\t-R               Generate a (statistical/coverage) report" << endl;
     cerr << "\t-H               Generate a histogram" << endl;   
@@ -233,7 +230,8 @@ int main( int argc, char *argv[] ) {
     
     PatternModelOptions options;
 
-    options.DOREVERSEINDEX = true;  //will be set to false later for unindexedpattern models without skipgrams
+    bool LOADCORPUS = true; //load corpus/reverse index
+
     int outputmodeltype = INDEXEDPATTERNMODEL;
     bool DOQUERIER = false;
     bool DOREPORT = false;
@@ -311,7 +309,8 @@ int main( int argc, char *argv[] ) {
             outputmodeltype = UNINDEXEDPATTERNMODEL;
 			break;
 		case 'r':
-            reverseindexfile = optarg;
+            //alias for -f , for backward compatibility
+            corpusfile = optarg;
 			break;
 		case 'g':
             DORELATIONS = true;
@@ -492,7 +491,7 @@ int main( int argc, char *argv[] ) {
             cerr << " (Contains " << constrainbymodel->size() << " patterns)" << endl;
         }
 
-        IndexedCorpus * reverseindex = NULL;
+        IndexedCorpus * corpus = NULL;
 
         if ( ((outputmodeltype == UNINDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNMODEL))) {
             if (options.DOSKIPGRAMS) {
@@ -500,26 +499,24 @@ int main( int argc, char *argv[] ) {
                 options.DOSKIPGRAMS_EXHAUSTIVE = true;
                 options.DOSKIPGRAMS = false;
             } else {
-                options.DOREVERSEINDEX = false;
+                LOADCORPUS = false;
             }
-        } else {
-            if ( (!DOPRINTREVERSEINDEX) && (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) && (!DOFLEXFROMSKIP) && (!DOREPORT) && (!DORELATIONS) && (!DOCOOC) && (reverseindexfile.empty())) {
-                options.DOREVERSEINDEX = false; //no need for reverse index
-                cerr << "Reverse index: disabled" << endl;
-            } else {
-                if (!reverseindexfile.empty()) {
-                    assert_file_exists(reverseindexfile);
-                    cerr << "Loading corpus data for reverse index" << endl;
-                    std::ifstream * f = new ifstream(reverseindexfile.c_str());
-                    if (!f->good()) {
-                        cerr << "Can't open corpus data file for Reverse index: " << endl;
-                        exit(2);
-                    }
-                    reverseindex = new IndexedCorpus(f);
-                    f->close();
-                }
-                cerr << "Reverse index: enabled" << endl;
+        }
+
+        if (corpusfile.empty()) {
+            if ((DOPRINTREVERSEINDEX) || (options.DOSKIPGRAMS) || (DOFLEXFROMSKIP) || (DORELATIONS) || (DOCOOC)) {
+                cerr << "ERROR: No corpus data file was specified (-f), but this is required for the options you specified..." << endl;
+                exit(2);
             }
+        } else if (LOADCORPUS) {
+            cerr << "Loading corpus data..." << endl;
+            std::ifstream * f = new ifstream(corpusfile.c_str());
+            if (!f->good()) {
+                cerr << "Can't open corpus data: " << corpusfile << endl;
+                exit(2);
+            }
+            corpus = new IndexedCorpus(f);
+            f->close();
         }
             
 
@@ -537,7 +534,7 @@ int main( int argc, char *argv[] ) {
                 cerr << "Loading model " << inputmodelfile << " as unindexed pattern model..."<<endl;
                 PatternModelOptions optionscopy = PatternModelOptions(options);
                 optionscopy.DORESET = true;
-                PatternModel<uint32_t> model = PatternModel<uint32_t>(inputmodelfile, optionscopy, (PatternModelInterface*) constrainbymodel, reverseindex);
+                PatternModel<uint32_t> model = PatternModel<uint32_t>(inputmodelfile, optionscopy, (PatternModelInterface*) constrainbymodel, corpus);
 
                 if (constrainbymodel) {
                     cerr << "Unloading constraint model" << endl;
@@ -565,7 +562,7 @@ int main( int argc, char *argv[] ) {
                 cerr << "Loading model " << inputmodelfile << " as indexed pattern model..."<<endl;
                 PatternModelOptions optionscopy = PatternModelOptions(options);
                 optionscopy.DORESET = true;
-                IndexedPatternModel<> model = IndexedPatternModel<>(inputmodelfile, optionscopy, (PatternModelInterface*) constrainbymodel, reverseindex);
+                IndexedPatternModel<> model = IndexedPatternModel<>(inputmodelfile, optionscopy, (PatternModelInterface*) constrainbymodel, corpus);
 
                 if (constrainbymodel) {
                     cerr << "Unloading constraint model" << endl;
@@ -591,8 +588,8 @@ int main( int argc, char *argv[] ) {
 
         } else if (inputmodeltype == INDEXEDPATTERNMODEL) {
             cerr << "Loading indexed pattern model " << inputmodelfile << " as input model..."<<endl;
-            IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options, (PatternModelInterface*) constrainbymodel, reverseindex);
-            inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
+            IndexedPatternModel<> inputmodel = IndexedPatternModel<>(inputmodelfile, options, (PatternModelInterface*) constrainbymodel, corpus);
+            if (corpus != NULL) inputmodel.pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
 
             if (!corpusfile.empty()) {
                 cerr << "Expanding indexed model on  " << corpusfile <<endl;
@@ -639,7 +636,7 @@ int main( int argc, char *argv[] ) {
             
         } else if (inputmodeltype == UNINDEXEDPATTERNMODEL) {
             cerr << "Loading unindexed pattern model " << inputmodelfile << " as input model..."<<endl;
-            PatternModel<uint32_t> inputmodel = PatternModel<uint32_t>(inputmodelfile, options, (PatternModelInterface*) constrainbymodel, reverseindex);
+            PatternModel<uint32_t> inputmodel = PatternModel<uint32_t>(inputmodelfile, options, (PatternModelInterface*) constrainbymodel, corpus);
 
 
             if (!corpusfile.empty()) {
@@ -683,7 +680,7 @@ int main( int argc, char *argv[] ) {
             //no inputmodel
 
             if (outputmodeltype == INDEXEDPATTERNMODEL) {
-                IndexedPatternModel<> outputmodel = IndexedPatternModel<>(reverseindex);
+                IndexedPatternModel<> outputmodel = IndexedPatternModel<>(corpus);
                 if (!corpusfile.empty()) {
                     //build new model from corpus
                     cerr << "Building new indexed model from  " << corpusfile <<endl;
@@ -713,7 +710,7 @@ int main( int argc, char *argv[] ) {
                     processquerypatterns<IndexedPatternModel<>>(outputmodel,  classencoder, classdecoder, querypatterns, DORELATIONS);
                 }
             } else if (outputmodeltype == UNINDEXEDPATTERNMODEL) {
-                PatternModel<uint32_t> outputmodel = PatternModel<uint32_t>(reverseindex);
+                PatternModel<uint32_t> outputmodel = PatternModel<uint32_t>(corpus);
                 if (!corpusfile.empty()) {
                     //build new model from corpus
                     cerr << "Building new unindexed model from  " << corpusfile <<endl;
@@ -725,7 +722,7 @@ int main( int argc, char *argv[] ) {
                     constrainbymodel = NULL;
                 }
                 if (DOFLEXFROMSKIP) {
-                    cerr << "WARNING: Can not compute flexgrams form skipgrams on unindexed models!" << endl;
+                    cerr << "WARNING: Can not compute flexgrams from skipgrams on unindexed models!" << endl;
                 }
                 if (!outputmodelfile.empty()) {
                     cerr << "Saving unindexed pattern model to " << outputmodelfile <<endl;
@@ -743,7 +740,7 @@ int main( int argc, char *argv[] ) {
         }
 
 
-        if (reverseindex != NULL) delete reverseindex;
+        if (corpus != NULL) delete corpus;
 
         if (!didsomething)  {
             cerr << "Ooops... You didn't really give me anything to do...that can't be right.. Please study the usage options (-h) again! Did you perhaps forget a -P or -o? " << endl;

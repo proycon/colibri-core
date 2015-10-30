@@ -1746,6 +1746,10 @@ void IndexedCorpus::load(std::string filename, bool debug) {
 }
 
 unsigned char * IndexedCorpus::getpointer(const IndexReference & begin) const {
+    if (corpus == NULL) {
+        std::cerr << "ERROR: No corpus data loaded! (in IndexedCorpus::getpattern)" << std::endl;
+        throw InternalError();
+    }
     std::map<uint32_t,unsigned char*>::const_iterator iter = sentenceindex.find(begin.sentence);
     if (iter == sentenceindex.end()) {
         return NULL;
@@ -1771,6 +1775,10 @@ unsigned char * IndexedCorpus::getpointer(const IndexReference & begin) const {
 
 
 PatternPointer IndexedCorpus::getpattern(const IndexReference & begin, int length) const { 
+    if (corpus == NULL) {
+        std::cerr << "ERROR: No corpus data loaded! (in IndexedCorpus::getpattern)" << std::endl;
+        throw InternalError();
+    }
     unsigned char * data = getpointer(begin);
     if (data == NULL) throw KeyError();
     return PatternPointer(data,false,length);
