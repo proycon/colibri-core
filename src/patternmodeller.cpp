@@ -40,6 +40,7 @@ void usage() {
     cerr << "\t                 build an indexed model (View options are ignored in two-stage building, whereas an output model (-o) is mandatory)" << endl;    
     cerr << "\t-t <number>      Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
     cerr << "\t-u               Build an unindexed model (default is indexed)" << endl;    
+    cerr << "\t-M               Build a patternpointer model instead of a normal pattern model, saves memory when thresholds are low" << endl;    
     cerr << "\t-m <number>      Minimum pattern length (default: 1)" << endl;
     cerr << "\t-l <number>      Maximum pattern length (default: 100)" << endl;
     cerr << "\t-b <number>      Maximum back-off length (default: 100). Only makes sense to set lower than minimum pattern length and may conserve memory during training then" << endl;
@@ -220,12 +221,21 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
     
         ModelType * inputmodel;
 
+        string outputqualifier = "";
+        if ((outputmodeltype == UNINDEXEDPATTERNMODEL) || (outputmodeltype == UNINDEXEDPATTERNPOINTERMODEL)) {
+            outputqualifier += " unindexed";
+        }
+        if ((outputmodeltype == INDEXEDPATTERNPOINTERMODEL) || (outputmodeltype == UNINDEXEDPATTERNPOINTERMODEL)) {
+            outputqualifier += " pointer";
+        }
+
         if (inputmodelfile.empty()) {
             //train model from scratch
 
             inputmodel = new ModelType(corpus);
 
-            cerr << "Training model on  " << corpusfile <<endl;
+
+            cerr << "Training" << outputqualifier << " model on  " << corpusfile <<endl;
             inputmodel->train(corpusfile, options, constrainbymodel, continued,firstsentence,ignoreerrors);
             if (constrainbymodel) {
                 cerr << "Unloading constraint model" << endl;
@@ -252,9 +262,12 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
         } else {
             //load model
 
-            cerr << "Loading pattern model " << inputmodelfile << " as input model..."<<endl;
+            cerr << "Loading pattern model " << inputmodelfile << " as" << outputqualifier << " model..."<<endl;
             inputmodel = new ModelType(inputmodelfile, options, (PatternModelInterface*) constrainbymodel, corpus);
-            if (corpus != NULL) inputmodel->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
+            if ((corpus != NULL) && (inputmodel->hasskipgrams)) {
+                cerr << "Filtering skipgrams..." << endl;
+                inputmodel->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
+            }
 
             if ((!corpusfile.empty()) && (expand)) {
                 cerr << "Expanding model on  " << corpusfile <<endl;
@@ -344,7 +357,7 @@ int main( int argc, char *argv[] ) {
     bool ignoreerrors = false;
     uint32_t firstsentence = 1;
     char c;    
-    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vb:y:W:p:Ee:0")) != -1)
+    while ((c = getopt(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vb:y:W:p:Ee:0M")) != -1)
         switch (c)
         {
         case 'c':
@@ -400,7 +413,18 @@ int main( int argc, char *argv[] ) {
             outputmodelfile = optarg;
             break;
 		case 'u':
-            outputmodeltype = UNINDEXEDPATTERNMODEL;
+            if (outputmodeltype == INDEXEDPATTERNMODEL) {
+                outputmodeltype = UNINDEXEDPATTERNMODEL;
+            } else {
+                outputmodeltype = UNINDEXEDPATTERNPOINTERMODEL;
+            }
+			break;
+        case 'M':
+            if (outputmodeltype == INDEXEDPATTERNMODEL) {
+                outputmodeltype = INDEXEDPATTERNPOINTERMODEL;
+            } else {
+                outputmodeltype = UNINDEXEDPATTERNPOINTERMODEL;
+            }
 			break;
 		case 'r':
             //alias for -f , for backward compatibility
@@ -568,6 +592,13 @@ int main( int argc, char *argv[] ) {
             inputmodeltype = getmodeltype(inputmodelfile);
             if ((inputmodeltype == INDEXEDPATTERNMODEL) && (outputmodeltype == UNINDEXEDPATTERNMODEL))   {
                 cerr << "NOTE: Indexed input model will be read as unindexed because -u was set" << endl;
+            }
+            if ( ((inputmodeltype == INDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNMODEL)) && ((outputmodeltype == UNINDEXEDPATTERNPOINTERMODEL) || (outputmodeltype == INDEXEDPATTERNPOINTERMODEL)) ) {
+                cerr << "ERROR: Input is a pattern model, can not load as a pattern pointer model!" << endl;
+                exit(2);
+            }
+            if (  (!outputmodelfile.empty()) &&  ( ((outputmodeltype == INDEXEDPATTERNMODEL) || (outputmodeltype == UNINDEXEDPATTERNMODEL)) && ((inputmodeltype == UNINDEXEDPATTERNPOINTERMODEL) || (inputmodeltype == INDEXEDPATTERNPOINTERMODEL)) ) )  {
+                cerr << "NOTE: Converting a pattern pointer model to a pattern model " << endl;
             }
         }
         
