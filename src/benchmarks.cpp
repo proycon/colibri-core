@@ -284,5 +284,15 @@ int main( int argc, char *argv[] ) {
         model.train(datafile, options);
         end(m);
     }
+
+    if (testnr == 13) {
+        Measurement m = begin(string("13 - Training indexed PatternPointerModel from preloaded corpus: threshold 2, up to 8-grams, no skipgrams"));
+        PatternModelOptions options;
+        options.MINTOKENS = 2; options.MAXLENGTH = 8;
+        IndexedPatternPointerModel<> model(&corpus);
+        model.train(datafile, options);
+        end(m);
+    }
+
 }
 
