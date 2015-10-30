@@ -1368,7 +1368,7 @@ int main( int argc, char *argv[] ) {
         model.train((istream*) &ssdat, options);
     }
     {
-        cerr << endl << "************************** PatternPointerModel Tests ***************************************" << endl << endl;
+        cerr << endl << "************************** Unindexed PatternPointerModel Tests ***************************************" << endl << endl;
         cerr << "Loading class decoders/encoders" << endl;
         const string classfile = "/tmp/hamlet.colibri.cls";
         ClassDecoder classdecoder = ClassDecoder(classfile);
@@ -1437,6 +1437,80 @@ int main( int argc, char *argv[] ) {
 
         cerr << "Reading PatternPointerModel from file" << endl;
         PatternPointerModel<uint32_t> ppmodel2 = PatternPointerModel<uint32_t>(ppmodelfile, options);
+        cerr << "Verifying equal size" ; test(ppmodel2.size(), ppmodel.size());
+        cerr << "Verifying equal token count" ; test(ppmodel2.tokens(), ppmodel.tokens());
+        cerr << "Verifying equal type count" ; test(ppmodel2.types(), ppmodel.types());
+    }
+    {
+        cerr << endl << "************************** Indexed PatternPointerModel Tests ***************************************" << endl << endl;
+        cerr << "Loading class decoders/encoders" << endl;
+        const string classfile = "/tmp/hamlet.colibri.cls";
+        ClassDecoder classdecoder = ClassDecoder(classfile);
+        ClassEncoder classencoder = ClassEncoder(classfile);
+
+        Pattern ngram = classencoder.buildpattern("not");
+        PatternPointer pngram = PatternPointer(ngram);
+
+        cerr << "Loading corpus as IndexedCorpus" << endl;
+        IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
+
+        PatternModelOptions options;
+        options.DOREVERSEINDEX = true;
+        options.DOSKIPGRAMS_EXHAUSTIVE = false;
+        options.DOSKIPGRAMS = true;
+
+        cerr << "Building indexed POINTER model" << endl;
+        IndexedPatternPointerModel<> ppmodel(&corpus);
+        IndexedPatternModel<> refmodel(&corpus);
+
+        cerr << endl;
+        std::string infilename = "/tmp/hamlet.colibri.dat";
+        std::string outputfilename = "/tmp/data.colibri.patternmodel";
+        ppmodel.train(infilename, options);
+        cerr << "Found " << ppmodel.size() << " patterns, " << ppmodel.types() << " types, " << ppmodel.tokens() << " tokens" << endl;
+        ppmodel.print(&std::cerr, classdecoder);
+
+        cerr << "Sanity check: ";
+        unsigned int i = 0;
+        for (IndexedPatternPointerModel<>::iterator iter = ppmodel.begin(); iter != ppmodel.end(); iter++) {
+            const PatternPointer p = iter->first;
+            cerr << "Pattern #" << (i+1) << ", hash=" << p.hash() << ", mask=" << p.mask << "...";
+            test(ppmodel.occurrencecount(p),iter->second.count());
+            i++;
+        }
+		cerr << "Count check "; test(i, ppmodel.size());
+
+
+        cerr << "Checking presence of Pattern" ; test(ppmodel[ngram].count(), 7);
+        cerr << "Checking presence of PatternPointer" ; test(ppmodel[pngram].count(), 7);
+        cerr << "Querying occurrencecount with Pattern (ngram)" ; test(ppmodel.occurrencecount(ngram), 7);
+        cerr << "Querying occurrencecount with PatternPointer (ngram)" ; test(ppmodel.occurrencecount(pngram), 7);
+        string querystring2 = "see or not to see";
+        Pattern ngram2 = classencoder.buildpattern(querystring2);
+        cerr << "Querying occurrencecount with Pattern (ngram) (2)" ; test(ppmodel.occurrencecount(ngram2), 2);
+        string querystring = "or not to {*} .";
+        Pattern skipgram = classencoder.buildpattern(querystring, false);
+        PatternPointer pskipgram = PatternPointer(skipgram);
+        cerr << "Querying occurrencecount with PatternPointer (skipgram)" ; test(ppmodel.occurrencecount(pskipgram), 4);
+        cerr << "Querying occurrencecount with Pattern (skipgram)" ; test(ppmodel.occurrencecount(skipgram), 4);
+        ppmodel.report(&std::cerr);
+        cerr << endl;
+        cerr << endl;
+        ppmodel.histogram(&std::cerr);
+
+        cerr << "Training reference PatternModel" << endl;
+        refmodel.train(infilename, options);
+        cerr << "Verifying equal size" ; test(ppmodel.size(), refmodel.size());
+        cerr << "Verifying equal token count" ; test(ppmodel.tokens(), refmodel.tokens());
+        cerr << "Verifying equal type count" ; test(ppmodel.types(), refmodel.types());
+
+        string ppmodelfile = "/tmp/indexedpatternpointermodel.tmp";
+        
+        cerr << "Writing PatternPointerModel to file" << endl;
+        ppmodel.write(ppmodelfile);
+
+        cerr << "Reading PatternPointerModel from file" << endl;
+        IndexedPatternPointerModel<> ppmodel2 = IndexedPatternPointerModel<>(ppmodelfile, options);
         cerr << "Verifying equal size" ; test(ppmodel2.size(), ppmodel.size());
         cerr << "Verifying equal token count" ; test(ppmodel2.tokens(), ppmodel.tokens());
         cerr << "Verifying equal type count" ; test(ppmodel2.types(), ppmodel.types());

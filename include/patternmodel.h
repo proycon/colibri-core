@@ -1277,10 +1277,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             unsigned char v = this->getmodelversion();
             out->write( (char*) &v, sizeof(char));        
             if ((this->getmodeltype()== UNINDEXEDPATTERNPOINTERMODEL) || (this->getmodeltype() == INDEXEDPATTERNPOINTERMODEL)) {
-                PatternPointer corpusdata = reverseindex->getpattern();
-                unsigned int corpussize = corpusdata.bytesize();
-                out->write( (char*) &corpussize, sizeof(unsigned int));
-                out->write((char*) corpusdata.data, sizeof(unsigned char) * corpussize);
+                out->write( (char*) &this->corpussize, sizeof(unsigned int));
+                out->write((char*) this->corpusstart, sizeof(unsigned char) * this->corpussize);
             }
             out->write( (char*) &totaltokens, sizeof(uint64_t));        
             const uint64_t tp = this->types(); //use this instead of totaltypes, as it may need to be computed on-the-fly still
@@ -3434,6 +3432,7 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
 
 template<class MapType=PatternPointerMap<IndexedData, IndexedDataHandler>>
 class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPointer> {
+    public:
 
         IndexedPatternPointerModel<MapType>(IndexedCorpus * corpus): IndexedPatternModel<MapType,PatternPointer>() {
             this->model_type = this->getmodeltype();
@@ -3507,9 +3506,9 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
             this->add(patternpointer, data, ref );
         }
 
-        void add(const PatternPointer & pattern, IndexedData * value, const IndexReference & ref) {
+        void add(const PatternPointer & patternpointer, IndexedData * value, const IndexReference & ref) {
             if (value == NULL) {
-                value = this->getdata(pattern,true);
+                value = this->getdata(patternpointer,true);
             }
             this->valuehandler.add(value, ref);
         }
