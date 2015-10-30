@@ -39,6 +39,7 @@ class InternalError: public std::exception {
   }
 };
 
+
 class KeyError: public std::exception {
   virtual const char* what() const throw()
   {

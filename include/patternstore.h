@@ -336,13 +336,24 @@ class PatternStore: public PatternStoreInterface {
         virtual ~PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {};
     
         virtual void attachcorpus(unsigned char * corpusstart, unsigned int corpussize) {
-                this->corpusstart = corpusstart;
-                this->corpussize = corpussize;
+            this->corpusstart = corpusstart;
+            this->corpussize = corpussize;
         }
         virtual void attachcorpus(const IndexedCorpus & corpus) {
-                this->corpusstart = corpus.beginpointer();
-                this->corpussize = corpus.bytesize();
+            this->corpusstart = corpus.beginpointer();
+            this->corpussize = corpus.bytesize();
         }
+        virtual void detachcorpus() {
+            this->corpusstart = NULL;
+            this->corpussize = 0;
+        }
+        unsigned char * getcorpus() const {
+            return corpusstart;
+        }
+        unsigned int getcorpussize() const {
+            return corpussize;
+        }
+        
 
         /**
          * Set this to read patterns using the v1 classencoding (pre Colibri Core v2). Only for reading, write actions will always use the newest version.

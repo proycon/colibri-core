@@ -27,9 +27,9 @@ unsigned int inttobytes(unsigned char * buffer, unsigned int cls) {
 		length++;
 	} while (cls2 > 0);
     if (buffer != NULL) {
-        int i = 0;
+        unsigned int i = 0;
         do {
-            int r = cls % 128;
+            unsigned int r = cls % 128;
             if (i != length - 1) {
                 buffer[i++] = (unsigned char) r | 128; //high
             } else {

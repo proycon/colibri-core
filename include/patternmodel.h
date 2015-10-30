@@ -2424,8 +2424,21 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
     
+    virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
+        if ((options.DOSKIPGRAMS) && (this->reverseindex == NULL)) {
+            std::cerr << "ERROR: You must specify a reverse index if you want to train skipgrams (or train skipgrams exhaustively)" << std::endl;
+            throw InternalError();
+        }
+        PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::train(in,options,constrainbymodel,continued,firstsentence,ignoreerrors);
+    }
 
-
+    virtual void train(const std::string & filename, PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
+        if ((options.DOSKIPGRAMS) && (this->reverseindex == NULL)) {
+            std::cerr << "ERROR: You must specify a reverse index if you want to train skipgrams (or train skipgrams exhaustively)" << std::endl;
+            throw InternalError();
+        }
+        PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::train(filename,options,constrainbymodel,continued,firstsentence,ignoreerrors);
+    }
 
     /**
      * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
