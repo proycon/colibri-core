@@ -248,9 +248,11 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
                     cerr << "WARNING: Can't compute skipgrams non-exhaustively on unindexed model" << endl;
                     if (flexfromskip) cerr << "WARNING: Can't compute flexgrams from skipgrams on unindexed model" << endl;
                 }  else {
-                    cerr << "Computing skipgrams" << endl;
                     if (!inputmodelfile2.empty()) cerr << "WARNING: Can not compute skipgrams constrained by " << inputmodelfile2 << "!" << endl;
-                    inputmodel->trainskipgrams(options);
+                    if (!inputmodel->hasskipgrams) {
+                        cerr << "Computing skipgrams" << endl;
+                        inputmodel->trainskipgrams(options);
+                    }
                     if (flexfromskip) {
                         cerr << "Computing flexgrams from skipgrams" << corpusfile <<endl;
                         int found = inputmodel->computeflexgrams_fromskipgrams();
