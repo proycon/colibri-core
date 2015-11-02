@@ -666,6 +666,7 @@ int main( int argc, char *argv[] ) {
                 PatternModelOptions optionscopy = PatternModelOptions(options);
                 optionscopy.DORESET = true;
                 PatternModel<uint32_t> model = PatternModel<uint32_t>(inputmodelfile, optionscopy, (PatternModelInterface*) constrainbymodel, corpus);
+                cerr << "(" << model.size() << " patterns" << ")" << endl;
 
                 if (constrainbymodel) {
                     cerr << "Unloading constraint model" << endl;
@@ -693,6 +694,7 @@ int main( int argc, char *argv[] ) {
                 PatternModelOptions optionscopy = PatternModelOptions(options);
                 optionscopy.DORESET = true;
                 IndexedPatternModel<> model = IndexedPatternModel<>(inputmodelfile, optionscopy, (PatternModelInterface*) constrainbymodel, corpus);
+                cerr << "(" << model.size() << " patterns" << ")" << endl;
 
                 if (constrainbymodel) {
                     cerr << "Unloading constraint model" << endl;
