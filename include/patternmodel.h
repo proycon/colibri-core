@@ -808,6 +808,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             bool found;
             IndexReference ref;
             int prevsize = this->size();
+            if (constrainbymodel == this) prevsize = 0; //going over same model
             int backoffn = 0;
             Pattern * linepattern = NULL;
             
@@ -895,6 +896,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             line.subngrams(ngrams,minlength,options.MAXLENGTH); //extract ALL ngrams if MINTOKENS == 1 or a constraint model is set, no need to look back anyway, only one iteration over corpus
                         }
                     }
+                    if (options.DEBUG) std::cerr << "\t" << ngrams.size() << " ngrams in line" << std::endl;
 
 
                     // *** ITERATION OVER ALL NGRAMS OF CURRENT ORDER (n) IN THE LINE/SENTENCE ***
@@ -945,6 +947,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                                 ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
                                 if ((found) && (!skipgramsonly)) {
+                                    if (options.DEBUG) std::cerr << "\t\tAdding @" << ref.sentence << ":" << ref.token << " n=" << iter->first.n() << " category=" <<(int) iter->first.category()<< std::endl;
                                     add(iter->first, ref);
                                 } 
                             }

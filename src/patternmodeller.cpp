@@ -676,7 +676,7 @@ int main( int argc, char *argv[] ) {
 
 
                 //build new model from corpus
-                cerr << "Building new indexed model from  " << corpusfile <<endl;
+                cerr << "Building new unindexed model from  " << corpusfile <<endl;
                 model.train(corpusfile, options, model.getinterface(), continued,firstsentence,ignoreerrors);
 
                 if (DOFLEXFROMSKIP) {
@@ -702,7 +702,7 @@ int main( int argc, char *argv[] ) {
                     constrainbymodel = NULL;
                 }
                 //build new model from corpus
-                cerr << "Building new unindexed model from  " << corpusfile <<endl;
+                cerr << "Building new indexed model from  " << corpusfile <<endl;
                 model.train(corpusfile, options, model.getinterface(), continued, firstsentence,ignoreerrors);
 
                 if (!outputmodelfile.empty()) {
