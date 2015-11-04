@@ -2,34 +2,80 @@
 \label{algorithms_8cpp}\index{src/algorithms.\+cpp@{src/algorithms.\+cpp}}
 {\ttfamily \#include $<$vector$>$}\\*
 {\ttfamily \#include $<$utility$>$}\\*
+{\ttfamily \#include \char`\"{}algorithms.\+h\char`\"{}}\\*
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-vector$<$ pair$<$ int, int $>$ $>$ \hyperlink{algorithms_8cpp_a4c23345a767d8fee651c40fa40deb471}{get\+\_\+consecutive\+\_\+gaps} (const int n, const int leftmargin=1, const int rightmargin=1)
+vector$<$ pair$<$ int, int $>$ $>$ \hyperlink{algorithms_8cpp_a4c0991bca65a7987ecdd13334a31d631}{get\+\_\+consecutive\+\_\+gaps} (const int n, const int leftmargin, const int rightmargin)
 \item 
-void \hyperlink{algorithms_8cpp_a2326d96ae321dea6c8bc0de46a905e95}{compute\+\_\+multi\+\_\+skips} (vector$<$ vector$<$ pair$<$ int, int $>$ $>$ $>$ \&skips, const vector$<$ pair$<$ int, int $>$ $>$ \&path, const int n, const int maxskips, const int skipnum, const int leftmargin)
+uint32\+\_\+t \hyperlink{algorithms_8cpp_a0e3915017586c92a4e092fe69ff3fee3}{vector2mask} (const vector$<$ pair$<$ int, int $>$$>$ \&skips)
+\item 
+vector$<$ pair$<$ int, int $>$ $>$ \hyperlink{algorithms_8cpp_a5d636a2055b24b67136440a206bad507}{mask2vector} (const uint32\+\_\+t mask, const int n)
+\item 
+uint32\+\_\+t \hyperlink{algorithms_8cpp_ac8b732f37fb89fb5edacfbc9d3b95356}{reversemask} (uint32\+\_\+t mask, const unsigned int n)
+\item 
+int \hyperlink{algorithms_8cpp_aed39efadda0e0c9a9caeec74ad25be79}{maskheadskip} (uint32\+\_\+t mask, const unsigned int n)
+\item 
+int \hyperlink{algorithms_8cpp_a1c0cdba6c75aa2680062858530c0eaf8}{masktailskip} (uint32\+\_\+t mask, const unsigned int n)
+\item 
+vector$<$ uint32\+\_\+t $>$ \hyperlink{algorithms_8cpp_a664e9dbe33e77f0de7353c71d5430ef8}{compute\+\_\+skip\+\_\+configurations} (const int n, const int maxskips)
 \end{DoxyCompactItemize}
 
 
 \subsection{Function Documentation}
-\hypertarget{algorithms_8cpp_a2326d96ae321dea6c8bc0de46a905e95}{}\index{algorithms.\+cpp@{algorithms.\+cpp}!compute\+\_\+multi\+\_\+skips@{compute\+\_\+multi\+\_\+skips}}
-\index{compute\+\_\+multi\+\_\+skips@{compute\+\_\+multi\+\_\+skips}!algorithms.\+cpp@{algorithms.\+cpp}}
-\subsubsection[{compute\+\_\+multi\+\_\+skips(vector$<$ vector$<$ pair$<$ int, int $>$ $>$ $>$ \&skips, const vector$<$ pair$<$ int, int $>$ $>$ \&path, const int n, const int maxskips, const int skipnum, const int leftmargin)}]{\setlength{\rightskip}{0pt plus 5cm}void compute\+\_\+multi\+\_\+skips (
+\hypertarget{algorithms_8cpp_a664e9dbe33e77f0de7353c71d5430ef8}{}\index{algorithms.\+cpp@{algorithms.\+cpp}!compute\+\_\+skip\+\_\+configurations@{compute\+\_\+skip\+\_\+configurations}}
+\index{compute\+\_\+skip\+\_\+configurations@{compute\+\_\+skip\+\_\+configurations}!algorithms.\+cpp@{algorithms.\+cpp}}
+\subsubsection[{compute\+\_\+skip\+\_\+configurations(const int n, const int maxskips)}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$uint32\+\_\+t$>$ compute\+\_\+skip\+\_\+configurations (
 \begin{DoxyParamCaption}
-\item[{vector$<$ vector$<$ pair$<$ int, int $>$ $>$ $>$ \&}]{skips, }
-\item[{const vector$<$ pair$<$ int, int $>$ $>$ \&}]{path, }
 \item[{const int}]{n, }
-\item[{const int}]{maxskips, }
-\item[{const int}]{skipnum, }
-\item[{const int}]{leftmargin}
+\item[{const int}]{maxskips}
 \end{DoxyParamCaption}
-)}\label{algorithms_8cpp_a2326d96ae321dea6c8bc0de46a905e95}
-\hypertarget{algorithms_8cpp_a4c23345a767d8fee651c40fa40deb471}{}\index{algorithms.\+cpp@{algorithms.\+cpp}!get\+\_\+consecutive\+\_\+gaps@{get\+\_\+consecutive\+\_\+gaps}}
+)}\label{algorithms_8cpp_a664e9dbe33e77f0de7353c71d5430ef8}
+\hypertarget{algorithms_8cpp_a4c0991bca65a7987ecdd13334a31d631}{}\index{algorithms.\+cpp@{algorithms.\+cpp}!get\+\_\+consecutive\+\_\+gaps@{get\+\_\+consecutive\+\_\+gaps}}
 \index{get\+\_\+consecutive\+\_\+gaps@{get\+\_\+consecutive\+\_\+gaps}!algorithms.\+cpp@{algorithms.\+cpp}}
-\subsubsection[{get\+\_\+consecutive\+\_\+gaps(const int n, const int leftmargin=1, const int rightmargin=1)}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ pair$<$int,int$>$ $>$ get\+\_\+consecutive\+\_\+gaps (
+\subsubsection[{get\+\_\+consecutive\+\_\+gaps(const int n, const int leftmargin, const int rightmargin)}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ pair$<$int,int$>$ $>$ get\+\_\+consecutive\+\_\+gaps (
 \begin{DoxyParamCaption}
 \item[{const int}]{n, }
-\item[{const int}]{leftmargin = {\ttfamily 1}, }
-\item[{const int}]{rightmargin = {\ttfamily 1}}
+\item[{const int}]{leftmargin, }
+\item[{const int}]{rightmargin}
 \end{DoxyParamCaption}
-)}\label{algorithms_8cpp_a4c23345a767d8fee651c40fa40deb471}
+)}\label{algorithms_8cpp_a4c0991bca65a7987ecdd13334a31d631}
+\hypertarget{algorithms_8cpp_a5d636a2055b24b67136440a206bad507}{}\index{algorithms.\+cpp@{algorithms.\+cpp}!mask2vector@{mask2vector}}
+\index{mask2vector@{mask2vector}!algorithms.\+cpp@{algorithms.\+cpp}}
+\subsubsection[{mask2vector(const uint32\+\_\+t mask, const int n)}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$pair$<$int,int$>$ $>$ mask2vector (
+\begin{DoxyParamCaption}
+\item[{const uint32\+\_\+t}]{mask, }
+\item[{const int}]{n}
+\end{DoxyParamCaption}
+)}\label{algorithms_8cpp_a5d636a2055b24b67136440a206bad507}
+\hypertarget{algorithms_8cpp_aed39efadda0e0c9a9caeec74ad25be79}{}\index{algorithms.\+cpp@{algorithms.\+cpp}!maskheadskip@{maskheadskip}}
+\index{maskheadskip@{maskheadskip}!algorithms.\+cpp@{algorithms.\+cpp}}
+\subsubsection[{maskheadskip(uint32\+\_\+t mask, const unsigned int n)}]{\setlength{\rightskip}{0pt plus 5cm}int maskheadskip (
+\begin{DoxyParamCaption}
+\item[{uint32\+\_\+t}]{mask, }
+\item[{const unsigned int}]{n}
+\end{DoxyParamCaption}
+)}\label{algorithms_8cpp_aed39efadda0e0c9a9caeec74ad25be79}
+\hypertarget{algorithms_8cpp_a1c0cdba6c75aa2680062858530c0eaf8}{}\index{algorithms.\+cpp@{algorithms.\+cpp}!masktailskip@{masktailskip}}
+\index{masktailskip@{masktailskip}!algorithms.\+cpp@{algorithms.\+cpp}}
+\subsubsection[{masktailskip(uint32\+\_\+t mask, const unsigned int n)}]{\setlength{\rightskip}{0pt plus 5cm}int masktailskip (
+\begin{DoxyParamCaption}
+\item[{uint32\+\_\+t}]{mask, }
+\item[{const unsigned int}]{n}
+\end{DoxyParamCaption}
+)}\label{algorithms_8cpp_a1c0cdba6c75aa2680062858530c0eaf8}
+\hypertarget{algorithms_8cpp_ac8b732f37fb89fb5edacfbc9d3b95356}{}\index{algorithms.\+cpp@{algorithms.\+cpp}!reversemask@{reversemask}}
+\index{reversemask@{reversemask}!algorithms.\+cpp@{algorithms.\+cpp}}
+\subsubsection[{reversemask(uint32\+\_\+t mask, const unsigned int n)}]{\setlength{\rightskip}{0pt plus 5cm}uint32\+\_\+t reversemask (
+\begin{DoxyParamCaption}
+\item[{uint32\+\_\+t}]{mask, }
+\item[{const unsigned int}]{n}
+\end{DoxyParamCaption}
+)}\label{algorithms_8cpp_ac8b732f37fb89fb5edacfbc9d3b95356}
+\hypertarget{algorithms_8cpp_a0e3915017586c92a4e092fe69ff3fee3}{}\index{algorithms.\+cpp@{algorithms.\+cpp}!vector2mask@{vector2mask}}
+\index{vector2mask@{vector2mask}!algorithms.\+cpp@{algorithms.\+cpp}}
+\subsubsection[{vector2mask(const vector$<$ pair$<$ int, int $>$$>$ \&skips)}]{\setlength{\rightskip}{0pt plus 5cm}uint32\+\_\+t vector2mask (
+\begin{DoxyParamCaption}
+\item[{const vector$<$ pair$<$ int, int $>$$>$ \&}]{skips}
+\end{DoxyParamCaption}
+)}\label{algorithms_8cpp_a0e3915017586c92a4e092fe69ff3fee3}

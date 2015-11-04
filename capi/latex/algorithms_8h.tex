@@ -3,34 +3,81 @@
 {\ttfamily \#include $<$unordered\+\_\+map$>$}\\*
 {\ttfamily \#include $<$vector$>$}\\*
 {\ttfamily \#include $<$utility$>$}\\*
+{\ttfamily \#include $<$cstdint$>$}\\*
+{\ttfamily \#include \char`\"{}common.\+h\char`\"{}}\\*
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \hyperlink{algorithms_8h_ae43260b0f2889b105cbc70fd97c68041}{get\+\_\+consecutive\+\_\+gaps} (const int n, const int leftmargin=0, const int rightmargin=0)
+uint32\+\_\+t \hyperlink{algorithms_8h_a83c677ca972ac87e4bce9008eebcb07e}{vector2mask} (const std\+::vector$<$ std\+::pair$<$ int, int $>$$>$ \&skips)
 \item 
-void \hyperlink{algorithms_8h_ad75f18898e16ddb1396caa4de1be5fa6}{compute\+\_\+multi\+\_\+skips} (std\+::vector$<$ std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ $>$ \&skips, const std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&path, const int n, const int maxskips=3, const int skipnum=0, const int leftmargin=1)
+std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \hyperlink{algorithms_8h_a9ca13d16372b52cb0b2bf058f58fce63}{mask2vector} (const uint32\+\_\+t mask, const int n)
+\item 
+std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \hyperlink{algorithms_8h_aebb50b68f3aea347fb004b525fb9a84a}{get\+\_\+consecutive\+\_\+gaps} (const int n, const int leftmargin=1, const int rightmargin=1)
+\item 
+uint32\+\_\+t \hyperlink{algorithms_8h_ac8b732f37fb89fb5edacfbc9d3b95356}{reversemask} (uint32\+\_\+t mask, const unsigned int n)
+\item 
+int \hyperlink{algorithms_8h_aed39efadda0e0c9a9caeec74ad25be79}{maskheadskip} (uint32\+\_\+t mask, const unsigned int n)
+\item 
+int \hyperlink{algorithms_8h_a1c0cdba6c75aa2680062858530c0eaf8}{masktailskip} (uint32\+\_\+t mask, const unsigned int n)
+\item 
+std\+::vector$<$ uint32\+\_\+t $>$ \hyperlink{algorithms_8h_a50886ebc1499d851fd7161227f1ae2df}{compute\+\_\+skip\+\_\+configurations} (const int n, const int maxskips)
 \end{DoxyCompactItemize}
 
 
 \subsection{Function Documentation}
-\hypertarget{algorithms_8h_ad75f18898e16ddb1396caa4de1be5fa6}{}\index{algorithms.\+h@{algorithms.\+h}!compute\+\_\+multi\+\_\+skips@{compute\+\_\+multi\+\_\+skips}}
-\index{compute\+\_\+multi\+\_\+skips@{compute\+\_\+multi\+\_\+skips}!algorithms.\+h@{algorithms.\+h}}
-\subsubsection[{compute\+\_\+multi\+\_\+skips(std\+::vector$<$ std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ $>$ \&skips, const std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&path, const int n, const int maxskips=3, const int skipnum=0, const int leftmargin=1)}]{\setlength{\rightskip}{0pt plus 5cm}void compute\+\_\+multi\+\_\+skips (
+\hypertarget{algorithms_8h_a50886ebc1499d851fd7161227f1ae2df}{}\index{algorithms.\+h@{algorithms.\+h}!compute\+\_\+skip\+\_\+configurations@{compute\+\_\+skip\+\_\+configurations}}
+\index{compute\+\_\+skip\+\_\+configurations@{compute\+\_\+skip\+\_\+configurations}!algorithms.\+h@{algorithms.\+h}}
+\subsubsection[{compute\+\_\+skip\+\_\+configurations(const int n, const int maxskips)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$uint32\+\_\+t$>$ compute\+\_\+skip\+\_\+configurations (
 \begin{DoxyParamCaption}
-\item[{std\+::vector$<$ std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ $>$ \&}]{skips, }
-\item[{const std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{path, }
 \item[{const int}]{n, }
-\item[{const int}]{maxskips = {\ttfamily 3}, }
-\item[{const int}]{skipnum = {\ttfamily 0}, }
-\item[{const int}]{leftmargin = {\ttfamily 1}}
+\item[{const int}]{maxskips}
 \end{DoxyParamCaption}
-)}\label{algorithms_8h_ad75f18898e16ddb1396caa4de1be5fa6}
-\hypertarget{algorithms_8h_ae43260b0f2889b105cbc70fd97c68041}{}\index{algorithms.\+h@{algorithms.\+h}!get\+\_\+consecutive\+\_\+gaps@{get\+\_\+consecutive\+\_\+gaps}}
+)}\label{algorithms_8h_a50886ebc1499d851fd7161227f1ae2df}
+\hypertarget{algorithms_8h_aebb50b68f3aea347fb004b525fb9a84a}{}\index{algorithms.\+h@{algorithms.\+h}!get\+\_\+consecutive\+\_\+gaps@{get\+\_\+consecutive\+\_\+gaps}}
 \index{get\+\_\+consecutive\+\_\+gaps@{get\+\_\+consecutive\+\_\+gaps}!algorithms.\+h@{algorithms.\+h}}
-\subsubsection[{get\+\_\+consecutive\+\_\+gaps(const int n, const int leftmargin=0, const int rightmargin=0)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$ std\+::pair$<$int,int$>$ $>$ get\+\_\+consecutive\+\_\+gaps (
+\subsubsection[{get\+\_\+consecutive\+\_\+gaps(const int n, const int leftmargin=1, const int rightmargin=1)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$ std\+::pair$<$int,int$>$ $>$ get\+\_\+consecutive\+\_\+gaps (
 \begin{DoxyParamCaption}
 \item[{const int}]{n, }
-\item[{const int}]{leftmargin = {\ttfamily 0}, }
-\item[{const int}]{rightmargin = {\ttfamily 0}}
+\item[{const int}]{leftmargin = {\ttfamily 1}, }
+\item[{const int}]{rightmargin = {\ttfamily 1}}
 \end{DoxyParamCaption}
-)}\label{algorithms_8h_ae43260b0f2889b105cbc70fd97c68041}
+)}\label{algorithms_8h_aebb50b68f3aea347fb004b525fb9a84a}
+\hypertarget{algorithms_8h_a9ca13d16372b52cb0b2bf058f58fce63}{}\index{algorithms.\+h@{algorithms.\+h}!mask2vector@{mask2vector}}
+\index{mask2vector@{mask2vector}!algorithms.\+h@{algorithms.\+h}}
+\subsubsection[{mask2vector(const uint32\+\_\+t mask, const int n)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$std\+::pair$<$int,int$>$ $>$ mask2vector (
+\begin{DoxyParamCaption}
+\item[{const uint32\+\_\+t}]{mask, }
+\item[{const int}]{n}
+\end{DoxyParamCaption}
+)}\label{algorithms_8h_a9ca13d16372b52cb0b2bf058f58fce63}
+\hypertarget{algorithms_8h_aed39efadda0e0c9a9caeec74ad25be79}{}\index{algorithms.\+h@{algorithms.\+h}!maskheadskip@{maskheadskip}}
+\index{maskheadskip@{maskheadskip}!algorithms.\+h@{algorithms.\+h}}
+\subsubsection[{maskheadskip(uint32\+\_\+t mask, const unsigned int n)}]{\setlength{\rightskip}{0pt plus 5cm}int maskheadskip (
+\begin{DoxyParamCaption}
+\item[{uint32\+\_\+t}]{mask, }
+\item[{const unsigned int}]{n}
+\end{DoxyParamCaption}
+)}\label{algorithms_8h_aed39efadda0e0c9a9caeec74ad25be79}
+\hypertarget{algorithms_8h_a1c0cdba6c75aa2680062858530c0eaf8}{}\index{algorithms.\+h@{algorithms.\+h}!masktailskip@{masktailskip}}
+\index{masktailskip@{masktailskip}!algorithms.\+h@{algorithms.\+h}}
+\subsubsection[{masktailskip(uint32\+\_\+t mask, const unsigned int n)}]{\setlength{\rightskip}{0pt plus 5cm}int masktailskip (
+\begin{DoxyParamCaption}
+\item[{uint32\+\_\+t}]{mask, }
+\item[{const unsigned int}]{n}
+\end{DoxyParamCaption}
+)}\label{algorithms_8h_a1c0cdba6c75aa2680062858530c0eaf8}
+\hypertarget{algorithms_8h_ac8b732f37fb89fb5edacfbc9d3b95356}{}\index{algorithms.\+h@{algorithms.\+h}!reversemask@{reversemask}}
+\index{reversemask@{reversemask}!algorithms.\+h@{algorithms.\+h}}
+\subsubsection[{reversemask(uint32\+\_\+t mask, const unsigned int n)}]{\setlength{\rightskip}{0pt plus 5cm}uint32\+\_\+t reversemask (
+\begin{DoxyParamCaption}
+\item[{uint32\+\_\+t}]{mask, }
+\item[{const unsigned int}]{n}
+\end{DoxyParamCaption}
+)}\label{algorithms_8h_ac8b732f37fb89fb5edacfbc9d3b95356}
+\hypertarget{algorithms_8h_a83c677ca972ac87e4bce9008eebcb07e}{}\index{algorithms.\+h@{algorithms.\+h}!vector2mask@{vector2mask}}
+\index{vector2mask@{vector2mask}!algorithms.\+h@{algorithms.\+h}}
+\subsubsection[{vector2mask(const std\+::vector$<$ std\+::pair$<$ int, int $>$$>$ \&skips)}]{\setlength{\rightskip}{0pt plus 5cm}uint32\+\_\+t vector2mask (
+\begin{DoxyParamCaption}
+\item[{const std\+::vector$<$ std\+::pair$<$ int, int $>$$>$ \&}]{skips}
+\end{DoxyParamCaption}
+)}\label{algorithms_8h_a83c677ca972ac87e4bce9008eebcb07e}

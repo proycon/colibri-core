@@ -6,13 +6,20 @@
 {\ttfamily \#include $<$iostream$>$}\\*
 {\ttfamily \#include $<$map$>$}\\*
 {\ttfamily \#include $<$unordered\+\_\+map$>$}\\*
+{\ttfamily \#include $<$climits$>$}\\*
 {\ttfamily \#include \char`\"{}bz2stream.\+h\char`\"{}}\\*
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-unsigned char $\ast$ \hyperlink{classencoder_8cpp_ab480fc678930b4cd82b667d4235b135c}{inttobytes} (unsigned int cls, int \&length)
+unsigned int \hyperlink{classencoder_8cpp_a45dca55cba49c6ff46bca82217617e82}{inttobytes} (unsigned char $\ast$buffer, unsigned int cls)
+\item 
+unsigned char $\ast$ \hyperlink{classencoder_8cpp_ac5fbdfad20feab163470c79b6c7bc94d}{inttobytes\+\_\+v1} (unsigned int cls, int \&length)
 \item 
 int \hyperlink{classencoder_8cpp_a4f9039489cb2f0e2b654ecfb218e80dd}{utf8\+\_\+strlen} (const string \&str)
+\item 
+unsigned char $\ast$ \hyperlink{classencoder_8cpp_a2993dcb8cba48cf388b7bd18b6a1b7c9}{convert\+\_\+v1\+\_\+v2} (const unsigned char $\ast$olddata, unsigned int \&newlength)
+\item 
+unsigned char $\ast$ \hyperlink{classencoder_8cpp_a62f2b90d9921d9ccb55c350451c8ec1b}{convert\+\_\+v1\+\_\+v2} (istream $\ast$in, bool ignoreeol, bool debug)
 \end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
@@ -24,14 +31,39 @@ unsigned char \hyperlink{classencoder_8cpp_a12073696145ec9d64c88d6c4d986a712}{bu
 
 
 \subsection{Function Documentation}
-\hypertarget{classencoder_8cpp_ab480fc678930b4cd82b667d4235b135c}{}\index{classencoder.\+cpp@{classencoder.\+cpp}!inttobytes@{inttobytes}}
+\hypertarget{classencoder_8cpp_a2993dcb8cba48cf388b7bd18b6a1b7c9}{}\index{classencoder.\+cpp@{classencoder.\+cpp}!convert\+\_\+v1\+\_\+v2@{convert\+\_\+v1\+\_\+v2}}
+\index{convert\+\_\+v1\+\_\+v2@{convert\+\_\+v1\+\_\+v2}!classencoder.\+cpp@{classencoder.\+cpp}}
+\subsubsection[{convert\+\_\+v1\+\_\+v2(const unsigned char $\ast$olddata, unsigned int \&newlength)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ convert\+\_\+v1\+\_\+v2 (
+\begin{DoxyParamCaption}
+\item[{const unsigned char $\ast$}]{olddata, }
+\item[{unsigned int \&}]{newlength}
+\end{DoxyParamCaption}
+)}\label{classencoder_8cpp_a2993dcb8cba48cf388b7bd18b6a1b7c9}
+\hypertarget{classencoder_8cpp_a62f2b90d9921d9ccb55c350451c8ec1b}{}\index{classencoder.\+cpp@{classencoder.\+cpp}!convert\+\_\+v1\+\_\+v2@{convert\+\_\+v1\+\_\+v2}}
+\index{convert\+\_\+v1\+\_\+v2@{convert\+\_\+v1\+\_\+v2}!classencoder.\+cpp@{classencoder.\+cpp}}
+\subsubsection[{convert\+\_\+v1\+\_\+v2(istream $\ast$in, bool ignoreeol, bool debug)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ convert\+\_\+v1\+\_\+v2 (
+\begin{DoxyParamCaption}
+\item[{istream $\ast$}]{in, }
+\item[{bool}]{ignoreeol, }
+\item[{bool}]{debug}
+\end{DoxyParamCaption}
+)}\label{classencoder_8cpp_a62f2b90d9921d9ccb55c350451c8ec1b}
+\hypertarget{classencoder_8cpp_a45dca55cba49c6ff46bca82217617e82}{}\index{classencoder.\+cpp@{classencoder.\+cpp}!inttobytes@{inttobytes}}
 \index{inttobytes@{inttobytes}!classencoder.\+cpp@{classencoder.\+cpp}}
-\subsubsection[{inttobytes(unsigned int cls, int \&length)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ inttobytes (
+\subsubsection[{inttobytes(unsigned char $\ast$buffer, unsigned int cls)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int inttobytes (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{buffer, }
+\item[{unsigned int}]{cls}
+\end{DoxyParamCaption}
+)}\label{classencoder_8cpp_a45dca55cba49c6ff46bca82217617e82}
+\hypertarget{classencoder_8cpp_ac5fbdfad20feab163470c79b6c7bc94d}{}\index{classencoder.\+cpp@{classencoder.\+cpp}!inttobytes\+\_\+v1@{inttobytes\+\_\+v1}}
+\index{inttobytes\+\_\+v1@{inttobytes\+\_\+v1}!classencoder.\+cpp@{classencoder.\+cpp}}
+\subsubsection[{inttobytes\+\_\+v1(unsigned int cls, int \&length)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ inttobytes\+\_\+v1 (
 \begin{DoxyParamCaption}
 \item[{unsigned int}]{cls, }
 \item[{int \&}]{length}
 \end{DoxyParamCaption}
-)}\label{classencoder_8cpp_ab480fc678930b4cd82b667d4235b135c}
+)}\label{classencoder_8cpp_ac5fbdfad20feab163470c79b6c7bc94d}
 \hypertarget{classencoder_8cpp_a4f9039489cb2f0e2b654ecfb218e80dd}{}\index{classencoder.\+cpp@{classencoder.\+cpp}!utf8\+\_\+strlen@{utf8\+\_\+strlen}}
 \index{utf8\+\_\+strlen@{utf8\+\_\+strlen}!classencoder.\+cpp@{classencoder.\+cpp}}
 \subsubsection[{utf8\+\_\+strlen(const string \&str)}]{\setlength{\rightskip}{0pt plus 5cm}int utf8\+\_\+strlen (

@@ -95,23 +95,78 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
+<code>#include &lt;<a class="el" href="common_8h_source.html">common.h</a>&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aea9cc09167edc417a0176b44a4546aa9"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdecoder_8cpp.html#aea9cc09167edc417a0176b44a4546aa9">bytestoint</a> (const unsigned char *a, const int l)</td></tr>
-<tr class="separator:aea9cc09167edc417a0176b44a4546aa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c8dd71d61ed906899f173ce9942229d"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdecoder_8cpp.html#a1c8dd71d61ed906899f173ce9942229d">countwords</a> (const unsigned char *data, const int l)</td></tr>
-<tr class="separator:a1c8dd71d61ed906899f173ce9942229d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca2c2c616e3e813091d93eb66ca29cf2"><td class="memItemLeft" align="right" valign="top">pair&lt; int, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdecoder_8cpp.html#aca2c2c616e3e813091d93eb66ca29cf2">getwords</a> (const unsigned char *data, const int <a class="el" href="pattern_8cpp.html#aa35f7c02f0b33f90cf30fca8eda3c712">datasize</a>, const int n, const int begin)</td></tr>
-<tr class="separator:aca2c2c616e3e813091d93eb66ca29cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca40654f0867316a10594f2134a55778"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdecoder_8cpp.html#aca40654f0867316a10594f2134a55778">bytestoint</a> (const unsigned char *a, unsigned int *length)</td></tr>
+<tr class="separator:aca40654f0867316a10594f2134a55778"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade6cb0c9326e0364b0a2eb5b40b9f0ba"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdecoder_8cpp.html#ade6cb0c9326e0364b0a2eb5b40b9f0ba">bytestoint</a> (istream *IN, const unsigned char version)</td></tr>
+<tr class="separator:ade6cb0c9326e0364b0a2eb5b40b9f0ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c0673caba9360363dd9d489076f5ed2"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdecoder_8cpp.html#a3c0673caba9360363dd9d489076f5ed2">bytestoint_v1</a> (const unsigned char *a, const int l)</td></tr>
+<tr class="separator:a3c0673caba9360363dd9d489076f5ed2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a819fd03c2f0de81682d8069a3cf43c7c"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdecoder_8cpp.html#a819fd03c2f0de81682d8069a3cf43c7c">getdataversion</a> (std::istream *in)</td></tr>
+<tr class="separator:a819fd03c2f0de81682d8069a3cf43c7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="aea9cc09167edc417a0176b44a4546aa9"></a>
+<a class="anchor" id="aca40654f0867316a10594f2134a55778"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">unsigned int bytestoint </td>
+          <td>(</td>
+          <td class="paramtype">const unsigned char *&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int *&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ade6cb0c9326e0364b0a2eb5b40b9f0ba"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int bytestoint </td>
+          <td>(</td>
+          <td class="paramtype">istream *&#160;</td>
+          <td class="paramname"><em>IN</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned char&#160;</td>
+          <td class="paramname"><em>version</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3c0673caba9360363dd9d489076f5ed2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int bytestoint_v1 </td>
           <td>(</td>
           <td class="paramtype">const unsigned char *&#160;</td>
           <td class="paramname"><em>a</em>, </td>
@@ -132,64 +187,16 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a1c8dd71d61ed906899f173ce9942229d"></a>
+<a class="anchor" id="a819fd03c2f0de81682d8069a3cf43c7c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const int countwords </td>
+          <td class="memname">unsigned char getdataversion </td>
           <td>(</td>
-          <td class="paramtype">const unsigned char *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">std::istream *&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>l</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aca2c2c616e3e813091d93eb66ca29cf2"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">pair&lt;int,int&gt; getwords </td>
-          <td>(</td>
-          <td class="paramtype">const unsigned char *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>datasize</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>n</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>begin</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -199,7 +206,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2015 13:45:49 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 4 2015 12:10:20 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['valuetype',['valuetype',['../classAlignedPatternMap.html#a5b139dad8d98612f62fc561a1e29153d',1,'AlignedPatternMap']]]
+  ['reference',['reference',['../classIndexedCorpus_1_1iterator.html#a2dbd246beaf7326504d5694bdd23f1d6',1,'IndexedCorpus::iterator']]]
 ];

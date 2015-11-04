@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['indexedpatternmodel',['INDEXEDPATTERNMODEL',['../patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15daa6f0526916810a6caccd82480e5ec144',1,'patternmodel.h']]]
+  ['quick',['QUICK',['../patternmodel_8h.html#a718d8a8cc511fa24f0af5c8007b7e5feaef079160a47f3cf267a177cc6400cf1d',1,'patternmodel.h']]]
 ];

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['paragraphmarker',['PARAGRAPHMARKER',['../pattern_8h.html#a456be878416629b7bdbab1afa77a06e6a42f093f58a7cfc74b57753d7071c7ac4',1,'pattern.h']]],
-  ['patternalignmentmodel',['PATTERNALIGNMENTMODEL',['../patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15da318700774f54f408c004112396953a04',1,'patternmodel.h']]],
-  ['patternsetmodel',['PATTERNSETMODEL',['../patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15da7d9f6b1a25936e5735c1cec638737616',1,'patternmodel.h']]]
+  ['unindexedpatternmodel',['UNINDEXEDPATTERNMODEL',['../patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15daca2120c3741a469ce1f15b89c2ea1c45',1,'patternmodel.h']]],
+  ['unindexedpatternpointermodel',['UNINDEXEDPATTERNPOINTERMODEL',['../patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15da224dcaa883740a06c4db071c22d22403',1,'patternmodel.h']]],
+  ['unknownpattern',['UNKNOWNPATTERN',['../pattern_8h.html#a17879f85ec892834fb691c61e71dfe54a6d52c728fbd290a85f9b877c4f47c318',1,'pattern.h']]]
 ];

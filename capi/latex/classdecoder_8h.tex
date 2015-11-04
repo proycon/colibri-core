@@ -8,6 +8,7 @@ Class for decoding binary class-\/encoded data back to plain-\/text.
 {\ttfamily \#include $<$unordered\+\_\+map$>$}\\*
 {\ttfamily \#include $<$string$>$}\\*
 {\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$istream$>$}\\*
 {\ttfamily \#include $<$fstream$>$}\\*
 \subsection*{Classes}
 \begin{DoxyCompactItemize}
@@ -17,13 +18,15 @@ class \hyperlink{classClassDecoder}{Class\+Decoder}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-unsigned int \hyperlink{classdecoder_8h_aea9cc09167edc417a0176b44a4546aa9}{bytestoint} (const unsigned char $\ast$a, const int l)
+unsigned int \hyperlink{classdecoder_8h_a53807f496a03324903602a41320cc4a9}{bytestoint} (std\+::istream $\ast$I\+N, const unsigned char version=2)
+\item 
+unsigned int \hyperlink{classdecoder_8h_a406221cc6b7d26d00b426e2ecfca3fdc}{bytestoint} (const unsigned char $\ast$a, unsigned int $\ast$length=N\+U\+L\+L)
+\item 
+unsigned int \hyperlink{classdecoder_8h_a3c0673caba9360363dd9d489076f5ed2}{bytestoint\+\_\+v1} (const unsigned char $\ast$a, const int l)
+\item 
+unsigned char \hyperlink{classdecoder_8h_a485224a77a8dcc2f06aef24485dc6182}{getdataversion} (std\+::istream $\ast$I\+N)
 \item 
 int \hyperlink{classdecoder_8h_ad84aa03fdcbb1681ea715967a289e034}{readline} (std\+::istream $\ast$I\+N, unsigned char $\ast$buffer, const int)
-\item 
-const int \hyperlink{classdecoder_8h_a1c8dd71d61ed906899f173ce9942229d}{countwords} (const unsigned char $\ast$data, const int l)
-\item 
-std\+::pair$<$ int, int $>$ \hyperlink{classdecoder_8h_a50d64120d63b9df5dd49c00ac65c1d3b}{getwords} (const unsigned char $\ast$data, const int \hyperlink{pattern_8cpp_aa35f7c02f0b33f90cf30fca8eda3c712}{datasize}, const int n, const int begin=0)
 \end{DoxyCompactItemize}
 
 
@@ -38,32 +41,37 @@ Licensed under G\+P\+Lv3\hypertarget{SpookyV2_8h_DESCRIPTION}{}\subsection{D\+E\
 Class for decoding binary class-\/encoded data back to plain-\/text 
 
 \subsection{Function Documentation}
-\hypertarget{classdecoder_8h_aea9cc09167edc417a0176b44a4546aa9}{}\index{classdecoder.\+h@{classdecoder.\+h}!bytestoint@{bytestoint}}
+\hypertarget{classdecoder_8h_a53807f496a03324903602a41320cc4a9}{}\index{classdecoder.\+h@{classdecoder.\+h}!bytestoint@{bytestoint}}
 \index{bytestoint@{bytestoint}!classdecoder.\+h@{classdecoder.\+h}}
-\subsubsection[{bytestoint(const unsigned char $\ast$a, const int l)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int bytestoint (
+\subsubsection[{bytestoint(std\+::istream $\ast$\+I\+N, const unsigned char version=2)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int bytestoint (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{I\+N, }
+\item[{const unsigned char}]{version = {\ttfamily 2}}
+\end{DoxyParamCaption}
+)}\label{classdecoder_8h_a53807f496a03324903602a41320cc4a9}
+\hypertarget{classdecoder_8h_a406221cc6b7d26d00b426e2ecfca3fdc}{}\index{classdecoder.\+h@{classdecoder.\+h}!bytestoint@{bytestoint}}
+\index{bytestoint@{bytestoint}!classdecoder.\+h@{classdecoder.\+h}}
+\subsubsection[{bytestoint(const unsigned char $\ast$a, unsigned int $\ast$length=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int bytestoint (
+\begin{DoxyParamCaption}
+\item[{const unsigned char $\ast$}]{a, }
+\item[{unsigned int $\ast$}]{length = {\ttfamily NULL}}
+\end{DoxyParamCaption}
+)}\label{classdecoder_8h_a406221cc6b7d26d00b426e2ecfca3fdc}
+\hypertarget{classdecoder_8h_a3c0673caba9360363dd9d489076f5ed2}{}\index{classdecoder.\+h@{classdecoder.\+h}!bytestoint\+\_\+v1@{bytestoint\+\_\+v1}}
+\index{bytestoint\+\_\+v1@{bytestoint\+\_\+v1}!classdecoder.\+h@{classdecoder.\+h}}
+\subsubsection[{bytestoint\+\_\+v1(const unsigned char $\ast$a, const int l)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int bytestoint\+\_\+v1 (
 \begin{DoxyParamCaption}
 \item[{const unsigned char $\ast$}]{a, }
 \item[{const int}]{l}
 \end{DoxyParamCaption}
-)}\label{classdecoder_8h_aea9cc09167edc417a0176b44a4546aa9}
-\hypertarget{classdecoder_8h_a1c8dd71d61ed906899f173ce9942229d}{}\index{classdecoder.\+h@{classdecoder.\+h}!countwords@{countwords}}
-\index{countwords@{countwords}!classdecoder.\+h@{classdecoder.\+h}}
-\subsubsection[{countwords(const unsigned char $\ast$data, const int l)}]{\setlength{\rightskip}{0pt plus 5cm}const int countwords (
+)}\label{classdecoder_8h_a3c0673caba9360363dd9d489076f5ed2}
+\hypertarget{classdecoder_8h_a485224a77a8dcc2f06aef24485dc6182}{}\index{classdecoder.\+h@{classdecoder.\+h}!getdataversion@{getdataversion}}
+\index{getdataversion@{getdataversion}!classdecoder.\+h@{classdecoder.\+h}}
+\subsubsection[{getdataversion(std\+::istream $\ast$\+I\+N)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char getdataversion (
 \begin{DoxyParamCaption}
-\item[{const unsigned char $\ast$}]{data, }
-\item[{const int}]{l}
+\item[{std\+::istream $\ast$}]{I\+N}
 \end{DoxyParamCaption}
-)}\label{classdecoder_8h_a1c8dd71d61ed906899f173ce9942229d}
-\hypertarget{classdecoder_8h_a50d64120d63b9df5dd49c00ac65c1d3b}{}\index{classdecoder.\+h@{classdecoder.\+h}!getwords@{getwords}}
-\index{getwords@{getwords}!classdecoder.\+h@{classdecoder.\+h}}
-\subsubsection[{getwords(const unsigned char $\ast$data, const int datasize, const int n, const int begin=0)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::pair$<$int,int$>$ getwords (
-\begin{DoxyParamCaption}
-\item[{const unsigned char $\ast$}]{data, }
-\item[{const int}]{datasize, }
-\item[{const int}]{n, }
-\item[{const int}]{begin = {\ttfamily 0}}
-\end{DoxyParamCaption}
-)}\label{classdecoder_8h_a50d64120d63b9df5dd49c00ac65c1d3b}
+)}\label{classdecoder_8h_a485224a77a8dcc2f06aef24485dc6182}
 \hypertarget{classdecoder_8h_ad84aa03fdcbb1681ea715967a289e034}{}\index{classdecoder.\+h@{classdecoder.\+h}!readline@{readline}}
 \index{readline@{readline}!classdecoder.\+h@{classdecoder.\+h}}
 \subsubsection[{readline(std\+::istream $\ast$\+I\+N, unsigned char $\ast$buffer, const int)}]{\setlength{\rightskip}{0pt plus 5cm}int readline (

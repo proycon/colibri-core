@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gapconf',['gapconf',['../classPatternModel.html#a1070e4e96457caf4ae35d23c1e9ac5c3',1,'PatternModel']]]
+  ['gapmasks',['gapmasks',['../classPatternModel.html#a6136c80df09f3721420f97606c6412b6',1,'PatternModel']]]
 ];

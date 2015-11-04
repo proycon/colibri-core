@@ -16,13 +16,15 @@ void \hyperlink{patternmodeller_8cpp_a2ef30c42cbc289d899a8be5d2d8f77d0}{usage} (
 \item 
 {\footnotesize template$<$class Model\+Type  = Indexed\+Pattern\+Model$<$$>$$>$ }\\void \hyperlink{patternmodeller_8cpp_ad0c88bad3b9c1980f54df5f405a81f80}{processquerypattern} (\hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15d}{Model\+Type} \&model, \hyperlink{classClassDecoder}{Class\+Decoder} $\ast$classdecoder, const \hyperlink{classPattern}{Pattern} \&pattern, bool dorelations)
 \item 
-{\footnotesize template$<$class Model\+Type  = Indexed\+Pattern\+Model$<$$>$$>$ }\\void \hyperlink{patternmodeller_8cpp_ad27bbd78606665ce9c4d02cacc7c0ab2}{processquerypatterns} (\hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15d}{Model\+Type} \&model, \hyperlink{classClassEncoder}{Class\+Encoder} $\ast$classencoder, \hyperlink{classClassDecoder}{Class\+Decoder} $\ast$classdecoder, vector$<$ string $>$ \&querypatterns, bool dorelations)
+{\footnotesize template$<$class Model\+Type  = Indexed\+Pattern\+Model$<$$>$$>$ }\\void \hyperlink{patternmodeller_8cpp_aa85ea3a37781c8f8129d6610a5ae9971}{processquerypatterns} (\hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15d}{Model\+Type} \&model, \hyperlink{classClassEncoder}{Class\+Encoder} $\ast$classencoder, \hyperlink{classClassDecoder}{Class\+Decoder} $\ast$classdecoder, const vector$<$ string $>$ \&querypatterns, bool dorelations)
 \item 
 {\footnotesize template$<$class Model\+Type  = Indexed\+Pattern\+Model$<$$>$$>$ }\\void \hyperlink{patternmodeller_8cpp_ad1ab1d45c1fb09607b7a129417c7ed43}{querymodel} (\hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15d}{Model\+Type} \&model, \hyperlink{classClassEncoder}{Class\+Encoder} $\ast$classencoder, \hyperlink{classClassDecoder}{Class\+Decoder} $\ast$classdecoder, bool dorelations, bool repeat=true)
 \item 
 void \hyperlink{patternmodeller_8cpp_a6219353f95491cc0527c8710d370aeba}{assert\+\_\+file\+\_\+exists} (const string \&filename)
 \item 
-{\footnotesize template$<$class Model\+Type  = Indexed\+Pattern\+Model$<$$>$$>$ }\\bool \hyperlink{patternmodeller_8cpp_a465ce2c2be675a450fbcd0875a46ecfb}{viewmodel} (\hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15d}{Model\+Type} \&model, \hyperlink{classClassDecoder}{Class\+Decoder} $\ast$classdecoder, \hyperlink{classClassEncoder}{Class\+Encoder} $\ast$classencoder, bool print, bool report, bool histogram, bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold=0.\+1)
+{\footnotesize template$<$class Model\+Type  = Indexed\+Pattern\+Model$<$$>$$>$ }\\void \hyperlink{patternmodeller_8cpp_a92c7cc881450851f35bb9d6e334f7ba5}{viewmodel} (\hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15d}{Model\+Type} \&model, \hyperlink{classClassDecoder}{Class\+Decoder} $\ast$classdecoder, \hyperlink{classClassEncoder}{Class\+Encoder} $\ast$classencoder, bool print, bool report, bool histogram, bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold=0.\+1)
+\item 
+{\footnotesize template$<$class Model\+Type $>$ }\\bool \hyperlink{patternmodeller_8cpp_af9936251681ff78ab65e0233a0e9d25e}{processmodel} (const string \&inputmodelfile, int inputmodeltype, const string \&outputmodelfile, int outputmodeltype, const string \&corpusfile, \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} $\ast$constrainbymodel, \hyperlink{classIndexedCorpus}{Indexed\+Corpus} $\ast$corpus, \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} \&options, bool continued, bool expand, int firstsentence, bool ignoreerrors, string inputmodelfile2, \hyperlink{classClassDecoder}{Class\+Decoder} $\ast$classdecoder, \hyperlink{classClassEncoder}{Class\+Encoder} $\ast$classencoder, bool print, bool report, bool histogram, bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold, bool flexfromskip, const vector$<$ string $>$ \&querypatterns)
 \item 
 int \hyperlink{patternmodeller_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
 \end{DoxyCompactItemize}
@@ -44,6 +46,44 @@ int \hyperlink{patternmodeller_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main} (in
 \item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
 \end{DoxyParamCaption}
 )}\label{patternmodeller_8cpp_a0ddf1224851353fc92bfbff6f499fa97}
+
+
+
+
+
+
+\hypertarget{patternmodeller_8cpp_af9936251681ff78ab65e0233a0e9d25e}{}\index{patternmodeller.\+cpp@{patternmodeller.\+cpp}!processmodel@{processmodel}}
+\index{processmodel@{processmodel}!patternmodeller.\+cpp@{patternmodeller.\+cpp}}
+\subsubsection[{processmodel(const string \&inputmodelfile, int inputmodeltype, const string \&outputmodelfile, int outputmodeltype, const string \&corpusfile, Pattern\+Set\+Model $\ast$constrainbymodel, Indexed\+Corpus $\ast$corpus, Pattern\+Model\+Options \&options, bool continued, bool expand, int firstsentence, bool ignoreerrors, string inputmodelfile2, Class\+Decoder $\ast$classdecoder, Class\+Encoder $\ast$classencoder, bool print, bool report, bool histogram, bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold, bool flexfromskip, const vector$<$ string $>$ \&querypatterns)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Model\+Type $>$ bool processmodel (
+\begin{DoxyParamCaption}
+\item[{const string \&}]{inputmodelfile, }
+\item[{int}]{inputmodeltype, }
+\item[{const string \&}]{outputmodelfile, }
+\item[{int}]{outputmodeltype, }
+\item[{const string \&}]{corpusfile, }
+\item[{{\bf Pattern\+Set\+Model} $\ast$}]{constrainbymodel, }
+\item[{{\bf Indexed\+Corpus} $\ast$}]{corpus, }
+\item[{{\bf Pattern\+Model\+Options} \&}]{options, }
+\item[{bool}]{continued, }
+\item[{bool}]{expand, }
+\item[{int}]{firstsentence, }
+\item[{bool}]{ignoreerrors, }
+\item[{string}]{inputmodelfile2, }
+\item[{{\bf Class\+Decoder} $\ast$}]{classdecoder, }
+\item[{{\bf Class\+Encoder} $\ast$}]{classencoder, }
+\item[{bool}]{print, }
+\item[{bool}]{report, }
+\item[{bool}]{histogram, }
+\item[{bool}]{query, }
+\item[{bool}]{relations, }
+\item[{bool}]{info, }
+\item[{bool}]{printreverseindex, }
+\item[{int}]{cooc, }
+\item[{double}]{coocthreshold, }
+\item[{bool}]{flexfromskip, }
+\item[{const vector$<$ string $>$ \&}]{querypatterns}
+\end{DoxyParamCaption}
+)}\label{patternmodeller_8cpp_af9936251681ff78ab65e0233a0e9d25e}
 \hypertarget{patternmodeller_8cpp_ad0c88bad3b9c1980f54df5f405a81f80}{}\index{patternmodeller.\+cpp@{patternmodeller.\+cpp}!processquerypattern@{processquerypattern}}
 \index{processquerypattern@{processquerypattern}!patternmodeller.\+cpp@{patternmodeller.\+cpp}}
 \subsubsection[{processquerypattern(\+Model\+Type \&model, Class\+Decoder $\ast$classdecoder, const Pattern \&pattern, bool dorelations)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Model\+Type  = Indexed\+Pattern\+Model$<$$>$$>$ void processquerypattern (
@@ -54,17 +94,17 @@ int \hyperlink{patternmodeller_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main} (in
 \item[{bool}]{dorelations}
 \end{DoxyParamCaption}
 )}\label{patternmodeller_8cpp_ad0c88bad3b9c1980f54df5f405a81f80}
-\hypertarget{patternmodeller_8cpp_ad27bbd78606665ce9c4d02cacc7c0ab2}{}\index{patternmodeller.\+cpp@{patternmodeller.\+cpp}!processquerypatterns@{processquerypatterns}}
+\hypertarget{patternmodeller_8cpp_aa85ea3a37781c8f8129d6610a5ae9971}{}\index{patternmodeller.\+cpp@{patternmodeller.\+cpp}!processquerypatterns@{processquerypatterns}}
 \index{processquerypatterns@{processquerypatterns}!patternmodeller.\+cpp@{patternmodeller.\+cpp}}
-\subsubsection[{processquerypatterns(\+Model\+Type \&model, Class\+Encoder $\ast$classencoder, Class\+Decoder $\ast$classdecoder, vector$<$ string $>$ \&querypatterns, bool dorelations)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Model\+Type  = Indexed\+Pattern\+Model$<$$>$$>$ void processquerypatterns (
+\subsubsection[{processquerypatterns(\+Model\+Type \&model, Class\+Encoder $\ast$classencoder, Class\+Decoder $\ast$classdecoder, const vector$<$ string $>$ \&querypatterns, bool dorelations)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Model\+Type  = Indexed\+Pattern\+Model$<$$>$$>$ void processquerypatterns (
 \begin{DoxyParamCaption}
 \item[{{\bf Model\+Type} \&}]{model, }
 \item[{{\bf Class\+Encoder} $\ast$}]{classencoder, }
 \item[{{\bf Class\+Decoder} $\ast$}]{classdecoder, }
-\item[{vector$<$ string $>$ \&}]{querypatterns, }
+\item[{const vector$<$ string $>$ \&}]{querypatterns, }
 \item[{bool}]{dorelations}
 \end{DoxyParamCaption}
-)}\label{patternmodeller_8cpp_ad27bbd78606665ce9c4d02cacc7c0ab2}
+)}\label{patternmodeller_8cpp_aa85ea3a37781c8f8129d6610a5ae9971}
 \hypertarget{patternmodeller_8cpp_ad1ab1d45c1fb09607b7a129417c7ed43}{}\index{patternmodeller.\+cpp@{patternmodeller.\+cpp}!querymodel@{querymodel}}
 \index{querymodel@{querymodel}!patternmodeller.\+cpp@{patternmodeller.\+cpp}}
 \subsubsection[{querymodel(\+Model\+Type \&model, Class\+Encoder $\ast$classencoder, Class\+Decoder $\ast$classdecoder, bool dorelations, bool repeat=true)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Model\+Type  = Indexed\+Pattern\+Model$<$$>$$>$ void querymodel (
@@ -83,9 +123,9 @@ int \hyperlink{patternmodeller_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main} (in
 {}
 \end{DoxyParamCaption}
 )}\label{patternmodeller_8cpp_a2ef30c42cbc289d899a8be5d2d8f77d0}
-\hypertarget{patternmodeller_8cpp_a465ce2c2be675a450fbcd0875a46ecfb}{}\index{patternmodeller.\+cpp@{patternmodeller.\+cpp}!viewmodel@{viewmodel}}
+\hypertarget{patternmodeller_8cpp_a92c7cc881450851f35bb9d6e334f7ba5}{}\index{patternmodeller.\+cpp@{patternmodeller.\+cpp}!viewmodel@{viewmodel}}
 \index{viewmodel@{viewmodel}!patternmodeller.\+cpp@{patternmodeller.\+cpp}}
-\subsubsection[{viewmodel(\+Model\+Type \&model, Class\+Decoder $\ast$classdecoder, Class\+Encoder $\ast$classencoder, bool print, bool report, bool histogram, bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold=0.\+1)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Model\+Type  = Indexed\+Pattern\+Model$<$$>$$>$ bool viewmodel (
+\subsubsection[{viewmodel(\+Model\+Type \&model, Class\+Decoder $\ast$classdecoder, Class\+Encoder $\ast$classencoder, bool print, bool report, bool histogram, bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold=0.\+1)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Model\+Type  = Indexed\+Pattern\+Model$<$$>$$>$ void viewmodel (
 \begin{DoxyParamCaption}
 \item[{{\bf Model\+Type} \&}]{model, }
 \item[{{\bf Class\+Decoder} $\ast$}]{classdecoder, }
@@ -100,4 +140,4 @@ int \hyperlink{patternmodeller_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main} (in
 \item[{int}]{cooc, }
 \item[{double}]{coocthreshold = {\ttfamily 0.1}}
 \end{DoxyParamCaption}
-)}\label{patternmodeller_8cpp_a465ce2c2be675a450fbcd0875a46ecfb}
+)}\label{patternmodeller_8cpp_a92c7cc881450851f35bb9d6e334f7ba5}

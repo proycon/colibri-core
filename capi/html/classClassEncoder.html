@@ -86,6 +86,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classClassEncoder-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">ClassEncoder Class Reference</div>  </div>
@@ -110,32 +111,32 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad45c22282d9cdbf5bc3b63529f104a82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a154967c8f5092155daff8f8d2e9614f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a154967c8f5092155daff8f8d2e9614f9">load</a> (const std::string &amp;filename, const unsigned int minlength=0, const unsigned int maxlength=0)</td></tr>
 <tr class="separator:a154967c8f5092155daff8f8d2e9614f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a778921ee3b6c24152bd4754c095780"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a7a778921ee3b6c24152bd4754c095780">build</a> (const std::string &amp;filename)</td></tr>
-<tr class="separator:a7a778921ee3b6c24152bd4754c095780"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63dc79113097584b052b1c1aafb1450e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a63dc79113097584b052b1c1aafb1450e">build</a> (std::vector&lt; std::string &gt; &amp;files, bool quiet=false)</td></tr>
-<tr class="separator:a63dc79113097584b052b1c1aafb1450e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d2503142bf80628342d63d4b1bc8c80"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a1d2503142bf80628342d63d4b1bc8c80">buildclasses</a> (const std::unordered_map&lt; std::string, int &gt; &amp;freqlist)</td></tr>
-<tr class="separator:a1d2503142bf80628342d63d4b1bc8c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31582938ee64039dda806490f70ede04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a31582938ee64039dda806490f70ede04">processcorpus</a> (const std::string &amp;filename, std::unordered_map&lt; std::string, int &gt; &amp;freqlist)</td></tr>
-<tr class="separator:a31582938ee64039dda806490f70ede04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51df3eebfbcf89c57deaa1a43056be34"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a51df3eebfbcf89c57deaa1a43056be34">processcorpus</a> (std::istream *in, std::unordered_map&lt; std::string, int &gt; &amp;freqlist)</td></tr>
-<tr class="separator:a51df3eebfbcf89c57deaa1a43056be34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2663b3a486786596aecbf1a70405f63"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#af2663b3a486786596aecbf1a70405f63">build</a> (const std::string &amp;filename, unsigned int threshold=0)</td></tr>
+<tr class="separator:af2663b3a486786596aecbf1a70405f63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a317e36914ad768d4673da8726b5bc748"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a317e36914ad768d4673da8726b5bc748">build</a> (std::vector&lt; std::string &gt; &amp;files, bool quiet=false, unsigned int threshold=0)</td></tr>
+<tr class="separator:a317e36914ad768d4673da8726b5bc748"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50785ce05b8f24bdab3373a9abfe3418"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a50785ce05b8f24bdab3373a9abfe3418">buildclasses</a> (const std::unordered_map&lt; std::string, unsigned int &gt; &amp;freqlist, unsigned int threshold=0)</td></tr>
+<tr class="separator:a50785ce05b8f24bdab3373a9abfe3418"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f24c785b8056dd0e4c19215687ff0e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a1f24c785b8056dd0e4c19215687ff0e9">processcorpus</a> (const std::string &amp;filename, std::unordered_map&lt; std::string, unsigned int &gt; &amp;freqlist)</td></tr>
+<tr class="separator:a1f24c785b8056dd0e4c19215687ff0e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a517d86e528966a04d188e9a023f01ae6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a517d86e528966a04d188e9a023f01ae6">processcorpus</a> (std::istream *in, std::unordered_map&lt; std::string, unsigned int &gt; &amp;freqlist)</td></tr>
+<tr class="separator:a517d86e528966a04d188e9a023f01ae6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27a25d91e8e1a1412d905ae4d09ac9d5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a27a25d91e8e1a1412d905ae4d09ac9d5">outputlength</a> (const std::string &amp;line)</td></tr>
 <tr class="separator:a27a25d91e8e1a1412d905ae4d09ac9d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8a81b7f610ab91dc31db0c893c92321"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#af8a81b7f610ab91dc31db0c893c92321">encodestring</a> (const std::string &amp;line, unsigned char *outputbuffer, bool allowunknown, bool autoaddunknown=false)</td></tr>
 <tr class="separator:af8a81b7f610ab91dc31db0c893c92321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2733c6eaab7304a53cfc63a10c3bbee3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a2733c6eaab7304a53cfc63a10c3bbee3">encodefile</a> (const std::string &amp;inputfilename, const std::string &amp;outputfilename, bool allowunknown, bool autoaddunknown=false, bool append=false, bool quiet=false)</td></tr>
 <tr class="separator:a2733c6eaab7304a53cfc63a10c3bbee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83e08eb6b43b6fceb95b0bdb1960348f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a83e08eb6b43b6fceb95b0bdb1960348f">encodefile</a> (std::istream *IN, std::ostream *OUT, bool allowunknown, bool autoaddunknown, bool quiet=false)</td></tr>
-<tr class="separator:a83e08eb6b43b6fceb95b0bdb1960348f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac18800b64264d93383234ddeed0098d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#ac18800b64264d93383234ddeed0098d3">encodefile</a> (std::istream *IN, std::ostream *OUT, bool allowunknown, bool autoaddunknown, bool quiet=false, bool append=false)</td></tr>
+<tr class="separator:ac18800b64264d93383234ddeed0098d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1c2529c9abd544f618c821067ee39c9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#ae1c2529c9abd544f618c821067ee39c9">encodeseq</a> (const std::vector&lt; std::string &gt; &amp;seq)</td></tr>
 <tr class="separator:ae1c2529c9abd544f618c821067ee39c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac517bd3fb8129c7a525479b015d91e01"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classPattern.html">Pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#ac517bd3fb8129c7a525479b015d91e01">buildpattern</a> (const std::string &amp;patternstring, bool allowunknown=false, bool autoaddunknown=false)</td></tr>
 <tr class="separator:ac517bd3fb8129c7a525479b015d91e01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af65d2963df9698d6ff6a0740f506feae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classPattern.html">Pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#af65d2963df9698d6ff6a0740f506feae">buildpattern_safe</a> (const std::string &amp;patternstring, bool allowunknown=false, bool autoaddunknown=false)</td></tr>
 <tr class="separator:af65d2963df9698d6ff6a0740f506feae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a434fc52c64ec960ef68daba4889695d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a434fc52c64ec960ef68daba4889695d6">add</a> (std::string, unsigned int cls)</td></tr>
-<tr class="separator:a434fc52c64ec960ef68daba4889695d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af63308ff3a1bd315fa921becee25f97a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#af63308ff3a1bd315fa921becee25f97a">add</a> (const std::string &amp;, const unsigned int cls)</td></tr>
+<tr class="separator:af63308ff3a1bd315fa921becee25f97a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a295adb48f47845aa5842c68b00b24b9a"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a295adb48f47845aa5842c68b00b24b9a">gethighestclass</a> ()</td></tr>
 <tr class="separator:a295adb48f47845aa5842c68b00b24b9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a171525ba62fd46cb8f79dcfbf1b39c7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a171525ba62fd46cb8f79dcfbf1b39c7e">save</a> (const std::string &amp;filename)</td></tr>
@@ -153,6 +154,17 @@ Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:adcdcf6dc84a1c3ca056f3687b2d3688c"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; unsigned int, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#adcdcf6dc84a1c3ca056f3687b2d3688c">added</a></td></tr>
 <tr class="separator:adcdcf6dc84a1c3ca056f3687b2d3688c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a644f99132d9b6f5be6f645b40784b170"><td class="memItemLeft" align="right" valign="top">static const unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a644f99132d9b6f5be6f645b40784b170">delimiterclass</a> = 0</td></tr>
+<tr class="separator:a644f99132d9b6f5be6f645b40784b170"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a99bcd37707a9d26707e45728ee7c1d"><td class="memItemLeft" align="right" valign="top">static const unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a4a99bcd37707a9d26707e45728ee7c1d">unknownclass</a> = 2</td></tr>
+<tr class="separator:a4a99bcd37707a9d26707e45728ee7c1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a645b97d98a788a150f2458db90282276"><td class="memItemLeft" align="right" valign="top">static const unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a645b97d98a788a150f2458db90282276">skipclass</a> = 3</td></tr>
+<tr class="separator:a645b97d98a788a150f2458db90282276"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87e9e57927ca8c80c53612465aa8802d"><td class="memItemLeft" align="right" valign="top">static const unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassEncoder.html#a87e9e57927ca8c80c53612465aa8802d">flexclass</a> = 4</td></tr>
+<tr class="separator:a87e9e57927ca8c80c53612465aa8802d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for encoding plain-text to binary class-encoded data. The <a class="el" href="classClassEncoder.html" title="Class for encoding plain-text to binary class-encoded data. The ClassEncoder maintains a mapping of w...">ClassEncoder</a> maintains a mapping of words to classes (integers). It allows a corpus to be losslessly compressed by substituting words for classes. The classes are distributed based on word frequency, with frequent words receiving a lower class number that can be represented in fewer bytes, and rare words receiving a higher class number. </p>
@@ -244,20 +256,20 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a434fc52c64ec960ef68daba4889695d6"></a>
+<a class="anchor" id="af63308ff3a1bd315fa921becee25f97a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void ClassEncoder::add </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>s</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const unsigned int&#160;</td>
           <td class="paramname"><em>cls</em>&#160;</td>
         </tr>
         <tr>
@@ -294,7 +306,7 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a7a778921ee3b6c24152bd4754c095780"></a>
+<a class="anchor" id="af2663b3a486786596aecbf1a70405f63"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -302,21 +314,32 @@ Public Attributes</h2></td></tr>
           <td class="memname">void ClassEncoder::build </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>filename</em></td><td>)</td>
+          <td class="paramname"><em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>threshold</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Build a class encoding from a plain-text corpus </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">filename</td><td>A plain text corpus with the units of interest (e.g sentences) each on one line </td></tr>
+    <tr><td class="paramname">threshold</td><td>Occurrence threshold, words occurring less will be pruned </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a class="anchor" id="a63dc79113097584b052b1c1aafb1450e"></a>
+<a class="anchor" id="a317e36914ad768d4673da8726b5bc748"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -330,7 +353,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>quiet</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>quiet</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>threshold</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -343,28 +372,40 @@ Public Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">files</td><td>A list of plain text corpus files with the units of interest (e.g sentences) each on one line </td></tr>
     <tr><td class="paramname">quiet</td><td>If true, do not output progress to stderr (default: false) </td></tr>
+    <tr><td class="paramname">threshold</td><td>Occurrence threshold, words occurring less will be pruned </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a class="anchor" id="a1d2503142bf80628342d63d4b1bc8c80"></a>
+<a class="anchor" id="a50785ce05b8f24bdab3373a9abfe3418"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void ClassEncoder::buildclasses </td>
           <td>(</td>
-          <td class="paramtype">const std::unordered_map&lt; std::string, int &gt; &amp;&#160;</td>
-          <td class="paramname"><em>freqlist</em></td><td>)</td>
+          <td class="paramtype">const std::unordered_map&lt; std::string, unsigned int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>freqlist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>threshold</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Assign classes based on the computed frequency list. This method should only be called once. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">freqlist</td><td>The data structure that will contain the frequency list </td></tr>
+    <tr><td class="paramname">threshold</td><td>Occurrence threshold, words occurring less will be pruned </td></tr>
   </table>
   </dd>
 </dl>
@@ -507,6 +548,7 @@ Public Attributes</h2></td></tr>
     <tr><td class="paramname">outputfilename</td><td>Filename of the output file (binary class-encoded corpus file, *.colibri.dat) </td></tr>
     <tr><td class="paramname">allowunknown</td><td>If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default: false) </td></tr>
     <tr><td class="paramname">autoaddunknown</td><td>If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false) </td></tr>
+    <tr><td class="paramname">append</td><td>Set to true if this is not the first file to write to the stream </td></tr>
   </table>
   </dd>
 </dl>
@@ -514,7 +556,7 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a83e08eb6b43b6fceb95b0bdb1960348f"></a>
+<a class="anchor" id="ac18800b64264d93383234ddeed0098d3"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -546,7 +588,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>quiet</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>quiet</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>append</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -562,6 +610,8 @@ Public Attributes</h2></td></tr>
     <tr><td class="paramname">OUT</td><td>Output stream of a binary class-encoded corpus file (*.colibri.dat) </td></tr>
     <tr><td class="paramname">allowunknown</td><td>If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default: false) </td></tr>
     <tr><td class="paramname">autoaddunknown</td><td>If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false) </td></tr>
+    <tr><td class="paramname">quiet</td><td>Set to true to suppress any output </td></tr>
+    <tr><td class="paramname">append</td><td>Set to true if this is not the first file to write to the stream </td></tr>
   </table>
   </dd>
 </dl>
@@ -762,7 +812,7 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a31582938ee64039dda806490f70ede04"></a>
+<a class="anchor" id="a1f24c785b8056dd0e4c19215687ff0e9"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -775,7 +825,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::unordered_map&lt; std::string, int &gt; &amp;&#160;</td>
+          <td class="paramtype">std::unordered_map&lt; std::string, unsigned int &gt; &amp;&#160;</td>
           <td class="paramname"><em>freqlist</em>&#160;</td>
         </tr>
         <tr>
@@ -788,14 +838,14 @@ Public Attributes</h2></td></tr>
 <p>Count word frequency in a given plain-text corpus. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">filename</td><td>The corpus file </td></tr>
-    <tr><td class="paramname">freqlist</td><td>The resulting frequency list, should be shared between multiple calls to <a class="el" href="classClassEncoder.html#a31582938ee64039dda806490f70ede04">processcorpus()</a> </td></tr>
+    <tr><td class="paramname">freqlist</td><td>The resulting frequency list, should be shared between multiple calls to <a class="el" href="classClassEncoder.html#a1f24c785b8056dd0e4c19215687ff0e9">processcorpus()</a> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a class="anchor" id="a51df3eebfbcf89c57deaa1a43056be34"></a>
+<a class="anchor" id="a517d86e528966a04d188e9a023f01ae6"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -808,7 +858,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::unordered_map&lt; std::string, int &gt; &amp;&#160;</td>
+          <td class="paramtype">std::unordered_map&lt; std::string, unsigned int &gt; &amp;&#160;</td>
           <td class="paramname"><em>freqlist</em>&#160;</td>
         </tr>
         <tr>
@@ -821,7 +871,7 @@ Public Attributes</h2></td></tr>
 <p>Count word frequency in a given plain-text corpus. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">in</td><td>The input stream </td></tr>
-    <tr><td class="paramname">freqlist</td><td>The resulting frequency list, should be shared between multiple calls to <a class="el" href="classClassEncoder.html#a31582938ee64039dda806490f70ede04">processcorpus()</a> </td></tr>
+    <tr><td class="paramname">freqlist</td><td>The resulting frequency list, should be shared between multiple calls to <a class="el" href="classClassEncoder.html#a1f24c785b8056dd0e4c19215687ff0e9">processcorpus()</a> </td></tr>
   </table>
   </dd>
 </dl>
@@ -882,6 +932,86 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a644f99132d9b6f5be6f645b40784b170"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned char ClassEncoder::delimiterclass = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a87e9e57927ca8c80c53612465aa8802d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned char ClassEncoder::flexclass = 4</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a645b97d98a788a150f2458db90282276"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned char ClassEncoder::skipclass = 3</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4a99bcd37707a9d26707e45728ee7c1d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned char ClassEncoder::unknownclass = 2</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/<a class="el" href="classencoder_8h_source.html">classencoder.h</a></li>
 <li>src/<a class="el" href="classencoder_8cpp.html">classencoder.cpp</a></li>
@@ -889,7 +1019,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2015 13:45:50 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 4 2015 12:10:21 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

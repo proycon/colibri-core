@@ -5,7 +5,7 @@
 %%For: 
 %Magnification: 1.00
 %%Orientation: Portrait
-%%BoundingBox: 0 0 500 174.418605
+%%BoundingBox: 0 0 500 189.959294
 %%Pages: 0
 %%BeginSetup
 %%EndSetup
@@ -19,12 +19,12 @@
 /marginwidth 10 def
 /distx 20 def
 /disty 40 def
-/boundaspect 2.866667 def  % aspect ratio of the BoundingBox (width/height)
+/boundaspect 2.632143 def  % aspect ratio of the BoundingBox (width/height)
 /boundx 500 def
 /boundy boundx boundaspect div def
 /xspacing 0 def
 /yspacing 0 def
-/rows 12 def
+/rows 14 def
 /cols 2 def
 /scalefactor 0 def
 /boxfont /Times-Roman findfont fontheight scalefont def
@@ -176,15 +176,17 @@ boxfont setfont
 (PatternStoreInterface) cw
 (PatternModelInterface) cw
 (PatternModelInterface) cw
-(PatternStore< ContainerType, ReadWriteSizeType >) cw
-(PatternStore< std::map< const Pattern, ValueType >, ReadWriteSizeType >) cw
-(PatternStore< std::unordered_map< Pattern, PatternFeatureVectorMap< FeatureType > >, uint64_t >) cw
-(PatternStore< std::unordered_map< Pattern, PatternMap< ValueType, ValueHandler, NestedSizeType > >, uint64_t >) cw
-(PatternStore< std::unordered_map< Pattern, ValueType >, NestedSizeType >) cw
-(PatternStore< std::unordered_map< Pattern, ValueType >, ReadWriteSizeType >) cw
+(PatternStore< ContainerType, ReadWriteSizeType, PatternType >) cw
+(PatternStore< std::map< const Pattern, ValueType >, ReadWriteSizeType, Pattern >) cw
+(PatternStore< std::map< PatternPointer, ValueType >, ReadWriteSizeType, PatternPointer >) cw
+(PatternStore< std::unordered_map< Pattern, PatternFeatureVectorMap< FeatureType > >, uint64_t, Pattern >) cw
+(PatternStore< std::unordered_map< Pattern, PatternMap< ValueType, ValueHandler, NestedSizeType > >, uint64_t, Pattern >) cw
+(PatternStore< std::unordered_map< Pattern, ValueType >, NestedSizeType, Pattern >) cw
+(PatternStore< std::unordered_map< Pattern, ValueType >, ReadWriteSizeType, Pattern >) cw
+(PatternStore< std::unordered_map< PatternPointer, ValueType >, ReadWriteSizeType, PatternPointer >) cw
 (PatternStore< t_hashorderedpatternset, ReadWriteSizeType >) cw
-(PatternStore< t_patternset, ReadWriteSizeType >) cw
-(PatternStore< t_patternset, uint64_t >) cw
+(PatternStore< t_patternset, ReadWriteSizeType, Pattern >) cw
+(PatternStore< t_patternset, uint64_t, Pattern >) cw
 /boxwidth boxwidth marginwidth 2 mul add def
 /xspacing boxwidth distx add def
 /yspacing boxheight disty add def
@@ -196,34 +198,42 @@ boundx scalefactor div boundy scalefactor div scale
 
 % ----- classes -----
 
- (PatternStoreInterface) 0.000000 11.000000 box
- (PatternModelInterface) 1.000000 10.000000 box
+ (PatternStoreInterface) 0.000000 13.000000 box
+ (PatternModelInterface) 1.000000 12.000000 box
+1.000000 12.000000 mark
+ (PatternModelInterface) 1.000000 11.000000 box
+1.000000 11.000000 mark
+ (PatternStore< ContainerType, ReadWriteSizeType, PatternType >) 1.000000 10.000000 box
 1.000000 10.000000 mark
- (PatternModelInterface) 1.000000 9.000000 box
+ (PatternStore< std::map< const Pattern, ValueType >, ReadWriteSizeType, Pattern >) 1.000000 9.000000 box
 1.000000 9.000000 mark
- (PatternStore< ContainerType, ReadWriteSizeType >) 1.000000 8.000000 box
+ (PatternStore< std::map< PatternPointer, ValueType >, ReadWriteSizeType, PatternPointer >) 1.000000 8.000000 box
 1.000000 8.000000 mark
- (PatternStore< std::map< const Pattern, ValueType >, ReadWriteSizeType >) 1.000000 7.000000 box
+ (PatternStore< std::unordered_map< Pattern, PatternFeatureVectorMap< FeatureType > >, uint64_t, Pattern >) 1.000000 7.000000 box
 1.000000 7.000000 mark
- (PatternStore< std::unordered_map< Pattern, PatternFeatureVectorMap< FeatureType > >, uint64_t >) 1.000000 6.000000 box
+ (PatternStore< std::unordered_map< Pattern, PatternMap< ValueType, ValueHandler, NestedSizeType > >, uint64_t, Pattern >) 1.000000 6.000000 box
 1.000000 6.000000 mark
- (PatternStore< std::unordered_map< Pattern, PatternMap< ValueType, ValueHandler, NestedSizeType > >, uint64_t >) 1.000000 5.000000 box
+ (PatternStore< std::unordered_map< Pattern, ValueType >, NestedSizeType, Pattern >) 1.000000 5.000000 box
 1.000000 5.000000 mark
- (PatternStore< std::unordered_map< Pattern, ValueType >, NestedSizeType >) 1.000000 4.000000 box
+ (PatternStore< std::unordered_map< Pattern, ValueType >, ReadWriteSizeType, Pattern >) 1.000000 4.000000 box
 1.000000 4.000000 mark
- (PatternStore< std::unordered_map< Pattern, ValueType >, ReadWriteSizeType >) 1.000000 3.000000 box
+ (PatternStore< std::unordered_map< PatternPointer, ValueType >, ReadWriteSizeType, PatternPointer >) 1.000000 3.000000 box
 1.000000 3.000000 mark
  (PatternStore< t_hashorderedpatternset, ReadWriteSizeType >) 1.000000 2.000000 box
 1.000000 2.000000 mark
- (PatternStore< t_patternset, ReadWriteSizeType >) 1.000000 1.000000 box
+ (PatternStore< t_patternset, ReadWriteSizeType, Pattern >) 1.000000 1.000000 box
 1.000000 1.000000 mark
- (PatternStore< t_patternset, uint64_t >) 1.000000 0.000000 box
+ (PatternStore< t_patternset, uint64_t, Pattern >) 1.000000 0.000000 box
 1.000000 0.000000 mark
 
 % ----- relations -----
 
 solid
-1 0.000000 10.250000 out
+1 0.000000 12.250000 out
+solid
+0 0.000000 12.500000 hedge
+solid
+0 0.000000 11.500000 hedge
 solid
 0 0.000000 10.500000 hedge
 solid
@@ -247,4 +257,4 @@ solid
 solid
 0 0.000000 0.500000 hedge
 solid
-0.000000 11.000000 0.500000 vedge
+0.000000 13.000000 0.500000 vedge

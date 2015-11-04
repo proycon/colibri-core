@@ -4,43 +4,43 @@
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \hyperlink{patternmodel_8cpp_a80b71afd5e6d9b738daee567a8b519aa}{getmodeltype} (const std\+::string filename)
+int \hyperlink{patternmodel_8cpp_a231755ef5c50233b1dc4ed38eb08aebb}{getmodeltype} (const std\+::string \&filename)
 \item 
-double \hyperlink{patternmodel_8cpp_a1c4c6c8e8913366d40e51eb25c53b418}{comparemodels\+\_\+loglikelihood} (const \hyperlink{classPattern}{Pattern} pattern, std\+::vector$<$ \hyperlink{classPatternModel}{Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$ models)
+double \hyperlink{patternmodel_8cpp_a98b461c96f9b61ed4a42ee6837594aa7}{comparemodels\+\_\+loglikelihood} (const \hyperlink{classPattern}{Pattern} pattern, std\+::vector$<$ \hyperlink{classPatternModel}{Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$ \&models)
 \item 
-void \hyperlink{patternmodel_8cpp_a2384b2f126aee21fa773ddffa538dadd}{comparemodels\+\_\+loglikelihood} (std\+::vector$<$ \hyperlink{classPatternModel}{Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$ models, \hyperlink{classPatternMap}{Pattern\+Map}$<$ double $>$ $\ast$resultmap, bool conjunctiononly, std\+::ostream $\ast$output, \hyperlink{classClassDecoder}{Class\+Decoder} $\ast$classdecoder)
+void \hyperlink{patternmodel_8cpp_a6d868ae6a7b9e41ea478a0cb8b04e1ff}{comparemodels\+\_\+loglikelihood} (std\+::vector$<$ \hyperlink{classPatternModel}{Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$ \&models, \hyperlink{classPatternMap}{Pattern\+Map}$<$ double $>$ $\ast$resultmap, bool conjunctiononly, std\+::ostream $\ast$output, \hyperlink{classClassDecoder}{Class\+Decoder} $\ast$classdecoder)
 \end{DoxyCompactItemize}
 
 
 \subsection{Function Documentation}
-\hypertarget{patternmodel_8cpp_a1c4c6c8e8913366d40e51eb25c53b418}{}\index{patternmodel.\+cpp@{patternmodel.\+cpp}!comparemodels\+\_\+loglikelihood@{comparemodels\+\_\+loglikelihood}}
+\hypertarget{patternmodel_8cpp_a98b461c96f9b61ed4a42ee6837594aa7}{}\index{patternmodel.\+cpp@{patternmodel.\+cpp}!comparemodels\+\_\+loglikelihood@{comparemodels\+\_\+loglikelihood}}
 \index{comparemodels\+\_\+loglikelihood@{comparemodels\+\_\+loglikelihood}!patternmodel.\+cpp@{patternmodel.\+cpp}}
-\subsubsection[{comparemodels\+\_\+loglikelihood(const Pattern pattern, std\+::vector$<$ Pattern\+Model$<$ uint32\+\_\+t $>$ $\ast$ $>$ models)}]{\setlength{\rightskip}{0pt plus 5cm}double comparemodels\+\_\+loglikelihood (
+\subsubsection[{comparemodels\+\_\+loglikelihood(const Pattern pattern, std\+::vector$<$ Pattern\+Model$<$ uint32\+\_\+t $>$ $\ast$ $>$ \&models)}]{\setlength{\rightskip}{0pt plus 5cm}double comparemodels\+\_\+loglikelihood (
 \begin{DoxyParamCaption}
 \item[{const {\bf Pattern}}]{pattern, }
-\item[{std\+::vector$<$ {\bf Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$}]{models}
+\item[{std\+::vector$<$ {\bf Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$ \&}]{models}
 \end{DoxyParamCaption}
-)}\label{patternmodel_8cpp_a1c4c6c8e8913366d40e51eb25c53b418}
+)}\label{patternmodel_8cpp_a98b461c96f9b61ed4a42ee6837594aa7}
 Computation of log likelihood for a single pattern, accross corpora.
 
-Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (A\+C\+L 2000). 1-\/8 October 2000, Hong Kong, pp. 1 -\/ 6\+: \href{http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf}{\tt http\+://www.\+comp.\+lancs.\+ac.\+uk/$\sim$paul/publications/rg\+\_\+acl2000.\+pdf} \hypertarget{patternmodel_8cpp_a2384b2f126aee21fa773ddffa538dadd}{}\index{patternmodel.\+cpp@{patternmodel.\+cpp}!comparemodels\+\_\+loglikelihood@{comparemodels\+\_\+loglikelihood}}
+Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (A\+C\+L 2000). 1-\/8 October 2000, Hong Kong, pp. 1 -\/ 6\+: \href{http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf}{\tt http\+://www.\+comp.\+lancs.\+ac.\+uk/$\sim$paul/publications/rg\+\_\+acl2000.\+pdf} \hypertarget{patternmodel_8cpp_a6d868ae6a7b9e41ea478a0cb8b04e1ff}{}\index{patternmodel.\+cpp@{patternmodel.\+cpp}!comparemodels\+\_\+loglikelihood@{comparemodels\+\_\+loglikelihood}}
 \index{comparemodels\+\_\+loglikelihood@{comparemodels\+\_\+loglikelihood}!patternmodel.\+cpp@{patternmodel.\+cpp}}
-\subsubsection[{comparemodels\+\_\+loglikelihood(std\+::vector$<$ Pattern\+Model$<$ uint32\+\_\+t $>$ $\ast$ $>$ models, Pattern\+Map$<$ double $>$ $\ast$resultmap, bool conjunctiononly, std\+::ostream $\ast$output, Class\+Decoder $\ast$classdecoder)}]{\setlength{\rightskip}{0pt plus 5cm}void comparemodels\+\_\+loglikelihood (
+\subsubsection[{comparemodels\+\_\+loglikelihood(std\+::vector$<$ Pattern\+Model$<$ uint32\+\_\+t $>$ $\ast$ $>$ \&models, Pattern\+Map$<$ double $>$ $\ast$resultmap, bool conjunctiononly, std\+::ostream $\ast$output, Class\+Decoder $\ast$classdecoder)}]{\setlength{\rightskip}{0pt plus 5cm}void comparemodels\+\_\+loglikelihood (
 \begin{DoxyParamCaption}
-\item[{std\+::vector$<$ {\bf Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$}]{models, }
+\item[{std\+::vector$<$ {\bf Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$ \&}]{models, }
 \item[{{\bf Pattern\+Map}$<$ double $>$ $\ast$}]{resultmap, }
 \item[{bool}]{conjunctiononly, }
 \item[{std\+::ostream $\ast$}]{output, }
 \item[{{\bf Class\+Decoder} $\ast$}]{classdecoder}
 \end{DoxyParamCaption}
-)}\label{patternmodel_8cpp_a2384b2f126aee21fa773ddffa538dadd}
+)}\label{patternmodel_8cpp_a6d868ae6a7b9e41ea478a0cb8b04e1ff}
 Computation of log likelihood between patterns in corpora
 
-Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (A\+C\+L 2000). 1-\/8 October 2000, Hong Kong, pp. 1 -\/ 6\+: \href{http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf}{\tt http\+://www.\+comp.\+lancs.\+ac.\+uk/$\sim$paul/publications/rg\+\_\+acl2000.\+pdf} \hypertarget{patternmodel_8cpp_a80b71afd5e6d9b738daee567a8b519aa}{}\index{patternmodel.\+cpp@{patternmodel.\+cpp}!getmodeltype@{getmodeltype}}
+Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (A\+C\+L 2000). 1-\/8 October 2000, Hong Kong, pp. 1 -\/ 6\+: \href{http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf}{\tt http\+://www.\+comp.\+lancs.\+ac.\+uk/$\sim$paul/publications/rg\+\_\+acl2000.\+pdf} \hypertarget{patternmodel_8cpp_a231755ef5c50233b1dc4ed38eb08aebb}{}\index{patternmodel.\+cpp@{patternmodel.\+cpp}!getmodeltype@{getmodeltype}}
 \index{getmodeltype@{getmodeltype}!patternmodel.\+cpp@{patternmodel.\+cpp}}
-\subsubsection[{getmodeltype(const std\+::string filename)}]{\setlength{\rightskip}{0pt plus 5cm}int getmodeltype (
+\subsubsection[{getmodeltype(const std\+::string \&filename)}]{\setlength{\rightskip}{0pt plus 5cm}int getmodeltype (
 \begin{DoxyParamCaption}
-\item[{const std\+::string}]{filename}
+\item[{const std\+::string \&}]{filename}
 \end{DoxyParamCaption}
-)}\label{patternmodel_8cpp_a80b71afd5e6d9b738daee567a8b519aa}
+)}\label{patternmodel_8cpp_a231755ef5c50233b1dc4ed38eb08aebb}
 Extracts the model type (one of Model\+Type) from a file 

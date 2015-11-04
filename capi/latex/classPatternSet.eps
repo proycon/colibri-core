@@ -5,7 +5,7 @@
 %%For: 
 %Magnification: 1.00
 %%Orientation: Portrait
-%%BoundingBox: 0 0 500 201.342282
+%%BoundingBox: 0 0 500 172.910663
 %%Pages: 0
 %%BeginSetup
 %%EndSetup
@@ -19,7 +19,7 @@
 /marginwidth 10 def
 /distx 20 def
 /disty 40 def
-/boundaspect 2.483333 def  % aspect ratio of the BoundingBox (width/height)
+/boundaspect 2.891667 def  % aspect ratio of the BoundingBox (width/height)
 /boundx 500 def
 /boundy boundx boundaspect div def
 /xspacing 0 def
@@ -174,7 +174,7 @@
 boxfont setfont
 1 boundaspect scale
 (PatternSet< ReadWriteSizeType >) cw
-(PatternStore< t_patternset, ReadWriteSizeType >) cw
+(PatternStore< t_patternset, ReadWriteSizeType, Pattern >) cw
 (PatternStoreInterface) cw
 /boxwidth boxwidth marginwidth 2 mul add def
 /xspacing boxwidth distx add def
@@ -188,7 +188,7 @@ boundx scalefactor div boundy scalefactor div scale
 % ----- classes -----
 
  (PatternSet< ReadWriteSizeType >) 0.000000 0.000000 box
- (PatternStore< t_patternset, ReadWriteSizeType >) 0.000000 1.000000 box
+ (PatternStore< t_patternset, ReadWriteSizeType, Pattern >) 0.000000 1.000000 box
  (PatternStoreInterface) 0.000000 2.000000 box
 
 % ----- relations -----

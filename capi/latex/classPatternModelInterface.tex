@@ -12,7 +12,7 @@ Basic read-\/only interface for pattern models, abstract base class.
 Inheritance diagram for Pattern\+Model\+Interface\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[height=1.991111cm]{classPatternModelInterface}
+\includegraphics[height=1.206897cm]{classPatternModelInterface}
 \end{center}
 \end{figure}
 \subsection*{Public Member Functions}
@@ -71,7 +71,7 @@ Basic read-\/only interface for pattern models, abstract base class.
 )\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_abab22952ac502743377e3a5a524e2ae1}
 Returns the number of times the frequency of the pattern in the model, a relative/normalised value 
 
-Implemented in \hyperlink{classPatternModel_a0927686caf05d2e1accff6e158a75188}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_a0927686caf05d2e1accff6e158a75188}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_af5bdb2a283c048233e62b2a0741b7cab}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classPatternModel_a4ec1d0a963488d62afea4a67869758fa}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a4ec1d0a963488d62afea4a67869758fa}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a4ec1d0a963488d62afea4a67869758fa}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a4ec1d0a963488d62afea4a67869758fa}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_af5bdb2a283c048233e62b2a0741b7cab}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_abab22952ac502743377e3a5a524e2ae1}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!frequency@{frequency}}
 \index{frequency@{frequency}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -80,23 +80,9 @@ Implemented in \hyperlink{classPatternModel_a0927686caf05d2e1accff6e158a75188}{P
 \item[{const {\bf Pattern} \&}]{}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_abab22952ac502743377e3a5a524e2ae1}
-Returns the number of times the frequency of the pattern in the model, a relative/normalised value 
+Returns the frequency of the pattern in the model, a relative/normalised value 
 
-Implemented in \hyperlink{classPatternModel_a0927686caf05d2e1accff6e158a75188}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_a0927686caf05d2e1accff6e158a75188}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_af5bdb2a283c048233e62b2a0741b7cab}{Pattern\+Set\+Model}.
-
-\hypertarget{classPatternModelInterface_ad485931462c2f1c1bcd0aac13ec3028b}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!getmodeltype@{getmodeltype}}
-\index{getmodeltype@{getmodeltype}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
-\subsubsection[{getmodeltype() const  =0}]{\setlength{\rightskip}{0pt plus 5cm}virtual int Pattern\+Model\+Interface\+::getmodeltype (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_ad485931462c2f1c1bcd0aac13ec3028b}
-Get the type of the model \begin{DoxyReturn}{Returns}
-Model\+Type 
-\end{DoxyReturn}
-
-
-Implemented in \hyperlink{classIndexedPatternModel_adeb6b2bce5dc4fcdd9f8ec9f723d0f5b}{Indexed\+Pattern\+Model$<$ Map\+Type $>$}, \hyperlink{classPatternModel_aadea1e70400eb2aeced1ca1648cf9cd9}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_aadea1e70400eb2aeced1ca1648cf9cd9}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_a27adf3033f15f03e908d53d032779d09}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classPatternModel_a4ec1d0a963488d62afea4a67869758fa}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a4ec1d0a963488d62afea4a67869758fa}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a4ec1d0a963488d62afea4a67869758fa}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a4ec1d0a963488d62afea4a67869758fa}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_af5bdb2a283c048233e62b2a0741b7cab}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_ad485931462c2f1c1bcd0aac13ec3028b}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!getmodeltype@{getmodeltype}}
 \index{getmodeltype@{getmodeltype}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -110,7 +96,21 @@ Model\+Type
 \end{DoxyReturn}
 
 
-Implemented in \hyperlink{classIndexedPatternModel_adeb6b2bce5dc4fcdd9f8ec9f723d0f5b}{Indexed\+Pattern\+Model$<$ Map\+Type $>$}, \hyperlink{classPatternModel_aadea1e70400eb2aeced1ca1648cf9cd9}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_aadea1e70400eb2aeced1ca1648cf9cd9}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_a27adf3033f15f03e908d53d032779d09}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classIndexedPatternPointerModel_a2cf62012c68c8557403226ff478500e9}{Indexed\+Pattern\+Pointer\+Model$<$ Map\+Type $>$}, \hyperlink{classPatternPointerModel_a6588706e670ebd3b14e2ab71c19011b7}{Pattern\+Pointer\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classIndexedPatternModel_a63f42808d22dd3a813242332ad42ee6c}{Indexed\+Pattern\+Model$<$ Map\+Type, Pattern\+Type $>$}, \hyperlink{classIndexedPatternModel_a63f42808d22dd3a813242332ad42ee6c}{Indexed\+Pattern\+Model$<$ Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_ac4a38270c6a2dbcfccf0b8baebee11eb}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_ac4a38270c6a2dbcfccf0b8baebee11eb}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_ac4a38270c6a2dbcfccf0b8baebee11eb}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_ac4a38270c6a2dbcfccf0b8baebee11eb}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_a27adf3033f15f03e908d53d032779d09}{Pattern\+Set\+Model}.
+
+\hypertarget{classPatternModelInterface_ad485931462c2f1c1bcd0aac13ec3028b}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!getmodeltype@{getmodeltype}}
+\index{getmodeltype@{getmodeltype}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
+\subsubsection[{getmodeltype() const  =0}]{\setlength{\rightskip}{0pt plus 5cm}virtual int Pattern\+Model\+Interface\+::getmodeltype (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_ad485931462c2f1c1bcd0aac13ec3028b}
+Get the type of the model \begin{DoxyReturn}{Returns}
+Model\+Type 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classIndexedPatternPointerModel_a2cf62012c68c8557403226ff478500e9}{Indexed\+Pattern\+Pointer\+Model$<$ Map\+Type $>$}, \hyperlink{classPatternPointerModel_a6588706e670ebd3b14e2ab71c19011b7}{Pattern\+Pointer\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classIndexedPatternModel_a63f42808d22dd3a813242332ad42ee6c}{Indexed\+Pattern\+Model$<$ Map\+Type, Pattern\+Type $>$}, \hyperlink{classIndexedPatternModel_a63f42808d22dd3a813242332ad42ee6c}{Indexed\+Pattern\+Model$<$ Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_ac4a38270c6a2dbcfccf0b8baebee11eb}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_ac4a38270c6a2dbcfccf0b8baebee11eb}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_ac4a38270c6a2dbcfccf0b8baebee11eb}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_ac4a38270c6a2dbcfccf0b8baebee11eb}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_a27adf3033f15f03e908d53d032779d09}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_a0d58b42e55df75e04faae361677aa777}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!getmodelversion@{getmodelversion}}
 \index{getmodelversion@{getmodelversion}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -121,7 +121,7 @@ Implemented in \hyperlink{classIndexedPatternModel_adeb6b2bce5dc4fcdd9f8ec9f723d
 ) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_a0d58b42e55df75e04faae361677aa777}
 Get the version number of the model 
 
-Implemented in \hyperlink{classIndexedPatternModel_adabaad88e64edd1c4762a56c86d1bae4}{Indexed\+Pattern\+Model$<$ Map\+Type $>$}, \hyperlink{classPatternModel_ac2f98f98d449951caa82894be78e9fe6}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_ac2f98f98d449951caa82894be78e9fe6}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_a79dc7fd04e3de5eb894541bd664f5d12}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classIndexedPatternPointerModel_a34a68ddd193a441242b8d24fca7392b8}{Indexed\+Pattern\+Pointer\+Model$<$ Map\+Type $>$}, \hyperlink{classPatternPointerModel_a84979d2ff5033607dba04bb2210108d2}{Pattern\+Pointer\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classIndexedPatternModel_a50e185e2f7e48751f8633d4b981089bc}{Indexed\+Pattern\+Model$<$ Map\+Type, Pattern\+Type $>$}, \hyperlink{classIndexedPatternModel_a50e185e2f7e48751f8633d4b981089bc}{Indexed\+Pattern\+Model$<$ Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a760a01e32f97b63400d13e69384dad86}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a760a01e32f97b63400d13e69384dad86}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a760a01e32f97b63400d13e69384dad86}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a760a01e32f97b63400d13e69384dad86}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_a79dc7fd04e3de5eb894541bd664f5d12}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_a0d58b42e55df75e04faae361677aa777}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!getmodelversion@{getmodelversion}}
 \index{getmodelversion@{getmodelversion}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -132,7 +132,7 @@ Implemented in \hyperlink{classIndexedPatternModel_adabaad88e64edd1c4762a56c86d1
 ) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_a0d58b42e55df75e04faae361677aa777}
 Get the version number of the model 
 
-Implemented in \hyperlink{classIndexedPatternModel_adabaad88e64edd1c4762a56c86d1bae4}{Indexed\+Pattern\+Model$<$ Map\+Type $>$}, \hyperlink{classPatternModel_ac2f98f98d449951caa82894be78e9fe6}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_ac2f98f98d449951caa82894be78e9fe6}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_a79dc7fd04e3de5eb894541bd664f5d12}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classIndexedPatternPointerModel_a34a68ddd193a441242b8d24fca7392b8}{Indexed\+Pattern\+Pointer\+Model$<$ Map\+Type $>$}, \hyperlink{classPatternPointerModel_a84979d2ff5033607dba04bb2210108d2}{Pattern\+Pointer\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classIndexedPatternModel_a50e185e2f7e48751f8633d4b981089bc}{Indexed\+Pattern\+Model$<$ Map\+Type, Pattern\+Type $>$}, \hyperlink{classIndexedPatternModel_a50e185e2f7e48751f8633d4b981089bc}{Indexed\+Pattern\+Model$<$ Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a760a01e32f97b63400d13e69384dad86}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a760a01e32f97b63400d13e69384dad86}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a760a01e32f97b63400d13e69384dad86}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a760a01e32f97b63400d13e69384dad86}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_a79dc7fd04e3de5eb894541bd664f5d12}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_a1bb04234bc1225becbec941a0efaa094}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!getstoreinterface@{getstoreinterface}}
 \index{getstoreinterface@{getstoreinterface}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -157,7 +157,7 @@ Implemented in \hyperlink{classIndexedPatternModel_adabaad88e64edd1c4762a56c86d1
 ) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_acbe234679e86792765d3afade8ce014c}
 Return the maximum pattern length in this model 
 
-Implemented in \hyperlink{classPatternModel_ac0d63c6c6ada696e3a247e25df8487ec}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_ac0d63c6c6ada696e3a247e25df8487ec}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_abd386cc901e2328079a349eae42d9ee8}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classPatternModel_a545fbfefef4eadb268217ec781c494bb}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a545fbfefef4eadb268217ec781c494bb}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a545fbfefef4eadb268217ec781c494bb}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a545fbfefef4eadb268217ec781c494bb}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_abd386cc901e2328079a349eae42d9ee8}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_acbe234679e86792765d3afade8ce014c}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!maxlength@{maxlength}}
 \index{maxlength@{maxlength}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -168,7 +168,7 @@ Implemented in \hyperlink{classPatternModel_ac0d63c6c6ada696e3a247e25df8487ec}{P
 ) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_acbe234679e86792765d3afade8ce014c}
 Return the maximum pattern length in this model 
 
-Implemented in \hyperlink{classPatternModel_ac0d63c6c6ada696e3a247e25df8487ec}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_ac0d63c6c6ada696e3a247e25df8487ec}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_abd386cc901e2328079a349eae42d9ee8}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classPatternModel_a545fbfefef4eadb268217ec781c494bb}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a545fbfefef4eadb268217ec781c494bb}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a545fbfefef4eadb268217ec781c494bb}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a545fbfefef4eadb268217ec781c494bb}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_abd386cc901e2328079a349eae42d9ee8}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_a53325f7b36c9cf0de4954b618eff2416}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!minlength@{minlength}}
 \index{minlength@{minlength}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -179,7 +179,7 @@ Implemented in \hyperlink{classPatternModel_ac0d63c6c6ada696e3a247e25df8487ec}{P
 ) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_a53325f7b36c9cf0de4954b618eff2416}
 Returns the minumum pattern length in this model 
 
-Implemented in \hyperlink{classPatternModel_a4777ec9b1e76ef3c2ccbc981dad15129}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_a4777ec9b1e76ef3c2ccbc981dad15129}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_a3cc6ca22d4dd68270068d5a4e05f530a}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classPatternModel_a7a0208745487928ecb418baeb78e810f}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a7a0208745487928ecb418baeb78e810f}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a7a0208745487928ecb418baeb78e810f}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a7a0208745487928ecb418baeb78e810f}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_a3cc6ca22d4dd68270068d5a4e05f530a}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_a53325f7b36c9cf0de4954b618eff2416}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!minlength@{minlength}}
 \index{minlength@{minlength}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -190,7 +190,7 @@ Implemented in \hyperlink{classPatternModel_a4777ec9b1e76ef3c2ccbc981dad15129}{P
 ) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_a53325f7b36c9cf0de4954b618eff2416}
 Returns the minumum pattern length in this model 
 
-Implemented in \hyperlink{classPatternModel_a4777ec9b1e76ef3c2ccbc981dad15129}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_a4777ec9b1e76ef3c2ccbc981dad15129}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_a3cc6ca22d4dd68270068d5a4e05f530a}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classPatternModel_a7a0208745487928ecb418baeb78e810f}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a7a0208745487928ecb418baeb78e810f}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a7a0208745487928ecb418baeb78e810f}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a7a0208745487928ecb418baeb78e810f}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_a3cc6ca22d4dd68270068d5a4e05f530a}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_afd9ec4756bb723ee6bf94321f05f1b71}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!occurrencecount@{occurrencecount}}
 \index{occurrencecount@{occurrencecount}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -201,7 +201,7 @@ Implemented in \hyperlink{classPatternModel_a4777ec9b1e76ef3c2ccbc981dad15129}{P
 )\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_afd9ec4756bb723ee6bf94321f05f1b71}
 Returns the number of times this pattern occurs in the model 
 
-Implemented in \hyperlink{classPatternModel_a8f5bc659abbbdd456937e85642a97d40}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_a8f5bc659abbbdd456937e85642a97d40}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_ab1ca42eb82df349263b10c57f968678e}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classPatternModel_a013725360804aac3514eb8bb436102db}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a013725360804aac3514eb8bb436102db}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a013725360804aac3514eb8bb436102db}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a013725360804aac3514eb8bb436102db}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_ab1ca42eb82df349263b10c57f968678e}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_afd9ec4756bb723ee6bf94321f05f1b71}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!occurrencecount@{occurrencecount}}
 \index{occurrencecount@{occurrencecount}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -212,7 +212,7 @@ Implemented in \hyperlink{classPatternModel_a8f5bc659abbbdd456937e85642a97d40}{P
 )\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_afd9ec4756bb723ee6bf94321f05f1b71}
 Returns the number of times this pattern occurs in the model 
 
-Implemented in \hyperlink{classPatternModel_a8f5bc659abbbdd456937e85642a97d40}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_a8f5bc659abbbdd456937e85642a97d40}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_ab1ca42eb82df349263b10c57f968678e}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classPatternModel_a013725360804aac3514eb8bb436102db}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a013725360804aac3514eb8bb436102db}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a013725360804aac3514eb8bb436102db}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a013725360804aac3514eb8bb436102db}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_ab1ca42eb82df349263b10c57f968678e}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_aafea9a0f8fd453b85cffd18709a42ae7}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!tokens@{tokens}}
 \index{tokens@{tokens}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -223,7 +223,7 @@ Implemented in \hyperlink{classPatternModel_a8f5bc659abbbdd456937e85642a97d40}{P
 ) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_aafea9a0f8fd453b85cffd18709a42ae7}
 Returns the number of tokens in the original corpus, includes tokens not covered by the model! 
 
-Implemented in \hyperlink{classPatternModel_afac99feddfa4cf1dc44090c5148e518a}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_afac99feddfa4cf1dc44090c5148e518a}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_aa834dd6a5467ea8a68680512d6251e16}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classPatternModel_a9e4a67d7c0136f9c9a8da56df5ffc18c}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a9e4a67d7c0136f9c9a8da56df5ffc18c}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a9e4a67d7c0136f9c9a8da56df5ffc18c}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a9e4a67d7c0136f9c9a8da56df5ffc18c}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_aa834dd6a5467ea8a68680512d6251e16}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_aafea9a0f8fd453b85cffd18709a42ae7}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!tokens@{tokens}}
 \index{tokens@{tokens}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -234,7 +234,7 @@ Implemented in \hyperlink{classPatternModel_afac99feddfa4cf1dc44090c5148e518a}{P
 ) const\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_aafea9a0f8fd453b85cffd18709a42ae7}
 Returns the number of tokens in the original corpus, includes tokens not covered by the model! 
 
-Implemented in \hyperlink{classPatternModel_afac99feddfa4cf1dc44090c5148e518a}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_afac99feddfa4cf1dc44090c5148e518a}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_aa834dd6a5467ea8a68680512d6251e16}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classPatternModel_a9e4a67d7c0136f9c9a8da56df5ffc18c}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a9e4a67d7c0136f9c9a8da56df5ffc18c}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a9e4a67d7c0136f9c9a8da56df5ffc18c}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a9e4a67d7c0136f9c9a8da56df5ffc18c}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_aa834dd6a5467ea8a68680512d6251e16}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_a5f3fab33835e8b01bf30b20793746e24}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!types@{types}}
 \index{types@{types}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -245,7 +245,7 @@ Implemented in \hyperlink{classPatternModel_afac99feddfa4cf1dc44090c5148e518a}{P
 )\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_a5f3fab33835e8b01bf30b20793746e24}
 Return the number of distinct words/unigram in the original corpus, includes types not covered by the model! 
 
-Implemented in \hyperlink{classPatternModel_af5df3d30417804589c552320add3285a}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_af5df3d30417804589c552320add3285a}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_a178d3c988a43130b4ba3d4fa57001055}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classPatternModel_a6e5ac4583443112eb1a78157aed967b5}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a6e5ac4583443112eb1a78157aed967b5}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a6e5ac4583443112eb1a78157aed967b5}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a6e5ac4583443112eb1a78157aed967b5}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_a178d3c988a43130b4ba3d4fa57001055}{Pattern\+Set\+Model}.
 
 \hypertarget{classPatternModelInterface_a5f3fab33835e8b01bf30b20793746e24}{}\index{Pattern\+Model\+Interface@{Pattern\+Model\+Interface}!types@{types}}
 \index{types@{types}!Pattern\+Model\+Interface@{Pattern\+Model\+Interface}}
@@ -256,7 +256,7 @@ Implemented in \hyperlink{classPatternModel_af5df3d30417804589c552320add3285a}{P
 )\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classPatternModelInterface_a5f3fab33835e8b01bf30b20793746e24}
 Return the number of distinct words/unigram in the original corpus, includes types not covered by the model! 
 
-Implemented in \hyperlink{classPatternModel_af5df3d30417804589c552320add3285a}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}, \hyperlink{classPatternModel_af5df3d30417804589c552320add3285a}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type $>$}, and \hyperlink{classPatternSetModel_a178d3c988a43130b4ba3d4fa57001055}{Pattern\+Set\+Model}.
+Implemented in \hyperlink{classPatternModel_a6e5ac4583443112eb1a78157aed967b5}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a6e5ac4583443112eb1a78157aed967b5}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Pointer $>$}, \hyperlink{classPatternModel_a6e5ac4583443112eb1a78157aed967b5}{Pattern\+Model$<$ Indexed\+Data, Indexed\+Data\+Handler, Map\+Type, Pattern\+Type $>$}, \hyperlink{classPatternModel_a6e5ac4583443112eb1a78157aed967b5}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Pointer $>$}, and \hyperlink{classPatternSetModel_a178d3c988a43130b4ba3d4fa57001055}{Pattern\+Set\+Model}.
 
 
 

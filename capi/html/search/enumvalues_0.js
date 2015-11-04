@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['begindivmarker',['BEGINDIVMARKER',['../pattern_8h.html#a456be878416629b7bdbab1afa77a06e6a6204bbbcd83be95bd6b5771f113603a9',1,'pattern.h']]]
+  ['compact',['COMPACT',['../patternmodel_8h.html#a718d8a8cc511fa24f0af5c8007b7e5fea406f9f3f0927e1677cf42658e47e5385',1,'patternmodel.h']]]
 ];

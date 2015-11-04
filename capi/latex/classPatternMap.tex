@@ -12,7 +12,7 @@ A pattern map storing patterns and their values in a hash map (unordered\+\_\+ma
 Inheritance diagram for Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[height=3.393939cm]{classPatternMap}
+\includegraphics[height=3.159379cm]{classPatternMap}
 \end{center}
 \end{figure}
 \subsection*{Public Types}
@@ -37,6 +37,8 @@ bool \hyperlink{classPatternMap_a18587e4b3c6143749b4b96e8f4808cdb}{has} (const \
 \item 
 size\+\_\+t \hyperlink{classPatternMap_aed30070f31256d0c1335fa9bd3b5db1c}{size} () const 
 \item 
+void \hyperlink{classPatternMap_af3718a607f4d34f656b3b8aaf8e52494}{reserve} (size\+\_\+t s)
+\item 
 Value\+Type \& \hyperlink{classPatternMap_af08cad16a81aede5cf12f9601b75d697}{operator\mbox{[}$\,$\mbox{]}} (const \hyperlink{classPattern}{Pattern} \&pattern)
 \item 
 Value\+Type \& \hyperlink{classPatternMap_a790d9a4673f3971c644b120660bfab22}{operator\mbox{[}$\,$\mbox{]}} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&pattern)
@@ -52,6 +54,10 @@ Value\+Type \& \hyperlink{classPatternMap_a790d9a4673f3971c644b120660bfab22}{ope
 \hyperlink{classPatternMap_a4de5ceaff3526d091098b4d82dde2b27}{iterator} \hyperlink{classPatternMap_a4f36d73514e80d18f93395a72f81e6bc}{find} (const \hyperlink{classPattern}{Pattern} \&pattern)
 \item 
 \hyperlink{classPatternMap_aba8ff62eadadedc25bf4ea799a322cf3}{const\+\_\+iterator} \hyperlink{classPatternMap_a685d9bac878f2d8862c6c193ba9de45e}{find} (const \hyperlink{classPattern}{Pattern} \&pattern) const 
+\item 
+\hyperlink{classPatternMap_a4de5ceaff3526d091098b4d82dde2b27}{iterator} \hyperlink{classPatternMap_a75e2cf7d74b8ffed73256324cfa1e3bf}{find} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&pattern)
+\item 
+\hyperlink{classPatternMap_aba8ff62eadadedc25bf4ea799a322cf3}{const\+\_\+iterator} \hyperlink{classPatternMap_adeb3de7b7d2c4cfb0e3976a230950259}{find} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&pattern) const 
 \item 
 bool \hyperlink{classPatternMap_a96e5a77a5c782f340fe38f5c05ae30c4}{erase} (const \hyperlink{classPattern}{Pattern} \&pattern)
 \item 
@@ -109,7 +115,7 @@ A pattern map storing patterns and their values in a hash map (unordered\+\_\+ma
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_a6e536f5947c4e1752f91166922c4ae16}
 
 
-Implements \hyperlink{classPatternMapStore_a2a0a8463a6faa2f2b6636167c06e19af}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternMapStore_a34918a8855a815fcfda852888e7639bc}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternMap_addb90b8e3f3721f061757bb5cec64bf2}{}\index{Pattern\+Map@{Pattern\+Map}!begin@{begin}}
 \index{begin@{begin}!Pattern\+Map@{Pattern\+Map}}
@@ -127,7 +133,7 @@ Implements \hyperlink{classPatternMapStore_a2a0a8463a6faa2f2b6636167c06e19af}{Pa
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_aa5a92eab727e74e54b93f7f7916e26cb}
 
 
-Implements \hyperlink{classPatternMapStore_a363c63981ea34474b28b2e3a95d376ce}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternMapStore_a81b765692da54406e3951e1e1ae84fa5}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternMap_a75f67f68fb66a7d15d7f8c75cb08dc8d}{}\index{Pattern\+Map@{Pattern\+Map}!end@{end}}
 \index{end@{end}!Pattern\+Map@{Pattern\+Map}}
@@ -145,7 +151,7 @@ Implements \hyperlink{classPatternMapStore_a363c63981ea34474b28b2e3a95d376ce}{Pa
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_a96e5a77a5c782f340fe38f5c05ae30c4}
 
 
-Implements \hyperlink{classPatternMapStore_a60f2926144fbd408b86d9ff5481fd140}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternMapStore_a1cd3996a4d1067783adb0ce4100d5f38}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternMap_ac7bfe17942e5fb3c1bad7f975b61b650}{}\index{Pattern\+Map@{Pattern\+Map}!erase@{erase}}
 \index{erase@{erase}!Pattern\+Map@{Pattern\+Map}}
@@ -163,7 +169,7 @@ Implements \hyperlink{classPatternMapStore_a60f2926144fbd408b86d9ff5481fd140}{Pa
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_a4f36d73514e80d18f93395a72f81e6bc}
 
 
-Implements \hyperlink{classPatternMapStore_ae50e3cdbbf9a503d3381971daec92b54}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternMapStore_abe0af4c950b2389e5ec7c4d5bfb759c7}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternMap_a685d9bac878f2d8862c6c193ba9de45e}{}\index{Pattern\+Map@{Pattern\+Map}!find@{find}}
 \index{find@{find}!Pattern\+Map@{Pattern\+Map}}
@@ -172,6 +178,24 @@ Implements \hyperlink{classPatternMapStore_ae50e3cdbbf9a503d3381971daec92b54}{Pa
 \item[{const {\bf Pattern} \&}]{pattern}
 \end{DoxyParamCaption}
 ) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternMap_a685d9bac878f2d8862c6c193ba9de45e}
+\hypertarget{classPatternMap_a75e2cf7d74b8ffed73256324cfa1e3bf}{}\index{Pattern\+Map@{Pattern\+Map}!find@{find}}
+\index{find@{find}!Pattern\+Map@{Pattern\+Map}}
+\subsubsection[{find(const Pattern\+Pointer \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type, class Value\+Handler = Base\+Value\+Handler$<$\+Value\+Type$>$, class Read\+Write\+Size\+Type = uint64\+\_\+t$>$ {\bf iterator} {\bf Pattern\+Map}$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_a75e2cf7d74b8ffed73256324cfa1e3bf}
+
+
+Implements \hyperlink{classPatternMapStore_aa09480df06716f8e2b22972636d48c9e}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern $>$}.
+
+\hypertarget{classPatternMap_adeb3de7b7d2c4cfb0e3976a230950259}{}\index{Pattern\+Map@{Pattern\+Map}!find@{find}}
+\index{find@{find}!Pattern\+Map@{Pattern\+Map}}
+\subsubsection[{find(const Pattern\+Pointer \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type, class Value\+Handler = Base\+Value\+Handler$<$\+Value\+Type$>$, class Read\+Write\+Size\+Type = uint64\+\_\+t$>$ {\bf const\+\_\+iterator} {\bf Pattern\+Map}$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{pattern}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternMap_adeb3de7b7d2c4cfb0e3976a230950259}
 \hypertarget{classPatternMap_a038d49e8aed58a207c3e106b086cdab0}{}\index{Pattern\+Map@{Pattern\+Map}!has@{has}}
 \index{has@{has}!Pattern\+Map@{Pattern\+Map}}
 \subsubsection[{has(const Pattern \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type, class Value\+Handler = Base\+Value\+Handler$<$\+Value\+Type$>$, class Read\+Write\+Size\+Type = uint64\+\_\+t$>$ bool {\bf Pattern\+Map}$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::has (
@@ -181,7 +205,7 @@ Implements \hyperlink{classPatternMapStore_ae50e3cdbbf9a503d3381971daec92b54}{Pa
 ) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_a038d49e8aed58a207c3e106b086cdab0}
 Does the pattern occur in the pattern store? 
 
-Implements \hyperlink{classPatternMapStore_ad9c07c57785e95edbe057e79f94be2c9}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternMapStore_a208cf2d90725a3a9291d2dae67ac9256}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternMap_a18587e4b3c6143749b4b96e8f4808cdb}{}\index{Pattern\+Map@{Pattern\+Map}!has@{has}}
 \index{has@{has}!Pattern\+Map@{Pattern\+Map}}
@@ -192,7 +216,7 @@ Implements \hyperlink{classPatternMapStore_ad9c07c57785e95edbe057e79f94be2c9}{Pa
 ) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_a18587e4b3c6143749b4b96e8f4808cdb}
 Does the pattern occur in the pattern store? 
 
-Implements \hyperlink{classPatternMapStore_a00d47f8640efaeb3ce85558b3ee4a6a2}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternMapStore_a4bce03112ff9c3c0950f31ccee0c9ab8}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternMap_a67628e669cf2995a44769cda83bf8e85}{}\index{Pattern\+Map@{Pattern\+Map}!insert@{insert}}
 \index{insert@{insert}!Pattern\+Map@{Pattern\+Map}}
@@ -204,7 +228,7 @@ Implements \hyperlink{classPatternMapStore_a00d47f8640efaeb3ce85558b3ee4a6a2}{Pa
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_a67628e669cf2995a44769cda83bf8e85}
 
 
-Implements \hyperlink{classPatternMapStore_a37bcf7aae1c40ccdea57e9a57533a555}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternMapStore_a4700a0f0dda681e6a4aa5e43ee917ad8}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternMap_a911511a1b32cef2ee3efb234f66974ce}{}\index{Pattern\+Map@{Pattern\+Map}!insert@{insert}}
 \index{insert@{insert}!Pattern\+Map@{Pattern\+Map}}
@@ -215,7 +239,7 @@ Implements \hyperlink{classPatternMapStore_a37bcf7aae1c40ccdea57e9a57533a555}{Pa
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_a911511a1b32cef2ee3efb234f66974ce}
 
 
-Implements \hyperlink{classPatternStore_a22e091d80efb8182ac49cf6b225f0aa1}{Pattern\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_aac1558cd3f7e4ec8ec142e1c59f122c9}{Pattern\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternMap_af08cad16a81aede5cf12f9601b75d697}{}\index{Pattern\+Map@{Pattern\+Map}!operator\mbox{[}$\,$\mbox{]}@{operator[]}}
 \index{operator\mbox{[}$\,$\mbox{]}@{operator[]}!Pattern\+Map@{Pattern\+Map}}
@@ -226,7 +250,7 @@ Implements \hyperlink{classPatternStore_a22e091d80efb8182ac49cf6b225f0aa1}{Patte
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_af08cad16a81aede5cf12f9601b75d697}
 
 
-Implements \hyperlink{classPatternMapStore_ac4e8b5a15bb4e3d0f205a979f0d272ab}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternMapStore_a43e79c4c7686d7b9822dbc0f29d26a4e}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternMap_a790d9a4673f3971c644b120660bfab22}{}\index{Pattern\+Map@{Pattern\+Map}!operator\mbox{[}$\,$\mbox{]}@{operator[]}}
 \index{operator\mbox{[}$\,$\mbox{]}@{operator[]}!Pattern\+Map@{Pattern\+Map}}
@@ -237,7 +261,18 @@ Implements \hyperlink{classPatternMapStore_ac4e8b5a15bb4e3d0f205a979f0d272ab}{Pa
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_a790d9a4673f3971c644b120660bfab22}
 
 
-Implements \hyperlink{classPatternMapStore_ac4f6c5ef2bd7397a33adeb2e72f6d38c}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternMapStore_a808c1401e644c1663bcef477bad71cab}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern $>$}.
+
+\hypertarget{classPatternMap_af3718a607f4d34f656b3b8aaf8e52494}{}\index{Pattern\+Map@{Pattern\+Map}!reserve@{reserve}}
+\index{reserve@{reserve}!Pattern\+Map@{Pattern\+Map}}
+\subsubsection[{reserve(size\+\_\+t s)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Value\+Type, class Value\+Handler = Base\+Value\+Handler$<$\+Value\+Type$>$, class Read\+Write\+Size\+Type = uint64\+\_\+t$>$ void {\bf Pattern\+Map}$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$\+::reserve (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{s}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_af3718a607f4d34f656b3b8aaf8e52494}
+
+
+Implements \hyperlink{classPatternMapStore_a553c8b3c88c099e9c43ae8aa1194a741}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternMap_aed30070f31256d0c1335fa9bd3b5db1c}{}\index{Pattern\+Map@{Pattern\+Map}!size@{size}}
 \index{size@{size}!Pattern\+Map@{Pattern\+Map}}
@@ -248,7 +283,7 @@ Implements \hyperlink{classPatternMapStore_ac4f6c5ef2bd7397a33adeb2e72f6d38c}{Pa
 ) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternMap_aed30070f31256d0c1335fa9bd3b5db1c}
 How many patterns are in the pattern store? 
 
-Implements \hyperlink{classPatternMapStore_ab6dc590b4b102f1464301a3fc6c4ec73}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternMapStore_af7bd333e776a4e55af9add5ee320dbb5}{Pattern\+Map\+Store$<$ std\+::unordered\+\_\+map$<$ Pattern, Value\+Type $>$, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern $>$}.
 
 
 

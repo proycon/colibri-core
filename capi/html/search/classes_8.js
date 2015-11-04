@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['spookyhash',['SpookyHash',['../classSpookyHash.html',1,'']]]
+  ['orderedpatternpointermap',['OrderedPatternPointerMap',['../classOrderedPatternPointerMap.html',1,'']]]
 ];
