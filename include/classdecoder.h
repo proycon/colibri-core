@@ -14,6 +14,7 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <istream>
 #include <fstream>
 
 /**
@@ -30,6 +31,7 @@
  *
  */
 
+
 /**
  * \brief Class for decoding binary class-encoded data back to plain-text.
  * The ClassDecoder maintains a mapping of classes (integers) to words. It allows decoding of a corpus
@@ -41,11 +43,12 @@
 class ClassDecoder {
     private:
      std::unordered_map<unsigned int,std::string> classes;
-     unsigned int unknownclass;
-     unsigned int bosclass;
-     unsigned int eosclass;
      unsigned int highestclass;
     public:
+     static const unsigned char delimiterclass = 0;
+     static const unsigned char unknownclass = 2;
+     static const unsigned char skipclass = 3;
+     static const unsigned char flexclass = 4;
     
     /**
      * Constructor for an empty class decoder 
@@ -73,6 +76,7 @@ class ClassDecoder {
      * @param quiet Do not report decoding problems to stderr
      */
     void decodefile(const std::string & filename, std::ostream*,  unsigned int start = 0, unsigned int end = 0, bool quiet=false);
+    void decodefile_v1(std::ifstream* in,  std::ostream* out , unsigned int start=0, unsigned int end=0, bool quiet=false);
 
     /**
      * Create a plain-text corpus file from a class-encoded corpus file (*.colibri.dat)
@@ -93,14 +97,14 @@ class ClassDecoder {
     
     /**
      * Return the word pertaining to the given class. Unknown classes will be
-     * decoded as {UNKNOWN}.
+     * decoded as {?}.
      */
     std::string operator[](unsigned int key) const {
          std::unordered_map<unsigned int, std::string>::const_iterator it = classes.find(key);
          if (it != classes.end()) {
              return it->second;
          } else {
-             return "{UNKNOWN}";
+             return "{?}";
          }
     }
     
@@ -141,9 +145,12 @@ class ClassDecoder {
 
 };
 
-unsigned int bytestoint(const unsigned char* a, const int l);
-int readline(std::istream* IN, unsigned char* buffer, const int);
+unsigned int bytestoint(std::istream* IN, const unsigned char version = 2);
+unsigned int bytestoint(const unsigned char* a, unsigned int * length = NULL);
 
-const int countwords(const unsigned char* data, const int l);
-std::pair<int,int> getwords(const unsigned char* data, const int datasize, const int n, const int begin = 0);
+unsigned int bytestoint_v1(const unsigned char* a, const int l);
+
+
+unsigned char getdataversion(std::istream* IN);
+int readline(std::istream* IN, unsigned char* buffer, const int);
 #endif

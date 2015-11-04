@@ -8,6 +8,29 @@ import sys
 from copy import copy
 import pickle
 
+
+def red(s):
+   CSI="\x1B["
+   return CSI+"1;31m" + s + CSI + "0m"
+
+def green(s):
+   CSI="\x1B["
+   return CSI+"1;32m" + s + CSI + "0m"
+
+def test(a, b = None):
+    if b is None:
+        if a:
+            return "... " + green("ok")
+        else:
+            print(red("FAILED!"), file=sys.stderr)
+            sys.exit(2)
+    else:
+        if a == b:
+            return "... " + str(a) + " " + green("ok")
+        else:
+            print(red("FAILED!") + " Got "+ str(a) + ", expected " + str(b),file=sys.stderr)
+            sys.exit(2)
+
 try:
     import colibricore
 except ImportError:
@@ -17,30 +40,29 @@ except ImportError:
 with open("/tmp/colibritest",'w') as f:
     f.write("5\tbe\n6\tTo\n7\tto\n8\tor\n9\tnot\n73477272\tblah\n")
 
+print("Loading class decoder...")
 decoder = colibricore.ClassDecoder("/tmp/colibritest")
+print("Loading class encoder...")
 encoder = colibricore.ClassEncoder("/tmp/colibritest")
 
+print("Building pattern...")
 ngram = encoder.buildpattern("To be or not to be")
 
-print("Ngram: ", ngram.tostring(decoder))
-print("Size: ", len(ngram))
-print("Bytesize: ", ngram.bytesize())
-print("Category==NGRAM", (ngram.category() == colibricore.Category.NGRAM) )
-print("Hash: ", hash(ngram))
-print("Raw bytes: ", repr(bytes(ngram)))
+print("Ngram: ", test(ngram.tostring(decoder),"To be or not to be"))
+print("Size: ", test(len(ngram),6))
+print("Bytesize: ", test(ngram.bytesize(),6))
+print("Category==NGRAM", test(ngram.category() == colibricore.Category.NGRAM) )
+print("Hash: ", test(hash(ngram)))
+print("Raw bytes: ",repr(bytes(ngram)))
+
+print("Third token ", test(ngram[2].tostring(decoder), "or"))
+print("Last token ", test(ngram[-1].tostring(decoder), "be"))
+
+print("Slicing ngram[2:4]", test(ngram[2:4].tostring(decoder), "or not"))
 
 
-print("Slicing ngram")
-ngram2 = ngram[2:2]
+print("Copying n-gram:", test(copy(ngram) == ngram))
 
-print("Sliced ngram: ", ngram2.tostring(decoder))
-
-print("Copying n-gram:")
-ngram3 = copy(ngram)
-print(ngram3.tostring(decoder))
-
-print("Equality check")
-assert ngram == ngram3
 
 if sys.version[0] != '2':
     #Python 3 only for now:
@@ -51,29 +73,55 @@ if sys.version[0] != '2':
     print("Unpicking n-gram:")
     unpickledngram = pickle.loads(pickled)
 
-    print("Equality check")
-    assert ngram == unpickledngram
+    print("Equality check", test(ngram == unpickledngram))
 
+
+
+
+print("Tokens of ngram:")
+tokens =["To","be","or","not","to","be"]
+for token,tokenref in zip(ngram,tokens):
+    test(token.tostring(decoder),tokenref)
+print("Count check", test(len(list(iter(ngram))), len(tokens)))
+
+subngrams = [
+"To",
+"be",
+"or",
+"not",
+"to",
+"be",
+"To be",
+"be or",
+"or not",
+"not to",
+"to be",
+"To be or",
+"be or not",
+"or not to",
+"not to be",
+"To be or not",
+"be or not to",
+"or not to be",
+"To be or not to",
+"be or not to be"]
 print("Subgrams of ngram:")
-for subngram in ngram.subngrams():
-    print(subngram.tostring(decoder))
+for subngram,subngramref in zip(ngram.subngrams(),subngrams):
+    print(test(subngram.tostring(decoder),subngramref) )
+print("Count check", test(len(list(ngram.subngrams())), len(subngrams)))
 
 subngram = encoder.buildpattern("or not")
-print("Testing occurrence of substring 'or not'...")
-assert subngram in ngram
+print("Testing occurrence of substring 'or not'...", test(subngram in ngram))
 
 subngram2 = encoder.buildpattern("to be")
-print("Testing occurrence of substring 'to be'...")
-assert subngram2 in ngram
+print("Testing occurrence of substring 'to be'...", test(subngram2 in ngram))
 
 subngram3 = encoder.buildpattern("or")
-print("Testing occurrence of substring 'or'...")
-assert subngram3 in ngram
+print("Testing occurrence of substring 'or'...", test(subngram3 in ngram))
 
 print("Testing gram addition:")
 ngramconc = subngram + subngram2
-print(ngramconc.tostring(decoder))
-assert ngramconc.tostring(decoder) == "or not to be"
+print(ngramconc.tostring(decoder),test(ngramconc.tostring(decoder) == "or not to be"))
 
 print("Testing sorting")
 for subngram in sorted(ngram.subngrams()):
@@ -81,13 +129,12 @@ for subngram in sorted(ngram.subngrams()):
 
 print("Skipgram test")
 skipgram = encoder.buildpattern("To {*1*} or {*1*} to be")
-print("Skipgram: ", skipgram.tostring(decoder))
-print("Size: ", len(skipgram))
-print("Bytesize: ", skipgram.bytesize())
-print("Category==SKIPGRAM", (skipgram.category() == colibricore.Category.SKIPGRAM) )
-print("Hash: ", hash(skipgram))
-print("Skipcount check...")
-assert skipgram.skipcount() == 2
+print("Skipgram: ", test(skipgram.tostring(decoder),"To {*} or {*} to be") )
+print("Size: ", test(len(skipgram),6))
+print("Bytesize: ", test(skipgram.bytesize(),6))
+print("Category==SKIPGRAM", test(skipgram.category() == colibricore.Category.SKIPGRAM) )
+print("Hash: ", test(hash(skipgram)))
+print("Skipcount check...", test(skipgram.skipcount() == 2))
 
 print("Parts:")
 for part in skipgram.parts():
@@ -99,17 +146,17 @@ for begin,length in skipgram.gaps():
 
 print("Converting to flexgram")
 flexgram = skipgram.toflexgram()
-print("Flexgram: ", flexgram.tostring(decoder))
-print("Size: ", len(flexgram))
-print("Bytesize: ", flexgram.bytesize())
-print("Category==SKIPGRAM", (flexgram.category() == colibricore.Category.FLEXGRAM) )
-print("Hash: ", hash(flexgram))
-print("Skipcount check...")
-assert flexgram.skipcount() == 2
+print("Flexgram: ", test(flexgram.tostring(decoder),"To {**} or {**} to be" ))
+print("Size: ", test(len(flexgram),6))
+print("Bytesize: ", test(flexgram.bytesize(),6))
+print("Category==SKIPGRAM", test(flexgram.category() == colibricore.Category.FLEXGRAM) )
+print("Hash: ", test(hash(flexgram)))
+print("Skipcount check...", test(flexgram.skipcount() == 2))
 
 print("Parts:")
-for part in flexgram.parts():
-    print(part.tostring(decoder))
+partsref = ["To","or","to be"]
+for part,partref in zip(flexgram.parts(),partsref) :
+    print(test(part.tostring(decoder),partref))
 
 hamlet = """
 To be or not to be , that is the question ;
@@ -169,7 +216,7 @@ print("Loading corpus as IndexedCorpus")
 corpus = colibricore.IndexedCorpus("/tmp/hamlet.colibri.dat")
 print("Total number of tokens: ", len(corpus))
 firstword = corpus[(1,0)]
-print("First word: ", firstword.tostring(decoder))
+print("First word: ", test(firstword.tostring(decoder),"To"))
 needle = encoder.buildpattern("fair Ophelia")
 for match in corpus.findpattern(needle):
     print( "'fair Ophelia' found at ", match)
@@ -177,19 +224,15 @@ for match in corpus.findpattern(needle):
 
 print()
 
-options = colibricore.PatternModelOptions()
-options.DOREVERSEINDEX = True
-options.DOSKIPGRAMS_EXHAUSTIVE = True
-options.DOSKIPGRAMS = False
-print(options.DOSKIPGRAMS)
+options = colibricore.PatternModelOptions(doskipgrams_exhaustive=True)
 
-
-
-print("Building unindexed model")
+print("\n===== Building unindexed model ======\n")
 unindexedmodel = colibricore.UnindexedPatternModel()
 unindexedmodel.train("/tmp/hamlet.colibri.dat",options)
+print("Pattern count", test(len(unindexedmodel), 385))
+print("Type count", test(unindexedmodel.types(), 186))
+print("Token count", test(unindexedmodel.tokens(), 354))
 
-print("Found ", len(unindexedmodel), " patterns, " , unindexedmodel.types()," types, " , unindexedmodel.tokens(), " tokens")
 unindexedmodel.printmodel(decoder)
 print("REPORT:")
 unindexedmodel.report()
@@ -206,25 +249,43 @@ print("REPORT:")
 unindexedmodel.report()
 
 print("iterating over all patterns")
+i = 0
 for pattern in unindexedmodel:
     print(pattern.tostring(decoder))
+    i += 1
+print("Pattern count", test(i, 385))
+
 
 print("iterating over all patterns and values")
+i = 0
 for pattern, value in unindexedmodel.items():
     print(pattern.tostring(decoder), value)
+    i += 1
+print("Pattern count", test(i, 385))
 
 print("Extracting count for specific pattern")
-print(unindexedmodel[encoder.buildpattern("to be")])
+print(test(unindexedmodel[encoder.buildpattern("to be")],2))
 
-options = colibricore.PatternModelOptions()
-options.DOREVERSEINDEX = True
-options.DOSKIPGRAMS_EXHAUSTIVE = False
-options.DOSKIPGRAMS = True
-print("Building indexed model")
-indexedmodel = colibricore.IndexedPatternModel()
+
+print("\n======= Loading corpus data =========\n")
+
+corpus = colibricore.IndexedCorpus("/tmp/hamlet.colibri.dat")
+print("Sentence count", test(corpus.sentencecount(),40))
+i = 0
+for sentence in corpus.sentences():
+    print(sentence.tostring(decoder))
+    i += 1
+print("Count check",test(i,40))
+
+print("\n======= Building indexed model =========\n")
+options = colibricore.PatternModelOptions(doskipgrams=True)
+indexedmodel = colibricore.IndexedPatternModel(reverseindex=corpus)
 indexedmodel.train("/tmp/hamlet.colibri.dat",options)
 
-print("Found ", len(indexedmodel), " patterns, " , indexedmodel.types()," types, " , indexedmodel.tokens(), " tokens")
+print("Pattern count", test(len(indexedmodel), 133))
+print("Type count", test(indexedmodel.types(), 186))
+print("Token count", test(indexedmodel.tokens(), 354))
+
 indexedmodel.printmodel(decoder)
 print("REPORT:")
 indexedmodel.report()
@@ -243,7 +304,7 @@ for pattern, value in indexedmodel.items():
     print(pattern.tostring(decoder), len(value))
 
 print("Extracting count for specific pattern")
-print(len(indexedmodel[encoder.buildpattern("to be")]))
+print(test(len(indexedmodel[encoder.buildpattern("to be")]),2))
 
 
 print("Test done")

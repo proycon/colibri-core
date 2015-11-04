@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <unordered_map>
+#include <climits>
 #include "bz2stream.h"
 
 /*****************************
@@ -18,8 +19,29 @@
 *****************************/
 using namespace std;
 
+unsigned int inttobytes(unsigned char * buffer, unsigned int cls) {	
+	unsigned int cls2 = cls;
+	unsigned int length = 0;
+	do {
+		cls2 = cls2 / 128;
+		length++;
+	} while (cls2 > 0);
+    if (buffer != NULL) {
+        unsigned int i = 0;
+        do {
+            unsigned int r = cls % 128;
+            if (i != length - 1) {
+                buffer[i++] = (unsigned char) r | 128; //high
+            } else {
+                buffer[i++] = (unsigned char) r; //low
+            }
+            cls = cls / 128;
+        } while (cls > 0);
+    }
+	return length;    
+}
 
-unsigned char * inttobytes(unsigned int cls, int & length) {	
+unsigned char * inttobytes_v1(unsigned int cls, int & length) {	
 	//compute length of byte array
 	unsigned int cls2 = cls;
 	length = 0;
@@ -57,9 +79,6 @@ int utf8_strlen(const string& str)
 
 
 ClassEncoder::ClassEncoder(const unsigned int minlength, unsigned const int maxlength) {
-    unknownclass = 2;
-    bosclass = 3;
-    eosclass = 4;
     highestclass = 5; //5 and lower are reserved
 
     this->minlength = minlength;
@@ -71,10 +90,7 @@ ClassEncoder::ClassEncoder(const string & filename,const unsigned int minlength,
 }
 
 void ClassEncoder::load(const string & filename,const unsigned int minlength, unsigned const int maxlength) {
-       unknownclass = 2;
        highestclass = 0; 
-       bosclass = 3;
-       eosclass = 4;
        this->minlength = minlength;
        this->maxlength = maxlength;
        
@@ -98,9 +114,6 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
                     if (((minlength > 0) && (l < minlength)) || ((maxlength > 0) && (l > maxlength))) continue;
                   }
                   classes[word] = cls;
-                  if (cls == 2) {
-                    unknownclass = 0;
-                  }
                   if (cls > (unsigned int) highestclass) highestclass = cls;
                   //cerr << "CLASS=" << cls << " WORD=" << word << endl;
               }
@@ -109,15 +122,9 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
         }        
         IN.close();  
         
-        if (unknownclass == 0) {
-            highestclass++;
-            unknownclass = highestclass;
-            classes["{UNKNOWN}"] = unknownclass;
-        } else {        
-            classes["{UNKNOWN}"] = unknownclass;
-            classes["{BEGIN}"] = bosclass;
-            classes["{END}"] = eosclass;
-        }
+        classes["{?}"] = unknownclass;
+        classes["{*}"] = skipclass;
+        classes["{**}"] = flexclass;
 }
 
 
@@ -271,6 +278,7 @@ int ClassEncoder::outputlength(const string & line) {
 	  int outputcursor = 0;
       int begin = 0;      
       int tmphighestclass = highestclass;
+      unsigned int classlength;
       const int l = line.length();
       for (int i = 0; i < l; i++) {
       	  if ((line[i] == ' ') || (i == l - 1)) {
@@ -284,12 +292,12 @@ int ClassEncoder::outputlength(const string & line) {
           	  begin = i+1;
           	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
           	    unsigned int cls;
-                if (word == "{*}") {
-                    //variable length skip
+                if ((word == "{*}") || (word == "{**}")) {
+                    //length skip
                     outputcursor++;
                     continue;
                 } else if (word == "{?}") {
-                    //single tokenskip
+                    //unknown word
                     outputcursor++;
                     continue;
                 } else if ((word.substr(0,2) == "{*")  && (word.substr(word.size() - 2,2) == "*}")) {
@@ -303,17 +311,8 @@ int ClassEncoder::outputlength(const string & line) {
           	    } else {
           	  		cls = classes[word];
           	  	}
-          	  	int length = 0;
-  	        	const unsigned char * byterep = inttobytes(cls, length);
-  	        	if (length == 0) {
-  	        		cerr << "INTERNAL ERROR: Error whilst encoding '" << word << "' (class " << cls << "), length==0, not possible!" << endl;
-  	        		exit(13);
-  	        	} else if (length > 128) {
-  	        		cerr << "INTERNAL ERROR: Error whilst encoding '" << word << "' (class " << cls << "), length exceeds 128, not possible!" << endl;
-  	        		exit(13);
-                }
-                outputcursor += length + 1;
-  	        	delete [] byterep;
+          	  	classlength = inttobytes(NULL, cls);
+                outputcursor += classlength;
           	  }			 
           }
       }
@@ -325,6 +324,7 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
 	  int outputcursor = 0;
       int begin = 0;      
       const int l = line.length();
+      unsigned int classlength;
       for (int i = 0; i < l; i++) {
       	  if ((line[i] == ' ') || (i == l - 1)) {
           	  string word;
@@ -338,20 +338,24 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
           	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
           	    unsigned int cls;
                 if (word == "{*}") {
+                    //fixed length skip
+                    outputbuffer[outputcursor++] = skipclass; 
+                    continue;
+                } else if (word == "{**}") {
                     //variable length skip
-                    outputbuffer[outputcursor++] = 129; //DYNAMICGAP MARKER 
+                    outputbuffer[outputcursor++] = flexclass;
                     continue;
                 } else if (word == "{?}") {
-                    //single tokenskip
-                    outputbuffer[outputcursor++] = 128; //FIXEDGAP MARKER
+                    //unknown word
+                    outputbuffer[outputcursor++] = unknownclass; 
                     continue;
                 } else if ((word.substr(0,2) == "{*")  && (word.substr(word.size() - 2,2) == "*}")) {
                     const int skipcount = atoi(word.substr(2,word.size() - 4).c_str()); 
                     for (int j = 0; j < skipcount; j++) {
-                        outputbuffer[outputcursor++] = 128; //FIXEDGAP MARKER                     
+                        outputbuffer[outputcursor++] = skipclass; //FIXEDGAP MARKER                     
                     }                
                     continue;
-                } else if (classes.count(word) == 0) {
+                } else if (classes.find(word) == classes.end()) {
                     if (autoaddunknown) {
                         cls = ++highestclass;
                         classes[word] = cls;  
@@ -366,20 +370,8 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
           	    } else {
           	  		cls = classes[word];
           	  	}
-          	  	int length = 0;
-  	        	const unsigned char * byterep = inttobytes(cls, length);
-  	        	if (length == 0) {
-  	        		cerr << "INTERNAL ERROR: Error whilst encoding '" << word << "' (class " << cls << "), length==0, not possible!" << endl;
-  	        		exit(13);
-  	        	} else if (length > 128) {
-  	        		cerr << "INTERNAL ERROR: Error whilst encoding '" << word << "' (class " << cls << "), length exceeds 128, not possible!" << endl;
-  	        		exit(13);
-                }
-                outputbuffer[outputcursor++] = length;
-  	        	for (int j = 0; j < length; j++) {
-  	        		outputbuffer[outputcursor++] = byterep[j];
-  	        	}  	        	
-  	        	delete [] byterep;
+  	        	classlength = inttobytes(outputbuffer + outputcursor, cls);
+                outputcursor += classlength;
           	  }			 
           }
       }
@@ -432,7 +424,6 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	    if (append) {
 	        OUT.open(outputfilename.c_str(), ios::app | ios::binary);
 	        if (OUT.tellp() > 0) {
-	            OUT.write(&one, sizeof(char)); //newline          
           	    OUT.write(&zero, sizeof(char)); //write separator
 	        }
 	    } else {
@@ -488,7 +479,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
                 exit(2);
             }
             bz2istream * decompressor = new bz2istream(IN.rdbuf());
-            encodefile((istream*) decompressor, (ostream*) &OUT, allowunknown, autoaddunknown, quiet);
+            encodefile((istream*) decompressor, (ostream*) &OUT, allowunknown, autoaddunknown, quiet, append);
             delete decompressor;
         } else {
             IN.open(inputfilename.c_str());
@@ -496,14 +487,20 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
                 cerr << "No such file: " << inputfilename << endl;
                 exit(2);
             }
-            encodefile((istream*) &IN, (ostream*) &OUT, allowunknown, autoaddunknown, quiet);
+            encodefile((istream*) &IN, (ostream*) &OUT, allowunknown, autoaddunknown, quiet, append);
         }
 	    IN.close();
 	    OUT.close();
 	}
 }
 
-void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet) {
+void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet, bool append) {
+    if (!append) {
+        const char mark = 0xa2;
+        const char version = 2;
+        OUT->write(&mark,1);
+        OUT->write(&version,1);
+    }
     const char zero = 0;
     size_t outputbuffersize = 65536;
     unsigned char * outputbuffer = new unsigned char[outputbuffersize];
@@ -530,3 +527,167 @@ void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bo
     delete[] outputbuffer;
 }
 
+unsigned char * convert_v1_v2(const unsigned char * olddata, unsigned int & newlength) {
+
+	std::vector<unsigned int> classes;
+
+    //get new length
+	newlength = 0;
+    int i = 0;
+    do {
+        const unsigned char c = olddata[i];
+        if (c == 0) {
+			classes.push_back(ClassEncoder::delimiterclass);
+		    break;
+        } else if (c < 128) {
+            //we have a size
+			unsigned int cls = bytestoint_v1(olddata + i +1, c);
+			classes.push_back(cls);
+            newlength += inttobytes( NULL, cls);
+            i += c + 1;
+        } else if (c == 128) { //SKIPMARKER (v1)
+			newlength++;
+			classes.push_back(ClassEncoder::skipclass);
+            i++;
+        } else if (c == 129) { //FLEXMARKER (v1)
+			newlength++;
+			classes.push_back(ClassEncoder::flexclass);
+            i++;
+        } else {
+            //we have another marker
+            i++;
+        }
+    } while (1);
+
+	//allocate new data
+    //cerr<<"DEBUG: Newlength=" << newlength << endl;
+	unsigned char * data  = new unsigned char[newlength+1];
+	unsigned char * datacursor = data;
+    unsigned int classlength;
+	for (std::vector<unsigned int>::iterator iter = classes.begin(); iter != classes.end(); iter++) {
+		classlength = inttobytes(datacursor, *iter);
+		datacursor += classlength;
+	}
+    return data;   
+}
+
+unsigned char * convert_v1_v2(istream * in, bool ignoreeol, bool debug) {
+    int readingdata = 0;
+    unsigned char c = 0;
+
+    std::streampos beginpos = 0;
+    bool gotbeginpos = false;
+
+    //stage 1 -- get length
+    int length = 0;
+    readingdata = 0;
+    do {
+        if (in->good()) {
+            if (!gotbeginpos) {
+                beginpos = in->tellg();
+                gotbeginpos = true;
+            }
+            in->read( (char* ) &c, sizeof(char));
+            if (debug) std::cerr << "DEBUG read1=" << (int) c << endl;
+        } else {
+            if (ignoreeol) {
+                break;
+            } else {
+                std::cerr << "WARNING: Unexpected end of file (stage 1, length=" << length << "), no EOS marker found (adding and continuing)" << std::endl;
+                in->clear(); //clear error bits
+                break;
+            }
+        }
+        length++;
+        if (readingdata) {
+            readingdata--;
+        } else {
+            if (c == 0) {
+                if (!ignoreeol) break;
+            } else if (c < 128) {
+                //we have a size
+                if (c == 0) {
+                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 1)" << std::endl;
+                    throw InternalError();
+                } else {
+                    readingdata = c;
+                }
+            }
+        }
+    } while (1);
+
+    if (length == 0) {
+        std::cerr << "ERROR: Attempting to read pattern from file, but file is empty?" << std::endl;
+        throw InternalError();
+    }
+
+    unsigned char * data;
+    //allocate buffer
+    if (c == 0) {
+        data  = new unsigned char[length];
+    } else {
+        data  = new unsigned char[length+1];
+    }
+
+    //stage 2 -- read buffer
+    int i = 0;
+    readingdata = 0;
+    if (debug) std::cerr << "STARTING STAGE 2: BEGINPOS=" << beginpos << ", LENGTH=" << length << std::endl;
+    if (!gotbeginpos) {
+        std::cerr << "ERROR: Invalid position in input stream whilst Reading pattern" << std::endl;
+        throw InternalError();
+    }
+    in->seekg(beginpos, ios::beg);
+    std::streampos beginposcheck = in->tellg();
+    if ((beginposcheck != beginpos) && (beginposcheck >= ULLONG_MAX)) {
+        std::cerr << "ERROR: Resetting read pointer for stage 2 failed! (" << (unsigned long) beginposcheck << " != " << (unsigned long) beginpos << ")" << std::endl;
+        throw InternalError();
+    } else if (!in->good()) {
+        std::cerr << "ERROR: After resetting readpointer for stage 2, istream is not 'good': eof=" << (int) in->eof() << ", fail=" << (int) in->fail() << ", badbit=" << (int) in->bad() << std::endl;
+        throw InternalError();
+    }
+    while (i < length) {
+        if (in->good()) {
+            in->read( (char* ) &c, sizeof(char));
+            if (debug) std::cerr << "DEBUG read2=" << (int) c << endl;
+        } else {
+            std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 2,i=" << i << ",length=" << length << ",beginpos=" << beginpos << ",eof=" << (int) in->eof() << ",fail=" << (int) in->fail() << ",badbit=" << (int) in->bad() << ")" << std::endl;
+            throw InternalError();
+        }
+        data[i++] = c;
+        if (readingdata) {
+            readingdata--;
+        } else {
+            if (c == 0) {
+                if (!ignoreeol) break;
+            } else if (c < 128) {
+                //we have a size
+                if (c == 0) {
+                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 2)" << std::endl;
+                    throw InternalError();
+                } else {
+                    readingdata = c;
+                }
+            }
+        }
+    }
+
+    if (c != 0) { //add endmarker
+        data[i++] = 0;
+    }
+
+    if (debug) std::cerr << "DEBUG: DONE READING PATTERN" << std::endl;
+
+    //if this is the end of file, we want the eof bit set already, so we try to
+    //read one more byte (and wind back if succesful):
+    if (in->good()) {
+        if (debug) std::cerr << "DEBUG: (TESTING EOF)" << std::endl;
+        in->read( (char* ) &c, sizeof(char));
+        if (in->good()) in->unget();
+    }
+
+    unsigned int newlength;
+    unsigned char * newdata = convert_v1_v2(data, newlength);
+    delete[] data;
+    return newdata;
+}

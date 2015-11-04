@@ -1,0 +1,42 @@
+
+class encoding, no more byte-markers, first bit denotes delimiter, last byte of class is low, i.e. HIGH HIGH low
+
+
+current: 
+    Pattern: 8+x+y+1 bytes
+        *data       8-byte
+            data        not shared: x+y+1 bytes (x: pattern size,  + 1 for end marker, y: malloc overhead) 
+    PatternPointer: 9 bytes
+        *data       8-byte
+            data        shared
+        bytesize    1 byte
+
+        constraints: 
+            - max 255 bytes
+
+new:
+    Pattern: 8+x bytes
+        *data       8-byte
+            data        x-byte malloced not-shared
+    PatternPointer:
+        *data       8 byte
+            data        shared
+        n           1 byte
+        
+
+PatternModel
+    - class encoding version
+    - stores patterns? 
+    - stores pointers?  If yes, then it also has a corpus included
+
+
+read  PatternPointerMap as PatternMap: yes
+write PatternPointerMap as PatternMap: yes
+
+read PatternMap as PatternPointerMap: no
+write PatternMap as PatternPointerMap: no
+
+
+PatternModel can be based either PatternMap or PatternPointerMap (different type)
+
+

@@ -66,7 +66,7 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
         }
 
         virtual int getmodeltype() const { return PATTERNALIGNMENTMODEL; }
-        virtual int getmodelversion() const { return 1; }
+        virtual int getmodelversion() const { return 2; }
 
         virtual size_t size() const {
             return PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::size();
@@ -97,9 +97,13 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             f->read( (char*) &null, sizeof(char));        
             f->read( (char*) &model_type, sizeof(char));        
             f->read( (char*) &model_version, sizeof(char));  
+            if (model_version == 1) this->classencodingversion = 1;
             if ((null != 0) || (model_type != PATTERNALIGNMENTMODEL ))  {
                 std::cerr << "File is not a colibri alignment model file (did you try to load a different type of pattern model?)" << std::endl;
                 throw InternalError();
+            }
+            if (model_version > 2) {
+                std::cerr << "WARNING: Model is created with a newer version of Colibri Core! Attempting to continue but failure is likely..." << std::endl;
             }
             f->read( (char*) &totaltokens, sizeof(uint64_t));        
             f->read( (char*) &totaltypes, sizeof(uint64_t)); 

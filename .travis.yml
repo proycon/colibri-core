@@ -1,5 +1,5 @@
 language: python
-
+sudo: false
 python:
     - 2.7
     - 3.2
@@ -12,4 +12,6 @@ install:
 script: 
     - colibri-test
     - LD_LIBRARY_PATH="$VIRTUAL_ENV/lib/" python test.py
+    - cd exp
+    - LD_LIBRARY_PATH="$VIRTUAL_ENV/lib/" ./colibri-patternmodeller-test.sh
     
