@@ -11,6 +11,14 @@ echo -e "\n\nTEST> Class encoding corpus">&2
 colibri-classencode republic.txt
 if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 
+echo -e "\n\nTEST> Class decoding corpus">&2
+colibri-classencode -f republic.colibri.dat -c republic.colibri.cls
+if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
+
+echo -e "\n\nTEST> Class decoding v1 corpus">&2
+colibri-classencode -f hamlet.v1.colibri.dat -c hamlet.colibri.cls
+if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
+
 echo -e "\n\nTEST> Building unindexed model">&2
 colibri-patternmodeller -f republic.colibri.dat -t 2 -l 10 -u -o republic.colibri.unindexedpatternmodel
 if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
@@ -28,6 +36,9 @@ if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 #if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 
 
+echo -e "\n\nTEST> Building unindexed model on v1 data">&2
+colibri-patternmodeller -f hamlet.v1.colibri.dat -t 2 -l 10 -u -R
+if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 
 echo -e "\n\nTEST> Class encoding corpus">&2
 colibri-classencode -c republic.colibri.cls -e apology.txt
