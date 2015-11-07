@@ -2894,20 +2894,20 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
           if ((category == 0) || (*iterc == category)) {
             for (std::set<int>::iterator itern = this->cache_n.begin(); itern != this->cache_n.end(); itern++) {
               if (((n == 0) || (*itern == n)) && (this->cache_grouptotalwordtypes[*iterc][*itern] == 0) )  {
-                std::unordered_set<Pattern> types;
+                std::unordered_set<PatternPointer> types;
                 std::set<IndexReference> tokens;
                 typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); 
                 while (iter != this->end()) {
-                    const Pattern pattern = iter->first;                        
+                    const PatternPointer pattern = iter->first;                        
                     const int n = pattern.n();
                     if ( (n == 1) && (*itern <= 1) && ((*iterc == 0) || (pattern.category() == *iterc))) {
                         types.insert(pattern);
                     } else {
                         if (((*itern == 0) || (n == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
-                            std::vector<Pattern> unigrams;
+                            std::vector<PatternPointer> unigrams;
                             pattern.ngrams(unigrams, 1);
-                            for (std::vector<Pattern>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
-                                const Pattern p = *iter2;
+                            for (std::vector<PatternPointer>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); iter2++) {
+                                const PatternPointer p = *iter2;
                                 types.insert(p);
                             }
                         }
