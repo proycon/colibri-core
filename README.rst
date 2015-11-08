@@ -7,8 +7,8 @@ Colibri Core
 .. image:: https://badge.fury.io/py/colibricore.svg
     :target: http://badge.fury.io/py/colibricore
 
-.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.31163.svg
-   :target: http://dx.doi.org/10.5281/zenodo.31163
+.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.33464.svg
+   :target: http://dx.doi.org/10.5281/zenodo.33464
 
 *by Maarten van Gompel, proycon@anaproy.nl, Radboud University Nijmegen*
 
