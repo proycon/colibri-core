@@ -6,25 +6,74 @@ extracredit: Cover photo by Roger Burkhard
 
 <section>
 
-<p><strong>Colibri Core</strong> is a set of tools as well as a C++ and Python library for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. At the core is the tool <tt>colibri-patternmodeller</tt> which allows you to build, view, manipulate and query pattern models.</p>
+<p><strong>Colibri Core</strong> is software to quickly and efficiently count and extract patterns
+from large corpus data, to extract various statistics on the extracted
+patterns, and to compute relations between the extracted patterns. The employed
+notion of pattern or construction encompasses the following categories:</p>
 
-<p>The Colibri software is developed in the scope of the Ph.D. research project <strong>Constructions as Linguistic Bridges</strong>. This research examines the identification and extraction of aligned constructions or patterns across natural languages, and the usage of such constructions in Machine Translation. The aligned constructions are not identified on the basis of an extensive and explicitly defined grammar or expert database of linguistic knowledge, but rather are implicitly distilled from large amounts of example data. Our notion of constructions is broad and transcends the idea of words or variable-length phrases. </p>
-
-
-<p>The software consists out of various tools and an API for C++ as well as Python, the tools and Python API are documented in the <a href="doc/">documentation</a>, the <a href="capi/">C++ API reference</a> is documented separately. Depending on the size of your input corpus, certain tasks may take considerable memory. We recommend a Linux machine with at least 8GB RAM.</p>
+<ul>
+    <li><strong>n-gram</strong> -- <em>n</em> consecutive words</li>
+    <li><strong>skipgram</strong> -- An abstract pattern of predetermined length with one or multiple gaps (of specific size).</li>
+    <li><strong>flexgram</strong> -- An abstract pattern with one or more gaps of variable-size.</li>
+</ul>
 
 <p>
-<strong>Colibri Core</strong> has the following facilities:
-<ul>
-    <li><strong>Pattern modelling</strong> - Build pattern models from corpus data. Models may contain n-grams and/or skipgrams and may be either unindexed or indexed (maintaining precise references to the covered tokens).</li>
-    <li><strong>Model visualisation</strong> - Visualisation of models in various ways, including token coverage reports, histograms, and graphs that show the relationships between patterns</li>
-    <li><strong>Model querying</strong> - Interactively query generated models for specific patterns and relations between patterns</li>
-    <li><strong>Model/corpus comparison</strong> - Match patterns generated from one corpus to another corpus.</li>
-</ul>
+N-gram extraction may seem fairly trivial at first, with a few lines in your
+favourite scripting language, you can move a simple sliding window of size **n**
+over your corpus and store the results in some kind of hashmap. This trivial
+approach however makes an unnecessarily high demand on memory resources, this
+often becomes prohibitive if unleashed on large corpora. Colibri Core tries to
+minimise these space requirements in several ways:
 </p>
 
-<p>Most of the code is written in C++, offering a clean API interface. A Python wrapper binding with the C++ library is available, giving access to fast and memory-efficient pattern models from a high-level language.</p>
+<ul>
+    <li><strong>Compressed binary representation</strong> -- Each word type is assigned a numeric class, which is encoded in a compact binary format in which highly frequent classes take less space than less frequent classes. Colibri core always uses this representation rather than a full string representation, both on disk and in memory.</li>
+    <li><strong>Informed iterative counting</strong> -- Counting is performed more intelligently by iteratively processing the corpus in several passes and quickly discarding patterns that won't reach the desired occurrence threshold.</li>
+</ul>
 
+<p>
+Skipgram and flexgram extraction are computationally more demanding but have
+been implemented with similar optimisations. Skipgrams are computed by
+abstracting over n-grams, and flexgrams in turn are computed either by
+abstracting over skipgrams, or directly from n-grams on the basis of
+co-occurrence information (mutual pointwise information).  
+</p>
+
+<p>
+At the heart of the sofware is the notion of <em>pattern models</em>. The core tool, to
+be used from the command-line, is <tt>colibri-patternmodeller</tt> which enables you
+to build pattern models, generate statistical reports, query for specific
+patterns and relations, and manipulate models.
+</p>
+
+<p>
+A pattern model is simply a collection of extracted patterns (any of the three
+categories) and their counts from a specific corpus. Pattern models come in two
+varieties:
+</p>
+
+<ul>
+    <li><strong>Unindexed Pattern Model</strong> -- The simplest form, which simply stores the patterns and their count.</li>
+    <li><strong>Indexed Pattern Model</strong> -- The more informed form, which retains all indices to the original corpus, at the cost of more memory/diskspace.</li>
+</ul>
+
+<p>
+The Indexed Pattern Model is much more powerful, and allows more statistics and
+relations to be inferred.
+</p>
+
+<p>
+The generation of pattern models is optionally parametrised by a minimum
+occurrence threshold, a maximum pattern length, and a lower-boundary on the
+different types that may instantiate a skipgram (i.e. possible fillings of the
+gaps). 
+</p>
+
+</section>
+
+<section>
+Colibri Core is available as a collection of **standalone command-line tools**,
+as a **C++ library**, and as a **Python library**.
 </section>
 
 <section>
