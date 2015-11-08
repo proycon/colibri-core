@@ -1088,7 +1088,7 @@ cdef class IndexedCorpus:
 
 
     def sentencecount(self):
-        """Returns the number of sentencecount. ( The C++ equivalent is called sentences() ) """
+        """Returns the number of sentences. ( The C++ equivalent is called sentences() ) """
         return self.data.sentences()
 
 

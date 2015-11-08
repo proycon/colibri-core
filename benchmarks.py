@@ -133,7 +133,7 @@ def main():
         if testnum == 1:
 
             linecount = 0
-            print("Extracting and counting n-grams (up to 8-grams) naively (Python defaultdict + Pynlpl MultiWindower)")
+            print("Extracting and counting n-grams (up to 8-grams,threshold=1) naively (Python defaultdict + Pynlpl MultiWindower)")
             ngrams=defaultdict(int)
             b = begin()
             with open(textfile,'r',encoding='utf-8') as f:
@@ -178,11 +178,10 @@ def main():
             print("Extracting and counting n-grams (up to 8-grams, threshold=2, without look-back)  (Python defaultdict + Pynlpl Windower)")
             ngrams=defaultdict(int)
             b = begin()
-            for n in range(1,9):
-                with open(textfile,'r',encoding='utf-8') as f:
-                    for line in f:
-                        for ngram in Windower(line, n):
-                            ngrams[ngram] += 1
+            with open(textfile,'r',encoding='utf-8') as f:
+                for line in f:
+                    for ngram in MultiWindower(line, 1,8):
+                        ngrams[ngram] += 1
             for ngram in list(ngrams.keys()):
                 if ngrams[ngram] < 2: del ngrams[ngram]
             gc.collect()

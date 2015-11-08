@@ -183,7 +183,7 @@ def __init__(self, str filename = "",PatternModelOptions options = None, constra
     :type options: PatternModelOptions
     :param constrainmodel: A model to be used as a constraint, only patterns occuring in this constraint model will be loaded/trained
     :type constrainmodel: IndexedPatternModel, UnindexedPatternModel or None (default)
-    :param reverseindex: Corpus data to use as reverse index 
+    :param reverseindex: Corpus data to use as reverse index. On indexed models, this is required for various operations, including computation of skipgrams
     :type reverseindex: IndexedCorpus or None
     """
 
