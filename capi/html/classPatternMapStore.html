@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.10"/>
-<title>Colibri Core: PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt; Class Template Reference</title>
+<title>Colibri Core: PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, PatternType &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -88,7 +88,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classPatternMapStore-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, PatternType &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -97,81 +97,106 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p><code>#include &lt;<a class="el" href="patternstore_8h_source.html">patternstore.h</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;:</div>
+Inheritance diagram for PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, PatternType &gt;:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="classPatternMapStore.png" usemap="#PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;_map" alt=""/>
-  <map id="PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;_map" name="PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;_map">
-<area href="classPatternStore.html" title="Abstract Pattern store class, not to be instantiated directly. " alt="PatternStore&lt; ContainerType, ReadWriteSizeType &gt;" shape="rect" coords="0,56,490,80"/>
-<area href="classPatternStoreInterface.html" title="Limited virtual interface to pattern stores. " alt="PatternStoreInterface" shape="rect" coords="0,0,490,24"/>
+  <img src="classPatternMapStore.png" usemap="#PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, PatternType &gt;_map" alt=""/>
+  <map id="PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, PatternType &gt;_map" name="PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, PatternType &gt;_map">
+<area href="classPatternStore.html" title="Abstract Pattern store class, not to be instantiated directly. " alt="PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;" shape="rect" coords="0,56,567,80"/>
+<area href="classPatternStoreInterface.html" title="Limited virtual interface to pattern stores. " alt="PatternStoreInterface" shape="rect" coords="0,0,567,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a918b5de9d2deb6fcc2080a0bb9f53877"><td class="memItemLeft" align="right" valign="top">typedef ContainerType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a918b5de9d2deb6fcc2080a0bb9f53877">iterator</a></td></tr>
-<tr class="separator:a918b5de9d2deb6fcc2080a0bb9f53877"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41a18b827340283e8a643a1d526320f4"><td class="memItemLeft" align="right" valign="top">typedef ContainerType::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a41a18b827340283e8a643a1d526320f4">const_iterator</a></td></tr>
-<tr class="separator:a41a18b827340283e8a643a1d526320f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_classPatternStore"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classPatternStore')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classPatternStore.html">PatternStore&lt; ContainerType, ReadWriteSizeType &gt;</a></td></tr>
-<tr class="memitem:a2bcb8a35edcee7c35eb125ea3d2655ae inherit pub_types_classPatternStore"><td class="memItemLeft" align="right" valign="top">typedef ContainerType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a2bcb8a35edcee7c35eb125ea3d2655ae">iterator</a></td></tr>
-<tr class="separator:a2bcb8a35edcee7c35eb125ea3d2655ae inherit pub_types_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d9724742a6e593e6d970bcd5540c6aa inherit pub_types_classPatternStore"><td class="memItemLeft" align="right" valign="top">typedef ContainerType::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a7d9724742a6e593e6d970bcd5540c6aa">const_iterator</a></td></tr>
-<tr class="separator:a7d9724742a6e593e6d970bcd5540c6aa inherit pub_types_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a2ccac9de68d33712dfb1d6e2c0c3a1"><td class="memItemLeft" align="right" valign="top">typedef ContainerType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a4a2ccac9de68d33712dfb1d6e2c0c3a1">iterator</a></td></tr>
+<tr class="separator:a4a2ccac9de68d33712dfb1d6e2c0c3a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83ae57cc8cb6bf76f5672a0e89684787"><td class="memItemLeft" align="right" valign="top">typedef ContainerType::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a83ae57cc8cb6bf76f5672a0e89684787">const_iterator</a></td></tr>
+<tr class="separator:a83ae57cc8cb6bf76f5672a0e89684787"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_classPatternStore"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classPatternStore')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classPatternStore.html">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a></td></tr>
+<tr class="memitem:ac0c35c2f256738575a5fc6932546d9dc inherit pub_types_classPatternStore"><td class="memItemLeft" align="right" valign="top">typedef ContainerType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#ac0c35c2f256738575a5fc6932546d9dc">iterator</a></td></tr>
+<tr class="separator:ac0c35c2f256738575a5fc6932546d9dc inherit pub_types_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a605a2f6e75381eac263bcc36976c1377 inherit pub_types_classPatternStore"><td class="memItemLeft" align="right" valign="top">typedef ContainerType::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a605a2f6e75381eac263bcc36976c1377">const_iterator</a></td></tr>
+<tr class="separator:a605a2f6e75381eac263bcc36976c1377 inherit pub_types_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af246953d72bedb9ef3741eddb1768ff6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#af246953d72bedb9ef3741eddb1768ff6">PatternMapStore</a> ()</td></tr>
-<tr class="separator:af246953d72bedb9ef3741eddb1768ff6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa15df2207721ea9d43952add6e5a1ebc"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#aa15df2207721ea9d43952add6e5a1ebc">~PatternMapStore</a> ()</td></tr>
-<tr class="separator:aa15df2207721ea9d43952add6e5a1ebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37bcf7aae1c40ccdea57e9a57533a555"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a37bcf7aae1c40ccdea57e9a57533a555">insert</a> (const <a class="el" href="classPattern.html">Pattern</a> &amp;pattern, ValueType &amp;value)=0</td></tr>
-<tr class="separator:a37bcf7aae1c40ccdea57e9a57533a555"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9c07c57785e95edbe057e79f94be2c9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#ad9c07c57785e95edbe057e79f94be2c9">has</a> (const <a class="el" href="classPattern.html">Pattern</a> &amp;) const  =0</td></tr>
-<tr class="separator:ad9c07c57785e95edbe057e79f94be2c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00d47f8640efaeb3ce85558b3ee4a6a2"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a00d47f8640efaeb3ce85558b3ee4a6a2">has</a> (const <a class="el" href="classPatternPointer.html">PatternPointer</a> &amp;) const  =0</td></tr>
-<tr class="separator:a00d47f8640efaeb3ce85558b3ee4a6a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60f2926144fbd408b86d9ff5481fd140"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a60f2926144fbd408b86d9ff5481fd140">erase</a> (const <a class="el" href="classPattern.html">Pattern</a> &amp;)=0</td></tr>
-<tr class="separator:a60f2926144fbd408b86d9ff5481fd140"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6dc590b4b102f1464301a3fc6c4ec73"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#ab6dc590b4b102f1464301a3fc6c4ec73">size</a> () const  =0</td></tr>
-<tr class="separator:ab6dc590b4b102f1464301a3fc6c4ec73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4e8b5a15bb4e3d0f205a979f0d272ab"><td class="memItemLeft" align="right" valign="top">virtual ValueType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#ac4e8b5a15bb4e3d0f205a979f0d272ab">operator[]</a> (const <a class="el" href="classPattern.html">Pattern</a> &amp;pattern)=0</td></tr>
-<tr class="separator:ac4e8b5a15bb4e3d0f205a979f0d272ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4f6c5ef2bd7397a33adeb2e72f6d38c"><td class="memItemLeft" align="right" valign="top">virtual ValueType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#ac4f6c5ef2bd7397a33adeb2e72f6d38c">operator[]</a> (const <a class="el" href="classPatternPointer.html">PatternPointer</a> &amp;pattern)=0</td></tr>
-<tr class="separator:ac4f6c5ef2bd7397a33adeb2e72f6d38c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a0a8463a6faa2f2b6636167c06e19af"><td class="memItemLeft" align="right" valign="top">virtual ContainerType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a2a0a8463a6faa2f2b6636167c06e19af">begin</a> ()=0</td></tr>
-<tr class="separator:a2a0a8463a6faa2f2b6636167c06e19af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a363c63981ea34474b28b2e3a95d376ce"><td class="memItemLeft" align="right" valign="top">virtual ContainerType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a363c63981ea34474b28b2e3a95d376ce">end</a> ()=0</td></tr>
-<tr class="separator:a363c63981ea34474b28b2e3a95d376ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae50e3cdbbf9a503d3381971daec92b54"><td class="memItemLeft" align="right" valign="top">virtual ContainerType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#ae50e3cdbbf9a503d3381971daec92b54">find</a> (const <a class="el" href="classPattern.html">Pattern</a> &amp;pattern)=0</td></tr>
-<tr class="separator:ae50e3cdbbf9a503d3381971daec92b54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa672214575c57ba24f51996e1eb26902"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#aa672214575c57ba24f51996e1eb26902">write</a> (std::ostream *out)</td></tr>
-<tr class="separator:aa672214575c57ba24f51996e1eb26902"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abefd53c729c5cdd4916edfc8be1054b2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#abefd53c729c5cdd4916edfc8be1054b2">write</a> (std::string filename)</td></tr>
-<tr class="separator:abefd53c729c5cdd4916edfc8be1054b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6b2ea5515c974d47212bd84b0d39f15"><td class="memTemplParams" colspan="2">template&lt;class ReadValueType  = ValueType, class ReadValueHandler  = ValueHandler&gt; </td></tr>
-<tr class="memitem:af6b2ea5515c974d47212bd84b0d39f15"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#af6b2ea5515c974d47212bd84b0d39f15">read</a> (std::istream *in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, <a class="el" href="classPatternStoreInterface.html">PatternStoreInterface</a> *constrainstore=NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, bool DEBUG=false)</td></tr>
-<tr class="separator:af6b2ea5515c974d47212bd84b0d39f15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af105b594e52f6f730cc5b15d10f145fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#af105b594e52f6f730cc5b15d10f145fe">read</a> (std::string filename, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, <a class="el" href="classPatternStoreInterface.html">PatternStoreInterface</a> *constrainstore=NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, bool DEBUG=false)</td></tr>
-<tr class="separator:af105b594e52f6f730cc5b15d10f145fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classPatternStore"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classPatternStore')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classPatternStore.html">PatternStore&lt; ContainerType, ReadWriteSizeType &gt;</a></td></tr>
-<tr class="memitem:ad767b084f6fa6e96b2cf011d74c6a691 inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#ad767b084f6fa6e96b2cf011d74c6a691">PatternStore</a> ()</td></tr>
-<tr class="separator:ad767b084f6fa6e96b2cf011d74c6a691 inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a867df32d9a0656631f730c959be89b3b inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a867df32d9a0656631f730c959be89b3b">~PatternStore</a> ()</td></tr>
-<tr class="separator:a867df32d9a0656631f730c959be89b3b inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22e091d80efb8182ac49cf6b225f0aa1 inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a22e091d80efb8182ac49cf6b225f0aa1">insert</a> (const <a class="el" href="classPattern.html">Pattern</a> &amp;pattern)=0</td></tr>
-<tr class="separator:a22e091d80efb8182ac49cf6b225f0aa1 inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a993fa155a8361ff87a526de81dbe6d6d inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classPatternStoreInterface.html">PatternStoreInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a993fa155a8361ff87a526de81dbe6d6d">getstoreinterface</a> ()</td></tr>
-<tr class="separator:a993fa155a8361ff87a526de81dbe6d6d inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb67cbdb113f2a2d6667e527bfd91668"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#abb67cbdb113f2a2d6667e527bfd91668">PatternMapStore</a> ()</td></tr>
+<tr class="separator:abb67cbdb113f2a2d6667e527bfd91668"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ec3e63216173eed7fd733749e84d2bd"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a8ec3e63216173eed7fd733749e84d2bd">~PatternMapStore</a> ()</td></tr>
+<tr class="separator:a8ec3e63216173eed7fd733749e84d2bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4700a0f0dda681e6a4aa5e43ee917ad8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a4700a0f0dda681e6a4aa5e43ee917ad8">insert</a> (const <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &amp;pattern, ValueType &amp;value)=0</td></tr>
+<tr class="separator:a4700a0f0dda681e6a4aa5e43ee917ad8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a208cf2d90725a3a9291d2dae67ac9256"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a208cf2d90725a3a9291d2dae67ac9256">has</a> (const <a class="el" href="classPattern.html">Pattern</a> &amp;) const  =0</td></tr>
+<tr class="separator:a208cf2d90725a3a9291d2dae67ac9256"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bce03112ff9c3c0950f31ccee0c9ab8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a4bce03112ff9c3c0950f31ccee0c9ab8">has</a> (const <a class="el" href="classPatternPointer.html">PatternPointer</a> &amp;) const  =0</td></tr>
+<tr class="separator:a4bce03112ff9c3c0950f31ccee0c9ab8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cd3996a4d1067783adb0ce4100d5f38"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a1cd3996a4d1067783adb0ce4100d5f38">erase</a> (const <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &amp;)=0</td></tr>
+<tr class="separator:a1cd3996a4d1067783adb0ce4100d5f38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7bd333e776a4e55af9add5ee320dbb5"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#af7bd333e776a4e55af9add5ee320dbb5">size</a> () const  =0</td></tr>
+<tr class="separator:af7bd333e776a4e55af9add5ee320dbb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a553c8b3c88c099e9c43ae8aa1194a741"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a553c8b3c88c099e9c43ae8aa1194a741">reserve</a> (size_t)=0</td></tr>
+<tr class="separator:a553c8b3c88c099e9c43ae8aa1194a741"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43e79c4c7686d7b9822dbc0f29d26a4e"><td class="memItemLeft" align="right" valign="top">virtual ValueType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a43e79c4c7686d7b9822dbc0f29d26a4e">operator[]</a> (const <a class="el" href="classPattern.html">Pattern</a> &amp;pattern)=0</td></tr>
+<tr class="separator:a43e79c4c7686d7b9822dbc0f29d26a4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a808c1401e644c1663bcef477bad71cab"><td class="memItemLeft" align="right" valign="top">virtual ValueType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a808c1401e644c1663bcef477bad71cab">operator[]</a> (const <a class="el" href="classPatternPointer.html">PatternPointer</a> &amp;pattern)=0</td></tr>
+<tr class="separator:a808c1401e644c1663bcef477bad71cab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34918a8855a815fcfda852888e7639bc"><td class="memItemLeft" align="right" valign="top">virtual ContainerType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a34918a8855a815fcfda852888e7639bc">begin</a> ()=0</td></tr>
+<tr class="separator:a34918a8855a815fcfda852888e7639bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81b765692da54406e3951e1e1ae84fa5"><td class="memItemLeft" align="right" valign="top">virtual ContainerType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a81b765692da54406e3951e1e1ae84fa5">end</a> ()=0</td></tr>
+<tr class="separator:a81b765692da54406e3951e1e1ae84fa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe0af4c950b2389e5ec7c4d5bfb759c7"><td class="memItemLeft" align="right" valign="top">virtual ContainerType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#abe0af4c950b2389e5ec7c4d5bfb759c7">find</a> (const <a class="el" href="classPattern.html">Pattern</a> &amp;pattern)=0</td></tr>
+<tr class="separator:abe0af4c950b2389e5ec7c4d5bfb759c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa09480df06716f8e2b22972636d48c9e"><td class="memItemLeft" align="right" valign="top">virtual ContainerType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#aa09480df06716f8e2b22972636d48c9e">find</a> (const <a class="el" href="classPatternPointer.html">PatternPointer</a> &amp;pattern)=0</td></tr>
+<tr class="separator:aa09480df06716f8e2b22972636d48c9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6400b6ff29f93c3e1c73355363c2476"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#aa6400b6ff29f93c3e1c73355363c2476">write</a> (std::ostream *out)</td></tr>
+<tr class="separator:aa6400b6ff29f93c3e1c73355363c2476"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42c82c250e9a070d148637f7f7966c12"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a42c82c250e9a070d148637f7f7966c12">write</a> (std::string filename)</td></tr>
+<tr class="separator:a42c82c250e9a070d148637f7f7966c12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70aaedef83737f6bb2aeb66e340b17c4"><td class="memTemplParams" colspan="2">template&lt;class ReadValueType  = ValueType, class ReadValueHandler  = ValueHandler, class ReadPatternType  = PatternType&gt; </td></tr>
+<tr class="memitem:a70aaedef83737f6bb2aeb66e340b17c4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a70aaedef83737f6bb2aeb66e340b17c4">read</a> (std::istream *in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, <a class="el" href="classPatternStoreInterface.html">PatternStoreInterface</a> *constrainstore=NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, bool DEBUG=false)</td></tr>
+<tr class="separator:a70aaedef83737f6bb2aeb66e340b17c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d0b967b093500bcf37818306a02b7ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a9d0b967b093500bcf37818306a02b7ef">read</a> (std::string filename, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, <a class="el" href="classPatternStoreInterface.html">PatternStoreInterface</a> *constrainstore=NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false, bool DEBUG=false)</td></tr>
+<tr class="separator:a9d0b967b093500bcf37818306a02b7ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classPatternStore"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classPatternStore')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classPatternStore.html">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a></td></tr>
+<tr class="memitem:a8fc2f93bbac98093e3928423a9ef2fb6 inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a8fc2f93bbac98093e3928423a9ef2fb6">PatternStore</a> ()</td></tr>
+<tr class="separator:a8fc2f93bbac98093e3928423a9ef2fb6 inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4a1446d8c1637e34147dab4655e1bf1 inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#ac4a1446d8c1637e34147dab4655e1bf1">~PatternStore</a> ()</td></tr>
+<tr class="separator:ac4a1446d8c1637e34147dab4655e1bf1 inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e4361163bb2568593a5049f214a17b5 inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a6e4361163bb2568593a5049f214a17b5">attachcorpus</a> (unsigned char *<a class="el" href="classPatternStore.html#a56811e603e5a5ce165a8709216f3f1c5">corpusstart</a>, unsigned int <a class="el" href="classPatternStore.html#aae8c0f162986134d629b0e6b1a63b4cc">corpussize</a>)</td></tr>
+<tr class="separator:a6e4361163bb2568593a5049f214a17b5 inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38c362e35c48cf8a29b9a91bc9545cd3 inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a38c362e35c48cf8a29b9a91bc9545cd3">attachcorpus</a> (const <a class="el" href="classIndexedCorpus.html">IndexedCorpus</a> &amp;corpus)</td></tr>
+<tr class="separator:a38c362e35c48cf8a29b9a91bc9545cd3 inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07493b7e476f3d59539ac7be0c811412 inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a07493b7e476f3d59539ac7be0c811412">detachcorpus</a> ()</td></tr>
+<tr class="separator:a07493b7e476f3d59539ac7be0c811412 inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53c9f6c2ef894c4ea871471d6b259d55 inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a53c9f6c2ef894c4ea871471d6b259d55">getcorpus</a> () const </td></tr>
+<tr class="separator:a53c9f6c2ef894c4ea871471d6b259d55 inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a409a492f79640da8eef56b089504191d inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a409a492f79640da8eef56b089504191d">getcorpussize</a> () const </td></tr>
+<tr class="separator:a409a492f79640da8eef56b089504191d inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af82a73cc05a22318f86daee0e4ae5189 inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#af82a73cc05a22318f86daee0e4ae5189">use_v1_format</a> ()</td></tr>
+<tr class="separator:af82a73cc05a22318f86daee0e4ae5189 inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac1558cd3f7e4ec8ec142e1c59f122c9 inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#aac1558cd3f7e4ec8ec142e1c59f122c9">insert</a> (const <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &amp;pattern)=0</td></tr>
+<tr class="separator:aac1558cd3f7e4ec8ec142e1c59f122c9 inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd6094fb1e3fd4c655603dccdaed4c88 inherit pub_methods_classPatternStore"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classPatternStoreInterface.html">PatternStoreInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#acd6094fb1e3fd4c655603dccdaed4c88">getstoreinterface</a> ()</td></tr>
+<tr class="separator:acd6094fb1e3fd4c655603dccdaed4c88 inherit pub_methods_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:abdbe9beb478e1719f6edb64272424e5f"><td class="memItemLeft" align="right" valign="top">ValueHandler&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#abdbe9beb478e1719f6edb64272424e5f">valuehandler</a></td></tr>
-<tr class="separator:abdbe9beb478e1719f6edb64272424e5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a3346dbd7ce78c40ac26d12eeba5900"><td class="memItemLeft" align="right" valign="top">ValueHandler&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html#a2a3346dbd7ce78c40ac26d12eeba5900">valuehandler</a></td></tr>
+<tr class="separator:a2a3346dbd7ce78c40ac26d12eeba5900"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classPatternStore"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classPatternStore')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classPatternStore.html">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a></td></tr>
+<tr class="memitem:a56811e603e5a5ce165a8709216f3f1c5 inherit pro_attribs_classPatternStore"><td class="memItemLeft" align="right" valign="top">unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a56811e603e5a5ce165a8709216f3f1c5">corpusstart</a></td></tr>
+<tr class="separator:a56811e603e5a5ce165a8709216f3f1c5 inherit pro_attribs_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae8c0f162986134d629b0e6b1a63b4cc inherit pro_attribs_classPatternStore"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#aae8c0f162986134d629b0e6b1a63b4cc">corpussize</a></td></tr>
+<tr class="separator:aae8c0f162986134d629b0e6b1a63b4cc inherit pro_attribs_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37f196867dede75f7a9bf72b07a3c24d inherit pro_attribs_classPatternStore"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#a37f196867dede75f7a9bf72b07a3c24d">classencodingversion</a></td></tr>
+<tr class="separator:a37f196867dede75f7a9bf72b07a3c24d inherit pro_attribs_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4ef383cb01f6842e97be70bea0e8c82 inherit pro_attribs_classPatternStore"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html#aa4ef383cb01f6842e97be70bea0e8c82">patterntype</a></td></tr>
+<tr class="separator:aa4ef383cb01f6842e97be70bea0e8c82 inherit pro_attribs_classPatternStore"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt;<br />
-class PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;</h3>
+<div class="textblock"><h3>template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt;<br />
+class PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, PatternType &gt;</h3>
 
 <p>Abstract class for map-like pattern stores, do not instantiate directly. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -184,28 +209,28 @@ class PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeT
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a class="anchor" id="a41a18b827340283e8a643a1d526320f4"></a>
+<a class="anchor" id="a83ae57cc8cb6bf76f5672a0e89684787"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef ContainerType::const_iterator <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::<a class="el" href="classPatternStore.html#a7d9724742a6e593e6d970bcd5540c6aa">const_iterator</a></td>
+          <td class="memname">typedef ContainerType::const_iterator <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::<a class="el" href="classPatternStore.html#a605a2f6e75381eac263bcc36976c1377">const_iterator</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a918b5de9d2deb6fcc2080a0bb9f53877"></a>
+<a class="anchor" id="a4a2ccac9de68d33712dfb1d6e2c0c3a1"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef ContainerType::iterator <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::<a class="el" href="classPatternStore.html#a2bcb8a35edcee7c35eb125ea3d2655ae">iterator</a></td>
+          <td class="memname">typedef ContainerType::iterator <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::<a class="el" href="classPatternStore.html#ac0c35c2f256738575a5fc6932546d9dc">iterator</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -213,17 +238,17 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="af246953d72bedb9ef3741eddb1768ff6"></a>
+<a class="anchor" id="abb67cbdb113f2a2d6667e527bfd91668"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::<a class="el" href="classPatternMapStore.html">PatternMapStore</a> </td>
+          <td class="memname"><a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::<a class="el" href="classPatternMapStore.html">PatternMapStore</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -238,17 +263,17 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 
 </div>
 </div>
-<a class="anchor" id="aa15df2207721ea9d43952add6e5a1ebc"></a>
+<a class="anchor" id="a8ec3e63216173eed7fd733749e84d2bd"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::~<a class="el" href="classPatternMapStore.html">PatternMapStore</a> </td>
+          <td class="memname">virtual <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::~<a class="el" href="classPatternMapStore.html">PatternMapStore</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -264,17 +289,17 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a2a0a8463a6faa2f2b6636167c06e19af"></a>
+<a class="anchor" id="a34918a8855a815fcfda852888e7639bc"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual ContainerType::iterator <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::begin </td>
+          <td class="memname">virtual ContainerType::iterator <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::begin </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -287,23 +312,23 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classPatternStore.html#a9dfc403ac576e1904f4ec326fec1adaa">PatternStore&lt; ContainerType, ReadWriteSizeType &gt;</a>.</p>
+<p>Implements <a class="el" href="classPatternStore.html#aab3fab217b585b2b90a3fb3cc7065e11">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a>.</p>
 
-<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#ac103913725b7036ba414453b2204b955">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a6e536f5947c4e1752f91166922c4ae16">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a6e536f5947c4e1752f91166922c4ae16">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a6e536f5947c4e1752f91166922c4ae16">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#a6e536f5947c4e1752f91166922c4ae16">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#ac103913725b7036ba414453b2204b955">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classOrderedPatternPointerMap.html#a12194a18d92e1ddf107cbdbc59c8de65">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternPointerMap.html#ab27caf6f73f4c66ffb8399c72aee53a4">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a6e536f5947c4e1752f91166922c4ae16">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a6e536f5947c4e1752f91166922c4ae16">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a6e536f5947c4e1752f91166922c4ae16">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#a6e536f5947c4e1752f91166922c4ae16">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a363c63981ea34474b28b2e3a95d376ce"></a>
+<a class="anchor" id="a81b765692da54406e3951e1e1ae84fa5"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual ContainerType::iterator <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::end </td>
+          <td class="memname">virtual ContainerType::iterator <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::end </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -316,25 +341,25 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classPatternStore.html#aed5adf38c88543123f705e44b4cddfee">PatternStore&lt; ContainerType, ReadWriteSizeType &gt;</a>.</p>
+<p>Implements <a class="el" href="classPatternStore.html#ae697b6ba815e09fa300532a78e1c9077">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a>.</p>
 
-<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#aa2a8090eed690299d4abeb36ea16fb3d">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#aa5a92eab727e74e54b93f7f7916e26cb">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#aa5a92eab727e74e54b93f7f7916e26cb">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#aa5a92eab727e74e54b93f7f7916e26cb">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#aa5a92eab727e74e54b93f7f7916e26cb">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#aa2a8090eed690299d4abeb36ea16fb3d">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classOrderedPatternPointerMap.html#a6e930ff1ee953bc901323746c5e418ca">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternPointerMap.html#abc9e82948004438795cf5c417147b375">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#aa5a92eab727e74e54b93f7f7916e26cb">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#aa5a92eab727e74e54b93f7f7916e26cb">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#aa5a92eab727e74e54b93f7f7916e26cb">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#aa5a92eab727e74e54b93f7f7916e26cb">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a60f2926144fbd408b86d9ff5481fd140"></a>
+<a class="anchor" id="a1cd3996a4d1067783adb0ce4100d5f38"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::erase </td>
+          <td class="memname">virtual bool <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::erase </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classPattern.html">Pattern</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -346,23 +371,23 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classPatternStore.html#ad8b6d8e1eba917d45e8667ace70f1b1e">PatternStore&lt; ContainerType, ReadWriteSizeType &gt;</a>.</p>
+<p>Implements <a class="el" href="classPatternStore.html#a42f8de80a8627c485315e4bb8eff538f">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a>.</p>
 
-<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#acc3231c8b727c982ef11c80d3390f8ec">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a96e5a77a5c782f340fe38f5c05ae30c4">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a96e5a77a5c782f340fe38f5c05ae30c4">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a96e5a77a5c782f340fe38f5c05ae30c4">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#a96e5a77a5c782f340fe38f5c05ae30c4">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#acc3231c8b727c982ef11c80d3390f8ec">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classOrderedPatternPointerMap.html#afadff7b0e87659c39dec96c16649fcb8">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternPointerMap.html#ac6c8adf867fa872c8677ed8a65e4e6d9">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a96e5a77a5c782f340fe38f5c05ae30c4">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a96e5a77a5c782f340fe38f5c05ae30c4">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a96e5a77a5c782f340fe38f5c05ae30c4">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#a96e5a77a5c782f340fe38f5c05ae30c4">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae50e3cdbbf9a503d3381971daec92b54"></a>
+<a class="anchor" id="abe0af4c950b2389e5ec7c4d5bfb759c7"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual ContainerType::iterator <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::find </td>
+          <td class="memname">virtual ContainerType::iterator <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::find </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classPattern.html">Pattern</a> &amp;&#160;</td>
           <td class="paramname"><em>pattern</em></td><td>)</td>
@@ -376,23 +401,53 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classPatternStore.html#ac8cf692af151c3aad6aea81fa5748957">PatternStore&lt; ContainerType, ReadWriteSizeType &gt;</a>.</p>
+<p>Implements <a class="el" href="classPatternStore.html#a6996798c63c2dd3ae3845848da35a6dd">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a>.</p>
 
-<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#ab0391b67630d9c20ee0069f7197ca9da">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a4f36d73514e80d18f93395a72f81e6bc">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a4f36d73514e80d18f93395a72f81e6bc">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a4f36d73514e80d18f93395a72f81e6bc">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#a4f36d73514e80d18f93395a72f81e6bc">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#ab0391b67630d9c20ee0069f7197ca9da">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classOrderedPatternPointerMap.html#a19bdc5b4b028c8c89638d263cbe168ab">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternPointerMap.html#af4971cbafd7193d03ad46823e7bde0af">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a4f36d73514e80d18f93395a72f81e6bc">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a4f36d73514e80d18f93395a72f81e6bc">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a4f36d73514e80d18f93395a72f81e6bc">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#a4f36d73514e80d18f93395a72f81e6bc">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad9c07c57785e95edbe057e79f94be2c9"></a>
+<a class="anchor" id="aa09480df06716f8e2b22972636d48c9e"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::has </td>
+          <td class="memname">virtual ContainerType::iterator <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::find </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classPatternPointer.html">PatternPointer</a> &amp;&#160;</td>
+          <td class="paramname"><em>pattern</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classPatternStore.html#a33991d30a74b13a4264200474bf0542c">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a>.</p>
+
+<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#a1b1f8f29f6a967b945a7d22907890977">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classOrderedPatternPointerMap.html#a0fd55cda8460d3ad5dc3d67d9bc4e3ac">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternPointerMap.html#a722120c11af76500a453e68b35ca6d03">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a75e2cf7d74b8ffed73256324cfa1e3bf">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a75e2cf7d74b8ffed73256324cfa1e3bf">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a75e2cf7d74b8ffed73256324cfa1e3bf">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#a75e2cf7d74b8ffed73256324cfa1e3bf">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a208cf2d90725a3a9291d2dae67ac9256"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::has </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classPattern.html">Pattern</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -407,23 +462,23 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </div><div class="memdoc">
 <p>Does the pattern occur in the pattern store? </p>
 
-<p>Implements <a class="el" href="classPatternStore.html#abdebd74a21912e436531a64fe8b09a6c">PatternStore&lt; ContainerType, ReadWriteSizeType &gt;</a>.</p>
+<p>Implements <a class="el" href="classPatternStore.html#a2e29add9b35b3459d183f56f6c5525ed">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a>.</p>
 
-<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#a8682c2810f85d0c80ed015e388b571ef">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a038d49e8aed58a207c3e106b086cdab0">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a038d49e8aed58a207c3e106b086cdab0">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a038d49e8aed58a207c3e106b086cdab0">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a038d49e8aed58a207c3e106b086cdab0">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>, and <a class="el" href="classPatternAlignmentModel.html#a4822a730be0dabeebd06771c803b8254">PatternAlignmentModel&lt; FeatureType &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#a8682c2810f85d0c80ed015e388b571ef">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classOrderedPatternPointerMap.html#a646cdbf8491700740207b8fd980fbcc7">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternPointerMap.html#aff90e9b372ae3aed68cb037d91f65206">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a038d49e8aed58a207c3e106b086cdab0">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a038d49e8aed58a207c3e106b086cdab0">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a038d49e8aed58a207c3e106b086cdab0">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a038d49e8aed58a207c3e106b086cdab0">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>, and <a class="el" href="classPatternAlignmentModel.html#a4822a730be0dabeebd06771c803b8254">PatternAlignmentModel&lt; FeatureType &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a00d47f8640efaeb3ce85558b3ee4a6a2"></a>
+<a class="anchor" id="a4bce03112ff9c3c0950f31ccee0c9ab8"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::has </td>
+          <td class="memname">virtual bool <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::has </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classPatternPointer.html">PatternPointer</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -438,25 +493,25 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </div><div class="memdoc">
 <p>Does the pattern occur in the pattern store? </p>
 
-<p>Implements <a class="el" href="classPatternStore.html#ad9c8afcf7b7da6acd257c52336751bd2">PatternStore&lt; ContainerType, ReadWriteSizeType &gt;</a>.</p>
+<p>Implements <a class="el" href="classPatternStore.html#ad1e06c2468bad2a14d4ed28b26c6ff33">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a>.</p>
 
-<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#ae2b83d2bcc1378b817044c205bd60651">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a18587e4b3c6143749b4b96e8f4808cdb">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a18587e4b3c6143749b4b96e8f4808cdb">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a18587e4b3c6143749b4b96e8f4808cdb">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a18587e4b3c6143749b4b96e8f4808cdb">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>, and <a class="el" href="classPatternAlignmentModel.html#ad81e599091c476a9cb121e7e04a4da5a">PatternAlignmentModel&lt; FeatureType &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#ae2b83d2bcc1378b817044c205bd60651">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classOrderedPatternPointerMap.html#a2bff7f96eb16357c7fb99049e2ad1223">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternPointerMap.html#ac8f06f6f2adcf655b0d46bcd999eeed9">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a18587e4b3c6143749b4b96e8f4808cdb">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a18587e4b3c6143749b4b96e8f4808cdb">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a18587e4b3c6143749b4b96e8f4808cdb">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a18587e4b3c6143749b4b96e8f4808cdb">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>, and <a class="el" href="classPatternAlignmentModel.html#ad81e599091c476a9cb121e7e04a4da5a">PatternAlignmentModel&lt; FeatureType &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a37bcf7aae1c40ccdea57e9a57533a555"></a>
+<a class="anchor" id="a4700a0f0dda681e6a4aa5e43ee917ad8"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::insert </td>
+          <td class="memname">virtual void <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::insert </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classPattern.html">Pattern</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &amp;&#160;</td>
           <td class="paramname"><em>pattern</em>, </td>
         </tr>
         <tr>
@@ -478,21 +533,21 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#aec9cfa54723fbe49e75a4e93109ed0bf">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a67628e669cf2995a44769cda83bf8e85">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a67628e669cf2995a44769cda83bf8e85">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a67628e669cf2995a44769cda83bf8e85">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#a67628e669cf2995a44769cda83bf8e85">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#aec9cfa54723fbe49e75a4e93109ed0bf">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classOrderedPatternPointerMap.html#a4ecb7501054290e84a5b06b6aa57ee48">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternPointerMap.html#aa0f6f51f4eafb19c66911c609fb3fd54">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a67628e669cf2995a44769cda83bf8e85">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a67628e669cf2995a44769cda83bf8e85">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a67628e669cf2995a44769cda83bf8e85">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#a67628e669cf2995a44769cda83bf8e85">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ac4e8b5a15bb4e3d0f205a979f0d272ab"></a>
+<a class="anchor" id="a43e79c4c7686d7b9822dbc0f29d26a4e"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual ValueType&amp; <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::operator[] </td>
+          <td class="memname">virtual ValueType&amp; <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::operator[] </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classPattern.html">Pattern</a> &amp;&#160;</td>
           <td class="paramname"><em>pattern</em></td><td>)</td>
@@ -506,21 +561,21 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#ac37c92e91eb149eaa271054156264328">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#af08cad16a81aede5cf12f9601b75d697">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#af08cad16a81aede5cf12f9601b75d697">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#af08cad16a81aede5cf12f9601b75d697">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#af08cad16a81aede5cf12f9601b75d697">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#ac37c92e91eb149eaa271054156264328">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classOrderedPatternPointerMap.html#a6b4a5f31a164883695e3fa11ab18f10c">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternPointerMap.html#a40631d208fa8c64512693bd3f3dc8da7">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#af08cad16a81aede5cf12f9601b75d697">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#af08cad16a81aede5cf12f9601b75d697">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#af08cad16a81aede5cf12f9601b75d697">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#af08cad16a81aede5cf12f9601b75d697">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ac4f6c5ef2bd7397a33adeb2e72f6d38c"></a>
+<a class="anchor" id="a808c1401e644c1663bcef477bad71cab"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual ValueType&amp; <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::operator[] </td>
+          <td class="memname">virtual ValueType&amp; <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::operator[] </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classPatternPointer.html">PatternPointer</a> &amp;&#160;</td>
           <td class="paramname"><em>pattern</em></td><td>)</td>
@@ -534,23 +589,23 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#a65a2aa5b240f6d88b205273331f212b9">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a790d9a4673f3971c644b120660bfab22">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a790d9a4673f3971c644b120660bfab22">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a790d9a4673f3971c644b120660bfab22">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#a790d9a4673f3971c644b120660bfab22">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#a65a2aa5b240f6d88b205273331f212b9">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classOrderedPatternPointerMap.html#a9a2c381f82557a6c9861e073d56b4f92">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternPointerMap.html#aa1cd28596206519ae0b597ef908913dc">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a790d9a4673f3971c644b120660bfab22">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#a790d9a4673f3971c644b120660bfab22">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#a790d9a4673f3971c644b120660bfab22">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#a790d9a4673f3971c644b120660bfab22">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="af6b2ea5515c974d47212bd84b0d39f15"></a>
+<a class="anchor" id="a70aaedef83737f6bb2aeb66e340b17c4"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <div class="memtemplate">
-template&lt;class ReadValueType  = ValueType, class ReadValueHandler  = ValueHandler&gt; </div>
+template&lt;class ReadValueType  = ValueType, class ReadValueHandler  = ValueHandler, class ReadPatternType  = PatternType&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::read </td>
+          <td class="memname">void <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::read </td>
           <td>(</td>
           <td class="paramtype">std::istream *&#160;</td>
           <td class="paramname"><em>in</em>, </td>
@@ -625,17 +680,17 @@ template&lt;class ReadValueType  = ValueType, class ReadValueHandler  = ValueHan
 
 </div>
 </div>
-<a class="anchor" id="af105b594e52f6f730cc5b15d10f145fe"></a>
+<a class="anchor" id="a9d0b967b093500bcf37818306a02b7ef"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::read </td>
+          <td class="memname">void <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::read </td>
           <td>(</td>
           <td class="paramtype">std::string&#160;</td>
           <td class="paramname"><em>filename</em>, </td>
@@ -710,17 +765,47 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 
 </div>
 </div>
-<a class="anchor" id="ab6dc590b4b102f1464301a3fc6c4ec73"></a>
+<a class="anchor" id="a553c8b3c88c099e9c43ae8aa1194a741"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual size_t <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::size </td>
+          <td class="memname">virtual void <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::reserve </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classPatternStore.html#afc995f7b88b6a31b700bb3bdb948b180">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a>.</p>
+
+<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#a76f7eb2593bf60ba2bc25f23ff6655f4">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classOrderedPatternPointerMap.html#a3c31cabd0884606df87f2d28c83aeffe">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternPointerMap.html#a6af50959f03661722d915f1e922be2dc">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#af3718a607f4d34f656b3b8aaf8e52494">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#af3718a607f4d34f656b3b8aaf8e52494">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#af3718a607f4d34f656b3b8aaf8e52494">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, and <a class="el" href="classPatternMap.html#af3718a607f4d34f656b3b8aaf8e52494">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af7bd333e776a4e55af9add5ee320dbb5"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual size_t <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::size </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -734,23 +819,23 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </div><div class="memdoc">
 <p>How many patterns are in the pattern store? </p>
 
-<p>Implements <a class="el" href="classPatternStore.html#a586751d731a509da5865d5863d56a8e4">PatternStore&lt; ContainerType, ReadWriteSizeType &gt;</a>.</p>
+<p>Implements <a class="el" href="classPatternStore.html#abfa82df94ab565bea13fc45ee4866faf">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a>.</p>
 
-<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#a5a48798964b7d667950f41630d3bf708">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#aed30070f31256d0c1335fa9bd3b5db1c">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#aed30070f31256d0c1335fa9bd3b5db1c">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#aed30070f31256d0c1335fa9bd3b5db1c">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, <a class="el" href="classPatternMap.html#aed30070f31256d0c1335fa9bd3b5db1c">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>, and <a class="el" href="classPatternAlignmentModel.html#a7e4b2a69fd2e0852af0ed6ffaf6c51dc">PatternAlignmentModel&lt; FeatureType &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classHashOrderedPatternMap.html#a5a48798964b7d667950f41630d3bf708">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classOrderedPatternPointerMap.html#a58dd12c7a840c59ec9d90461c7e5e8ce">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternPointerMap.html#a84be24690f7548478cdb123479729aa5">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#aed30070f31256d0c1335fa9bd3b5db1c">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>, <a class="el" href="classPatternMap.html#aed30070f31256d0c1335fa9bd3b5db1c">PatternMap&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;, PatternStoreValueHandler&lt; PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt; &gt;, uint64_t &gt;</a>, <a class="el" href="classPatternMap.html#aed30070f31256d0c1335fa9bd3b5db1c">PatternMap&lt; ValueType, ValueHandler, NestedSizeType &gt;</a>, <a class="el" href="classPatternMap.html#aed30070f31256d0c1335fa9bd3b5db1c">PatternMap&lt; PatternFeatureVectorMap&lt; FeatureType &gt;, PatternFeatureVectorMapHandler&lt; FeatureType &gt; &gt;</a>, and <a class="el" href="classPatternAlignmentModel.html#a7e4b2a69fd2e0852af0ed6ffaf6c51dc">PatternAlignmentModel&lt; FeatureType &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aa672214575c57ba24f51996e1eb26902"></a>
+<a class="anchor" id="aa6400b6ff29f93c3e1c73355363c2476"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::write </td>
+          <td class="memname">virtual void <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::write </td>
           <td>(</td>
           <td class="paramtype">std::ostream *&#160;</td>
           <td class="paramname"><em>out</em></td><td>)</td>
@@ -765,23 +850,23 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </div><div class="memdoc">
 <p>Write the map to stream output (in binary format) </p>
 
-<p>Implements <a class="el" href="classPatternStore.html#ac491b99964c6b4c99f5c40519d0c8ccc">PatternStore&lt; ContainerType, ReadWriteSizeType &gt;</a>.</p>
+<p>Implements <a class="el" href="classPatternStore.html#a70d9b8faa5858ab7182cea7b1488a75c">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a>.</p>
 
 <p>Reimplemented in <a class="el" href="classPatternAlignmentModel.html#a335c3f85686db801fafeb328bf8df5e8">PatternAlignmentModel&lt; FeatureType &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="abefd53c729c5cdd4916edfc8be1054b2"></a>
+<a class="anchor" id="a42c82c250e9a070d148637f7f7966c12"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::write </td>
+          <td class="memname">virtual void <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::write </td>
           <td>(</td>
           <td class="paramtype">std::string&#160;</td>
           <td class="paramname"><em>filename</em></td><td>)</td>
@@ -801,17 +886,17 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="abdbe9beb478e1719f6edb64272424e5f"></a>
+<a class="anchor" id="a2a3346dbd7ce78c40ac26d12eeba5900"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t&gt; </div>
+template&lt;class ContainerType, class ValueType, class ValueHandler, class ReadWriteSizeType = uint32_t, class PatternType = Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ValueHandler <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;::valuehandler</td>
+          <td class="memname">ValueHandler <a class="el" href="classPatternMapStore.html">PatternMapStore</a>&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> &gt;::valuehandler</td>
         </tr>
       </table>
   </td>
@@ -829,7 +914,7 @@ template&lt;class ContainerType, class ValueType, class ValueHandler, class Read
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2015 13:45:51 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 4 2015 12:10:22 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

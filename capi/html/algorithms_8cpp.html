@@ -92,34 +92,33 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 <div class="textblock"><code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
+<code>#include &quot;<a class="el" href="algorithms_8h_source.html">algorithms.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4c23345a767d8fee651c40fa40deb471"><td class="memItemLeft" align="right" valign="top">vector&lt; pair&lt; int, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="algorithms_8cpp.html#a4c23345a767d8fee651c40fa40deb471">get_consecutive_gaps</a> (const int n, const int leftmargin=1, const int rightmargin=1)</td></tr>
-<tr class="separator:a4c23345a767d8fee651c40fa40deb471"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2326d96ae321dea6c8bc0de46a905e95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="algorithms_8cpp.html#a2326d96ae321dea6c8bc0de46a905e95">compute_multi_skips</a> (vector&lt; vector&lt; pair&lt; int, int &gt; &gt; &gt; &amp;skips, const vector&lt; pair&lt; int, int &gt; &gt; &amp;path, const int n, const int maxskips, const int skipnum, const int leftmargin)</td></tr>
-<tr class="separator:a2326d96ae321dea6c8bc0de46a905e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c0991bca65a7987ecdd13334a31d631"><td class="memItemLeft" align="right" valign="top">vector&lt; pair&lt; int, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="algorithms_8cpp.html#a4c0991bca65a7987ecdd13334a31d631">get_consecutive_gaps</a> (const int n, const int leftmargin, const int rightmargin)</td></tr>
+<tr class="separator:a4c0991bca65a7987ecdd13334a31d631"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e3915017586c92a4e092fe69ff3fee3"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="algorithms_8cpp.html#a0e3915017586c92a4e092fe69ff3fee3">vector2mask</a> (const vector&lt; pair&lt; int, int &gt;&gt; &amp;skips)</td></tr>
+<tr class="separator:a0e3915017586c92a4e092fe69ff3fee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d636a2055b24b67136440a206bad507"><td class="memItemLeft" align="right" valign="top">vector&lt; pair&lt; int, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="algorithms_8cpp.html#a5d636a2055b24b67136440a206bad507">mask2vector</a> (const uint32_t mask, const int n)</td></tr>
+<tr class="separator:a5d636a2055b24b67136440a206bad507"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8b732f37fb89fb5edacfbc9d3b95356"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="algorithms_8cpp.html#ac8b732f37fb89fb5edacfbc9d3b95356">reversemask</a> (uint32_t mask, const unsigned int n)</td></tr>
+<tr class="separator:ac8b732f37fb89fb5edacfbc9d3b95356"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed39efadda0e0c9a9caeec74ad25be79"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="algorithms_8cpp.html#aed39efadda0e0c9a9caeec74ad25be79">maskheadskip</a> (uint32_t mask, const unsigned int n)</td></tr>
+<tr class="separator:aed39efadda0e0c9a9caeec74ad25be79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c0cdba6c75aa2680062858530c0eaf8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="algorithms_8cpp.html#a1c0cdba6c75aa2680062858530c0eaf8">masktailskip</a> (uint32_t mask, const unsigned int n)</td></tr>
+<tr class="separator:a1c0cdba6c75aa2680062858530c0eaf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a664e9dbe33e77f0de7353c71d5430ef8"><td class="memItemLeft" align="right" valign="top">vector&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="algorithms_8cpp.html#a664e9dbe33e77f0de7353c71d5430ef8">compute_skip_configurations</a> (const int n, const int maxskips)</td></tr>
+<tr class="separator:a664e9dbe33e77f0de7353c71d5430ef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a2326d96ae321dea6c8bc0de46a905e95"></a>
+<a class="anchor" id="a664e9dbe33e77f0de7353c71d5430ef8"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void compute_multi_skips </td>
+          <td class="memname">vector&lt;uint32_t&gt; compute_skip_configurations </td>
           <td>(</td>
-          <td class="paramtype">vector&lt; vector&lt; pair&lt; int, int &gt; &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>skips</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const vector&lt; pair&lt; int, int &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>path</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>n</em>, </td>
         </tr>
@@ -127,19 +126,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>maxskips</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>skipnum</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>leftmargin</em>&#160;</td>
+          <td class="paramname"><em>maxskips</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -151,7 +138,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a4c23345a767d8fee651c40fa40deb471"></a>
+<a class="anchor" id="a4c0991bca65a7987ecdd13334a31d631"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -165,13 +152,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>leftmargin</em> = <code>1</code>, </td>
+          <td class="paramname"><em>leftmargin</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>rightmargin</em> = <code>1</code>&#160;</td>
+          <td class="paramname"><em>rightmargin</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -183,10 +170,130 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a5d636a2055b24b67136440a206bad507"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt;pair&lt;int,int&gt; &gt; mask2vector </td>
+          <td>(</td>
+          <td class="paramtype">const uint32_t&#160;</td>
+          <td class="paramname"><em>mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aed39efadda0e0c9a9caeec74ad25be79"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int maskheadskip </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned int&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1c0cdba6c75aa2680062858530c0eaf8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int masktailskip </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned int&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac8b732f37fb89fb5edacfbc9d3b95356"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t reversemask </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned int&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0e3915017586c92a4e092fe69ff3fee3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t vector2mask </td>
+          <td>(</td>
+          <td class="paramtype">const vector&lt; pair&lt; int, int &gt;&gt; &amp;&#160;</td>
+          <td class="paramname"><em>skips</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2015 13:45:49 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 4 2015 12:10:20 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

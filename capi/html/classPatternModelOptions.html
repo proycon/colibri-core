@@ -128,8 +128,11 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ad5b2686b6f641463c54441a595259046"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternModelOptions.html#ad5b2686b6f641463c54441a595259046">MINSKIPTYPES</a></td></tr>
 <tr class="memdesc:ad5b2686b6f641463c54441a595259046"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum required amount of distinct patterns that can fit in a gap of a skipgram for the skipgram to be included (default: 2)  <a href="#ad5b2686b6f641463c54441a595259046">More...</a><br /></td></tr>
 <tr class="separator:ad5b2686b6f641463c54441a595259046"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03fe79b560a2e9b598f607912e43b295"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternModelOptions.html#a03fe79b560a2e9b598f607912e43b295">MAXSKIPS</a></td></tr>
+<tr class="memdesc:a03fe79b560a2e9b598f607912e43b295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum skips per skipgram.  <a href="#a03fe79b560a2e9b598f607912e43b295">More...</a><br /></td></tr>
+<tr class="separator:a03fe79b560a2e9b598f607912e43b295"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4d4b2fa96e3355b9e3f4b8e51bb62ff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternModelOptions.html#ad4d4b2fa96e3355b9e3f4b8e51bb62ff">DOREVERSEINDEX</a></td></tr>
-<tr class="memdesc:ad4d4b2fa96e3355b9e3f4b8e51bb62ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute reverse index? Costs memory. This will be way faster when you pass an <a class="el" href="classIndexedCorpus.html" title="Class for reading an entire (class encoded) corpus into memory. It provides a reverse index by IndexR...">IndexedCorpus</a> to the <a class="el" href="classPatternModel.html" title="A model mapping patterns to values, gigh-level interface. ">PatternModel</a> constructor. (default: true)  <a href="#ad4d4b2fa96e3355b9e3f4b8e51bb62ff">More...</a><br /></td></tr>
+<tr class="memdesc:ad4d4b2fa96e3355b9e3f4b8e51bb62ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obsolete now, only here for backward-compatibility with v1.  <a href="#ad4d4b2fa96e3355b9e3f4b8e51bb62ff">More...</a><br /></td></tr>
 <tr class="separator:ad4d4b2fa96e3355b9e3f4b8e51bb62ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4391604983decec050de83f13cd6235"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternModelOptions.html#ad4391604983decec050de83f13cd6235">DOPATTERNPERLINE</a></td></tr>
 <tr class="memdesc:ad4391604983decec050de83f13cd6235"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assume each line contains one integral pattern, rather than actively extracting all subpatterns on a line (default: false)  <a href="#ad4391604983decec050de83f13cd6235">More...</a><br /></td></tr>
@@ -320,7 +323,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Compute reverse index? Costs memory. This will be way faster when you pass an <a class="el" href="classIndexedCorpus.html" title="Class for reading an entire (class encoded) corpus into memory. It provides a reverse index by IndexR...">IndexedCorpus</a> to the <a class="el" href="classPatternModel.html" title="A model mapping patterns to values, gigh-level interface. ">PatternModel</a> constructor. (default: true) </p>
+<p>Obsolete now, only here for backward-compatibility with v1. </p>
 
 </div>
 </div>
@@ -376,6 +379,20 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The maximum length of patterns to be loaded/extracted, inclusive (in words/tokens) (default: 100) </p>
+
+</div>
+</div>
+<a class="anchor" id="a03fe79b560a2e9b598f607912e43b295"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int PatternModelOptions::MAXSKIPS</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maximum skips per skipgram. </p>
 
 </div>
 </div>
@@ -478,7 +495,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2015 13:45:51 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 4 2015 12:10:22 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

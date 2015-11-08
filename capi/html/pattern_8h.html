@@ -109,6 +109,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <code>#include &lt;iomanip&gt;</code><br />
 <code>#include &lt;exception&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;climits&gt;</code><br />
 <code>#include &quot;<a class="el" href="common_8h_source.html">common.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="classdecoder_8h_source.html">classdecoder.h</a>&quot;</code><br />
 </div>
@@ -123,9 +124,11 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1hash_3_01Pattern_01_4.html">std::hash&lt; Pattern &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1hash_3_01const_01Pattern_01_4.html">std::hash&lt; const Pattern &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1hash_3_01const_01Pattern_01_5_01_4.html">std::hash&lt; const Pattern * &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1hash_3_01PatternPointer_01_4.html">std::hash&lt; PatternPointer &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1hash_3_01const_01PatternPointer_01_5_01_4.html">std::hash&lt; const PatternPointer * &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
@@ -136,56 +139,27 @@ Enumerations</h2></td></tr>
 <a class="el" href="pattern_8h.html#a17879f85ec892834fb691c61e71dfe54a0e498301215acf5b6f285d4170ce9907">FLEXGRAM</a> = 3
  }<tr class="separator:a17879f85ec892834fb691c61e71dfe54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </td></tr>
-<tr class="memitem:aff0cb3a143c587463f28ef629d0cd35e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#aff0cb3a143c587463f28ef629d0cd35e">StructureType</a> { <br />
-&#160;&#160;<a class="el" href="pattern_8h.html#aff0cb3a143c587463f28ef629d0cd35ea1acb766bbcf5b802cfebeb1108eebe16">STRUCT_PATTERN</a> = 0, 
-<a class="el" href="pattern_8h.html#aff0cb3a143c587463f28ef629d0cd35ea5f8005faf739ab298ed4d99c0267b038">STRUCT_SENTENCE</a> = 1, 
-<a class="el" href="pattern_8h.html#aff0cb3a143c587463f28ef629d0cd35eaf3f19e9b1032491f13d625f9feb34b3e">STRUCT_PARAGRAPH</a> = 2, 
-<a class="el" href="pattern_8h.html#aff0cb3a143c587463f28ef629d0cd35eaddf1557712cb371cae28ba0e3b21b736">STRUCT_HEADER</a> = 3, 
-<br />
-&#160;&#160;<a class="el" href="pattern_8h.html#aff0cb3a143c587463f28ef629d0cd35ea3c59869f029e1e9c845f03b599fce40c">STRUCT_TEXT</a> = 4, 
-<a class="el" href="pattern_8h.html#aff0cb3a143c587463f28ef629d0cd35ea8a5e539553b6893dd35797eecb013a71">STRUCT_QUOTE</a> = 5, 
-<a class="el" href="pattern_8h.html#aff0cb3a143c587463f28ef629d0cd35ea50e28c56439943383b555bd9a29c35f2">STRUCT_DIV</a> = 6
-<br />
- }<tr class="separator:aff0cb3a143c587463f28ef629d0cd35e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</td></tr>
-<tr class="memitem:a456be878416629b7bdbab1afa77a06e6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6">Markers</a> { <br />
-&#160;&#160;<a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6a7bf675a947f690d9c3e7987d00b8d22d">ENDMARKER</a> = 0, 
-<a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6a2c482798f661b24e32d766c7014ad595">TEXTMARKER</a> = 255, 
-<a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6ad1ccb7c901ba70c823830e062be851bd">SENTENCEMARKER</a> = 254, 
-<a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6a42f093f58a7cfc74b57753d7071c7ac4">PARAGRAPHMARKER</a> = 253, 
-<br />
-&#160;&#160;<a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6a6204bbbcd83be95bd6b5771f113603a9">BEGINDIVMARKER</a> = 252, 
-<a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6a581bedb09890cd95a800d2e64ef8be2d">ENDDIVMARKER</a> = 251, 
-<a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6a0508928b4245f1a0d9c77135a11b339c">HEADERMARKER</a> = 250, 
-<a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6abd963ad5cce7aba974e9be43dac121b2">FLEXMARKER</a> = 129, 
-<br />
-&#160;&#160;<a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6ad128fe0ed3e5c7803c0e458660bfb254">SKIPMARKER</a> = 128
-<br />
- }<tr class="separator:a456be878416629b7bdbab1afa77a06e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a351dc5aa88481a949638aeb6cc5e6754"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a> { <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754ac2ab7901214563c5f2300c42358129f6">PATTERN</a> = 0, 
+<a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754a5f20d34b0b2fd5023f48ddd94e4fb617">PATTERNPOINTER</a> = 1
+ }<tr class="separator:a351dc5aa88481a949638aeb6cc5e6754"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3afea24db8ad9026a42ac0e9caa0b72e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#a3afea24db8ad9026a42ac0e9caa0b72e">readanddiscardpattern</a> (std::istream *in)</td></tr>
-<tr class="separator:a3afea24db8ad9026a42ac0e9caa0b72e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af94d807aa42f606e65942aecc46ab794"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#af94d807aa42f606e65942aecc46ab794">readanddiscardpattern</a> (std::istream *in, bool pointerformat=false)</td></tr>
+<tr class="separator:af94d807aa42f606e65942aecc46ab794"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47b9052d17f33cd0620edfa271099e35"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#a47b9052d17f33cd0620edfa271099e35">reader_passmarker</a> (const unsigned char c, std::istream *in)</td></tr>
 <tr class="separator:a47b9052d17f33cd0620edfa271099e35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e9195e7d434a0b52779b53baf69283f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classPattern.html">Pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#a5e9195e7d434a0b52779b53baf69283f">patternfromfile</a> (const std::string &amp;filename)</td></tr>
 <tr class="separator:a5e9195e7d434a0b52779b53baf69283f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a596d31d8e393e5280e06a8e82cadd416"><td class="memItemLeft" align="right" valign="top">unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#a596d31d8e393e5280e06a8e82cadd416">inttopatterndata</a> (unsigned char *buffer, unsigned int cls)</td></tr>
-<tr class="separator:a596d31d8e393e5280e06a8e82cadd416"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:abb5e3da43ee16bd408675e2c306e0c8c"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#abb5e3da43ee16bd408675e2c306e0c8c">MAINPATTERNBUFFERSIZE</a> = 40960</td></tr>
 <tr class="separator:abb5e3da43ee16bd408675e2c306e0c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa782a3a331e5011e1a2f13bcee3cd884"><td class="memItemLeft" align="right" valign="top">const unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#aa782a3a331e5011e1a2f13bcee3cd884">tmp_skipmarker</a> = <a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6ad128fe0ed3e5c7803c0e458660bfb254">SKIPMARKER</a></td></tr>
-<tr class="separator:aa782a3a331e5011e1a2f13bcee3cd884"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6371d650f9669e200bfaac1a0523d009"><td class="memItemLeft" align="right" valign="top">const unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#a6371d650f9669e200bfaac1a0523d009">tmp_flexmarker</a> = <a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6abd963ad5cce7aba974e9be43dac121b2">FLEXMARKER</a></td></tr>
-<tr class="separator:a6371d650f9669e200bfaac1a0523d009"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2d2d06088bcb1c64b915b8ed679df7d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classPattern.html">Pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#ad2d2d06088bcb1c64b915b8ed679df7d">SKIPPATTERN</a> = <a class="el" href="classPattern.html">Pattern</a>(&amp;<a class="el" href="pattern_8h.html#aa782a3a331e5011e1a2f13bcee3cd884">tmp_skipmarker</a>,1)</td></tr>
+<tr class="memitem:ad2d2d06088bcb1c64b915b8ed679df7d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classPattern.html">Pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#ad2d2d06088bcb1c64b915b8ed679df7d">SKIPPATTERN</a> = <a class="el" href="classPattern.html">Pattern</a>((const unsigned char *) tmp_skipmarker,1)</td></tr>
 <tr class="separator:ad2d2d06088bcb1c64b915b8ed679df7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff09c2042ea8ddaff17952629a490a24"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classPattern.html">Pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#aff09c2042ea8ddaff17952629a490a24">FLEXPATTERN</a> = <a class="el" href="classPattern.html">Pattern</a>(&amp;<a class="el" href="pattern_8h.html#a6371d650f9669e200bfaac1a0523d009">tmp_flexmarker</a>,1)</td></tr>
+<tr class="memitem:aff09c2042ea8ddaff17952629a490a24"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classPattern.html">Pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8h.html#aff09c2042ea8ddaff17952629a490a24">FLEXPATTERN</a> = <a class="el" href="classPattern.html">Pattern</a>((const unsigned char*) tmp_flexmarker,1)</td></tr>
 <tr class="separator:aff09c2042ea8ddaff17952629a490a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -198,38 +172,6 @@ LICENSE</h1>
 DESCRIPTION</h1>
 <p>Contains the <a class="el" href="classPattern.html" title="Pattern class, represents a pattern (ngram, skipgram or flexgram). Encoded in a memory-saving fashion...">Pattern</a> class that is ubiquitous throughout Colibri Core </p>
 </div><h2 class="groupheader">Enumeration Type Documentation</h2>
-<a class="anchor" id="a456be878416629b7bdbab1afa77a06e6"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6">Markers</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="a456be878416629b7bdbab1afa77a06e6a7bf675a947f690d9c3e7987d00b8d22d"></a>ENDMARKER&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="a456be878416629b7bdbab1afa77a06e6a2c482798f661b24e32d766c7014ad595"></a>TEXTMARKER&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="a456be878416629b7bdbab1afa77a06e6ad1ccb7c901ba70c823830e062be851bd"></a>SENTENCEMARKER&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="a456be878416629b7bdbab1afa77a06e6a42f093f58a7cfc74b57753d7071c7ac4"></a>PARAGRAPHMARKER&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="a456be878416629b7bdbab1afa77a06e6a6204bbbcd83be95bd6b5771f113603a9"></a>BEGINDIVMARKER&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="a456be878416629b7bdbab1afa77a06e6a581bedb09890cd95a800d2e64ef8be2d"></a>ENDDIVMARKER&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="a456be878416629b7bdbab1afa77a06e6a0508928b4245f1a0d9c77135a11b339c"></a>HEADERMARKER&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="a456be878416629b7bdbab1afa77a06e6abd963ad5cce7aba974e9be43dac121b2"></a>FLEXMARKER&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="a456be878416629b7bdbab1afa77a06e6ad128fe0ed3e5c7803c0e458660bfb254"></a>SKIPMARKER&#160;</td><td class="fielddoc">
-</td></tr>
-</table>
-
-</div>
-</div>
 <a class="anchor" id="a17879f85ec892834fb691c61e71dfe54"></a>
 <div class="memitem">
 <div class="memproto">
@@ -257,62 +199,25 @@ DESCRIPTION</h1>
 
 </div>
 </div>
-<a class="anchor" id="aff0cb3a143c587463f28ef629d0cd35e"></a>
+<a class="anchor" id="a351dc5aa88481a949638aeb6cc5e6754"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="pattern_8h.html#aff0cb3a143c587463f28ef629d0cd35e">StructureType</a></td>
+          <td class="memname">enum <a class="el" href="pattern_8h.html#a351dc5aa88481a949638aeb6cc5e6754">PatternType</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Not really used much yet, but reserved for encoding structural markup later on. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="aff0cb3a143c587463f28ef629d0cd35ea1acb766bbcf5b802cfebeb1108eebe16"></a>STRUCT_PATTERN&#160;</td><td class="fielddoc">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="a351dc5aa88481a949638aeb6cc5e6754ac2ab7901214563c5f2300c42358129f6"></a>PATTERN&#160;</td><td class="fielddoc">
 </td></tr>
-<tr><td class="fieldname"><a class="anchor" id="aff0cb3a143c587463f28ef629d0cd35ea5f8005faf739ab298ed4d99c0267b038"></a>STRUCT_SENTENCE&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="aff0cb3a143c587463f28ef629d0cd35eaf3f19e9b1032491f13d625f9feb34b3e"></a>STRUCT_PARAGRAPH&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="aff0cb3a143c587463f28ef629d0cd35eaddf1557712cb371cae28ba0e3b21b736"></a>STRUCT_HEADER&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="aff0cb3a143c587463f28ef629d0cd35ea3c59869f029e1e9c845f03b599fce40c"></a>STRUCT_TEXT&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="aff0cb3a143c587463f28ef629d0cd35ea8a5e539553b6893dd35797eecb013a71"></a>STRUCT_QUOTE&#160;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="aff0cb3a143c587463f28ef629d0cd35ea50e28c56439943383b555bd9a29c35f2"></a>STRUCT_DIV&#160;</td><td class="fielddoc">
+<tr><td class="fieldname"><a class="anchor" id="a351dc5aa88481a949638aeb6cc5e6754a5f20d34b0b2fd5023f48ddd94e4fb617"></a>PATTERNPOINTER&#160;</td><td class="fielddoc">
 </td></tr>
 </table>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a596d31d8e393e5280e06a8e82cadd416"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned char* inttopatterndata </td>
-          <td>(</td>
-          <td class="paramtype">unsigned char *&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>cls</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a5e9195e7d434a0b52779b53baf69283f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -329,7 +234,7 @@ DESCRIPTION</h1>
 
 </div>
 </div>
-<a class="anchor" id="a3afea24db8ad9026a42ac0e9caa0b72e"></a>
+<a class="anchor" id="af94d807aa42f606e65942aecc46ab794"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -337,8 +242,18 @@ DESCRIPTION</h1>
           <td class="memname">void readanddiscardpattern </td>
           <td>(</td>
           <td class="paramtype">std::istream *&#160;</td>
-          <td class="paramname"><em>in</em></td><td>)</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>pointerformat</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -377,7 +292,7 @@ DESCRIPTION</h1>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classPattern.html">Pattern</a> FLEXPATTERN = <a class="el" href="classPattern.html">Pattern</a>(&amp;<a class="el" href="pattern_8h.html#a6371d650f9669e200bfaac1a0523d009">tmp_flexmarker</a>,1)</td>
+          <td class="memname">const <a class="el" href="classPattern.html">Pattern</a> FLEXPATTERN = <a class="el" href="classPattern.html">Pattern</a>((const unsigned char*) tmp_flexmarker,1)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -401,31 +316,7 @@ DESCRIPTION</h1>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classPattern.html">Pattern</a> SKIPPATTERN = <a class="el" href="classPattern.html">Pattern</a>(&amp;<a class="el" href="pattern_8h.html#aa782a3a331e5011e1a2f13bcee3cd884">tmp_skipmarker</a>,1)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a6371d650f9669e200bfaac1a0523d009"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const unsigned char tmp_flexmarker = <a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6abd963ad5cce7aba974e9be43dac121b2">FLEXMARKER</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aa782a3a331e5011e1a2f13bcee3cd884"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const unsigned char tmp_skipmarker = <a class="el" href="pattern_8h.html#a456be878416629b7bdbab1afa77a06e6ad128fe0ed3e5c7803c0e458660bfb254">SKIPMARKER</a></td>
+          <td class="memname">const <a class="el" href="classPattern.html">Pattern</a> SKIPPATTERN = <a class="el" href="classPattern.html">Pattern</a>((const unsigned char *) tmp_skipmarker,1)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -435,7 +326,7 @@ DESCRIPTION</h1>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2015 13:45:49 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 4 2015 12:10:20 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

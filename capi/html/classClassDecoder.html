@@ -85,6 +85,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classClassDecoder-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">ClassDecoder Class Reference</div>  </div>
@@ -113,14 +114,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac7b469a8815a77b07daee3e76ef41f8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e9e821e67a97d9197047d64a5e1cb18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#a6e9e821e67a97d9197047d64a5e1cb18">decodefile</a> (const std::string &amp;filename, std::ostream *, unsigned int start=0, unsigned int <a class="el" href="classClassDecoder.html#af3c11f55c5acdc9e0e6f7ec4ec0a45e7">end</a>=0, bool quiet=false)</td></tr>
 <tr class="separator:a6e9e821e67a97d9197047d64a5e1cb18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a794e96f70f095be218f4606d17c0e529"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#a794e96f70f095be218f4606d17c0e529">decodefile_v1</a> (std::ifstream *in, std::ostream *out, unsigned int start=0, unsigned int <a class="el" href="classClassDecoder.html#af3c11f55c5acdc9e0e6f7ec4ec0a45e7">end</a>=0, bool quiet=false)</td></tr>
+<tr class="separator:a794e96f70f095be218f4606d17c0e529"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75348f84c3f9eb4f699f1b0986593ea6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#a75348f84c3f9eb4f699f1b0986593ea6">decodefiletostring</a> (const std::string &amp;filename, unsigned int start=0, unsigned int <a class="el" href="classClassDecoder.html#af3c11f55c5acdc9e0e6f7ec4ec0a45e7">end</a>=0, bool quiet=true)</td></tr>
 <tr class="separator:a75348f84c3f9eb4f699f1b0986593ea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4a58ebdaed62bbc27f3d0fd860c9dde"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#af4a58ebdaed62bbc27f3d0fd860c9dde">size</a> () const </td></tr>
 <tr class="separator:af4a58ebdaed62bbc27f3d0fd860c9dde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab212c7a5643348965fc70e85ccf6a454"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#ab212c7a5643348965fc70e85ccf6a454">operator[]</a> (unsigned int key) const </td></tr>
 <tr class="separator:ab212c7a5643348965fc70e85ccf6a454"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92ceaca2cdad3cdd40cf4489dffb70be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#a92ceaca2cdad3cdd40cf4489dffb70be">add</a> (unsigned int, std::string)</td></tr>
-<tr class="separator:a92ceaca2cdad3cdd40cf4489dffb70be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa962f31cc3abbb4420a89419e02d141a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#aa962f31cc3abbb4420a89419e02d141a">add</a> (const unsigned int, const std::string &amp;)</td></tr>
+<tr class="separator:aa962f31cc3abbb4420a89419e02d141a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90399b17e31b20a7330fcdd501e8350a"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#a90399b17e31b20a7330fcdd501e8350a">gethighestclass</a> ()</td></tr>
 <tr class="separator:a90399b17e31b20a7330fcdd501e8350a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade08d075b70964c24a2fba6b5f43f7da"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#ade08d075b70964c24a2fba6b5f43f7da">hasclass</a> (unsigned int key) const </td></tr>
@@ -133,6 +136,17 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab52e0396600b9fca95348c603b6aca7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3c11f55c5acdc9e0e6f7ec4ec0a45e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classClassDecoder.html#a24770930683eb9829a898343fe016929">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#af3c11f55c5acdc9e0e6f7ec4ec0a45e7">end</a> () const </td></tr>
 <tr class="separator:af3c11f55c5acdc9e0e6f7ec4ec0a45e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a878d35a6832b7967ed57eb074a833f90"><td class="memItemLeft" align="right" valign="top">static const unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#a878d35a6832b7967ed57eb074a833f90">delimiterclass</a> = 0</td></tr>
+<tr class="separator:a878d35a6832b7967ed57eb074a833f90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a802ad043ecd17751c2e3520170649f4e"><td class="memItemLeft" align="right" valign="top">static const unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#a802ad043ecd17751c2e3520170649f4e">unknownclass</a> = 2</td></tr>
+<tr class="separator:a802ad043ecd17751c2e3520170649f4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65bd3f4f5100e8d3743b82b0643aa4f7"><td class="memItemLeft" align="right" valign="top">static const unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#a65bd3f4f5100e8d3743b82b0643aa4f7">skipclass</a> = 3</td></tr>
+<tr class="separator:a65bd3f4f5100e8d3743b82b0643aa4f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19f0b9f9aca599e1bfc271f61dff15a1"><td class="memItemLeft" align="right" valign="top">static const unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassDecoder.html#a19f0b9f9aca599e1bfc271f61dff15a1">flexclass</a> = 4</td></tr>
+<tr class="separator:a19f0b9f9aca599e1bfc271f61dff15a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for decoding binary class-encoded data back to plain-text. The <a class="el" href="classClassDecoder.html" title="Class for decoding binary class-encoded data back to plain-text. The ClassDecoder maintains a mapping...">ClassDecoder</a> maintains a mapping of classes (integers) to words. It allows decoding of a corpus that was losslessly compressed by substituting words for classes. The classes are distributed based on word frequency, with frequent words receiving a lower class number that can be represented in fewer bytes, and rare words receiving a higher class number. </p>
@@ -184,20 +198,20 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a92ceaca2cdad3cdd40cf4489dffb70be"></a>
+<a class="anchor" id="aa962f31cc3abbb4420a89419e02d141a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void ClassDecoder::add </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const unsigned int&#160;</td>
           <td class="paramname"><em>cls</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>s</em>&#160;</td>
         </tr>
         <tr>
@@ -285,6 +299,50 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="a794e96f70f095be218f4606d17c0e529"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ClassDecoder::decodefile_v1 </td>
+          <td>(</td>
+          <td class="paramtype">std::ifstream *&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::ostream *&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>start</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>end</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>quiet</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -478,7 +536,7 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Return the word pertaining to the given class. Unknown classes will be decoded as {UNKNOWN}. </p>
+<p>Return the word pertaining to the given class. Unknown classes will be decoded as {?}. </p>
 
 </div>
 </div>
@@ -523,6 +581,87 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a878d35a6832b7967ed57eb074a833f90"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned char ClassDecoder::delimiterclass = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a19f0b9f9aca599e1bfc271f61dff15a1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned char ClassDecoder::flexclass = 4</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a65bd3f4f5100e8d3743b82b0643aa4f7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned char ClassDecoder::skipclass = 3</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a802ad043ecd17751c2e3520170649f4e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned char ClassDecoder::unknownclass = 2</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/<a class="el" href="classdecoder_8h_source.html">classdecoder.h</a></li>
 <li>src/<a class="el" href="classdecoder_8cpp.html">classdecoder.cpp</a></li>
@@ -530,7 +669,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2015 13:45:50 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 4 2015 12:10:21 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

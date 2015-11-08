@@ -98,8 +98,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a596d31d8e393e5280e06a8e82cadd416"><td class="memItemLeft" align="right" valign="top">unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8cpp.html#a596d31d8e393e5280e06a8e82cadd416">inttopatterndata</a> (unsigned char *buffer, unsigned int cls)</td></tr>
-<tr class="separator:a596d31d8e393e5280e06a8e82cadd416"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a455f4834be42248a30579f12c8fce1f1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="pattern_8h.html#a17879f85ec892834fb691c61e71dfe54">PatternCategory</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8cpp.html#a455f4834be42248a30579f12c8fce1f1">datacategory</a> (const unsigned char *data, int maxbytes=0)</td></tr>
 <tr class="separator:a455f4834be42248a30579f12c8fce1f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa35f7c02f0b33f90cf30fca8eda3c712"><td class="memItemLeft" align="right" valign="top">const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8cpp.html#aa35f7c02f0b33f90cf30fca8eda3c712">datasize</a> (unsigned char *data, int maxbytes=0)</td></tr>
@@ -108,8 +106,10 @@ Functions</h2></td></tr>
 <tr class="separator:a1d1ad9be89018e20698de73bf51847f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaeedd854046c679043b1c3c72984a663"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8cpp.html#aaeedd854046c679043b1c3c72984a663">dataout</a> (unsigned char *data, int maxbytes=0)</td></tr>
 <tr class="separator:aaeedd854046c679043b1c3c72984a663"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3afea24db8ad9026a42ac0e9caa0b72e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8cpp.html#a3afea24db8ad9026a42ac0e9caa0b72e">readanddiscardpattern</a> (std::istream *in)</td></tr>
-<tr class="separator:a3afea24db8ad9026a42ac0e9caa0b72e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab46764a2a44054a04d159248dd989550"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8cpp.html#ab46764a2a44054a04d159248dd989550">readanddiscardpattern</a> (std::istream *in, bool pointerformat)</td></tr>
+<tr class="separator:ab46764a2a44054a04d159248dd989550"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a230dca861e7032624bf7acdd70202be9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8cpp.html#a230dca861e7032624bf7acdd70202be9">readanddiscardpattern_v1</a> (std::istream *in)</td></tr>
+<tr class="separator:a230dca861e7032624bf7acdd70202be9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e9195e7d434a0b52779b53baf69283f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classPattern.html">Pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pattern_8cpp.html#a5e9195e7d434a0b52779b53baf69283f">patternfromfile</a> (const std::string &amp;filename)</td></tr>
 <tr class="separator:a5e9195e7d434a0b52779b53baf69283f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -229,32 +229,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a596d31d8e393e5280e06a8e82cadd416"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned char* inttopatterndata </td>
-          <td>(</td>
-          <td class="paramtype">unsigned char *&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>cls</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a5e9195e7d434a0b52779b53baf69283f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -271,12 +245,38 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3afea24db8ad9026a42ac0e9caa0b72e"></a>
+<a class="anchor" id="ab46764a2a44054a04d159248dd989550"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void readanddiscardpattern </td>
+          <td>(</td>
+          <td class="paramtype">std::istream *&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>pointerformat</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a230dca861e7032624bf7acdd70202be9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void readanddiscardpattern_v1 </td>
           <td>(</td>
           <td class="paramtype">std::istream *&#160;</td>
           <td class="paramname"><em>in</em></td><td>)</td>
@@ -303,7 +303,7 @@ Variables</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2015 13:45:49 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 4 2015 12:10:20 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

@@ -106,6 +106,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <code>#include &lt;set&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
 <code>#include &lt;array&gt;</code><br />
+<code>#include &lt;exception&gt;</code><br />
 <code>#include &quot;bz2stream.h&quot;</code><br />
 </div>
 <p><a href="patternmodel_8h_source.html">Go to the source code of this file.</a></p>
@@ -123,11 +124,15 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternSetModel.html">PatternSetModel</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pattern model based on an unordered set, does not hold data, only patterns. Very suitable for loading constraint models.  <a href="classPatternSetModel.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternModel.html">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternModel.html">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A model mapping patterns to values, gigh-level interface.  <a href="classPatternModel.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIndexedPatternModel.html">IndexedPatternModel&lt; MapType &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIndexedPatternModel.html">IndexedPatternModel&lt; MapType, PatternType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An indexed model mapping patterns to values, high-level interface. This is a specialised subclass of <a class="el" href="classPatternMap.html" title="A pattern map storing patterns and their values in a hash map (unordered_map). ">PatternMap</a>.  <a href="classIndexedPatternModel.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternPointerModel.html">PatternPointerModel&lt; ValueType, ValueHandler, MapType &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIndexedPatternPointerModel.html">IndexedPatternPointerModel&lt; MapType &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -143,10 +148,15 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a9f27db0468ce0ce2994eb68dc919b15d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15d">ModelType</a> { <a class="el" href="patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15daca2120c3741a469ce1f15b89c2ea1c45">UNINDEXEDPATTERNMODEL</a> = 10, 
+<tr class="memitem:a9f27db0468ce0ce2994eb68dc919b15d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15d">ModelType</a> { <br />
+&#160;&#160;<a class="el" href="patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15daca2120c3741a469ce1f15b89c2ea1c45">UNINDEXEDPATTERNMODEL</a> = 10, 
+<a class="el" href="patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15da224dcaa883740a06c4db071c22d22403">UNINDEXEDPATTERNPOINTERMODEL</a> = 11, 
 <a class="el" href="patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15daa6f0526916810a6caccd82480e5ec144">INDEXEDPATTERNMODEL</a> = 20, 
-<a class="el" href="patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15da7d9f6b1a25936e5735c1cec638737616">PATTERNSETMODEL</a> = 30, 
+<a class="el" href="patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15dafc25969ab047944b6d6e8237ffe67c56">INDEXEDPATTERNPOINTERMODEL</a> = 21, 
+<br />
+&#160;&#160;<a class="el" href="patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15da7d9f6b1a25936e5735c1cec638737616">PATTERNSETMODEL</a> = 30, 
 <a class="el" href="patternmodel_8h.html#a9f27db0468ce0ce2994eb68dc919b15da318700774f54f408c004112396953a04">PATTERNALIGNMENTMODEL</a> = 40
+<br />
  }<tr class="separator:a9f27db0468ce0ce2994eb68dc919b15d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </td></tr>
 <tr class="memitem:a718d8a8cc511fa24f0af5c8007b7e5fe"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="patternmodel_8h.html#a718d8a8cc511fa24f0af5c8007b7e5fe">ReverseIndexType</a> { <a class="el" href="patternmodel_8h.html#a718d8a8cc511fa24f0af5c8007b7e5feac157bdf0b85a40d2619cbc8bc1ae5fe2">NONE</a> = 0, 
@@ -157,12 +167,12 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a80b71afd5e6d9b738daee567a8b519aa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="patternmodel_8h.html#a80b71afd5e6d9b738daee567a8b519aa">getmodeltype</a> (const std::string filename)</td></tr>
-<tr class="separator:a80b71afd5e6d9b738daee567a8b519aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c4c6c8e8913366d40e51eb25c53b418"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="patternmodel_8h.html#a1c4c6c8e8913366d40e51eb25c53b418">comparemodels_loglikelihood</a> (const <a class="el" href="classPattern.html">Pattern</a> pattern, std::vector&lt; <a class="el" href="classPatternModel.html">PatternModel</a>&lt; uint32_t &gt; * &gt; models)</td></tr>
-<tr class="separator:a1c4c6c8e8913366d40e51eb25c53b418"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9dedbf0e6e670b3417141dfc1abb164d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="patternmodel_8h.html#a9dedbf0e6e670b3417141dfc1abb164d">comparemodels_loglikelihood</a> (std::vector&lt; <a class="el" href="classPatternModel.html">PatternModel</a>&lt; uint32_t &gt; * &gt; models, <a class="el" href="classPatternMap.html">PatternMap</a>&lt; double &gt; *resultmap, bool conjunctiononly=false, std::ostream *output=NULL, <a class="el" href="classClassDecoder.html">ClassDecoder</a> *classdecoder=NULL)</td></tr>
-<tr class="separator:a9dedbf0e6e670b3417141dfc1abb164d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a231755ef5c50233b1dc4ed38eb08aebb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="patternmodel_8h.html#a231755ef5c50233b1dc4ed38eb08aebb">getmodeltype</a> (const std::string &amp;filename)</td></tr>
+<tr class="separator:a231755ef5c50233b1dc4ed38eb08aebb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98b461c96f9b61ed4a42ee6837594aa7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="patternmodel_8h.html#a98b461c96f9b61ed4a42ee6837594aa7">comparemodels_loglikelihood</a> (const <a class="el" href="classPattern.html">Pattern</a> pattern, std::vector&lt; <a class="el" href="classPatternModel.html">PatternModel</a>&lt; uint32_t &gt; * &gt; &amp;models)</td></tr>
+<tr class="separator:a98b461c96f9b61ed4a42ee6837594aa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e6a4c9ab26cf9ea95c26c9bf9b52dba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="patternmodel_8h.html#a4e6a4c9ab26cf9ea95c26c9bf9b52dba">comparemodels_loglikelihood</a> (std::vector&lt; <a class="el" href="classPatternModel.html">PatternModel</a>&lt; uint32_t &gt; * &gt; &amp;models, <a class="el" href="classPatternMap.html">PatternMap</a>&lt; double &gt; *resultmap, bool conjunctiononly=false, std::ostream *output=NULL, <a class="el" href="classClassDecoder.html">ClassDecoder</a> *classdecoder=NULL)</td></tr>
+<tr class="separator:a4e6a4c9ab26cf9ea95c26c9bf9b52dba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains classes for <a class="el" href="classPattern.html" title="Pattern class, represents a pattern (ngram, skipgram or flexgram). Encoded in a memory-saving fashion...">Pattern</a> Models. </p>
@@ -238,7 +248,11 @@ DESCRIPTION</h1>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="a9f27db0468ce0ce2994eb68dc919b15daca2120c3741a469ce1f15b89c2ea1c45"></a>UNINDEXEDPATTERNMODEL&#160;</td><td class="fielddoc">
 </td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a9f27db0468ce0ce2994eb68dc919b15da224dcaa883740a06c4db071c22d22403"></a>UNINDEXEDPATTERNPOINTERMODEL&#160;</td><td class="fielddoc">
+</td></tr>
 <tr><td class="fieldname"><a class="anchor" id="a9f27db0468ce0ce2994eb68dc919b15daa6f0526916810a6caccd82480e5ec144"></a>INDEXEDPATTERNMODEL&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a9f27db0468ce0ce2994eb68dc919b15dafc25969ab047944b6d6e8237ffe67c56"></a>INDEXEDPATTERNPOINTERMODEL&#160;</td><td class="fielddoc">
 </td></tr>
 <tr><td class="fieldname"><a class="anchor" id="a9f27db0468ce0ce2994eb68dc919b15da7d9f6b1a25936e5735c1cec638737616"></a>PATTERNSETMODEL&#160;</td><td class="fielddoc">
 </td></tr>
@@ -270,7 +284,7 @@ DESCRIPTION</h1>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a1c4c6c8e8913366d40e51eb25c53b418"></a>
+<a class="anchor" id="a98b461c96f9b61ed4a42ee6837594aa7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -283,7 +297,7 @@ DESCRIPTION</h1>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="classPatternModel.html">PatternModel</a>&lt; uint32_t &gt; * &gt;&#160;</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classPatternModel.html">PatternModel</a>&lt; uint32_t &gt; * &gt; &amp;&#160;</td>
           <td class="paramname"><em>models</em>&#160;</td>
         </tr>
         <tr>
@@ -298,14 +312,14 @@ DESCRIPTION</h1>
 
 </div>
 </div>
-<a class="anchor" id="a9dedbf0e6e670b3417141dfc1abb164d"></a>
+<a class="anchor" id="a4e6a4c9ab26cf9ea95c26c9bf9b52dba"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void comparemodels_loglikelihood </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="classPatternModel.html">PatternModel</a>&lt; uint32_t &gt; * &gt;&#160;</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classPatternModel.html">PatternModel</a>&lt; uint32_t &gt; * &gt; &amp;&#160;</td>
           <td class="paramname"><em>models</em>, </td>
         </tr>
         <tr>
@@ -344,14 +358,14 @@ DESCRIPTION</h1>
 
 </div>
 </div>
-<a class="anchor" id="a80b71afd5e6d9b738daee567a8b519aa"></a>
+<a class="anchor" id="a231755ef5c50233b1dc4ed38eb08aebb"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int getmodeltype </td>
           <td>(</td>
-          <td class="paramtype">const std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>filename</em></td><td>)</td>
           <td></td>
         </tr>
@@ -364,7 +378,7 @@ DESCRIPTION</h1>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2015 13:45:49 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 4 2015 12:10:20 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

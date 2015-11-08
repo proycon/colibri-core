@@ -15,6 +15,7 @@ Contains classes for \hyperlink{classPattern}{Pattern} Models.
 {\ttfamily \#include $<$set$>$}\\*
 {\ttfamily \#include $<$sstream$>$}\\*
 {\ttfamily \#include $<$array$>$}\\*
+{\ttfamily \#include $<$exception$>$}\\*
 {\ttfamily \#include \char`\"{}bz2stream.\+h\char`\"{}}\\*
 \subsection*{Classes}
 \begin{DoxyCompactItemize}
@@ -27,10 +28,14 @@ class \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface}
 \begin{DoxyCompactList}\small\item\em Basic read-\/only interface for pattern models, abstract base class. \end{DoxyCompactList}\item 
 class \hyperlink{classPatternSetModel}{Pattern\+Set\+Model}
 \begin{DoxyCompactList}\small\item\em A pattern model based on an unordered set, does not hold data, only patterns. Very suitable for loading constraint models. \end{DoxyCompactList}\item 
-class \hyperlink{classPatternModel}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}
+class \hyperlink{classPatternModel}{Pattern\+Model$<$ Value\+Type, Value\+Handler, Map\+Type, Pattern\+Type $>$}
 \begin{DoxyCompactList}\small\item\em A model mapping patterns to values, gigh-\/level interface. \end{DoxyCompactList}\item 
-class \hyperlink{classIndexedPatternModel}{Indexed\+Pattern\+Model$<$ Map\+Type $>$}
-\begin{DoxyCompactList}\small\item\em An indexed model mapping patterns to values, high-\/level interface. This is a specialised subclass of \hyperlink{classPatternMap}{Pattern\+Map}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+class \hyperlink{classIndexedPatternModel}{Indexed\+Pattern\+Model$<$ Map\+Type, Pattern\+Type $>$}
+\begin{DoxyCompactList}\small\item\em An indexed model mapping patterns to values, high-\/level interface. This is a specialised subclass of \hyperlink{classPatternMap}{Pattern\+Map}. \end{DoxyCompactList}\item 
+class \hyperlink{classPatternPointerModel}{Pattern\+Pointer\+Model$<$ Value\+Type, Value\+Handler, Map\+Type $>$}
+\item 
+class \hyperlink{classIndexedPatternPointerModel}{Indexed\+Pattern\+Pointer\+Model$<$ Map\+Type $>$}
+\end{DoxyCompactItemize}
 \subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
@@ -45,8 +50,12 @@ typedef \hyperlink{classPatternMap}{Pattern\+Map}$<$ double, \hyperlink{classBas
 \subsection*{Enumerations}
 \begin{DoxyCompactItemize}
 \item 
-enum \hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15d}{Model\+Type} \{ \hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15daca2120c3741a469ce1f15b89c2ea1c45}{U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L} = 10, 
+enum \hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15d}{Model\+Type} \{ \\*
+\hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15daca2120c3741a469ce1f15b89c2ea1c45}{U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L} = 10, 
+\hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15da224dcaa883740a06c4db071c22d22403}{U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\+M\+O\+D\+E\+L} = 11, 
 \hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15daa6f0526916810a6caccd82480e5ec144}{I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L} = 20, 
+\hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15dafc25969ab047944b6d6e8237ffe67c56}{I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\+M\+O\+D\+E\+L} = 21, 
+\\*
 \hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15da7d9f6b1a25936e5735c1cec638737616}{P\+A\+T\+T\+E\+R\+N\+S\+E\+T\+M\+O\+D\+E\+L} = 30, 
 \hyperlink{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15da318700774f54f408c004112396953a04}{P\+A\+T\+T\+E\+R\+N\+A\+L\+I\+G\+N\+M\+E\+N\+T\+M\+O\+D\+E\+L} = 40
  \}
@@ -59,11 +68,11 @@ enum \hyperlink{patternmodel_8h_a718d8a8cc511fa24f0af5c8007b7e5fe}{Reverse\+Inde
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \hyperlink{patternmodel_8h_a80b71afd5e6d9b738daee567a8b519aa}{getmodeltype} (const std\+::string filename)
+int \hyperlink{patternmodel_8h_a231755ef5c50233b1dc4ed38eb08aebb}{getmodeltype} (const std\+::string \&filename)
 \item 
-double \hyperlink{patternmodel_8h_a1c4c6c8e8913366d40e51eb25c53b418}{comparemodels\+\_\+loglikelihood} (const \hyperlink{classPattern}{Pattern} pattern, std\+::vector$<$ \hyperlink{classPatternModel}{Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$ models)
+double \hyperlink{patternmodel_8h_a98b461c96f9b61ed4a42ee6837594aa7}{comparemodels\+\_\+loglikelihood} (const \hyperlink{classPattern}{Pattern} pattern, std\+::vector$<$ \hyperlink{classPatternModel}{Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$ \&models)
 \item 
-void \hyperlink{patternmodel_8h_a9dedbf0e6e670b3417141dfc1abb164d}{comparemodels\+\_\+loglikelihood} (std\+::vector$<$ \hyperlink{classPatternModel}{Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$ models, \hyperlink{classPatternMap}{Pattern\+Map}$<$ double $>$ $\ast$resultmap, bool conjunctiononly=false, std\+::ostream $\ast$output=N\+U\+L\+L, \hyperlink{classClassDecoder}{Class\+Decoder} $\ast$classdecoder=N\+U\+L\+L)
+void \hyperlink{patternmodel_8h_a4e6a4c9ab26cf9ea95c26c9bf9b52dba}{comparemodels\+\_\+loglikelihood} (std\+::vector$<$ \hyperlink{classPatternModel}{Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$ \&models, \hyperlink{classPatternMap}{Pattern\+Map}$<$ double $>$ $\ast$resultmap, bool conjunctiononly=false, std\+::ostream $\ast$output=N\+U\+L\+L, \hyperlink{classClassDecoder}{Class\+Decoder} $\ast$classdecoder=N\+U\+L\+L)
 \end{DoxyCompactItemize}
 
 
@@ -101,8 +110,12 @@ Defines the various types of pattern models \begin{Desc}
 \begin{description}
 \index{U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L@{U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L}!patternmodel.\+h@{patternmodel.\+h}}\index{patternmodel.\+h@{patternmodel.\+h}!U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L@{U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L}}\item[{\em 
 \hypertarget{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15daca2120c3741a469ce1f15b89c2ea1c45}{}U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L\label{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15daca2120c3741a469ce1f15b89c2ea1c45}
+}]\index{U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\+M\+O\+D\+E\+L@{U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\+M\+O\+D\+E\+L}!patternmodel.\+h@{patternmodel.\+h}}\index{patternmodel.\+h@{patternmodel.\+h}!U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\+M\+O\+D\+E\+L@{U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\+M\+O\+D\+E\+L}}\item[{\em 
+\hypertarget{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15da224dcaa883740a06c4db071c22d22403}{}U\+N\+I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\+M\+O\+D\+E\+L\label{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15da224dcaa883740a06c4db071c22d22403}
 }]\index{I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L@{I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L}!patternmodel.\+h@{patternmodel.\+h}}\index{patternmodel.\+h@{patternmodel.\+h}!I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L@{I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L}}\item[{\em 
 \hypertarget{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15daa6f0526916810a6caccd82480e5ec144}{}I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+M\+O\+D\+E\+L\label{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15daa6f0526916810a6caccd82480e5ec144}
+}]\index{I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\+M\+O\+D\+E\+L@{I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\+M\+O\+D\+E\+L}!patternmodel.\+h@{patternmodel.\+h}}\index{patternmodel.\+h@{patternmodel.\+h}!I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\+M\+O\+D\+E\+L@{I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\+M\+O\+D\+E\+L}}\item[{\em 
+\hypertarget{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15dafc25969ab047944b6d6e8237ffe67c56}{}I\+N\+D\+E\+X\+E\+D\+P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\+M\+O\+D\+E\+L\label{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15dafc25969ab047944b6d6e8237ffe67c56}
 }]\index{P\+A\+T\+T\+E\+R\+N\+S\+E\+T\+M\+O\+D\+E\+L@{P\+A\+T\+T\+E\+R\+N\+S\+E\+T\+M\+O\+D\+E\+L}!patternmodel.\+h@{patternmodel.\+h}}\index{patternmodel.\+h@{patternmodel.\+h}!P\+A\+T\+T\+E\+R\+N\+S\+E\+T\+M\+O\+D\+E\+L@{P\+A\+T\+T\+E\+R\+N\+S\+E\+T\+M\+O\+D\+E\+L}}\item[{\em 
 \hypertarget{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15da7d9f6b1a25936e5735c1cec638737616}{}P\+A\+T\+T\+E\+R\+N\+S\+E\+T\+M\+O\+D\+E\+L\label{patternmodel_8h_a9f27db0468ce0ce2994eb68dc919b15da7d9f6b1a25936e5735c1cec638737616}
 }]\index{P\+A\+T\+T\+E\+R\+N\+A\+L\+I\+G\+N\+M\+E\+N\+T\+M\+O\+D\+E\+L@{P\+A\+T\+T\+E\+R\+N\+A\+L\+I\+G\+N\+M\+E\+N\+T\+M\+O\+D\+E\+L}!patternmodel.\+h@{patternmodel.\+h}}\index{patternmodel.\+h@{patternmodel.\+h}!P\+A\+T\+T\+E\+R\+N\+A\+L\+I\+G\+N\+M\+E\+N\+T\+M\+O\+D\+E\+L@{P\+A\+T\+T\+E\+R\+N\+A\+L\+I\+G\+N\+M\+E\+N\+T\+M\+O\+D\+E\+L}}\item[{\em 
@@ -126,34 +139,34 @@ Defines Reverse Index Types \begin{Desc}
 
 
 \subsection{Function Documentation}
-\hypertarget{patternmodel_8h_a1c4c6c8e8913366d40e51eb25c53b418}{}\index{patternmodel.\+h@{patternmodel.\+h}!comparemodels\+\_\+loglikelihood@{comparemodels\+\_\+loglikelihood}}
+\hypertarget{patternmodel_8h_a98b461c96f9b61ed4a42ee6837594aa7}{}\index{patternmodel.\+h@{patternmodel.\+h}!comparemodels\+\_\+loglikelihood@{comparemodels\+\_\+loglikelihood}}
 \index{comparemodels\+\_\+loglikelihood@{comparemodels\+\_\+loglikelihood}!patternmodel.\+h@{patternmodel.\+h}}
-\subsubsection[{comparemodels\+\_\+loglikelihood(const Pattern pattern, std\+::vector$<$ Pattern\+Model$<$ uint32\+\_\+t $>$ $\ast$ $>$ models)}]{\setlength{\rightskip}{0pt plus 5cm}double comparemodels\+\_\+loglikelihood (
+\subsubsection[{comparemodels\+\_\+loglikelihood(const Pattern pattern, std\+::vector$<$ Pattern\+Model$<$ uint32\+\_\+t $>$ $\ast$ $>$ \&models)}]{\setlength{\rightskip}{0pt plus 5cm}double comparemodels\+\_\+loglikelihood (
 \begin{DoxyParamCaption}
 \item[{const {\bf Pattern}}]{pattern, }
-\item[{std\+::vector$<$ {\bf Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$}]{models}
+\item[{std\+::vector$<$ {\bf Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$ \&}]{models}
 \end{DoxyParamCaption}
-)}\label{patternmodel_8h_a1c4c6c8e8913366d40e51eb25c53b418}
+)}\label{patternmodel_8h_a98b461c96f9b61ed4a42ee6837594aa7}
 Computation of log likelihood for a single pattern, accross corpora.
 
-Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (A\+C\+L 2000). 1-\/8 October 2000, Hong Kong, pp. 1 -\/ 6\+: \href{http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf}{\tt http\+://www.\+comp.\+lancs.\+ac.\+uk/$\sim$paul/publications/rg\+\_\+acl2000.\+pdf} \hypertarget{patternmodel_8h_a9dedbf0e6e670b3417141dfc1abb164d}{}\index{patternmodel.\+h@{patternmodel.\+h}!comparemodels\+\_\+loglikelihood@{comparemodels\+\_\+loglikelihood}}
+Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (A\+C\+L 2000). 1-\/8 October 2000, Hong Kong, pp. 1 -\/ 6\+: \href{http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf}{\tt http\+://www.\+comp.\+lancs.\+ac.\+uk/$\sim$paul/publications/rg\+\_\+acl2000.\+pdf} \hypertarget{patternmodel_8h_a4e6a4c9ab26cf9ea95c26c9bf9b52dba}{}\index{patternmodel.\+h@{patternmodel.\+h}!comparemodels\+\_\+loglikelihood@{comparemodels\+\_\+loglikelihood}}
 \index{comparemodels\+\_\+loglikelihood@{comparemodels\+\_\+loglikelihood}!patternmodel.\+h@{patternmodel.\+h}}
-\subsubsection[{comparemodels\+\_\+loglikelihood(std\+::vector$<$ Pattern\+Model$<$ uint32\+\_\+t $>$ $\ast$ $>$ models, Pattern\+Map$<$ double $>$ $\ast$resultmap, bool conjunctiononly=false, std\+::ostream $\ast$output=\+N\+U\+L\+L, Class\+Decoder $\ast$classdecoder=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}void comparemodels\+\_\+loglikelihood (
+\subsubsection[{comparemodels\+\_\+loglikelihood(std\+::vector$<$ Pattern\+Model$<$ uint32\+\_\+t $>$ $\ast$ $>$ \&models, Pattern\+Map$<$ double $>$ $\ast$resultmap, bool conjunctiononly=false, std\+::ostream $\ast$output=\+N\+U\+L\+L, Class\+Decoder $\ast$classdecoder=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}void comparemodels\+\_\+loglikelihood (
 \begin{DoxyParamCaption}
-\item[{std\+::vector$<$ {\bf Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$}]{models, }
+\item[{std\+::vector$<$ {\bf Pattern\+Model}$<$ uint32\+\_\+t $>$ $\ast$ $>$ \&}]{models, }
 \item[{{\bf Pattern\+Map}$<$ double $>$ $\ast$}]{resultmap, }
 \item[{bool}]{conjunctiononly, }
 \item[{std\+::ostream $\ast$}]{output, }
 \item[{{\bf Class\+Decoder} $\ast$}]{classdecoder}
 \end{DoxyParamCaption}
-)}\label{patternmodel_8h_a9dedbf0e6e670b3417141dfc1abb164d}
+)}\label{patternmodel_8h_a4e6a4c9ab26cf9ea95c26c9bf9b52dba}
 Computation of log likelihood between patterns in corpora
 
-Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (A\+C\+L 2000). 1-\/8 October 2000, Hong Kong, pp. 1 -\/ 6\+: \href{http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf}{\tt http\+://www.\+comp.\+lancs.\+ac.\+uk/$\sim$paul/publications/rg\+\_\+acl2000.\+pdf} \hypertarget{patternmodel_8h_a80b71afd5e6d9b738daee567a8b519aa}{}\index{patternmodel.\+h@{patternmodel.\+h}!getmodeltype@{getmodeltype}}
+Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (A\+C\+L 2000). 1-\/8 October 2000, Hong Kong, pp. 1 -\/ 6\+: \href{http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf}{\tt http\+://www.\+comp.\+lancs.\+ac.\+uk/$\sim$paul/publications/rg\+\_\+acl2000.\+pdf} \hypertarget{patternmodel_8h_a231755ef5c50233b1dc4ed38eb08aebb}{}\index{patternmodel.\+h@{patternmodel.\+h}!getmodeltype@{getmodeltype}}
 \index{getmodeltype@{getmodeltype}!patternmodel.\+h@{patternmodel.\+h}}
-\subsubsection[{getmodeltype(const std\+::string filename)}]{\setlength{\rightskip}{0pt plus 5cm}int getmodeltype (
+\subsubsection[{getmodeltype(const std\+::string \&filename)}]{\setlength{\rightskip}{0pt plus 5cm}int getmodeltype (
 \begin{DoxyParamCaption}
-\item[{const std\+::string}]{filename}
+\item[{const std\+::string \&}]{filename}
 \end{DoxyParamCaption}
-)}\label{patternmodel_8h_a80b71afd5e6d9b738daee567a8b519aa}
+)}\label{patternmodel_8h_a231755ef5c50233b1dc4ed38eb08aebb}
 Extracts the model type (one of Model\+Type) from a file 

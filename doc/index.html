@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Colibri Documentation &mdash; Colibri Core 0.5.11 documentation</title>
+    <title>Colibri Core Documentation &mdash; Colibri Core 1.0.1 documentation</title>
     
     <link rel="stylesheet" href="static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.5.11',
+        VERSION:     '1.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Colibri Core 0.5.11 documentation" href="#" />
+    <link rel="top" title="Colibri Core 1.0.1 documentation" href="#" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -36,15 +36,15 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="colibri-documentation">
-<h1>Colibri Documentation<a class="headerlink" href="#colibri-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="colibri-core-documentation">
+<h1>Colibri Core Documentation<a class="headerlink" href="#colibri-core-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul class="simple">
 </ul>
 </div>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>Colibri Core is software, consisting of command line tools as well as programming libraries. to quickly and efficiently count and extract patterns from large corpus data, to extract various statistics on the extracted patterns, and to compute relations between the extracted patterns. The employed notion of pattern or construction encompasses the following categories:</p>
+<p>Colibri Core is software consisting of command line tools as well as programming libraries. to quickly and efficiently count and extract patterns from large corpus data, to extract various statistics on the extracted patterns, and to compute relations between the extracted patterns. The employed notion of pattern or construction encompasses the following categories:</p>
 <blockquote>
 <div><ul class="simple">
 <li><strong>n-gram</strong> &#8211; n consecutive words</li>
@@ -66,49 +66,141 @@
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>Colibri is hosted on <a class="reference external" href="http://github.com/proycon/colibri-core/">github</a> and should be retrieved through the versioning control system <code class="docutils literal"><span class="pre">git</span></code>. Provided git is installed on your system, this is done as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ git clone http://github.com/proycon/colibri-core.git
+<div class="section" id="installation-via-lamachine">
+<h3>Installation via LaMachine<a class="headerlink" href="#installation-via-lamachine" title="Permalink to this headline">¶</a></h3>
+<p>Colibri Core is included in the <a class="reference external" href="https://proycon.github.io/LaMachine">LaMachine</a> distribution. This includes all dependencies and other NLP software. LaMachine can also run as a virtual machine on any host OS.</p>
+</div>
+<div class="section" id="installing-dependencies">
+<h3>Installing dependencies<a class="headerlink" href="#installing-dependencies" title="Permalink to this headline">¶</a></h3>
+<p>To compile Colibri Core, you need a sane build environment, install the necessary dependencies for your distribution.</p>
+<p>For Debian/Ubuntu:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo apt-get install make gcc g++ pkg-config autoconf-archive libtool autotools-dev libbz2-dev zlib1g-dev libtar-dev python3 python3-dev cython3&quot;
 </pre></div>
 </div>
-<p>You need to compile the software, if you want FoLiA support you will need to first to install the following dependency. By default FoLiA support is disabled.</p>
+<p>For RedHat-based systems (run as root):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># yum install pkgconfig libtool autoconf automake autoconf-archive make gcc gcc-c++ libtar libtar-devel python3 python3-devel zlib zlib-devel python3-pip bzip2 bzip2-devel cython3</span>
+</pre></div>
+</div>
+<p>For Mac OS X with <a class="reference external" href="http://brew.sh">homebrew</a>:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ brew install autoconf automake libtool autoconf-archive python3
+</pre></div>
+</div>
+<p>Arch Linux users can simply install Colibri Core and all dependencies directly from the <a class="reference external" href="https://aur.archlinux.org/packages/colibri-core-git">Arch User Repository</a> , no further installation is necessary in this case.</p>
+</div>
+<div class="section" id="installation-via-the-python-package-index">
+<h3>Installation via the Python Package Index<a class="headerlink" href="#installation-via-the-python-package-index" title="Permalink to this headline">¶</a></h3>
+<p>Colibri Core can be installed from the <a class="reference external" href="https://pypi.python.org/pypi/colibricore">Python Package Index</a> using the <code class="docutils literal"><span class="pre">pip</span></code> tool, often
+named <code class="docutils literal"><span class="pre">pip3</span></code> for the Python 3 version, which we recommend. This procedure
+will automatically download, compile, and install all of Colibi Core.</p>
+<p>First ensure you installed all dependencies from the previous section!</p>
+<p>Colibri Core requires an up-to-date version of Cython first (0.23 or above), or the installation will fail, we use <code class="docutils literal"><span class="pre">pip</span></code> to compile it from scratch:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo pip3 install cython
+</pre></div>
+</div>
+<p>Then we can install Colibri Core itself:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo pip3 install colibricore
+</pre></div>
+</div>
+<p>For installation without root privileges we recommend creating a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">Python Virtual environment,</a> , in which case all of Colibri Code will be installed under it:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ virtualenv --python=python3 coco
+$ . coco/bin/activate       #you will need to do this each time you want to use Colibri Core
+(coco)$ pip install cython
+(coco)$ pip install colibricore
+</pre></div>
+</div>
+<p>Alternatively, pass a prefix:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ pip3 install --install-option=&quot;--prefix=/my/installation/directory&quot; colibricore
+</pre></div>
+</div>
+<p><strong>Important Note:</strong> If you install Colibri Core locally (in a Python Virtual Environment
+or elsewhere), then you need to set <code class="docutils literal"><span class="pre">LD_LIBRARY_PATH=$VIRTUAL_ENV/lib/</span></code> prior
+to running Python for the Python binding to function (replace <code class="docutils literal"><span class="pre">$VIRTUAL_ENV</span></code> with
+the directory you used as a prefix if you do not use Python Virtual
+Environment). Otherwise, you will be confronted with an error: <code class="docutils literal"><span class="pre">ImportError:</span>
+<span class="pre">libcolibricore.so.0:</span> <span class="pre">cannot</span> <span class="pre">open</span> <span class="pre">shared</span> <span class="pre">object</span> <span class="pre">file:</span> <span class="pre">No</span> <span class="pre">such</span> <span class="pre">file</span> <span class="pre">or</span>
+<span class="pre">directory</span></code>. If you get this error after a global installaton, run <code class="docutils literal"><span class="pre">sudo</span>
+<span class="pre">ldconfig</span></code>.</p>
+</div>
+<div class="section" id="installation-from-github">
+<h3>Installation from Github<a class="headerlink" href="#installation-from-github" title="Permalink to this headline">¶</a></h3>
+<p>First ensure you installed all dependencies from the dependencies section!</p>
+<p>Colibri Core is hosted on <a class="reference external" href="https//github.com/proycon/colibri-core/">github</a>
+and should ideally be retrieved through the versioning control system <code class="docutils literal"><span class="pre">git</span></code>.
+Provided git is installed on your system, this is done as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ git clone https://github.com/proycon/colibri-core.git
+</pre></div>
+</div>
+<p>Alternatively, you can download and extract release archives from the
+aforementioned Github page.</p>
+<p>Now we can install Colibri Core itself, the following will install everything globally under <code class="docutils literal"><span class="pre">/usr/</span></code> and hence requires administrative privileges:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo python3 setup.py install
+</pre></div>
+</div>
+<p>If you install from within a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">Python Virtual environment,</a> everything will be
+installed under it. This does not require root privileges:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ virtualenv --python=python3 coco
+$ . coco/bin/activate       #you will need to do this each time you want to use Colibri Core
+(coco)$ pip install cython
+(coco)$ pip install colibricore
+</pre></div>
+</div>
+<p>For local installation elsewhere, pass a prefix, for example:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python3 setup.py install --prefix=/home/yourname/local
+</pre></div>
+</div>
+<p>The note at the end of the previous section applies for any non-global installation!</p>
+</div>
+<div class="section" id="manual-compilation-and-installation-advanced">
+<h3>Manual compilation and installation (advanced)<a class="headerlink" href="#manual-compilation-and-installation-advanced" title="Permalink to this headline">¶</a></h3>
+<p>Installation via the Python Package Index or Github invokes compilation of the C++ source for you.
+You can however to compile everything yourself. This is especially relevant if
+you are not only interested in command-line tools or C++ library, and do not
+care about the Python library.</p>
+<p>Moreover, this route is also needed if you want FoLiA support (optional), for which you
+then first to install the following dependency. By default FoLiA support is disabled.</p>
 <blockquote>
 <div><ul class="simple">
 <li><strong>libfolia</strong>; obtainable from <a class="reference external" href="http://proycon.github.com/folia">the FoLiA website</a>,  follow the instructions included with libfolia to install it.</li>
 </ul>
 </div></blockquote>
-<p>In addition to the C/C++ compiler (<code class="docutils literal"><span class="pre">gcc</span></code>), the build process for colibri makes use of <code class="docutils literal"><span class="pre">autoconf</span></code> and <code class="docutils literal"><span class="pre">automake</span></code>. Make sure these are installed on your system. Also install the package <code class="docutils literal"><span class="pre">autoconf-archive</span></code> if available on your distribution. Colibri can now be compiled and installed:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ cd colibri
+<p>Including pulling the sources from github, Colibri Core can be compiled and
+installed as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ git clone https://github.com/proycon/colibri-core.git
+$ cd colibri-core
 $ bash bootstrap
-$ ./configure [--with-folia --with-folia-path=/path/to/libfolia]
+$ ./configure [--prefix=/usr] [--with-folia --with-folia-path=/path/to/libfolia]
 $ make
-$ make install
+$ sudo make install
 </pre></div>
 </div>
-<p>You can optionally pass a prefix if you want to install colibri in a different location:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ ./configure --prefix=/usr/local/
+<p>If not prefix is set, installation will be under <code class="docutils literal"><span class="pre">/usr/local/</span></code> by default.</p>
+<p>To compile the Python binding manually, we first create an empty file
+<code class="docutils literal"><span class="pre">manual</span></code> which signals the build process to not attempt to recompile the C++
+library itself:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ touch manual
 </pre></div>
 </div>
-<p>To install the Colibri Core Python library, you require Python 3 or higher with Cython 0.19 or above. On Debian/Ubuntu systems you will find these in the packages
-<code class="docutils literal"><span class="pre">python3</span></code> and <code class="docutils literal"><span class="pre">cython3</span></code>. To compile and install the Python library, issue
-the following command:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ python3 ./setup.py install
+<p>Then build as follows, provided Colibri Core is in a globally accessible
+location already:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo python3 ./setup.py install
 </pre></div>
 </div>
-<p>If you want to install in a customised non-global location, use <code class="docutils literal"><span class="pre">--prefix</span></code>
-along with <code class="docutils literal"><span class="pre">--include-dirs</span></code> and <code class="docutils literal"><span class="pre">--library-dirs</span></code> to point to where the
-C++ headers and the library are installed:</p>
+<p>If you used a prefix and want to install in a customised non-global location,
+again use <code class="docutils literal"><span class="pre">--prefix</span></code> along with <code class="docutils literal"><span class="pre">--include-dirs</span></code> and <code class="docutils literal"><span class="pre">--library-dirs</span></code> to
+point to where the C++ headers and the library are installed:</p>
 <div class="highlight-python"><div class="highlight"><pre>$ python3 ./setup.py build_ext --include-dirs=/path/to/include/colibri-core  --library-dirs=/path/to/lib/  install --prefix=/path/to/somewhere/
 </pre></div>
 </div>
-<p>If you plan to use Colibri-Core from Python with virtualenv or a distribution
-such as Anaconda, we recommend to install all of colibri-core in this specific
-location. To do this, you need need to call <code class="docutils literal"><span class="pre">configure</span></code> with <code class="docutils literal"><span class="pre">--prefix</span></code>, where the prefix is the directory where your
-virtual environment, or Anaconda resides. The <code class="docutils literal"><span class="pre">--prefix</span></code> for <code class="docutils literal"><span class="pre">setup.py</span></code> is
-the same, and the include-dirs and library-dirs should point to respectively
-to the <code class="docutils literal"><span class="pre">include/colibri-core</span></code> and <code class="docutils literal"><span class="pre">lib</span></code> directories within this directory.</p>
+<p>Update <code class="docutils literal"><span class="pre">$LD_LIBRARY_PATH</span></code> and <code class="docutils literal"><span class="pre">$PYTHONPATH</span></code> where necessary.</p>
+</div>
 <div class="section" id="keeping-colibri-up-to-date">
 <h3>Keeping colibri up to date<a class="headerlink" href="#keeping-colibri-up-to-date" title="Permalink to this headline">¶</a></h3>
-<p>Colibri is always under heavy development. Update your colibri copy by issuing a git pull:</p>
+<p>It is recommended to often check back for new versions of Colibri Core.</p>
+<p>If you used, <code class="docutils literal"><span class="pre">pip</span></code> just run:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ pip3 install -U colibricore
+</pre></div>
+</div>
+<p>For the git version:</p>
 <div class="highlight-python"><div class="highlight"><pre>$ git pull
 </pre></div>
 </div>
@@ -116,13 +208,17 @@ to the <code class="docutils literal"><span class="pre">include/colibri-core</sp
 </div>
 <div class="section" id="general-usage-instructions">
 <h3>General usage instructions<a class="headerlink" href="#general-usage-instructions" title="Permalink to this headline">¶</a></h3>
-<p>Colibri consist of various programs and scripts, each of which will output an extensive overview of available parameters if the parameter <code class="docutils literal"><span class="pre">-h</span></code> is passed. Each program is designed for a specialised purpose, with specific input and output formats. It is often needed to call multiple programs in succession to obtain the final analysis or model you desire.</p>
+<p>Colibri consist of various programs and scripts, each of which will output an
+extensive overview of available parameters if the parameter <code class="docutils literal"><span class="pre">-h</span></code> is passed.
+Each program is designed for a specialised purpose, with specific input and
+output formats. It is often needed to call multiple programs in succession to
+obtain the final analysis or model you desire.</p>
 </div>
 </div>
 <div class="section" id="quick-start-high-level-scripts">
 <h2>Quick start: High-level scripts<a class="headerlink" href="#quick-start-high-level-scripts" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
-<h3>Introduction<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Introduction<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>Colibri Core comes with a set of scripts that provide simpler access to the
 underlying tools and can be used from the command line by end-users to get
 quick results. Input to these tools is always one or more plain text files, in
@@ -189,8 +285,8 @@ limited amount of the functionality of Colibri Core.</p>
 </div>
 <div class="section" id="corpus-class-encoding">
 <h2>Corpus Class Encoding<a class="headerlink" href="#corpus-class-encoding" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id2">
-<h3>Introduction<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Introduction<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>Computation on large datasets begs for solutions to keep memory consumption
 manageable. Colibri requires that input corpora are converted into a compressed
 binary form. The vocabulary of the corpus is converted to integer form, i.e.
@@ -267,8 +363,8 @@ flags <code class="docutils literal"><span class="pre">-s</span></code> and <cod
 </div>
 <div class="section" id="pattern-modeller">
 <h2>Pattern Modeller<a class="headerlink" href="#pattern-modeller" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id4">
-<h3>Introduction<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Introduction<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal"><span class="pre">colibri-patternmodeller</span></code> program is used to create pattern models capturing recurring patterns from a monolingual corpus. The extracted patterns are n-grams or skip-grams, where a skip-gram is an n-gram with one or more gaps of either a predefined size, thus containing unspecified or wildcard tokens, or of dynamic width.</p>
 <p>In the internal pattern representation, in the place of the size marker, byte
 value 128 is used for a fixed gap of a single token, and can be repeated for
@@ -858,7 +954,7 @@ to the static, read-only, version <a class="reference external" href="http://pro
 
 <dl class="attribute">
 <dt id="colibricore.Category.__dict__">
-<code class="descname">__dict__</code><em class="property"> = mappingproxy({'__doc__': 'Pattern Category', 'SKIPGRAM': 2, '__weakref__': &lt;attribute '__weakref__' of 'Category' objects&gt;, 'NGRAM': 1, '__module__': 'colibricore', '__dict__': &lt;attribute '__dict__' of 'Category' objects&gt;, 'FLEXGRAM': 3})</em><a class="headerlink" href="#colibricore.Category.__dict__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__dict__</code><em class="property"> = mappingproxy({'__dict__': &lt;attribute '__dict__' of 'Category' objects&gt;, 'FLEXGRAM': 3, 'SKIPGRAM': 2, '__weakref__': &lt;attribute '__weakref__' of 'Category' objects&gt;, 'NGRAM': 1, '__doc__': 'Pattern Category', '__module__': 'colibricore'})</em><a class="headerlink" href="#colibricore.Category.__dict__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1590,7 +1686,7 @@ to the static, read-only, version <a class="reference external" href="http://pro
 <dl class="method">
 <dt id="colibricore.HashOrderedIndexedPatternModel.train">
 <code class="descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#colibricore.HashOrderedIndexedPatternModel.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id5"><span class="problematic" id="id6">*</span></a>.colibri.dat file)</p>
+<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id6"><span class="problematic" id="id7">*</span></a>.colibri.dat file)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2411,7 +2507,7 @@ to the static, read-only, version <a class="reference external" href="http://pro
 <dl class="method">
 <dt id="colibricore.IndexedPatternModel.train">
 <code class="descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#colibricore.IndexedPatternModel.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id7"><span class="problematic" id="id8">*</span></a>.colibri.dat file)</p>
+<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id8"><span class="problematic" id="id9">*</span></a>.colibri.dat file)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2932,7 +3028,7 @@ to the static, read-only, version <a class="reference external" href="http://pro
 <dl class="method">
 <dt id="colibricore.OrderedUnindexedPatternModel.train">
 <code class="descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#colibricore.OrderedUnindexedPatternModel.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id9"><span class="problematic" id="id10">*</span></a>.colibri.dat file)</p>
+<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id10"><span class="problematic" id="id11">*</span></a>.colibri.dat file)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -4846,7 +4942,7 @@ to the static, read-only, version <a class="reference external" href="http://pro
 <dl class="method">
 <dt id="colibricore.UnindexedPatternModel.train">
 <code class="descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#colibricore.UnindexedPatternModel.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id11"><span class="problematic" id="id12">*</span></a>.colibri.dat file)</p>
+<dd><p>Train the patternmodel on the specified corpus data (a <a href="#id12"><span class="problematic" id="id13">*</span></a>.colibri.dat file)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -4951,27 +5047,32 @@ to the static, read-only, version <a class="reference external" href="http://pro
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Colibri Documentation</a><ul>
+<li><a class="reference internal" href="#">Colibri Core Documentation</a><ul>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
 <li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#installation-via-lamachine">Installation via LaMachine</a></li>
+<li><a class="reference internal" href="#installing-dependencies">Installing dependencies</a></li>
+<li><a class="reference internal" href="#installation-via-the-python-package-index">Installation via the Python Package Index</a></li>
+<li><a class="reference internal" href="#installation-from-github">Installation from Github</a></li>
+<li><a class="reference internal" href="#manual-compilation-and-installation-advanced">Manual compilation and installation (advanced)</a></li>
 <li><a class="reference internal" href="#keeping-colibri-up-to-date">Keeping colibri up to date</a></li>
 <li><a class="reference internal" href="#general-usage-instructions">General usage instructions</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#quick-start-high-level-scripts">Quick start: High-level scripts</a><ul>
-<li><a class="reference internal" href="#id1">Introduction</a></li>
+<li><a class="reference internal" href="#id2">Introduction</a></li>
 <li><a class="reference internal" href="#tokenisation">Tokenisation</a></li>
 <li><a class="reference internal" href="#scripts">Scripts</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#corpus-class-encoding">Corpus Class Encoding</a><ul>
-<li><a class="reference internal" href="#id2">Introduction</a></li>
+<li><a class="reference internal" href="#id3">Introduction</a></li>
 <li><a class="reference internal" href="#class-encoding-your-corpus">Class-encoding your corpus</a></li>
 <li><a class="reference internal" href="#class-decoding-your-corpus">Class-decoding your corpus</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#pattern-modeller">Pattern Modeller</a><ul>
-<li><a class="reference internal" href="#id4">Introduction</a></li>
+<li><a class="reference internal" href="#id5">Introduction</a></li>
 <li><a class="reference internal" href="#creating-a-pattern-model">Creating a pattern model</a></li>
 <li><a class="reference internal" href="#creating-a-pattern-model-with-skipgrams-and-or-flexgrams">Creating a pattern model with skipgrams and/or flexgrams</a></li>
 <li><a class="reference internal" href="#two-stage-building">Two-stage building</a></li>

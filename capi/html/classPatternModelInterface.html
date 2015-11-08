@@ -100,12 +100,17 @@ Inheritance diagram for PatternModelInterface:</div>
  <div class="center">
   <img src="classPatternModelInterface.png" usemap="#PatternModelInterface_map" alt=""/>
   <map id="PatternModelInterface_map" name="PatternModelInterface_map">
-<area href="classPatternStoreInterface.html" title="Limited virtual interface to pattern stores. " alt="PatternStoreInterface" shape="rect" coords="188,0,555,24"/>
-<area href="classPatternStoreInterface.html" title="Limited virtual interface to pattern stores. " alt="PatternStoreInterface" shape="rect" coords="565,0,932,24"/>
-<area href="classPatternModel.html" title="A model mapping patterns to values, gigh-level interface. " alt="PatternModel&lt; ValueType, ValueHandler, MapType &gt;" shape="rect" coords="0,112,367,136"/>
-<area href="classPatternModel.html" alt="PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;" shape="rect" coords="377,112,744,136"/>
-<area href="classPatternSetModel.html" title="A pattern model based on an unordered set, does not hold data, only patterns. Very suitable for loadi..." alt="PatternSetModel" shape="rect" coords="754,112,1121,136"/>
-<area href="classIndexedPatternModel.html" title="An indexed model mapping patterns to values, high-level interface. This is a specialised subclass of ..." alt="IndexedPatternModel&lt; MapType &gt;" shape="rect" coords="377,168,744,192"/>
+<area href="classPatternStoreInterface.html" title="Limited virtual interface to pattern stores. " alt="PatternStoreInterface" shape="rect" coords="699,0,1155,24"/>
+<area href="classPatternStoreInterface.html" title="Limited virtual interface to pattern stores. " alt="PatternStoreInterface" shape="rect" coords="1165,0,1621,24"/>
+<area href="classPatternModel.html" title="A model mapping patterns to values, gigh-level interface. " alt="PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;" shape="rect" coords="0,112,456,136"/>
+<area href="classPatternModel.html" alt="PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;" shape="rect" coords="466,112,922,136"/>
+<area href="classPatternModel.html" alt="PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;" shape="rect" coords="932,112,1388,136"/>
+<area href="classPatternModel.html" alt="PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;" shape="rect" coords="1398,112,1854,136"/>
+<area href="classPatternSetModel.html" title="A pattern model based on an unordered set, does not hold data, only patterns. Very suitable for loadi..." alt="PatternSetModel" shape="rect" coords="1864,112,2320,136"/>
+<area href="classIndexedPatternModel.html" alt="IndexedPatternModel&lt; MapType, PatternPointer &gt;" shape="rect" coords="466,168,922,192"/>
+<area href="classIndexedPatternModel.html" title="An indexed model mapping patterns to values, high-level interface. This is a specialised subclass of ..." alt="IndexedPatternModel&lt; MapType, PatternType &gt;" shape="rect" coords="932,168,1388,192"/>
+<area href="classPatternPointerModel.html" alt="PatternPointerModel&lt; ValueType, ValueHandler, MapType &gt;" shape="rect" coords="1398,168,1854,192"/>
+<area href="classIndexedPatternPointerModel.html" alt="IndexedPatternPointerModel&lt; MapType &gt;" shape="rect" coords="466,224,922,248"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -188,7 +193,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Returns the number of times the frequency of the pattern in the model, a relative/normalised value </p>
 
-<p>Implemented in <a class="el" href="classPatternModel.html#a0927686caf05d2e1accff6e158a75188">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#a0927686caf05d2e1accff6e158a75188">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#af5bdb2a283c048233e62b2a0741b7cab">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classPatternModel.html#a4ec1d0a963488d62afea4a67869758fa">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a4ec1d0a963488d62afea4a67869758fa">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a4ec1d0a963488d62afea4a67869758fa">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a4ec1d0a963488d62afea4a67869758fa">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#af5bdb2a283c048233e62b2a0741b7cab">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -213,35 +218,9 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Returns the number of times the frequency of the pattern in the model, a relative/normalised value </p>
+<p>Returns the frequency of the pattern in the model, a relative/normalised value </p>
 
-<p>Implemented in <a class="el" href="classPatternModel.html#a0927686caf05d2e1accff6e158a75188">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#a0927686caf05d2e1accff6e158a75188">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#af5bdb2a283c048233e62b2a0741b7cab">PatternSetModel</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ad485931462c2f1c1bcd0aac13ec3028b"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual int PatternModelInterface::getmodeltype </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Get the type of the model </p><dl class="section return"><dt>Returns</dt><dd>ModelType </dd></dl>
-
-<p>Implemented in <a class="el" href="classIndexedPatternModel.html#adeb6b2bce5dc4fcdd9f8ec9f723d0f5b">IndexedPatternModel&lt; MapType &gt;</a>, <a class="el" href="classPatternModel.html#aadea1e70400eb2aeced1ca1648cf9cd9">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#aadea1e70400eb2aeced1ca1648cf9cd9">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#a27adf3033f15f03e908d53d032779d09">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classPatternModel.html#a4ec1d0a963488d62afea4a67869758fa">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a4ec1d0a963488d62afea4a67869758fa">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a4ec1d0a963488d62afea4a67869758fa">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a4ec1d0a963488d62afea4a67869758fa">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#af5bdb2a283c048233e62b2a0741b7cab">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -267,7 +246,33 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Get the type of the model </p><dl class="section return"><dt>Returns</dt><dd>ModelType </dd></dl>
 
-<p>Implemented in <a class="el" href="classIndexedPatternModel.html#adeb6b2bce5dc4fcdd9f8ec9f723d0f5b">IndexedPatternModel&lt; MapType &gt;</a>, <a class="el" href="classPatternModel.html#aadea1e70400eb2aeced1ca1648cf9cd9">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#aadea1e70400eb2aeced1ca1648cf9cd9">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#a27adf3033f15f03e908d53d032779d09">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classIndexedPatternPointerModel.html#a2cf62012c68c8557403226ff478500e9">IndexedPatternPointerModel&lt; MapType &gt;</a>, <a class="el" href="classPatternPointerModel.html#a6588706e670ebd3b14e2ab71c19011b7">PatternPointerModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classIndexedPatternModel.html#a63f42808d22dd3a813242332ad42ee6c">IndexedPatternModel&lt; MapType, PatternType &gt;</a>, <a class="el" href="classIndexedPatternModel.html#a63f42808d22dd3a813242332ad42ee6c">IndexedPatternModel&lt; MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#ac4a38270c6a2dbcfccf0b8baebee11eb">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#ac4a38270c6a2dbcfccf0b8baebee11eb">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#ac4a38270c6a2dbcfccf0b8baebee11eb">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#ac4a38270c6a2dbcfccf0b8baebee11eb">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#a27adf3033f15f03e908d53d032779d09">PatternSetModel</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad485931462c2f1c1bcd0aac13ec3028b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int PatternModelInterface::getmodeltype </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get the type of the model </p><dl class="section return"><dt>Returns</dt><dd>ModelType </dd></dl>
+
+<p>Implemented in <a class="el" href="classIndexedPatternPointerModel.html#a2cf62012c68c8557403226ff478500e9">IndexedPatternPointerModel&lt; MapType &gt;</a>, <a class="el" href="classPatternPointerModel.html#a6588706e670ebd3b14e2ab71c19011b7">PatternPointerModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classIndexedPatternModel.html#a63f42808d22dd3a813242332ad42ee6c">IndexedPatternModel&lt; MapType, PatternType &gt;</a>, <a class="el" href="classIndexedPatternModel.html#a63f42808d22dd3a813242332ad42ee6c">IndexedPatternModel&lt; MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#ac4a38270c6a2dbcfccf0b8baebee11eb">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#ac4a38270c6a2dbcfccf0b8baebee11eb">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#ac4a38270c6a2dbcfccf0b8baebee11eb">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#ac4a38270c6a2dbcfccf0b8baebee11eb">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#a27adf3033f15f03e908d53d032779d09">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -293,7 +298,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Get the version number of the model </p>
 
-<p>Implemented in <a class="el" href="classIndexedPatternModel.html#adabaad88e64edd1c4762a56c86d1bae4">IndexedPatternModel&lt; MapType &gt;</a>, <a class="el" href="classPatternModel.html#ac2f98f98d449951caa82894be78e9fe6">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#ac2f98f98d449951caa82894be78e9fe6">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#a79dc7fd04e3de5eb894541bd664f5d12">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classIndexedPatternPointerModel.html#a34a68ddd193a441242b8d24fca7392b8">IndexedPatternPointerModel&lt; MapType &gt;</a>, <a class="el" href="classPatternPointerModel.html#a84979d2ff5033607dba04bb2210108d2">PatternPointerModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classIndexedPatternModel.html#a50e185e2f7e48751f8633d4b981089bc">IndexedPatternModel&lt; MapType, PatternType &gt;</a>, <a class="el" href="classIndexedPatternModel.html#a50e185e2f7e48751f8633d4b981089bc">IndexedPatternModel&lt; MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a760a01e32f97b63400d13e69384dad86">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a760a01e32f97b63400d13e69384dad86">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a760a01e32f97b63400d13e69384dad86">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a760a01e32f97b63400d13e69384dad86">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#a79dc7fd04e3de5eb894541bd664f5d12">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -319,7 +324,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Get the version number of the model </p>
 
-<p>Implemented in <a class="el" href="classIndexedPatternModel.html#adabaad88e64edd1c4762a56c86d1bae4">IndexedPatternModel&lt; MapType &gt;</a>, <a class="el" href="classPatternModel.html#ac2f98f98d449951caa82894be78e9fe6">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#ac2f98f98d449951caa82894be78e9fe6">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#a79dc7fd04e3de5eb894541bd664f5d12">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classIndexedPatternPointerModel.html#a34a68ddd193a441242b8d24fca7392b8">IndexedPatternPointerModel&lt; MapType &gt;</a>, <a class="el" href="classPatternPointerModel.html#a84979d2ff5033607dba04bb2210108d2">PatternPointerModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classIndexedPatternModel.html#a50e185e2f7e48751f8633d4b981089bc">IndexedPatternModel&lt; MapType, PatternType &gt;</a>, <a class="el" href="classIndexedPatternModel.html#a50e185e2f7e48751f8633d4b981089bc">IndexedPatternModel&lt; MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a760a01e32f97b63400d13e69384dad86">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a760a01e32f97b63400d13e69384dad86">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a760a01e32f97b63400d13e69384dad86">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a760a01e32f97b63400d13e69384dad86">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#a79dc7fd04e3de5eb894541bd664f5d12">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -391,7 +396,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Return the maximum pattern length in this model </p>
 
-<p>Implemented in <a class="el" href="classPatternModel.html#ac0d63c6c6ada696e3a247e25df8487ec">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#ac0d63c6c6ada696e3a247e25df8487ec">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#abd386cc901e2328079a349eae42d9ee8">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classPatternModel.html#a545fbfefef4eadb268217ec781c494bb">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a545fbfefef4eadb268217ec781c494bb">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a545fbfefef4eadb268217ec781c494bb">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a545fbfefef4eadb268217ec781c494bb">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#abd386cc901e2328079a349eae42d9ee8">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -417,7 +422,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Return the maximum pattern length in this model </p>
 
-<p>Implemented in <a class="el" href="classPatternModel.html#ac0d63c6c6ada696e3a247e25df8487ec">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#ac0d63c6c6ada696e3a247e25df8487ec">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#abd386cc901e2328079a349eae42d9ee8">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classPatternModel.html#a545fbfefef4eadb268217ec781c494bb">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a545fbfefef4eadb268217ec781c494bb">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a545fbfefef4eadb268217ec781c494bb">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a545fbfefef4eadb268217ec781c494bb">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#abd386cc901e2328079a349eae42d9ee8">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -443,7 +448,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Returns the minumum pattern length in this model </p>
 
-<p>Implemented in <a class="el" href="classPatternModel.html#a4777ec9b1e76ef3c2ccbc981dad15129">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#a4777ec9b1e76ef3c2ccbc981dad15129">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#a3cc6ca22d4dd68270068d5a4e05f530a">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classPatternModel.html#a7a0208745487928ecb418baeb78e810f">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a7a0208745487928ecb418baeb78e810f">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a7a0208745487928ecb418baeb78e810f">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a7a0208745487928ecb418baeb78e810f">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#a3cc6ca22d4dd68270068d5a4e05f530a">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -469,7 +474,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Returns the minumum pattern length in this model </p>
 
-<p>Implemented in <a class="el" href="classPatternModel.html#a4777ec9b1e76ef3c2ccbc981dad15129">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#a4777ec9b1e76ef3c2ccbc981dad15129">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#a3cc6ca22d4dd68270068d5a4e05f530a">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classPatternModel.html#a7a0208745487928ecb418baeb78e810f">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a7a0208745487928ecb418baeb78e810f">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a7a0208745487928ecb418baeb78e810f">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a7a0208745487928ecb418baeb78e810f">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#a3cc6ca22d4dd68270068d5a4e05f530a">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -496,7 +501,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Returns the number of times this pattern occurs in the model </p>
 
-<p>Implemented in <a class="el" href="classPatternModel.html#a8f5bc659abbbdd456937e85642a97d40">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#a8f5bc659abbbdd456937e85642a97d40">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#ab1ca42eb82df349263b10c57f968678e">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classPatternModel.html#a013725360804aac3514eb8bb436102db">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a013725360804aac3514eb8bb436102db">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a013725360804aac3514eb8bb436102db">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a013725360804aac3514eb8bb436102db">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#ab1ca42eb82df349263b10c57f968678e">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -523,7 +528,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Returns the number of times this pattern occurs in the model </p>
 
-<p>Implemented in <a class="el" href="classPatternModel.html#a8f5bc659abbbdd456937e85642a97d40">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#a8f5bc659abbbdd456937e85642a97d40">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#ab1ca42eb82df349263b10c57f968678e">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classPatternModel.html#a013725360804aac3514eb8bb436102db">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a013725360804aac3514eb8bb436102db">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a013725360804aac3514eb8bb436102db">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a013725360804aac3514eb8bb436102db">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#ab1ca42eb82df349263b10c57f968678e">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -549,7 +554,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Returns the number of tokens in the original corpus, includes tokens not covered by the model! </p>
 
-<p>Implemented in <a class="el" href="classPatternModel.html#afac99feddfa4cf1dc44090c5148e518a">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#afac99feddfa4cf1dc44090c5148e518a">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#aa834dd6a5467ea8a68680512d6251e16">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classPatternModel.html#a9e4a67d7c0136f9c9a8da56df5ffc18c">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a9e4a67d7c0136f9c9a8da56df5ffc18c">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a9e4a67d7c0136f9c9a8da56df5ffc18c">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a9e4a67d7c0136f9c9a8da56df5ffc18c">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#aa834dd6a5467ea8a68680512d6251e16">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -575,7 +580,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Returns the number of tokens in the original corpus, includes tokens not covered by the model! </p>
 
-<p>Implemented in <a class="el" href="classPatternModel.html#afac99feddfa4cf1dc44090c5148e518a">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#afac99feddfa4cf1dc44090c5148e518a">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#aa834dd6a5467ea8a68680512d6251e16">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classPatternModel.html#a9e4a67d7c0136f9c9a8da56df5ffc18c">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a9e4a67d7c0136f9c9a8da56df5ffc18c">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a9e4a67d7c0136f9c9a8da56df5ffc18c">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a9e4a67d7c0136f9c9a8da56df5ffc18c">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#aa834dd6a5467ea8a68680512d6251e16">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -601,7 +606,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Return the number of distinct words/unigram in the original corpus, includes types not covered by the model! </p>
 
-<p>Implemented in <a class="el" href="classPatternModel.html#af5df3d30417804589c552320add3285a">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#af5df3d30417804589c552320add3285a">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#a178d3c988a43130b4ba3d4fa57001055">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classPatternModel.html#a6e5ac4583443112eb1a78157aed967b5">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a6e5ac4583443112eb1a78157aed967b5">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a6e5ac4583443112eb1a78157aed967b5">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a6e5ac4583443112eb1a78157aed967b5">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#a178d3c988a43130b4ba3d4fa57001055">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -627,7 +632,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Return the number of distinct words/unigram in the original corpus, includes types not covered by the model! </p>
 
-<p>Implemented in <a class="el" href="classPatternModel.html#af5df3d30417804589c552320add3285a">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>, <a class="el" href="classPatternModel.html#af5df3d30417804589c552320add3285a">PatternModel&lt; IndexedData, IndexedDataHandler, MapType &gt;</a>, and <a class="el" href="classPatternSetModel.html#a178d3c988a43130b4ba3d4fa57001055">PatternSetModel</a>.</p>
+<p>Implemented in <a class="el" href="classPatternModel.html#a6e5ac4583443112eb1a78157aed967b5">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a6e5ac4583443112eb1a78157aed967b5">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternPointer &gt;</a>, <a class="el" href="classPatternModel.html#a6e5ac4583443112eb1a78157aed967b5">PatternModel&lt; IndexedData, IndexedDataHandler, MapType, PatternType &gt;</a>, <a class="el" href="classPatternModel.html#a6e5ac4583443112eb1a78157aed967b5">PatternModel&lt; ValueType, ValueHandler, MapType, PatternPointer &gt;</a>, and <a class="el" href="classPatternSetModel.html#a178d3c988a43130b4ba3d4fa57001055">PatternSetModel</a>.</p>
 
 </div>
 </div>
@@ -638,7 +643,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2015 13:45:51 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 4 2015 12:10:22 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

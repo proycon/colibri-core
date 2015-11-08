@@ -19,9 +19,15 @@ class \hyperlink{classClassEncoder}{Class\+Encoder}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-unsigned char $\ast$ \hyperlink{classencoder_8h_a721ad23402594e00edef5eccb07c917c}{inttobytes} (unsigned int, int \&length)
+unsigned int \hyperlink{classencoder_8h_a45dca55cba49c6ff46bca82217617e82}{inttobytes} (unsigned char $\ast$buffer, unsigned int cls)
+\item 
+unsigned char $\ast$ \hyperlink{classencoder_8h_a39f1e944599f255096666059dea07bb0}{inttobytes\+\_\+v1} (unsigned int, int \&length)
 \item 
 int \hyperlink{classencoder_8h_ad84aa03fdcbb1681ea715967a289e034}{readline} (std\+::istream $\ast$I\+N, unsigned char $\ast$buffer, const int)
+\item 
+unsigned char $\ast$ \hyperlink{classencoder_8h_a2993dcb8cba48cf388b7bd18b6a1b7c9}{convert\+\_\+v1\+\_\+v2} (const unsigned char $\ast$olddata, unsigned int \&newlength)
+\item 
+unsigned char $\ast$ \hyperlink{classencoder_8h_ac37268f5b2194e47aade5b9754241a61}{convert\+\_\+v1\+\_\+v2} (std\+::istream $\ast$in, bool ignoreeol, bool debug)
 \item 
 const int \hyperlink{classencoder_8h_a1c8dd71d61ed906899f173ce9942229d}{countwords} (const unsigned char $\ast$data, const int l)
 \end{DoxyCompactItemize}
@@ -38,6 +44,23 @@ Licensed under G\+P\+Lv3\hypertarget{SpookyV2_8h_DESCRIPTION}{}\subsection{D\+E\
 Class for encoding plain-\/text to binary class-\/encoded data 
 
 \subsection{Function Documentation}
+\hypertarget{classencoder_8h_a2993dcb8cba48cf388b7bd18b6a1b7c9}{}\index{classencoder.\+h@{classencoder.\+h}!convert\+\_\+v1\+\_\+v2@{convert\+\_\+v1\+\_\+v2}}
+\index{convert\+\_\+v1\+\_\+v2@{convert\+\_\+v1\+\_\+v2}!classencoder.\+h@{classencoder.\+h}}
+\subsubsection[{convert\+\_\+v1\+\_\+v2(const unsigned char $\ast$olddata, unsigned int \&newlength)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ convert\+\_\+v1\+\_\+v2 (
+\begin{DoxyParamCaption}
+\item[{const unsigned char $\ast$}]{olddata, }
+\item[{unsigned int \&}]{newlength}
+\end{DoxyParamCaption}
+)}\label{classencoder_8h_a2993dcb8cba48cf388b7bd18b6a1b7c9}
+\hypertarget{classencoder_8h_ac37268f5b2194e47aade5b9754241a61}{}\index{classencoder.\+h@{classencoder.\+h}!convert\+\_\+v1\+\_\+v2@{convert\+\_\+v1\+\_\+v2}}
+\index{convert\+\_\+v1\+\_\+v2@{convert\+\_\+v1\+\_\+v2}!classencoder.\+h@{classencoder.\+h}}
+\subsubsection[{convert\+\_\+v1\+\_\+v2(std\+::istream $\ast$in, bool ignoreeol, bool debug)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ convert\+\_\+v1\+\_\+v2 (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{bool}]{ignoreeol, }
+\item[{bool}]{debug}
+\end{DoxyParamCaption}
+)}\label{classencoder_8h_ac37268f5b2194e47aade5b9754241a61}
 \hypertarget{classencoder_8h_a1c8dd71d61ed906899f173ce9942229d}{}\index{classencoder.\+h@{classencoder.\+h}!countwords@{countwords}}
 \index{countwords@{countwords}!classencoder.\+h@{classencoder.\+h}}
 \subsubsection[{countwords(const unsigned char $\ast$data, const int l)}]{\setlength{\rightskip}{0pt plus 5cm}const int countwords (
@@ -46,14 +69,22 @@ Class for encoding plain-\/text to binary class-\/encoded data
 \item[{const int}]{l}
 \end{DoxyParamCaption}
 )}\label{classencoder_8h_a1c8dd71d61ed906899f173ce9942229d}
-\hypertarget{classencoder_8h_a721ad23402594e00edef5eccb07c917c}{}\index{classencoder.\+h@{classencoder.\+h}!inttobytes@{inttobytes}}
+\hypertarget{classencoder_8h_a45dca55cba49c6ff46bca82217617e82}{}\index{classencoder.\+h@{classencoder.\+h}!inttobytes@{inttobytes}}
 \index{inttobytes@{inttobytes}!classencoder.\+h@{classencoder.\+h}}
-\subsubsection[{inttobytes(unsigned int, int \&length)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ inttobytes (
+\subsubsection[{inttobytes(unsigned char $\ast$buffer, unsigned int cls)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int inttobytes (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{buffer, }
+\item[{unsigned int}]{cls}
+\end{DoxyParamCaption}
+)}\label{classencoder_8h_a45dca55cba49c6ff46bca82217617e82}
+\hypertarget{classencoder_8h_a39f1e944599f255096666059dea07bb0}{}\index{classencoder.\+h@{classencoder.\+h}!inttobytes\+\_\+v1@{inttobytes\+\_\+v1}}
+\index{inttobytes\+\_\+v1@{inttobytes\+\_\+v1}!classencoder.\+h@{classencoder.\+h}}
+\subsubsection[{inttobytes\+\_\+v1(unsigned int, int \&length)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ inttobytes\+\_\+v1 (
 \begin{DoxyParamCaption}
 \item[{unsigned}]{int, }
 \item[{int \&}]{length}
 \end{DoxyParamCaption}
-)}\label{classencoder_8h_a721ad23402594e00edef5eccb07c917c}
+)}\label{classencoder_8h_a39f1e944599f255096666059dea07bb0}
 \hypertarget{classencoder_8h_ad84aa03fdcbb1681ea715967a289e034}{}\index{classencoder.\+h@{classencoder.\+h}!readline@{readline}}
 \index{readline@{readline}!classencoder.\+h@{classencoder.\+h}}
 \subsubsection[{readline(std\+::istream $\ast$\+I\+N, unsigned char $\ast$buffer, const int)}]{\setlength{\rightskip}{0pt plus 5cm}int readline (

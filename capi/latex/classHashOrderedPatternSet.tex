@@ -37,6 +37,8 @@ bool \hyperlink{classHashOrderedPatternSet_a4d917cedc8386b463aae0ad86856c82a}{ha
 \item 
 size\+\_\+t \hyperlink{classHashOrderedPatternSet_a42fee5ee6f163edf807623ffc6ab2617}{size} () const 
 \item 
+void \hyperlink{classHashOrderedPatternSet_ac61b634d5e115949f2955dc85c3babe3}{reserve} (size\+\_\+t s)
+\item 
 \hyperlink{classHashOrderedPatternSet_a3191eb8aa122dfe2bf819d37468bd0b6}{iterator} \hyperlink{classHashOrderedPatternSet_a94bf915d870e33639c80839d7da7ce54}{begin} ()
 \item 
 \hyperlink{classHashOrderedPatternSet_a5e1bbb1c4ef5ee0937bc0d5251a8d97e}{const\+\_\+iterator} \hyperlink{classHashOrderedPatternSet_a82869ce8a41f6f5d45ffca4cd4f4133c}{begin} () const 
@@ -48,6 +50,10 @@ size\+\_\+t \hyperlink{classHashOrderedPatternSet_a42fee5ee6f163edf807623ffc6ab2
 \hyperlink{classHashOrderedPatternSet_a3191eb8aa122dfe2bf819d37468bd0b6}{iterator} \hyperlink{classHashOrderedPatternSet_aaf005777860a7af872aa104b1b7f9895}{find} (const \hyperlink{classPattern}{Pattern} \&pattern)
 \item 
 \hyperlink{classHashOrderedPatternSet_a5e1bbb1c4ef5ee0937bc0d5251a8d97e}{const\+\_\+iterator} \hyperlink{classHashOrderedPatternSet_a1c4db04fcfa32faf3f807f40bc52f602}{find} (const \hyperlink{classPattern}{Pattern} \&pattern) const 
+\item 
+\hyperlink{classHashOrderedPatternSet_a3191eb8aa122dfe2bf819d37468bd0b6}{iterator} \hyperlink{classHashOrderedPatternSet_a90e6642ea5198c48bb23af9cee8f3b76}{find} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&pattern)
+\item 
+\hyperlink{classHashOrderedPatternSet_a5e1bbb1c4ef5ee0937bc0d5251a8d97e}{const\+\_\+iterator} \hyperlink{classHashOrderedPatternSet_af718bb8098b11ce4794815ccdf449ac6}{find} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&pattern) const 
 \item 
 bool \hyperlink{classHashOrderedPatternSet_ab48e2380fcc00d9dc0ef01d9217fb5e6}{erase} (const \hyperlink{classPattern}{Pattern} \&pattern)
 \item 
@@ -112,7 +118,7 @@ A pattern store in the form of an ordered set (i.\+e, no duplicates). Stores onl
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_a94bf915d870e33639c80839d7da7ce54}
 
 
-Implements \hyperlink{classPatternStore_a9dfc403ac576e1904f4ec326fec1adaa}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_aab3fab217b585b2b90a3fb3cc7065e11}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
 
 \hypertarget{classHashOrderedPatternSet_a82869ce8a41f6f5d45ffca4cd4f4133c}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!begin@{begin}}
 \index{begin@{begin}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
@@ -130,7 +136,7 @@ Implements \hyperlink{classPatternStore_a9dfc403ac576e1904f4ec326fec1adaa}{Patte
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_ada3bb2f1617443ad288c5c22dcd33ec0}
 
 
-Implements \hyperlink{classPatternStore_aed5adf38c88543123f705e44b4cddfee}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_ae697b6ba815e09fa300532a78e1c9077}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
 
 \hypertarget{classHashOrderedPatternSet_a0bd639de898189b047a8432292d18392}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!end@{end}}
 \index{end@{end}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
@@ -148,7 +154,7 @@ Implements \hyperlink{classPatternStore_aed5adf38c88543123f705e44b4cddfee}{Patte
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_ab48e2380fcc00d9dc0ef01d9217fb5e6}
 
 
-Implements \hyperlink{classPatternStore_ad8b6d8e1eba917d45e8667ace70f1b1e}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_a42f8de80a8627c485315e4bb8eff538f}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
 
 \hypertarget{classHashOrderedPatternSet_a6240dd699062a02b09811935517edab2}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!erase@{erase}}
 \index{erase@{erase}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
@@ -166,7 +172,7 @@ Implements \hyperlink{classPatternStore_ad8b6d8e1eba917d45e8667ace70f1b1e}{Patte
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_aaf005777860a7af872aa104b1b7f9895}
 
 
-Implements \hyperlink{classPatternStore_ac8cf692af151c3aad6aea81fa5748957}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_a6996798c63c2dd3ae3845848da35a6dd}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
 
 \hypertarget{classHashOrderedPatternSet_a1c4db04fcfa32faf3f807f40bc52f602}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!find@{find}}
 \index{find@{find}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
@@ -175,6 +181,24 @@ Implements \hyperlink{classPatternStore_ac8cf692af151c3aad6aea81fa5748957}{Patte
 \item[{const {\bf Pattern} \&}]{pattern}
 \end{DoxyParamCaption}
 ) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classHashOrderedPatternSet_a1c4db04fcfa32faf3f807f40bc52f602}
+\hypertarget{classHashOrderedPatternSet_a90e6642ea5198c48bb23af9cee8f3b76}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!find@{find}}
+\index{find@{find}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{find(const Pattern\+Pointer \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ {\bf iterator} {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_a90e6642ea5198c48bb23af9cee8f3b76}
+
+
+Implements \hyperlink{classPatternStore_a33991d30a74b13a4264200474bf0542c}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+
+\hypertarget{classHashOrderedPatternSet_af718bb8098b11ce4794815ccdf449ac6}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!find@{find}}
+\index{find@{find}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{find(const Pattern\+Pointer \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ {\bf const\+\_\+iterator} {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{pattern}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classHashOrderedPatternSet_af718bb8098b11ce4794815ccdf449ac6}
 \hypertarget{classHashOrderedPatternSet_ac21ec186302af16a3b70c5c85e434510}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!has@{has}}
 \index{has@{has}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
 \subsubsection[{has(const Pattern \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ bool {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::has (
@@ -184,7 +208,7 @@ Implements \hyperlink{classPatternStore_ac8cf692af151c3aad6aea81fa5748957}{Patte
 ) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_ac21ec186302af16a3b70c5c85e434510}
 Does the pattern occur in the pattern store? 
 
-Implements \hyperlink{classPatternStore_abdebd74a21912e436531a64fe8b09a6c}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_a2e29add9b35b3459d183f56f6c5525ed}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
 
 \hypertarget{classHashOrderedPatternSet_a4d917cedc8386b463aae0ad86856c82a}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!has@{has}}
 \index{has@{has}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
@@ -195,7 +219,7 @@ Implements \hyperlink{classPatternStore_abdebd74a21912e436531a64fe8b09a6c}{Patte
 ) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_a4d917cedc8386b463aae0ad86856c82a}
 Does the pattern occur in the pattern store? 
 
-Implements \hyperlink{classPatternStore_ad9c8afcf7b7da6acd257c52336751bd2}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_ad1e06c2468bad2a14d4ed28b26c6ff33}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
 
 \hypertarget{classHashOrderedPatternSet_a9da0aaf61e7b1425a181da16ccef6a1b}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!insert@{insert}}
 \index{insert@{insert}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
@@ -216,6 +240,17 @@ Implements \hyperlink{classPatternStore_ad9c8afcf7b7da6acd257c52336751bd2}{Patte
 \item[{bool}]{D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S = {\ttfamily true}}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}\label{classHashOrderedPatternSet_ae4f18bc4f126da615a0ec194fe8f24b0}
+\hypertarget{classHashOrderedPatternSet_ac61b634d5e115949f2955dc85c3babe3}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!reserve@{reserve}}
+\index{reserve@{reserve}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
+\subsubsection[{reserve(size\+\_\+t s)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ void {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::reserve (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{s}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_ac61b634d5e115949f2955dc85c3babe3}
+
+
+Implements \hyperlink{classPatternStore_afc995f7b88b6a31b700bb3bdb948b180}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+
 \hypertarget{classHashOrderedPatternSet_a42fee5ee6f163edf807623ffc6ab2617}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!size@{size}}
 \index{size@{size}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
 \subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type  = uint64\+\_\+t$>$ size\+\_\+t {\bf Hash\+Ordered\+Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::size (
@@ -225,7 +260,7 @@ Implements \hyperlink{classPatternStore_ad9c8afcf7b7da6acd257c52336751bd2}{Patte
 ) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_a42fee5ee6f163edf807623ffc6ab2617}
 How many patterns are in the pattern store? 
 
-Implements \hyperlink{classPatternStore_a586751d731a509da5865d5863d56a8e4}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_abfa82df94ab565bea13fc45ee4866faf}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
 
 \hypertarget{classHashOrderedPatternSet_a5410dc1022729fe531e7ef7dcd0e845c}{}\index{Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}!write@{write}}
 \index{write@{write}!Hash\+Ordered\+Pattern\+Set@{Hash\+Ordered\+Pattern\+Set}}
@@ -236,7 +271,7 @@ Implements \hyperlink{classPatternStore_a586751d731a509da5865d5863d56a8e4}{Patte
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classHashOrderedPatternSet_a5410dc1022729fe531e7ef7dcd0e845c}
 
 
-Implements \hyperlink{classPatternStore_ac491b99964c6b4c99f5c40519d0c8ccc}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_a70d9b8faa5858ab7182cea7b1488a75c}{Pattern\+Store$<$ t\+\_\+hashorderedpatternset, Read\+Write\+Size\+Type $>$}.
 
 
 

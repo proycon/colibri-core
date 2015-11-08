@@ -7,17 +7,31 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classPatternPointer_ae636664cd90e3529db1006c8fa85fe36}{Pattern\+Pointer} (unsigned char $\ast$dataref, const int \hyperlink{classPatternPointer_a8a204b408ed1cccc3b0c89183e818210}{bytesize})
+\hyperlink{classPatternPointer_a381ac2ccc5d5f93a4455a1b2872d3d6e}{Pattern\+Pointer} ()
+\item 
+\hyperlink{classPatternPointer_aa647a834df48ed926690ddc19490d531}{Pattern\+Pointer} (unsigned char $\ast$dataref, const unsigned int \hyperlink{classPatternPointer_a8a204b408ed1cccc3b0c89183e818210}{bytesize})
+\item 
+\hyperlink{classPatternPointer_a8c1e78640412744a1f9411b937a4a6a5}{Pattern\+Pointer} (const \hyperlink{classPattern}{Pattern} \&ref)
 \item 
 \hyperlink{classPatternPointer_a5eb9e3fcab5a8551cdce0283fe944ea8}{Pattern\+Pointer} (const \hyperlink{classPattern}{Pattern} $\ast$ref)
 \item 
 \hyperlink{classPatternPointer_a39eb71907e688b7b459b56806d8053e4}{Pattern\+Pointer} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&ref)
 \item 
-\hyperlink{classPatternPointer}{Pattern\+Pointer} \& \hyperlink{classPatternPointer_aa9db1bf0980f3ce147638c24e045ead8}{operator=} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} other)
+\hyperlink{classPatternPointer_a9aba9dd0c20350ae03814d962cd1dad3}{Pattern\+Pointer} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} $\ast$ref)
 \item 
-\hyperlink{classPatternPointer_aa13d9661c3e49d0846ea1e10d2917ab8}{Pattern\+Pointer} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&, int, int)
+\hyperlink{classPatternPointer}{Pattern\+Pointer} \& \hyperlink{classPatternPointer_a578fae25bee65ed0211a06f4101795f4}{operator=} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&other)
 \item 
-\hyperlink{classPatternPointer_a0eba7796fceeba5d3a19308dfc0a783b}{Pattern\+Pointer} (const \hyperlink{classPattern}{Pattern} \&, int, int)
+\hyperlink{classPatternPointer_aa8eb02907db90afc9decd7b44e54b6c5}{Pattern\+Pointer} (std\+::istream $\ast$in, bool ignoreeol=false, const unsigned char version=2, unsigned char $\ast$corpusstart=N\+U\+L\+L, bool debug=false)
+\item 
+void \hyperlink{classPatternPointer_ace0bd6e4b893a9ecd205e08a88490b6d}{write} (std\+::ostream $\ast$\hyperlink{classPatternPointer_a281b6877995271a87cf561c450c4421b}{out}, const unsigned char $\ast$corpusstart=N\+U\+L\+L) const 
+\item 
+\hyperlink{classPatternPointer_aaff11689a322a10b794b6b24a7729370}{Pattern\+Pointer} (unsigned char $\ast$, unsigned int, unsigned int)
+\item 
+\hyperlink{classPatternPointer_a52b3b7683e06bc50ed070e691599c8e6}{Pattern\+Pointer} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&, unsigned int, unsigned int)
+\item 
+\hyperlink{classPatternPointer_a3a087008261f7c88a5603c77a8feb995}{Pattern\+Pointer} (const \hyperlink{classPattern}{Pattern} \&, unsigned int, unsigned int)
+\item 
+uint32\+\_\+t \hyperlink{classPatternPointer_ac1245e58c40f3ee9c1202ce922493b86}{computemask} () const 
 \item 
 const size\+\_\+t \hyperlink{classPatternPointer_a557d9f27ecad057a8942770313c22e42}{n} () const 
 \item 
@@ -25,7 +39,13 @@ const size\+\_\+t \hyperlink{classPatternPointer_a8a204b408ed1cccc3b0c89183e8182
 \item 
 const size\+\_\+t \hyperlink{classPatternPointer_a2c8bab975c7234c935f7992701b897b9}{size} () const 
 \item 
+const size\+\_\+t \hyperlink{classPatternPointer_a3cb1a416e1824414406ec3d4b804b0c3}{hash} () const 
+\item 
 const \hyperlink{pattern_8h_a17879f85ec892834fb691c61e71dfe54}{Pattern\+Category} \hyperlink{classPatternPointer_aab5856a3a8e1ae58c7446b631142503e}{category} () const 
+\item 
+const bool \hyperlink{classPatternPointer_a4efd42523605481c0dc56d59e370cec3}{isskipgram} () const 
+\item 
+const bool \hyperlink{classPatternPointer_a345e4adac1ad1698e5964229feb1368c}{isflexgram} () const 
 \item 
 std\+::string \hyperlink{classPatternPointer_ab17b7641c0651d2879bfe320826492e7}{tostring} (const \hyperlink{classClassDecoder}{Class\+Decoder} \&classdecoder) const 
 \item 
@@ -37,6 +57,18 @@ bool \hyperlink{classPatternPointer_a70e5e8f505fe4b136f37ab6e19ffc1c7}{operator=
 \item 
 bool \hyperlink{classPatternPointer_acdb6d4e30680813986d6e6d2cc4c49c3}{operator!=} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&other) const 
 \item 
+bool \hyperlink{classPatternPointer_a811a89fbc68a8dfba2202cc10e2b18c7}{operator==} (const \hyperlink{classPattern}{Pattern} \&other) const 
+\item 
+bool \hyperlink{classPatternPointer_aa741dfe682c3ef299f1dbebac5ba5686}{operator!=} (const \hyperlink{classPattern}{Pattern} \&other) const 
+\item 
+\hyperlink{classPatternPointer}{Pattern\+Pointer} \hyperlink{classPatternPointer_a6debba7dd934678060a88db6daa8845a}{toflexgram} () const 
+\item 
+bool \hyperlink{classPatternPointer_a937e665a5d2a649ed7281ad878016e5a}{isgap} (int i) const 
+\item 
+\hyperlink{classPatternPointer}{Pattern\+Pointer} \& \hyperlink{classPatternPointer_a7811fb9f118192d3518a45f3ecc55bef}{operator++} ()
+\item 
+bool \hyperlink{classPatternPointer_ab526b8218a98671dd25cb49121d951eb}{operator$<$} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&other) const 
+\item 
 int \hyperlink{classPatternPointer_aafda149990a0f254f2c24d121796df55}{ngrams} (std\+::vector$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer} $>$ \&container, const int \hyperlink{classPatternPointer_a557d9f27ecad057a8942770313c22e42}{n}) const 
 \item 
 int \hyperlink{classPatternPointer_a86f864d3b5d9504f8aa29836a4c57049}{subngrams} (std\+::vector$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer} $>$ \&container, int minn=1, int maxn=9) const 
@@ -44,25 +76,66 @@ int \hyperlink{classPatternPointer_a86f864d3b5d9504f8aa29836a4c57049}{subngrams}
 int \hyperlink{classPatternPointer_a68524816c4b4504aa950a6000d5fbd15}{ngrams} (std\+::vector$<$ std\+::pair$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer}, int $>$$>$ \&container, const int \hyperlink{classPatternPointer_a557d9f27ecad057a8942770313c22e42}{n}) const 
 \item 
 int \hyperlink{classPatternPointer_a9313e5d4ec8575aab14f04922011ed71}{subngrams} (std\+::vector$<$ std\+::pair$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer}, int $>$$>$ \&container, int minn=1, int maxn=9) const 
+\item 
+int \hyperlink{classPatternPointer_a00cdaf2a3844e6ea12bc2c51bd37e77d}{parts} (std\+::vector$<$ \hyperlink{classPatternPointer}{Pattern\+Pointer} $>$ \&container) const 
+\item 
+int \hyperlink{classPatternPointer_ae9da2891140e37c57d13c5dae26c3c2f}{parts} (std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&container) const 
+\item 
+int \hyperlink{classPatternPointer_a898c7d000bae5fe5d968de3f1b863551}{gaps} (std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&container) const 
+\item 
+const unsigned int \hyperlink{classPatternPointer_aef0eeb74abf554cb37c8917e593aa791}{skipcount} () const 
+\item 
+\hyperlink{classPatternPointer}{Pattern\+Pointer} \hyperlink{classPatternPointer_a981fcefe815d9defe35ccba1b9592f4a}{addskip} (const std\+::pair$<$ int, int $>$ \&gap) const 
+\item 
+\hyperlink{classPatternPointer}{Pattern\+Pointer} \hyperlink{classPatternPointer_a1caeebb778f40989f73f54a2badc3be2}{addskips} (const std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&\hyperlink{classPatternPointer_a898c7d000bae5fe5d968de3f1b863551}{gaps}) const 
+\item 
+int \hyperlink{classPatternPointer_aafa8231c856c63a28c1792027107c5f0}{flexcollapse} (unsigned char $\ast$collapseddata) const 
+\item 
+bool \hyperlink{classPatternPointer_ac7f372d6738afa40d5b3f11a59bfa301}{instanceof} (const \hyperlink{classPattern}{Pattern} \&skipgram) const 
+\item 
+\hyperlink{classPatternPointer_a7b785c4e04542d1d0c026272fa2fc387}{operator Pattern} ()
+\item 
+\hyperlink{classPattern}{Pattern} \hyperlink{classPatternPointer_a5f7e3d7cd6431e699e166814967d1741}{pattern} () const 
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 unsigned char $\ast$ \hyperlink{classPatternPointer_ad754ecbbeeb29fbebb075f520884e11d}{data}
 \item 
-unsigned char \hyperlink{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{bytes}
+uint32\+\_\+t \hyperlink{classPatternPointer_a60d057d9e790b1c1686c440b91a425a7}{bytes}
+\item 
+uint32\+\_\+t \hyperlink{classPatternPointer_a7f75c1464a5782d28b8dc338ab3788f1}{mask}
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const int \hyperlink{classPatternPointer_a51173670c6a2294d3c0eb4fe38d48a59}{patterntype} = \hyperlink{pattern_8h_a351dc5aa88481a949638aeb6cc5e6754a5f20d34b0b2fd5023f48ddd94e4fb617}{P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R}
 \end{DoxyCompactItemize}
 
 
 \subsection{Constructor \& Destructor Documentation}
-\hypertarget{classPatternPointer_ae636664cd90e3529db1006c8fa85fe36}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\hypertarget{classPatternPointer_a381ac2ccc5d5f93a4455a1b2872d3d6e}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
 \index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
-\subsubsection[{Pattern\+Pointer(unsigned char $\ast$dataref, const int bytesize)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\subsubsection[{Pattern\+Pointer()}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a381ac2ccc5d5f93a4455a1b2872d3d6e}
+\hypertarget{classPatternPointer_aa647a834df48ed926690ddc19490d531}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{Pattern\+Pointer(unsigned char $\ast$dataref, const unsigned int bytesize)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
 \begin{DoxyParamCaption}
 \item[{unsigned char $\ast$}]{dataref, }
-\item[{const int}]{bytesize}
+\item[{const unsigned int}]{bytesize}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_ae636664cd90e3529db1006c8fa85fe36}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_aa647a834df48ed926690ddc19490d531}
+\hypertarget{classPatternPointer_a8c1e78640412744a1f9411b937a4a6a5}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{Pattern\+Pointer(const Pattern \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a8c1e78640412744a1f9411b937a4a6a5}
 \hypertarget{classPatternPointer_a5eb9e3fcab5a8551cdce0283fe944ea8}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
 \index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
 \subsubsection[{Pattern\+Pointer(const Pattern $\ast$ref)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
@@ -77,27 +150,81 @@ unsigned char \hyperlink{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{
 \item[{const {\bf Pattern\+Pointer} \&}]{ref}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a39eb71907e688b7b459b56806d8053e4}
-\hypertarget{classPatternPointer_aa13d9661c3e49d0846ea1e10d2917ab8}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\hypertarget{classPatternPointer_a9aba9dd0c20350ae03814d962cd1dad3}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
 \index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
-\subsubsection[{Pattern\+Pointer(const Pattern\+Pointer \&, int, int)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\subsubsection[{Pattern\+Pointer(const Pattern\+Pointer $\ast$ref)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} $\ast$}]{ref}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a9aba9dd0c20350ae03814d962cd1dad3}
+\hypertarget{classPatternPointer_aa8eb02907db90afc9decd7b44e54b6c5}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{Pattern\+Pointer(std\+::istream $\ast$in, bool ignoreeol=false, const unsigned char version=2, unsigned char $\ast$corpusstart=\+N\+U\+L\+L, bool debug=false)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\begin{DoxyParamCaption}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{bool}]{ignoreeol = {\ttfamily false}, }
+\item[{const unsigned char}]{version = {\ttfamily 2}, }
+\item[{unsigned char $\ast$}]{corpusstart = {\ttfamily NULL}, }
+\item[{bool}]{debug = {\ttfamily false}}
+\end{DoxyParamCaption}
+)}\label{classPatternPointer_aa8eb02907db90afc9decd7b44e54b6c5}
+\hypertarget{classPatternPointer_aaff11689a322a10b794b6b24a7729370}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{Pattern\+Pointer(unsigned char $\ast$, unsigned int, unsigned int)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{ref, }
+\item[{unsigned int}]{begin, }
+\item[{unsigned int}]{length}
+\end{DoxyParamCaption}
+)}\label{classPatternPointer_aaff11689a322a10b794b6b24a7729370}
+\hypertarget{classPatternPointer_a52b3b7683e06bc50ed070e691599c8e6}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{Pattern\+Pointer(const Pattern\+Pointer \&, unsigned int, unsigned int)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
 \begin{DoxyParamCaption}
 \item[{const {\bf Pattern\+Pointer} \&}]{ref, }
-\item[{int}]{begin, }
-\item[{int}]{length}
+\item[{unsigned int}]{begin, }
+\item[{unsigned int}]{length}
 \end{DoxyParamCaption}
-)}\label{classPatternPointer_aa13d9661c3e49d0846ea1e10d2917ab8}
-\hypertarget{classPatternPointer_a0eba7796fceeba5d3a19308dfc0a783b}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
+)}\label{classPatternPointer_a52b3b7683e06bc50ed070e691599c8e6}
+\hypertarget{classPatternPointer_a3a087008261f7c88a5603c77a8feb995}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
 \index{Pattern\+Pointer@{Pattern\+Pointer}!Pattern\+Pointer@{Pattern\+Pointer}}
-\subsubsection[{Pattern\+Pointer(const Pattern \&, int, int)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
+\subsubsection[{Pattern\+Pointer(const Pattern \&, unsigned int, unsigned int)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::\+Pattern\+Pointer (
 \begin{DoxyParamCaption}
-\item[{const {\bf Pattern} \&}]{ref, }
-\item[{int}]{begin, }
-\item[{int}]{length}
+\item[{const {\bf Pattern} \&}]{, }
+\item[{unsigned}]{int, }
+\item[{unsigned}]{int}
 \end{DoxyParamCaption}
-)}\label{classPatternPointer_a0eba7796fceeba5d3a19308dfc0a783b}
+)}\label{classPatternPointer_a3a087008261f7c88a5603c77a8feb995}
 
 
 \subsection{Member Function Documentation}
+\hypertarget{classPatternPointer_a981fcefe815d9defe35ccba1b9592f4a}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!addskip@{addskip}}
+\index{addskip@{addskip}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{addskip(const std\+::pair$<$ int, int $>$ \&gap) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Pointer} Pattern\+Pointer\+::addskip (
+\begin{DoxyParamCaption}
+\item[{const std\+::pair$<$ int, int $>$ \&}]{gap}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a981fcefe815d9defe35ccba1b9592f4a}
+Replaces a series of tokens with a skip/gap of a particular size. Effectively turns a pattern into a skipgram. 
+\begin{DoxyParams}{Parameters}
+{\em gap} & The position and size of the skip/gap\+: a pair consisting of a begin index (0-\/indexed) and a length, i.\+e. the size of the skip \\
+\hline
+\end{DoxyParams}
+\hypertarget{classPatternPointer_a1caeebb778f40989f73f54a2badc3be2}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!addskips@{addskips}}
+\index{addskips@{addskips}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{addskips(const std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&gaps) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Pointer} Pattern\+Pointer\+::addskips (
+\begin{DoxyParamCaption}
+\item[{const std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{gaps}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a1caeebb778f40989f73f54a2badc3be2}
+Replaces multiple series of tokens with skips/gaps of particular sizes. Effectively turns a pattern into a skipgram. 
+\begin{DoxyParams}{Parameters}
+{\em gaps} & The positions and sizes of the gaps\+: a vector of pairs, each pair consisting of a begin index (0-\/indexed) and a length, indicating where to place the gap \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A skipgram 
+\end{DoxyReturn}
 \hypertarget{classPatternPointer_a8a204b408ed1cccc3b0c89183e818210}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!bytesize@{bytesize}}
 \index{bytesize@{bytesize}!Pattern\+Pointer@{Pattern\+Pointer}}
 \subsubsection[{bytesize() const }]{\setlength{\rightskip}{0pt plus 5cm}const size\+\_\+t Pattern\+Pointer\+::bytesize (
@@ -112,6 +239,13 @@ unsigned char \hyperlink{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{
 {}
 \end{DoxyParamCaption}
 ) const}\label{classPatternPointer_aab5856a3a8e1ae58c7446b631142503e}
+\hypertarget{classPatternPointer_ac1245e58c40f3ee9c1202ce922493b86}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!computemask@{computemask}}
+\index{computemask@{computemask}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{computemask() const }]{\setlength{\rightskip}{0pt plus 5cm}uint32\+\_\+t Pattern\+Pointer\+::computemask (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_ac1245e58c40f3ee9c1202ce922493b86}
 \hypertarget{classPatternPointer_ac35cb0151096929cd0054f77110e1afe}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!decode@{decode}}
 \index{decode@{decode}!Pattern\+Pointer@{Pattern\+Pointer}}
 \subsubsection[{decode(const Class\+Decoder \&classdecoder) const }]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Pattern\+Pointer\+::decode (
@@ -119,6 +253,55 @@ unsigned char \hyperlink{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{
 \item[{const {\bf Class\+Decoder} \&}]{classdecoder}
 \end{DoxyParamCaption}
 ) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_ac35cb0151096929cd0054f77110e1afe}
+\hypertarget{classPatternPointer_aafa8231c856c63a28c1792027107c5f0}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!flexcollapse@{flexcollapse}}
+\index{flexcollapse@{flexcollapse}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{flexcollapse(unsigned char $\ast$collapseddata) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Pointer\+::flexcollapse (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{collapseddata}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_aafa8231c856c63a28c1792027107c5f0}
+Low-\/level function for flexgrams, that returns a collapsed comparable representation of the flexgram in collapseddata (has to be pre-\/allocated). Return value is the number of bytes of the representation. In the collapsed representation adjacent flexgrams are removed. \hypertarget{classPatternPointer_a898c7d000bae5fe5d968de3f1b863551}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!gaps@{gaps}}
+\index{gaps@{gaps}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{gaps(std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&container) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Pointer\+::gaps (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{container}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a898c7d000bae5fe5d968de3f1b863551}
+Finds all the gaps of a skipgram or flexgram., parts are the portions that are not skips and adds them to container as begin,length pairs... Thus \textquotesingle{}to be \{$\ast$\} not \{$\ast$\} be\textquotesingle{} has three parts. The gap-\/length of a flexgram will always be its minimum length one. \hypertarget{classPatternPointer_a3cb1a416e1824414406ec3d4b804b0c3}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!hash@{hash}}
+\index{hash@{hash}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{hash() const }]{\setlength{\rightskip}{0pt plus 5cm}const size\+\_\+t Pattern\+Pointer\+::hash (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a3cb1a416e1824414406ec3d4b804b0c3}
+Compute a hash value for this pattern \hypertarget{classPatternPointer_ac7f372d6738afa40d5b3f11a59bfa301}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!instanceof@{instanceof}}
+\index{instanceof@{instanceof}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{instanceof(const Pattern \&skipgram) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Pointer\+::instanceof (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{skipgram}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_ac7f372d6738afa40d5b3f11a59bfa301}
+\hypertarget{classPatternPointer_a345e4adac1ad1698e5964229feb1368c}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!isflexgram@{isflexgram}}
+\index{isflexgram@{isflexgram}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{isflexgram() const }]{\setlength{\rightskip}{0pt plus 5cm}const bool Pattern\+Pointer\+::isflexgram (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a345e4adac1ad1698e5964229feb1368c}
+\hypertarget{classPatternPointer_a937e665a5d2a649ed7281ad878016e5a}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!isgap@{isgap}}
+\index{isgap@{isgap}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{isgap(int i) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Pointer\+::isgap (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a937e665a5d2a649ed7281ad878016e5a}
+\hypertarget{classPatternPointer_a4efd42523605481c0dc56d59e370cec3}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!isskipgram@{isskipgram}}
+\index{isskipgram@{isskipgram}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{isskipgram() const }]{\setlength{\rightskip}{0pt plus 5cm}const bool Pattern\+Pointer\+::isskipgram (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a4efd42523605481c0dc56d59e370cec3}
 \hypertarget{classPatternPointer_a557d9f27ecad057a8942770313c22e42}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!n@{n}}
 \index{n@{n}!Pattern\+Pointer@{Pattern\+Pointer}}
 \subsubsection[{n() const }]{\setlength{\rightskip}{0pt plus 5cm}const size\+\_\+t Pattern\+Pointer\+::n (
@@ -142,6 +325,13 @@ unsigned char \hyperlink{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{
 \item[{const int}]{n}
 \end{DoxyParamCaption}
 ) const}\label{classPatternPointer_a68524816c4b4504aa950a6000d5fbd15}
+\hypertarget{classPatternPointer_a7b785c4e04542d1d0c026272fa2fc387}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!operator Pattern@{operator Pattern}}
+\index{operator Pattern@{operator Pattern}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{operator Pattern()}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Pointer\+::operator {\bf Pattern} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a7b785c4e04542d1d0c026272fa2fc387}
 \hypertarget{classPatternPointer_acdb6d4e30680813986d6e6d2cc4c49c3}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!operator"!=@{operator"!=}}
 \index{operator"!=@{operator"!=}!Pattern\+Pointer@{Pattern\+Pointer}}
 \subsubsection[{operator"!=(const Pattern\+Pointer \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Pointer\+::operator!= (
@@ -149,20 +339,48 @@ unsigned char \hyperlink{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{
 \item[{const {\bf Pattern\+Pointer} \&}]{other}
 \end{DoxyParamCaption}
 ) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_acdb6d4e30680813986d6e6d2cc4c49c3}
-\hypertarget{classPatternPointer_aa9db1bf0980f3ce147638c24e045ead8}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!operator=@{operator=}}
-\index{operator=@{operator=}!Pattern\+Pointer@{Pattern\+Pointer}}
-\subsubsection[{operator=(const Pattern\+Pointer other)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Pointer}\& Pattern\+Pointer\+::operator= (
+\hypertarget{classPatternPointer_aa741dfe682c3ef299f1dbebac5ba5686}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{operator"!=(const Pattern \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Pointer\+::operator!= (
 \begin{DoxyParamCaption}
-\item[{const {\bf Pattern\+Pointer}}]{other}
+\item[{const {\bf Pattern} \&}]{other}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_aa9db1bf0980f3ce147638c24e045ead8}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_aa741dfe682c3ef299f1dbebac5ba5686}
+\hypertarget{classPatternPointer_a7811fb9f118192d3518a45f3ecc55bef}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!operator++@{operator++}}
+\index{operator++@{operator++}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{operator++()}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Pointer} \& Pattern\+Pointer\+::operator++ (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPatternPointer_a7811fb9f118192d3518a45f3ecc55bef}
+Return a new patternpointer one token to the right, maintaining the same token length and same skip configuration (if any). Note that this will cause segmentation faults if the new \hyperlink{classPatternPointer}{Pattern\+Pointer} exceeds the original data!!! It\textquotesingle{}s up to the caller to check this! \hypertarget{classPatternPointer_ab526b8218a98671dd25cb49121d951eb}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!operator$<$@{operator$<$}}
+\index{operator$<$@{operator$<$}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{operator$<$(const Pattern\+Pointer \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Pointer\+::operator$<$ (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{other}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_ab526b8218a98671dd25cb49121d951eb}
+\hypertarget{classPatternPointer_a578fae25bee65ed0211a06f4101795f4}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!operator=@{operator=}}
+\index{operator=@{operator=}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{operator=(const Pattern\+Pointer \&other)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Pointer}\& Pattern\+Pointer\+::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{other}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a578fae25bee65ed0211a06f4101795f4}
 \hypertarget{classPatternPointer_a70e5e8f505fe4b136f37ab6e19ffc1c7}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!operator==@{operator==}}
 \index{operator==@{operator==}!Pattern\+Pointer@{Pattern\+Pointer}}
 \subsubsection[{operator==(const Pattern\+Pointer \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Pointer\+::operator== (
 \begin{DoxyParamCaption}
 \item[{const {\bf Pattern\+Pointer} \&}]{other}
 \end{DoxyParamCaption}
-) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a70e5e8f505fe4b136f37ab6e19ffc1c7}
+) const}\label{classPatternPointer_a70e5e8f505fe4b136f37ab6e19ffc1c7}
+\hypertarget{classPatternPointer_a811a89fbc68a8dfba2202cc10e2b18c7}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!operator==@{operator==}}
+\index{operator==@{operator==}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{operator==(const Pattern \&other) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Pointer\+::operator== (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern} \&}]{other}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a811a89fbc68a8dfba2202cc10e2b18c7}
 \hypertarget{classPatternPointer_a281b6877995271a87cf561c450c4421b}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!out@{out}}
 \index{out@{out}!Pattern\+Pointer@{Pattern\+Pointer}}
 \subsubsection[{out() const }]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Pointer\+::out (
@@ -170,6 +388,27 @@ unsigned char \hyperlink{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{
 {}
 \end{DoxyParamCaption}
 ) const}\label{classPatternPointer_a281b6877995271a87cf561c450c4421b}
+\hypertarget{classPatternPointer_a00cdaf2a3844e6ea12bc2c51bd37e77d}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!parts@{parts}}
+\index{parts@{parts}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{parts(std\+::vector$<$ Pattern\+Pointer $>$ \&container) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Pointer\+::parts (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ {\bf Pattern\+Pointer} $>$ \&}]{container}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a00cdaf2a3844e6ea12bc2c51bd37e77d}
+Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container... Thus \textquotesingle{}to be \{$\ast$\} not \{$\ast$\} be\textquotesingle{} has three parts \hypertarget{classPatternPointer_ae9da2891140e37c57d13c5dae26c3c2f}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!parts@{parts}}
+\index{parts@{parts}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{parts(std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&container) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Pointer\+::parts (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ \&}]{container}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_ae9da2891140e37c57d13c5dae26c3c2f}
+Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container as begin,length pairs... Thus \textquotesingle{}to be \{$\ast$\} not \{$\ast$\} be\textquotesingle{} has three parts \hypertarget{classPatternPointer_a5f7e3d7cd6431e699e166814967d1741}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!pattern@{pattern}}
+\index{pattern@{pattern}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{pattern() const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Pattern\+Pointer\+::pattern (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a5f7e3d7cd6431e699e166814967d1741}
 \hypertarget{classPatternPointer_a2c8bab975c7234c935f7992701b897b9}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!size@{size}}
 \index{size@{size}!Pattern\+Pointer@{Pattern\+Pointer}}
 \subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}const size\+\_\+t Pattern\+Pointer\+::size (
@@ -177,7 +416,14 @@ unsigned char \hyperlink{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{
 {}
 \end{DoxyParamCaption}
 ) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternPointer_a2c8bab975c7234c935f7992701b897b9}
-\hypertarget{classPatternPointer_a86f864d3b5d9504f8aa29836a4c57049}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!subngrams@{subngrams}}
+\hypertarget{classPatternPointer_aef0eeb74abf554cb37c8917e593aa791}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!skipcount@{skipcount}}
+\index{skipcount@{skipcount}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{skipcount() const }]{\setlength{\rightskip}{0pt plus 5cm}const unsigned int Pattern\+Pointer\+::skipcount (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_aef0eeb74abf554cb37c8917e593aa791}
+return the number of skips in this pattern \hypertarget{classPatternPointer_a86f864d3b5d9504f8aa29836a4c57049}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!subngrams@{subngrams}}
 \index{subngrams@{subngrams}!Pattern\+Pointer@{Pattern\+Pointer}}
 \subsubsection[{subngrams(std\+::vector$<$ Pattern\+Pointer $>$ \&container, int minn=1, int maxn=9) const }]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Pointer\+::subngrams (
 \begin{DoxyParamCaption}
@@ -195,6 +441,13 @@ unsigned char \hyperlink{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{
 \item[{int}]{maxn = {\ttfamily 9}}
 \end{DoxyParamCaption}
 ) const}\label{classPatternPointer_a9313e5d4ec8575aab14f04922011ed71}
+\hypertarget{classPatternPointer_a6debba7dd934678060a88db6daa8845a}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!toflexgram@{toflexgram}}
+\index{toflexgram@{toflexgram}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{toflexgram() const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Pointer} Pattern\+Pointer\+::toflexgram (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_a6debba7dd934678060a88db6daa8845a}
 \hypertarget{classPatternPointer_ab17b7641c0651d2879bfe320826492e7}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!tostring@{tostring}}
 \index{tostring@{tostring}!Pattern\+Pointer@{Pattern\+Pointer}}
 \subsubsection[{tostring(const Class\+Decoder \&classdecoder) const }]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Pattern\+Pointer\+::tostring (
@@ -202,15 +455,34 @@ unsigned char \hyperlink{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{
 \item[{const {\bf Class\+Decoder} \&}]{classdecoder}
 \end{DoxyParamCaption}
 ) const}\label{classPatternPointer_ab17b7641c0651d2879bfe320826492e7}
+\hypertarget{classPatternPointer_ace0bd6e4b893a9ecd205e08a88490b6d}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!write@{write}}
+\index{write@{write}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{write(std\+::ostream $\ast$out, const unsigned char $\ast$corpusstart=\+N\+U\+L\+L) const }]{\setlength{\rightskip}{0pt plus 5cm}void Pattern\+Pointer\+::write (
+\begin{DoxyParamCaption}
+\item[{std\+::ostream $\ast$}]{out, }
+\item[{const unsigned char $\ast$}]{corpusstart = {\ttfamily NULL}}
+\end{DoxyParamCaption}
+) const}\label{classPatternPointer_ace0bd6e4b893a9ecd205e08a88490b6d}
+Write \hyperlink{classPattern}{Pattern} to output stream (in binary form) 
+\begin{DoxyParams}{Parameters}
+{\em out} & The output stream \\
+\hline
+\end{DoxyParams}
 
 
 \subsection{Member Data Documentation}
-\hypertarget{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!bytes@{bytes}}
+\hypertarget{classPatternPointer_a60d057d9e790b1c1686c440b91a425a7}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!bytes@{bytes}}
 \index{bytes@{bytes}!Pattern\+Pointer@{Pattern\+Pointer}}
-\subsubsection[{bytes}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char Pattern\+Pointer\+::bytes}\label{classPatternPointer_a2fe42598c138a68c059f4207ef2ead64}
+\subsubsection[{bytes}]{\setlength{\rightskip}{0pt plus 5cm}uint32\+\_\+t Pattern\+Pointer\+::bytes}\label{classPatternPointer_a60d057d9e790b1c1686c440b91a425a7}
 Pointer to \hyperlink{classPattern}{Pattern} data \hypertarget{classPatternPointer_ad754ecbbeeb29fbebb075f520884e11d}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!data@{data}}
 \index{data@{data}!Pattern\+Pointer@{Pattern\+Pointer}}
 \subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ Pattern\+Pointer\+::data}\label{classPatternPointer_ad754ecbbeeb29fbebb075f520884e11d}
+\hypertarget{classPatternPointer_a7f75c1464a5782d28b8dc338ab3788f1}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!mask@{mask}}
+\index{mask@{mask}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{mask}]{\setlength{\rightskip}{0pt plus 5cm}uint32\+\_\+t Pattern\+Pointer\+::mask}\label{classPatternPointer_a7f75c1464a5782d28b8dc338ab3788f1}
+\hypertarget{classPatternPointer_a51173670c6a2294d3c0eb4fe38d48a59}{}\index{Pattern\+Pointer@{Pattern\+Pointer}!patterntype@{patterntype}}
+\index{patterntype@{patterntype}!Pattern\+Pointer@{Pattern\+Pointer}}
+\subsubsection[{patterntype}]{\setlength{\rightskip}{0pt plus 5cm}const int Pattern\+Pointer\+::patterntype = {\bf P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R}\hspace{0.3cm}{\ttfamily [static]}}\label{classPatternPointer_a51173670c6a2294d3c0eb4fe38d48a59}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}

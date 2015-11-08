@@ -9,78 +9,83 @@ Class for reading an entire (class encoded) corpus into memory. It provides a re
 
 {\ttfamily \#include $<$patternstore.\+h$>$}
 
-\subsection*{Public Types}
+\subsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-typedef std\+::vector$<$ \hyperlink{classIndexPattern}{Index\+Pattern} $>$\+::\hyperlink{classIndexedCorpus_a08602ec2763d0bd068d2c3213edb8256}{iterator} \hyperlink{classIndexedCorpus_a08602ec2763d0bd068d2c3213edb8256}{iterator}
-\item 
-typedef std\+::vector$<$ \hyperlink{classIndexPattern}{Index\+Pattern} $>$\+::\hyperlink{classIndexedCorpus_a0bb2b3e49bd81618fc39fd6d9d505531}{const\+\_\+iterator} \hyperlink{classIndexedCorpus_a0bb2b3e49bd81618fc39fd6d9d505531}{const\+\_\+iterator}
+class \hyperlink{classIndexedCorpus_1_1iterator}{iterator}
 \end{DoxyCompactItemize}
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{classIndexedCorpus_abed3d107618b4d1cc91f77c56445c5a5}{Indexed\+Corpus} ()
 \item 
+\hyperlink{classIndexedCorpus_a90eaf21374d0bc17af480c882fcb07b2}{Indexed\+Corpus} (unsigned char $\ast$\hyperlink{classIndexedCorpus_a382d8734879b170282345a5e20e71113}{corpus}, unsigned int \hyperlink{classIndexedCorpus_aaea6690e61d8538ae86f62857f044563}{corpussize})
+\item 
 \hyperlink{classIndexedCorpus_a3a2369b02abd0c7f4eb25710a5aec446}{Indexed\+Corpus} (std\+::istream $\ast$in, bool debug=false)
 \item 
 \hyperlink{classIndexedCorpus_ab5d67abefdab495addd6bdfb976c4c0b}{Indexed\+Corpus} (std\+::string filename, bool debug=false)
+\item 
+\hyperlink{classIndexedCorpus_ae6bbb800f2a974b60336be7e0678ae91}{$\sim$\+Indexed\+Corpus} ()
 \item 
 void \hyperlink{classIndexedCorpus_af77786d6aba870b93e5cea36e25842c2}{load} (std\+::istream $\ast$in, bool debug=false)
 \item 
 void \hyperlink{classIndexedCorpus_a7b5292da7a8f674d83b6bc0dc5e6e3c8}{load} (std\+::string filename, bool debug=false)
 \item 
-\hyperlink{classIndexedCorpus_a08602ec2763d0bd068d2c3213edb8256}{iterator} \hyperlink{classIndexedCorpus_aa8be0b3a2a730fccd755a9e12b74f869}{begin} ()
+unsigned char $\ast$ \hyperlink{classIndexedCorpus_a9420c42aadad6e159e00a4d42cfc08cd}{getpointer} (const \hyperlink{classIndexReference}{Index\+Reference} \&\hyperlink{classIndexedCorpus_aa8be0b3a2a730fccd755a9e12b74f869}{begin}) const 
 \item 
-\hyperlink{classIndexedCorpus_a0bb2b3e49bd81618fc39fd6d9d505531}{const\+\_\+iterator} \hyperlink{classIndexedCorpus_a6288ffdaa5fac4190672fa17b931cb20}{begin} () const 
+\hyperlink{classPatternPointer}{Pattern\+Pointer} \hyperlink{classIndexedCorpus_a4f93a11280c23c7ed3d35997bb558d4b}{getpattern} (const \hyperlink{classIndexReference}{Index\+Reference} \&\hyperlink{classIndexedCorpus_aa8be0b3a2a730fccd755a9e12b74f869}{begin}, int length=1) const 
 \item 
-\hyperlink{classIndexedCorpus_a08602ec2763d0bd068d2c3213edb8256}{iterator} \hyperlink{classIndexedCorpus_a9153a4018b224d89f49a5435dd795d8b}{end} ()
+\hyperlink{classPatternPointer}{Pattern\+Pointer} \hyperlink{classIndexedCorpus_acbe113355f05b3b87819e0f713f21c14}{getpattern} () const 
 \item 
-\hyperlink{classIndexedCorpus_a0bb2b3e49bd81618fc39fd6d9d505531}{const\+\_\+iterator} \hyperlink{classIndexedCorpus_a0ec504ca81277f6838f913163d76c99c}{end} () const 
+unsigned char $\ast$ \hyperlink{classIndexedCorpus_ac781102b8cce6188e5c7eb9cb2c34d56}{beginpointer} () const 
 \item 
-\hyperlink{classIndexedCorpus_a08602ec2763d0bd068d2c3213edb8256}{iterator} \hyperlink{classIndexedCorpus_aae1ae54b38d7df66e9195441c0df18cd}{find} (const \hyperlink{classIndexReference}{Index\+Reference} \&ref)
+unsigned int \hyperlink{classIndexedCorpus_a062ad76223ad6c7391f66207adb9f9e5}{bytesize} () const 
 \item 
-\hyperlink{classIndexedCorpus_a0bb2b3e49bd81618fc39fd6d9d505531}{const\+\_\+iterator} \hyperlink{classIndexedCorpus_a7514fdb00499778a2606fc6e8e7dd8c7}{find} (const \hyperlink{classIndexReference}{Index\+Reference} \&ref) const 
+\hyperlink{classPatternPointer}{Pattern\+Pointer} \hyperlink{classIndexedCorpus_ad181728adf70c795d8d969d8813e7502}{getsentence} (int sentence) const 
 \item 
-bool \hyperlink{classIndexedCorpus_a51ac4a603352deb4937a4c75baa1944b}{has} (const \hyperlink{classIndexReference}{Index\+Reference} \&ref) const 
+\hyperlink{classPatternPointer}{Pattern\+Pointer} \hyperlink{classIndexedCorpus_a38017ee00cfa8218e1f362980bbabed5}{getsentence} (unsigned char $\ast$sentencedata) const 
 \item 
-size\+\_\+t \hyperlink{classIndexedCorpus_a66126ff82e6ff8d1a7792a27e1599bec}{size} () const 
+std\+::vector$<$ \hyperlink{classIndexReference}{Index\+Reference} $>$ \hyperlink{classIndexedCorpus_aae1a89d3682a2b356f61e3c1fc335e7b}{findpattern} (const \hyperlink{classPattern}{Pattern} \&pattern, uint32\+\_\+t sentence=0, int maxmatches=0)
 \item 
-bool \hyperlink{classIndexedCorpus_a71486367cec99431560824d21d90a6bc}{empty} () const 
-\item 
-uint32\+\_\+t \hyperlink{classIndexedCorpus_a0df27ec720cdd98b01212952ffd07d4a}{operator\mbox{[}$\,$\mbox{]}} (const \hyperlink{classIndexReference}{Index\+Reference} ref)
-\item 
-\hyperlink{classPattern}{Pattern} \hyperlink{classIndexedCorpus_a0c25fbcd801013189dd7f00416e3af70}{getpattern} (const \hyperlink{classIndexReference}{Index\+Reference} \&\hyperlink{classIndexedCorpus_aa8be0b3a2a730fccd755a9e12b74f869}{begin}, int length=1) const 
-\item 
-\hyperlink{classPattern}{Pattern} \hyperlink{classIndexedCorpus_a6398ff206b24fd8d8f0c10b2bce8d5da}{getsentence} (int sentence) const 
-\item 
-std\+::vector$<$ \hyperlink{classIndexReference}{Index\+Reference} $>$ \hyperlink{classIndexedCorpus_a1f2166136e96e8baac50601412e6ca87}{findpattern} (const \hyperlink{classPattern}{Pattern} \&pattern, int maxmatches=0)
+void \hyperlink{classIndexedCorpus_af8b7d741687477e83c1c07628ab12fe8}{findpattern} (std\+::vector$<$ \hyperlink{classIndexReference}{Index\+Reference} $>$ \&result, const \hyperlink{classPattern}{Pattern} \&pattern, uint32\+\_\+t sentence, const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&sentencedata, int maxmatches=0)
 \item 
 int \hyperlink{classIndexedCorpus_a33e0bdd2bc93e29de9dfe5917b227197}{sentencelength} (int sentence) const 
 \item 
+int \hyperlink{classIndexedCorpus_a71e94ea8a361b3b6ea8ba6ba98c449fd}{sentencelength} (unsigned char $\ast$sentencebegin) const 
+\item 
 unsigned int \hyperlink{classIndexedCorpus_ac402b5450e2b33bef72f222f1cd057c1}{sentences} () const 
 \item 
-void \hyperlink{classIndexedCorpus_adb0b90309c3f744cf77c05aa5c940fa5}{push\+\_\+back} (const \hyperlink{classIndexReference}{Index\+Reference} ref, const \hyperlink{classPattern}{Pattern} \&pattern)
+\hyperlink{classIndexedCorpus_1_1iterator}{iterator} \hyperlink{classIndexedCorpus_aa8be0b3a2a730fccd755a9e12b74f869}{begin} ()
 \item 
-void \hyperlink{classIndexedCorpus_aa7aa434dcc6d807941ec2e58d8ef8d98}{sort} ()
+\hyperlink{classIndexedCorpus_1_1iterator}{iterator} \hyperlink{classIndexedCorpus_a9153a4018b224d89f49a5435dd795d8b}{end} ()
+\item 
+\hyperlink{classIndexedCorpus_1_1iterator}{iterator} \hyperlink{classIndexedCorpus_aae1ae54b38d7df66e9195441c0df18cd}{find} (const \hyperlink{classIndexReference}{Index\+Reference} \&ref)
+\item 
+bool \hyperlink{classIndexedCorpus_a51ac4a603352deb4937a4c75baa1944b}{has} (const \hyperlink{classIndexReference}{Index\+Reference} \&ref) const 
+\item 
+size\+\_\+t \hyperlink{classIndexedCorpus_a5b885b8a73ac33a90f505617d737c848}{size} ()
+\item 
+bool \hyperlink{classIndexedCorpus_a71486367cec99431560824d21d90a6bc}{empty} () const 
+\item 
+unsigned int \hyperlink{classIndexedCorpus_a9d5e81d01808cd4cd99b612575cbf7e5}{operator\mbox{[}$\,$\mbox{]}} (const \hyperlink{classIndexReference}{Index\+Reference} \&ref)
 \end{DoxyCompactItemize}
 \subsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
 \item 
-std\+::vector$<$ \hyperlink{classIndexPattern}{Index\+Pattern} $>$ \hyperlink{classIndexedCorpus_a27966bc680d46c0e8a22ad356cbee837}{data}
+unsigned char $\ast$ \hyperlink{classIndexedCorpus_a382d8734879b170282345a5e20e71113}{corpus}
+\item 
+unsigned int \hyperlink{classIndexedCorpus_aaea6690e61d8538ae86f62857f044563}{corpussize}
+\item 
+\hyperlink{classPatternPointer}{Pattern\+Pointer} $\ast$ \hyperlink{classIndexedCorpus_a93e1c4d54e89d2923fcaafd98f94fcf2}{patternpointer}
+\item 
+unsigned int \hyperlink{classIndexedCorpus_a24358ff9fed75b73b775824288190dd9}{totaltokens}
+\item 
+std\+::map$<$ uint32\+\_\+t, unsigned char $\ast$ $>$ \hyperlink{classIndexedCorpus_a6ccec03ac24bf2578d57c815ce028f78}{sentenceindex}
 \end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
 Class for reading an entire (class encoded) corpus into memory. It provides a reverse index by \hyperlink{classIndexReference}{Index\+Reference}. The reverse index stores positions and unigrams. 
-
-\subsection{Member Typedef Documentation}
-\hypertarget{classIndexedCorpus_a0bb2b3e49bd81618fc39fd6d9d505531}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!const\+\_\+iterator@{const\+\_\+iterator}}
-\index{const\+\_\+iterator@{const\+\_\+iterator}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{const\+\_\+iterator}]{\setlength{\rightskip}{0pt plus 5cm}typedef std\+::vector$<${\bf Index\+Pattern}$>$\+::{\bf const\+\_\+iterator} {\bf Indexed\+Corpus\+::const\+\_\+iterator}}\label{classIndexedCorpus_a0bb2b3e49bd81618fc39fd6d9d505531}
-\hypertarget{classIndexedCorpus_a08602ec2763d0bd068d2c3213edb8256}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!iterator@{iterator}}
-\index{iterator@{iterator}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}typedef std\+::vector$<${\bf Index\+Pattern}$>$\+::{\bf iterator} {\bf Indexed\+Corpus\+::iterator}}\label{classIndexedCorpus_a08602ec2763d0bd068d2c3213edb8256}
-
 
 \subsection{Constructor \& Destructor Documentation}
 \hypertarget{classIndexedCorpus_abed3d107618b4d1cc91f77c56445c5a5}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!Indexed\+Corpus@{Indexed\+Corpus}}
@@ -90,6 +95,14 @@ Class for reading an entire (class encoded) corpus into memory. It provides a re
 {}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_abed3d107618b4d1cc91f77c56445c5a5}
+\hypertarget{classIndexedCorpus_a90eaf21374d0bc17af480c882fcb07b2}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!Indexed\+Corpus@{Indexed\+Corpus}}
+\index{Indexed\+Corpus@{Indexed\+Corpus}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{Indexed\+Corpus(unsigned char $\ast$corpus, unsigned int corpussize)}]{\setlength{\rightskip}{0pt plus 5cm}Indexed\+Corpus\+::\+Indexed\+Corpus (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{corpus, }
+\item[{unsigned int}]{corpussize}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_a90eaf21374d0bc17af480c882fcb07b2}
 \hypertarget{classIndexedCorpus_a3a2369b02abd0c7f4eb25710a5aec446}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!Indexed\+Corpus@{Indexed\+Corpus}}
 \index{Indexed\+Corpus@{Indexed\+Corpus}!Indexed\+Corpus@{Indexed\+Corpus}}
 \subsubsection[{Indexed\+Corpus(std\+::istream $\ast$in, bool debug=false)}]{\setlength{\rightskip}{0pt plus 5cm}Indexed\+Corpus\+::\+Indexed\+Corpus (
@@ -106,6 +119,13 @@ Class for reading an entire (class encoded) corpus into memory. It provides a re
 \item[{bool}]{debug = {\ttfamily false}}
 \end{DoxyParamCaption}
 )}\label{classIndexedCorpus_ab5d67abefdab495addd6bdfb976c4c0b}
+\hypertarget{classIndexedCorpus_ae6bbb800f2a974b60336be7e0678ae91}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!````~Indexed\+Corpus@{$\sim$\+Indexed\+Corpus}}
+\index{````~Indexed\+Corpus@{$\sim$\+Indexed\+Corpus}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{$\sim$\+Indexed\+Corpus()}]{\setlength{\rightskip}{0pt plus 5cm}Indexed\+Corpus\+::$\sim$\+Indexed\+Corpus (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_ae6bbb800f2a974b60336be7e0678ae91}
 
 
 \subsection{Member Function Documentation}
@@ -116,13 +136,20 @@ Class for reading an entire (class encoded) corpus into memory. It provides a re
 {}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_aa8be0b3a2a730fccd755a9e12b74f869}
-\hypertarget{classIndexedCorpus_a6288ffdaa5fac4190672fa17b931cb20}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!begin@{begin}}
-\index{begin@{begin}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{begin() const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf const\+\_\+iterator} Indexed\+Corpus\+::begin (
+\hypertarget{classIndexedCorpus_ac781102b8cce6188e5c7eb9cb2c34d56}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!beginpointer@{beginpointer}}
+\index{beginpointer@{beginpointer}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{beginpointer() const }]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ Indexed\+Corpus\+::beginpointer (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_a6288ffdaa5fac4190672fa17b931cb20}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_ac781102b8cce6188e5c7eb9cb2c34d56}
+\hypertarget{classIndexedCorpus_a062ad76223ad6c7391f66207adb9f9e5}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!bytesize@{bytesize}}
+\index{bytesize@{bytesize}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{bytesize() const }]{\setlength{\rightskip}{0pt plus 5cm}unsigned int Indexed\+Corpus\+::bytesize (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_a062ad76223ad6c7391f66207adb9f9e5}
 \hypertarget{classIndexedCorpus_a71486367cec99431560824d21d90a6bc}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!empty@{empty}}
 \index{empty@{empty}!Indexed\+Corpus@{Indexed\+Corpus}}
 \subsubsection[{empty() const }]{\setlength{\rightskip}{0pt plus 5cm}bool Indexed\+Corpus\+::empty (
@@ -137,13 +164,6 @@ Is the corpus empty? \hypertarget{classIndexedCorpus_a9153a4018b224d89f49a5435dd
 {}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_a9153a4018b224d89f49a5435dd795d8b}
-\hypertarget{classIndexedCorpus_a0ec504ca81277f6838f913163d76c99c}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!end@{end}}
-\index{end@{end}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{end() const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf const\+\_\+iterator} Indexed\+Corpus\+::end (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_a0ec504ca81277f6838f913163d76c99c}
 \hypertarget{classIndexedCorpus_aae1ae54b38d7df66e9195441c0df18cd}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!find@{find}}
 \index{find@{find}!Indexed\+Corpus@{Indexed\+Corpus}}
 \subsubsection[{find(const Index\+Reference \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf iterator} Indexed\+Corpus\+::find (
@@ -151,44 +171,75 @@ Is the corpus empty? \hypertarget{classIndexedCorpus_a9153a4018b224d89f49a5435dd
 \item[{const {\bf Index\+Reference} \&}]{ref}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_aae1ae54b38d7df66e9195441c0df18cd}
-Returns an iterator starting at the given position. Correspond to \hyperlink{classIndexedCorpus_a9153a4018b224d89f49a5435dd795d8b}{end()} when no such position is found. \hypertarget{classIndexedCorpus_a7514fdb00499778a2606fc6e8e7dd8c7}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!find@{find}}
-\index{find@{find}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{find(const Index\+Reference \&ref) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf const\+\_\+iterator} Indexed\+Corpus\+::find (
-\begin{DoxyParamCaption}
-\item[{const {\bf Index\+Reference} \&}]{ref}
-\end{DoxyParamCaption}
-) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_a7514fdb00499778a2606fc6e8e7dd8c7}
-Returns a const iterator starting at the given position. Correspond to \hyperlink{classIndexedCorpus_a9153a4018b224d89f49a5435dd795d8b}{end()} when no such position is found. \hypertarget{classIndexedCorpus_a1f2166136e96e8baac50601412e6ca87}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!findpattern@{findpattern}}
+Returns an iterator starting at the given position. Correspond to \hyperlink{classIndexedCorpus_a9153a4018b224d89f49a5435dd795d8b}{end()} when no such position is found. \hypertarget{classIndexedCorpus_aae1a89d3682a2b356f61e3c1fc335e7b}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!findpattern@{findpattern}}
 \index{findpattern@{findpattern}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{findpattern(const Pattern \&pattern, int maxmatches=0)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$ {\bf Index\+Reference} $>$ Indexed\+Corpus\+::findpattern (
+\subsubsection[{findpattern(const Pattern \&pattern, uint32\+\_\+t sentence=0, int maxmatches=0)}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$ {\bf Index\+Reference} $>$ Indexed\+Corpus\+::findpattern (
 \begin{DoxyParamCaption}
 \item[{const {\bf Pattern} \&}]{pattern, }
+\item[{uint32\+\_\+t}]{sentence = {\ttfamily 0}, }
 \item[{int}]{maxmatches = {\ttfamily 0}}
 \end{DoxyParamCaption}
-)}\label{classIndexedCorpus_a1f2166136e96e8baac50601412e6ca87}
-Returns all positions at which the pattern occurs. Up to a certain number of maximum matches if desired. Note that this iterates over the entire corpus and is by far not as efficient as a proper pattern model. \hypertarget{classIndexedCorpus_a0c25fbcd801013189dd7f00416e3af70}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!getpattern@{getpattern}}
+)}\label{classIndexedCorpus_aae1a89d3682a2b356f61e3c1fc335e7b}
+Returns all positions at which the pattern occurs. Up to a certain number of maximum matches if desired. Note that this iterates over the entire corpus and is by far not as efficient as a proper pattern model. 
+\begin{DoxyParams}{Parameters}
+{\em sentence} & Restrict to a particular sentence (0=all sentences, default) \\
+\hline
+\end{DoxyParams}
+\hypertarget{classIndexedCorpus_af8b7d741687477e83c1c07628ab12fe8}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!findpattern@{findpattern}}
+\index{findpattern@{findpattern}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{findpattern(std\+::vector$<$ Index\+Reference $>$ \&result, const Pattern \&pattern, uint32\+\_\+t sentence, const Pattern\+Pointer \&sentencedata, int maxmatches=0)}]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Corpus\+::findpattern (
+\begin{DoxyParamCaption}
+\item[{std\+::vector$<$ {\bf Index\+Reference} $>$ \&}]{result, }
+\item[{const {\bf Pattern} \&}]{pattern, }
+\item[{uint32\+\_\+t}]{sentence, }
+\item[{const {\bf Pattern\+Pointer} \&}]{sentencedata, }
+\item[{int}]{maxmatches = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}\label{classIndexedCorpus_af8b7d741687477e83c1c07628ab12fe8}
+\hypertarget{classIndexedCorpus_a4f93a11280c23c7ed3d35997bb558d4b}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!getpattern@{getpattern}}
 \index{getpattern@{getpattern}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{getpattern(const Index\+Reference \&begin, int length=1) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Indexed\+Corpus\+::getpattern (
+\subsubsection[{getpattern(const Index\+Reference \&begin, int length=1) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Pointer} Indexed\+Corpus\+::getpattern (
 \begin{DoxyParamCaption}
 \item[{const {\bf Index\+Reference} \&}]{begin, }
 \item[{int}]{length = {\ttfamily 1}}
 \end{DoxyParamCaption}
-) const}\label{classIndexedCorpus_a0c25fbcd801013189dd7f00416e3af70}
-Returns a pattern starting at the provided position and of the specified length. \hypertarget{classIndexedCorpus_a6398ff206b24fd8d8f0c10b2bce8d5da}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!getsentence@{getsentence}}
+) const}\label{classIndexedCorpus_a4f93a11280c23c7ed3d35997bb558d4b}
+Returns a pattern starting at the provided position and of the specified length. \hypertarget{classIndexedCorpus_acbe113355f05b3b87819e0f713f21c14}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!getpattern@{getpattern}}
+\index{getpattern@{getpattern}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{getpattern() const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Pointer} Indexed\+Corpus\+::getpattern (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_acbe113355f05b3b87819e0f713f21c14}
+\hypertarget{classIndexedCorpus_a9420c42aadad6e159e00a4d42cfc08cd}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!getpointer@{getpointer}}
+\index{getpointer@{getpointer}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{getpointer(const Index\+Reference \&begin) const }]{\setlength{\rightskip}{0pt plus 5cm}unsigned char $\ast$ Indexed\+Corpus\+::getpointer (
+\begin{DoxyParamCaption}
+\item[{const {\bf Index\+Reference} \&}]{begin}
+\end{DoxyParamCaption}
+) const}\label{classIndexedCorpus_a9420c42aadad6e159e00a4d42cfc08cd}
+Low-\/level function, returns a data pointer given an \hyperlink{classIndexReference}{Index\+Reference}. Returns N\+U\+L\+L when the index does not exist. Use \hyperlink{classIndexedCorpus_a4f93a11280c23c7ed3d35997bb558d4b}{getpattern()} instead. \hypertarget{classIndexedCorpus_ad181728adf70c795d8d969d8813e7502}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!getsentence@{getsentence}}
 \index{getsentence@{getsentence}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{getsentence(int sentence) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} Indexed\+Corpus\+::getsentence (
+\subsubsection[{getsentence(int sentence) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Pointer} Indexed\+Corpus\+::getsentence (
 \begin{DoxyParamCaption}
 \item[{int}]{sentence}
 \end{DoxyParamCaption}
-) const}\label{classIndexedCorpus_a6398ff206b24fd8d8f0c10b2bce8d5da}
-Get the sentence (or whatever other unit your data employs) specified by the given index. Sentences start at 1. \hypertarget{classIndexedCorpus_a51ac4a603352deb4937a4c75baa1944b}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!has@{has}}
+) const}\label{classIndexedCorpus_ad181728adf70c795d8d969d8813e7502}
+Get the sentence (or whatever other unit your data employs) specified by the given index. Sentences start at 1. \hypertarget{classIndexedCorpus_a38017ee00cfa8218e1f362980bbabed5}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!getsentence@{getsentence}}
+\index{getsentence@{getsentence}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{getsentence(unsigned char $\ast$sentencedata) const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Pointer} Indexed\+Corpus\+::getsentence (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{sentencedata}
+\end{DoxyParamCaption}
+) const}\label{classIndexedCorpus_a38017ee00cfa8218e1f362980bbabed5}
+\hypertarget{classIndexedCorpus_a51ac4a603352deb4937a4c75baa1944b}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!has@{has}}
 \index{has@{has}!Indexed\+Corpus@{Indexed\+Corpus}}
 \subsubsection[{has(const Index\+Reference \&ref) const }]{\setlength{\rightskip}{0pt plus 5cm}bool Indexed\+Corpus\+::has (
 \begin{DoxyParamCaption}
 \item[{const {\bf Index\+Reference} \&}]{ref}
 \end{DoxyParamCaption}
 ) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_a51ac4a603352deb4937a4c75baa1944b}
-Does the provided position occur in the corpus? \hypertarget{classIndexedCorpus_af77786d6aba870b93e5cea36e25842c2}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!load@{load}}
+Returns a const iterator starting at the given position. Correspond to \hyperlink{classIndexedCorpus_a9153a4018b224d89f49a5435dd795d8b}{end()} when no such position is found. Does the provided position occur in the corpus? \hypertarget{classIndexedCorpus_af77786d6aba870b93e5cea36e25842c2}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!load@{load}}
 \index{load@{load}!Indexed\+Corpus@{Indexed\+Corpus}}
 \subsubsection[{load(std\+::istream $\ast$in, bool debug=false)}]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Corpus\+::load (
 \begin{DoxyParamCaption}
@@ -204,58 +255,62 @@ Does the provided position occur in the corpus? \hypertarget{classIndexedCorpus_
 \item[{bool}]{debug = {\ttfamily false}}
 \end{DoxyParamCaption}
 )}\label{classIndexedCorpus_a7b5292da7a8f674d83b6bc0dc5e6e3c8}
-\hypertarget{classIndexedCorpus_a0df27ec720cdd98b01212952ffd07d4a}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!operator\mbox{[}$\,$\mbox{]}@{operator[]}}
+\hypertarget{classIndexedCorpus_a9d5e81d01808cd4cd99b612575cbf7e5}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!operator\mbox{[}$\,$\mbox{]}@{operator[]}}
 \index{operator\mbox{[}$\,$\mbox{]}@{operator[]}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{operator[](const Index\+Reference ref)}]{\setlength{\rightskip}{0pt plus 5cm}uint32\+\_\+t Indexed\+Corpus\+::operator\mbox{[}$\,$\mbox{]} (
+\subsubsection[{operator[](const Index\+Reference \&ref)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int Indexed\+Corpus\+::operator\mbox{[}$\,$\mbox{]} (
 \begin{DoxyParamCaption}
-\item[{const {\bf Index\+Reference}}]{ref}
+\item[{const {\bf Index\+Reference} \&}]{ref}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_a0df27ec720cdd98b01212952ffd07d4a}
-Returns the token at the provided position. The token is returned as an integer corresponding to the class in a particular class encoding. Use \hyperlink{classIndexedCorpus_a0c25fbcd801013189dd7f00416e3af70}{getpattern()} if you want a \hyperlink{classPattern}{Pattern} instance. \begin{DoxySeeAlso}{See also}
-\hyperlink{classIndexedCorpus_a0c25fbcd801013189dd7f00416e3af70}{getpattern} 
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_a9d5e81d01808cd4cd99b612575cbf7e5}
+Returns the token at the provided position. The token is returned as an integer corresponding to the class in a particular class encoding. Use \hyperlink{classIndexedCorpus_a4f93a11280c23c7ed3d35997bb558d4b}{getpattern()} if you want a \hyperlink{classPattern}{Pattern} instance. \begin{DoxySeeAlso}{See also}
+\hyperlink{classIndexedCorpus_a4f93a11280c23c7ed3d35997bb558d4b}{getpattern} 
 \end{DoxySeeAlso}
-\hypertarget{classIndexedCorpus_adb0b90309c3f744cf77c05aa5c940fa5}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!push\+\_\+back@{push\+\_\+back}}
-\index{push\+\_\+back@{push\+\_\+back}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{push\+\_\+back(const Index\+Reference ref, const Pattern \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Corpus\+::push\+\_\+back (
-\begin{DoxyParamCaption}
-\item[{const {\bf Index\+Reference}}]{ref, }
-\item[{const {\bf Pattern} \&}]{pattern}
-\end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_adb0b90309c3f744cf77c05aa5c940fa5}
-Add a unigram to the corpus at the given position (it\textquotesingle{}s up to you to ensure this is called in proper order, or call \hyperlink{classIndexedCorpus_aa7aa434dcc6d807941ec2e58d8ef8d98}{sort()} afterwards) \hypertarget{classIndexedCorpus_a33e0bdd2bc93e29de9dfe5917b227197}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!sentencelength@{sentencelength}}
+\hypertarget{classIndexedCorpus_a33e0bdd2bc93e29de9dfe5917b227197}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!sentencelength@{sentencelength}}
 \index{sentencelength@{sentencelength}!Indexed\+Corpus@{Indexed\+Corpus}}
 \subsubsection[{sentencelength(int sentence) const }]{\setlength{\rightskip}{0pt plus 5cm}int Indexed\+Corpus\+::sentencelength (
 \begin{DoxyParamCaption}
 \item[{int}]{sentence}
 \end{DoxyParamCaption}
 ) const}\label{classIndexedCorpus_a33e0bdd2bc93e29de9dfe5917b227197}
-Returns the length of the sentence (or whatever other unit your data employs) at the given sentence index (starts at 1) \hypertarget{classIndexedCorpus_ac402b5450e2b33bef72f222f1cd057c1}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!sentences@{sentences}}
+Returns the length of the sentence (or whatever other unit your data employs) at the given sentence index (starts at 1) \hypertarget{classIndexedCorpus_a71e94ea8a361b3b6ea8ba6ba98c449fd}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!sentencelength@{sentencelength}}
+\index{sentencelength@{sentencelength}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{sentencelength(unsigned char $\ast$sentencebegin) const }]{\setlength{\rightskip}{0pt plus 5cm}int Indexed\+Corpus\+::sentencelength (
+\begin{DoxyParamCaption}
+\item[{unsigned char $\ast$}]{sentencebegin}
+\end{DoxyParamCaption}
+) const}\label{classIndexedCorpus_a71e94ea8a361b3b6ea8ba6ba98c449fd}
+\hypertarget{classIndexedCorpus_ac402b5450e2b33bef72f222f1cd057c1}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!sentences@{sentences}}
 \index{sentences@{sentences}!Indexed\+Corpus@{Indexed\+Corpus}}
 \subsubsection[{sentences() const }]{\setlength{\rightskip}{0pt plus 5cm}unsigned int Indexed\+Corpus\+::sentences (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-) const}\label{classIndexedCorpus_ac402b5450e2b33bef72f222f1cd057c1}
-Return the total number of sentences (or whatever other unit delimites your data) in the corpus. \hypertarget{classIndexedCorpus_a66126ff82e6ff8d1a7792a27e1599bec}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!size@{size}}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_ac402b5450e2b33bef72f222f1cd057c1}
+Return the total number of sentences (or whatever other unit delimites your data) in the corpus. \hypertarget{classIndexedCorpus_a5b885b8a73ac33a90f505617d737c848}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!size@{size}}
 \index{size@{size}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t Indexed\+Corpus\+::size (
+\subsubsection[{size()}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t Indexed\+Corpus\+::size (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_a66126ff82e6ff8d1a7792a27e1599bec}
-Returns the number of tokens in the corpus \hypertarget{classIndexedCorpus_aa7aa434dcc6d807941ec2e58d8ef8d98}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!sort@{sort}}
-\index{sort@{sort}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{sort()}]{\setlength{\rightskip}{0pt plus 5cm}void Indexed\+Corpus\+::sort (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_aa7aa434dcc6d807941ec2e58d8ef8d98}
-Ensures the data is in proper order. May be needed after out-\/of-\/order use of \hyperlink{classIndexedCorpus_adb0b90309c3f744cf77c05aa5c940fa5}{push\+\_\+back()} 
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classIndexedCorpus_a5b885b8a73ac33a90f505617d737c848}
+Returns the number of tokens in the corpus 
 
 \subsection{Member Data Documentation}
-\hypertarget{classIndexedCorpus_a27966bc680d46c0e8a22ad356cbee837}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!data@{data}}
-\index{data@{data}!Indexed\+Corpus@{Indexed\+Corpus}}
-\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<${\bf Index\+Pattern}$>$ Indexed\+Corpus\+::data\hspace{0.3cm}{\ttfamily [protected]}}\label{classIndexedCorpus_a27966bc680d46c0e8a22ad356cbee837}
+\hypertarget{classIndexedCorpus_a382d8734879b170282345a5e20e71113}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!corpus@{corpus}}
+\index{corpus@{corpus}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{corpus}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ Indexed\+Corpus\+::corpus\hspace{0.3cm}{\ttfamily [protected]}}\label{classIndexedCorpus_a382d8734879b170282345a5e20e71113}
+\hypertarget{classIndexedCorpus_aaea6690e61d8538ae86f62857f044563}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!corpussize@{corpussize}}
+\index{corpussize@{corpussize}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{corpussize}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int Indexed\+Corpus\+::corpussize\hspace{0.3cm}{\ttfamily [protected]}}\label{classIndexedCorpus_aaea6690e61d8538ae86f62857f044563}
+\hypertarget{classIndexedCorpus_a93e1c4d54e89d2923fcaafd98f94fcf2}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!patternpointer@{patternpointer}}
+\index{patternpointer@{patternpointer}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{patternpointer}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern\+Pointer}$\ast$ Indexed\+Corpus\+::patternpointer\hspace{0.3cm}{\ttfamily [protected]}}\label{classIndexedCorpus_a93e1c4d54e89d2923fcaafd98f94fcf2}
+\hypertarget{classIndexedCorpus_a6ccec03ac24bf2578d57c815ce028f78}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!sentenceindex@{sentenceindex}}
+\index{sentenceindex@{sentenceindex}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{sentenceindex}]{\setlength{\rightskip}{0pt plus 5cm}std\+::map$<$uint32\+\_\+t,unsigned char$\ast$$>$ Indexed\+Corpus\+::sentenceindex\hspace{0.3cm}{\ttfamily [protected]}}\label{classIndexedCorpus_a6ccec03ac24bf2578d57c815ce028f78}
+\hypertarget{classIndexedCorpus_a24358ff9fed75b73b775824288190dd9}{}\index{Indexed\+Corpus@{Indexed\+Corpus}!totaltokens@{totaltokens}}
+\index{totaltokens@{totaltokens}!Indexed\+Corpus@{Indexed\+Corpus}}
+\subsubsection[{totaltokens}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int Indexed\+Corpus\+::totaltokens\hspace{0.3cm}{\ttfamily [protected]}}\label{classIndexedCorpus_a24358ff9fed75b73b775824288190dd9}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}

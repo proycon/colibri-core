@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['extractngrams_2ecpp',['extractngrams.cpp',['../extractngrams_8cpp.html',1,'']]]
+  ['datatypes_2eh',['datatypes.h',['../datatypes_8h.html',1,'']]]
 ];

@@ -117,19 +117,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIndexPattern.html">IndexPattern</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This class corresponds to a single token in a corpus, it holds the token class and the position.  <a href="classIndexPattern.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIndexedCorpus.html">IndexedCorpus</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for reading an entire (class encoded) corpus into memory. It provides a reverse index by <a class="el" href="classIndexReference.html" title="Reference to a position in the corpus. ">IndexReference</a>. The reverse index stores positions and unigrams.  <a href="classIndexedCorpus.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIndexedCorpus_1_1iterator.html">IndexedCorpus::iterator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStoreInterface.html">PatternStoreInterface</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Limited virtual interface to pattern stores.  <a href="classPatternStoreInterface.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html">PatternStore&lt; ContainerType, ReadWriteSizeType &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternStore.html">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract <a class="el" href="classPattern.html" title="Pattern class, represents a pattern (ngram, skipgram or flexgram). Encoded in a memory-saving fashion...">Pattern</a> store class, not to be instantiated directly.  <a href="classPatternStore.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html">PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMapStore.html">PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, PatternType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract class for map-like pattern stores, do not instantiate directly.  <a href="classPatternMapStore.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternSet.html">PatternSet&lt; ReadWriteSizeType &gt;</a></td></tr>
@@ -140,6 +139,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternMap.html">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pattern map storing patterns and their values in a hash map (unordered_map).  <a href="classPatternMap.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPatternPointerMap.html">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOrderedPatternPointerMap.html">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashOrderedPatternMap.html">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,6 +157,8 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:ab6eb1121be28d4a231c70a353bdf1132"><td class="memItemLeft" align="right" valign="top">typedef std::pair&lt; <a class="el" href="classIndexReference.html">IndexReference</a>, <a class="el" href="classPatternPointer.html">PatternPointer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="patternstore_8h.html#ab6eb1121be28d4a231c70a353bdf1132">IndexPattern</a></td></tr>
+<tr class="separator:ab6eb1121be28d4a231c70a353bdf1132"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29bbbbc6d95519f30358276784e16c25"><td class="memItemLeft" align="right" valign="top">typedef std::unordered_set&lt; <a class="el" href="classPattern.html">Pattern</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="patternstore_8h.html#a29bbbbc6d95519f30358276784e16c25">t_patternset</a></td></tr>
 <tr class="separator:a29bbbbc6d95519f30358276784e16c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95f03de9f728d05eb31111e2dbdac6a7"><td class="memItemLeft" align="right" valign="top">typedef std::set&lt; <a class="el" href="classPattern.html">Pattern</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="patternstore_8h.html#a95f03de9f728d05eb31111e2dbdac6a7">t_hashorderedpatternset</a></td></tr>
@@ -169,6 +174,18 @@ LICENSE</h1>
 DESCRIPTION</h1>
 <p>Contains lower-level containers for patterns </p>
 </div><h2 class="groupheader">Typedef Documentation</h2>
+<a class="anchor" id="ab6eb1121be28d4a231c70a353bdf1132"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::pair&lt;<a class="el" href="classIndexReference.html">IndexReference</a>,<a class="el" href="classPatternPointer.html">PatternPointer</a>&gt; <a class="el" href="patternstore_8h.html#ab6eb1121be28d4a231c70a353bdf1132">IndexPattern</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a95f03de9f728d05eb31111e2dbdac6a7"></a>
 <div class="memitem">
 <div class="memproto">
@@ -196,7 +213,7 @@ DESCRIPTION</h1>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2015 13:45:49 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 4 2015 12:10:20 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

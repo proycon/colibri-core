@@ -18,6 +18,7 @@ Contains the \hyperlink{classPattern}{Pattern} class that is ubiquitous througho
 {\ttfamily \#include $<$iomanip$>$}\\*
 {\ttfamily \#include $<$exception$>$}\\*
 {\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$climits$>$}\\*
 {\ttfamily \#include \char`\"{}common.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}classdecoder.\+h\char`\"{}}\\*
 \subsection*{Classes}
@@ -29,9 +30,11 @@ class \hyperlink{classPatternPointer}{Pattern\+Pointer}
 \item 
 struct \hyperlink{structstd_1_1hash_3_01Pattern_01_4}{std\+::hash$<$ Pattern $>$}
 \item 
-struct \hyperlink{structstd_1_1hash_3_01const_01Pattern_01_4}{std\+::hash$<$ const Pattern $>$}
-\item 
 struct \hyperlink{structstd_1_1hash_3_01const_01Pattern_01_5_01_4}{std\+::hash$<$ const Pattern $\ast$ $>$}
+\item 
+struct \hyperlink{structstd_1_1hash_3_01PatternPointer_01_4}{std\+::hash$<$ Pattern\+Pointer $>$}
+\item 
+struct \hyperlink{structstd_1_1hash_3_01const_01PatternPointer_01_5_01_4}{std\+::hash$<$ const Pattern\+Pointer $\ast$ $>$}
 \end{DoxyCompactItemize}
 \subsection*{Enumerations}
 \begin{DoxyCompactItemize}
@@ -42,54 +45,27 @@ enum \hyperlink{pattern_8h_a17879f85ec892834fb691c61e71dfe54}{Pattern\+Category}
 \hyperlink{pattern_8h_a17879f85ec892834fb691c61e71dfe54a0e498301215acf5b6f285d4170ce9907}{F\+L\+E\+X\+G\+R\+A\+M} = 3
  \}
 \item 
-enum \hyperlink{pattern_8h_aff0cb3a143c587463f28ef629d0cd35e}{Structure\+Type} \{ \\*
-\hyperlink{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea1acb766bbcf5b802cfebeb1108eebe16}{S\+T\+R\+U\+C\+T\+\_\+\+P\+A\+T\+T\+E\+R\+N} = 0, 
-\hyperlink{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea5f8005faf739ab298ed4d99c0267b038}{S\+T\+R\+U\+C\+T\+\_\+\+S\+E\+N\+T\+E\+N\+C\+E} = 1, 
-\hyperlink{pattern_8h_aff0cb3a143c587463f28ef629d0cd35eaf3f19e9b1032491f13d625f9feb34b3e}{S\+T\+R\+U\+C\+T\+\_\+\+P\+A\+R\+A\+G\+R\+A\+P\+H} = 2, 
-\hyperlink{pattern_8h_aff0cb3a143c587463f28ef629d0cd35eaddf1557712cb371cae28ba0e3b21b736}{S\+T\+R\+U\+C\+T\+\_\+\+H\+E\+A\+D\+E\+R} = 3, 
-\\*
-\hyperlink{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea3c59869f029e1e9c845f03b599fce40c}{S\+T\+R\+U\+C\+T\+\_\+\+T\+E\+X\+T} = 4, 
-\hyperlink{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea8a5e539553b6893dd35797eecb013a71}{S\+T\+R\+U\+C\+T\+\_\+\+Q\+U\+O\+T\+E} = 5, 
-\hyperlink{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea50e28c56439943383b555bd9a29c35f2}{S\+T\+R\+U\+C\+T\+\_\+\+D\+I\+V} = 6
- \}
-\item 
-enum \hyperlink{pattern_8h_a456be878416629b7bdbab1afa77a06e6}{Markers} \{ \\*
-\hyperlink{pattern_8h_a456be878416629b7bdbab1afa77a06e6a7bf675a947f690d9c3e7987d00b8d22d}{E\+N\+D\+M\+A\+R\+K\+E\+R} = 0, 
-\hyperlink{pattern_8h_a456be878416629b7bdbab1afa77a06e6a2c482798f661b24e32d766c7014ad595}{T\+E\+X\+T\+M\+A\+R\+K\+E\+R} = 255, 
-\hyperlink{pattern_8h_a456be878416629b7bdbab1afa77a06e6ad1ccb7c901ba70c823830e062be851bd}{S\+E\+N\+T\+E\+N\+C\+E\+M\+A\+R\+K\+E\+R} = 254, 
-\hyperlink{pattern_8h_a456be878416629b7bdbab1afa77a06e6a42f093f58a7cfc74b57753d7071c7ac4}{P\+A\+R\+A\+G\+R\+A\+P\+H\+M\+A\+R\+K\+E\+R} = 253, 
-\\*
-\hyperlink{pattern_8h_a456be878416629b7bdbab1afa77a06e6a6204bbbcd83be95bd6b5771f113603a9}{B\+E\+G\+I\+N\+D\+I\+V\+M\+A\+R\+K\+E\+R} = 252, 
-\hyperlink{pattern_8h_a456be878416629b7bdbab1afa77a06e6a581bedb09890cd95a800d2e64ef8be2d}{E\+N\+D\+D\+I\+V\+M\+A\+R\+K\+E\+R} = 251, 
-\hyperlink{pattern_8h_a456be878416629b7bdbab1afa77a06e6a0508928b4245f1a0d9c77135a11b339c}{H\+E\+A\+D\+E\+R\+M\+A\+R\+K\+E\+R} = 250, 
-\hyperlink{pattern_8h_a456be878416629b7bdbab1afa77a06e6abd963ad5cce7aba974e9be43dac121b2}{F\+L\+E\+X\+M\+A\+R\+K\+E\+R} = 129, 
-\\*
-\hyperlink{pattern_8h_a456be878416629b7bdbab1afa77a06e6ad128fe0ed3e5c7803c0e458660bfb254}{S\+K\+I\+P\+M\+A\+R\+K\+E\+R} = 128
+enum \hyperlink{pattern_8h_a351dc5aa88481a949638aeb6cc5e6754}{Pattern\+Type} \{ \hyperlink{pattern_8h_a351dc5aa88481a949638aeb6cc5e6754ac2ab7901214563c5f2300c42358129f6}{P\+A\+T\+T\+E\+R\+N} = 0, 
+\hyperlink{pattern_8h_a351dc5aa88481a949638aeb6cc5e6754a5f20d34b0b2fd5023f48ddd94e4fb617}{P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R} = 1
  \}
 \end{DoxyCompactItemize}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \hyperlink{pattern_8h_a3afea24db8ad9026a42ac0e9caa0b72e}{readanddiscardpattern} (std\+::istream $\ast$in)
+void \hyperlink{pattern_8h_af94d807aa42f606e65942aecc46ab794}{readanddiscardpattern} (std\+::istream $\ast$in, bool pointerformat=false)
 \item 
 int \hyperlink{pattern_8h_a47b9052d17f33cd0620edfa271099e35}{reader\+\_\+passmarker} (const unsigned char c, std\+::istream $\ast$in)
 \item 
 \hyperlink{classPattern}{Pattern} \hyperlink{pattern_8h_a5e9195e7d434a0b52779b53baf69283f}{patternfromfile} (const std\+::string \&filename)
-\item 
-unsigned char $\ast$ \hyperlink{pattern_8h_a596d31d8e393e5280e06a8e82cadd416}{inttopatterndata} (unsigned char $\ast$buffer, unsigned int cls)
 \end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 const int \hyperlink{pattern_8h_abb5e3da43ee16bd408675e2c306e0c8c}{M\+A\+I\+N\+P\+A\+T\+T\+E\+R\+N\+B\+U\+F\+F\+E\+R\+S\+I\+Z\+E} = 40960
 \item 
-const unsigned char \hyperlink{pattern_8h_aa782a3a331e5011e1a2f13bcee3cd884}{tmp\+\_\+skipmarker} = \hyperlink{pattern_8h_a456be878416629b7bdbab1afa77a06e6ad128fe0ed3e5c7803c0e458660bfb254}{S\+K\+I\+P\+M\+A\+R\+K\+E\+R}
+const \hyperlink{classPattern}{Pattern} \hyperlink{pattern_8h_ad2d2d06088bcb1c64b915b8ed679df7d}{S\+K\+I\+P\+P\+A\+T\+T\+E\+R\+N} = \hyperlink{classPattern}{Pattern}((const unsigned char $\ast$) tmp\+\_\+skipmarker,1)
 \item 
-const unsigned char \hyperlink{pattern_8h_a6371d650f9669e200bfaac1a0523d009}{tmp\+\_\+flexmarker} = \hyperlink{pattern_8h_a456be878416629b7bdbab1afa77a06e6abd963ad5cce7aba974e9be43dac121b2}{F\+L\+E\+X\+M\+A\+R\+K\+E\+R}
-\item 
-const \hyperlink{classPattern}{Pattern} \hyperlink{pattern_8h_ad2d2d06088bcb1c64b915b8ed679df7d}{S\+K\+I\+P\+P\+A\+T\+T\+E\+R\+N} = \hyperlink{classPattern}{Pattern}(\&\hyperlink{pattern_8h_aa782a3a331e5011e1a2f13bcee3cd884}{tmp\+\_\+skipmarker},1)
-\item 
-const \hyperlink{classPattern}{Pattern} \hyperlink{pattern_8h_aff09c2042ea8ddaff17952629a490a24}{F\+L\+E\+X\+P\+A\+T\+T\+E\+R\+N} = \hyperlink{classPattern}{Pattern}(\&\hyperlink{pattern_8h_a6371d650f9669e200bfaac1a0523d009}{tmp\+\_\+flexmarker},1)
+const \hyperlink{classPattern}{Pattern} \hyperlink{pattern_8h_aff09c2042ea8ddaff17952629a490a24}{F\+L\+E\+X\+P\+A\+T\+T\+E\+R\+N} = \hyperlink{classPattern}{Pattern}((const unsigned char$\ast$) tmp\+\_\+flexmarker,1)
 \end{DoxyCompactItemize}
 
 
@@ -104,32 +80,6 @@ Licensed under G\+P\+Lv3\hypertarget{SpookyV2_8h_DESCRIPTION}{}\subsection{D\+E\
 Contains the \hyperlink{classPattern}{Pattern} class that is ubiquitous throughout Colibri Core 
 
 \subsection{Enumeration Type Documentation}
-\hypertarget{pattern_8h_a456be878416629b7bdbab1afa77a06e6}{}\index{pattern.\+h@{pattern.\+h}!Markers@{Markers}}
-\index{Markers@{Markers}!pattern.\+h@{pattern.\+h}}
-\subsubsection[{Markers}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Markers}}\label{pattern_8h_a456be878416629b7bdbab1afa77a06e6}
-\begin{Desc}
-\item[Enumerator]\par
-\begin{description}
-\index{E\+N\+D\+M\+A\+R\+K\+E\+R@{E\+N\+D\+M\+A\+R\+K\+E\+R}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!E\+N\+D\+M\+A\+R\+K\+E\+R@{E\+N\+D\+M\+A\+R\+K\+E\+R}}\item[{\em 
-\hypertarget{pattern_8h_a456be878416629b7bdbab1afa77a06e6a7bf675a947f690d9c3e7987d00b8d22d}{}E\+N\+D\+M\+A\+R\+K\+E\+R\label{pattern_8h_a456be878416629b7bdbab1afa77a06e6a7bf675a947f690d9c3e7987d00b8d22d}
-}]\index{T\+E\+X\+T\+M\+A\+R\+K\+E\+R@{T\+E\+X\+T\+M\+A\+R\+K\+E\+R}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!T\+E\+X\+T\+M\+A\+R\+K\+E\+R@{T\+E\+X\+T\+M\+A\+R\+K\+E\+R}}\item[{\em 
-\hypertarget{pattern_8h_a456be878416629b7bdbab1afa77a06e6a2c482798f661b24e32d766c7014ad595}{}T\+E\+X\+T\+M\+A\+R\+K\+E\+R\label{pattern_8h_a456be878416629b7bdbab1afa77a06e6a2c482798f661b24e32d766c7014ad595}
-}]\index{S\+E\+N\+T\+E\+N\+C\+E\+M\+A\+R\+K\+E\+R@{S\+E\+N\+T\+E\+N\+C\+E\+M\+A\+R\+K\+E\+R}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!S\+E\+N\+T\+E\+N\+C\+E\+M\+A\+R\+K\+E\+R@{S\+E\+N\+T\+E\+N\+C\+E\+M\+A\+R\+K\+E\+R}}\item[{\em 
-\hypertarget{pattern_8h_a456be878416629b7bdbab1afa77a06e6ad1ccb7c901ba70c823830e062be851bd}{}S\+E\+N\+T\+E\+N\+C\+E\+M\+A\+R\+K\+E\+R\label{pattern_8h_a456be878416629b7bdbab1afa77a06e6ad1ccb7c901ba70c823830e062be851bd}
-}]\index{P\+A\+R\+A\+G\+R\+A\+P\+H\+M\+A\+R\+K\+E\+R@{P\+A\+R\+A\+G\+R\+A\+P\+H\+M\+A\+R\+K\+E\+R}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!P\+A\+R\+A\+G\+R\+A\+P\+H\+M\+A\+R\+K\+E\+R@{P\+A\+R\+A\+G\+R\+A\+P\+H\+M\+A\+R\+K\+E\+R}}\item[{\em 
-\hypertarget{pattern_8h_a456be878416629b7bdbab1afa77a06e6a42f093f58a7cfc74b57753d7071c7ac4}{}P\+A\+R\+A\+G\+R\+A\+P\+H\+M\+A\+R\+K\+E\+R\label{pattern_8h_a456be878416629b7bdbab1afa77a06e6a42f093f58a7cfc74b57753d7071c7ac4}
-}]\index{B\+E\+G\+I\+N\+D\+I\+V\+M\+A\+R\+K\+E\+R@{B\+E\+G\+I\+N\+D\+I\+V\+M\+A\+R\+K\+E\+R}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!B\+E\+G\+I\+N\+D\+I\+V\+M\+A\+R\+K\+E\+R@{B\+E\+G\+I\+N\+D\+I\+V\+M\+A\+R\+K\+E\+R}}\item[{\em 
-\hypertarget{pattern_8h_a456be878416629b7bdbab1afa77a06e6a6204bbbcd83be95bd6b5771f113603a9}{}B\+E\+G\+I\+N\+D\+I\+V\+M\+A\+R\+K\+E\+R\label{pattern_8h_a456be878416629b7bdbab1afa77a06e6a6204bbbcd83be95bd6b5771f113603a9}
-}]\index{E\+N\+D\+D\+I\+V\+M\+A\+R\+K\+E\+R@{E\+N\+D\+D\+I\+V\+M\+A\+R\+K\+E\+R}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!E\+N\+D\+D\+I\+V\+M\+A\+R\+K\+E\+R@{E\+N\+D\+D\+I\+V\+M\+A\+R\+K\+E\+R}}\item[{\em 
-\hypertarget{pattern_8h_a456be878416629b7bdbab1afa77a06e6a581bedb09890cd95a800d2e64ef8be2d}{}E\+N\+D\+D\+I\+V\+M\+A\+R\+K\+E\+R\label{pattern_8h_a456be878416629b7bdbab1afa77a06e6a581bedb09890cd95a800d2e64ef8be2d}
-}]\index{H\+E\+A\+D\+E\+R\+M\+A\+R\+K\+E\+R@{H\+E\+A\+D\+E\+R\+M\+A\+R\+K\+E\+R}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!H\+E\+A\+D\+E\+R\+M\+A\+R\+K\+E\+R@{H\+E\+A\+D\+E\+R\+M\+A\+R\+K\+E\+R}}\item[{\em 
-\hypertarget{pattern_8h_a456be878416629b7bdbab1afa77a06e6a0508928b4245f1a0d9c77135a11b339c}{}H\+E\+A\+D\+E\+R\+M\+A\+R\+K\+E\+R\label{pattern_8h_a456be878416629b7bdbab1afa77a06e6a0508928b4245f1a0d9c77135a11b339c}
-}]\index{F\+L\+E\+X\+M\+A\+R\+K\+E\+R@{F\+L\+E\+X\+M\+A\+R\+K\+E\+R}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!F\+L\+E\+X\+M\+A\+R\+K\+E\+R@{F\+L\+E\+X\+M\+A\+R\+K\+E\+R}}\item[{\em 
-\hypertarget{pattern_8h_a456be878416629b7bdbab1afa77a06e6abd963ad5cce7aba974e9be43dac121b2}{}F\+L\+E\+X\+M\+A\+R\+K\+E\+R\label{pattern_8h_a456be878416629b7bdbab1afa77a06e6abd963ad5cce7aba974e9be43dac121b2}
-}]\index{S\+K\+I\+P\+M\+A\+R\+K\+E\+R@{S\+K\+I\+P\+M\+A\+R\+K\+E\+R}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!S\+K\+I\+P\+M\+A\+R\+K\+E\+R@{S\+K\+I\+P\+M\+A\+R\+K\+E\+R}}\item[{\em 
-\hypertarget{pattern_8h_a456be878416629b7bdbab1afa77a06e6ad128fe0ed3e5c7803c0e458660bfb254}{}S\+K\+I\+P\+M\+A\+R\+K\+E\+R\label{pattern_8h_a456be878416629b7bdbab1afa77a06e6ad128fe0ed3e5c7803c0e458660bfb254}
-}]\end{description}
-\end{Desc}
 \hypertarget{pattern_8h_a17879f85ec892834fb691c61e71dfe54}{}\index{pattern.\+h@{pattern.\+h}!Pattern\+Category@{Pattern\+Category}}
 \index{Pattern\+Category@{Pattern\+Category}!pattern.\+h@{pattern.\+h}}
 \subsubsection[{Pattern\+Category}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Pattern\+Category}}\label{pattern_8h_a17879f85ec892834fb691c61e71dfe54}
@@ -146,39 +96,21 @@ Contains the \hyperlink{classPattern}{Pattern} class that is ubiquitous througho
 \hypertarget{pattern_8h_a17879f85ec892834fb691c61e71dfe54a0e498301215acf5b6f285d4170ce9907}{}F\+L\+E\+X\+G\+R\+A\+M\label{pattern_8h_a17879f85ec892834fb691c61e71dfe54a0e498301215acf5b6f285d4170ce9907}
 }]For flexgrams, i.\+e. patterns with dynamic-\/width gaps \end{description}
 \end{Desc}
-\hypertarget{pattern_8h_aff0cb3a143c587463f28ef629d0cd35e}{}\index{pattern.\+h@{pattern.\+h}!Structure\+Type@{Structure\+Type}}
-\index{Structure\+Type@{Structure\+Type}!pattern.\+h@{pattern.\+h}}
-\subsubsection[{Structure\+Type}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Structure\+Type}}\label{pattern_8h_aff0cb3a143c587463f28ef629d0cd35e}
-Not really used much yet, but reserved for encoding structural markup later on. \begin{Desc}
+\hypertarget{pattern_8h_a351dc5aa88481a949638aeb6cc5e6754}{}\index{pattern.\+h@{pattern.\+h}!Pattern\+Type@{Pattern\+Type}}
+\index{Pattern\+Type@{Pattern\+Type}!pattern.\+h@{pattern.\+h}}
+\subsubsection[{Pattern\+Type}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Pattern\+Type}}\label{pattern_8h_a351dc5aa88481a949638aeb6cc5e6754}
+\begin{Desc}
 \item[Enumerator]\par
 \begin{description}
-\index{S\+T\+R\+U\+C\+T\+\_\+\+P\+A\+T\+T\+E\+R\+N@{S\+T\+R\+U\+C\+T\+\_\+\+P\+A\+T\+T\+E\+R\+N}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!S\+T\+R\+U\+C\+T\+\_\+\+P\+A\+T\+T\+E\+R\+N@{S\+T\+R\+U\+C\+T\+\_\+\+P\+A\+T\+T\+E\+R\+N}}\item[{\em 
-\hypertarget{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea1acb766bbcf5b802cfebeb1108eebe16}{}S\+T\+R\+U\+C\+T\+\_\+\+P\+A\+T\+T\+E\+R\+N\label{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea1acb766bbcf5b802cfebeb1108eebe16}
-}]\index{S\+T\+R\+U\+C\+T\+\_\+\+S\+E\+N\+T\+E\+N\+C\+E@{S\+T\+R\+U\+C\+T\+\_\+\+S\+E\+N\+T\+E\+N\+C\+E}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!S\+T\+R\+U\+C\+T\+\_\+\+S\+E\+N\+T\+E\+N\+C\+E@{S\+T\+R\+U\+C\+T\+\_\+\+S\+E\+N\+T\+E\+N\+C\+E}}\item[{\em 
-\hypertarget{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea5f8005faf739ab298ed4d99c0267b038}{}S\+T\+R\+U\+C\+T\+\_\+\+S\+E\+N\+T\+E\+N\+C\+E\label{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea5f8005faf739ab298ed4d99c0267b038}
-}]\index{S\+T\+R\+U\+C\+T\+\_\+\+P\+A\+R\+A\+G\+R\+A\+P\+H@{S\+T\+R\+U\+C\+T\+\_\+\+P\+A\+R\+A\+G\+R\+A\+P\+H}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!S\+T\+R\+U\+C\+T\+\_\+\+P\+A\+R\+A\+G\+R\+A\+P\+H@{S\+T\+R\+U\+C\+T\+\_\+\+P\+A\+R\+A\+G\+R\+A\+P\+H}}\item[{\em 
-\hypertarget{pattern_8h_aff0cb3a143c587463f28ef629d0cd35eaf3f19e9b1032491f13d625f9feb34b3e}{}S\+T\+R\+U\+C\+T\+\_\+\+P\+A\+R\+A\+G\+R\+A\+P\+H\label{pattern_8h_aff0cb3a143c587463f28ef629d0cd35eaf3f19e9b1032491f13d625f9feb34b3e}
-}]\index{S\+T\+R\+U\+C\+T\+\_\+\+H\+E\+A\+D\+E\+R@{S\+T\+R\+U\+C\+T\+\_\+\+H\+E\+A\+D\+E\+R}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!S\+T\+R\+U\+C\+T\+\_\+\+H\+E\+A\+D\+E\+R@{S\+T\+R\+U\+C\+T\+\_\+\+H\+E\+A\+D\+E\+R}}\item[{\em 
-\hypertarget{pattern_8h_aff0cb3a143c587463f28ef629d0cd35eaddf1557712cb371cae28ba0e3b21b736}{}S\+T\+R\+U\+C\+T\+\_\+\+H\+E\+A\+D\+E\+R\label{pattern_8h_aff0cb3a143c587463f28ef629d0cd35eaddf1557712cb371cae28ba0e3b21b736}
-}]\index{S\+T\+R\+U\+C\+T\+\_\+\+T\+E\+X\+T@{S\+T\+R\+U\+C\+T\+\_\+\+T\+E\+X\+T}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!S\+T\+R\+U\+C\+T\+\_\+\+T\+E\+X\+T@{S\+T\+R\+U\+C\+T\+\_\+\+T\+E\+X\+T}}\item[{\em 
-\hypertarget{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea3c59869f029e1e9c845f03b599fce40c}{}S\+T\+R\+U\+C\+T\+\_\+\+T\+E\+X\+T\label{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea3c59869f029e1e9c845f03b599fce40c}
-}]\index{S\+T\+R\+U\+C\+T\+\_\+\+Q\+U\+O\+T\+E@{S\+T\+R\+U\+C\+T\+\_\+\+Q\+U\+O\+T\+E}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!S\+T\+R\+U\+C\+T\+\_\+\+Q\+U\+O\+T\+E@{S\+T\+R\+U\+C\+T\+\_\+\+Q\+U\+O\+T\+E}}\item[{\em 
-\hypertarget{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea8a5e539553b6893dd35797eecb013a71}{}S\+T\+R\+U\+C\+T\+\_\+\+Q\+U\+O\+T\+E\label{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea8a5e539553b6893dd35797eecb013a71}
-}]\index{S\+T\+R\+U\+C\+T\+\_\+\+D\+I\+V@{S\+T\+R\+U\+C\+T\+\_\+\+D\+I\+V}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!S\+T\+R\+U\+C\+T\+\_\+\+D\+I\+V@{S\+T\+R\+U\+C\+T\+\_\+\+D\+I\+V}}\item[{\em 
-\hypertarget{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea50e28c56439943383b555bd9a29c35f2}{}S\+T\+R\+U\+C\+T\+\_\+\+D\+I\+V\label{pattern_8h_aff0cb3a143c587463f28ef629d0cd35ea50e28c56439943383b555bd9a29c35f2}
+\index{P\+A\+T\+T\+E\+R\+N@{P\+A\+T\+T\+E\+R\+N}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!P\+A\+T\+T\+E\+R\+N@{P\+A\+T\+T\+E\+R\+N}}\item[{\em 
+\hypertarget{pattern_8h_a351dc5aa88481a949638aeb6cc5e6754ac2ab7901214563c5f2300c42358129f6}{}P\+A\+T\+T\+E\+R\+N\label{pattern_8h_a351dc5aa88481a949638aeb6cc5e6754ac2ab7901214563c5f2300c42358129f6}
+}]\index{P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R@{P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R}!pattern.\+h@{pattern.\+h}}\index{pattern.\+h@{pattern.\+h}!P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R@{P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R}}\item[{\em 
+\hypertarget{pattern_8h_a351dc5aa88481a949638aeb6cc5e6754a5f20d34b0b2fd5023f48ddd94e4fb617}{}P\+A\+T\+T\+E\+R\+N\+P\+O\+I\+N\+T\+E\+R\label{pattern_8h_a351dc5aa88481a949638aeb6cc5e6754a5f20d34b0b2fd5023f48ddd94e4fb617}
 }]\end{description}
 \end{Desc}
 
 
 \subsection{Function Documentation}
-\hypertarget{pattern_8h_a596d31d8e393e5280e06a8e82cadd416}{}\index{pattern.\+h@{pattern.\+h}!inttopatterndata@{inttopatterndata}}
-\index{inttopatterndata@{inttopatterndata}!pattern.\+h@{pattern.\+h}}
-\subsubsection[{inttopatterndata(unsigned char $\ast$buffer, unsigned int cls)}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char$\ast$ inttopatterndata (
-\begin{DoxyParamCaption}
-\item[{unsigned char $\ast$}]{buffer, }
-\item[{unsigned int}]{cls}
-\end{DoxyParamCaption}
-)}\label{pattern_8h_a596d31d8e393e5280e06a8e82cadd416}
 \hypertarget{pattern_8h_a5e9195e7d434a0b52779b53baf69283f}{}\index{pattern.\+h@{pattern.\+h}!patternfromfile@{patternfromfile}}
 \index{patternfromfile@{patternfromfile}!pattern.\+h@{pattern.\+h}}
 \subsubsection[{patternfromfile(const std\+::string \&filename)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Pattern} patternfromfile (
@@ -186,13 +118,14 @@ Not really used much yet, but reserved for encoding structural markup later on. 
 \item[{const std\+::string \&}]{filename}
 \end{DoxyParamCaption}
 )}\label{pattern_8h_a5e9195e7d434a0b52779b53baf69283f}
-\hypertarget{pattern_8h_a3afea24db8ad9026a42ac0e9caa0b72e}{}\index{pattern.\+h@{pattern.\+h}!readanddiscardpattern@{readanddiscardpattern}}
+\hypertarget{pattern_8h_af94d807aa42f606e65942aecc46ab794}{}\index{pattern.\+h@{pattern.\+h}!readanddiscardpattern@{readanddiscardpattern}}
 \index{readanddiscardpattern@{readanddiscardpattern}!pattern.\+h@{pattern.\+h}}
-\subsubsection[{readanddiscardpattern(std\+::istream $\ast$in)}]{\setlength{\rightskip}{0pt plus 5cm}void readanddiscardpattern (
+\subsubsection[{readanddiscardpattern(std\+::istream $\ast$in, bool pointerformat=false)}]{\setlength{\rightskip}{0pt plus 5cm}void readanddiscardpattern (
 \begin{DoxyParamCaption}
-\item[{std\+::istream $\ast$}]{in}
+\item[{std\+::istream $\ast$}]{in, }
+\item[{bool}]{pointerformat = {\ttfamily false}}
 \end{DoxyParamCaption}
-)}\label{pattern_8h_a3afea24db8ad9026a42ac0e9caa0b72e}
+)}\label{pattern_8h_af94d807aa42f606e65942aecc46ab794}
 \hypertarget{pattern_8h_a47b9052d17f33cd0620edfa271099e35}{}\index{pattern.\+h@{pattern.\+h}!reader\+\_\+passmarker@{reader\+\_\+passmarker}}
 \index{reader\+\_\+passmarker@{reader\+\_\+passmarker}!pattern.\+h@{pattern.\+h}}
 \subsubsection[{reader\+\_\+passmarker(const unsigned char c, std\+::istream $\ast$in)}]{\setlength{\rightskip}{0pt plus 5cm}int reader\+\_\+passmarker (
@@ -206,16 +139,10 @@ Not really used much yet, but reserved for encoding structural markup later on. 
 \subsection{Variable Documentation}
 \hypertarget{pattern_8h_aff09c2042ea8ddaff17952629a490a24}{}\index{pattern.\+h@{pattern.\+h}!F\+L\+E\+X\+P\+A\+T\+T\+E\+R\+N@{F\+L\+E\+X\+P\+A\+T\+T\+E\+R\+N}}
 \index{F\+L\+E\+X\+P\+A\+T\+T\+E\+R\+N@{F\+L\+E\+X\+P\+A\+T\+T\+E\+R\+N}!pattern.\+h@{pattern.\+h}}
-\subsubsection[{F\+L\+E\+X\+P\+A\+T\+T\+E\+R\+N}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Pattern} F\+L\+E\+X\+P\+A\+T\+T\+E\+R\+N = {\bf Pattern}(\&{\bf tmp\+\_\+flexmarker},1)}\label{pattern_8h_aff09c2042ea8ddaff17952629a490a24}
+\subsubsection[{F\+L\+E\+X\+P\+A\+T\+T\+E\+R\+N}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Pattern} F\+L\+E\+X\+P\+A\+T\+T\+E\+R\+N = {\bf Pattern}((const unsigned char$\ast$) tmp\+\_\+flexmarker,1)}\label{pattern_8h_aff09c2042ea8ddaff17952629a490a24}
 \hypertarget{pattern_8h_abb5e3da43ee16bd408675e2c306e0c8c}{}\index{pattern.\+h@{pattern.\+h}!M\+A\+I\+N\+P\+A\+T\+T\+E\+R\+N\+B\+U\+F\+F\+E\+R\+S\+I\+Z\+E@{M\+A\+I\+N\+P\+A\+T\+T\+E\+R\+N\+B\+U\+F\+F\+E\+R\+S\+I\+Z\+E}}
 \index{M\+A\+I\+N\+P\+A\+T\+T\+E\+R\+N\+B\+U\+F\+F\+E\+R\+S\+I\+Z\+E@{M\+A\+I\+N\+P\+A\+T\+T\+E\+R\+N\+B\+U\+F\+F\+E\+R\+S\+I\+Z\+E}!pattern.\+h@{pattern.\+h}}
 \subsubsection[{M\+A\+I\+N\+P\+A\+T\+T\+E\+R\+N\+B\+U\+F\+F\+E\+R\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}const int M\+A\+I\+N\+P\+A\+T\+T\+E\+R\+N\+B\+U\+F\+F\+E\+R\+S\+I\+Z\+E = 40960}\label{pattern_8h_abb5e3da43ee16bd408675e2c306e0c8c}
 \hypertarget{pattern_8h_ad2d2d06088bcb1c64b915b8ed679df7d}{}\index{pattern.\+h@{pattern.\+h}!S\+K\+I\+P\+P\+A\+T\+T\+E\+R\+N@{S\+K\+I\+P\+P\+A\+T\+T\+E\+R\+N}}
 \index{S\+K\+I\+P\+P\+A\+T\+T\+E\+R\+N@{S\+K\+I\+P\+P\+A\+T\+T\+E\+R\+N}!pattern.\+h@{pattern.\+h}}
-\subsubsection[{S\+K\+I\+P\+P\+A\+T\+T\+E\+R\+N}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Pattern} S\+K\+I\+P\+P\+A\+T\+T\+E\+R\+N = {\bf Pattern}(\&{\bf tmp\+\_\+skipmarker},1)}\label{pattern_8h_ad2d2d06088bcb1c64b915b8ed679df7d}
-\hypertarget{pattern_8h_a6371d650f9669e200bfaac1a0523d009}{}\index{pattern.\+h@{pattern.\+h}!tmp\+\_\+flexmarker@{tmp\+\_\+flexmarker}}
-\index{tmp\+\_\+flexmarker@{tmp\+\_\+flexmarker}!pattern.\+h@{pattern.\+h}}
-\subsubsection[{tmp\+\_\+flexmarker}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned char tmp\+\_\+flexmarker = {\bf F\+L\+E\+X\+M\+A\+R\+K\+E\+R}}\label{pattern_8h_a6371d650f9669e200bfaac1a0523d009}
-\hypertarget{pattern_8h_aa782a3a331e5011e1a2f13bcee3cd884}{}\index{pattern.\+h@{pattern.\+h}!tmp\+\_\+skipmarker@{tmp\+\_\+skipmarker}}
-\index{tmp\+\_\+skipmarker@{tmp\+\_\+skipmarker}!pattern.\+h@{pattern.\+h}}
-\subsubsection[{tmp\+\_\+skipmarker}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned char tmp\+\_\+skipmarker = {\bf S\+K\+I\+P\+M\+A\+R\+K\+E\+R}}\label{pattern_8h_aa782a3a331e5011e1a2f13bcee3cd884}
+\subsubsection[{S\+K\+I\+P\+P\+A\+T\+T\+E\+R\+N}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Pattern} S\+K\+I\+P\+P\+A\+T\+T\+E\+R\+N = {\bf Pattern}((const unsigned char $\ast$) tmp\+\_\+skipmarker,1)}\label{pattern_8h_ad2d2d06088bcb1c64b915b8ed679df7d}

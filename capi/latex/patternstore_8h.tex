@@ -26,15 +26,15 @@ Contains lower-\/level containers for patterns.
 \subsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-class \hyperlink{classIndexPattern}{Index\+Pattern}
-\begin{DoxyCompactList}\small\item\em This class corresponds to a single token in a corpus, it holds the token class and the position. \end{DoxyCompactList}\item 
 class \hyperlink{classIndexedCorpus}{Indexed\+Corpus}
 \begin{DoxyCompactList}\small\item\em Class for reading an entire (class encoded) corpus into memory. It provides a reverse index by \hyperlink{classIndexReference}{Index\+Reference}. The reverse index stores positions and unigrams. \end{DoxyCompactList}\item 
+class \hyperlink{classIndexedCorpus_1_1iterator}{Indexed\+Corpus\+::iterator}
+\item 
 class \hyperlink{classPatternStoreInterface}{Pattern\+Store\+Interface}
 \begin{DoxyCompactList}\small\item\em Limited virtual interface to pattern stores. \end{DoxyCompactList}\item 
-class \hyperlink{classPatternStore}{Pattern\+Store$<$ Container\+Type, Read\+Write\+Size\+Type $>$}
+class \hyperlink{classPatternStore}{Pattern\+Store$<$ Container\+Type, Read\+Write\+Size\+Type, Pattern\+Type $>$}
 \begin{DoxyCompactList}\small\item\em Abstract \hyperlink{classPattern}{Pattern} store class, not to be instantiated directly. \end{DoxyCompactList}\item 
-class \hyperlink{classPatternMapStore}{Pattern\+Map\+Store$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}
+class \hyperlink{classPatternMapStore}{Pattern\+Map\+Store$<$ Container\+Type, Value\+Type, Value\+Handler, Read\+Write\+Size\+Type, Pattern\+Type $>$}
 \begin{DoxyCompactList}\small\item\em Abstract class for map-\/like pattern stores, do not instantiate directly. \end{DoxyCompactList}\item 
 class \hyperlink{classPatternSet}{Pattern\+Set$<$ Read\+Write\+Size\+Type $>$}
 \begin{DoxyCompactList}\small\item\em A pattern store in the form of an unordered set (i.\+e, no duplicates). Stores only patterns, no values. \end{DoxyCompactList}\item 
@@ -42,6 +42,10 @@ class \hyperlink{classHashOrderedPatternSet}{Hash\+Ordered\+Pattern\+Set$<$ Read
 \begin{DoxyCompactList}\small\item\em A pattern store in the form of an ordered set (i.\+e, no duplicates). Stores only patterns, no values. \end{DoxyCompactList}\item 
 class \hyperlink{classPatternMap}{Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}
 \begin{DoxyCompactList}\small\item\em A pattern map storing patterns and their values in a hash map (unordered\+\_\+map). \end{DoxyCompactList}\item 
+class \hyperlink{classPatternPointerMap}{Pattern\+Pointer\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}
+\item 
+class \hyperlink{classOrderedPatternPointerMap}{Ordered\+Pattern\+Pointer\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}
+\item 
 class \hyperlink{classHashOrderedPatternMap}{Hash\+Ordered\+Pattern\+Map$<$ Value\+Type, Value\+Handler, Read\+Write\+Size\+Type $>$}
 \item 
 class \hyperlink{classArrayValueHandler}{Array\+Value\+Handler$<$ T, N, countindex $>$}
@@ -52,6 +56,8 @@ class \hyperlink{classAlignedPatternMap}{Aligned\+Pattern\+Map$<$ Value\+Type, V
 \begin{DoxyCompactList}\small\item\em A nested pattern map, useful for storing patterns that map to other patterns, which in turn map to values. An example is phrase-\/translation tables in Machine Translation. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Typedefs}
 \begin{DoxyCompactItemize}
+\item 
+typedef std\+::pair$<$ \hyperlink{classIndexReference}{Index\+Reference}, \hyperlink{classPatternPointer}{Pattern\+Pointer} $>$ \hyperlink{patternstore_8h_ab6eb1121be28d4a231c70a353bdf1132}{Index\+Pattern}
 \item 
 typedef std\+::unordered\+\_\+set$<$ \hyperlink{classPattern}{Pattern} $>$ \hyperlink{patternstore_8h_a29bbbbc6d95519f30358276784e16c25}{t\+\_\+patternset}
 \item 
@@ -70,6 +76,9 @@ Licensed under G\+P\+Lv3\hypertarget{SpookyV2_8h_DESCRIPTION}{}\subsection{D\+E\
 Contains lower-\/level containers for patterns 
 
 \subsection{Typedef Documentation}
+\hypertarget{patternstore_8h_ab6eb1121be28d4a231c70a353bdf1132}{}\index{patternstore.\+h@{patternstore.\+h}!Index\+Pattern@{Index\+Pattern}}
+\index{Index\+Pattern@{Index\+Pattern}!patternstore.\+h@{patternstore.\+h}}
+\subsubsection[{Index\+Pattern}]{\setlength{\rightskip}{0pt plus 5cm}typedef std\+::pair$<${\bf Index\+Reference},{\bf Pattern\+Pointer}$>$ {\bf Index\+Pattern}}\label{patternstore_8h_ab6eb1121be28d4a231c70a353bdf1132}
 \hypertarget{patternstore_8h_a95f03de9f728d05eb31111e2dbdac6a7}{}\index{patternstore.\+h@{patternstore.\+h}!t\+\_\+hashorderedpatternset@{t\+\_\+hashorderedpatternset}}
 \index{t\+\_\+hashorderedpatternset@{t\+\_\+hashorderedpatternset}!patternstore.\+h@{patternstore.\+h}}
 \subsubsection[{t\+\_\+hashorderedpatternset}]{\setlength{\rightskip}{0pt plus 5cm}typedef std\+::set$<${\bf Pattern}$>$ {\bf t\+\_\+hashorderedpatternset}}\label{patternstore_8h_a95f03de9f728d05eb31111e2dbdac6a7}

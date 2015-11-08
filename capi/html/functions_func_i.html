@@ -72,6 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
       <li><a href="functions_type.html"><span>Typedefs</span></a></li>
+      <li><a href="functions_rela.html"><span>Related&#160;Functions</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -127,23 +128,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="classPatternStoreValueHandler.html#a8f1745d36fe84bd8b96854a30b3bc5f7">PatternStoreValueHandler&lt; PatternStoreType &gt;</a>
 </li>
 <li>IndexedCorpus()
-: <a class="el" href="classIndexedCorpus.html#a3a2369b02abd0c7f4eb25710a5aec446">IndexedCorpus</a>
+: <a class="el" href="classIndexedCorpus.html#a90eaf21374d0bc17af480c882fcb07b2">IndexedCorpus</a>
 </li>
 <li>IndexedData()
 : <a class="el" href="classIndexedData.html#a9973db49f518c5e9fdad7985954eb1ea">IndexedData</a>
 </li>
 <li>IndexedPatternModel()
-: <a class="el" href="classIndexedPatternModel.html#af2fbb7d1f40210bda30bee3d5577546a">IndexedPatternModel&lt; MapType &gt;</a>
+: <a class="el" href="classIndexedPatternModel.html#ae2334d12047a541e3ffba097a88510cd">IndexedPatternModel&lt; MapType, PatternType &gt;</a>
 </li>
-<li>IndexPattern()
-: <a class="el" href="classIndexPattern.html#a56904dd604599f3ea9cc1283d0f33f6a">IndexPattern</a>
+<li>IndexedPatternPointerModel()
+: <a class="el" href="classIndexedPatternPointerModel.html#a690eb6e46ba2b5f44e5a9063826922df">IndexedPatternPointerModel&lt; MapType &gt;</a>
 </li>
 <li>IndexReference()
 : <a class="el" href="classIndexReference.html#afcc00f656c2940e65cf7771efb663eb2">IndexReference</a>
 </li>
 <li>info()
-: <a class="el" href="classIndexedPatternModel.html#a64fade10459a7699b856c8cb621789f9">IndexedPatternModel&lt; MapType &gt;</a>
-, <a class="el" href="classPatternModel.html#a231e5e4c9ed49764b24718e4269b4256">PatternModel&lt; ValueType, ValueHandler, MapType &gt;</a>
+: <a class="el" href="classIndexedPatternModel.html#a4fb359f3059ee9689494fd053ce4adba">IndexedPatternModel&lt; MapType, PatternType &gt;</a>
+, <a class="el" href="classPatternModel.html#a6f4cc32e18eceda5029f215ab67f06e4">PatternModel&lt; ValueType, ValueHandler, MapType, PatternType &gt;</a>
 </li>
 <li>Init()
 : <a class="el" href="classSpookyHash.html#acba9d3327d8576d4126b15f301a17282">SpookyHash</a>
@@ -152,29 +153,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classHashOrderedPatternMap.html#aec9cfa54723fbe49e75a4e93109ed0bf">HashOrderedPatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>
 , <a class="el" href="classHashOrderedPatternSet.html#a9da0aaf61e7b1425a181da16ccef6a1b">HashOrderedPatternSet&lt; ReadWriteSizeType &gt;</a>
 , <a class="el" href="classIndexedData.html#a59a7f803269610b024bcd8ea87d2752b">IndexedData</a>
+, <a class="el" href="classOrderedPatternPointerMap.html#a4ecb7501054290e84a5b06b6aa57ee48">OrderedPatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>
 , <a class="el" href="classPatternFeatureVectorMap.html#a90b60dbc7335c97312816da56c7faa56">PatternFeatureVectorMap&lt; FeatureType &gt;</a>
-, <a class="el" href="classPatternMap.html#a911511a1b32cef2ee3efb234f66974ce">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>
-, <a class="el" href="classPatternMapStore.html#a37bcf7aae1c40ccdea57e9a57533a555">PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType &gt;</a>
+, <a class="el" href="classPatternMap.html#a67628e669cf2995a44769cda83bf8e85">PatternMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>
+, <a class="el" href="classPatternMapStore.html#a4700a0f0dda681e6a4aa5e43ee917ad8">PatternMapStore&lt; ContainerType, ValueType, ValueHandler, ReadWriteSizeType, PatternType &gt;</a>
+, <a class="el" href="classPatternPointerMap.html#a7d407c9bdb2a64a216ae5a514c3865d3">PatternPointerMap&lt; ValueType, ValueHandler, ReadWriteSizeType &gt;</a>
 , <a class="el" href="classPatternSet.html#aee78dae3e67875f22089ba537d50bc29">PatternSet&lt; ReadWriteSizeType &gt;</a>
-, <a class="el" href="classPatternStore.html#a22e091d80efb8182ac49cf6b225f0aa1">PatternStore&lt; ContainerType, ReadWriteSizeType &gt;</a>
+, <a class="el" href="classPatternStore.html#aac1558cd3f7e4ec8ec142e1c59f122c9">PatternStore&lt; ContainerType, ReadWriteSizeType, PatternType &gt;</a>
 </li>
 <li>instanceof()
 : <a class="el" href="classPattern.html#a62563035a235a84b77fc4bd97bc82e0e">Pattern</a>
+, <a class="el" href="classPatternPointer.html#ac7f372d6738afa40d5b3f11a59bfa301">PatternPointer</a>
 </li>
 <li>isflexgram()
 : <a class="el" href="classPattern.html#a8bef14a88603946827aa1342b47ec001">Pattern</a>
+, <a class="el" href="classPatternPointer.html#a345e4adac1ad1698e5964229feb1368c">PatternPointer</a>
 </li>
 <li>isgap()
 : <a class="el" href="classPattern.html#a971a055b02cf2c7d6f0c6a5a0e4401f0">Pattern</a>
+, <a class="el" href="classPatternPointer.html#a937e665a5d2a649ed7281ad878016e5a">PatternPointer</a>
 </li>
 <li>isskipgram()
 : <a class="el" href="classPattern.html#a609a2ba1f832678fb69baa201f50b163">Pattern</a>
+, <a class="el" href="classPatternPointer.html#a4efd42523605481c0dc56d59e370cec3">PatternPointer</a>
+</li>
+<li>iterator()
+: <a class="el" href="classIndexedCorpus_1_1iterator.html#a6c221abcce60832d47ae7dba18ca8d9b">IndexedCorpus::iterator</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2015 13:45:52 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 4 2015 12:10:23 for Colibri Core by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.10
 </small></address>

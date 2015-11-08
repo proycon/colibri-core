@@ -41,6 +41,8 @@ bool \hyperlink{classPatternSet_a28de1eeb8ec5774505173cc28e06320e}{has} (const \
 \item 
 size\+\_\+t \hyperlink{classPatternSet_af85860d7135a5154a01a8366131beb39}{size} () const 
 \item 
+void \hyperlink{classPatternSet_ac66abd4ac79ee7d35548a3bbfd8e5e8f}{reserve} (size\+\_\+t s)
+\item 
 \hyperlink{classPatternSet_a18b78ea966c57db2373741291ba610f3}{iterator} \hyperlink{classPatternSet_ac8c206e63c54d45443a38df762cea863}{begin} ()
 \item 
 \hyperlink{classPatternSet_a5d419991ea0abb0fbc4a2282574b1b8c}{const\+\_\+iterator} \hyperlink{classPatternSet_af78486457770e3260e73fc233b789a1a}{begin} () const 
@@ -52,6 +54,10 @@ size\+\_\+t \hyperlink{classPatternSet_af85860d7135a5154a01a8366131beb39}{size} 
 \hyperlink{classPatternSet_a18b78ea966c57db2373741291ba610f3}{iterator} \hyperlink{classPatternSet_a2c56aa5b266f2132f8453bf794bba1f5}{find} (const \hyperlink{classPattern}{Pattern} \&pattern)
 \item 
 \hyperlink{classPatternSet_a5d419991ea0abb0fbc4a2282574b1b8c}{const\+\_\+iterator} \hyperlink{classPatternSet_a56c0fcc8deb357628e778d3cc0d3c418}{find} (const \hyperlink{classPattern}{Pattern} \&pattern) const 
+\item 
+\hyperlink{classPatternSet_a18b78ea966c57db2373741291ba610f3}{iterator} \hyperlink{classPatternSet_a0463855da3729a70a59ee2e24265fbf8}{find} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&pattern)
+\item 
+\hyperlink{classPatternSet_a5d419991ea0abb0fbc4a2282574b1b8c}{const\+\_\+iterator} \hyperlink{classPatternSet_acba3d1e3b3bce94f6768c014b0d17140}{find} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&pattern) const 
 \item 
 bool \hyperlink{classPatternSet_afd2c053ac589e30edd7eda5c9f95c771}{erase} (const \hyperlink{classPattern}{Pattern} \&pattern)
 \item 
@@ -132,7 +138,7 @@ Constructs a pattern set from a \hyperlink{classClassEncoder}{Class\+Encoder} \h
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_ac8c206e63c54d45443a38df762cea863}
 Returns an iterator to iterate over the set 
 
-Implements \hyperlink{classPatternStore_a9dfc403ac576e1904f4ec326fec1adaa}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_aab3fab217b585b2b90a3fb3cc7065e11}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternSet_af78486457770e3260e73fc233b789a1a}{}\index{Pattern\+Set@{Pattern\+Set}!begin@{begin}}
 \index{begin@{begin}!Pattern\+Set@{Pattern\+Set}}
@@ -150,7 +156,7 @@ Implements \hyperlink{classPatternStore_a9dfc403ac576e1904f4ec326fec1adaa}{Patte
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_a8ef5ec893a3ab9b00cf70cfdf2e623b9}
 
 
-Implements \hyperlink{classPatternStore_aed5adf38c88543123f705e44b4cddfee}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_ae697b6ba815e09fa300532a78e1c9077}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternSet_af0b085d67c1aa4c38aa40451868a8500}{}\index{Pattern\+Set@{Pattern\+Set}!end@{end}}
 \index{end@{end}!Pattern\+Set@{Pattern\+Set}}
@@ -168,7 +174,7 @@ Implements \hyperlink{classPatternStore_aed5adf38c88543123f705e44b4cddfee}{Patte
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_afd2c053ac589e30edd7eda5c9f95c771}
 Removes the specified pattern from the set, returns true if successful 
 
-Implements \hyperlink{classPatternStore_ad8b6d8e1eba917d45e8667ace70f1b1e}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_a42f8de80a8627c485315e4bb8eff538f}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternSet_afbcbec2296a6ea98b809dcd9288eb756}{}\index{Pattern\+Set@{Pattern\+Set}!erase@{erase}}
 \index{erase@{erase}!Pattern\+Set@{Pattern\+Set}}
@@ -186,7 +192,7 @@ Implements \hyperlink{classPatternStore_ad8b6d8e1eba917d45e8667ace70f1b1e}{Patte
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_a2c56aa5b266f2132f8453bf794bba1f5}
 Returns an iterator to the pattern in the set or \hyperlink{classPatternSet_a8ef5ec893a3ab9b00cf70cfdf2e623b9}{end()} if no such pattern was found. 
 
-Implements \hyperlink{classPatternStore_ac8cf692af151c3aad6aea81fa5748957}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_a6996798c63c2dd3ae3845848da35a6dd}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternSet_a56c0fcc8deb357628e778d3cc0d3c418}{}\index{Pattern\+Set@{Pattern\+Set}!find@{find}}
 \index{find@{find}!Pattern\+Set@{Pattern\+Set}}
@@ -195,6 +201,24 @@ Implements \hyperlink{classPatternStore_ac8cf692af151c3aad6aea81fa5748957}{Patte
 \item[{const {\bf Pattern} \&}]{pattern}
 \end{DoxyParamCaption}
 ) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSet_a56c0fcc8deb357628e778d3cc0d3c418}
+\hypertarget{classPatternSet_a0463855da3729a70a59ee2e24265fbf8}{}\index{Pattern\+Set@{Pattern\+Set}!find@{find}}
+\index{find@{find}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{find(const Pattern\+Pointer \&pattern)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf iterator} {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{pattern}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_a0463855da3729a70a59ee2e24265fbf8}
+
+
+Implements \hyperlink{classPatternStore_a33991d30a74b13a4264200474bf0542c}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type, Pattern $>$}.
+
+\hypertarget{classPatternSet_acba3d1e3b3bce94f6768c014b0d17140}{}\index{Pattern\+Set@{Pattern\+Set}!find@{find}}
+\index{find@{find}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{find(const Pattern\+Pointer \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ {\bf const\+\_\+iterator} {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::find (
+\begin{DoxyParamCaption}
+\item[{const {\bf Pattern\+Pointer} \&}]{pattern}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSet_acba3d1e3b3bce94f6768c014b0d17140}
 \hypertarget{classPatternSet_a25e9ec9ca33750f21dd729cd2462d925}{}\index{Pattern\+Set@{Pattern\+Set}!has@{has}}
 \index{has@{has}!Pattern\+Set@{Pattern\+Set}}
 \subsubsection[{has(const Pattern \&pattern) const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ bool {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::has (
@@ -204,7 +228,7 @@ Implements \hyperlink{classPatternStore_ac8cf692af151c3aad6aea81fa5748957}{Patte
 ) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_a25e9ec9ca33750f21dd729cd2462d925}
 Checks if a pattern is in the set 
 
-Implements \hyperlink{classPatternStore_abdebd74a21912e436531a64fe8b09a6c}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_a2e29add9b35b3459d183f56f6c5525ed}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternSet_a28de1eeb8ec5774505173cc28e06320e}{}\index{Pattern\+Set@{Pattern\+Set}!has@{has}}
 \index{has@{has}!Pattern\+Set@{Pattern\+Set}}
@@ -215,7 +239,7 @@ Implements \hyperlink{classPatternStore_abdebd74a21912e436531a64fe8b09a6c}{Patte
 ) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_a28de1eeb8ec5774505173cc28e06320e}
 Checks if a pattern is in the set 
 
-Implements \hyperlink{classPatternStore_ad9c8afcf7b7da6acd257c52336751bd2}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_ad1e06c2468bad2a14d4ed28b26c6ff33}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternSet_aee78dae3e67875f22089ba537d50bc29}{}\index{Pattern\+Set@{Pattern\+Set}!insert@{insert}}
 \index{insert@{insert}!Pattern\+Set@{Pattern\+Set}}
@@ -226,7 +250,7 @@ Implements \hyperlink{classPatternStore_ad9c8afcf7b7da6acd257c52336751bd2}{Patte
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_aee78dae3e67875f22089ba537d50bc29}
 Add a new pattern to the set 
 
-Implements \hyperlink{classPatternStore_a22e091d80efb8182ac49cf6b225f0aa1}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_aac1558cd3f7e4ec8ec142e1c59f122c9}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternSet_a97bff883909c96f3f8a07a9c9ef83d84}{}\index{Pattern\+Set@{Pattern\+Set}!read@{read}}
 \index{read@{read}!Pattern\+Set@{Pattern\+Set}}
@@ -255,7 +279,18 @@ Read the set from input stream, in binary format \hypertarget{classPatternSet_a7
 \item[{bool}]{D\+O\+F\+L\+E\+X\+G\+R\+A\+M\+S = {\ttfamily true}}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSet_a7c974deb65a7b48ada65a4b4a45a5a3f}
-Reads a map from input stream, in binary format, but ignores the values and retains only the keys for the set. \hypertarget{classPatternSet_af85860d7135a5154a01a8366131beb39}{}\index{Pattern\+Set@{Pattern\+Set}!size@{size}}
+Reads a map from input stream, in binary format, but ignores the values and retains only the keys for the set. \hypertarget{classPatternSet_ac66abd4ac79ee7d35548a3bbfd8e5e8f}{}\index{Pattern\+Set@{Pattern\+Set}!reserve@{reserve}}
+\index{reserve@{reserve}!Pattern\+Set@{Pattern\+Set}}
+\subsubsection[{reserve(size\+\_\+t s)}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ void {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::reserve (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{s}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_ac66abd4ac79ee7d35548a3bbfd8e5e8f}
+
+
+Implements \hyperlink{classPatternStore_afc995f7b88b6a31b700bb3bdb948b180}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type, Pattern $>$}.
+
+\hypertarget{classPatternSet_af85860d7135a5154a01a8366131beb39}{}\index{Pattern\+Set@{Pattern\+Set}!size@{size}}
 \index{size@{size}!Pattern\+Set@{Pattern\+Set}}
 \subsubsection[{size() const }]{\setlength{\rightskip}{0pt plus 5cm}template$<$class Read\+Write\+Size\+Type = uint32\+\_\+t$>$ size\+\_\+t {\bf Pattern\+Set}$<$ Read\+Write\+Size\+Type $>$\+::size (
 \begin{DoxyParamCaption}
@@ -264,7 +299,7 @@ Reads a map from input stream, in binary format, but ignores the values and reta
 ) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_af85860d7135a5154a01a8366131beb39}
 Returns the number of patterns in the set 
 
-Implements \hyperlink{classPatternStore_a586751d731a509da5865d5863d56a8e4}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_abfa82df94ab565bea13fc45ee4866faf}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type, Pattern $>$}.
 
 \hypertarget{classPatternSet_ae55073ee2384d529faf51fca22c8dee1}{}\index{Pattern\+Set@{Pattern\+Set}!write@{write}}
 \index{write@{write}!Pattern\+Set@{Pattern\+Set}}
@@ -275,7 +310,7 @@ Implements \hyperlink{classPatternStore_a586751d731a509da5865d5863d56a8e4}{Patte
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSet_ae55073ee2384d529faf51fca22c8dee1}
 Write the set to output stream, in binary format 
 
-Implements \hyperlink{classPatternStore_ac491b99964c6b4c99f5c40519d0c8ccc}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type $>$}.
+Implements \hyperlink{classPatternStore_a70d9b8faa5858ab7182cea7b1488a75c}{Pattern\+Store$<$ t\+\_\+patternset, Read\+Write\+Size\+Type, Pattern $>$}.
 
 
 

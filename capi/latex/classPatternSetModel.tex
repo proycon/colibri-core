@@ -12,7 +12,7 @@ A pattern model based on an unordered set, does not hold data, only patterns. Ve
 Inheritance diagram for Pattern\+Set\+Model\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[height=3.218391cm]{classPatternSetModel}
+\includegraphics[height=2.657177cm]{classPatternSetModel}
 \end{center}
 \end{figure}
 \subsection*{Public Types}
@@ -29,7 +29,7 @@ typedef \hyperlink{classPatternSet}{Pattern\+Set}$<$ uint64\+\_\+t $>$\+::\hyper
 \item 
 \hyperlink{classPatternSetModel_aecf0741defc687aff8e69514742c697d}{Pattern\+Set\+Model} (std\+::istream $\ast$f, \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L)
 \item 
-\hyperlink{classPatternSetModel_add4a2435685baf51852eb2fc55cbdc35}{Pattern\+Set\+Model} (const std\+::string filename, const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L)
+\hyperlink{classPatternSetModel_a31c7d5c3e0165fa832d8fc85f292bd1e}{Pattern\+Set\+Model} (const std\+::string \&filename, const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} \&options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L)
 \item 
 virtual int \hyperlink{classPatternSetModel_a27adf3033f15f03e908d53d032779d09}{getmodeltype} () const 
 \item 
@@ -41,13 +41,13 @@ virtual bool \hyperlink{classPatternSetModel_a8821cf7c6d469d0978e32e5ed9cfcda0}{
 \item 
 virtual bool \hyperlink{classPatternSetModel_a2fcd4d3d1023b5e20f67d2b845a29b2f}{has} (const \hyperlink{classPatternPointer}{Pattern\+Pointer} \&pattern) const 
 \item 
-virtual void \hyperlink{classPatternSetModel_a04080c0e0ce176b5c53f0c1e8cdf5519}{load} (std\+::string filename, const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L)
+virtual void \hyperlink{classPatternSetModel_af6c3d508fd01352eeb3ae90c438db24b}{load} (std\+::string \&filename, const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} \&options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L)
 \item 
-virtual void \hyperlink{classPatternSetModel_aa77fa04be083535b7c8c5dd6f0ca07b7}{load} (std\+::istream $\ast$f, const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L)
+virtual void \hyperlink{classPatternSetModel_a61c9e25adefa734946a7571a0444049f}{load} (std\+::istream $\ast$f, const \hyperlink{classPatternModelOptions}{Pattern\+Model\+Options} \&options, \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$constrainmodel=N\+U\+L\+L)
 \item 
 void \hyperlink{classPatternSetModel_a8b5731f823fd868cfc6b219e01b13343}{write} (std\+::ostream $\ast$out)
 \item 
-void \hyperlink{classPatternSetModel_ac1fe33cf4ea003f37779fd39319d06fa}{write} (const std\+::string filename)
+void \hyperlink{classPatternSetModel_a9ad4bb51ec6c1272b4d73168e8267c2c}{write} (const std\+::string \&filename)
 \item 
 \hyperlink{classPatternModelInterface}{Pattern\+Model\+Interface} $\ast$ \hyperlink{classPatternSetModel_af2ead0d1766424cb00e95f76cab0c334}{getinterface} ()
 \item 
@@ -120,15 +120,15 @@ Load a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} from stream
 {\em constrainmodel} & Load only patterns that occur in this model \\
 \hline
 \end{DoxyParams}
-\hypertarget{classPatternSetModel_add4a2435685baf51852eb2fc55cbdc35}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
+\hypertarget{classPatternSetModel_a31c7d5c3e0165fa832d8fc85f292bd1e}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
 \index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
-\subsubsection[{Pattern\+Set\+Model(const std\+::string filename, const Pattern\+Model\+Options options, Pattern\+Model\+Interface $\ast$constrainmodel=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Set\+Model\+::\+Pattern\+Set\+Model (
+\subsubsection[{Pattern\+Set\+Model(const std\+::string \&filename, const Pattern\+Model\+Options \&options, Pattern\+Model\+Interface $\ast$constrainmodel=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}Pattern\+Set\+Model\+::\+Pattern\+Set\+Model (
 \begin{DoxyParamCaption}
-\item[{const std\+::string}]{filename, }
-\item[{const {\bf Pattern\+Model\+Options}}]{options, }
+\item[{const std\+::string \&}]{filename, }
+\item[{const {\bf Pattern\+Model\+Options} \&}]{options, }
 \item[{{\bf Pattern\+Model\+Interface} $\ast$}]{constrainmodel = {\ttfamily NULL}}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSetModel_add4a2435685baf51852eb2fc55cbdc35}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSetModel_a31c7d5c3e0165fa832d8fc85f292bd1e}
 Load a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} from file 
 \begin{DoxyParams}{Parameters}
 {\em filename} & The name of the file to load \\
@@ -206,15 +206,15 @@ Does the pattern occur in the pattern store?
 
 Implements \hyperlink{classPatternStoreInterface_a6b3e80cd9021201ce8992ad6c293a354}{Pattern\+Store\+Interface}.
 
-\hypertarget{classPatternSetModel_a04080c0e0ce176b5c53f0c1e8cdf5519}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!load@{load}}
+\hypertarget{classPatternSetModel_af6c3d508fd01352eeb3ae90c438db24b}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!load@{load}}
 \index{load@{load}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
-\subsubsection[{load(std\+::string filename, const Pattern\+Model\+Options options, Pattern\+Model\+Interface $\ast$constrainmodel=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Pattern\+Set\+Model\+::load (
+\subsubsection[{load(std\+::string \&filename, const Pattern\+Model\+Options \&options, Pattern\+Model\+Interface $\ast$constrainmodel=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Pattern\+Set\+Model\+::load (
 \begin{DoxyParamCaption}
-\item[{std\+::string}]{filename, }
-\item[{const {\bf Pattern\+Model\+Options}}]{options, }
+\item[{std\+::string \&}]{filename, }
+\item[{const {\bf Pattern\+Model\+Options} \&}]{options, }
 \item[{{\bf Pattern\+Model\+Interface} $\ast$}]{constrainmodel = {\ttfamily NULL}}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_a04080c0e0ce176b5c53f0c1e8cdf5519}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_af6c3d508fd01352eeb3ae90c438db24b}
 Load a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} from file 
 \begin{DoxyParams}{Parameters}
 {\em filename} & The name of the file to load \\
@@ -224,15 +224,15 @@ Load a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} from file
 {\em constrainmodel} & Load only patterns that occur in this model \\
 \hline
 \end{DoxyParams}
-\hypertarget{classPatternSetModel_aa77fa04be083535b7c8c5dd6f0ca07b7}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!load@{load}}
+\hypertarget{classPatternSetModel_a61c9e25adefa734946a7571a0444049f}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!load@{load}}
 \index{load@{load}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
-\subsubsection[{load(std\+::istream $\ast$f, const Pattern\+Model\+Options options, Pattern\+Model\+Interface $\ast$constrainmodel=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Pattern\+Set\+Model\+::load (
+\subsubsection[{load(std\+::istream $\ast$f, const Pattern\+Model\+Options \&options, Pattern\+Model\+Interface $\ast$constrainmodel=\+N\+U\+L\+L)}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Pattern\+Set\+Model\+::load (
 \begin{DoxyParamCaption}
 \item[{std\+::istream $\ast$}]{f, }
-\item[{const {\bf Pattern\+Model\+Options}}]{options, }
+\item[{const {\bf Pattern\+Model\+Options} \&}]{options, }
 \item[{{\bf Pattern\+Model\+Interface} $\ast$}]{constrainmodel = {\ttfamily NULL}}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_aa77fa04be083535b7c8c5dd6f0ca07b7}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_a61c9e25adefa734946a7571a0444049f}
 Load a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} from stream 
 \begin{DoxyParams}{Parameters}
 {\em options} & The options for loading \\
@@ -329,15 +329,15 @@ Returns the version of the model\textquotesingle{}s implementation and binary se
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\label{classPatternSetModel_a8b5731f823fd868cfc6b219e01b13343}
 Write a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} to an output stream 
 
-Implements \hyperlink{classPatternStore_ac491b99964c6b4c99f5c40519d0c8ccc}{Pattern\+Store$<$ t\+\_\+patternset, uint64\+\_\+t $>$}.
+Implements \hyperlink{classPatternStore_a70d9b8faa5858ab7182cea7b1488a75c}{Pattern\+Store$<$ t\+\_\+patternset, uint64\+\_\+t, Pattern $>$}.
 
-\hypertarget{classPatternSetModel_ac1fe33cf4ea003f37779fd39319d06fa}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!write@{write}}
+\hypertarget{classPatternSetModel_a9ad4bb51ec6c1272b4d73168e8267c2c}{}\index{Pattern\+Set\+Model@{Pattern\+Set\+Model}!write@{write}}
 \index{write@{write}!Pattern\+Set\+Model@{Pattern\+Set\+Model}}
-\subsubsection[{write(const std\+::string filename)}]{\setlength{\rightskip}{0pt plus 5cm}void Pattern\+Set\+Model\+::write (
+\subsubsection[{write(const std\+::string \&filename)}]{\setlength{\rightskip}{0pt plus 5cm}void Pattern\+Set\+Model\+::write (
 \begin{DoxyParamCaption}
-\item[{const std\+::string}]{filename}
+\item[{const std\+::string \&}]{filename}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSetModel_ac1fe33cf4ea003f37779fd39319d06fa}
+)\hspace{0.3cm}{\ttfamily [inline]}}\label{classPatternSetModel_a9ad4bb51ec6c1272b4d73168e8267c2c}
 Write a \hyperlink{classPatternSetModel}{Pattern\+Set\+Model} to an output file. This is a wrapper around \hyperlink{classPatternSetModel_a8b5731f823fd868cfc6b219e01b13343}{write(std\+::ostream $\ast$)} 
 
 \subsection{Member Data Documentation}

@@ -37,8 +37,10 @@ bool \hyperlink{classPatternModelOptions_ab9f8da4d9fe653cf967f571ae6766ed4}{D\+O
 \begin{DoxyCompactList}\small\item\em Load/extract skipgrams in an exhaustive fashion? More memory intensive, but the only options for unindexed models (default\+: false) \end{DoxyCompactList}\item 
 int \hyperlink{classPatternModelOptions_ad5b2686b6f641463c54441a595259046}{M\+I\+N\+S\+K\+I\+P\+T\+Y\+P\+E\+S}
 \begin{DoxyCompactList}\small\item\em Minimum required amount of distinct patterns that can fit in a gap of a skipgram for the skipgram to be included (default\+: 2) \end{DoxyCompactList}\item 
+int \hyperlink{classPatternModelOptions_a03fe79b560a2e9b598f607912e43b295}{M\+A\+X\+S\+K\+I\+P\+S}
+\begin{DoxyCompactList}\small\item\em Maximum skips per skipgram. \end{DoxyCompactList}\item 
 bool \hyperlink{classPatternModelOptions_ad4d4b2fa96e3355b9e3f4b8e51bb62ff}{D\+O\+R\+E\+V\+E\+R\+S\+E\+I\+N\+D\+E\+X}
-\begin{DoxyCompactList}\small\item\em Compute reverse index? Costs memory. This will be way faster when you pass an \hyperlink{classIndexedCorpus}{Indexed\+Corpus} to the \hyperlink{classPatternModel}{Pattern\+Model} constructor. (default\+: true) \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Obsolete now, only here for backward-\/compatibility with v1. \end{DoxyCompactList}\item 
 bool \hyperlink{classPatternModelOptions_ad4391604983decec050de83f13cd6235}{D\+O\+P\+A\+T\+T\+E\+R\+N\+P\+E\+R\+L\+I\+N\+E}
 \begin{DoxyCompactList}\small\item\em Assume each line contains one integral pattern, rather than actively extracting all subpatterns on a line (default\+: false) \end{DoxyCompactList}\item 
 int \hyperlink{classPatternModelOptions_acb220b576d5b4126289cd4a6dec98a1c}{P\+R\+U\+N\+E\+N\+O\+N\+S\+U\+B\+S\+U\+M\+E\+D}
@@ -136,7 +138,7 @@ sets all counts to zero upon loading, clears indices
 \subsubsection[{D\+O\+R\+E\+V\+E\+R\+S\+E\+I\+N\+D\+E\+X}]{\setlength{\rightskip}{0pt plus 5cm}bool Pattern\+Model\+Options\+::\+D\+O\+R\+E\+V\+E\+R\+S\+E\+I\+N\+D\+E\+X}\label{classPatternModelOptions_ad4d4b2fa96e3355b9e3f4b8e51bb62ff}
 
 
-Compute reverse index? Costs memory. This will be way faster when you pass an \hyperlink{classIndexedCorpus}{Indexed\+Corpus} to the \hyperlink{classPatternModel}{Pattern\+Model} constructor. (default\+: true) 
+Obsolete now, only here for backward-\/compatibility with v1. 
 
 \hypertarget{classPatternModelOptions_a79465fd9abbfab5a481222d9660e598a}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S@{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S}}
 \index{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S@{D\+O\+S\+K\+I\+P\+G\+R\+A\+M\+S}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
@@ -161,6 +163,13 @@ Counting n-\/grams is done iteratively for each increasing n. (default\+: M\+A\+
 
 
 The maximum length of patterns to be loaded/extracted, inclusive (in words/tokens) (default\+: 100) 
+
+\hypertarget{classPatternModelOptions_a03fe79b560a2e9b598f607912e43b295}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!M\+A\+X\+S\+K\+I\+P\+S@{M\+A\+X\+S\+K\+I\+P\+S}}
+\index{M\+A\+X\+S\+K\+I\+P\+S@{M\+A\+X\+S\+K\+I\+P\+S}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}
+\subsubsection[{M\+A\+X\+S\+K\+I\+P\+S}]{\setlength{\rightskip}{0pt plus 5cm}int Pattern\+Model\+Options\+::\+M\+A\+X\+S\+K\+I\+P\+S}\label{classPatternModelOptions_a03fe79b560a2e9b598f607912e43b295}
+
+
+Maximum skips per skipgram. 
 
 \hypertarget{classPatternModelOptions_a4dada20f1bba3cc5e08a49e4a9bfb545}{}\index{Pattern\+Model\+Options@{Pattern\+Model\+Options}!M\+I\+N\+L\+E\+N\+G\+T\+H@{M\+I\+N\+L\+E\+N\+G\+T\+H}}
 \index{M\+I\+N\+L\+E\+N\+G\+T\+H@{M\+I\+N\+L\+E\+N\+G\+T\+H}!Pattern\+Model\+Options@{Pattern\+Model\+Options}}

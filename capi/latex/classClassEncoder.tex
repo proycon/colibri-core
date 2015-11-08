@@ -23,15 +23,15 @@ typedef std\+::unordered\+\_\+map$<$ std\+::string, unsigned int $>$\+::\hyperli
 \item 
 void \hyperlink{classClassEncoder_a154967c8f5092155daff8f8d2e9614f9}{load} (const std\+::string \&filename, const unsigned int minlength=0, const unsigned int maxlength=0)
 \item 
-void \hyperlink{classClassEncoder_a7a778921ee3b6c24152bd4754c095780}{build} (const std\+::string \&filename)
+void \hyperlink{classClassEncoder_af2663b3a486786596aecbf1a70405f63}{build} (const std\+::string \&filename, unsigned int threshold=0)
 \item 
-void \hyperlink{classClassEncoder_a63dc79113097584b052b1c1aafb1450e}{build} (std\+::vector$<$ std\+::string $>$ \&files, bool quiet=false)
+void \hyperlink{classClassEncoder_a317e36914ad768d4673da8726b5bc748}{build} (std\+::vector$<$ std\+::string $>$ \&files, bool quiet=false, unsigned int threshold=0)
 \item 
-void \hyperlink{classClassEncoder_a1d2503142bf80628342d63d4b1bc8c80}{buildclasses} (const std\+::unordered\+\_\+map$<$ std\+::string, int $>$ \&freqlist)
+void \hyperlink{classClassEncoder_a50785ce05b8f24bdab3373a9abfe3418}{buildclasses} (const std\+::unordered\+\_\+map$<$ std\+::string, unsigned int $>$ \&freqlist, unsigned int threshold=0)
 \item 
-void \hyperlink{classClassEncoder_a31582938ee64039dda806490f70ede04}{processcorpus} (const std\+::string \&filename, std\+::unordered\+\_\+map$<$ std\+::string, int $>$ \&freqlist)
+void \hyperlink{classClassEncoder_a1f24c785b8056dd0e4c19215687ff0e9}{processcorpus} (const std\+::string \&filename, std\+::unordered\+\_\+map$<$ std\+::string, unsigned int $>$ \&freqlist)
 \item 
-void \hyperlink{classClassEncoder_a51df3eebfbcf89c57deaa1a43056be34}{processcorpus} (std\+::istream $\ast$in, std\+::unordered\+\_\+map$<$ std\+::string, int $>$ \&freqlist)
+void \hyperlink{classClassEncoder_a517d86e528966a04d188e9a023f01ae6}{processcorpus} (std\+::istream $\ast$in, std\+::unordered\+\_\+map$<$ std\+::string, unsigned int $>$ \&freqlist)
 \item 
 int \hyperlink{classClassEncoder_a27a25d91e8e1a1412d905ae4d09ac9d5}{outputlength} (const std\+::string \&line)
 \item 
@@ -39,7 +39,7 @@ int \hyperlink{classClassEncoder_af8a81b7f610ab91dc31db0c893c92321}{encodestring
 \item 
 void \hyperlink{classClassEncoder_a2733c6eaab7304a53cfc63a10c3bbee3}{encodefile} (const std\+::string \&inputfilename, const std\+::string \&outputfilename, bool allowunknown, bool autoaddunknown=false, bool append=false, bool quiet=false)
 \item 
-void \hyperlink{classClassEncoder_a83e08eb6b43b6fceb95b0bdb1960348f}{encodefile} (std\+::istream $\ast$I\+N, std\+::ostream $\ast$O\+U\+T, bool allowunknown, bool autoaddunknown, bool quiet=false)
+void \hyperlink{classClassEncoder_ac18800b64264d93383234ddeed0098d3}{encodefile} (std\+::istream $\ast$I\+N, std\+::ostream $\ast$O\+U\+T, bool allowunknown, bool autoaddunknown, bool quiet=false, bool append=false)
 \item 
 std\+::vector$<$ unsigned int $>$ \hyperlink{classClassEncoder_ae1c2529c9abd544f618c821067ee39c9}{encodeseq} (const std\+::vector$<$ std\+::string $>$ \&seq)
 \item 
@@ -47,7 +47,7 @@ std\+::vector$<$ unsigned int $>$ \hyperlink{classClassEncoder_ae1c2529c9abd544f
 \item 
 \hyperlink{classPattern}{Pattern} \hyperlink{classClassEncoder_af65d2963df9698d6ff6a0740f506feae}{buildpattern\+\_\+safe} (const std\+::string \&patternstring, bool allowunknown=false, bool autoaddunknown=false)
 \item 
-void \hyperlink{classClassEncoder_a434fc52c64ec960ef68daba4889695d6}{add} (std\+::string, unsigned int cls)
+void \hyperlink{classClassEncoder_af63308ff3a1bd315fa921becee25f97a}{add} (const std\+::string \&, const unsigned int cls)
 \item 
 unsigned int \hyperlink{classClassEncoder_a295adb48f47845aa5842c68b00b24b9a}{gethighestclass} ()
 \item 
@@ -65,6 +65,17 @@ unsigned int \hyperlink{classClassEncoder_aa91eb6e8559c0483f973ffbd27aa6567}{ope
 \begin{DoxyCompactItemize}
 \item 
 std\+::unordered\+\_\+map$<$ unsigned int, std\+::string $>$ \hyperlink{classClassEncoder_adcdcf6dc84a1c3ca056f3687b2d3688c}{added}
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const unsigned char \hyperlink{classClassEncoder_a644f99132d9b6f5be6f645b40784b170}{delimiterclass} = 0
+\item 
+static const unsigned char \hyperlink{classClassEncoder_a4a99bcd37707a9d26707e45728ee7c1d}{unknownclass} = 2
+\item 
+static const unsigned char \hyperlink{classClassEncoder_a645b97d98a788a150f2458db90282276}{skipclass} = 3
+\item 
+static const unsigned char \hyperlink{classClassEncoder_a87e9e57927ca8c80c53612465aa8802d}{flexclass} = 4
 \end{DoxyCompactItemize}
 
 
@@ -114,14 +125,14 @@ Constructor for a \hyperlink{classClassEncoder}{Class\+Encoder} read from file
 
 
 \subsection{Member Function Documentation}
-\hypertarget{classClassEncoder_a434fc52c64ec960ef68daba4889695d6}{}\index{Class\+Encoder@{Class\+Encoder}!add@{add}}
+\hypertarget{classClassEncoder_af63308ff3a1bd315fa921becee25f97a}{}\index{Class\+Encoder@{Class\+Encoder}!add@{add}}
 \index{add@{add}!Class\+Encoder@{Class\+Encoder}}
-\subsubsection[{add(std\+::string, unsigned int cls)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::add (
+\subsubsection[{add(const std\+::string \&, const unsigned int cls)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::add (
 \begin{DoxyParamCaption}
-\item[{std\+::string}]{s, }
-\item[{unsigned int}]{cls}
+\item[{const std\+::string \&}]{s, }
+\item[{const unsigned int}]{cls}
 \end{DoxyParamCaption}
-)}\label{classClassEncoder_a434fc52c64ec960ef68daba4889695d6}
+)}\label{classClassEncoder_af63308ff3a1bd315fa921becee25f97a}
 Add the word with the specified class to the class encoding \hypertarget{classClassEncoder_aa910e516cb3b8daae2c78bc7f03321f0}{}\index{Class\+Encoder@{Class\+Encoder}!begin@{begin}}
 \index{begin@{begin}!Class\+Encoder@{Class\+Encoder}}
 \subsubsection[{begin() const }]{\setlength{\rightskip}{0pt plus 5cm}{\bf const\+\_\+iterator} Class\+Encoder\+::begin (
@@ -129,43 +140,52 @@ Add the word with the specified class to the class encoding \hypertarget{classCl
 {}
 \end{DoxyParamCaption}
 ) const\hspace{0.3cm}{\ttfamily [inline]}}\label{classClassEncoder_aa910e516cb3b8daae2c78bc7f03321f0}
-\hypertarget{classClassEncoder_a7a778921ee3b6c24152bd4754c095780}{}\index{Class\+Encoder@{Class\+Encoder}!build@{build}}
+\hypertarget{classClassEncoder_af2663b3a486786596aecbf1a70405f63}{}\index{Class\+Encoder@{Class\+Encoder}!build@{build}}
 \index{build@{build}!Class\+Encoder@{Class\+Encoder}}
-\subsubsection[{build(const std\+::string \&filename)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::build (
+\subsubsection[{build(const std\+::string \&filename, unsigned int threshold=0)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::build (
 \begin{DoxyParamCaption}
-\item[{const std\+::string \&}]{filename}
+\item[{const std\+::string \&}]{filename, }
+\item[{unsigned int}]{threshold = {\ttfamily 0}}
 \end{DoxyParamCaption}
-)}\label{classClassEncoder_a7a778921ee3b6c24152bd4754c095780}
+)}\label{classClassEncoder_af2663b3a486786596aecbf1a70405f63}
 Build a class encoding from a plain-\/text corpus 
 \begin{DoxyParams}{Parameters}
 {\em filename} & A plain text corpus with the units of interest (e.\+g sentences) each on one line \\
 \hline
+{\em threshold} & Occurrence threshold, words occurring less will be pruned \\
+\hline
 \end{DoxyParams}
-\hypertarget{classClassEncoder_a63dc79113097584b052b1c1aafb1450e}{}\index{Class\+Encoder@{Class\+Encoder}!build@{build}}
+\hypertarget{classClassEncoder_a317e36914ad768d4673da8726b5bc748}{}\index{Class\+Encoder@{Class\+Encoder}!build@{build}}
 \index{build@{build}!Class\+Encoder@{Class\+Encoder}}
-\subsubsection[{build(std\+::vector$<$ std\+::string $>$ \&files, bool quiet=false)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::build (
+\subsubsection[{build(std\+::vector$<$ std\+::string $>$ \&files, bool quiet=false, unsigned int threshold=0)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::build (
 \begin{DoxyParamCaption}
 \item[{std\+::vector$<$ std\+::string $>$ \&}]{files, }
-\item[{bool}]{quiet = {\ttfamily false}}
+\item[{bool}]{quiet = {\ttfamily false}, }
+\item[{unsigned int}]{threshold = {\ttfamily 0}}
 \end{DoxyParamCaption}
-)}\label{classClassEncoder_a63dc79113097584b052b1c1aafb1450e}
+)}\label{classClassEncoder_a317e36914ad768d4673da8726b5bc748}
 Build a class encoding from multiple plain-\/text corpus files 
 \begin{DoxyParams}{Parameters}
 {\em files} & A list of plain text corpus files with the units of interest (e.\+g sentences) each on one line \\
 \hline
 {\em quiet} & If true, do not output progress to stderr (default\+: false) \\
 \hline
+{\em threshold} & Occurrence threshold, words occurring less will be pruned \\
+\hline
 \end{DoxyParams}
-\hypertarget{classClassEncoder_a1d2503142bf80628342d63d4b1bc8c80}{}\index{Class\+Encoder@{Class\+Encoder}!buildclasses@{buildclasses}}
+\hypertarget{classClassEncoder_a50785ce05b8f24bdab3373a9abfe3418}{}\index{Class\+Encoder@{Class\+Encoder}!buildclasses@{buildclasses}}
 \index{buildclasses@{buildclasses}!Class\+Encoder@{Class\+Encoder}}
-\subsubsection[{buildclasses(const std\+::unordered\+\_\+map$<$ std\+::string, int $>$ \&freqlist)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::buildclasses (
+\subsubsection[{buildclasses(const std\+::unordered\+\_\+map$<$ std\+::string, unsigned int $>$ \&freqlist, unsigned int threshold=0)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::buildclasses (
 \begin{DoxyParamCaption}
-\item[{const std\+::unordered\+\_\+map$<$ std\+::string, int $>$ \&}]{freqlist}
+\item[{const std\+::unordered\+\_\+map$<$ std\+::string, unsigned int $>$ \&}]{freqlist, }
+\item[{unsigned int}]{threshold = {\ttfamily 0}}
 \end{DoxyParamCaption}
-)}\label{classClassEncoder_a1d2503142bf80628342d63d4b1bc8c80}
+)}\label{classClassEncoder_a50785ce05b8f24bdab3373a9abfe3418}
 Assign classes based on the computed frequency list. This method should only be called once. 
 \begin{DoxyParams}{Parameters}
 {\em freqlist} & The data structure that will contain the frequency list \\
+\hline
+{\em threshold} & Occurrence threshold, words occurring less will be pruned \\
 \hline
 \end{DoxyParams}
 \hypertarget{classClassEncoder_ac517bd3fb8129c7a525479b015d91e01}{}\index{Class\+Encoder@{Class\+Encoder}!buildpattern@{buildpattern}}
@@ -233,21 +253,24 @@ Create a class-\/encoded corpus file from a plain-\/text corpus file. Each of th
 \hline
 {\em autoaddunknown} & If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default\+: false) \\
 \hline
+{\em append} & Set to true if this is not the first file to write to the stream \\
+\hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 The number of bytes written to outputbuffer 
 \end{DoxyReturn}
-\hypertarget{classClassEncoder_a83e08eb6b43b6fceb95b0bdb1960348f}{}\index{Class\+Encoder@{Class\+Encoder}!encodefile@{encodefile}}
+\hypertarget{classClassEncoder_ac18800b64264d93383234ddeed0098d3}{}\index{Class\+Encoder@{Class\+Encoder}!encodefile@{encodefile}}
 \index{encodefile@{encodefile}!Class\+Encoder@{Class\+Encoder}}
-\subsubsection[{encodefile(std\+::istream $\ast$\+I\+N, std\+::ostream $\ast$\+O\+U\+T, bool allowunknown, bool autoaddunknown, bool quiet=false)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::encodefile (
+\subsubsection[{encodefile(std\+::istream $\ast$\+I\+N, std\+::ostream $\ast$\+O\+U\+T, bool allowunknown, bool autoaddunknown, bool quiet=false, bool append=false)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::encodefile (
 \begin{DoxyParamCaption}
 \item[{std\+::istream $\ast$}]{I\+N, }
 \item[{std\+::ostream $\ast$}]{O\+U\+T, }
 \item[{bool}]{allowunknown, }
 \item[{bool}]{autoaddunknown, }
-\item[{bool}]{quiet = {\ttfamily false}}
+\item[{bool}]{quiet = {\ttfamily false}, }
+\item[{bool}]{append = {\ttfamily false}}
 \end{DoxyParamCaption}
-)}\label{classClassEncoder_a83e08eb6b43b6fceb95b0bdb1960348f}
+)}\label{classClassEncoder_ac18800b64264d93383234ddeed0098d3}
 Create a class-\/encoded corpus file from a plain-\/text corpus file. Each of the units of interest (e.\+g sentences) should occupy a single line (i.\+e., ~\newline
  delimited) 
 \begin{DoxyParams}{Parameters}
@@ -258,6 +281,10 @@ Create a class-\/encoded corpus file from a plain-\/text corpus file. Each of th
 {\em allowunknown} & If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default\+: false) \\
 \hline
 {\em autoaddunknown} & If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default\+: false) \\
+\hline
+{\em quiet} & Set to true to suppress any output \\
+\hline
+{\em append} & Set to true if this is not the first file to write to the stream \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -340,34 +367,34 @@ Return the class for the given word \hypertarget{classClassEncoder_a27a25d91e8e1
 \item[{const std\+::string \&}]{line}
 \end{DoxyParamCaption}
 )}\label{classClassEncoder_a27a25d91e8e1a1412d905ae4d09ac9d5}
-Computes how many bytes the class repesentation for this input line would take \hypertarget{classClassEncoder_a31582938ee64039dda806490f70ede04}{}\index{Class\+Encoder@{Class\+Encoder}!processcorpus@{processcorpus}}
+Computes how many bytes the class repesentation for this input line would take \hypertarget{classClassEncoder_a1f24c785b8056dd0e4c19215687ff0e9}{}\index{Class\+Encoder@{Class\+Encoder}!processcorpus@{processcorpus}}
 \index{processcorpus@{processcorpus}!Class\+Encoder@{Class\+Encoder}}
-\subsubsection[{processcorpus(const std\+::string \&filename, std\+::unordered\+\_\+map$<$ std\+::string, int $>$ \&freqlist)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::processcorpus (
+\subsubsection[{processcorpus(const std\+::string \&filename, std\+::unordered\+\_\+map$<$ std\+::string, unsigned int $>$ \&freqlist)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::processcorpus (
 \begin{DoxyParamCaption}
 \item[{const std\+::string \&}]{filename, }
-\item[{std\+::unordered\+\_\+map$<$ std\+::string, int $>$ \&}]{freqlist}
+\item[{std\+::unordered\+\_\+map$<$ std\+::string, unsigned int $>$ \&}]{freqlist}
 \end{DoxyParamCaption}
-)}\label{classClassEncoder_a31582938ee64039dda806490f70ede04}
+)}\label{classClassEncoder_a1f24c785b8056dd0e4c19215687ff0e9}
 Count word frequency in a given plain-\/text corpus. 
 \begin{DoxyParams}{Parameters}
 {\em filename} & The corpus file \\
 \hline
-{\em freqlist} & The resulting frequency list, should be shared between multiple calls to \hyperlink{classClassEncoder_a31582938ee64039dda806490f70ede04}{processcorpus()} \\
+{\em freqlist} & The resulting frequency list, should be shared between multiple calls to \hyperlink{classClassEncoder_a1f24c785b8056dd0e4c19215687ff0e9}{processcorpus()} \\
 \hline
 \end{DoxyParams}
-\hypertarget{classClassEncoder_a51df3eebfbcf89c57deaa1a43056be34}{}\index{Class\+Encoder@{Class\+Encoder}!processcorpus@{processcorpus}}
+\hypertarget{classClassEncoder_a517d86e528966a04d188e9a023f01ae6}{}\index{Class\+Encoder@{Class\+Encoder}!processcorpus@{processcorpus}}
 \index{processcorpus@{processcorpus}!Class\+Encoder@{Class\+Encoder}}
-\subsubsection[{processcorpus(std\+::istream $\ast$in, std\+::unordered\+\_\+map$<$ std\+::string, int $>$ \&freqlist)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::processcorpus (
+\subsubsection[{processcorpus(std\+::istream $\ast$in, std\+::unordered\+\_\+map$<$ std\+::string, unsigned int $>$ \&freqlist)}]{\setlength{\rightskip}{0pt plus 5cm}void Class\+Encoder\+::processcorpus (
 \begin{DoxyParamCaption}
 \item[{std\+::istream $\ast$}]{in, }
-\item[{std\+::unordered\+\_\+map$<$ std\+::string, int $>$ \&}]{freqlist}
+\item[{std\+::unordered\+\_\+map$<$ std\+::string, unsigned int $>$ \&}]{freqlist}
 \end{DoxyParamCaption}
-)}\label{classClassEncoder_a51df3eebfbcf89c57deaa1a43056be34}
+)}\label{classClassEncoder_a517d86e528966a04d188e9a023f01ae6}
 Count word frequency in a given plain-\/text corpus. 
 \begin{DoxyParams}{Parameters}
 {\em in} & The input stream \\
 \hline
-{\em freqlist} & The resulting frequency list, should be shared between multiple calls to \hyperlink{classClassEncoder_a31582938ee64039dda806490f70ede04}{processcorpus()} \\
+{\em freqlist} & The resulting frequency list, should be shared between multiple calls to \hyperlink{classClassEncoder_a1f24c785b8056dd0e4c19215687ff0e9}{processcorpus()} \\
 \hline
 \end{DoxyParams}
 \hypertarget{classClassEncoder_a171525ba62fd46cb8f79dcfbf1b39c7e}{}\index{Class\+Encoder@{Class\+Encoder}!save@{save}}
@@ -390,6 +417,18 @@ Returns the number of classes, i.\+e. word types
 \hypertarget{classClassEncoder_adcdcf6dc84a1c3ca056f3687b2d3688c}{}\index{Class\+Encoder@{Class\+Encoder}!added@{added}}
 \index{added@{added}!Class\+Encoder@{Class\+Encoder}}
 \subsubsection[{added}]{\setlength{\rightskip}{0pt plus 5cm}std\+::unordered\+\_\+map$<$unsigned int, std\+::string$>$ Class\+Encoder\+::added}\label{classClassEncoder_adcdcf6dc84a1c3ca056f3687b2d3688c}
+\hypertarget{classClassEncoder_a644f99132d9b6f5be6f645b40784b170}{}\index{Class\+Encoder@{Class\+Encoder}!delimiterclass@{delimiterclass}}
+\index{delimiterclass@{delimiterclass}!Class\+Encoder@{Class\+Encoder}}
+\subsubsection[{delimiterclass}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned char Class\+Encoder\+::delimiterclass = 0\hspace{0.3cm}{\ttfamily [static]}}\label{classClassEncoder_a644f99132d9b6f5be6f645b40784b170}
+\hypertarget{classClassEncoder_a87e9e57927ca8c80c53612465aa8802d}{}\index{Class\+Encoder@{Class\+Encoder}!flexclass@{flexclass}}
+\index{flexclass@{flexclass}!Class\+Encoder@{Class\+Encoder}}
+\subsubsection[{flexclass}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned char Class\+Encoder\+::flexclass = 4\hspace{0.3cm}{\ttfamily [static]}}\label{classClassEncoder_a87e9e57927ca8c80c53612465aa8802d}
+\hypertarget{classClassEncoder_a645b97d98a788a150f2458db90282276}{}\index{Class\+Encoder@{Class\+Encoder}!skipclass@{skipclass}}
+\index{skipclass@{skipclass}!Class\+Encoder@{Class\+Encoder}}
+\subsubsection[{skipclass}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned char Class\+Encoder\+::skipclass = 3\hspace{0.3cm}{\ttfamily [static]}}\label{classClassEncoder_a645b97d98a788a150f2458db90282276}
+\hypertarget{classClassEncoder_a4a99bcd37707a9d26707e45728ee7c1d}{}\index{Class\+Encoder@{Class\+Encoder}!unknownclass@{unknownclass}}
+\index{unknownclass@{unknownclass}!Class\+Encoder@{Class\+Encoder}}
+\subsubsection[{unknownclass}]{\setlength{\rightskip}{0pt plus 5cm}const unsigned char Class\+Encoder\+::unknownclass = 2\hspace{0.3cm}{\ttfamily [static]}}\label{classClassEncoder_a4a99bcd37707a9d26707e45728ee7c1d}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
