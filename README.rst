@@ -38,7 +38,7 @@ Skipgram and flexgram extraction are computationally more demanding but have
 been implemented with similar optimisations. Skipgrams are computed by
 abstracting over n-grams, and flexgrams in turn are computed either by
 abstracting over skipgrams, or directly from n-grams on the basis of
-co-occurrence information (mutual pointwise information).  Pattern Models
+co-occurrence information (mutual pointwise information).  
 
 At the heart of the sofware is the notion of pattern models. The core tool, to
 be used from the command-line, is ``colibri-patternmodeller`` which enables you
