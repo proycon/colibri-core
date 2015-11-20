@@ -284,24 +284,32 @@ cdef cPatternModelInterface* getinterface(self):
 cpdef trainconstrainedbyindexedmodel(self, str filename, PatternModelOptions options, IndexedPatternModel constrainmodel):
     if filename:
         self.data.train(<string> encode(filename),options.coptions,  constrainmodel.getinterface())
+    elif self.data.reverseindex == NULL:
+        raise ValueError("No filename or reverseindex specified!")
     else:
         self.data.train(<istream*> NULL,options.coptions,  constrainmodel.getinterface())
 
 cpdef trainconstrainedbyunindexedmodel(self, str filename, PatternModelOptions options, UnindexedPatternModel constrainmodel):
     if filename:
         self.data.train(<string> encode(filename),options.coptions,  constrainmodel.getinterface())
+    elif self.data.reverseindex == NULL:
+        raise ValueError("No filename or reverseindex specified!")
     else:
         self.data.train(<istream*> NULL,options.coptions,  constrainmodel.getinterface())
 
 cpdef trainconstrainedbypatternsetmodel(self, str filename, PatternModelOptions options, PatternSetModel constrainmodel):
     if filename:
         self.data.train(<string> encode(filename),options.coptions,  constrainmodel.getinterface())
+    elif self.data.reverseindex == NULL:
+        raise ValueError("No filename or reverseindex specified!")
     else:
         self.data.train(<istream*> NULL,options.coptions,  constrainmodel.getinterface())
 
 cpdef trainconstrainedbyalignmodel(self, str filename, PatternModelOptions options, PatternAlignmentModel_float constrainmodel):
     if filename:
         self.data.train(<string> encode(filename),options.coptions,  constrainmodel.getinterface())
+    elif self.data.reverseindex == NULL:
+        raise ValueError("No filename or reverseindex specified!")
     else:
         self.data.train(<istream*>  NULL,options.coptions,  constrainmodel.getinterface())
 
