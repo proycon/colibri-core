@@ -258,6 +258,7 @@ cpdef train(self, str filename, PatternModelOptions options, constrainmodel = No
     :type options: PatternModelOptions
     """
     if constrainmodel:
+        assert len(constrainmodel) >= 0
         if isinstance(constrainmodel, IndexedPatternModel):
             self.trainconstrainedbyindexedmodel(filename, options, constrainmodel)
         elif isinstance(constrainmodel, UnindexedPatternModel):
