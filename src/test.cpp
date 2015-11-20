@@ -145,7 +145,7 @@ int main( int argc, char *argv[] ) {
             
         cerr << "Loading class decoder" << endl;
         ClassDecoder classdecoder = ClassDecoder(classfile);
-        cerr << "  Number of classes: "; test(classdecoder.size(),10); //including reserved classes
+        cerr << "  Number of classes: "; test(classdecoder.size(),11); //including reserved classes
 
         cerr << "Loading class encoder" << endl;
         ClassEncoder encoder = ClassEncoder(classfile);
