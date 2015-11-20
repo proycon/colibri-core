@@ -1342,6 +1342,14 @@ int main( int argc, char *argv[] ) {
             cerr << "Loading PatternAlignmentModel" << endl;
             PatternAlignmentModel<double> alignmodel = PatternAlignmentModel<double>();
             alignmodel.load("/tmp/hamlet.colibri.alignmodel", PatternModelOptions()); 
+            cerr << "Testing size: ";
+            test(alignmodel.size(),2);
+            cerr << "Testing [p][p][0]: ";
+            test(alignmodel.getdata(p,p)->get(0), 3.14);
+            cerr << "Testing [p2][p2][0]: ";
+            test(alignmodel.getdata(p2,p2)->get(0), 2.17);
+            cerr << "Testing [p2][p2][1]: ";
+            test(alignmodel.getdata(p2,p2)->get(1), 0.24);
         }
 
     }
