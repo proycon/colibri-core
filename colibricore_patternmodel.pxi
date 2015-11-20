@@ -273,6 +273,8 @@ cpdef train(self, str filename, PatternModelOptions options, constrainmodel = No
             raise ValueError("Invalid valid for constrainmodel") #TODO: build patternmodel on the fly from an iterable of patterns or lower level patternstorage
     elif filename:
         self.data.train(<string> encode(filename),options.coptions, NULL)
+    elif self.data.reverseindex == NULL:
+        raise ValueError("No filename or reverseindex specified!")
     else:
         self.data.train(<istream*> NULL ,options.coptions, NULL)
 
