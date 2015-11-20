@@ -1296,11 +1296,11 @@ cdef class PatternAlignmentModel_float:
 
     def type(self):
         """Returns the model type (10 = UNINDEXED, 20 = INDEXED)"""
-        return self.data.type()
+        return self.data.getmodeltype()
 
     def version(self):
         """Return the version of the model type"""
-        return self.data.version()
+        return self.data.getmodelversion()
 
     cdef has(self, Pattern pattern):
         if not isinstance(pattern, Pattern):

@@ -489,8 +489,8 @@ cdef extern from "alignmodel.h":
         PatternAlignmentModel() nogil
         unsigned int types() nogil
         unsigned int tokens() nogil
-        int type() nogil
-        int version() nogil
+        int getmodeltype()
+        int getmodelversion()
         int maxlength() nogil
         int minlength() nogil
         void add(Pattern&, Pattern&, vector[FeatureType]&)
