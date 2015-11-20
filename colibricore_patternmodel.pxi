@@ -252,11 +252,13 @@ cpdef printmodel(self,ClassDecoder decoder):
 cpdef train(self, str filename, PatternModelOptions options, constrainmodel = None):
     """Train the patternmodel on the specified corpus data (a *.colibri.dat file)
 
-    :param filename: The name of the file to load, must be a valid colibri.dat file
+    :param filename: The name of the file to load, must be a valid colibri.dat file. Can be set to an empty string if a corpus was pre-loaded already.
     :type filename: str
     :param options: An instance of PatternModelOptions, containing the options used for loading
     :type options: PatternModelOptions
     """
+    if self.data.reverseindex != NULL:
+        filename = ""
     if constrainmodel:
         assert len(constrainmodel) >= 0
         if isinstance(constrainmodel, IndexedPatternModel):
@@ -269,23 +271,37 @@ cpdef train(self, str filename, PatternModelOptions options, constrainmodel = No
             self.trainconstrainedbyalignmodel(filename, options, constrainmodel)
         else:
             raise ValueError("Invalid valid for constrainmodel") #TODO: build patternmodel on the fly from an iterable of patterns or lower level patternstorage
-    else:
+    elif filename:
         self.data.train(encode(filename),options.coptions, NULL)
+    else:
+        self.data.train(NULL ,options.coptions, NULL)
 
 cdef cPatternModelInterface* getinterface(self):
     return self.data.getinterface()
 
 cpdef trainconstrainedbyindexedmodel(self, str filename, PatternModelOptions options, IndexedPatternModel constrainmodel):
-    self.data.train(encode(filename),options.coptions,  constrainmodel.getinterface())
+    if filename:
+        self.data.train(encode(filename),options.coptions,  constrainmodel.getinterface())
+    else:
+        self.data.train(NULL,options.coptions,  constrainmodel.getinterface())
 
 cpdef trainconstrainedbyunindexedmodel(self, str filename, PatternModelOptions options, UnindexedPatternModel constrainmodel):
-    self.data.train(encode(filename),options.coptions,  constrainmodel.getinterface())
+    if filename:
+        self.data.train(encode(filename),options.coptions,  constrainmodel.getinterface())
+    else:
+        self.data.train(NULL,options.coptions,  constrainmodel.getinterface())
 
 cpdef trainconstrainedbypatternsetmodel(self, str filename, PatternModelOptions options, PatternSetModel constrainmodel):
-    self.data.train(encode(filename),options.coptions,  constrainmodel.getinterface())
+    if filename:
+        self.data.train(encode(filename),options.coptions,  constrainmodel.getinterface())
+    else:
+        self.data.train(NULL,options.coptions,  constrainmodel.getinterface())
 
 cpdef trainconstrainedbyalignmodel(self, str filename, PatternModelOptions options, PatternAlignmentModel_float constrainmodel):
-    self.data.train(encode(filename),options.coptions,  constrainmodel.getinterface())
+    if filename:
+        self.data.train(encode(filename),options.coptions,  constrainmodel.getinterface())
+    else:
+        self.data.train(NULL,options.coptions,  constrainmodel.getinterface())
 
 cpdef report(self):
     """Print a detailed statistical report to stdout"""
