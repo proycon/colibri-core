@@ -20,6 +20,8 @@ from libc.stdint cimport *
 cdef extern from "<iostream>" namespace "std":
     cdef cppclass ostream:
         pass
+    cdef cppclass istream:
+        pass
 
     extern ostream cout
 
@@ -372,7 +374,7 @@ cdef extern from "patternmodel.h":
 
         PatternModelInterface * getinterface() nogil
         void train(string filename, PatternModelOptions options, PatternModelInterface *)
-        void train(istream *, PatternModelOptions options, PatternModelInterface *)
+        void train(istream*, PatternModelOptions options, PatternModelInterface *)
 
         unsigned int totaloccurrencesingroup(int category, int n)
         unsigned int totalpatternsingroup(int category, int n)
@@ -432,7 +434,7 @@ cdef extern from "patternmodel.h":
 
         PatternModelInterface * getinterface() nogil
         void train(string filename, PatternModelOptions options, PatternModelInterface *)
-        void train(istream *, PatternModelOptions options, PatternModelInterface *)
+        void train(istream*, PatternModelOptions options, PatternModelInterface *)
 
         IndexedCorpus * reverseindex
         bool externalreverseindex
