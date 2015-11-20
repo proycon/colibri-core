@@ -462,7 +462,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         /**
          * Get the interface (just a basic typecast)
          */
-        PatternModelInterface * getinterface() {
+        virtual PatternModelInterface * getinterface() {
             return (PatternModelInterface*) this;
         }
 

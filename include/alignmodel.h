@@ -5,7 +5,7 @@
 
 
 template<class FeatureType>
-class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>> {
+class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>, public PatternModelInterface {
     protected:
         //some duplication from PatternModel, but didn't want to inherit from
         //it, as too much is different
@@ -19,8 +19,6 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
         
 
         virtual void postread(const PatternModelOptions options) {
-            //this function has a specialisation specific to indexed pattern models,
-            //this is the generic version
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern p = iter->first;
                 const int n = p.n();
@@ -151,9 +149,13 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
         virtual int maxlength() const { return maxn; };
         virtual int minlength() const { return minn; };
 
-        virtual int occurrencecount(const Pattern & pattern)  { 
+        virtual unsigned int occurrencecount(const Pattern & pattern)  { 
             return 0; // we don't do occurrence counts 
         }
+        virtual double frequency(const Pattern & pattern)  { 
+            return 0; // we don't do frequency
+        }
+
         
         virtual PatternFeatureVectorMap<FeatureType> * getdata(const Pattern & pattern, bool makeifnew=false) { 
             typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::iterator iter = this->find(pattern);
@@ -178,12 +180,9 @@ class PatternAlignmentModel: public PatternMap<PatternFeatureVectorMap<FeatureTy
             }
         }
 
-        //not really useful in this context
-        int types() const { return totaltypes; }
-        int tokens() const { return totaltokens; }
-
-        unsigned char type() const { return model_type; }
-        unsigned char version() const { return model_version; }
+        //not really useful in this context, but required by the interface
+        virtual unsigned int types() { return totaltypes; }
+        virtual unsigned int tokens() const { return totaltokens; }
 
 
         //(source,target) pair versions of has, getdata

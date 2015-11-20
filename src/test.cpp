@@ -1350,6 +1350,15 @@ int main( int argc, char *argv[] ) {
             test(alignmodel.getdata(p2,p2)->get(0), 2.17);
             cerr << "Testing [p2][p2][1]: ";
             test(alignmodel.getdata(p2,p2)->get(1), 0.24);
+
+            cerr << "Training indexed model constrained by PatternAlignmentModel" << endl;
+            IndexedCorpus c = IndexedCorpus("/tmp/hamlet.colibri.dat");
+
+            PatternModelOptions o;
+            o.MINTOKENS = 1;
+            IndexedPatternModel<> m = IndexedPatternModel<>(&c);
+            m.train(NULL, o, alignmodel.getinterface());
+
         }
 
     }
