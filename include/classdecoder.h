@@ -47,6 +47,7 @@ class ClassDecoder {
     public:
      static const unsigned char delimiterclass = 0;
      static const unsigned char unknownclass = 2;
+     static const unsigned char boundaryclass = 1;
      static const unsigned char skipclass = 3;
      static const unsigned char flexclass = 4;
     

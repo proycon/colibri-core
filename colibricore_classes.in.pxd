@@ -260,6 +260,7 @@ cdef extern from "patternstore.h":
     extern Pattern SKIPPATTERN
     extern Pattern FLEXPATTERN
     extern Pattern UNKPATTERN
+    extern Pattern BOUNDARYPATTERN
 
 
 cdef extern from "classdecoder.h":

@@ -125,6 +125,7 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
         classes["{?}"] = unknownclass;
         classes["{*}"] = skipclass;
         classes["{**}"] = flexclass;
+        classes["{|}"] = boundaryclass;
 }
 
 

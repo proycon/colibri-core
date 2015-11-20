@@ -529,8 +529,10 @@ class PatternPointer {
 
 
 static const unsigned char * tmp_unk = (const unsigned char *) "\2";
+static const unsigned char * tmp_boundarymarker = (const unsigned char *) "\1";
 static const unsigned char * tmp_skipmarker = (const unsigned char *) "\3";
 static const unsigned char * tmp_flexmarker = (const unsigned char *) "\4";
+const Pattern BOUNDARYPATTERN = Pattern((const unsigned char *) tmp_boundarymarker,1);
 const Pattern SKIPPATTERN = Pattern((const unsigned char *) tmp_skipmarker,1);
 const Pattern FLEXPATTERN = Pattern((const unsigned char*) tmp_flexmarker,1);
 static const Pattern UNKPATTERN = Pattern((const unsigned char* ) tmp_unk,1);

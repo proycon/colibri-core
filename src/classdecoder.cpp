@@ -86,6 +86,7 @@ ClassDecoder::ClassDecoder() {
        classes[unknownclass] = "{?}";
        classes[skipclass] = "{*}";
        classes[flexclass] = "{**}";
+       classes[boundaryclass] = "{|}";
 }
 
 ClassDecoder::ClassDecoder(const string & filename) {
@@ -99,6 +100,7 @@ void ClassDecoder::load(const string & filename) {
        classes[unknownclass] = "{?}";
        classes[skipclass] = "{*}";
        classes[flexclass] = "{**}";
+       classes[boundaryclass] = "{|}";
 
        ifstream *IN =  new ifstream( filename.c_str() );    
        if (!(*IN)) {
