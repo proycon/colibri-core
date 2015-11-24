@@ -280,7 +280,10 @@ cdef class Pattern:
         :rtype: a Pattern instance
         """
 
+        cdef int start
+        cdef int stop
         cdef cPattern c_pattern
+
         if isinstance(item, slice):
             start = item.start
             stop = item.stop
@@ -294,8 +297,10 @@ cdef class Pattern:
             return newpattern
         else:
             if item < 0:
-                item = len(self) + item
-            c_pattern = cPattern(self.cpattern, item, 1)
+                start = len(self) + item
+            else:
+                start = item
+            c_pattern = cPattern(self.cpattern, start, 1)
             newpattern = Pattern()
             newpattern.bind(c_pattern)
             return newpattern
