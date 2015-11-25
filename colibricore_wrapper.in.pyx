@@ -284,6 +284,7 @@ cdef class Pattern:
         cdef int stop
         cdef cPattern c_pattern
 
+        newpattern = Pattern()
         if isinstance(item, slice):
             start = item.start
             stop = item.stop
@@ -292,7 +293,6 @@ cdef class Pattern:
             if not start:
                 start = 0
             c_pattern = cPattern(self.cpattern, start, stop - start)
-            newpattern = Pattern()
             newpattern.bind(c_pattern)
             return newpattern
         else:
@@ -301,7 +301,6 @@ cdef class Pattern:
             else:
                 start = item
             c_pattern = cPattern(self.cpattern, start, 1)
-            newpattern = Pattern()
             newpattern.bind(c_pattern)
             return newpattern
 
