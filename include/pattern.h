@@ -78,10 +78,9 @@ class Pattern {
      unsigned char * data; /**< This array holds the variable-width byte representation, it is always terminated by \0 (ENDMARKER). Though public, you usually do not want to access it directly */
      
      /**
-      * Default/empty Pattern constructor. Creates an empty pattern. Still consumes one
-      * byte (the end-marker)
+      * Default/empty Pattern constructor. Creates an empty pattern. Special case, allocates no extra data.
       */
-     Pattern() { data = new unsigned char[1]; data[0] = ClassDecoder::delimiterclass; }
+     Pattern() { data = NULL; }
 
      /**
       * Low-level pattern constructor from character array. The size is in

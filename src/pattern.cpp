@@ -22,6 +22,7 @@ unsigned char mainpatternbuffer[MAINPATTERNBUFFERSIZE+1];
 
 const PatternCategory datacategory(const unsigned char * data, int maxbytes = 0) {
     PatternCategory category = NGRAM;
+    if (data == NULL) return category;
     int i = 0;
     unsigned int length;
     do {
@@ -56,6 +57,7 @@ const PatternCategory PatternPointer::category() const {
 
 const size_t Pattern::bytesize() const {
     //return the size of the pattern (in bytes)
+    if (data == NULL) return 0;
     unsigned int i = 0;
     bool prevhigh = false;
     do {
@@ -69,6 +71,7 @@ const size_t Pattern::bytesize() const {
 
 const size_t datasize(unsigned char * data, int maxbytes = 0) {
     //return the size of the pattern (in tokens)
+    if (data == NULL) return 0;
     int i = 0;
     int n = 0;
     bool prevhigh = false;
@@ -96,6 +99,7 @@ const size_t PatternPointer::n() const {
 
 
 bool Pattern::isgap(int index) const { //is the word at this position a gap? 
+    if (data == NULL) return false;
     int i = 0;
     int n = 0;
     bool prevhigh = false;
@@ -130,6 +134,7 @@ bool PatternPointer::isgap(int index) const { //is the word at this position a g
 
 Pattern Pattern::toflexgram() const { //converts a fixed skipgram into a dynamic one, ngrams just come out unchanged
     //to be computed in bytes
+    if (data == NULL) return *this;
     int i = 0;
     int j = 0;
     int copybytes = 0;
@@ -196,6 +201,7 @@ uint32_t PatternPointer::computemask() const {
 
 
 const size_t Pattern::hash() const {
+    if (data == NULL) return 0;
     return SpookyHash::Hash64((const void*) data , bytesize());
 }
 
@@ -320,6 +326,7 @@ std::string PatternPointer::tostring(const ClassDecoder& classdecoder) const {
 }
 
 bool dataout(unsigned char * data, int maxbytes = 0) {
+    if (data == NULL) return true;
     int i = 0;
     unsigned int length;
     do {
@@ -347,6 +354,7 @@ bool PatternPointer::out() const {
 }
 
 const bool Pattern::unknown() const {
+    if (data == NULL) return false;
     int i = 0;
     unsigned int length;
     do {
@@ -363,6 +371,7 @@ const bool Pattern::unknown() const {
 
 vector<unsigned int> Pattern::tovector() const { 
     vector<unsigned int> v;
+    if (data == NULL) return v;
     int i = 0;
     unsigned int length;
     do {
@@ -585,9 +594,11 @@ Pattern::Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, b
 */
 
 Pattern::Pattern(const unsigned char * dataref, const int _size) {
-    data = new unsigned char[_size+1];
-    memcpy(data, dataref, _size);
-    data[_size] = ClassEncoder::delimiterclass;
+    if (dataref != NULL) {
+        data = new unsigned char[_size+1];
+        memcpy(data, dataref, _size);
+        data[_size] = ClassEncoder::delimiterclass;
+    }
 }
 
 
@@ -596,9 +607,11 @@ void Pattern::set(const unsigned char * dataref, const int _size) {
         delete[] data;
         data = NULL;
     }
-    data = new unsigned char[_size+1];
-    memcpy(data, dataref, _size);
-    data[_size] = ClassEncoder::delimiterclass;
+    if (dataref != NULL) {
+        data = new unsigned char[_size+1];
+        memcpy(data, dataref, _size);
+        data[_size] = ClassEncoder::delimiterclass;
+    }
 }
 
 
@@ -761,10 +774,12 @@ PatternPointer::PatternPointer(const PatternPointer& ref, unsigned int begin, un
 }
 
 Pattern::Pattern(const Pattern& ref) { //copy constructor
-    const int s = ref.bytesize();
-    data = new unsigned char[s + 1];
-    memcpy(data, ref.data, s);
-    data[s] = ClassDecoder::delimiterclass;
+    if (ref.data != NULL) {
+        const int s = ref.bytesize();
+        data = new unsigned char[s + 1];
+        memcpy(data, ref.data, s);
+        data[s] = ClassDecoder::delimiterclass;
+    }
 }
 
 Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
@@ -859,6 +874,7 @@ Pattern::~Pattern() {
 
 
 bool Pattern::operator==(const Pattern &other) const {
+    if (data == NULL) return (other.data == NULL);
     unsigned int i = 0;
     do {
         if (data[i] != other.data[i]) return false;
@@ -871,6 +887,7 @@ bool Pattern::operator==(const PatternPointer &other) const {
 }
 
 bool PatternPointer::operator==(const Pattern &other) const {
+    if (other.data == NULL) return (bytesize() == 0);
     unsigned int i = 0;
     unsigned int n = 0;
     if ((mask != 0) && (isflexgram())) {
@@ -983,23 +1000,31 @@ void Pattern::operator =(const Pattern & other) {
         //nothing to do
         return;
     }
-    
-    //set new data
-    const int s = other.bytesize();        
-    data = new unsigned char[s+1];   
-    memcpy(data, other.data, s);
-    data[s] = ClassDecoder::delimiterclass;
+   
+    if (other.data != NULL) {
+        //set new data
+        const int s = other.bytesize();        
+        data = new unsigned char[s+1];   
+        memcpy(data, other.data, s);
+        data[s] = ClassDecoder::delimiterclass;
+    }
 }
 
 Pattern Pattern::operator +(const Pattern & other) const {
-    const int s = bytesize();
-    const int s2 = other.bytesize();
-    unsigned char buffer[s+s2]; 
-    memcpy(buffer, data, s);
-    for (int i = 0; i < s2; i++) {
-        buffer[s+i] = other.data[i];
+    if (data == NULL) {
+        return other;
+    } else if (other.data == NULL) {
+        return *this;
+    } else {
+        const int s = bytesize();
+        const int s2 = other.bytesize();
+        unsigned char buffer[s+s2]; 
+        memcpy(buffer, data, s);
+        for (int i = 0; i < s2; i++) {
+            buffer[s+i] = other.data[i];
+        }
+        return Pattern(buffer, s+s2);
     }
-    return Pattern(buffer, s+s2);
 }
 
 
@@ -1184,6 +1209,7 @@ int PatternPointer::subngrams(vector<pair<PatternPointer,int>> & container, int 
 }
 
 int Pattern::parts(vector<pair<int,int>> & container) const { 
+    if (data == NULL) return 0;
     int partbegin = 0;
     int partlength = 0;
     bool prevhigh = false;
@@ -1223,6 +1249,7 @@ int Pattern::parts(vector<pair<int,int>> & container) const {
 }
 
 int Pattern::parts(vector<Pattern> & container) const { 
+    if (data == NULL) return 0;
     int partbegin = 0;
     int partlength = 0;
     bool prevhigh = false;
@@ -1262,6 +1289,7 @@ int Pattern::parts(vector<Pattern> & container) const {
 }
 
 int Pattern::parts(vector<PatternPointer> & container) const { 
+    if (data == NULL) return 0;
     int partbegin = 0;
     int partlength = 0;
     bool prevhigh = false;
@@ -1301,6 +1329,7 @@ int Pattern::parts(vector<PatternPointer> & container) const {
 }
 
 int PatternPointer::parts(vector<pair<int,int>> & container) const { 
+    if (data == NULL) return 0;
     int partbegin = 0;
     int partlength = 0;
 
@@ -1335,6 +1364,7 @@ int PatternPointer::parts(vector<pair<int,int>> & container) const {
 
 
 int PatternPointer::parts(vector<PatternPointer> & container) const { 
+    if (data == NULL) return 0;
     int partbegin = 0;
     int partlength = 0;
 
@@ -1364,6 +1394,7 @@ int PatternPointer::parts(vector<PatternPointer> & container) const {
 }
 
 const unsigned int Pattern::skipcount() const { 
+    if (data == NULL) return 0;
     int count = 0;
     int i = 0;
     bool prevhigh = false;
@@ -1384,6 +1415,7 @@ const unsigned int Pattern::skipcount() const {
 }
 
 const unsigned int PatternPointer::skipcount() const { 
+    if (data == NULL) return 0;
     if (mask == 0) return 0;
     unsigned int skipcount = 0;
     unsigned int i = 0;
@@ -1405,6 +1437,7 @@ const unsigned int PatternPointer::skipcount() const {
 }
 
 int PatternPointer::gaps(vector<pair<int,int> > & container) const { 
+    if (data == NULL) return 0;
     if (mask == 0) return 0;
     int i = 0;
     int n = 0;
@@ -1432,6 +1465,7 @@ int PatternPointer::gaps(vector<pair<int,int> > & container) const {
 }
 
 int Pattern::gaps(vector<pair<int,int> > & container) const { 
+    if (data == NULL) return 0;
     vector<pair<int,int> > partscontainer;
     parts(partscontainer);
 
@@ -1638,6 +1672,7 @@ Pattern Pattern::addflexgaps(const std::vector<std::pair<int,int> > & gaps) cons
 
 
 Pattern Pattern::reverse() const { 
+    if (data == NULL) return *this;
     const unsigned char _size = bytesize() + 1;
     unsigned char * newdata = new unsigned char[_size];
 
