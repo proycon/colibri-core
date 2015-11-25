@@ -644,10 +644,15 @@ Pattern::Pattern(const Pattern& ref, unsigned int begin, unsigned int length) { 
         }
     } while (1);
 
+
+    //std::cerr << "DEBUG: slicing: this=" << (size_t) this <<  ",begin=" << begin << ",length=" << length << ",begin_b=" << begin_b << ",length_b=" << length_b << std::endl; //#TODO:remove
+
     const unsigned char _size = length_b + 1;
     data = new unsigned char[_size];
-    memcpy(data, ref.data + begin_b, begin_b+length_b);
+    memcpy(data, ref.data + begin_b, length_b);
     data[length_b] = ClassDecoder::delimiterclass;
+
+    //std::cerr << "DEBUG: slicing done"; //#TODO:remove
 }
 
 PatternPointer::PatternPointer(unsigned char * ref, unsigned int begin, unsigned int length) { //slice constructor
@@ -839,7 +844,7 @@ Pattern::Pattern(const PatternPointer& ref, unsigned int begin, unsigned int len
 
     const unsigned char _size = length_b + 1;
     data = new unsigned char[_size];
-    memcpy(data, ref.data + begin_b, begin_b+length_b);
+    memcpy(data, ref.data + begin_b, length_b);
     data[length_b] = ClassDecoder::delimiterclass;
 
     if (ref.mask != 0) { 

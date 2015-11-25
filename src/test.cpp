@@ -50,6 +50,8 @@ void test(string value , string ref) {
 }
 
 int main( int argc, char *argv[] ) {
+
+
 	//string model = argv[1];
 	//string classfile = argv[1];
     int i; 
