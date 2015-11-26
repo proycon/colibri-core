@@ -336,11 +336,8 @@ cpdef prune(self, int threshold, int n=0):
 
 
 def reverseindex(self):
-    """Returns the reverseindex associated with the model, this will be an instance of IndexedCorpus. Use getreversindex( (sentence, token) ) instead if you want to query the reverse index."""
-    ri = IndexedCorpus()
-    ri.bind(self.data.reverseindex)
-    ri.frommodel = self #to prevent segfaults: reference to this pattern model, IndexedCorpus can not live without its parent model as it shares the same data, prevent Python garbage collector from cleaning it up while we still exist
-    return ri
+    """Returns the reverseindex associated with the model, this will be an instance of IndexedCorpus. Use getreverseindex( (sentence, token) ) instead if you want to query the reverse index."""
+    return self.reverseindex
 
 
 def getreverseindex(self, indexreference):
