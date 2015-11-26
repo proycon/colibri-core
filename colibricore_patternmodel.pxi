@@ -217,6 +217,7 @@ def load(self, str filename, PatternModelOptions options=None, constrainmodel = 
         self.data.load(encode(filename), options.coptions, NULL)
 
 def loadreverseindex(self, IndexedCorpus reverseindex):
+    self.reverseindex = reverseindex #so python doesn't garbage collect the python object
     self.data.reverseindex = reverseindex.data
 
 
