@@ -1,3 +1,5 @@
+cdef object corpus
+
 def __len__(self):
     """Returns the total number of distinct patterns in the model"""
     return self.data.size()
@@ -187,6 +189,7 @@ def __init__(self, str filename = "",PatternModelOptions options = None, constra
     :type reverseindex: IndexedCorpus or None
     """
 
+    self.corpus = None
     if reverseindex:
         self.loadreverseindex(reverseindex)
 
@@ -217,8 +220,8 @@ def load(self, str filename, PatternModelOptions options=None, constrainmodel = 
         self.data.load(encode(filename), options.coptions, NULL)
 
 def loadreverseindex(self, IndexedCorpus reverseindex):
-    self.reverseindex = reverseindex #so python doesn't garbage collect the python object
     self.data.reverseindex = reverseindex.data
+    self.corpus = reverseindex #so python doesn't garbage collect the python object
 
 
 cpdef loadconstrainedbyindexedmodel(self, str filename, PatternModelOptions options, IndexedPatternModel constrainmodel):
@@ -337,7 +340,7 @@ cpdef prune(self, int threshold, int n=0):
 
 def reverseindex(self):
     """Returns the reverseindex associated with the model, this will be an instance of IndexedCorpus. Use getreverseindex( (sentence, token) ) instead if you want to query the reverse index."""
-    return self.reverseindex
+    return self.corpus
 
 
 def getreverseindex(self, indexreference):
