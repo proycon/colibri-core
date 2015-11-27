@@ -444,7 +444,7 @@ follows::
 
 The various columns are:
 
-* **Pattern** - The actual pattern. Gaps in skipgrams are represented as ``{*x*}`` where x is a number representing the size of the skip. Variable-width skipgrams are just ``{*}``. 
+* **Pattern** - The actual pattern. Gaps in skipgrams are represented as ``{*}`` (for each gap). Variable-width skipgrams are just ``{**}``. 
 * **Occurrence count** - The absolute number of times this pattern occurs
 * **Tokens** - The absolute number of tokens in the corpus that this pattern covers. Longer patterns by definition cover more tokens. This value's maximum is ``occurrencecount * n``, the value will be smaller if a pattern overlaps itself.
 * **Coverage** - The number of covered tokens, as a fraction of the total number of tokens.
