@@ -184,17 +184,29 @@ class IndexedCorpus {
 					return *this; 
 				} //prefix
 
+                self_type & operator=(const self_type & ref) {
+					if (pairpointer != NULL) delete pairpointer;
+                    if (ref.pairpointer != NULL) {
+                        pairpointer = new std::pair<IndexReference,PatternPointer>(*ref.pairpointer);
+                    } else {
+                        pairpointer = NULL;
+                    }
+                    return *this;
+                }
+
 				void next() {
-					++(pairpointer->second);
-					if (*(pairpointer->second.data) == ClassDecoder::delimiterclass) {
-						//we never stop at delimiterclasses, iterate again:
-						pairpointer->first.sentence++;
-						pairpointer->first.token = 0;
-						++(pairpointer->second);
-					} else {
-						pairpointer->first.token++;	
-					}
-					//Note: At the end of the data, the patternpointer is out of bounds, checking against end() should work fine though
+                    if (pairpointer != NULL) {
+                        ++(pairpointer->second);
+                        if (*(pairpointer->second.data) == ClassDecoder::delimiterclass) {
+                            //we never stop at delimiterclasses, iterate again:
+                            pairpointer->first.sentence++;
+                            pairpointer->first.token = 0;
+                            ++(pairpointer->second);
+                        } else {
+                            pairpointer->first.token++;	
+                        }
+                        //Note: At the end of the data, the patternpointer is out of bounds, checking against end() should work fine though
+                    }
 				}
                 self_type operator++(int junk) { self_type tmpiter = *this; next(); return *tmpiter; } //postfix
                 reference operator*() { return *pairpointer; }
@@ -204,7 +216,7 @@ class IndexedCorpus {
                 void debug() {
                     std::cerr << (size_t) pairpointer << std::endl;
                 }
-            protected:
+
                 pointer pairpointer;
         };
     

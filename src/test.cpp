@@ -1307,7 +1307,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Iterating over reverse index..." << endl;
         int i = 0;
         for (IndexedCorpus::iterator iter = corpus.begin(); iter != corpus.end(); iter++) {
-            cerr << "\tGetting pattern for index " << iter->first.tostring() << endl;
+            cerr << "\tGetting pattern for index " << iter->first.tostring() << " = " << iter->second.tostring(classdecoder) << endl;
             vector<PatternPointer> patterns = model.getreverseindex(iter->first);
             for (PatternPointer p : patterns) {
                 cerr << "\t\t" << p.tostring(classdecoder) << endl;

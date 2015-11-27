@@ -1029,13 +1029,13 @@ cdef class IndexedCorpus:
         return pattern
 
     def __contains__(self, tuple indexreference):
-        """Test if the indexreference, a (sentence,tokenoffset) tuple is in the corpus. This is a much slower lookup than using a pattern model!!"""
+        """Test if the indexreference, a (sentence,tokenoffset) tuple is in the corpus."""
         return self.has(indexreference)
 
     def __iter__(self):
         """Iterate over all indexes in the corpus, generator over (sentence, tokenoffset) tuples"""
-        it = self.data.begin()
-        endit = self.data.end()
+        cdef cIndexedCorpus.iterator it = self.data.begin()
+        cdef cIndexedCorpus.iterator endit = self.data.end()
         while it != endit:
             yield (deref(it).first.sentence, deref(it).first.token)
             inc(it)

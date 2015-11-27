@@ -222,9 +222,9 @@ for match in corpus.findpattern(needle):
     print( "'fair Ophelia' found at ", match)
 print("Token iteration:")
 i = 0
-for ref, pattern in corpus:
+for ref in corpus:
     i += 1
-print("Total number of tokens: ", test(len(corpus),1))
+print("Total number of tokens: ", test(len(corpus),i))
 
 
 print()
