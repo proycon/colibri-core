@@ -1,0 +1,56 @@
+#!/bin/bash
+
+mintokens=1
+opt_u=""
+opt_s=""
+keeptmp=0
+
+usage() {
+ echo "Syntax: colibri-findpatterns patternlist corpusfile [corpusfile2]..." >&2
+ echo "Description: Find patterns in corpus data based on a presupplied list of patterns (one per line). " >&2
+ echo "Output: Files result.colibri.patternmodel and result.colibri.cls, all patterns will be decoded and printed to stdout on run" >&2
+ echo "Arguments: corpusfiles should be plain text files, tokenised, and one sentence per line" >&2
+ echo " -t int     Minimum amount of occurrences for a pattern to be included in the model (default: $threshold)" >&2
+ echo " -u         Compute an unindexed model instead of an indexed one (default is indexed)" >&2
+ echo " -s         Compute skipgrams as well" >&2
+ echo " -K         Keep intermediate files" >&2
+}
+
+while getopts ht:m:l:sK flag
+do
+    case "$flag" in
+    (h) usage; exit 0;;
+    (t) mintokens=$OPTARG;;
+    (u) opt_u="-u";;
+    (s) opt_s="-s";;
+    (K) keeptmp=1;;
+    (*) usage; exit 0;;
+    esac
+done
+shift $(expr $OPTIND - 1)
+
+if [ $# -eq 0 ] || [ $# -eq 1 ]; then
+    usage
+    exit 0
+fi
+
+
+echo "Class encoding corpora...">&2
+colibri-classencode -o tmp -u ${@:2}
+
+echo "Class encoding pattern list...">&2
+colibri-classencode -c tmp.colibri.cls -e -o patternlist $1
+mv patternlist.colibri.cls output.colibri.cls
+
+echo "Building pattern list"
+colibri-patternmodeller -f patternlist.colibri.dat -o patternlist.colibri.patternmodel -L $1
+
+echo "Building pattern model...">&2
+colibri-patternmodeller -I -i patternlist.colibri.patternmodel -f tmp.colibri.dat -o output.colibri.patternmodel -t $mintokens $opt_u $opt_s -c output.colibri.cls -P 
+
+#cleanup
+if [ $keeptmp -eq 0 ]; then
+    rm patternlist.colibri.dat
+    rm patternlist.colibri.patternmodel
+    rm tmp.colibri.dat
+fi
