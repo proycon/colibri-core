@@ -619,15 +619,17 @@ int main( int argc, char *argv[] ) {
         IndexedCorpus * corpus = NULL;
 
         if ( ((outputmodeltype == UNINDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNMODEL) || (outputmodeltype == UNINDEXEDPATTERNPOINTERMODEL) || (inputmodeltype == UNINDEXEDPATTERNPOINTERMODEL))) {
-            if (options.DOSKIPGRAMS) {
-                cerr << "NOTE: Skipgram generation on unindexed pattern models can only be done exhaustively!" << endl;
-                cerr << " This does not take the -T parameter into account (-T will always be 1), "<<endl;
-                cerr << " generates lots of skipgrams, and is therefore far less memory efficient "<<endl;
-                cerr << " than with indexed models." << endl;
-                options.DOSKIPGRAMS_EXHAUSTIVE = true;
-                options.DOSKIPGRAMS = false;
-            } else {
-                LOADCORPUS = false;
+            if (!DOINPLACEREBUILD) {
+                if (options.DOSKIPGRAMS) {
+                    cerr << "NOTE: Skipgram generation on unindexed pattern models can only be done exhaustively!" << endl;
+                    cerr << " This does not take the -T parameter into account (-T will always be 1), "<<endl;
+                    cerr << " generates lots of skipgrams, and is therefore far less memory efficient "<<endl;
+                    cerr << " than with indexed models." << endl;
+                    options.DOSKIPGRAMS_EXHAUSTIVE = true;
+                    options.DOSKIPGRAMS = false;
+                } else {
+                    LOADCORPUS = false;
+                }
             }
         }
 
@@ -651,7 +653,7 @@ int main( int argc, char *argv[] ) {
             
 
         if (DOINPLACEREBUILD) { ///*****************************************************
-            cerr << "In-place rebuild (-I) enabled" << corpusfile <<endl;
+            cerr << "In-place rebuild (-I) enabled, on " << corpusfile <<endl;
 
             if ((inputmodeltype != UNINDEXEDPATTERNPOINTERMODEL) && (inputmodeltype != INDEXEDPATTERNPOINTERMODEL)) {
                 if (corpusfile.empty()) {
@@ -675,6 +677,9 @@ int main( int argc, char *argv[] ) {
                     constrainbymodel = NULL;
                 }
 
+
+                if (model.maxlength() > options.MAXLENGTH) options.MAXLENGTH = model.maxlength();
+                if (model.minlength() < options.MINLENGTH) options.MINLENGTH = model.minlength();
 
                 //build new model from corpus
                 cerr << "Building new unindexed model from  " << corpusfile <<endl;
@@ -702,6 +707,10 @@ int main( int argc, char *argv[] ) {
                     delete constrainbymodel;
                     constrainbymodel = NULL;
                 }
+
+                if (model.maxlength() > options.MAXLENGTH) options.MAXLENGTH = model.maxlength();
+                if (model.minlength() < options.MINLENGTH) options.MINLENGTH = model.minlength();
+
                 //build new model from corpus
                 cerr << "Building new indexed model from  " << corpusfile <<endl;
                 model.train(corpusfile, options, model.getinterface(), continued, firstsentence,ignoreerrors);
