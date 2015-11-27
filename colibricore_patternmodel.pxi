@@ -263,6 +263,9 @@ cpdef train(self, str filename, PatternModelOptions options, constrainmodel = No
     """
     if self.data.reverseindex != NULL:
         filename = ""
+    if isinstance(self, IndexedPatternModel) and self.data.reverseindex == NULL and options.DOSKIPGRAMS:
+        raise ValueError("No reversindex was specified but you are requesting to train skipgrams, set reverseindex to an IndexedCorpus instance upon model construction")
+
     if constrainmodel:
         assert len(constrainmodel) >= 0
         if isinstance(constrainmodel, IndexedPatternModel):
