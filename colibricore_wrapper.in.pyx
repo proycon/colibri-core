@@ -1035,11 +1035,9 @@ cdef class IndexedCorpus:
     def __iter__(self):
         """Iterate over all indexes in the corpus, generator over (sentence, tokenoffset) tuples"""
         it = self.data.begin()
-        cdef cPattern cpattern
-        cdef cIndexReference ref
-        while it != self.data.end():
-            ref = deref(it).first
-            yield (ref.sentence, ref.token)
+        endit = self.data.end()
+        while it != endit:
+            yield (deref(it).first.sentence, deref(it).first.token)
             inc(it)
 
     def __getitem__(self, item):

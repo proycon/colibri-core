@@ -29,7 +29,7 @@ const PatternCategory datacategory(const unsigned char * data, int maxbytes = 0)
         if ((maxbytes > 0) && (i >= maxbytes)) return category;
         const unsigned int cls = bytestoint(data + i, &length);
         i += length;
-        if (cls == ClassDecoder::delimiterclass) {
+        if ((maxbytes == 0) && (cls == ClassDecoder::delimiterclass)) {
             //end marker
             return category;
         } else if (cls == ClassDecoder::skipclass) {
@@ -80,7 +80,11 @@ const size_t datasize(unsigned char * data, int maxbytes = 0) {
             return n;
         }
         if ((!prevhigh) && (data[i] == ClassDecoder::delimiterclass)) {
-            return n;
+            if (maxbytes == 0) {
+                return n;
+            } else {
+                n++;
+            }
         } else if (data[i] < 128) {
             n++;
         }
@@ -335,7 +339,7 @@ bool dataout(unsigned char * data, int maxbytes = 0) {
         }
         const unsigned int cls = bytestoint(data + i, &length);
         i += length;
-        if (cls == ClassDecoder::delimiterclass) {
+        if ((maxbytes == 0) && (cls == ClassDecoder::delimiterclass)) {
             cerr << endl;
             return true;
         } else {

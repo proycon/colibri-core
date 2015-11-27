@@ -1305,13 +1305,20 @@ int main( int argc, char *argv[] ) {
         model.train("/tmp/hamlet.colibri.dat", options);
         
         cerr << "Iterating over reverse index..." << endl;
+        int i = 0;
         for (IndexedCorpus::iterator iter = corpus.begin(); iter != corpus.end(); iter++) {
             cerr << "\tGetting pattern for index " << iter->first.tostring() << endl;
             vector<PatternPointer> patterns = model.getreverseindex(iter->first);
             for (PatternPointer p : patterns) {
                 cerr << "\t\t" << p.tostring(classdecoder) << endl;
             }
+            i++;
         }
+        cerr << "Size check: "; test(corpus.size(), i);
+
+        //PatternPointer corpus_pp = corpus.getpattern();
+        //cerr << "Pattern pointer sanity check (bytesize)"; test(corpus_pp.bytesize(), corpus.bytesize());
+        //cerr << "Pattern pointer sanity check (n)"; test(corpus_pp.n(), i);
 
     }
     {

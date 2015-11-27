@@ -260,7 +260,7 @@ class IndexedCorpus {
          */
         size_t size() {
 			if (totaltokens > 0) return totaltokens;
-			totaltokens =  patternpointer->n();
+            for (iterator iter = begin(); iter != end(); iter++) totaltokens++;
 			return totaltokens;
 		} 
 
