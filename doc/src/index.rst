@@ -57,7 +57,7 @@ For RedHat-based systems (run as root)::
 
 For Mac OS X with `homebrew <http://brew.sh>`_::
 
-    $ brew install autoconf automake libtool autoconf-archive python3
+    $ brew install autoconf automake libtool autoconf-archive python3 pkg-config
 
 Arch Linux users can simply install Colibri Core and all dependencies directly from the `Arch User Repository <https://aur.archlinux.org/packages/colibri-core-git>`_ , no further installation is necessary in this case.
 
