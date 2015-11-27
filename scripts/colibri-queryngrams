@@ -26,7 +26,7 @@ do
     (t) mintokens=$OPTARG;;
     (m) minlength=$OPTARG;;
     (l) maxlength=$OPTARG;;
-    (s) opt_s="";;
+    (s) opt_s="-s";;
     (v) opt_u=""; opt_g="-g";;
     (*) usage; exit 0;;
     esac

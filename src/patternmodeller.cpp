@@ -475,6 +475,7 @@ int main( int argc, char *argv[] ) {
             break;
         case 'L':
             options.DOPATTERNPERLINE = true;
+            outputmodeltype = UNINDEXEDPATTERNMODEL;
             break;
         case 'I':
             DOINPLACEREBUILD = true;

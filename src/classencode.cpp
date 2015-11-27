@@ -164,7 +164,7 @@ int main( int argc, char *argv[] ) {
         }
 
         cerr << "Encoding corpus " << corpusfiles[i] << " to " << outfile << ".colibri.dat" << endl;
-        classencoder.encodefile(corpusfiles[i], outfile + ".colibri.dat", allowunknown, extend, unified);
+        classencoder.encodefile(corpusfiles[i], outfile + ".colibri.dat", allowunknown, extend, (unified && i>0));
         cerr << "...Done" << endl;
     }
 
