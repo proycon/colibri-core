@@ -803,6 +803,16 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (version < 2) std::cerr << ", class encoding version: " << (int) version;
                 std::cerr << std::endl; 
             }
+
+            if (constrainbymodel != NULL) {
+                if ((options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE)) {
+                    options.DOSKIPGRAMS = false;
+                    options.DOSKIPGRAMS_EXHAUSTIVE = true;
+                    if (!options.QUIET) std::cerr << "Skipgrams will be exhaustively matched against the constraint model." << std::endl;
+                    if (options.MAXLENGTH >= 31) std::cerr << "WARNING: No maximum pattern length set or maximum pattern length is very high! This will drastically slow down skipgram computation" << std::endl; 
+                } 
+            }
+
             std::vector<std::pair<PatternPointer,int> > ngrams;
             std::vector<PatternPointer> subngrams;
             bool found;
@@ -907,11 +917,11 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 //prevent double counting of unigrams after a iter_unigramsonly run with mintokens==1
                                 continue;
                             }
+                            
 
                             if (!skipgramsonly) { 
                                 //check against constraint model 
-                                if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter->first))) continue; 
-                                
+                                if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (constrainbymodel->has(iter->first)))  continue;  //skip when we have a constraintmodel and the pattern is not found 
 
                                 found = true; //are the submatches in order? (default to true, attempt to falsify, needed for mintokens==1) 
 
@@ -950,9 +960,12 @@ class PatternModel: public MapType, public PatternModelInterface {
                                     if (options.DEBUG) std::cerr << "\t\tAdding @" << ref.sentence << ":" << ref.token << " n=" << iter->first.n() << " category=" <<(int) iter->first.category()<< std::endl;
                                     add(iter->first, ref);
                                 } 
+
                             }
-                            if (((n >= 3) || (options.MINTOKENS == 1)) //n is always 1 when mintokens == 1 !!
+                            if (((n >= 3) || (options.MINTOKENS == 1)) //n is always 1 when mintokens == 1 or constrainmodel !!
                                     && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
+                                //if we have a constraint model, we need to compute skipgrams even if the ngram was not found
+                                ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
                                 int foundskipgrams_thisround = this->computeskipgrams(iter->first, options, &ref, NULL, constrainbymodel, true );
                                 if (foundskipgrams_thisround > 0) hasskipgrams = true;
                                 foundskipgrams += foundskipgrams_thisround; 
@@ -963,6 +976,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             throw InternalError();
                         }
                     }
+
                 }
 
                 
@@ -1103,6 +1117,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             //if targetcontainer is NULL, skipgrams will be added to the model,
             // if not null , they will be added to the targetcontainer instead
 
+
             if (mintokens == -1) mintokens = 2;;
             if (mintokens  <= 1) {
                 mintokens = 1;
@@ -1113,6 +1128,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             std::vector<PatternPointer> subngrams;
 
             if (gapmasks[n].empty()) gapmasks[n] = compute_skip_configurations(n, maxskips); 
+
+            if (DEBUG) std::cerr << "Computing skipgrams (" << gapmasks[n].size() << " permutations)" << std::endl;
 
             //loop over all possible gap configurations
             int gapconf_i = 0;
@@ -1125,7 +1142,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     skipgram.mask = *iter2;
 
                     if (DEBUG) {
-                        std::cerr << "Checking for: " << std::endl;
+                        std::cerr << "Checking for skipgram: " << std::endl;
                         skipgram.out();
                     }
 
@@ -1221,7 +1238,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                     add(skipgram, ref ); //counts the actual skipgram, will add it to the model
                                 }
                             } else {
-                                std::cerr << "ERROR: computeskipgrams() called with no singleref and no multiplerefs" << std::endl;
+                                std::cerr << "ERROR: computeskipgrams() called with no singleref, no multiplerefs and no targetcontainer" << std::endl;
                                 throw InternalError();
                             }
                         } else {
@@ -1404,8 +1421,9 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param occurrencecount If set above zero, filters to only include patterns occurring above this threshold
          * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
          * @param size Set to any value above zero to only include patterns of the specified length.
+         * @param maxskips Maximum number of skips in a skipgram
          */
-        std::vector<PatternPointer> getreverseindex(const IndexReference ref, int occurrencecount = 0, int category = 0, unsigned int size = 0) {
+        std::vector<PatternPointer> getreverseindex(const IndexReference ref, int occurrencecount = 0, int category = 0, unsigned int size = 0, int maxskips = 3) {
             //Auxiliary function
             std::vector<PatternPointer> result;
             if (!this->reverseindex) return result;
@@ -1423,22 +1441,25 @@ class PatternModel: public MapType, public PatternModelInterface {
                         std::cerr << "hash: " << ngram.hash() << std::endl;*/
                         if ( (((occurrencecount == 0) && this->has(ngram)) || (this->occurrencecount(ngram) >= (unsigned int) occurrencecount))
                             && ((category == 0) || (ngram.category() >= category)) ) {
-                            result.push_back(ngram);
-
-                            if (((category == 0) || (category == SKIPGRAM)) && (this->hasskipgrams))  {
-                                
-                                //(we can't use gettemplates() because
-                                //gettemplates() depends on us, we have to
-                                //solve it low-level, punching holes:
-
-                                std::vector<PatternPointer> skipgrams = this->findskipgrams(ngram, occurrencecount);
-                                for (auto skipgram : skipgrams) {
-                                    result.push_back(skipgram);
-                                }
-
-                                //TODO: flexgrams
-
+                            if (constrainmodel != NULL) || ((constrainmodel == NULL) && (constrainmodel->has(ngram)) {
+                                result.push_back(ngram);
                             }
+
+                        }
+
+                        if (((category == 0) || (category == SKIPGRAM)) && (this->hasskipgrams) && (n >= 3))  {
+                            
+                            //(we can't use gettemplates() because
+                            //gettemplates() depends on us, we have to
+                            //solve it low-level, punching holes:
+
+                            std::vector<PatternPointer> skipgrams = this->findskipgrams(ngram, occurrencecount, maxskips, this);
+                            for (auto skipgram : skipgrams) {
+                                result.push_back(skipgram);
+                            }
+
+                            //TODO: flexgrams
+
                         }
                     } catch (KeyError &e) {
                         break;
@@ -1464,16 +1485,19 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         /**
          * Returns pairs of positions and patterns, consisting of all patterns
-         * found in the specified sentence (or whatever unit delimites your
+         * from the model found in the specified sentence (or whatever unit delimites your
          * corpus)
          * @param sentence The sentence index (starts at 1)
+         * @param occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+         * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
+         * @param size Set to any value above zero to only include patterns of the specified length.
          */
-        std::vector<std::pair<IndexReference,PatternPointer>> getreverseindex_bysentence(int sentence) {
+        std::vector<std::pair<IndexReference,PatternPointer>> getreverseindex_bysentence(int sentence, int occurrencecount = 0, int category = 0, unsigned int size = 0) {
             //Auxiliary function
             std::vector<std::pair<IndexReference,PatternPointer>> result;
             for (int i = 0; i < this->reverseindex->sentencelength(sentence); i++) {
                 const IndexReference ref = IndexReference(sentence, i);
-                std::vector<PatternPointer> tmpresult =  this->getreverseindex(ref);
+                std::vector<PatternPointer> tmpresult =  this->getreverseindex(ref, occurrencecount, category, size);
                 for (std::vector<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
                     const PatternPointer pattern = *iter;
                     result.push_back(std::pair<IndexReference,PatternPointer>(ref,pattern));
@@ -1486,12 +1510,12 @@ class PatternModel: public MapType, public PatternModelInterface {
          * Given a position in the corpus , return a vector of all the positions and patterns (as pairs) that occur to the right of this position
          * @param ref The position in the corpus
          */
-        std::vector<std::pair<IndexReference,PatternPointer>> getreverseindex_right(const IndexReference ref) {
+        std::vector<std::pair<IndexReference,PatternPointer>> getreverseindex_right(const IndexReference ref,int occurrencecount = 0, int category = 0, unsigned int size = 0) {
             //Auxiliary function
             std::vector<std::pair<IndexReference,PatternPointer>> result;
             for (int i = ref.token+1; i < this->reverseindex->sentencelength(ref.sentence); i++) {
                 const IndexReference ref2 = IndexReference(ref.sentence, i);
-                std::vector<PatternPointer> tmpresult =  this->getreverseindex(ref);
+                std::vector<PatternPointer> tmpresult =  this->getreverseindex(ref, occurrencecount, category, size);
                 for (std::vector<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
                     const PatternPointer pattern = *iter;
                     result.push_back(std::pair<IndexReference,PatternPointer>(ref2,pattern));
@@ -1504,12 +1528,12 @@ class PatternModel: public MapType, public PatternModelInterface {
          * Given a position in the corpus , return a vector of all the positions and patterns (as pairs) that occur to the left of this position
          * @param ref The position in the corpus
          */
-        std::vector<std::pair<IndexReference,PatternPointer>> getreverseindex_left(const IndexReference ref) {
+        std::vector<std::pair<IndexReference,PatternPointer>> getreverseindex_left(const IndexReference ref, int occurrencecount = 0, int category = 0, unsigned int size = 0) {
             //Auxiliary function
             std::vector<std::pair<IndexReference,PatternPointer>> result;
             for (int i = 0; i < ref.token; i++) {
                 const IndexReference ref2 = IndexReference(ref.sentence, i);
-                std::vector<PatternPointer> tmpresult =  this->getreverseindex(ref);
+                std::vector<PatternPointer> tmpresult =  this->getreverseindex(ref,occurrencecount, category, size);
                 for (std::vector<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
                     const PatternPointer pattern = *iter;
                     result.push_back(std::pair<IndexReference,PatternPointer>(ref2,pattern));
@@ -2453,27 +2477,59 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     virtual void trainskipgrams(PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
         if (options.MINTOKENS == -1) options.MINTOKENS = 2;
         this->cache_grouptotal.clear(); //forces recomputation of statistics
-        for (int n = 3; n <= options.MAXLENGTH; n++) {
-            if (this->gapmasks[n].empty()) this->gapmasks[n] = compute_skip_configurations(n, options.MAXSKIPS);
-            if (!options.QUIET) std::cerr << "Counting " << n << "-skipgrams" << std::endl; 
-            int foundskipgrams = 0;
+        if (constrainbymodel == this) {
+            vector<PatternPointer> parts;
+            //constrained by ourselves, 
+            if (!options.QUIET) std::cerr << "Finding skipgrams satisfying pre-loaded constraints" << std::endl; 
             for (typename MapType::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const PatternPointer pattern = PatternPointer(&(iter->first));
-                const IndexedData multirefs = iter->second;
-                if (((int) pattern.n() == n) && (pattern.category() == NGRAM) ) foundskipgrams += this->computeskipgrams(pattern,options, NULL, &multirefs, constrainbymodel, false);
+                if (pattern.category() == SKIPGRAM) {
+                    const unsigned int skipgram_n = pattern.n();
+                    parts.clear();
+                    pattern.parts(parts);
+                    PatternPointer firstpart = parts[0];
+                    PatternPointer firstword = firstpart[0]; //get first word (unigram)
+                    
+                    const IndexedData * data = getdata(firstword);
+                    if (data != NULL) {
+                        for (IndexedData::const_iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
+                            const IndexReference ref = *iter2;
+                            PatternPointer candidate = this->reverseindex->getpattern(
+                        }
+                    }
+
+
+
+
+
+                } else if (pattern.category() == FLEXGRAM) {
+                    //TODO: implement
+                }
             }
-            if (!foundskipgrams) {
-                std::cerr << " None found" << std::endl;
-                break;
-            } else {
-                this->hasskipgrams = true;
+        } else {
+            //normal behaviour: extract skipgrams from n-grams
+            for (int n = 3; n <= options.MAXLENGTH; n++) {
+                if (this->gapmasks[n].empty()) this->gapmasks[n] = compute_skip_configurations(n, options.MAXSKIPS);
+                if (!options.QUIET) std::cerr << "Counting " << n << "-skipgrams" << std::endl; 
+                int foundskipgrams = 0;
+                for (typename MapType::iterator iter = this->begin(); iter != this->end(); iter++) {
+                    const PatternPointer pattern = PatternPointer(&(iter->first));
+                    const IndexedData multirefs = iter->second;
+                    if (((int) pattern.n() == n) && (pattern.category() == NGRAM) ) foundskipgrams += this->computeskipgrams(pattern,options, NULL, &multirefs, constrainbymodel, false);
+                }
+                if (!foundskipgrams) {
+                    std::cerr << " None found" << std::endl;
+                    break;
+                } else {
+                    this->hasskipgrams = true;
+                }
+                if (!options.QUIET) std::cerr << " Found " << foundskipgrams << " skipgrams...";
+                unsigned int pruned = this->prune(options.MINTOKENS,n);
+                if (!options.QUIET) std::cerr << "pruned " << pruned;
+                unsigned int prunedextra = this->pruneskipgrams(options.MINTOKENS_SKIPGRAMS, options.MINSKIPTYPES, n);
+                if (prunedextra && !options.QUIET) std::cerr << " plus " << prunedextra << " extra skipgrams..";
+                if (!options.QUIET) std::cerr << "...total kept: " <<  foundskipgrams - pruned - prunedextra << std::endl;
             }
-            if (!options.QUIET) std::cerr << " Found " << foundskipgrams << " skipgrams...";
-            unsigned int pruned = this->prune(options.MINTOKENS,n);
-            if (!options.QUIET) std::cerr << "pruned " << pruned;
-            unsigned int prunedextra = this->pruneskipgrams(options.MINTOKENS_SKIPGRAMS, options.MINSKIPTYPES, n);
-            if (prunedextra && !options.QUIET) std::cerr << " plus " << prunedextra << " extra skipgrams..";
-            if (!options.QUIET) std::cerr << "...total kept: " <<  foundskipgrams - pruned - prunedextra << std::endl;
         }
     }
 
@@ -2619,11 +2675,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const IndexReference ref = *iter;
 
             //search in reverse index
-            std::vector<PatternPointer> rindex = this->getreverseindex(ref);
+            std::vector<PatternPointer> rindex = this->getreverseindex(ref, occurrencethreshold,NGRAM);
             for (std::vector<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                 const PatternPointer candidate = *iter2;
 
-                if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == NGRAM) && ((occurrencethreshold == 0) || (this->occurrencecount(pattern) >= occurrencethreshold))  ) {
+                if (((int) candidate.n() == _n)  && (candidate != pattern) ) {
                     instances[candidate] += 1;
                 }
             }
@@ -2666,17 +2722,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 //std::cerr << "Begin " << begin.sentence << ":" << begin.token << ",<< std::endl;
 
                 //search in reverse index
-                std::vector<PatternPointer> rindex = this->getreverseindex(begin);
+                std::vector<PatternPointer> rindex = this->getreverseindex(begin, occurrencethreshold, category,size);
                 for (std::vector<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                     const PatternPointer candidate = *iter2;
                     //std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << ", bs=" << candidate.bytesize() <<  std::endl;
                     //candidate.out();
-                    if (((int) candidate.n() <= maxsubn) && (candidate != pattern)
-                        && ((occurrencethreshold == 0) || (this->occurrencecount(candidate) >= occurrencethreshold))
-                        && ((category == 0) || (candidate.category() >= category))
-                        && ((size == 0) || (candidate.n() >= size))
-                        ) {
-                        if ((isskipgram) || (candidate.category() == SKIPGRAM)) { //MAYBE TODO: I may check too much now... could be more efficient? 
+                    if (((int) candidate.n() <= maxsubn) && (candidate != pattern)) {
+                        if ((isskipgram) || (candidate.category() == SKIPGRAM)) { 
                             //candidate may not have skips in places where the larger pattern does
                             Pattern tmpl = Pattern(pattern, i, candidate.n()); //get the proper slice to match
                             if (candidate.instanceof(tmpl)) {
@@ -2723,7 +2775,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
             //search in reverse index
-            std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_bysentence(ref.sentence);
+            std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_bysentence(ref.sentence, occurrencethreshold, category, size);
             for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                 if ((iter2->first.sentence != ref.sentence) || (iter2->first.token > ref.token)) break;
                 const PatternPointer candidate = iter2->second;
@@ -2735,7 +2787,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         && ((category == 0) || (candidate.category() >= category))
                         && ((size == 0) || (candidate.n() >= size))
                     ) {
-                    if ((candidate.category() == SKIPGRAM) || (pattern.category() == SKIPGRAM))  {//MAYBE TODO: I may check too much now... could be more efficient? 
+                    if ((candidate.category() == SKIPGRAM) || (pattern.category() == SKIPGRAM))  {
                         //instance may not have skips in places where the larger candidate pattern does 
                         Pattern inst = Pattern(candidate, iter2->first.token, pattern.n()); //get the proper slice to match
                         if (pattern.instanceof(candidate)) {

@@ -305,6 +305,8 @@ class IndexedCorpus {
 
 /************* Base abstract container for pattern storage  ********************/
 
+
+
 /**
  * \brief Limited virtual interface to pattern stores.
  */
@@ -322,7 +324,11 @@ class PatternStoreInterface {
          * How many patterns are in the pattern store?
          */
         virtual size_t size() const =0; 
+
+
+
 };
+
 
 /**
  * \brief Abstract Pattern store class, not to be instantiated directly.
@@ -386,6 +392,7 @@ class PatternStore: public PatternStoreInterface {
         virtual typename ContainerType::iterator end()=0;
         virtual typename ContainerType::iterator find(const Pattern & pattern)=0;
         virtual typename ContainerType::iterator find(const PatternPointer & pattern)=0;
+
         
         virtual void write(std::ostream * out)=0;
         //virtual void read(std::istream * in, int MINTOKENS)=0;
@@ -393,6 +400,8 @@ class PatternStore: public PatternStoreInterface {
         virtual PatternStoreInterface * getstoreinterface() {
             return (PatternStoreInterface*) this;
         }
+
+
 };
 
 
@@ -437,6 +446,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
         virtual typename ContainerType::iterator end()=0;
         virtual typename ContainerType::iterator find(const Pattern & pattern)=0;
         virtual typename ContainerType::iterator find(const PatternPointer & pattern)=0;
+
 
         /**
          * Write the map to stream output (in binary format)
