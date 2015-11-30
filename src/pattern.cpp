@@ -180,6 +180,28 @@ PatternPointer PatternPointer::toflexgram() const { //converts a fixed skipgram 
     return copy;
 }
 
+uint32_t Pattern::getmask() const {
+    uint32_t mask = 0;
+    unsigned int n = 0;
+    bool isflex = false;
+    const unsigned int bytes = bytesize();
+    for (unsigned int i = 0; (i < bytes) && (n < 31); i++) {
+        if (data[i] < 128) {
+            if ((i == 0) || (data[i-1] < 128)) {
+                if (data[i] == ClassDecoder::flexclass){
+                    isflex = true;
+                    mask |= (1 << n);
+                } else if ((data[i] == ClassDecoder::skipclass)) {
+                    mask |= (1 << n);
+                }
+            }
+            n++;
+        }
+    }
+    if (isflex) mask |= (1 << 31);
+    return mask;
+}
+
 uint32_t PatternPointer::computemask() const {
     uint32_t mask = 0;
     unsigned int n = 0;
@@ -360,16 +382,33 @@ bool PatternPointer::out() const {
 const bool Pattern::unknown() const {
     if (data == NULL) return false;
     int i = 0;
-    unsigned int length;
+    int n = 0;
+    bool prevhigh = false;
     do {
-        const unsigned int cls = bytestoint(data + i, &length);
-        i += length;
-        if (cls == ClassDecoder::delimiterclass) {
-            //end marker
+        if ((!prevhigh) && (data[i] == ClassDecoder::unknownclass)) {
+            return true;
+        } else if ((!prevhigh) && (data[i] == ClassDecoder::delimiterclass)) {
             return false;
-        } else if (cls == ClassDecoder::unknownclass) {
+        }
+        prevhigh = (data[i] >= 128);
+        i++;
+    } while (1);
+}
+
+const bool PatternPointer::unknown() const {
+    if (data == NULL) return false;
+    int i = 0;
+    int n = 0;
+    bool prevhigh = false;
+    do {
+        if ((bytes > 0) && (i >= bytes)) {
+            return false;
+        }
+        if ((!prevhigh) && (data[i] == ClassDecoder::unknownclass)) {
             return true;
         }
+        prevhigh = (data[i] >= 128);
+        i++;
     } while (1);
 }
 

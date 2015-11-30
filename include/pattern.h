@@ -54,6 +54,7 @@ enum PatternCategory {
     NGRAM = 1, /**< For ngrams, i.e. patterns without gaps */
     SKIPGRAM = 2, /**< For skipgrams, i.e. patterns with fixed-width gaps */
     FLEXGRAM = 3, /**< For flexgrams, i.e. patterns with dynamic-width gaps */
+    SKIPGRAMORFLEXGRAM = 4, /**< Only used as a parameter in querying */
 };
 
 enum PatternType {
@@ -346,6 +347,8 @@ class Pattern {
      Pattern addcontext(const Pattern & leftcontext, const Pattern & rightcontext) const;    
      void mask(std::vector<bool> & container) const; //returns a boolean mask of the skipgram (0 = gap(encapsulation) , 1 = skipgram coverage)
 
+     uint32_t getmask() const;
+
      //sets an entirely new value
      void set(const unsigned char* dataref, const int size); 
 };
@@ -429,6 +432,7 @@ class PatternPointer {
      PatternPointer(const Pattern&, unsigned int,unsigned int);
 
      uint32_t computemask() const;
+     uint32_t getmask() const { return mask; }
 
      const size_t n() const;
      const size_t bytesize() const { return bytes; }
@@ -442,6 +446,7 @@ class PatternPointer {
      const PatternCategory category() const;
      const bool isskipgram() const { return category() == SKIPGRAM; }
      const bool isflexgram() const { return category() == FLEXGRAM; }
+     const bool unknown() const;
 
      std::string tostring(const ClassDecoder& classdecoder) const; //pattern to string (decode)
      std::string decode(const ClassDecoder& classdecoder) const { return tostring(classdecoder); } //pattern to string (decode)

@@ -132,7 +132,7 @@ class PatternModelOptions {
                               ///< pruning and conserves memory.
         
         bool DOSKIPGRAMS; ///< Load/extract skipgrams? (default: false)
-        bool DOSKIPGRAMS_EXHAUSTIVE; ///< Load/extract skipgrams in an exhaustive fashion? More memory intensive, but the only options for unindexed models (default: false)
+        bool DOSKIPGRAMS_EXHAUSTIVE; ///< Load/extract skipgrams in an exhaustive fashion? More memory intensive, but the only options for unindexed models (default: false). Use DOSKIPGRAMS instead, this will be automatically used as a fallback whnever EXHAUSTIVE computation is necessary.
         int MINSKIPTYPES;  ///< Minimum required amount of distinct patterns that can fit in a gap of a skipgram for the skipgram to be included (default: 2)
         int MAXSKIPS; ///< Maximum skips per skipgram
 
@@ -515,6 +515,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         unsigned char version() const { return model_version; }
 };
 
+typedef std::unordered_map<PatternPointer,std::vector<std::pair<uint32_t,unsigned char>>> t_matchskipgramhelper; //tuple<mask,n,isflexgram>
 
 /**
  * \brief A model mapping patterns to values, gigh-level interface.
@@ -533,6 +534,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         int maxn;
         int minn; 
         
+        t_matchskipgramhelper matchskipgramhelper; ///< Helper structure for finding skipgrams in corpus data: maps the first word of skipgrams to series of mask,length pairs, so skipgrams need not be recomputed exhaustively for each pattern
+
         //std::multimap<IndexReference,Pattern> reverseindex; 
         std::set<int> cache_categories;
         std::set<int> cache_n;
@@ -549,20 +552,41 @@ class PatternModel: public MapType, public PatternModelInterface {
             //this is the generic version
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
                 const PatternType p = iter->first;
+                const PatternCategory category = p.category();
                 const int n = p.n();
                 if (n > maxn) maxn = n;
                 if (n < minn) minn = n;
-                if ((!hasskipgrams) && (p.isskipgram())) hasskipgrams = true;
+                if ((!hasskipgrams) && (category == SKIPGRAM)) hasskipgrams = true;
+                if ((!hasflexgrams) && (category == FLEXGRAM)) hasflexgrams = true;
             }
         }
         virtual void posttrain(const PatternModelOptions options) {
             //nothing to do here, indexed model specialised this function to
             //sort indices
         }
+
+        virtual void compute_matchskipgramhelper() {
+            if ((matchskipgramhelper.empty()) && ((hasskipgrams) || (hasflexgrams))) {
+                for (iterator iter = this->begin(); iter != this->end(); iter++) {
+                    const PatternPointer pattern = iter->first;
+                    const PatternCategory category = pattern.category();
+                    if ((category == SKIPGRAM) || (category == FLEXGRAM)) {
+                        const PatternPointer firstword = PatternPointer(pattern,0,1); 
+                        if (!firstword.unknown() && (!firstword.isgap(0))) {
+                            matchskipgramhelper[firstword].push_back(std::pair<uint32_t,unsigned char>(pattern.getmask(),pattern.n()));
+                        }
+                    }
+                }
+                for (t_matchskipgramhelper::iterator iter = matchskipgramhelper.begin(); iter != matchskipgramhelper.end(); iter++) {
+                    iter->second.shrink_to_fit();
+                }
+            }
+        }
     public:
         IndexedCorpus * reverseindex; ///< Pointer to the reverse index and corpus data for this model (or NULL)
         bool reverseindex_internal;
         bool hasskipgrams; ///< Does this model have skipgrams?
+        bool hasflexgrams; ///< Does this model have flexgrams?
 
         /**
          * Begin a new pattern model, optionally pre-setting a reverseindex.
@@ -573,6 +597,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             maxn = 0;
             minn = 999;
             hasskipgrams = false;
+            hasflexgrams = false;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             if (corpus) {
@@ -597,6 +622,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             maxn = 0;
             minn = 999;
             hasskipgrams = false;
+            hasflexgrams = false;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             this->load(f,options,constrainmodel);
@@ -626,6 +652,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             maxn = 0;
             minn = 999;
             hasskipgrams = false;
+            hasflexgrams = false;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             if (corpus) {
@@ -806,11 +833,19 @@ class PatternModel: public MapType, public PatternModelInterface {
 
             if (constrainbymodel != NULL) {
                 if ((options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE)) {
-                    options.DOSKIPGRAMS = false;
-                    options.DOSKIPGRAMS_EXHAUSTIVE = true;
-                    if (!options.QUIET) std::cerr << "Skipgrams will be exhaustively matched against the constraint model." << std::endl;
-                    if (options.MAXLENGTH >= 31) std::cerr << "WARNING: No maximum pattern length set or maximum pattern length is very high! This will drastically slow down skipgram computation" << std::endl; 
+                    if (constrainbymodel != this) {
+                        options.DOSKIPGRAMS = false;
+                        options.DOSKIPGRAMS_EXHAUSTIVE = true;
+                        if (!options.QUIET) std::cerr << "WARNING: Skipgrams will be extracted exhaustively on the basis of the ngrams found; the constraint model will be applied only afterwards. This implies some skipgrams in the constraint model that are present may be missed, and it will not be most efficient. Use in-place rebuilding of your constraint model instead." << std::endl;
+                        if (options.MAXLENGTH >= 31) std::cerr << "WARNING: No maximum pattern length set or maximum pattern length is very high! This will drastically slow down skipgram computation" << std::endl; 
+                    }
                 } 
+            }
+
+            if (options.DOSKIPGRAMS && options.DOSKIPGRAMS_EXHAUSTIVE) {
+                std::cerr << "ERROR: Both DOSKIPGRAMS as well as DOSKIPGRAMS_EXHAUSTIVE are set, this shouldn't happen, choose one." << std::endl;
+                if (!ignoreerrors) throw InternalError();
+                options.DOSKIPGRAMS = false;
             }
 
             std::vector<std::pair<PatternPointer,int> > ngrams;
@@ -962,7 +997,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 } 
 
                             }
-                            if (((n >= 3) || (options.MINTOKENS == 1)) //n is always 1 when mintokens == 1 or constrainmodel !!
+                            if (((n >= 3) || (options.MINTOKENS == 1)) //n is always 1 when mintokens == 1
                                     && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
                                 //if we have a constraint model, we need to compute skipgrams even if the ngram was not found
                                 ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
@@ -1281,8 +1316,47 @@ class PatternModel: public MapType, public PatternModelInterface {
          * Train skipgrams, for indexed models only
          */
         virtual void trainskipgrams(const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) { 
-            std::cerr << "Can not compute skipgrams on unindexed model (except exhaustively during train() )" << std::endl;
-            throw InternalError();
+            if (constrainbymodel == this) { 
+                trainskipgrams_selfconstrained(options);
+            } else {
+                std::cerr << "Can not compute skipgrams on unindexed model (except exhaustively during train() )" << std::endl;
+                throw InternalError();
+            }
+        }
+
+        /*
+         * Train skipgrams *and flexgrams* for self-constrained model (in-place
+         * rebuild). The model already needs to have skipgrams and/or flexgrams loaded with no
+         * occurrence count. This will iterate over the corpusdata (reverseindex) again and find and count all skipgrams/flexgrams in the data.
+         * Will be invoked by trainskipgrams usually.
+         */
+        virtual void trainskipgrams_selfconstrained(PatternModelOptions options) {
+            if (options.MINTOKENS == -1) options.MINTOKENS = 2;
+            this->cache_grouptotal.clear(); //forces recomputation of statistics
+            if (!options.QUIET) std::cerr << "Finding skipgrams/flexgrams matching preloaded constraints..." << std::endl; 
+            unsigned int foundskipgrams = 0;
+            unsigned int foundflexgrams = 0;
+            for (IndexedCorpus::iterator iter = this->reverseindex->begin(); iter != this->reverseindex->end(); iter++) {
+                const IndexReference ref = iter->first;
+                std::vector<PatternPointer> skipgrams = this->getreverseindex(ref,0, SKIPGRAMORFLEXGRAM);  //will also match flexgrams
+                for (std::vector<PatternPointer>::iterator iter = skipgrams.begin(); iter != skipgrams.end(); iter++) {
+                    add(*iter,ref); //add to model
+                    if (iter->category() == SKIPGRAM) {
+                        foundskipgrams += 1;
+                    } else {
+                        foundflexgrams += 1;
+                    }
+                }
+            }
+            if ((!foundskipgrams) && (!foundflexgrams)) {
+                std::cerr << " None found" << std::endl;
+            } else {
+                this->hasskipgrams = (foundskipgrams > 1);
+                this->hasflexgrams = (foundflexgrams > 1);
+                if (!options.QUIET) std::cerr << " Found " << foundskipgrams << " skipgrams, " << foundflexgrams << " flexgrams ...";
+            }
+            unsigned int pruned = this->prune(options.MINTOKENS);
+            if (!options.QUIET) std::cerr << " pruned " << pruned << std::endl;;
         }
 
         //creates a new test model using the current model as training
@@ -1427,6 +1501,16 @@ class PatternModel: public MapType, public PatternModelInterface {
             //Auxiliary function
             std::vector<PatternPointer> result;
             if (!this->reverseindex) return result;
+
+            bool includeskipgrams = false;
+            bool includeflexgrams = false;
+
+            if ((category == 0) || (category == SKIPGRAM) || (category == FLEXGRAM)) {
+                this->compute_matchskipgramhelper(); //computes only ONCE (and caches) a datastructure to aid skipgram matching, mapping unigrams (first words) to (mask,length,isflexgram) tuples
+                includeskipgrams = ((category != FLEXGRAM) && (this->hasskipgrams) && (!matchskipgramhelper.empty()));
+                includeflexgrams = ((category != SKIPGRAM) && (this->hasflexgrams) && (!matchskipgramhelper.empty()));
+            }
+
             const unsigned int sl = this->reverseindex->sentencelength(ref.sentence);
             //std::cerr << "DEBUG: getreverseindex sentencelength(" << ref.sentence << ")=" << sl << std::endl;
             const unsigned int minn = this->minlength();
@@ -1441,26 +1525,36 @@ class PatternModel: public MapType, public PatternModelInterface {
                         std::cerr << "hash: " << ngram.hash() << std::endl;*/
                         if ( (((occurrencecount == 0) && this->has(ngram)) || (this->occurrencecount(ngram) >= (unsigned int) occurrencecount))
                             && ((category == 0) || (ngram.category() >= category)) ) {
-                            if (constrainmodel != NULL) || ((constrainmodel == NULL) && (constrainmodel->has(ngram)) {
                                 result.push_back(ngram);
-                            }
-
                         }
 
-                        if (((category == 0) || (category == SKIPGRAM)) && (this->hasskipgrams) && (n >= 3))  {
+                        if ((includeskipgrams) && (n >= 3))  {
                             
                             //(we can't use gettemplates() because
-                            //gettemplates() depends on us, we have to
-                            //solve it low-level, punching holes:
+                            //gettemplates() depends on us to the the actual
+                            //work, we use the matchskipgramhelper
+                            //datastructure, mapping unigrams (first words) to
+                            //(mask,length) tuples
 
-                            std::vector<PatternPointer> skipgrams = this->findskipgrams(ngram, occurrencecount, maxskips, this);
-                            for (auto skipgram : skipgrams) {
-                                result.push_back(skipgram);
+                            const PatternPointer firstword = PatternPointer(ngram,0,1);
+
+                            for (t_matchskipgramhelper::iterator iter = this->matchskipgramhelper.find(firstword); iter != this->matchskipgramhelper.end(); iter++) {
+                                 for (std::vector<std::pair<uint32_t,unsigned char>>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
+                                   if (n == iter2->second) {
+                                        const uint32_t mask = iter2->first;
+                                        if ((includeskipgrams)) {
+                                            PatternPointer skipgram = ngram;
+                                            skipgram.mask = mask;
+                                            if ( (((occurrencecount == 0) && this->has(skipgram)) || (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount))) {
+                                                result.push_back(skipgram);
+                                            }
+                                        }
+                                   }
+                                }
                             }
 
-                            //TODO: flexgrams
-
                         }
+
                     } catch (KeyError &e) {
                         break;
                     }
@@ -2218,10 +2312,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         virtual void postread(const PatternModelOptions options) {
             for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern p = iter->first;
+                const PatternCategory category = p.category();
                 const int n = p.n();
                 if (n > this->maxn) this->maxn = n;
                 if (n < this->minn) this->minn = n;
-                if ((!this->hasskipgrams) && (p.isskipgram())) this->hasskipgrams = true;
+                if ((!this->hasskipgrams) && (category == SKIPGRAM)) this->hasskipgrams = true;
+                if ((!this->hasflexgrams) && (category == FLEXGRAM)) this->hasflexgrams = true;
             }
         }
         virtual void posttrain(const PatternModelOptions options) {
@@ -2469,6 +2565,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     }
 
 
+
+
     /**
      * Train skipgrams, for indexed models only
      * @param options Pattern model options
@@ -2478,40 +2576,14 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         if (options.MINTOKENS == -1) options.MINTOKENS = 2;
         this->cache_grouptotal.clear(); //forces recomputation of statistics
         if (constrainbymodel == this) {
-            vector<PatternPointer> parts;
-            //constrained by ourselves, 
-            if (!options.QUIET) std::cerr << "Finding skipgrams satisfying pre-loaded constraints" << std::endl; 
-            for (typename MapType::iterator iter = this->begin(); iter != this->end(); iter++) {
-                const PatternPointer pattern = PatternPointer(&(iter->first));
-                if (pattern.category() == SKIPGRAM) {
-                    const unsigned int skipgram_n = pattern.n();
-                    parts.clear();
-                    pattern.parts(parts);
-                    PatternPointer firstpart = parts[0];
-                    PatternPointer firstword = firstpart[0]; //get first word (unigram)
-                    
-                    const IndexedData * data = getdata(firstword);
-                    if (data != NULL) {
-                        for (IndexedData::const_iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
-                            const IndexReference ref = *iter2;
-                            PatternPointer candidate = this->reverseindex->getpattern(
-                        }
-                    }
-
-
-
-
-
-                } else if (pattern.category() == FLEXGRAM) {
-                    //TODO: implement
-                }
-            }
+            this->trainskipgrams_selfconstrained(options);
         } else {
             //normal behaviour: extract skipgrams from n-grams
+            if (!options.QUIET) std::cerr << "Finding skipgrams on the basis of extracted n-grams..." << std::endl; 
             for (int n = 3; n <= options.MAXLENGTH; n++) {
                 if (this->gapmasks[n].empty()) this->gapmasks[n] = compute_skip_configurations(n, options.MAXSKIPS);
                 if (!options.QUIET) std::cerr << "Counting " << n << "-skipgrams" << std::endl; 
-                int foundskipgrams = 0;
+                unsigned int foundskipgrams = 0;
                 for (typename MapType::iterator iter = this->begin(); iter != this->end(); iter++) {
                     const PatternPointer pattern = PatternPointer(&(iter->first));
                     const IndexedData multirefs = iter->second;
@@ -3257,6 +3329,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 }
             }
         }
+        if (count) this->hasflexgrams = true;
         return count;
     }
 
@@ -3285,6 +3358,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 }
             }
         }
+        if (found) this->hasflexgrams = true;
         return found;
     }
 
