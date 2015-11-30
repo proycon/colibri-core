@@ -1490,7 +1490,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
        
         /**
-         * Given a position in the corpus , return a vector of all the patterns that cover this position.
+         * Given a position in the corpus , return a vector of all the patterns (including skipgrams and flexgrams) that cover this position and are in the model.
+         * Note that the flexgrams are computed from skipgrams and the maximum length is therefore constrained to 31 words.
          * @param ref The position in the corpus
          * @param occurrencecount If set above zero, filters to only include patterns occurring above this threshold
          * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
@@ -1528,10 +1529,10 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 result.push_back(ngram);
                         }
 
-                        if ((includeskipgrams) && (n >= 3))  {
+                        if ((includeskipgrams || includeflexgrams) && (n >= 3))  {
                             
                             //(we can't use gettemplates() because
-                            //gettemplates() depends on us to the the actual
+                            //gettemplates() depends on us to do the actual
                             //work, we use the matchskipgramhelper
                             //datastructure, mapping unigrams (first words) to
                             //(mask,length) tuples
@@ -1542,11 +1543,17 @@ class PatternModel: public MapType, public PatternModelInterface {
                                  for (std::vector<std::pair<uint32_t,unsigned char>>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
                                    if (n == iter2->second) {
                                         const uint32_t mask = iter2->first;
+                                        PatternPointer skipgram = ngram;
+                                        skipgram.mask = mask;
                                         if ((includeskipgrams)) {
-                                            PatternPointer skipgram = ngram;
-                                            skipgram.mask = mask;
                                             if ( (((occurrencecount == 0) && this->has(skipgram)) || (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount))) {
                                                 result.push_back(skipgram);
+                                            }
+                                        }
+                                        if (includeflexgrams) {
+                                            PatternPointer flexgram = skipgram.toflexgram();
+                                            if ( (((occurrencecount == 0) && this->has(flexgram)) || (this->occurrencecount(flexgram) >= (unsigned int) occurrencecount))) {
+                                                result.push_back(flexgram);
                                             }
                                         }
                                    }
