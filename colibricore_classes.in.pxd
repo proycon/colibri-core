@@ -14,6 +14,7 @@ from libcpp.map cimport map as stdmap
 from libcpp.vector cimport vector
 from libcpp cimport bool
 from unordered_map cimport unordered_map
+from unordered_set cimport unordered_set
 from libcpp.utility cimport pair
 from libc.stdint cimport *
 
@@ -409,7 +410,7 @@ cdef extern from "patternmodel.h":
         t_relationmap getleftcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
         t_relationmap getrightcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
 
-        vector[PatternPointer] getreverseindex(IndexReference&)
+        unordered_set[PatternPointer] getreverseindex(IndexReference&)
         vector[pair[IndexReference,PatternPointer]] getreverseindex_bysentence(int)
 
     cdef cppclass IndexedPatternModel[MapType]:
@@ -463,7 +464,7 @@ cdef extern from "patternmodel.h":
 
         void add(Pattern&, IndexedData*, IndexReference&)
 
-        vector[PatternPointer] getreverseindex(IndexReference&)
+        unordered_set[PatternPointer] getreverseindex(IndexReference&)
         vector[pair[IndexReference,PatternPointer]] getreverseindex_bysentence(int)
 
         t_relationmap getsubchildren(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError

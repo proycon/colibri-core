@@ -358,8 +358,8 @@ def getreverseindex(self, indexreference):
     cdef int sentence = indexreference[0]
     cdef int token = indexreference[1]
     cdef cIndexReference ref = cIndexReference(sentence, token)
-    cdef vector[cPatternPointer] results = self.data.getreverseindex(ref)
-    cdef vector[cPatternPointer].iterator resit = results.begin()
+    cdef unordered_set[cPatternPointer] results = self.data.getreverseindex(ref)
+    cdef unordered_set[cPatternPointer].iterator resit = results.begin()
     cdef cPattern cpattern
     while resit != results.end():
         cpattern = deref(resit).pattern()
