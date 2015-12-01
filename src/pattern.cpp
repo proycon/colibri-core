@@ -1851,72 +1851,112 @@ PatternPointer IndexedCorpus::getpattern(const IndexReference & begin, int lengt
     return PatternPointer(data,false,length);
 }
 
-PatternPointer IndexedCorpus::getflexgram(const IndexReference & begin, const Pattern flexgram) const {
-    std::vector<PatternPointer> parts;
-    flexgram.parts(parts);
-    std::vector<std::pair<int,int>> newskips;
-    std::vector<PatternPointer>::iterator partiter = parts.begin();
-    IndexReference ref = begin;
-    IndexReference gapbegin;
-    bool found = true;
-    unsigned int totaln = 0;
-    while (partiter != parts.end()) {
-        const PatternPointer part = *partiter;
-        try {
-            const PatternPointer candidate = getpattern(ref, part.n());
-            if (candidate == part) {
-                partiter++;
-                if (gapbegin.sentence != 0) {
-                    //add a skip
-                    //std::cerr << "DEBUG: Adding skip " <<gapbegin.token - begin.token << ":"<<  ref.token - gapbegin.token << std::endl;
-                    newskips.push_back(std::pair<int,int>(gapbegin.token - begin.token, ref.token - gapbegin.token));
+PatternPointer IndexedCorpus::findpattern(const IndexReference & begin, const Pattern & pattern, PatternCategory resultcategory) const {
+    if (pattern.category() == NGRAM) {
+        const PatternPointer candidate = getpattern(begin, pattern.n());
+        if (candidate != pattern) throw KeyError();
+        return candidate;
+    } else if (pattern.category() == SKIPGRAM) {
+        std::vector<std::pair<int,int>> parts;
+        pattern.parts(parts);
+        for (std::vector<std::pair<int,int>>::iterator partiter = parts.begin(); partiter != parts.end(); partiter++) {
+            const PatternPointer part = PatternPointer(pattern,partiter->first, partiter->second);
+            try {
+                const PatternPointer candidate = getpattern(IndexReference(begin.sentence,begin.token + partiter->first),partiter->second);
+                if (part != candidate) {
+                    throw KeyError();
                 }
-                gapbegin = ref = ref + part.n();
+            } catch (KeyError &e) {
+                throw KeyError(); //rethrow
             }
-        } catch (KeyError &e) {
-            //we're out of bounds
-            found = false;
-            break;
-        } 
-        ref.token++;
+        }
+        //found!
+        PatternPointer result = getpattern(begin, pattern.n());
+        if (resultcategory == NGRAM) return result;
+        result.mask = pattern.getmask(); //to skipgram
+        if (resultcategory == FLEXGRAM) result.mask = result.mask | (1<<31); //make flexgram
+        return result; //SKIPGRAM
+    } else if (pattern.category() == FLEXGRAM) {
+        std::vector<PatternPointer> parts;
+        pattern.parts(parts);
+        std::vector<std::pair<int,int>> newskips;
+        std::vector<PatternPointer>::iterator partiter = parts.begin();
+        IndexReference ref = begin;
+        IndexReference gapbegin;
+        bool found = true;
+        unsigned int totaln = 0;
+        while (partiter != parts.end()) {
+            const PatternPointer part = *partiter;
+            try {
+                const PatternPointer candidate = getpattern(ref, part.n());
+                if (candidate == part) {
+                    partiter++;
+                    if (gapbegin.sentence != 0) {
+                        //add a skip
+                        //std::cerr << "DEBUG: Adding skip " <<gapbegin.token - begin.token << ":"<<  ref.token - gapbegin.token << std::endl;
+                        newskips.push_back(std::pair<int,int>(gapbegin.token - begin.token, ref.token - gapbegin.token));
+                    }
+                    gapbegin = ref = ref + part.n();
+                }
+            } catch (KeyError &e) {
+                //we're out of bounds
+                found = false;
+                break;
+            } 
+            ref.token++;
+        }
+        if ((!found) || (newskips.size() != parts.size() - 1)) throw KeyError();
+        PatternPointer foundpattern = getpattern(begin, gapbegin.token - begin.token);
+        if (resultcategory == NGRAM) return foundpattern;
+        foundpattern.mask = vector2mask(newskips);
+        if (resultcategory == SKIPGRAM) return foundpattern;
+        foundpattern.mask = foundpattern.mask | (1<<31); //make flexgram
+        return foundpattern; //FLEXGRAM
     }
-    if ((!found) || (newskips.size() != parts.size() - 1)) throw KeyError();
-    PatternPointer pattern = getpattern(begin, gapbegin.token - begin.token);
-    pattern.mask = vector2mask(newskips);
-    pattern.mask = pattern.mask | (1<<31); //make flexgram
-    return pattern;
+}
+
+PatternPointer IndexedCorpus::getflexgram(const IndexReference & begin, const Pattern flexgram) const {
+    return findpattern(begin,flexgram,FLEXGRAM);
+}
+
+PatternPointer IndexedCorpus::getskipgram(const IndexReference & begin, const Pattern skipgram) const {
+    return findpattern(begin,skipgram,SKIPGRAM);
 }
 
 
-
-
-void IndexedCorpus::findpattern(std::vector<IndexReference> & result, const Pattern & pattern,  uint32_t sentence, const PatternPointer & sentencedata, int maxmatches) {
-    //TODO: no flexgrams supported yet
+void IndexedCorpus::findpattern(std::vector<std::pair<IndexReference,PatternPointer>> & result, const Pattern & pattern,  uint32_t sentence, bool instantiate) {
     const int _n = pattern.size();
-    vector<pair<PatternPointer,int>> ngrams;
-    sentencedata.ngrams(ngrams,_n);
-    for (vector<pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) { 
-        if ((iter->first == pattern) || ((pattern.category() > NGRAM) && iter->first.instanceof(pattern))) {
-            result.push_back(IndexReference(sentence,iter->second));
+    int sentencelength = this->sentencelength(sentence);
+    for (int i = 0; i < sentencelength - _n; i++) {
+        IndexReference ref = IndexReference(sentence,i);
+        try {
+            PatternPointer p = findpattern(ref, pattern, instantiate ? NGRAM : pattern.category()); //will generate KeyError when not found
+            result.push_back(std::pair<IndexReference,PatternPointer>(ref, p));
+        } catch (KeyError &e) {
+            ; //ignore and continue
         }
     }
 }
-
-std::vector<IndexReference> IndexedCorpus::findpattern(const Pattern & pattern, uint32_t sentence, int maxmatches) {
+/**
+ * High-level function to extract the indices in the corpus where the specified pattern is found. Does not use
+ * any pattern models (pattern model may be more efficient). Supports skipgrams and flexgrams as well.
+ * @param sentence The sentence to check, set to 0 to check all, but be aware that this is far more inefficient than using a pattern model!
+ * @param instantiate Instantiate all found patterns (skipgrams and flexgrams will be resolved to ngrams) (default: false)
+ *
+ */
+std::vector<std::pair<IndexReference,PatternPointer>> IndexedCorpus::findpattern(const Pattern pattern, uint32_t sentence, bool instantiate) {
     //far more inefficient than a pattern model obviously
-    std::vector<IndexReference> result;
+    std::vector<std::pair<IndexReference,PatternPointer>> result;
     const int _n = pattern.size();
     if (_n == 0) return result;
  
     IndexReference ref;
     if (sentence == 0) {
         for (std::map<uint32_t,unsigned char*>::iterator iter = sentenceindex.begin(); iter != sentenceindex.end(); iter++) {
-            const PatternPointer sentence_pp = getsentence(iter->second);
-            findpattern(result, pattern, iter->first, sentence_pp,maxmatches);
+            findpattern(result, pattern, iter->first,instantiate);
         }
     } else {
-        const PatternPointer sentence_pp = getsentence(sentence);
-        findpattern(result, pattern, sentence, sentence_pp,maxmatches);
+        findpattern(result, pattern, sentence,instantiate);
     }
     return result;
 }

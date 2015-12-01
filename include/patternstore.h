@@ -109,13 +109,6 @@ class IndexedCorpus {
          */
         PatternPointer getpattern(const IndexReference & begin, int length=1) const;
 
-        /**
-         * Returns a valid patternpointer for the flexgram at the indicated
-         * position. Effectively removing a level of abstraction. If the
-         * flexgram can not be found, a KeyError will be raised. 
-         */
-        PatternPointer getflexgram(const IndexReference & begin, const Pattern flexgram) const;
-
 
         PatternPointer getpattern() const {
             return *patternpointer;
@@ -139,10 +132,37 @@ class IndexedCorpus {
          * number of maximum matches if desired. Note that this iterates over
          * the entire corpus and is by far not as efficient as a proper pattern
          * model.
+         * @param pattern The pattern to find (may be ngram, skipgram or flexgram)
          * @param sentence Restrict to a particular sentence (0=all sentences, default)
+         * @param instantiate Instantiate skipgrams and flexgrams, i.e. return ngrams instead (default : false)
          */
-        std::vector<IndexReference> findpattern(const Pattern & pattern, uint32_t sentence = 0, int maxmatches=0); 
-		void findpattern(std::vector<IndexReference> & result, const Pattern & pattern,  uint32_t sentence, const PatternPointer & sentencedata, int maxmatches=0);
+        std::vector<std::pair<IndexReference,PatternPointer>> findpattern(const Pattern pattern, uint32_t sentence=0, bool instantiate=false);
+
+        /**
+         *  Middle level function, for specific sentence, call higher-level version instead.
+         */
+        void findpattern(std::vector<std::pair<IndexReference,PatternPointer>> & result, const Pattern & pattern,  uint32_t sentence, bool instantiate=false);
+
+        /**
+        * Low-level method to find a pattern at the predetermined position. Can also instantiate skipgrams/flexgrams by setting resultcategory to NGRAM (default!). Raises a KeyError when the pattern was not found at the specified position
+        * getskipgram() and getflexgram() are higher level methods that use this one.
+        */
+        PatternPointer findpattern(const IndexReference & begin, const Pattern & pattern, PatternCategory resultcategory = NGRAM) const;
+
+        /**
+         * Returns a valid patternpointer for the flexgram at the indicated
+         * position. Effectively removing a level of abstraction. If the
+         * flexgram can not be found, a KeyError will be raised. 
+         * This is a specialised alias for the low-level findpattern() method
+         */
+        PatternPointer getflexgram(const IndexReference & begin, const Pattern flexgram) const;
+
+        /**
+         * Returns a valid patternpointer for the skipgram at the indicated
+         * position. If the skipgram can not be found, a KeyError will be raised. 
+         * This is a specialised alias for the low-level findpattern() method
+         */
+        PatternPointer getskipgram(const IndexReference & begin, const Pattern skipgram) const;
 
         /**
          * Returns the length of the sentence (or whatever other unit your data

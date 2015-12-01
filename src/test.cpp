@@ -1005,7 +1005,7 @@ int main( int argc, char *argv[] ) {
         cerr << "First word:  "; test(firstword.tostring(classdecoder),"To");
         Pattern needle = classencoder.buildpattern(string("fair Ophelia"));
         cerr << "Finding pattern: ";
-        vector<IndexReference> matches = corpus.findpattern(needle);
+        vector<std::pair<IndexReference,PatternPointer>> matches = corpus.findpattern(needle);
         test(matches.size(), 1);
 
         std::string infilename = "/tmp/hamlet.colibri.dat";
