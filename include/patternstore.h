@@ -109,6 +109,14 @@ class IndexedCorpus {
          */
         PatternPointer getpattern(const IndexReference & begin, int length=1) const;
 
+        /**
+         * Returns a valid patternpointer for the flexgram at the indicated
+         * position. Effectively removing a level of abstraction. If the
+         * flexgram can not be found, a KeyError will be raised. 
+         */
+        PatternPointer getflexgram(const IndexReference & begin, const Pattern flexgram) const;
+
+
         PatternPointer getpattern() const {
             return *patternpointer;
         }

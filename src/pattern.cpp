@@ -2,6 +2,7 @@
 #include "patternstore.h"
 #include "SpookyV2.h" //spooky hash
 #include <cstring>
+#include "algorithms.h"
 
 /*****************************
 * Colibri Core
@@ -1702,11 +1703,7 @@ PatternPointer PatternPointer::addskip(const std::pair<int,int> & gap) const {
 PatternPointer PatternPointer::addskips(const std::vector<std::pair<int,int> > & gaps) const {
     //Returns a patternpointer with the specified spans replaced by fixed skips
     PatternPointer copy = *this;
-    for (vector<pair<int,int> >::const_iterator iter = gaps.begin(); iter != gaps.end(); iter++) {
-        for (int i = iter->first; i < (iter->first + iter->second) && (i < 31); i++ ) {
-            copy.mask |= bitmask[i];
-        }
-    }
+    copy.mask = vector2mask(gaps);
     return copy;
 }
 Pattern Pattern::addflexgaps(const std::vector<std::pair<int,int> > & gaps) const {
@@ -1853,6 +1850,44 @@ PatternPointer IndexedCorpus::getpattern(const IndexReference & begin, int lengt
     if (data == NULL) throw KeyError();
     return PatternPointer(data,false,length);
 }
+
+PatternPointer IndexedCorpus::getflexgram(const IndexReference & begin, const Pattern flexgram) const {
+    std::vector<PatternPointer> parts;
+    flexgram.parts(parts);
+    std::vector<std::pair<int,int>> newskips;
+    std::vector<PatternPointer>::iterator partiter = parts.begin();
+    IndexReference ref = begin;
+    IndexReference gapbegin;
+    bool found = true;
+    unsigned int totaln = 0;
+    while (partiter != parts.end()) {
+        const PatternPointer part = *partiter;
+        try {
+            const PatternPointer candidate = getpattern(ref, part.n());
+            if (candidate == part) {
+                partiter++;
+                if (gapbegin.sentence != 0) {
+                    //add a skip
+                    //std::cerr << "DEBUG: Adding skip " <<gapbegin.token - begin.token << ":"<<  ref.token - gapbegin.token << std::endl;
+                    newskips.push_back(std::pair<int,int>(gapbegin.token - begin.token, ref.token - gapbegin.token));
+                }
+                gapbegin = ref = ref + part.n();
+            }
+        } catch (KeyError &e) {
+            //we're out of bounds
+            found = false;
+            break;
+        } 
+        ref.token++;
+    }
+    if ((!found) || (newskips.size() != parts.size() - 1)) throw KeyError();
+    PatternPointer pattern = getpattern(begin, gapbegin.token - begin.token);
+    pattern.mask = vector2mask(newskips);
+    pattern.mask = pattern.mask | (1<<31); //make flexgram
+    return pattern;
+}
+
+
 
 
 void IndexedCorpus::findpattern(std::vector<IndexReference> & result, const Pattern & pattern,  uint32_t sentence, const PatternPointer & sentencedata, int maxmatches) {

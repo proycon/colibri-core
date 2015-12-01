@@ -515,10 +515,11 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         unsigned char version() const { return model_version; }
 };
 
-typedef std::unordered_map<PatternPointer,std::vector<std::pair<uint32_t,unsigned char>>> t_matchskipgramhelper; //tuple<mask,n,isflexgram>
+typedef std::unordered_map<PatternPointer,std::vector<std::pair<uint32_t,unsigned char>>> t_matchskipgramhelper; //firstword => [pair<mask,n>]
+typedef std::unordered_map<PatternPointer,std::vector<PatternPointer>> t_matchflexgramhelper; //firstword => [flexgram]
 
 /**
- * \brief A model mapping patterns to values, gigh-level interface.
+ * \brief A model mapping patterns to values, high-level interface.
  * @tparam ValueType The type of Value this model stores
  * @tparam ValueHandler A handler class for this type of value
  * @tparam MapType The type of container to use
@@ -535,6 +536,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         int minn; 
         
         t_matchskipgramhelper matchskipgramhelper; ///< Helper structure for finding skipgrams in corpus data: maps the first word of skipgrams to series of mask,length pairs, so skipgrams need not be recomputed exhaustively for each pattern
+        t_matchflexgramhelper matchflexgramhelper; ///< Helper structure for finding flexgrams in corpus data: maps the first word of skipgrams to series of parts
 
         //std::multimap<IndexReference,Pattern> reverseindex; 
         std::set<int> cache_categories;
@@ -565,23 +567,31 @@ class PatternModel: public MapType, public PatternModelInterface {
             //sort indices
         }
 
-        virtual void compute_matchskipgramhelper(bool quiet = false) {
-            if ((matchskipgramhelper.empty()) && ((hasskipgrams) || (hasflexgrams))) {
-                for (iterator iter = this->begin(); iter != this->end(); iter++) {
-                    const PatternPointer pattern = iter->first;
-                    const PatternCategory category = pattern.category();
-                    if ((category == SKIPGRAM) || (category == FLEXGRAM)) {
-                        const PatternPointer firstword = PatternPointer(pattern,0,1); 
-                        if (!firstword.unknown() && (!firstword.isgap(0))) {
-                            matchskipgramhelper[firstword].push_back(std::pair<uint32_t,unsigned char>(pattern.getmask(),pattern.n()));
-                        }
+        virtual void compute_matchhelpers(bool quiet = false) {
+            const bool doskipgrams = (matchskipgramhelper.empty() && hasskipgrams);
+            const bool doflexgrams = (matchflexgramhelper.empty() && hasflexgrams);
+            if (!doskipgrams && !doflexgrams) return;
+
+            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+                const PatternPointer pattern = iter->first;
+                const PatternCategory category = pattern.category();
+                const PatternPointer firstword = PatternPointer(pattern,0,1); 
+                if (!firstword.unknown() && (!firstword.isgap(0))) {
+                    if ((category == SKIPGRAM) && (doskipgrams)) {
+                        matchskipgramhelper[firstword].push_back(std::pair<uint32_t,unsigned char>(pattern.getmask(),pattern.n()));
+                    } else if ((category == FLEXGRAM) && (doflexgrams)) {
+                        matchflexgramhelper[firstword].push_back(pattern);
                     }
                 }
-                if (!quiet) std::cerr << "(" << matchskipgramhelper.size() << " skipgrams/flexgrams in constraint model)" << std::endl;
-                for (t_matchskipgramhelper::iterator iter = matchskipgramhelper.begin(); iter != matchskipgramhelper.end(); iter++) {
-                    iter->second.shrink_to_fit();
-                }
             }
+            for (t_matchskipgramhelper::iterator iter = matchskipgramhelper.begin(); iter != matchskipgramhelper.end(); iter++) {
+                iter->second.shrink_to_fit();
+            }
+            for (t_matchflexgramhelper::iterator iter = matchflexgramhelper.begin(); iter != matchflexgramhelper.end(); iter++) {
+                iter->second.shrink_to_fit();
+            }
+            if (!quiet && !matchskipgramhelper.empty()) std::cerr << "(" << matchskipgramhelper.size() << " skipgrams in constraint model)" << std::endl;
+            if (!quiet && !matchflexgramhelper.empty()) std::cerr << "(" << matchflexgramhelper.size() << " flexgrams in constraint model)" << std::endl;
         }
     public:
         IndexedCorpus * reverseindex; ///< Pointer to the reverse index and corpus data for this model (or NULL)
@@ -1505,15 +1515,16 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param maxskips Maximum number of skips in a skipgram
          */
         std::unordered_set<PatternPointer> getreverseindex(const IndexReference ref, int occurrencecount = 0, int category = 0, unsigned int size = 0, int maxskips = 3) {
-            //Auxiliary function
+
             std::unordered_set<PatternPointer> result;
             if (!this->reverseindex) return result;
 
             bool includeskipgrams = false;
             bool includeflexgrams = false;
 
+
             if (category != NGRAM) {
-                this->compute_matchskipgramhelper(); //computes only ONCE (and caches) a datastructure to aid skipgram matching, mapping unigrams (first words) to (mask,length,isflexgram) tuples
+                this->compute_matchhelpers(); //computes only ONCE (and caches) a datastructure to aid skipgram matching, mapping unigrams (first words) to (mask,length,isflexgram) tuples
                 includeskipgrams = ((category != FLEXGRAM) && (this->hasskipgrams) && (!matchskipgramhelper.empty()));
                 includeflexgrams = ((category != SKIPGRAM) && (this->hasflexgrams) && (!matchskipgramhelper.empty()));
             }
@@ -1545,31 +1556,48 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                             const PatternPointer firstword = PatternPointer(ngram,0,1);
 
-                            for (t_matchskipgramhelper::iterator iter = this->matchskipgramhelper.find(firstword); iter != this->matchskipgramhelper.end(); iter++) {
-                                 for (std::vector<std::pair<uint32_t,unsigned char>>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
-                                   if (n == iter2->second) {
-                                        PatternPointer skipgram = ngram;
-                                        skipgram.mask = iter2->first;
-                                        if ((includeskipgrams)) {
-                                            if ( ((occurrencecount == 0) && this->has(skipgram)) || ((occurrencecount != 0) && (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount)) ) {
-                                                result.insert(skipgram);
+
+                            if (includeskipgrams) {
+                                for (t_matchskipgramhelper::iterator iter = this->matchskipgramhelper.find(firstword); iter != this->matchskipgramhelper.end(); iter++) {
+                                    for (std::vector<std::pair<uint32_t,unsigned char>>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
+                                        if (n == iter2->second) {
+                                            PatternPointer skipgram = ngram;
+                                            skipgram.mask = iter2->first;
+                                            if ((includeskipgrams)) {
+                                                if ( ((occurrencecount == 0) && this->has(skipgram)) || ((occurrencecount != 0) && (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount)) ) {
+                                                    result.insert(skipgram);
+                                                }
                                             }
                                         }
-                                        if (includeflexgrams) {
-                                            PatternPointer flexgram = skipgram.toflexgram();
-                                            if ( ((occurrencecount == 0) && this->has(flexgram)) || ((occurrencecount != 0) && (this->occurrencecount(flexgram) >= (unsigned int) occurrencecount)) ) {
-                                                result.insert(flexgram);
-                                            }
-                                        }
-                                   }
+                                    }
                                 }
                             }
 
                         }
-
                     } catch (KeyError &e) {
                         break;
                     }
+                }
+            }
+
+            if (includeflexgrams) {
+                try{
+                    const PatternPointer firstword = this->reverseindex->getpattern(ref,1);
+                    for (t_matchflexgramhelper::iterator iter = this->matchflexgramhelper.find(firstword); iter != this->matchflexgramhelper.end(); iter++) {
+                        for (std::vector<PatternPointer>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
+                            PatternPointer flexgram = *iter2;
+                            try  {
+                                flexgram = this->reverseindex->getflexgram(ref, flexgram);
+                                if ( ((occurrencecount == 0) && this->has(flexgram)) || ((occurrencecount != 0) && (this->occurrencecount(flexgram) >= (unsigned int) occurrencecount)) ) {
+                                    result.insert(flexgram);
+                                }
+                            } catch (KeyError &e) {
+                                ;
+                            }
+                        }
+                    }
+                } catch (KeyError &e) {
+                    ;
                 }
             }
             return result;
