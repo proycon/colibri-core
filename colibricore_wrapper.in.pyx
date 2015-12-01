@@ -1072,24 +1072,28 @@ cdef class IndexedCorpus:
             yield ( (ref.sentence, ref.token), pattern )
             inc(it)
 
-    def findpattern(self, Pattern pattern, int maxmatches=0):
+    def findpattern(self, Pattern pattern, int sentence = 0, bool instantiate = False):
         """Generator over the indexes in the corpus where this pattern is found. Note that this is much slower than using the forward index on an IndexedPatternModel!!!
 
         :param pattern: The pattern to find
         :type pattern: Pattern
-        :param maxmatches: The maximum number of patterns to return (0 = unlimited)
-        :type maxmatches: int
-        :rtype: generator over (sentence, tokenoffset) tuples
+        :param sentence: Set to a non-zero value to limit the search to a single sentence (default: 0, search entire corpus)
+        :type sentence: int
+        :param instantiate: Instantiate all skipgrams and flexgrams (i.e, return n-grams) (default: False)
+        :type instantiate: bool
+        :rtype: generator over ((sentence, tokenoffset),pattern) tuples
         """
 
-        cdef vector[cIndexReference] matches
-        cdef vector[cIndexReference].iterator it
+        cdef cPattern cpattern
         cdef cIndexReference ref
-        matches = self.data.findpattern(pattern.cpattern, maxmatches)
+        matches = self.data.findpattern(pattern.cpattern,sentence,instantiate)
         it = matches.begin()
         while it != matches.end():
-            ref = deref(it)
-            yield (ref.sentence, ref.token)
+            ref = deref(it).first
+            cpattern = deref(it).second.pattern()
+            foundpattern = Pattern()
+            foundpattern.bind(cpattern)
+            yield ((ref.sentence, ref.token), foundpattern)
             inc(it)
 
 

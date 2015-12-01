@@ -234,7 +234,7 @@ cdef extern from "patternstore.h":
         void load(string, bool) nogil
         bool has(IndexReference&) nogil
         Pattern getpattern(IndexReference&,int)  except +KeyError #PatternPointer in reality
-        vector[IndexReference] findpattern(Pattern&,int) nogil
+        vector[pair[IndexReference,PatternPointer]] findpattern(Pattern,int sentence,bool instantiate) nogil
         int operator[](IndexReference&) nogil except +KeyError
         int sentencelength(int) nogil
         int sentences() nogil
