@@ -1343,9 +1343,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             unsigned int foundflexgrams = 0;
             for (IndexedCorpus::iterator iter = this->reverseindex->begin(); iter != this->reverseindex->end(); iter++) {
                 const IndexReference ref = iter->first;
-                std::vector<PatternPointer> skipgrams = this->getreverseindex(ref,0, SKIPGRAMORFLEXGRAM);  //will also match flexgrams
+                std::unordered_set<PatternPointer> skipgrams = this->getreverseindex(ref,0, SKIPGRAMORFLEXGRAM);  //will also match flexgrams
                 if (options.DEBUG && !skipgrams.empty()) std::cerr << skipgrams.size() << " skipgrams found @" << ref << std::endl;
-                for (std::vector<PatternPointer>::iterator iter = skipgrams.begin(); iter != skipgrams.end(); iter++) {
+                for (std::unordered_set<PatternPointer>::iterator iter = skipgrams.begin(); iter != skipgrams.end(); iter++) {
                     add(*iter,ref); //add to model
                     if (iter->category() == SKIPGRAM) {
                         foundskipgrams++;
@@ -1504,9 +1504,9 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param size Set to any value above zero to only include patterns of the specified length.
          * @param maxskips Maximum number of skips in a skipgram
          */
-        std::vector<PatternPointer> getreverseindex(const IndexReference ref, int occurrencecount = 0, int category = 0, unsigned int size = 0, int maxskips = 3) {
+        std::unordered_set<PatternPointer> getreverseindex(const IndexReference ref, int occurrencecount = 0, int category = 0, unsigned int size = 0, int maxskips = 3) {
             //Auxiliary function
-            std::vector<PatternPointer> result;
+            std::unordered_set<PatternPointer> result;
             if (!this->reverseindex) return result;
 
             bool includeskipgrams = false;
@@ -1532,7 +1532,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                         std::cerr << "hash: " << ngram.hash() << std::endl;*/
                         if ( (((occurrencecount == 0) && this->has(ngram)) || ((occurrencecount != 0) && (this->occurrencecount(ngram) >= (unsigned int) occurrencecount)))
                             && ((category == 0) || (ngram.category() == category)) ) {
-                                result.push_back(ngram);
+                                result.insert(ngram);
                         }
 
                         if ((includeskipgrams || includeflexgrams) && (n >= 3))  {
@@ -1552,13 +1552,13 @@ class PatternModel: public MapType, public PatternModelInterface {
                                         skipgram.mask = iter2->first;
                                         if ((includeskipgrams)) {
                                             if ( ((occurrencecount == 0) && this->has(skipgram)) || ((occurrencecount != 0) && (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount)) ) {
-                                                result.push_back(skipgram);
+                                                result.insert(skipgram);
                                             }
                                         }
                                         if (includeflexgrams) {
                                             PatternPointer flexgram = skipgram.toflexgram();
                                             if ( ((occurrencecount == 0) && this->has(flexgram)) || ((occurrencecount != 0) && (this->occurrencecount(flexgram) >= (unsigned int) occurrencecount)) ) {
-                                                result.push_back(flexgram);
+                                                result.insert(flexgram);
                                             }
                                         }
                                    }
@@ -1603,8 +1603,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             std::vector<std::pair<IndexReference,PatternPointer>> result;
             for (int i = 0; i < this->reverseindex->sentencelength(sentence); i++) {
                 const IndexReference ref = IndexReference(sentence, i);
-                std::vector<PatternPointer> tmpresult =  this->getreverseindex(ref, occurrencecount, category, size);
-                for (std::vector<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
+                std::unordered_set<PatternPointer> tmpresult =  this->getreverseindex(ref, occurrencecount, category, size);
+                for (std::unordered_set<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
                     const PatternPointer pattern = *iter;
                     result.push_back(std::pair<IndexReference,PatternPointer>(ref,pattern));
                 }
@@ -1621,8 +1621,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             std::vector<std::pair<IndexReference,PatternPointer>> result;
             for (int i = ref.token+1; i < this->reverseindex->sentencelength(ref.sentence); i++) {
                 const IndexReference ref2 = IndexReference(ref.sentence, i);
-                std::vector<PatternPointer> tmpresult =  this->getreverseindex(ref, occurrencecount, category, size);
-                for (std::vector<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
+                std::unordered_set<PatternPointer> tmpresult =  this->getreverseindex(ref, occurrencecount, category, size);
+                for (std::unordered_set<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
                     const PatternPointer pattern = *iter;
                     result.push_back(std::pair<IndexReference,PatternPointer>(ref2,pattern));
                 }
@@ -1639,8 +1639,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             std::vector<std::pair<IndexReference,PatternPointer>> result;
             for (int i = 0; i < ref.token; i++) {
                 const IndexReference ref2 = IndexReference(ref.sentence, i);
-                std::vector<PatternPointer> tmpresult =  this->getreverseindex(ref,occurrencecount, category, size);
-                for (std::vector<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
+                std::unordered_set<PatternPointer> tmpresult =  this->getreverseindex(ref,occurrencecount, category, size);
+                for (std::unordered_set<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
                     const PatternPointer pattern = *iter;
                     result.push_back(std::pair<IndexReference,PatternPointer>(ref2,pattern));
                 }
@@ -2015,9 +2015,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (!this->reverseindex) return;
             for (IndexedCorpus::iterator iter = reverseindex->begin(); iter != reverseindex->end(); iter++) {
                 const IndexReference ref = iter->first;
-                std::vector<PatternPointer> rindex = this->getreverseindex(ref);
+                std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref);
                 *out << ref.tostring();
-                for (std::vector<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
+                for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                     const Pattern p = *iter2;
                     *out << "\t" << p.tostring(decoder); 
                 }
@@ -2719,8 +2719,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const IndexReference ref = *iter;
 
             //search in reverse index
-            std::vector<PatternPointer> rindex = this->getreverseindex(ref);
-            for (std::vector<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
+            std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref);
+            for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                 const PatternPointer candidate = *iter2;
 
                 if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == SKIPGRAM)  && ((occurrencethreshold == 0) || (this->occurrencecount(pattern) >= occurrencethreshold)) ) {
@@ -2760,8 +2760,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const IndexReference ref = *iter;
 
             //search in reverse index
-            std::vector<PatternPointer> rindex = this->getreverseindex(ref, occurrencethreshold,NGRAM);
-            for (std::vector<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
+            std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref, occurrencethreshold,NGRAM);
+            for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                 const PatternPointer candidate = *iter2;
 
                 if (((int) candidate.n() == _n)  && (candidate != pattern) ) {
@@ -2807,8 +2807,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 //std::cerr << "Begin " << begin.sentence << ":" << begin.token << ",<< std::endl;
 
                 //search in reverse index
-                std::vector<PatternPointer> rindex = this->getreverseindex(begin, occurrencethreshold, category,size);
-                for (std::vector<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
+                std::unordered_set<PatternPointer> rindex = this->getreverseindex(begin, occurrencethreshold, category,size);
+                for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                     const PatternPointer candidate = *iter2;
                     //std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << ", bs=" << candidate.bytesize() <<  std::endl;
                     //candidate.out();
@@ -2957,8 +2957,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             ref.token += pattern.size();
 
             //search in reverse index
-            std::vector<PatternPointer> rindex = this->getreverseindex(ref);
-            for (std::vector<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
+            std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref);
+            for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                 const PatternPointer neighbour = *iter2;
                 if ( ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
                         && ((category == 0) || (neighbour.category() >= category))
