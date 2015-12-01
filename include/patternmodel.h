@@ -565,7 +565,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             //sort indices
         }
 
-        virtual void compute_matchskipgramhelper() {
+        virtual void compute_matchskipgramhelper(bool quiet = false) {
             if ((matchskipgramhelper.empty()) && ((hasskipgrams) || (hasflexgrams))) {
                 for (iterator iter = this->begin(); iter != this->end(); iter++) {
                     const PatternPointer pattern = iter->first;
@@ -577,6 +577,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                         }
                     }
                 }
+                if (!quiet) std::cerr << "(" << matchskipgramhelper.size() << " skipgrams/flexgrams in constraint model)" << std::endl;
                 for (t_matchskipgramhelper::iterator iter = matchskipgramhelper.begin(); iter != matchskipgramhelper.end(); iter++) {
                     iter->second.shrink_to_fit();
                 }
@@ -956,7 +957,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                             if (!skipgramsonly) { 
                                 //check against constraint model 
-                                if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (constrainbymodel->has(iter->first)))  continue;  //skip when we have a constraintmodel and the pattern is not found 
+                                if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter->first)))  continue;  //skip when we have a constraintmodel and the pattern is not found 
 
                                 found = true; //are the submatches in order? (default to true, attempt to falsify, needed for mintokens==1) 
 
@@ -1038,7 +1039,11 @@ class PatternModel: public MapType, public PatternModelInterface {
 					}
                     unsigned int pruned;
                     if (singlepass) {
-                        pruned = this->prune(options.MINTOKENS,0); //prune regardless of size
+                        if (options.DOSKIPGRAMS) {
+                            pruned = this->prune(options.MINTOKENS,0, NGRAM); //prune regardless of size, but only n-grams (if we have a constraint model with skipgrams with count 0, we need that later and can't prune it)
+                        } else {
+                            pruned = this->prune(options.MINTOKENS,0); //prune regardless of size
+                        }
                     } else {
                         pruned = this->prune(options.MINTOKENS,n); //prune only in size-class
                         if ( (!options.DOSKIPGRAMS) && (!options.DOSKIPGRAMS_EXHAUSTIVE) &&  ( n - 1 >= 1) &&  ( (n - 1) < options.MINLENGTH) && (n - 1 != options.MAXBACKOFFLENGTH) &&
@@ -1333,18 +1338,19 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual void trainskipgrams_selfconstrained(PatternModelOptions options) {
             if (options.MINTOKENS == -1) options.MINTOKENS = 2;
             this->cache_grouptotal.clear(); //forces recomputation of statistics
-            if (!options.QUIET) std::cerr << "Finding skipgrams/flexgrams matching preloaded constraints..." << std::endl; 
+            if (!options.QUIET) std::cerr << "Finding skipgrams/flexgrams matching preloaded constraints, occurrence threshold " << options.MINTOKENS << " ..." << std::endl; 
             unsigned int foundskipgrams = 0;
             unsigned int foundflexgrams = 0;
             for (IndexedCorpus::iterator iter = this->reverseindex->begin(); iter != this->reverseindex->end(); iter++) {
                 const IndexReference ref = iter->first;
                 std::vector<PatternPointer> skipgrams = this->getreverseindex(ref,0, SKIPGRAMORFLEXGRAM);  //will also match flexgrams
+                if (options.DEBUG && !skipgrams.empty()) std::cerr << skipgrams.size() << " skipgrams found @" << ref << std::endl;
                 for (std::vector<PatternPointer>::iterator iter = skipgrams.begin(); iter != skipgrams.end(); iter++) {
                     add(*iter,ref); //add to model
                     if (iter->category() == SKIPGRAM) {
-                        foundskipgrams += 1;
+                        foundskipgrams++;
                     } else {
-                        foundflexgrams += 1;
+                        foundflexgrams++;
                     }
                 }
             }
@@ -1493,7 +1499,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * Given a position in the corpus , return a vector of all the patterns (including skipgrams and flexgrams) that cover this position and are in the model.
          * Note that the flexgrams are computed from skipgrams and the maximum length is therefore constrained to 31 words.
          * @param ref The position in the corpus
-         * @param occurrencecount If set above zero, filters to only include patterns occurring above this threshold
+         * @param occurrencecount If set above zero, filters to only include patterns occurring above or equal to this threshold
          * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
          * @param size Set to any value above zero to only include patterns of the specified length.
          * @param maxskips Maximum number of skips in a skipgram
@@ -1506,7 +1512,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             bool includeskipgrams = false;
             bool includeflexgrams = false;
 
-            if ((category == 0) || (category == SKIPGRAM) || (category == FLEXGRAM)) {
+            if (category != NGRAM) {
                 this->compute_matchskipgramhelper(); //computes only ONCE (and caches) a datastructure to aid skipgram matching, mapping unigrams (first words) to (mask,length,isflexgram) tuples
                 includeskipgrams = ((category != FLEXGRAM) && (this->hasskipgrams) && (!matchskipgramhelper.empty()));
                 includeflexgrams = ((category != SKIPGRAM) && (this->hasflexgrams) && (!matchskipgramhelper.empty()));
@@ -1524,8 +1530,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                         /*std::cerr << "n: " << ngram.n() << std::endl;
                         std::cerr << "bytesize: " << ngram.bytesize() << std::endl;;
                         std::cerr << "hash: " << ngram.hash() << std::endl;*/
-                        if ( (((occurrencecount == 0) && this->has(ngram)) || (this->occurrencecount(ngram) >= (unsigned int) occurrencecount))
-                            && ((category == 0) || (ngram.category() >= category)) ) {
+                        if ( (((occurrencecount == 0) && this->has(ngram)) || ((occurrencecount != 0) && (this->occurrencecount(ngram) >= (unsigned int) occurrencecount)))
+                            && ((category == 0) || (ngram.category() == category)) ) {
                                 result.push_back(ngram);
                         }
 
@@ -1542,17 +1548,16 @@ class PatternModel: public MapType, public PatternModelInterface {
                             for (t_matchskipgramhelper::iterator iter = this->matchskipgramhelper.find(firstword); iter != this->matchskipgramhelper.end(); iter++) {
                                  for (std::vector<std::pair<uint32_t,unsigned char>>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
                                    if (n == iter2->second) {
-                                        const uint32_t mask = iter2->first;
                                         PatternPointer skipgram = ngram;
-                                        skipgram.mask = mask;
+                                        skipgram.mask = iter2->first;
                                         if ((includeskipgrams)) {
-                                            if ( (((occurrencecount == 0) && this->has(skipgram)) || (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount))) {
+                                            if ( ((occurrencecount == 0) && this->has(skipgram)) || ((occurrencecount != 0) && (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount)) ) {
                                                 result.push_back(skipgram);
                                             }
                                         }
                                         if (includeflexgrams) {
                                             PatternPointer flexgram = skipgram.toflexgram();
-                                            if ( (((occurrencecount == 0) && this->has(flexgram)) || (this->occurrencecount(flexgram) >= (unsigned int) occurrencecount))) {
+                                            if ( ((occurrencecount == 0) && this->has(flexgram)) || ((occurrencecount != 0) && (this->occurrencecount(flexgram) >= (unsigned int) occurrencecount)) ) {
                                                 result.push_back(flexgram);
                                             }
                                         }
@@ -1844,20 +1849,21 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         /**
          * Prune all patterns under the specified occurrence threshold (or -1
-         * for all). Pruning can be limited to patterns of a particular size
-         * only.
+         * for all). Pruning can be limited to patterns of a particular size or
+         * category.
          * @param threshold The occurrence threshold (set to -1 to prune everything)
          * @param _n The size constraint, limit to patterns of this size only (set to 0 for no constraint, default)
+         * @param category Category constraint
          * @return the number of distinct patterns pruned
          */
-        unsigned int prune(int threshold,int _n=0) {
+        unsigned int prune(int threshold,int _n=0, int category = 0) {
             //prune all patterns under the specified threshold (set -1 for
             //all) and of the specified length (set _n==0 for all)
             unsigned int pruned = 0;
             PatternModel::iterator iter = this->begin(); 
             while (iter != this->end()) {
                 const PatternType pattern = iter->first;
-                if (( (_n == 0) || (pattern.n() == (unsigned int) _n) )&& ((threshold == -1) || (occurrencecount(pattern) < (unsigned int) threshold))) {
+                if (( (_n == 0) || (pattern.n() == (unsigned int) _n) ) && ( ( category == 0) || (pattern.category() == category)) && ((threshold == -1) || (occurrencecount(pattern) < (unsigned int) threshold))) {
                     /*std::cerr << "preprune:" << this->size() << std::endl; 
                     std::cerr << "DEBUG: pruning " << (int) pattern.category() << ",n=" << pattern.n() << ",skipcount=" << pattern.skipcount() << ",hash=" << pattern.hash() << std::endl;
                     std::cerr << occurrencecount(pattern) << std::endl;*/
