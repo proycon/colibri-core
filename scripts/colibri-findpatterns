@@ -2,7 +2,7 @@
 
 mintokens=1
 opt_u=""
-opt_I=""
+opt_I="--instances"
 minskiptypes=1
 keeptmp=0
 
@@ -18,13 +18,13 @@ usage() {
  echo " -K         Keep intermediate files" >&2
 }
 
-while getopts ht:m:uKT: flag
+while getopts ht:m:uKT:I flag
 do
     case "$flag" in
     (h) usage; exit 0;;
     (t) mintokens=$OPTARG;;
-    (u) opt_u="-u";;
-    (I) opt_I="-I";;
+    (u) opt_u="--unindexed";;
+    (I) opt_I="--instances";;
     (T) minskiptypes=$OPTARG;;
     (K) keeptmp=1;;
     (*) usage; exit 0;;
@@ -46,10 +46,10 @@ colibri-classencode -c tmp.colibri.cls -e -o patternlist $1
 mv patternlist.colibri.cls output.colibri.cls
 
 echo "=== Building pattern list ==="
-colibri-patternmodeller -f patternlist.colibri.dat -o patternlist.colibri.patternmodel -L $1
+colibri-patternmodeller --datafile patternlist.colibri.dat --outputmodel patternlist.colibri.patternmodel --patternlist $1
 
 echo "=== Building pattern model ===">&2
-colibri-patternmodeller -I -i patternlist.colibri.patternmodel -f tmp.colibri.dat -o output.colibri.patternmodel -t $mintokens -T $minskiptypes $opt_u $opt_I -s -c output.colibri.cls -P 
+colibri-patternmodeller --constrained --inputmodel patternlist.colibri.patternmodel --datafile tmp.colibri.dat --outputmodel output.colibri.patternmodel --threshold $mintokens --skiptypes $minskiptypes $opt_u $opt_I --skipgrams --classfile output.colibri.cls --print 
 
 #cleanup
 if [ $keeptmp -eq 0 ]; then

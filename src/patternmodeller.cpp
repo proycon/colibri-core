@@ -564,9 +564,6 @@ int main( int argc, char *argv[] ) {
         case 'Z':
             DOPRINTREVERSEINDEX = true;
             break;
-        case 'G':
-            cerr << "Option -G NOT IMPLEMENTED YET!" << endl;
-            exit(2);
         case 'E':
             continued = true;
             break;
@@ -672,7 +669,7 @@ int main( int argc, char *argv[] ) {
                 usage();
                 exit(0);
             } else {
-                cerr << "ERROR: No input model (-i) or corpus data file specified (-f), specify at least one. Issue colibri-patternmodeller -h for extensive usage options" << classfile << endl;
+                cerr << "ERROR: No input model (--inputmodel) or corpus data file specified (--datafile|-f), specify at least one. Issue colibri-patternmodeller -h for extensive usage options" << classfile << endl;
                 exit(2);
             }
         }
@@ -696,7 +693,7 @@ int main( int argc, char *argv[] ) {
             assert_file_exists(inputmodelfile);
             inputmodeltype = getmodeltype(inputmodelfile);
             if ((inputmodeltype == INDEXEDPATTERNMODEL) && (outputmodeltype == UNINDEXEDPATTERNMODEL))   {
-                cerr << "NOTE: Indexed input model will be read as unindexed because -u was set" << endl;
+                cerr << "NOTE: Indexed input model will be read as unindexed because --unindexed was set" << endl;
             }
             if ( ((inputmodeltype == INDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNMODEL)) && ((outputmodeltype == UNINDEXEDPATTERNPOINTERMODEL) || (outputmodeltype == INDEXEDPATTERNPOINTERMODEL)) ) {
                 cerr << "ERROR: Input is a pattern model, can not load as a pattern pointer model!" << endl;
@@ -738,7 +735,7 @@ int main( int argc, char *argv[] ) {
         if ((inputmodeltype != UNINDEXEDPATTERNPOINTERMODEL) && (inputmodeltype != INDEXEDPATTERNPOINTERMODEL)) {
             if (corpusfile.empty()) {
                 if ((DOPRINTREVERSEINDEX) || (options.DOSKIPGRAMS) || (DOFLEXFROMSKIP) || (!DORELATIONS.empty()) || (DOCOOC)) {
-                    cerr << "ERROR: No corpus data file was specified (-f), but this is required for the options you specified..." << endl;
+                    cerr << "ERROR: No corpus data file was specified (--datafile|-f), but this is required for the options you specified..." << endl;
                     exit(2);
                 }
             } else if (LOADCORPUS) {
@@ -755,11 +752,11 @@ int main( int argc, char *argv[] ) {
             
 
         if (DOINPLACEREBUILD) { ///*****************************************************
-            cerr << "In-place rebuild (-I) enabled, on " << corpusfile <<endl;
+            cerr << "Constrained in-place rebuild (--constrained|-I) enabled, on " << corpusfile <<endl;
 
             if ((inputmodeltype != UNINDEXEDPATTERNPOINTERMODEL) && (inputmodeltype != INDEXEDPATTERNPOINTERMODEL)) {
                 if (corpusfile.empty()) {
-                    cerr << "ERROR: Corpus data file (-f) must be specified when -I is set!." << classfile << endl;
+                    cerr << "ERROR: Corpus data file (--datafile|-f) must be specified when --constrained|-I is set!." << classfile << endl;
                     exit(2);
                 } else {
                     assert_file_exists(corpusfile);
