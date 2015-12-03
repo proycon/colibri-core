@@ -2324,14 +2324,14 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
         
 
-        virtual void outputrelations(const Pattern & pattern, ClassDecoder & classdecoder, std::ostream * OUT) {} //does nothing for unindexed models
-        virtual t_relationmap getsubchildren(const Pattern & pattern,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getsubparents(const Pattern & pattern,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap gettemplates(const Pattern & pattern,int = 0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getinstances(const Pattern & pattern,int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual void outputrelations(const PatternPointer & pattern, ClassDecoder & classdecoder, std::ostream * OUT, const std::string = "", bool=true) {} //does nothing for unindexed models
+        virtual t_relationmap getsubchildren(const PatternPointer & pattern,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getsubparents(const PatternPointer & pattern,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap gettemplates(const PatternPointer & pattern,int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getinstances(const PatternPointer & pattern,int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getskipcontent(const PatternPointer & pattern) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getleftneighbours(const Pattern & pattern,int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getrightneighbours(const Pattern & pattern,int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getleftneighbours(const PatternPointer & pattern,int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getrightneighbours(const PatternPointer & pattern,int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap_double getnpmi(const Pattern & pattern, double threshold) { return t_relationmap_double(); } //does nothing for unindexed models
         virtual int computeflexgrams_fromskipgrams() { return 0; }//does nothing for unindexed models
         virtual int computeflexgrams_fromcooc(double threshold) {return 0; }//does nothing for unindexed models
@@ -3254,38 +3254,51 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * @param pattern The pattern
      * @param classdecoder A class decoder
      * @param OUT The output stream
+     * @param filter default: none, set to string: subsumed/subparents, subsumes/subchildren,
+     * rightneighbours, leftneighbours, rightcooc, leftcooc, skipcontent,
+     * instances, templates
      * @param outputheader Output a header (default: true)
      */
-    void outputrelations(const PatternPointer & pattern, ClassDecoder & classdecoder, std::ostream * OUT, bool outputheader=true) {
+    void outputrelations(const PatternPointer & pattern, ClassDecoder & classdecoder, std::ostream * OUT, const std::string filter="", bool outputheader=true) {
         if (outputheader) *OUT << "#\tPATTERN1\tRELATION\tPATTERN2\tREL.COUNT\tREL.FREQUENCY\tCOUNT2" << std::endl;
-        {
+
+        if (filter.empty() || (filter == "subparents") || (filter == "subsumed")) {
             t_relationmap relations = this->getsubparents(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");
         }
-        {
+        if (filter.empty() || (filter == "subchildren") || (filter == "subsumes")){
             t_relationmap relations = this->getsubchildren(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMES");
         }
-        {
+        if (filter.empty() || (filter == "rightneighbours") || (filter == "rightneighbors")){
             t_relationmap relations = this->getleftneighbours(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-NEIGHBOUR-OF");
         }
-        {
+        if (filter.empty() || (filter == "leftneighbours") || (filter == "leftneighbors")){
             t_relationmap relations = this->getrightneighbours(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-NEIGHBOUR-OF");
         }
-        {
+        if (filter.empty() || (filter == "rightcooc")){
             t_relationmap relations = this->getrightcooc(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-COOC-OF");
         }
-        {
+        if (filter.empty() || (filter == "leftcooc")){
             t_relationmap relations = this->getleftcooc(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-COOC-OF");
         }
-        if (pattern.category() == SKIPGRAM) {
+        if (filter.empty() || (filter == "skipcontent")){
             t_relationmap relations = this->getskipcontent(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANTIATED-BY");
         }
+        if (filter.empty() || (filter == "instances")){
+            t_relationmap relations = this->getinstances(pattern);
+            this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANCE-OF");
+        }
+        if (filter.empty() || (filter == "templates")){
+            t_relationmap relations = this->gettemplates(pattern);
+            this->outputrelations(pattern, relations, classdecoder, OUT, "TEMPLATE-OF");
+        }
+
     }
 
 

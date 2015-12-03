@@ -67,14 +67,25 @@ void usage() {
     cerr << endl;
     cerr << " Viewing a model:  colibri-patternmodeller -i [modelfile] -f [datafile] -c [classfile] -[PRHQ]" << endl;
     cerr << "\t-P|--print                    Print the entire model." << endl;
-    cerr << "\t--instantiate                 To use with -P, prints the instances of skipgrams/flexgrams rather than their abstractions, this requires a reverse index, i.e. corpus data to be loaded" << endl;
+    //cerr << "\t--instantiate                 To use with -P, prints the instances of skipgrams/flexgrams rather than their abstractions, this requires a reverse index, i.e. corpus data to be loaded" << endl;
     cerr << "\t-R|--report                   Generate a (statistical/coverage) report" << endl;
     cerr << "\t-H|--histogram                Generate a histogram" << endl;   
     cerr << "\t-V|--info                     Storage information" << endl;   
     cerr << "\t-Q|--querymode                Start interactive query mode, allows for pattern lookup against the loaded model (input from standard input)" << endl; 
     cerr << "\t-Z|--printreverseindex        Print the reverse index" << endl;
     cerr << "\t-q|--query <pattern>          Query a pattern (may be specified multiple times!)" << endl; 
-    cerr << "\t-g|--relations                Compute and show relationships for the specified patterns (use with -q or -Q). Relationships are: subsumptions, neigbours, skipcontent. Only for indexed models." << endl; 
+    cerr << "\t-g|--relations                Compute and show ALL relationships for the specified patterns (use with -q or -Q). Relationships are: subsumes, subsumed, instances, templates, leftneighbours,rightneighbours, leftcooc, rightcooc, skipcontent. Only for indexed models." << endl; 
+    cerr << "\t--instances                   Compute and show instances of the specified skipgrams/flexgrams. Use with -q or -Q to constrain to specific patterns; if used standalone it will print instances of all skipgrams/flexgrams in the model." << endl; 
+    cerr << "\t--skipcontent                 Compute and show the skip content of the specified skipgrams/flexgrams. Use with -q or -Q to constrain to specific patterns; if used standalone it will apply to all skipgrams/flexgrams in the model." << endl; 
+    cerr << "\t--templates                   Compute and show templates of the specified ngrams, i.e. the skipgrams/flexgrams that it is an instance of. Use with -q or -Q to constrain to specific patterns; if used standalone it will use all patterns in the model." << endl; 
+    cerr << "\t--subsumes                    Compute and show the patterns that are subsumed by the specified pattern (i.e. sub-parts). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl; 
+    cerr << "\t--subsumed                    Compute and show the patterns that subsume the specified pattern (i.e. larger patterns). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl; 
+    cerr << "\t--leftneighbours              Compute and show the left neighbours of the specified pattern (i.e. the specified pattern is to the right). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl; 
+    cerr << "\t--rightneighbours             Compute and show the right neighbours of the specified pattern (i.e. the specified pattern is to the left). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl; 
+
+    cerr << "\t--leftcooc                    Compute and show all patterns co-occurring left of the specified pattern within the same sentence/unit (i.e. the specified pattern is to the right). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl; 
+    cerr << "\t--rightcooc                   Compute and show all patterns co-occurring right of the specified pattern within the same sentence/unit (i.e. the specified pattern is to the left). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl; 
+
     cerr << "\t-C|--cooc <threshold>         Compute and show absolute co-occurrence counts above the specified threshold.. Only for indexed models." << endl;
     cerr << "\t-Y|--npmi <threshold>         Compute and show normalised pointwise mutual information co-occurrence  above the specified threshold [-1,1]. Only for indexed models." << endl;
     //cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
@@ -95,17 +106,17 @@ void usage() {
 
 
 template<class ModelType = IndexedPatternModel<>>
-void processquerypattern(ModelType & model, ClassDecoder * classdecoder, const Pattern & pattern, bool dorelations) {
+void processquerypattern(ModelType & model, ClassDecoder * classdecoder, const Pattern & pattern, const string & dorelations) {
     if (!model.has(pattern)) {
         cout << "PATTERN \"" << pattern.tostring(*classdecoder) << "\" NOT FOUND IN MODEL" << endl;
     } else {
         model.print(&cout, *classdecoder, pattern);
-        if (dorelations) model.outputrelations(pattern, *classdecoder, &cout);
+        if (!dorelations.empty()) model.outputrelations(pattern, *classdecoder, &cout, dorelations == "all" ? "" : dorelations);
     }
 }
 
 template<class ModelType = IndexedPatternModel<>>
-void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, const vector<string> & querypatterns, bool dorelations) {
+void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, const vector<string> & querypatterns, const string & dorelations) {
     cerr << "Processing " << querypatterns.size() << " queries" << endl;
     const bool allowunknown = true;
     unsigned char buffer[65536];
@@ -119,7 +130,7 @@ void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassD
 
 
 template<class ModelType = IndexedPatternModel<>>
-void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, bool dorelations, bool repeat = true) {
+void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, string dorelations, bool repeat = true) {
     const bool allowunknown = true;
     unsigned char buffer[65536];
     uint32_t linenum = 0;
@@ -176,7 +187,7 @@ void assert_file_exists(const string & filename) {
 
 
 template<class ModelType = IndexedPatternModel<>>
-void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold = 0.1) {
+void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, const string dorelations, bool info, bool printreverseindex, int cooc, double coocthreshold = 0.1) {
     cerr << "Generating desired views..." << endl;
 
     if (print) {
@@ -205,16 +216,25 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
         if (classencoder == NULL) {
             cerr << "ERROR: Unable to query model, no class encoder specified (-c)" << endl;
         } else {
-            querymodel<ModelType>(model, classencoder, classdecoder, relations); 
+            querymodel<ModelType>(model, classencoder, classdecoder, dorelations); 
+        }
+    } else if (!dorelations.empty()) {
+        bool first = true;
+        for (typename ModelType::iterator iter = model.begin(); iter != model.end(); iter++) {
+            cout << iter->first.tostring(*classdecoder) << endl;
+            const PatternPointer pp = iter->first;
+            model.outputrelations(pp, *classdecoder, &cout, dorelations == "all" ? "" : dorelations,first);
+            first = false;
         }
     }
+
     if (info) {
         model.info(&cout);
     }
 }
 
 template<class ModelType>
-bool processmodel(const string & inputmodelfile, int inputmodeltype, const string & outputmodelfile, int outputmodeltype, const string & corpusfile,   PatternSetModel * constrainbymodel, IndexedCorpus * corpus, PatternModelOptions & options, bool continued, bool expand, int firstsentence, bool ignoreerrors, string inputmodelfile2, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, bool relations, bool info, bool printreverseindex, int cooc, double coocthreshold, bool flexfromskip, const vector<string> & querypatterns) {
+bool processmodel(const string & inputmodelfile, int inputmodeltype, const string & outputmodelfile, int outputmodeltype, const string & corpusfile,   PatternSetModel * constrainbymodel, IndexedCorpus * corpus, PatternModelOptions & options, bool continued, bool expand, int firstsentence, bool ignoreerrors, string inputmodelfile2, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, string dorelations, bool info, bool printreverseindex, int cooc, double coocthreshold, bool flexfromskip, const vector<string> & querypatterns) {
         if (!(print || report || histogram || query || info || cooc || printreverseindex || (!querypatterns.empty()) || (!outputmodelfile.empty()) )) {
             cerr << "Ooops... You didn't really give me anything to do...that can't be right.. Please study the usage options (-h) again! Did you perhaps forget a -P or -o? " << endl;
             return false;
@@ -308,10 +328,10 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
             cerr << "Writing model to " << outputmodelfile << endl;
             inputmodel->write(outputmodelfile);
         }
-        viewmodel<ModelType>(*inputmodel, classdecoder, classencoder, print, report, histogram, query, relations, info, printreverseindex, cooc, coocthreshold); 
+        viewmodel<ModelType>(*inputmodel, classdecoder, classencoder, print, report, histogram, query, dorelations, info, printreverseindex, cooc, coocthreshold); 
 
         if (!querypatterns.empty()) {
-            processquerypatterns<ModelType>(*inputmodel,  classencoder, classdecoder, querypatterns, relations);
+            processquerypatterns<ModelType>(*inputmodel,  classencoder, classdecoder, querypatterns, dorelations);
         }
 
         delete inputmodel;
@@ -347,13 +367,13 @@ int main( int argc, char *argv[] ) {
     bool DOHISTOGRAM = false;
     bool DOPRINT = false;
     bool DOPRINTREVERSEINDEX = false;
-    bool DORELATIONS = false;
+    string DORELATIONS = "";
     bool DOINFO = false;
     bool DOFLEXFROMSKIP = false;
     bool DOFLEXFROMCOOC = false;
     bool DOTWOSTAGE =false;
     bool DOINPLACEREBUILD = false;
-	bool DOINSTANTIATE = false;
+	//bool DOINSTANTIATE = false;
     double COOCTHRESHOLD = 0;
     int DOCOOC = 0; //1= absolute, 2= npmi
     bool continued = false;
@@ -403,7 +423,15 @@ int main( int argc, char *argv[] ) {
 		{"expand",  required_argument, 0, 'e'},
 		//{"file",    required_argument, 0,  0 },
 		//long options without a short counterpart:
-		{"instantiate", no_argument,       0,  0 },
+		{"instances", no_argument,       0,  0 },
+		{"templates", no_argument,       0,  0 },
+		{"skipcontent", no_argument,       0,  0 },
+		{"leftneighbours", no_argument,       0,  0 },
+		{"rightneighbours", no_argument,       0,  0 },
+		{"leftcooc", no_argument,       0,  0 },
+		{"rightcooc", no_argument,       0,  0 },
+		{"subsumes", no_argument,       0,  0 },
+		{"subsumed", no_argument,       0,  0 },
 		{0,         0,                 0,  0 }
 	};
 
@@ -482,7 +510,7 @@ int main( int argc, char *argv[] ) {
             corpusfile = optarg;
 			break;
 		case 'g':
-            DORELATIONS = true;
+            DORELATIONS = "all";
 			break;
 		case 'Q':
 			DOQUERIER = true;
@@ -564,8 +592,26 @@ int main( int argc, char *argv[] ) {
             
             return 1;
 		case 0:
-			if (strcmp(long_options[option_index].name,"instantiate") == 0) {
-				DOINSTANTIATE = true;
+			if (strcmp(long_options[option_index].name,"instances") == 0) {
+                DORELATIONS = "instances";
+            } else if (strcmp(long_options[option_index].name,"templates") == 0) {
+                DORELATIONS = "templates";
+            } else if (strcmp(long_options[option_index].name,"templates") == 0) {
+                DORELATIONS = "subsumes";
+            } else if (strcmp(long_options[option_index].name,"subsumes") == 0) {
+                DORELATIONS = "subsumed";
+            } else if (strcmp(long_options[option_index].name,"subsumed") == 0) {
+                DORELATIONS = "skipcontent";
+            } else if (strcmp(long_options[option_index].name,"skipcontent") == 0) {
+                DORELATIONS = "leftneighbours";
+            } else if (strcmp(long_options[option_index].name,"leftneighbours") == 0) {
+                DORELATIONS = "rightneighbours";
+            } else if (strcmp(long_options[option_index].name,"rightneighbours") == 0) {
+                DORELATIONS = "leftcooc";
+            } else if (strcmp(long_options[option_index].name,"leftcooc") == 0) {
+                DORELATIONS = "rightcooc";
+            } else if (strcmp(long_options[option_index].name,"rightcooc") == 0) {
+                DORELATIONS = "rightcooc";
 			}
 			break;
         default:
@@ -603,7 +649,8 @@ int main( int argc, char *argv[] ) {
                 DOINPLACEREBUILD = false;
                 outputmodelfile = outputmodelfile + ".stage1"; 
                 outputmodeltype = UNINDEXEDPATTERNMODEL;
-                DOPRINT = DORELATIONS = DOHISTOGRAM = DOQUERIER = DOINFO = false;
+                DOPRINT = DOHISTOGRAM = DOQUERIER = DOINFO = false;
+                DORELATIONS = "";
                 options.DOSKIPGRAMS = false;
                 DOFLEXFROMCOOC = false;
             } else if (stage == 2) {
@@ -690,7 +737,7 @@ int main( int argc, char *argv[] ) {
 
         if ((inputmodeltype != UNINDEXEDPATTERNPOINTERMODEL) && (inputmodeltype != INDEXEDPATTERNPOINTERMODEL)) {
             if (corpusfile.empty()) {
-                if ((DOPRINTREVERSEINDEX) || (options.DOSKIPGRAMS) || (DOFLEXFROMSKIP) || (DORELATIONS) || (DOCOOC)) {
+                if ((DOPRINTREVERSEINDEX) || (options.DOSKIPGRAMS) || (DOFLEXFROMSKIP) || (!DORELATIONS.empty()) || (DOCOOC)) {
                     cerr << "ERROR: No corpus data file was specified (-f), but this is required for the options you specified..." << endl;
                     exit(2);
                 }
