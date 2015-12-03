@@ -192,7 +192,7 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
 
     if (print) {
         if (classdecoder == NULL) {
-            cerr << "ERROR: Unable to print model, no class file specified (-c)" << endl;
+            cerr << "ERROR: Unable to print model, no class file specified (--classfile)" << endl;
         } else {
             model.print(&cout, *classdecoder);
         }
@@ -214,7 +214,7 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
 
     if (query) {
         if (classencoder == NULL) {
-            cerr << "ERROR: Unable to query model, no class encoder specified (-c)" << endl;
+            cerr << "ERROR: Unable to query model, no class encoder specified (--classfile)" << endl;
         } else {
             querymodel<ModelType>(model, classencoder, classdecoder, dorelations); 
         }
@@ -236,7 +236,7 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
 template<class ModelType>
 bool processmodel(const string & inputmodelfile, int inputmodeltype, const string & outputmodelfile, int outputmodeltype, const string & corpusfile,   PatternSetModel * constrainbymodel, IndexedCorpus * corpus, PatternModelOptions & options, bool continued, bool expand, int firstsentence, bool ignoreerrors, string inputmodelfile2, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, string dorelations, bool info, bool printreverseindex, int cooc, double coocthreshold, bool flexfromskip, const vector<string> & querypatterns) {
         if (!(print || report || histogram || query || info || cooc || printreverseindex || (!querypatterns.empty()) || (!outputmodelfile.empty()) )) {
-            cerr << "Ooops... You didn't really give me anything to do...that can't be right.. Please study the usage options (-h) again! Did you perhaps forget a -P or -o? " << endl;
+            cerr << "Ooops... You didn't really give me anything to do...that can't be right.. Please study the usage options (-h) again! Did you perhaps forget a --print or --outputmodel? " << endl;
             return false;
         }
     
@@ -629,12 +629,12 @@ int main( int argc, char *argv[] ) {
 
     if (DOTWOSTAGE) {
        if (options.MINTOKENS == 1) {
-           cerr << "Two stage building was requested but has no value with -t 1 , disabling..." << endl;
+           cerr << "Two stage building was requested but has no value with --threshold 1 , disabling..." << endl;
            DOTWOSTAGE = false;
        } else {
             stages = 2;
             if (outputmodelfile.empty()) {
-                cerr << "ERROR: An output model file (-o) is mandatory for two-stage building!" << endl;
+                cerr << "ERROR: An output model file (--outputmodel) is mandatory for two-stage building!" << endl;
                 exit(2);
             }
        }
