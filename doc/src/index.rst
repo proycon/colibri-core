@@ -170,7 +170,7 @@ care about the Python library.
 Moreover, this route is also needed if you want FoLiA support (optional), for which you
 then first to install the following dependency. By default FoLiA support is disabled.
 
- * **libfolia**; obtainable from `the FoLiA website <http://proycon.github.com/folia>`_,  follow the instructions included with libfolia to install it.
+ * **libfolia**; obtainable from `the FoLiA website <https://proycon.github.io/folia>`_,  follow the instructions included with libfolia to install it.
 
 Including pulling the sources from github, Colibri Core can be compiled and
 installed as follows::
