@@ -2334,7 +2334,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual t_relationmap getrightneighbours(const Pattern & pattern,int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap_double getnpmi(const Pattern & pattern, double threshold) { return t_relationmap_double(); } //does nothing for unindexed models
         virtual int computeflexgrams_fromskipgrams() { return 0; }//does nothing for unindexed models
-        virtual int computeflexgrams_fromcooc() {return 0; }//does nothing for unindexed models
+        virtual int computeflexgrams_fromcooc(double threshold) {return 0; }//does nothing for unindexed models
         virtual void outputcooc_npmi(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {}
         virtual void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {}
 };
@@ -3091,9 +3091,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * @param occurrencethreshold If set above zero, filters to only include patterns occurring above this threshold
     * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to include only this category. Set to 0 for unfiltered (default)
     * @param size Set to any value above zero to only include patterns of the specified length.
+    * @param matches Pointer to a data structure that will be filled by this method to hold all the matches in pairs: first the match of the pattern, then the match of the co-occurrence.
     * @return a relation map
     */
-    t_relationmap getrightcooc(const PatternPointer & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0,IndexedData * matches = NULL) { 
+    t_relationmap getrightcooc(const PatternPointer & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0, std::vector<std::pair<IndexReference,IndexReference>> * matches = NULL) { 
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -3121,7 +3122,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                         && ((size == 0) || (neighbour.n() >= size))
                      ) {
                     cooc[neighbour]++;
-                    if (matches != NULL) matches->insert(ref2);
+                    if (matches != NULL) matches->push_back(std::pair<IndexReference,IndexReference>(ref,ref2));
                 } 
             }
         }
@@ -3372,22 +3373,22 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * @param threshold Normalised Pointwise Mutual Information threshold
      * @return The number of flexgrams found
      */
-    int computeflexgrams_fromcooc(double threshold) { //TODO: won't work in pattern pointer model
+    int computeflexgrams_fromcooc(double threshold) { //TODO: won't work in pattern pointer model!!
         this->cache_grouptotal.clear(); //forces recomputation of statistics
         int found = 0;
-        const unsigned char dynamicgap = 129;
-        const Pattern dynamicpattern = Pattern(&dynamicgap,1);
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::iterator iter = this->begin(); iter != this->end(); iter++) {
-            const PatternType pattern = iter->first;
-            IndexedData matches;
+            const Pattern pattern = iter->first;
+            std::vector<std::pair<IndexReference,IndexReference>> matches;
             t_relationmap tmp =  this->getrightcooc(pattern, 0,0,0, &matches);
-            for (t_relationmap::iterator iter2 = tmp.begin(); iter2 != tmp.end(); iter2++) {
-                const PatternPointer pattern2 = iter2->first;
+            for (t_relationmap::iterator iter2 = tmp.begin(); iter2 != tmp.end(); iter2++) {            
+                const Pattern pattern2 = iter2->first;
                 const double value = npmi(pattern,pattern2,iter2->second);
                 if (value >= threshold) {
-                    const Pattern flexgram = pattern + dynamicpattern + pattern2;
+                    const Pattern flexgram = pattern + FLEXPATTERN + pattern2;
                     if (!this->has(flexgram)) found++;
-                    this->data[flexgram] = value;
+                    for (std::vector<std::pair<IndexReference,IndexReference>>::iterator iter3 = matches.begin(); iter3 != matches.end(); iter3++) {
+                        this->data[flexgram].insert(iter3->first);
+                    }
                 }
             }
         }
