@@ -132,6 +132,7 @@ class IndexedCorpus {
          * number of maximum matches if desired. Note that this iterates over
          * the entire corpus and is by far not as efficient as a proper pattern
          * model.
+         * WARNING: Skipgrams and flexgrams are limited to a maximum length 31 words (including gaps)
          * @param pattern The pattern to find (may be ngram, skipgram or flexgram)
          * @param sentence Restrict to a particular sentence (0=all sentences, default)
          * @param instantiate Instantiate skipgrams and flexgrams, i.e. return ngrams instead (default : false)
