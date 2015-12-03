@@ -1897,6 +1897,9 @@ PatternPointer IndexedCorpus::findpattern(const IndexReference & begin, const Pa
                         newskips.push_back(std::pair<int,int>(gapbegin.token - begin.token, ref.token - gapbegin.token));
                     }
                     gapbegin = ref = ref + part.n();
+                } else {
+                    found = false;
+                    break;
                 }
             } catch (KeyError &e) {
                 //we're out of bounds
