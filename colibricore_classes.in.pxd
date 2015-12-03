@@ -399,6 +399,9 @@ cdef extern from "patternmodel.h":
         unsigned int topthreshold(int,int,int) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
 
+        
+
+
         t_relationmap getsubchildren(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
         t_relationmap getsubparents(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
         t_relationmap getleftneighbours(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size, unsigned int cutoff) except +KeyError
@@ -466,6 +469,9 @@ cdef extern from "patternmodel.h":
 
         unordered_set[PatternPointer] getreverseindex(IndexReference&)
         vector[pair[IndexReference,PatternPointer]] getreverseindex_bysentence(int)
+
+        int computeflexgrams_fromskipgrams() nogil
+        int computeflexgrams_fromcooc(double) nogil
 
         t_relationmap getsubchildren(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
         t_relationmap getsubparents(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError

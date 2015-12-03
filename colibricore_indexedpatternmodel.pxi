@@ -347,3 +347,11 @@ def getrightcooc(self, Pattern pattern, int occurrencethreshold = 0, int categor
         pattern.bind(cpattern)
         yield (pattern,value)
         inc(relit)
+
+def computeflexgrams_fromskipgrams(self):
+    """Compute flexgrams from skipgrams in the model. Returns the number of flexgrams found."""
+    return self.data.computeflexgrams_fromskipgrams()
+
+def computeflexgrams_fromcooc(self,double threshold):
+    """Compute flexgrams based on  co-occurence. The threshold is expressed in normalised pointwise mutual information. Returns the number of flexgrams found. Flexgrams contain at only one gap using this method."""
+    return self.data.computeflexgrams_fromcooc(threshold)
