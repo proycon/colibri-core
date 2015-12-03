@@ -33,63 +33,63 @@ void usage() {
     cerr << "\t-o|--outputmodel [modelfile]   Output model" << endl;
     cerr << "\t-f|--datafile [datafile]       Corpus data file (encoded from plain text or other sources with colibri-classencode)" << endl;
     cerr << "\t-c|--classfile [classfile]     Class file (created with colibri-classencode)"<< endl;
-    cerr << "\t-j [modelfile]                 Joined input model, i.e. constraint model/training model. Result will be the *intersection* of this (training) model and the input model or constructed model. For training, consider using -I instead." << endl;
+    cerr << "\t-j|--constrainmodel [modfile]  Joined input model, i.e. constraint model/training model. Result will be the *intersection* of this (training) model and the input model or constructed model. For training, consider using -I instead." << endl;
     cerr << endl;
     cerr << " Building a model:  colibri-patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
     cerr << "\t-2|--twostage                 Enable two-stage building (for indexed models), takes longer but saves a lot of memory on large corpora! First builds an unindexed model and reuses that (via -I) to" << endl;
     cerr << "\t                              build an indexed model (View options are ignored in two-stage building, whereas an output model (-o) is mandatory)" << endl;    
     cerr << "\t-t|--threshold <number>       Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
-    cerr << "\t-u                            Build an unindexed model (default is indexed)" << endl;    
-    cerr << "\t-M                            Build a patternpointer model instead of a normal pattern model, saves memory when thresholds are low" << endl;    
-    cerr << "\t-m <number>                   Minimum pattern length (default: 1)" << endl;
-    cerr << "\t-l <number>                   Maximum pattern length (default: 100)" << endl;
-    cerr << "\t-b <number>                   Maximum back-off length (default: 100). Only makes sense to set lower than minimum pattern length and may conserve memory during training then" << endl;
-    cerr << "\t-W <number>                   Word occurrence threshold (secondary threshold): only count patterns in which the words/unigrams occur at least this many times, only effective when the primary " << endl;
+    cerr << "\t-u|--unindexed                Build an unindexed model (default is indexed)" << endl;    
+    cerr << "\t-M|--pointermodel             Build a patternpointer model instead of a normal pattern model, saves memory when thresholds are low" << endl;    
+    cerr << "\t-m|--minlength <number>       Minimum pattern length (default: 1)" << endl;
+    cerr << "\t-l|--maxlength <number>       Maximum pattern length (default: 100)" << endl;
+    cerr << "\t-b|--backofflength <number>   Maximum back-off length (default: 100). Only makes sense to set lower than minimum pattern length and may conserve memory during training then" << endl;
+    cerr << "\t-W|--wordthreshold  <number>  Word occurrence threshold (secondary threshold): only count patterns in which the words/unigrams occur at least this many times, only effective when the primary " << endl;
     cerr << "\t                              occurrence threshold (-t) is lower than this threshold (default: disabled)" << endl;    
-    cerr << "\t-p <number>                   Prune all lower-order n-grams below the specified order that are *NOT* subsumed by higher order n-grams (default: 0, disabled). Only effective when used with -l, usually set to equal values" << endl;
-    cerr << "\t-s                            Compute skipgrams (costs extra memory and time)" << endl;    
-    cerr << "\t-y <number>                   Occurrence threshold for skipgrams (overrides -t for skipgrams, defaults to -t). Skipgrams occurring less than this will be pruned. Value must be equal to or higher than -t." << endl;    
-    cerr << "\t-T <number>                   Skip type threshold (for use with -s): only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram " << endl;
+    cerr << "\t-p|--prune <number>           Prune all lower-order n-grams below the specified order that are *NOT* subsumed by higher order n-grams (default: 0, disabled). Only effective when used with -l, usually set to equal values" << endl;
+    cerr << "\t-s|--skipgrams                Compute skipgrams (costs extra memory and time)" << endl;    
+    cerr << "\t-y|--skipthreshold <number>   Occurrence threshold for skipgrams (overrides -t for skipgrams, defaults to -t). Skipgrams occurring less than this will be pruned. Value must be equal to or higher than -t." << endl;    
+    cerr << "\t-T|--skiptypes <number>       Skip type threshold (for use with -s): only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram " << endl;
     cerr << "\t                              will be pruned  (default: 2, unindexed models always act as if fixed to 1). Also note that only types that occur above the occurrent threshold (-t) are counted here! Requires indexed models" << endl;
-    cerr << "\t-S S                          Compute flexgrams by abstracting over skipgrams (implies -s)." << endl; 
-    cerr << "\t-S <number>                   Compute flexgrams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
-    cerr << "\t-L                            Input data file (-f) is a list of one pattern per line. No subgrams will be stored, implies -t 1" <<endl;
-    cerr << "\t-I                            Builds a new model from an input model (-i) and corpus data (-f).  Only patterns present in the input model will be present in the final model, making" << endl;
+    cerr << "\t-F|--flexgrams S		         Compute flexgrams by abstracting over skipgrams (implies -s). Do not forget the S value!" << endl; 
+    cerr << "\t-F|--flexgrams <number>       Compute flexgrams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
+    cerr << "\t-L|--patternlist              States that the input data file (-f) is a list of one pattern per line. No subgrams will be stored, implies -t 1" <<endl;
+    cerr << "\t-I|--contrained               Builds a new model from an input model (-i) and corpus data (-f).  Only patterns present in the input model will be present in the final model, making" << endl;
     cerr << "\t                              the input model the training model and the corpus data the test data. This method uses memory-efficient in-place building, and does not hold " << endl;
     cerr << "\t                              two models (unlike -j). Input model (-i) and or output model (-o) may be indexed or unindexed (-u), this option also allows for constructing indexed models " << endl;
     cerr << "\t                              from unindexed models (given the same source corpus), and is used in two-stage building (-2)." <<endl;  
     cerr << "\t--ssr                         Perform Statistical Substring reduction, prunes n-grams that are only part of larger n-grams (TO BE IMPLEMENTED STILL)" << endl; //TODO
-    cerr << "\t-E                            Expand the loaded pattern model *ON THE SAME CORPUS DATA*, allows you to add, for example, larger order ngrams to an existing model or skipgrams to an n-gram only model." << endl;
-    cerr << "\t-e <number>                   Expand the loaded pattern model *ON DIFFERENT CORPUS DATA*, the number is the sentence offset to use in the model (be careful not to overlap with existing sentence indices!)." << endl;
+    cerr << "\t-E|--selfexpand               Expand the loaded pattern model *ON THE SAME CORPUS DATA*, allows you to add, for example, larger order ngrams to an existing model or skipgrams to an n-gram only model." << endl;
+    cerr << "\t-e|--expand <number>          Expand the loaded pattern model *ON DIFFERENT CORPUS DATA*, the number is the sentence offset to use in the model (be careful not to overlap with existing sentence indices!)." << endl;
     cerr << "\t                              The offset is only relevant for indexed models, for unindexed models any value will do." << endl;
     cerr << endl;
     cerr << " Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
     cerr << endl;
     cerr << " Viewing a model:  colibri-patternmodeller -i [modelfile] -f [datafile] -c [classfile] -[PRHQ]" << endl;
-    cerr << "\t-P                            Print the entire model." << endl;
-    cerr << "\t                                               (To print the instances of skipgrams/flexgrams rather than their abstractions, add the option --instances, this requires a reverse index)" << endl;
-    cerr << "\t-R                            Generate a (statistical/coverage) report" << endl;
-    cerr << "\t-H                            Generate a histogram" << endl;   
-    cerr << "\t-V                            Storage information" << endl;   
-    cerr << "\t-Q                            Start interactive query mode, allows for pattern lookup against the loaded model (input from standard input)" << endl; 
-    cerr << "\t-Z                            Print the reverse index" << endl;
-    cerr << "\t-q                            Query a pattern (may be specified multiple times!)" << endl; 
-    cerr << "\t-g                            Compute and show relationships for the specified patterns (use with -q or -Q). Relationships are: subsumptions, neigbours, skipcontent. Only for indexed models." << endl; 
-    cerr << "\t-C <threshold>                Compute and show absolute co-occurrence counts above the specified threshold.. Only for indexed models." << endl;
-    cerr << "\t-Y <threshold>                Compute and show normalised pointwise mutual information co-occurrence  above the specified threshold [-1,1]. Only for indexed models." << endl;
+    cerr << "\t-P|--print                    Print the entire model." << endl;
+    cerr << "\t--instantiate                 To use with -P, prints the instances of skipgrams/flexgrams rather than their abstractions, this requires a reverse index, i.e. corpus data to be loaded" << endl;
+    cerr << "\t-R|--report                   Generate a (statistical/coverage) report" << endl;
+    cerr << "\t-H|--histogram                Generate a histogram" << endl;   
+    cerr << "\t-V|--info                     Storage information" << endl;   
+    cerr << "\t-Q|--querymode                Start interactive query mode, allows for pattern lookup against the loaded model (input from standard input)" << endl; 
+    cerr << "\t-Z|--printreverseindex        Print the reverse index" << endl;
+    cerr << "\t-q|--query <pattern>          Query a pattern (may be specified multiple times!)" << endl; 
+    cerr << "\t-g|--relations                Compute and show relationships for the specified patterns (use with -q or -Q). Relationships are: subsumptions, neigbours, skipcontent. Only for indexed models." << endl; 
+    cerr << "\t-C|--cooc <threshold>         Compute and show absolute co-occurrence counts above the specified threshold.. Only for indexed models." << endl;
+    cerr << "\t-Y|--npmi <threshold>         Compute and show normalised pointwise mutual information co-occurrence  above the specified threshold [-1,1]. Only for indexed models." << endl;
     //cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
     cerr << endl;
     cerr << " Editing a model:  colibri-patternmodeller -o [modelfile] -i [modelfile]" << endl;
-    cerr << "\t-x               Delete all skipgrams from the model" << endl;    
-    cerr << "\t-X               Delete all flexgrams from the model" << endl;    
-    cerr << "\t-N               Delete all ngrams from the model" << endl;    
-    cerr << "\tOptions -tlTmxXN can be used to filter the model, -u can be used to remove the index, -j can be used to take the intersection with another model, -S to compute and add flexgrams" << endl;
+    cerr << "\t-x|--noskipgrams              Delete all skipgrams from the model" << endl;    
+    cerr << "\t-X|--noflexgrams              Delete all flexgrams from the model" << endl;    
+    cerr << "\t-N|--nongrams                 Delete all ngrams from the model" << endl;    
+    cerr << "\tOptions -tlTmxXN can be used to filter the model, -u can be used to remove the index, -j can be used to take the intersection with another model, -F to compute and add flexgrams" << endl;
     cerr << endl;
     cerr << " Other options:" << endl;
-    cerr << "\t-h               This help message" << endl;
-    cerr << "\t-v|--version     Version information" << endl;
-    cerr << "\t-D|--debug       Enable debug mode" << endl;
+    cerr << "\t-h|--help                     This help message" << endl;
+    cerr << "\t-v|--version                  Version information" << endl;
+    cerr << "\t-D|--debug                    Enable debug mode" << endl;
 }
 
 
@@ -363,21 +363,52 @@ int main( int argc, char *argv[] ) {
 
 	int option_index = 0;
 	static struct option long_options[] = {
-		{"instantiate", no_argument,       0,  0 },
 		{"twostage", no_argument,       0,  '2' },
 		{"version", no_argument,       0,  'v' },
 		{"debug", no_argument,       0,  'D' },
+		{"help", no_argument,       0,  'h' },
+		{"skipgrams", no_argument,       0,  's' },
+		{"noskipgrams", no_argument,       0,  'x' },
+		{"noflexgrams", no_argument,       0,  'X' },
+		{"nongrams", no_argument,       0,  'n' },
+		{"unindexed", no_argument,       0,  'u' },
+		{"constrained", no_argument,       0,  'I' },
+		{"selfexpand", no_argument,       0,  'E' },
+		{"pointermodel", no_argument,       0,  'M' },
+		{"print", no_argument,       0,  'P' },
+		{"report", no_argument,       0,  'R' },
+		{"info", no_argument,       0,  'V' },
+		{"relations", no_argument,       0,  'g' },
+		{"querymode", no_argument,       0,  'Q' },
+		{"histogram", no_argument,       0,  'H' },
+		{"printreverseindex", no_argument,       0,  'Z' },
+		{"patternlist", no_argument,       0,  'L' },
+		{"query",  required_argument, 0, 'q'},
+		{"minlength",  required_argument, 0, 'm'},
+		{"maxlength",  required_argument, 0, 'l'},
+		{"backofflength",  required_argument, 0, 'l'},
 		{"inputmodel",  required_argument, 0, 'i'},
 		{"outputmodel",  required_argument, 0, 'o'},
+		{"constrainmodel",  required_argument, 0, 'j'},
 		{"classfile",  required_argument, 0, 'c'},
 		{"datafile",  required_argument, 0, 'f'},
 		{"threshold",  required_argument, 0, 't'},
+		{"wordthreshold",  required_argument, 0, 'W'},
+		{"skiptypes",  required_argument, 0, 'T'},
+		{"skipthreshold",  required_argument, 0, 'y'},
+		{"prune",  required_argument, 0, 'p'},
+		{"flexgrams",  required_argument, 0, 'F'},
+		{"cooc",  required_argument, 0, 'C'},
+		{"npmi",  required_argument, 0, 'Y'},
+		{"expand",  required_argument, 0, 'e'},
 		//{"file",    required_argument, 0,  0 },
+		//long options without a short counterpart:
+		{"instantiate", no_argument,       0,  0 },
 		{0,         0,                 0,  0 }
 	};
 
     char c;    
-    while ((c = getopt_long(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGS:xXNIVC:Y:L2Zm:vb:y:W:p:Ee:0M", long_options, &option_index)) != -1)
+    while ((c = getopt_long(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:r:gGF:S:xXNIVC:Y:L2Zm:vb:y:W:p:Ee:0M", long_options, &option_index)) != -1)
         switch (c)
         {
         case 'c':
@@ -465,7 +496,8 @@ int main( int argc, char *argv[] ) {
         case 'P':
             DOPRINT = true;
             break;        
-        case 'S':
+        case 'S': //alias for F, backward compatibility
+		case 'F':
             if (string(optarg) == "S") {
                 DOFLEXFROMSKIP = true;
                 options.DOSKIPGRAMS = true;
@@ -532,7 +564,7 @@ int main( int argc, char *argv[] ) {
             
             return 1;
 		case 0:
-			if (long_options[option_index].name == "instantiate") {
+			if (strcmp(long_options[option_index].name,"instantiate") == 0) {
 				DOINSTANTIATE = true;
 			}
 			break;
