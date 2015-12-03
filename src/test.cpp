@@ -1193,8 +1193,8 @@ int main( int argc, char *argv[] ) {
 
     
         Pattern skipgram2 = classencoder.buildpattern("To {*} or {*} to {*} ."); //this is a pattern actually in the model (important!)
-        t_relationmap relations7 = indexedmodel.getinstances(skipgram2);
         cerr << "Extracting instances for " << skipgram2.tostring(classdecoder) << endl;
+        t_relationmap relations7 = indexedmodel.getinstances(skipgram2);
         indexedmodel.outputrelations(skipgram2, relations7, classdecoder, &cerr,"INSTANTIATED-BY");
         for (t_relationmap::iterator iter = relations7.begin(); iter != relations7.end(); iter++) {
             cerr << " length check: "; test(iter->first.n(), 7); 
@@ -1202,6 +1202,16 @@ int main( int argc, char *argv[] ) {
         }
         cerr << "Verify count: "; test(relations7.size(), 2);  //other two are below threshold
 
+
+        Pattern instance = classencoder.buildpattern("To flee or not to flee ."); //this is a pattern actually in the model (important!)
+        cerr << "Extracting templates for " << instance.tostring(classdecoder) << endl;
+        t_relationmap relations8 = indexedmodel.gettemplates(instance);
+        for (t_relationmap::iterator iter = relations8.begin(); iter != relations8.end(); iter++) {
+            cerr << " " << iter->first.tostring(classdecoder);
+            cerr << " length check: "; test(iter->first.n(), 7); 
+            cerr << " type check: "; test(iter->first.category(), SKIPGRAM);  //no flexgrams in model at this point 
+        }
+        cerr << "Verify count: "; test(relations8.size(), 8);  //other two are below threshold
 
 
 

@@ -2749,7 +2749,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const PatternPointer candidate = *iter2;
 
                 if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == SKIPGRAM)  && ((occurrencethreshold == 0) || (this->occurrencecount(pattern) >= occurrencethreshold)) ) {
-                    std::cerr << "DEBUG: Found candidate:" << candidate.category() << std::endl;
                     templates[candidate] += 1;
                 }
             }
