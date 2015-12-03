@@ -15,24 +15,50 @@ Introduction
 ===================
 
 
-Colibri Core is software consisting of command line tools as well as programming libraries. to quickly and efficiently count and extract patterns from large corpus data, to extract various statistics on the extracted patterns, and to compute relations between the extracted patterns. The employed notion of pattern or construction encompasses the following categories:
+Colibri Core is software consisting of command line tools as well as
+programming libraries. to quickly and efficiently count and extract patterns
+from large corpus data, to extract various statistics on the extracted
+patterns, and to compute relations between the extracted patterns. The employed
+notion of pattern or construction encompasses the following categories:
 
  * **n-gram** -- n consecutive words
  * **skipgram** -- An abstract pattern of predetermined length with one or multiple gaps (of specific size).
  * **flexgram** -- An abstract pattern without predetermined length, with one or more gaps.
 
-N-gram extraction may seem fairly trivial at first, with a few lines in your favourite scripting language, you can move a simple sliding window of size *n* over your corpus and store the results in some kind of hashmap. This trivial approach however makes an unnecessarily high demand on memory resources, this often becomes prohibitive if unleashed on large corpora. Colibri Core tries to minimise these space requirements in several ways:
+N-gram extraction may seem fairly trivial at first, with a few lines in your
+favourite scripting language, you can move a simple sliding window of size *n*
+over your corpus and store the results in some kind of hashmap. This trivial
+approach however makes an unnecessarily high demand on memory resources, this
+often becomes prohibitive if unleashed on large corpora. Colibri Core tries to
+minimise these space requirements in several ways:
 
  * **Binary representation** -- Each word type is assigned a numeric class, which is encoded in a compact binary format in which highly frequent classes take less space than less frequent classes. Colibri core always uses this representation rather than a full string representation, both on disk and in memory.
  * **Informed counting** -- Counting is performed more intelligently by iteratively processing the corpus in several passes and quickly discarding patterns that won't reach the desired occurrence threshold.
 
-Skipgram and flexgram extraction are computationally more demanding but have been implemented with similar optimisations. Skipgrams are computed by abstracting over n-grams, and flexgrams in turn are computed either by abstracting over skipgrams, or directly from n-grams on the basis of co-occurrence information (mutual pointwise information). When patterns have been extracted, along with their counts and or index references to original corpus data, they form a so-called *pattern model*.
+Skipgram and flexgram extraction are computationally more demanding but have
+been implemented with similar optimisations. Skipgrams are computed by
+abstracting over n-grams, and flexgrams in turn are computed either by
+abstracting over skipgrams, or directly from n-grams on the basis of
+co-occurrence information (mutual pointwise information). When patterns have
+been extracted, along with their counts and or index references to original
+corpus data, they form a so-called *pattern model*.
 
-At the heart of Colibri Core lies the tool ``colibri-patternmodeller`` which allows you to build, view, manipulate and query pattern models. 
+At the heart of Colibri Core lies the tool ``colibri-patternmodeller`` which
+allows you to build, view, manipulate and query pattern models. 
 
-The Colibri software is developed in the scope of the Ph.D. research project **Constructions as Linguistic Bridges**. This research examines the identification and extraction of aligned constructions or patterns across natural languages, and the usage of such constructions in Machine Translation. The aligned constructions are not identified on the basis of an extensive and explicitly defined grammar or expert database of linguistic knowledge, but rather are implicitly distilled from large amounts of example data. Our notion of constructions is broad and transcends the idea of words or variable-length phrases.
+The Colibri software is developed in the scope of the Ph.D. research project
+**Constructions as Linguistic Bridges**. This research examines the
+identification and extraction of aligned constructions or patterns across
+natural languages, and the usage of such constructions in Machine Translation.
+The aligned constructions are not identified on the basis of an extensive and
+explicitly defined grammar or expert database of linguistic knowledge, but
+rather are implicitly distilled from large amounts of example data. Our notion
+of constructions is broad and transcends the idea of words or variable-length
+phrases.
 
-This documentation will illustrate how to work with the various tools and the library of colibri, as well as elaborate on the implementation of certain key aspects of the software.
+This documentation will illustrate how to work with the various tools and the
+library of colibri, as well as elaborate on the implementation of certain key
+aspects of the software.
 
 Installation
 ===============
@@ -255,9 +281,13 @@ documentation, Colibri Core offers the following scripts:
    patterns are significantly more frequent in one corpus than the other.
  * ``colibri-coverage`` - Computes overlap between a training corpus and a test
    corpus, produces coverage metrics.
+ * ``colibri-findpatterns`` - Finds patterns (including skipgrams and
+   flexgrams) in corpus data. You specify the patterns in a text file (one
+   per line).
 
 Users have to be aware, however, that these script only expose a
-limited amount of the functionality of Colibri Core.
+limited amount of the functionality of Colibri Core. Nevertheless, they
+simplify a lot of common tasks people do with Colibri Core.
 
 
 Corpus Class Encoding
@@ -303,16 +333,27 @@ If your corpus is not tokenised yet, you can consider using the tokeniser `ucto 
 	
 The above sample is for English (``-L en``), several other languages are also supported.
 
-In addition to this plain text input. The class encoder also supports *FoLiA XML* (`folia website <http://proycon.github.com/folia>`_) if you compiled with FoLiA support, make sure such files end with the extension ``xml`` and they will be automatically interpreted as FoLiA XML::
+In addition to this plain text input. The class encoder also supports *FoLiA
+XML* (`folia website <http://proycon.github.com/folia>`_) if you compiled with
+FoLiA support, make sure such files end with the extension ``xml`` and they
+will be automatically interpreted as FoLiA XML::
 
 	$ colibri-classencode yourcorpus.xml
 	
 
-The class file is the vocabulary of your corpus, it simply maps word strings to integer. You must always ensure that whenever you are working with multiple models, and you want to compare them, to use the exact same class file. It is possible to encode multiple corpus files similtaneously,  generating a joined class file::
+The class file is the vocabulary of your corpus, it simply maps word strings to
+integer. You must always ensure that whenever you are working with multiple
+models, and you want to compare them, to use the exact same class file. It is
+possible to encode multiple corpus files similtaneously,  generating a joined
+class file::
 
 	$ colibri-classencode yourcorpus1.txt yourcorpus2.txt
 	
-This results in ``yourcorpus1.colibri.cls`` and ``yourcorpus1.colibri.dat`` and ``yourcorpus2.colibri.dat``. The class file spans both despite the name. An explicit name can be passed with the ``-o`` flag. It is also possible to encode multiple corpora in a single unified file by passing the ``-u`` flag. This is often desired if you want to train a pattern model on all the joined data::
+This results in ``yourcorpus1.colibri.cls`` and ``yourcorpus1.colibri.dat`` and
+``yourcorpus2.colibri.dat``. The class file spans both despite the name. An
+explicit name can be passed with the ``-o`` flag. It is also possible to encode
+multiple corpora in a single unified file by passing the ``-u`` flag. This is
+often desired if you want to train a pattern model on all the joined data::
 
 	$ colibri-classencode -o out -u yourcorpus1.txt yourcorpus2.txt
 
@@ -322,8 +363,15 @@ If you have a pre-existing class file you can load it with the ``-c`` flag, and 
 
     $ colibri-classencode -c yourcorpus1.colibri.cls yourcorpus2.txt
 
-This will produce a ``yourcorpus2.colibri.dat``, provided that all of the word types already existed in ``yourcorpus1.colibri.cls`` (which usually is not the case, in which case an error will be shown. 
-To circumvent this error you have to specify how to deal with unknown words. There are two ways; the ``-U`` flag will encode all unknown word as a single word class dedicated to the task, whereas the ``-e`` flag will *extend* the specified class file with any new classes found. It has to be noted that this extension method spoils the optimal compression as classes are no longer strictly sorted by frequency. If you can all needed data in one go, then that is always preferred.
+This will produce a ``yourcorpus2.colibri.dat``, provided that all of the word
+types already existed in ``yourcorpus1.colibri.cls`` (which usually is not the
+case, in which case an error will be shown.  To circumvent this error you have
+to specify how to deal with unknown words. There are two ways; the ``-U`` flag
+will encode all unknown word as a single word class dedicated to the task,
+whereas the ``-e`` flag will *extend* the specified class file with any new
+classes found. It has to be noted that this extension method spoils the optimal
+compression as classes are no longer strictly sorted by frequency. If you can
+all needed data in one go, then that is always preferred.
 
 This setup, however, is often seen in a train/test paradigm::
 
@@ -358,7 +406,11 @@ Pattern Modeller
 Introduction
 -----------------------
 
-The ``colibri-patternmodeller`` program is used to create pattern models capturing recurring patterns from a monolingual corpus. The extracted patterns are n-grams or skip-grams, where a skip-gram is an n-gram with one or more gaps of either a predefined size, thus containing unspecified or wildcard tokens, or of dynamic width.
+The ``colibri-patternmodeller`` program is used to create pattern models
+capturing recurring patterns from a monolingual corpus. The extracted patterns
+are n-grams or skip-grams, where a skip-gram is an n-gram with one or more gaps
+of either a predefined size, thus containing unspecified or wildcard tokens, or
+of dynamic width.
 
 In the internal pattern representation, in the place of the size marker, byte
 value 128 is used for a fixed gap of a single token, and can be repeated for
@@ -408,20 +460,20 @@ Creating a pattern model
 
 First make sure to have class-encoded your corpus. Given this encoded corpus,
 ``colibri-patternmodeller`` can be invoked to produce an indexed pattern model.
-Always specify the output file using the ``-o`` flag. The occurrence threshold
-is specified with parameter ``-t``, patterns occuring less will not be counted.
+Always specify the output file using the ``--outputmodel`` or ``-o`` flag. The occurrence threshold
+is specified with parameter ``--threshold`` or ``-t``, patterns occuring less will not be counted.
 The default value is two.  The maximum value for n, i.e. the maximum
 n-gram/skipgram size, can be restricted using the parameter ``-l``.:: 
 
-	$ colibri-patternmodeller -f yourcorpus.dat -t 10 -o yourcorpus.colibri.indexedpatternmodel
+	$ colibri-patternmodeller --datafile yourcorpus.dat --threshold 10 --outputmodel yourcorpus.colibri.indexedpatternmodel
 	
 This outputted model ``yourcorpus.colibri.indexedpatternmodel`` is stored in a
 binary format. To print it into a human readable presentation it needs to be
 decoded. The ``colibri-patternmodeller`` program can do this by specifying an
-input model using the ``-i`` flag, the class file using the ``-c`` parameter,
-and the desired action to print it all using ``-P``::
+input model using the ``--inputmodel`` or ``-i`` flag, the class file using the ``--classfile`` (``-c``) parameter,
+and the desired action to print it all using ``--print`` (``-P``)::
 
-	$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -c yourcorpus.colibri.cls -P
+	$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --classfile yourcorpus.colibri.cls --print
 
 
 Optionally, instead of or in addition to outputting a model to file using
@@ -458,36 +510,39 @@ The various columns are:
 Creating a pattern model with skipgrams and/or flexgrams
 ----------------------------------------------------------
 
-The pattern model created in the previous example did not yet include skip-grams, these have to be explicitly enabled with the ``-s`` flag. When this is used, another options becomes available for consideration:
+The pattern model created in the previous example did not yet include
+skip-grams, these have to be explicitly enabled with the ``--skipgrams`` (``-s``) flag. When this
+is used, another options becomes available for consideration:
 
-* ``-T [value]`` - Only skipgrams that have at least this many different types
+* ``--skiptypes [value]`` (``-T`` for short) - Only skipgrams that have at least this many different types
   as skip content, i.e. possible options filling the gaps, will be considered.
   The default is set to two.
   
 Here is an example of generating an indexed pattern model including skipgrams::
 
-	$ colibri-patternmodeller -f yourcorpus.colibri.dat -t 10 -s -T 3 -o yourcorpus.colibri.indexedpatternmodel
+	$ colibri-patternmodeller --datafile yourcorpus.colibri.dat --threshold 10 --skipgrams --skiptypes 3 --outputmodel yourcorpus.colibri.indexedpatternmodel
 
-If you want to generate unindexed models, simply add the flag ``-u``. Do note
-that for unindexed models the parameter ``-T`` has no effect, it will extract
-all skipgrams it can find as if ``-T`` were set to one! If you want decent
+If you want to generate unindexed models, simply add the flag ``--unindexed`` or ``-u`` for short. Do note
+that for unindexed models the parameter ``--skiptypes`` has no effect, it will extract
+all skipgrams it can find as if ``-skiptypes`` were set to one! If you want decent
 skpigrams, you're best off with an indexed model. Note that indexed models can
-always be read and printed in an unindexed way (with the ``-u`` flag); but
+always be read and printed in an unindexed way (with the ``--unindexed`` flag); but
 unindexed models can not be read in an indexed way, as they simply lack
 indices::
 
-	$ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -c yourcorpus.colibri.cls -u -P
-	$ colibri-patternmodeller -i yourcorpus.colibri.unindexedpatternmodel -c yourcorpus.colibri.cls -u -P
+	$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --classfile yourcorpus.colibri.cls --unindexed --print
+	$ colibri-patternmodeller --inputmodel yourcorpus.colibri.unindexedpatternmodel --classfile yourcorpus.colibri.cls --unindexed --print
 
-Flexgrams, non-consecutive patterns in which the gap (only one in the current implementation) is of dynamic width, can be generated in one of two ways:
+Flexgrams, non-consecutive patterns in which the gap (only one in the current
+implementation) is of dynamic width, can be generated in one of two ways:
 
- * Extract flexgrams by abstracting from skipgrams: use the ``-S S`` flag.
- * Extract flexgrams directly from n-gram co-occurence: use the ``-S
+ * Extract flexgrams by abstracting from skipgrams: use the ``--flexgrams S`` flag.
+ * Extract flexgrams directly from n-gram co-occurence: use the ``--flexgams
    [threshold]`` flag, where the threshold is expressed as normalised pointwise mutual
    information [-1,1]. 
 
-The skipgram approach has the advantage of allowing you to rely on the ``-T``
-threshold, but comes with the disadvantage of having a maximum span. The
+The skipgram approach has the advantage of allowing you to rely on the
+``--skiptypes`` threshold, but comes with the disadvantage of having a maximum span. The
 co-occurrence approach allows for flexgrams over larger distances. Both methods
 come at the cost of more memory, especially the former method.
 
@@ -512,15 +567,15 @@ patterns in the model. Whilst this method is more time-consuming, it prevents
 the memory bump (after counting, prior to pruning) that normal one-stage
 building of indexed models have. Two-stage building is enabled using the ``-2`` flag::
 
-	$ colibri-patternmodeller -2 -f yourcorpus.colibri.dat -t 10 -s -T 3 -o yourcorpus.colibri.indexedpatternmodel
+	$ colibri-patternmodeller -2 --datafile yourcorpus.colibri.dat --threshold 10 --skipgrams --skiptypes 3 -outputmodel yourcorpus.colibri.indexedpatternmodel
 
 
 Statistical reports and histograms
 ----------------------------------
 
-If you have a pattern model, you can generate a statistical report which includes information on the number of occurrences and number of types for patterns, grouped for n-grams or skipgrams for a specific value of *n*. A report is generated using the ``-R`` flag, the input model is specified using ``-i``::
+If you have a pattern model, you can generate a statistical report which includes information on the number of occurrences and number of types for patterns, grouped for n-grams or skipgrams for a specific value of *n*. A report is generated using the ``-report`` (``-R``) flag, the input model is specified using ``--inputmodel`` (``-i``)::
 
-	   $ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -R
+	   $ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --report
 
 Example output::
 
@@ -621,9 +676,9 @@ Pattern models store how many of the tokens and types in the original corpus
 were covered. Tokens and types not covered did not make the set thresholds.
 Make sure to use indexed models if you want accurate coverage data.
 
-A histogram can also be generated, using the ``-H`` flag::
+A histogram can also be generated, using the ``--histogram`` (``-H``) flag::
 	   
-        $ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -H
+        $ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --histogram
 
 Example output::
 
@@ -644,53 +699,57 @@ Example output::
 Filtering models
 --------------------------------
 
-Patterns models can be read with ``-i`` and filtered by setting stricter thresholds prior to printing, reporting or outputting to file. An example::
+Patterns models can be read with ``--inputmodel`` and filtered by setting stricter thresholds prior to printing, reporting or outputting to file. An example::
 
-    $ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -t 20 -T 10 -o yourcorpus_filtered.colibri.indexedpatternmodel -P
+    $ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel -t 20 --skiptypes 10 --outputmodel yourcorpus_filtered.colibri.indexedpatternmodel --print
 
 You can also filter pattern models by intersecting with another pattern model
-using the ``-j`` option. This only works when both are built on
+using the ``--constraintmodel`` option. This only works when both are built on
 the same class file::
 
-    $ colibri-patternmodeller -i yourcorpus.colibri.indexedpatternmodel -j yourcorpus2.colibri.indexedpatternmodel -o yourcorpus_filtered.colibri.indexedpatternmodel
+    $ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --constraintmodel yourcorpus2.colibri.indexedpatternmodel --outputmodel yourcorpus_filtered.colibri.indexedpatternmodel
 
 The output pattern model will contain only those patterns that were present in
-both the input model (``-i``) as well as the constraining model (``-j``), which may be
-either indexed or unindexed regardless of the input model; it will
-always contain the counts/indices from the input model.
+both the input model (``--inputmodel``) as well as the constraining model
+(``--constraintmodel``), which may be either indexed or unindexed regardless of
+the input model; it will always contain the counts/indices from the input
+model.
 
 
 Training and testing coverage
 --------------------------------
 
 An important quality of pattern models lies in the fact that pattern models can
-be compared, provided they use comparable vocabulary, i.e. are based on the same
-class file.  More specifically, you can train a pattern model on a corpus and
-test it on another corpus, which yields another pattern model containing only
-those patterns that occur in both training and test data. The difference in
-count, frequency and coverage can then be easily be compared. You build such a
-model by taking the intersection with a training model using the ``-j`` flag.
-Make sure to always use the same class file for all datasets you are comparing.
-Instructions for this were given in :ref:`classencodetraintest`.
+be compared, provided they use comparable vocabulary, i.e. are based on the
+same class file.  More specifically, you can train a pattern model on a corpus
+and test it on another corpus, which yields another pattern model containing
+only those patterns that occur in both training and test data. The difference
+in count, frequency and coverage can then be easily be compared. You build such
+a model by taking the intersection with a training model using the
+``--constraintmodel`` flag.  Make sure to always use the same class file for
+all datasets you are comparing.  Instructions for this were given in
+:ref:`classencodetraintest`.
 
 Training::
-   $ colibri-patternmodeller -f trainset.colibri.dat -o trainset.colibri.indexedpatternmodel
+   $ colibri-patternmodeller --datafile trainset.colibri.dat --outputmodel trainset.colibri.indexedpatternmodel
 
 This results in a model ``trainset.colibri.indexedpatternmodel``. Now proceed
 with testing on another corpus:
 
 Testing::
-   $ colibri-patternmodeller -f testset.colibri.dat -j trainset.indexedpatternmodel.colibri -o testset.colibri.indexedpatternmodel
+   $ colibri-patternmodeller --datafile testset.colibri.dat --constraintmodel trainset.indexedpatternmodel.colibri --outputmodel testset.colibri.indexedpatternmodel
 
-or (more memory efficient)::
+It is, however, more memory efficient to load the constraint model as the inputmodel (using ``--inputmodel``), and specify ``--constrained``, this will do an in-place rebuilding of the model::
 
-   $ colibri-patternmodeller -f testset.colibri.dat -I trainset.indexedpatternmodel.colibri -o testset.colibri.indexedpatternmodel
+   $ colibri-patternmodeller --datafile testset.colibri.dat --constrained trainset.indexedpatternmodel.colibri --outputmodel testset.colibri.indexedpatternmodel
 
 This results in a model ``testset.colibri.indexedpatternmodel`` that only contains patterns that also occur in the specified training model. 
 
 Such an intersection of models can also be created at any later stage using
-``-i`` and ``-j``, as shown in the previous section.
+``--inputmodel`` and ``--constraintmodel``, as shown in the previous section.
 
+If you are interested in coverage metrics for a training model on a test model,
+the ``colibri-coverage`` script provides a shortcut for this.
 
 Reverse index
 -----------------
@@ -706,25 +765,32 @@ from the forward index of an indexed pattern model, or it can be explicitly
 given by simply passing the original corpus data to the model, which makes
 reverse indices available even for unindexed models. Explicitly providing a
 reverse index makes loading a model faster (especially on larger models), but at
-the cost of higher memory usage, especially in case of sparse models.
+the cost of higher memory usage, especially in case of sparse models. The usual
+``--datafile`` flag takes enables a reverse index by definition.
 
-Passing corpus data for the reverse index to colibri-patternmodeller is done
-using the ``-r`` flag, and the full reverse index can be displayed using the ``-Z`` flag::
+To compute and display the full reverse index, use the ``--printreverseindex`` (``-Z``) flag::
 
-   $ colibri-patternmodeller  -i yourcorpus.indexedpatternmodel.colibri -r yourcorpus.colibri.dat -c yourcorpus.colibri.cls -Z
-
+   $ colibri-patternmodeller  --inputmodel yourcorpus.indexedpatternmodel.colibri --datafile yourcorpus.colibri.dat --classfile yourcorpus.colibri.cls --printreverseindex
 
 Indexes and/or reverse indexes are required for various purposes, one of which
 is the extraction of relations and co-occurrence information.
+
+The ``colibri-reverseindex`` script provides a shortcut for this.
 
 
 Query mode
 --------------
 
-The pattern modeller has query mode which allows you to quickly extract patterns from test sentences or fragments thereof. The query mode is invoked by loading a pattern model (``-i``), a class file (``-c``) and the ``-Q`` flag. The query mode can be run interactively as it takes input from ``stdin``, one *tokenised* sentence per line. The following example illustrates this, the sentence *"To be or not to be"* was typed as input::
+The pattern modeller has query mode which allows you to quickly extract
+patterns from test sentences or fragments thereof. The query mode is invoked by
+loading a pattern model (``--inputmodel``), a class file (``--classfile``) and
+the ``--querymode`` (``-Q``) flag. The query mode can be run interactively as
+it takes input from ``stdin``, one *tokenised* sentence per line. The following
+example illustrates this, the sentence *"To be or not to be"* was typed as
+input::
 
 
-    $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -Q
+    $ colibri-patternmodeller --inputmodel /tmp/data.colibri.patternmodel --classfile /tmp/hamlet.colibri.cls --querymode
     Loading class decoder from file /tmp/hamlet.colibri.cls
     Loading class encoder from file /tmp/hamlet.colibri.cls
     Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
@@ -749,30 +815,41 @@ specified needs to match exactly and as a whole. Type ``X`` to switch between
 the modes.
 
 In addition to interactive query mode, there is also a command line query mode
-``-q`` in which you specify the pattern you want to query as argument on the command
+``--query`` (``-q``) in which you specify the pattern you want to query as argument on the command
 line. Multiple patterns can be specified by repeating the ``-q`` flag. This
 mode always behaves according to exact mode::
 
-    $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q "to be"
+    $ colibri-patternmodeller --inputmodel /tmp/data.colibri.patternmodel --classfile /tmp/hamlet.colibri.cls --query "to be"
     Loading class decoder from file /tmp/hamlet.colibri.cls
     Loading class encoder from file /tmp/hamlet.colibri.cls
     Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
     to be	2		4	0.0117647	ngram	2	0.0769231   1:4 9:1
 
+If you are working with skipgrams or flexgrams and want to explicitly
+instantiate them to ngrams in the output, add the ``--instantiate`` flag.
+
 
 Pattern Relations
 ---------------------
 
-A pattern model contains a wide variety of patterns; the relationships between those can be made explicit. These relationships can be imagined as a directed graph, in which the nodes represent the various patterns (n-grams and skipgrams), and the edges represent the relations. The following relations are distinguished; note that as the graph is directed relations often come in pairs; one relationship for each direction: 
+A pattern model contains a wide variety of patterns; the relationships between
+those can be made explicit. These relationships can be imagined as a directed
+graph, in which the nodes represent the various patterns (n-grams and
+skipgrams), and the edges represent the relations. The following relations are
+distinguished; note that as the graph is directed relations often come in
+pairs; one relationship for each direction: 
 
 * **Subsumption relations** - Patterns that are subsumed by larger patterns are called *subsumption children*, the larger patterns are called *subsumption parents*. These are the two subsumption relations that can be extracted from an indexed pattern model.
 * **Successor relations**  - Patterns that follow eachother are in a left-of/right-of relation.
 * **Instantiation relations** - There is a relation between skipgrams and
   patterns that instantiate them ``to be {*1*} not {*1*} be`` is instantiated
-  by ``to {*1*} or``, also referred to as the skip content.
+  by ``to {*1*} or``, also referred to as the skip content. Similarly, ``to be
+  or not to be`` is a full instantation, and the skipgram can be referred to as
+  a template.
 
-You can all of these extract relations using the ``-g`` flag, which is to be
-used in combination with the query mode ``-Q`` or ``-q``. Consider the
+
+You can all of these extract relations using the ``--relations`` (``-g``) flag, which is to be
+used in combination with ``--query`` or ``--querymode```. Consider the
 following sample::
 
     $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q "to be" -g  
@@ -808,18 +885,53 @@ decided upon when encoding your corpus). Co-occurrence is another relation in
 addition to the ones described in the previous section.
 
 The degree of co-occurrence can be expressed as either an absolute occurrence
-number (``-C``), for a normalised mutual pointwise information (``-Y``). Both
-flags take a threshold, setting the threshold too low, specially for npmi, may
-cause very high memory usage. The following syntax would show all patterns that
-occur at least five times in the same sentence. Note that the order of the
-pattern pairs does not matter; if there are two patterns X and Y then result X
-Y or Y X would be the same, yet only one of them is included in the output to
-prevent duplicating information::
+number (``--cooc`` or ``-C``), for a normalised mutual pointwise information
+(``--npmi`` or ``-Y``). Both flags take a threshold, setting the threshold too
+low, specially for npmi, may cause very high memory usage. The following syntax
+would show all patterns that occur at least five times in the same sentence.
+Note that the order of the pattern pairs does not matter; if there are two
+patterns X and Y then result X Y or Y X would be the same, yet only one of them
+is included in the output to prevent duplicating information::
 
   $ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -C 5 
 
+The ``colibri-cooc`` script provides a shortcut for this.
 
 
+Finding specific patterns
+----------------------------
+
+If you have a very specific, and limited, list of patterns you want to find in
+large corpus data, then you can create a constraint model based on such a
+pattern list, and apply to your test data. This follows the same paradigm as
+shown in the section on training and testing.
+
+To make a model from a pattern list, create a file with one pattern per line.
+The patterns can be skipgrams or flexgrams using ``{*}`` and ``{**}`` to mark
+gaps.
+
+As always, it is vital the test and training corpus share the same classfile.
+You can create one in the test data first and then extend it on the pattern
+list::
+
+  $ colibri-classencode -o test testcorpus.txt 
+  $ colibri-classencode -c test.colibri.cls -e -o patternlist patternlist.txt
+
+The extended class file will be ``patternlist.colibri.cls``. To build a model
+on the patternlist, in which each line contains one pattern only, use the
+``--patternlist`` flag:
+
+  $ colibri-patternmodeller --datafile patternlist.colibri.dat --outputmodel patternlist.colibri.patternmodel --patternlist
+
+We can now load the patternlist model as a constraint, and build on the test data::
+
+  $ colibri-patternmodeller --constrainted --inputmodel patternlist.colibri.patternmodel --datafile test.colibri.cls --classfile test.colibri.dat --outputmodel test.colibri.patternmodel
+
+For skipgram support, add ``--skipgrams`` to this last command. If you want to
+immediately print the output and see how skipgrams are instantiated, add
+``--instantiate --print``.
+  
+The ``colibri-findpatterns`` script provides a shortcut for this procedure.
 
 Architecture Overview
 =======================
