@@ -242,7 +242,7 @@ Tokenisation
 --------------
 
 If your corpus is not tokenised yet, you can consider using the tokeniser `ucto
-<http://ilk.uvt.nl/ucto>`_ , which is not part of Colibri Core, Debian/Ubuntu
+<https://languagemachines.github.io/ucto>`_ , which is not part of Colibri Core, Debian/Ubuntu
 users may it in the repository (``sudo apt-get install ucto``), Mac OS X users
 can find it in homebrew (``brew install naiaden/lama/ucto``). This will also do
 sentence detection and, with the ``-n`` flag output one line per sentence, as
