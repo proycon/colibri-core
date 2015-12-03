@@ -2661,7 +2661,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
     /**
-     * Given a skipgram, returns patterns in the model which would instantiate the skipgram
+     * Given a skipgram, returns patterns in the model which would fit the gaps and instantiate the skipgram. It is the inverse of the skipgram.
      * if inserted into the gaps. For skipgrams with multiple gaps, these skip content patterns are themselves skipgrams. Skipgram and skip content complement eachother
      * @returns A relation map
      */
@@ -2678,7 +2678,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 			const int head = maskheadskip(skipcontent_mask, n); //skip at begin
 			const int tail = masktailskip(skipcontent_mask,n); //skip at end
-
 
             const IndexedData * data = getdata(pattern);
             for (IndexedData::const_iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
@@ -2752,6 +2751,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const PatternPointer candidate = *iter2;
 
                 if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == SKIPGRAM)  && ((occurrencethreshold == 0) || (this->occurrencecount(pattern) >= occurrencethreshold)) ) {
+                    std::cerr << "DEBUG: Found candidate:" << candidate.category() << std::endl;
                     templates[candidate] += 1;
                 }
             }
@@ -3016,11 +3016,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const PatternType pattern = iter->first;
             if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == SKIPGRAM)) {
                 t_relationmap skipcontent = getskipcontent(pattern);
-                t_relationmap skipcontent2 = getskipcontent(pattern); //TODO: remove debug
-                if (skipcontent2.size() != skipcontent.size()) {
-                    std::cerr << " Pattern " << pattern.hash() << " discrepancy!!! " << skipcontent.size() << " vs " << skipcontent2.size() << std::endl;
-                    throw InternalError();
-                }
                 //std::cerr << " Pattern " << pattern.hash() << " occurs: " << this->occurrencecount(pattern) << " skipcontent=" << skipcontent.size() << std::endl;
                 if ((int) skipcontent.size() < minskiptypes) { //will take care of token threshold too, patterns not meeting the token threshold are not included
                     //std::cerr << "..pruning" << std::endl;

@@ -1184,8 +1184,26 @@ int main( int argc, char *argv[] ) {
         cerr << "Extracting skipcontent relations for " << querystring3 << endl;
 
         t_relationmap relations6 = indexedmodel.getskipcontent(skipgram);
-        indexedmodel.outputrelations(skipgram, relations6, classdecoder, &cerr,"INSTANTIATED-BY");
+        indexedmodel.outputrelations(skipgram, relations6, classdecoder, &cerr,"SKIPCONTENT");
+        for (t_relationmap::iterator iter = relations6.begin(); iter != relations6.end(); iter++) {
+            cerr << " length check: "; test(iter->first.n(), 3); 
+            cerr << " type check: "; test(iter->first.category(), NGRAM); 
+        }
         cerr << "Verify count: "; test(relations6.size(), 2); //the other 2 are below occurrence threshold
+
+    
+        Pattern skipgram2 = classencoder.buildpattern("To {*} or {*} to {*} ."); //this is a pattern actually in the model (important!)
+        t_relationmap relations7 = indexedmodel.getinstances(skipgram2);
+        cerr << "Extracting instances for " << skipgram2.tostring(classdecoder) << endl;
+        indexedmodel.outputrelations(skipgram, relations7, classdecoder, &cerr,"INSTANTIATED-BY");
+        for (t_relationmap::iterator iter = relations7.begin(); iter != relations7.end(); iter++) {
+            cerr << " length check: "; test(iter->first.n(), 7); 
+            cerr << " type check: "; test(iter->first.category(), NGRAM); 
+        }
+        cerr << "Verify count: "; test(relations7.size(), 2);  //other two are below threshold
+
+
+
 
 
         cerr << "All relations for  " << querystring3 << " in one go" << endl;

@@ -56,13 +56,10 @@ vector<pair<int,int>> mask2vector(const uint32_t mask, const int n) {
 }
 
 uint32_t reversemask(uint32_t mask, const unsigned int n) {
-    uint32_t result = 0;
-	for (unsigned int i = 0; i < n; i++) {
-        result <<= 1;         
-        result |= mask & 1;         
-        mask = mask >> 1;
-    }
-    return result;
+    mask = ~mask;
+    mask <<= n;
+    mask >>= n;
+    return mask;
 }
 
 int maskheadskip(uint32_t mask, const unsigned int n) {
