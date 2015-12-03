@@ -33,7 +33,7 @@ void usage() {
     cerr << "\t-o|--outputmodel [modelfile]   Output model" << endl;
     cerr << "\t-f|--datafile [datafile]       Corpus data file (encoded from plain text or other sources with colibri-classencode)" << endl;
     cerr << "\t-c|--classfile [classfile]     Class file (created with colibri-classencode)"<< endl;
-    cerr << "\t-j|--constrainmodel [modfile]  Joined input model, i.e. constraint model/training model. Result will be the *intersection* of this (training) model and the input model or constructed model. For training, consider using -I instead." << endl;
+    cerr << "\t-j|--constraintmodel [modfile]  Joined input model, i.e. constraint model/training model. Result will be the *intersection* of this (training) model and the input model or constructed model. For training, consider using -I instead." << endl;
     cerr << endl;
     cerr << " Building a model:  colibri-patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
     cerr << "\t-2|--twostage                 Enable two-stage building (for indexed models), takes longer but saves a lot of memory on large corpora! First builds an unindexed model and reuses that (via -I) to" << endl;
@@ -407,10 +407,15 @@ int main( int argc, char *argv[] ) {
 		{"maxlength",  required_argument, 0, 'l'},
 		{"backofflength",  required_argument, 0, 'l'},
 		{"inputmodel",  required_argument, 0, 'i'},
+		{"input",  required_argument, 0, 'i'}, //alias
 		{"outputmodel",  required_argument, 0, 'o'},
-		{"constrainmodel",  required_argument, 0, 'j'},
+		{"output",  required_argument, 0, 'o'}, //alias
+		{"constraintmodel",  required_argument, 0, 'j'},
+		{"constrainmodel",  required_argument, 0, 'j'}, //alias
 		{"classfile",  required_argument, 0, 'c'},
+		{"classencoding",  required_argument, 0, 'c'}, //alias
 		{"datafile",  required_argument, 0, 'f'},
+		{"corpusfile",  required_argument, 0, 'f'}, //alias
 		{"threshold",  required_argument, 0, 't'},
 		{"wordthreshold",  required_argument, 0, 'W'},
 		{"skiptypes",  required_argument, 0, 'T'},

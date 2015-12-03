@@ -43,7 +43,7 @@ colibri-classencode -c tmp.colibri.cls -e -o patternlist $1
 mv patternlist.colibri.cls output.colibri.cls
 
 echo "=== Building pattern list ==="
-colibri-patternmodeller --datafile patternlist.colibri.dat --outputmodel patternlist.colibri.patternmodel --patternlist $1
+colibri-patternmodeller --datafile patternlist.colibri.dat --outputmodel patternlist.colibri.patternmodel --patternlist
 
 echo "=== Building pattern model ===">&2
 colibri-patternmodeller --constrained --inputmodel patternlist.colibri.patternmodel --datafile tmp.colibri.dat --outputmodel output.colibri.patternmodel --threshold $mintokens --skiptypes $minskiptypes $opt_u --instantiate --skipgrams --classfile output.colibri.cls --print 

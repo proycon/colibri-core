@@ -884,6 +884,7 @@ cdef class PatternModelOptions:
     * DOREMOVENGRAMS - Remove n-grams from the model
     * DOREMOVESKIPGRAMS - Remove skipgrams from the model
     * DOREMOVEFLEXGRAMS - Remove flexgrams from the model
+    * DORESET - Reset all counts before training
     * DEBUG
     * QUIET (default: False)
 
