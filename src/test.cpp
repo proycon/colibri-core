@@ -1272,6 +1272,7 @@ int main( int argc, char *argv[] ) {
 
         const string classfile = "/tmp/hamlet.colibri.cls";
         ClassDecoder classdecoder = ClassDecoder(classfile);
+        ClassEncoder classencoder = ClassEncoder(classfile);
 
         cerr << "Loading corpus as IndexedCorpus" << endl;
         IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
@@ -1315,6 +1316,35 @@ int main( int argc, char *argv[] ) {
             i++;
         }
         cerr << "Size check: "; test(corpus.size(), i);
+
+
+        
+
+        cerr << "Findpattern test with skipgram" << endl;
+        Pattern skipgram = classencoder.buildpattern("that {*} the");
+        vector<std::pair<IndexReference,PatternPointer>> matches = corpus.findpattern(skipgram);
+        i = 0;
+        for ( vector<std::pair<IndexReference,PatternPointer>>::iterator iter = matches.begin(); iter != matches.end(); iter++) {
+            //should be only 1
+            cerr << "   " << iter->second.tostring(classdecoder) << endl;
+            cerr << "   testing match equivalence: "; test(iter->second == skipgram);
+            cerr << "   testing reference: "; test(iter->first == IndexReference(1,7)); 
+            i++;
+        }
+        cerr << "Size check: "; test(1, i);
+
+        cerr << "Findpattern test with flexgram" << endl;
+        Pattern flexgram = classencoder.buildpattern("that {**} the");
+        matches = corpus.findpattern(flexgram);
+        i = 0;
+        for ( vector<std::pair<IndexReference,PatternPointer>>::iterator iter = matches.begin(); iter != matches.end(); iter++) {
+            //should be only 1
+            cerr << "   " << iter->second.tostring(classdecoder) << endl;
+            cerr << "   testing match equivalence: "; test(iter->second == flexgram);
+            cerr << "   testing reference: "; test(iter->first == IndexReference(1,7)); 
+            i++;
+        }
+        cerr << "Size check: "; test(1, i);
 
         //PatternPointer corpus_pp = corpus.getpattern();
         //cerr << "Pattern pointer sanity check (bytesize)"; test(corpus_pp.bytesize(), corpus.bytesize());
