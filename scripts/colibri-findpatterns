@@ -2,7 +2,6 @@
 
 mintokens=1
 opt_u=""
-opt_I="--instances"
 minskiptypes=1
 keeptmp=0
 
@@ -12,9 +11,8 @@ usage() {
  echo "Output: Files result.colibri.patternmodel and result.colibri.cls, all patterns will be decoded and printed to stdout on run" >&2
  echo "Arguments: corpusfiles should be plain text files, tokenised, and one sentence per line" >&2
  echo " -t int     Minimum amount of occurrences for a pattern to be included in the model (default: $threshold)" >&2
- echo " -u         Compute an unindexed model instead of an indexed one (default is indexed)" >&2
+ echo " -u         Compute an unindexed model instead of an indexed one (default is indexed), saves a lot of memory but less informative" >&2
  echo " -T int     Skip-type" >&2
- echo " -I         Instantiate skipgrams/flexgrams, i.e. return the matching ngram instances instead of the skipgrams/flexgrams.">&2
  echo " -K         Keep intermediate files" >&2
 }
 
@@ -24,7 +22,6 @@ do
     (h) usage; exit 0;;
     (t) mintokens=$OPTARG;;
     (u) opt_u="--unindexed";;
-    (I) opt_I="--instances";;
     (T) minskiptypes=$OPTARG;;
     (K) keeptmp=1;;
     (*) usage; exit 0;;
@@ -49,11 +46,12 @@ echo "=== Building pattern list ==="
 colibri-patternmodeller --datafile patternlist.colibri.dat --outputmodel patternlist.colibri.patternmodel --patternlist $1
 
 echo "=== Building pattern model ===">&2
-colibri-patternmodeller --constrained --inputmodel patternlist.colibri.patternmodel --datafile tmp.colibri.dat --outputmodel output.colibri.patternmodel --threshold $mintokens --skiptypes $minskiptypes $opt_u $opt_I --skipgrams --classfile output.colibri.cls --print 
+colibri-patternmodeller --constrained --inputmodel patternlist.colibri.patternmodel --datafile tmp.colibri.dat --outputmodel output.colibri.patternmodel --threshold $mintokens --skiptypes $minskiptypes $opt_u --instantiate --skipgrams --classfile output.colibri.cls --print 
+
+mv -f tmp.colibri.dat output.colibri.dat
 
 #cleanup
 if [ $keeptmp -eq 0 ]; then
     rm patternlist.colibri.dat
     rm patternlist.colibri.patternmodel
-    rm tmp.colibri.dat
 fi

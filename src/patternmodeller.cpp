@@ -63,11 +63,11 @@ void usage() {
     cerr << "\t-e|--expand <number>          Expand the loaded pattern model *ON DIFFERENT CORPUS DATA*, the number is the sentence offset to use in the model (be careful not to overlap with existing sentence indices!)." << endl;
     cerr << "\t                              The offset is only relevant for indexed models, for unindexed models any value will do." << endl;
     cerr << endl;
-    cerr << " Building a model constrained by another model:  patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
+    cerr << " Building a model constrained by another model:  colibri-patternmodeller -o [modelfile] -j [trainingmodel] -f [datafile] -c [classfile]" << endl;
     cerr << endl;
     cerr << " Viewing a model:  colibri-patternmodeller -i [modelfile] -f [datafile] -c [classfile] -[PRHQ]" << endl;
     cerr << "\t-P|--print                    Print the entire model." << endl;
-    //cerr << "\t--instantiate                 To use with -P, prints the instances of skipgrams/flexgrams rather than their abstractions, this requires a reverse index, i.e. corpus data to be loaded" << endl;
+    cerr << "\t--instantiate                 To use with --print, explicitly prints all instances of skipgrams/flexgrams, regardless of whether they are in the model or not. (only works for indexed models)" << endl; 
     cerr << "\t-R|--report                   Generate a (statistical/coverage) report" << endl;
     cerr << "\t-H|--histogram                Generate a histogram" << endl;   
     cerr << "\t-V|--info                     Storage information" << endl;   
@@ -88,7 +88,6 @@ void usage() {
 
     cerr << "\t-C|--cooc <threshold>         Compute and show absolute co-occurrence counts above the specified threshold.. Only for indexed models." << endl;
     cerr << "\t-Y|--npmi <threshold>         Compute and show normalised pointwise mutual information co-occurrence  above the specified threshold [-1,1]. Only for indexed models." << endl;
-    //cerr << "\t-G               Output relationship graph in graphviz format (use with -q)" << endl; 
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
     cerr << endl;
     cerr << " Editing a model:  colibri-patternmodeller -o [modelfile] -i [modelfile]" << endl;
@@ -106,17 +105,17 @@ void usage() {
 
 
 template<class ModelType = IndexedPatternModel<>>
-void processquerypattern(ModelType & model, ClassDecoder * classdecoder, const Pattern & pattern, const string & dorelations) {
+void processquerypattern(ModelType & model, ClassDecoder * classdecoder, const Pattern & pattern, const string & dorelations, bool doinstantiate) {
     if (!model.has(pattern)) {
         cout << "PATTERN \"" << pattern.tostring(*classdecoder) << "\" NOT FOUND IN MODEL" << endl;
     } else {
-        model.print(&cout, *classdecoder, pattern);
+        model.print(&cout, *classdecoder, pattern, doinstantiate);
         if (!dorelations.empty()) model.outputrelations(pattern, *classdecoder, &cout, dorelations == "all" ? "" : dorelations);
     }
 }
 
 template<class ModelType = IndexedPatternModel<>>
-void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, const vector<string> & querypatterns, const string & dorelations) {
+void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, const vector<string> & querypatterns, const string & dorelations, bool doinstantiate) {
     cerr << "Processing " << querypatterns.size() << " queries" << endl;
     const bool allowunknown = true;
     unsigned char buffer[65536];
@@ -124,13 +123,13 @@ void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassD
        const string s = *iter;
        const int buffersize = classencoder->encodestring(s, buffer, allowunknown); 
        const Pattern pattern = Pattern(buffer, buffersize);
-       processquerypattern<ModelType>(model,classdecoder,pattern, dorelations);
+       processquerypattern<ModelType>(model,classdecoder,pattern, dorelations, doinstantiate);
     }
 }
 
 
 template<class ModelType = IndexedPatternModel<>>
-void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, string dorelations, bool repeat = true) {
+void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, string dorelations, bool doinstantiate, bool repeat = true) {
     const bool allowunknown = true;
     unsigned char buffer[65536];
     uint32_t linenum = 0;
@@ -153,7 +152,7 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
                 const int buffersize = classencoder->encodestring(line, buffer, allowunknown); 
                 Pattern linepattern = Pattern(buffer, buffersize);
                 if (exact) { 
-                    processquerypattern<ModelType>(model,classdecoder, linepattern, dorelations);
+                    processquerypattern<ModelType>(model,classdecoder, linepattern, dorelations, doinstantiate);
                 } else {
                     vector<pair<Pattern, int> > patterns = model.getpatterns(linepattern);
                     if (model.has(linepattern)) {
@@ -161,7 +160,7 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
 
                         //process and output instance
                         cout << ref.sentence << ':' << (int) ref.token << "\t";
-                        processquerypattern<ModelType>(model, classdecoder, linepattern, dorelations);                                
+                        processquerypattern<ModelType>(model, classdecoder, linepattern, dorelations, doinstantiate);                                
                     }
                     for (vector<pair<Pattern,int> >::iterator iter = patterns.begin(); iter != patterns.end(); iter++) {
                             const Pattern pattern = iter->first;
@@ -169,7 +168,7 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
 
                             //process and output instance
                             cout << ref.sentence << ':' << (int) ref.token << "\t";
-                            processquerypattern<ModelType>(model, classdecoder, pattern, dorelations);                                
+                            processquerypattern<ModelType>(model, classdecoder, pattern, dorelations, doinstantiate);                                
                     } 
                 }
             }
@@ -187,14 +186,14 @@ void assert_file_exists(const string & filename) {
 
 
 template<class ModelType = IndexedPatternModel<>>
-void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, const string dorelations, bool info, bool printreverseindex, int cooc, double coocthreshold = 0.1) {
+void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, const string dorelations, bool doinstantiate, bool info, bool printreverseindex, int cooc, double coocthreshold = 0.1) {
     cerr << "Generating desired views..." << endl;
 
     if (print) {
         if (classdecoder == NULL) {
             cerr << "ERROR: Unable to print model, no class file specified (--classfile)" << endl;
         } else {
-            model.print(&cout, *classdecoder);
+            model.print(&cout, *classdecoder, doinstantiate);
         }
     }
     if (printreverseindex) {
@@ -216,7 +215,7 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
         if (classencoder == NULL) {
             cerr << "ERROR: Unable to query model, no class encoder specified (--classfile)" << endl;
         } else {
-            querymodel<ModelType>(model, classencoder, classdecoder, dorelations); 
+            querymodel<ModelType>(model, classencoder, classdecoder, dorelations, doinstantiate); 
         }
     } else if (!dorelations.empty()) {
         bool first = true;
@@ -234,8 +233,8 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
 }
 
 template<class ModelType>
-bool processmodel(const string & inputmodelfile, int inputmodeltype, const string & outputmodelfile, int outputmodeltype, const string & corpusfile,   PatternSetModel * constrainbymodel, IndexedCorpus * corpus, PatternModelOptions & options, bool continued, bool expand, int firstsentence, bool ignoreerrors, string inputmodelfile2, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, string dorelations, bool info, bool printreverseindex, int cooc, double coocthreshold, bool flexfromskip, const vector<string> & querypatterns) {
-        if (!(print || report || histogram || query || info || cooc || printreverseindex || (!querypatterns.empty()) || (!outputmodelfile.empty()) )) {
+bool processmodel(const string & inputmodelfile, int inputmodeltype, const string & outputmodelfile, int outputmodeltype, const string & corpusfile,   PatternSetModel * constrainbymodel, IndexedCorpus * corpus, PatternModelOptions & options, bool continued, bool expand, int firstsentence, bool ignoreerrors, string inputmodelfile2, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report,  bool histogram , bool query, string dorelations, bool doinstantiate, bool info, bool printreverseindex, int cooc, double coocthreshold, bool flexfromskip, const vector<string> & querypatterns) {
+        if (!(print || report || histogram || query || info || cooc || printreverseindex || (dorelations != "") || (!querypatterns.empty()) || (!outputmodelfile.empty()) )) {
             cerr << "Ooops... You didn't really give me anything to do...that can't be right.. Please study the usage options (-h) again! Did you perhaps forget a --print or --outputmodel? " << endl;
             return false;
         }
@@ -328,10 +327,10 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
             cerr << "Writing model to " << outputmodelfile << endl;
             inputmodel->write(outputmodelfile);
         }
-        viewmodel<ModelType>(*inputmodel, classdecoder, classencoder, print, report, histogram, query, dorelations, info, printreverseindex, cooc, coocthreshold); 
+        viewmodel<ModelType>(*inputmodel, classdecoder, classencoder, print, report, histogram, query, dorelations, doinstantiate, info, printreverseindex, cooc, coocthreshold); 
 
         if (!querypatterns.empty()) {
-            processquerypatterns<ModelType>(*inputmodel,  classencoder, classdecoder, querypatterns, dorelations);
+            processquerypatterns<ModelType>(*inputmodel,  classencoder, classdecoder, querypatterns, dorelations, doinstantiate);
         }
 
         delete inputmodel;
@@ -373,7 +372,7 @@ int main( int argc, char *argv[] ) {
     bool DOFLEXFROMCOOC = false;
     bool DOTWOSTAGE =false;
     bool DOINPLACEREBUILD = false;
-	//bool DOINSTANTIATE = false;
+	bool DOINSTANTIATE = false;
     double COOCTHRESHOLD = 0;
     int DOCOOC = 0; //1= absolute, 2= npmi
     bool continued = false;
@@ -432,6 +431,7 @@ int main( int argc, char *argv[] ) {
 		{"rightcooc", no_argument,       0,  0 },
 		{"subsumes", no_argument,       0,  0 },
 		{"subsumed", no_argument,       0,  0 },
+		{"instantiate", no_argument,       0,  0 },
 		{0,         0,                 0,  0 }
 	};
 
@@ -609,6 +609,8 @@ int main( int argc, char *argv[] ) {
                 DORELATIONS = "rightcooc";
             } else if (strcmp(long_options[option_index].name,"rightcooc") == 0) {
                 DORELATIONS = "rightcooc";
+            } else if (strcmp(long_options[option_index].name,"instantiate") == 0) {
+                DOINSTANTIATE = true;
 			}
 			break;
         default:
@@ -793,7 +795,7 @@ int main( int argc, char *argv[] ) {
                 if (!outputmodelfile.empty()) {
                     model.write(outputmodelfile);
                 }
-                viewmodel<PatternModel<uint32_t>>(model, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC); 
+                viewmodel<PatternModel<uint32_t>>(model, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINSTANTIATE, DOINFO, DOPRINTREVERSEINDEX, DOCOOC); 
             } else if (outputmodeltype == INDEXEDPATTERNMODEL) {
                 cerr << "Loading model " << inputmodelfile << " as indexed pattern model..."<<endl;
                 PatternModelOptions optionscopy = PatternModelOptions(options);
@@ -817,9 +819,9 @@ int main( int argc, char *argv[] ) {
                 if (!outputmodelfile.empty()) {
                     model.write(outputmodelfile);
                 }
-                viewmodel<IndexedPatternModel<>>(model, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD); 
+                viewmodel<IndexedPatternModel<>>(model, classdecoder, classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINSTANTIATE,DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD); 
                 if (!querypatterns.empty()) {
-                    processquerypatterns<IndexedPatternModel<>>(model,  classencoder, classdecoder, querypatterns, DORELATIONS);
+                    processquerypatterns<IndexedPatternModel<>>(model,  classencoder, classdecoder, querypatterns, DORELATIONS, DOINSTANTIATE);
                 }
             } ///*****************************************************
 
@@ -827,13 +829,13 @@ int main( int argc, char *argv[] ) {
 
         } else { 
             if (outputmodeltype == INDEXEDPATTERNMODEL) {
-                processmodel<IndexedPatternModel<>>(inputmodelfile, inputmodeltype,  outputmodelfile, outputmodeltype, corpusfile, constrainbymodel,  corpus, options, continued, expand, firstsentence,  ignoreerrors, inputmodelfile2, classdecoder,classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD, DOFLEXFROMSKIP, querypatterns);
+                processmodel<IndexedPatternModel<>>(inputmodelfile, inputmodeltype,  outputmodelfile, outputmodeltype, corpusfile, constrainbymodel,  corpus, options, continued, expand, firstsentence,  ignoreerrors, inputmodelfile2, classdecoder,classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINSTANTIATE, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD, DOFLEXFROMSKIP, querypatterns);
             } else if (outputmodeltype == INDEXEDPATTERNPOINTERMODEL) {
-                processmodel<IndexedPatternPointerModel<>>(inputmodelfile, inputmodeltype,  outputmodelfile, outputmodeltype, corpusfile, constrainbymodel,  corpus, options, continued, expand, firstsentence,  ignoreerrors, inputmodelfile2, classdecoder,classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD, DOFLEXFROMSKIP, querypatterns);
+                processmodel<IndexedPatternPointerModel<>>(inputmodelfile, inputmodeltype,  outputmodelfile, outputmodeltype, corpusfile, constrainbymodel,  corpus, options, continued, expand, firstsentence,  ignoreerrors, inputmodelfile2, classdecoder,classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS,  DOINSTANTIATE,DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD, DOFLEXFROMSKIP, querypatterns);
             } else if (outputmodeltype == UNINDEXEDPATTERNMODEL) {
-                processmodel<PatternModel<uint32_t>>(inputmodelfile, inputmodeltype,  outputmodelfile, outputmodeltype, corpusfile, constrainbymodel,  corpus, options, continued, expand, firstsentence,  ignoreerrors, inputmodelfile2, classdecoder,classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD, DOFLEXFROMSKIP, querypatterns);
+                processmodel<PatternModel<uint32_t>>(inputmodelfile, inputmodeltype,  outputmodelfile, outputmodeltype, corpusfile, constrainbymodel,  corpus, options, continued, expand, firstsentence,  ignoreerrors, inputmodelfile2, classdecoder,classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS,  DOINSTANTIATE,DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD, DOFLEXFROMSKIP, querypatterns);
             } else if (outputmodeltype == UNINDEXEDPATTERNPOINTERMODEL) {
-                processmodel<PatternPointerModel<uint32_t>>(inputmodelfile, inputmodeltype,  outputmodelfile, outputmodeltype, corpusfile, constrainbymodel,  corpus, options, continued, expand, firstsentence,  ignoreerrors, inputmodelfile2, classdecoder,classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD, DOFLEXFROMSKIP, querypatterns);
+                processmodel<PatternPointerModel<uint32_t>>(inputmodelfile, inputmodeltype,  outputmodelfile, outputmodeltype, corpusfile, constrainbymodel,  corpus, options, continued, expand, firstsentence,  ignoreerrors, inputmodelfile2, classdecoder,classencoder, DOPRINT, DOREPORT, DOHISTOGRAM, DOQUERIER, DORELATIONS,  DOINSTANTIATE,DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD, DOFLEXFROMSKIP, querypatterns);
             }
         }
 

@@ -2009,8 +2009,9 @@ class PatternModel: public MapType, public PatternModelInterface {
          * associated counts, to the output stream.
          * @param out The output stream
          * @param decoder The class decoder to use
+         * @param instantiate Explicitly instantiate all skipgrams/flexgrams (default: false)
          */
-        virtual void print(std::ostream * out, ClassDecoder & decoder) {
+        virtual void print(std::ostream * out, ClassDecoder & decoder, bool instantiate=false) {
             bool haveoutput = false;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 if (!haveoutput) {
@@ -2018,7 +2019,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     haveoutput = true;
                 }
                 const PatternType pattern = iter->first;
-                this->print(out, decoder, pattern, true);
+                this->print(out, decoder, pattern, instantiate, true);
             }
             if (haveoutput) {
                 std::cerr << std::endl << "Legend:" << std::endl;
@@ -2066,8 +2067,10 @@ class PatternModel: public MapType, public PatternModelInterface {
          * Print for one pattern only.
          * @param out The output stream
          * @param decoder The class decoder to use
+         * @param instantiate Explicitly instantiate all skipgrams and flexgrams (for indexed models only, requires a reverse index)
+         * @param endline Output an end-of-line
          */
-        virtual void print(std::ostream* out, ClassDecoder &decoder, const PatternType & pattern, bool endline = true) {
+        virtual void print(std::ostream* out, ClassDecoder &decoder, const PatternType & pattern, bool instantiate=false, bool endline = true) {
             const std::string pattern_s = pattern.tostring(decoder);
             const unsigned int count = this->occurrencecount(pattern); 
             const unsigned int covcount = this->coveragecount(pattern);
@@ -2091,8 +2094,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Alias for per-pattern print()
          */
-        void printpattern(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool endline = true) {  //another alias for cython who can't deal with methods named print
-            return this->print(out,decoder,pattern,endline);
+        void printpattern(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool instantiate=false, bool endline = true) {  //another alias for cython who can't deal with methods named print
+            return this->print(out,decoder,pattern,instantiate,endline);
         }
 
 
@@ -2555,8 +2558,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * associated counts, to the output stream.
     * @param out The output stream
     * @param decoder The class decoder to use
+    * @param instantiate Explicitly instantiate all skipgrams/flexgrams (default: false)
     */
-    void print(std::ostream * out, ClassDecoder & decoder) {
+    void print(std::ostream * out, ClassDecoder & decoder, bool instantiate=false) {
         bool haveoutput = false;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::iterator iter = this->begin(); iter != this->end(); iter++) {
             if (!haveoutput) {
@@ -2564,7 +2568,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 haveoutput = true;
             }
             const PatternPointer pattern = iter->first;
-            this->print(out, decoder, pattern, true);
+            this->print(out, decoder, pattern, instantiate, true);
         }
         if (haveoutput) {
             std::cerr << std::endl << "Legend:" << std::endl;
@@ -2579,13 +2583,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
-    void print(std::ostream* out, ClassDecoder &decoder, const PatternPointer & pattern, bool endline = true) {
+    void print(std::ostream* out, ClassDecoder &decoder, const PatternPointer & pattern, bool instantiate=false, bool endline = true) {
             const std::string pattern_s = pattern.tostring(decoder);
             const unsigned int count = this->occurrencecount(pattern); 
             const unsigned int covcount = this->coveragecount(pattern);
             const double coverage = covcount / (double) this->tokens();
             const double freq = this->frequency(pattern);
-            const int cat = pattern.category();
+            const PatternCategory cat = pattern.category();
             std::string cat_s;
             if (cat == 1) {
                 cat_s = "ngram";
@@ -2600,6 +2604,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
                 i++;
                 *out << iter2->tostring();
+                if (cat != NGRAM) {
+                    if ((this->reverseindex != NULL) && (instantiate)) {
+                        const PatternPointer instance = this->reverseindex->findpattern(*iter2,pattern);
+                        *out << "[" << instance.tostring(decoder) <<  "]";
+                    }
+                }
                 if (i < count) *out << " ";
             }
             if (endline) *out << std::endl;
@@ -2797,6 +2807,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         if (occurrencethreshold > 0) this->prunerelations(instances, occurrencethreshold);
         return instances;
     }
+    
 
     /**
      * Returns all patterns in the model that are subsumed by the specified pattern. Subsumed patterns are smaller than the subsuming pattern. Every n-gram (except unigram) by definition subsumes two n-1-grams. 
@@ -3262,6 +3273,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     void outputrelations(const PatternPointer & pattern, ClassDecoder & classdecoder, std::ostream * OUT, const std::string filter="", bool outputheader=true) {
         if (outputheader) *OUT << "#\tPATTERN1\tRELATION\tPATTERN2\tREL.COUNT\tREL.FREQUENCY\tCOUNT2" << std::endl;
 
+    
         if (filter.empty() || (filter == "subparents") || (filter == "subsumed")) {
             t_relationmap relations = this->getsubparents(pattern);
             this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");

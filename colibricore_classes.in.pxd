@@ -392,7 +392,7 @@ cdef extern from "patternmodel.h":
         void load(string, PatternModelOptions, PatternModelInterface*) nogil except +IOError
         void write(string) nogil except +IOError
         void printmodel(ostream*, ClassDecoder&) nogil
-        void printpattern(ostream*, ClassDecoder&, Pattern&) nogil
+        void printpattern(ostream*, ClassDecoder&, Pattern&,bool instantiate=false,bool eol=true) nogil
         void report(ostream*) nogil
         void histogram(stdmap[unsigned int,unsigned int] & hist, unsigned int threshold, unsigned int cap,int,unsigned int)
         void histogram(ostream*) nogil
@@ -458,7 +458,7 @@ cdef extern from "patternmodel.h":
         void load(string, PatternModelOptions, PatternModelInterface* ) nogil except +IOError
         void write(string) nogil except +IOError
         void printmodel(ostream*, ClassDecoder&) nogil
-        void printpattern(ostream*, ClassDecoder&, Pattern&) nogil
+        void printpattern(ostream*, ClassDecoder&, Pattern&,bool instantiate=false,bool eol=true) nogil
         void report(ostream*) nogil
         void histogram(ostream*) nogil
         void histogram(stdmap[unsigned int,unsigned int] & hist, unsigned int threshold , unsigned int cap,int,unsigned int )
