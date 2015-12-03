@@ -2,6 +2,7 @@
 
 mintokens=1
 opt_u=""
+opt_I=""
 minskiptypes=1
 keeptmp=0
 
@@ -13,6 +14,7 @@ usage() {
  echo " -t int     Minimum amount of occurrences for a pattern to be included in the model (default: $threshold)" >&2
  echo " -u         Compute an unindexed model instead of an indexed one (default is indexed)" >&2
  echo " -T int     Skip-type" >&2
+ echo " -I         Instantiate skipgrams/flexgrams, i.e. return the matching ngram instances instead of the skipgrams/flexgrams.">&2
  echo " -K         Keep intermediate files" >&2
 }
 
@@ -22,6 +24,7 @@ do
     (h) usage; exit 0;;
     (t) mintokens=$OPTARG;;
     (u) opt_u="-u";;
+    (I) opt_I="-I";;
     (T) minskiptypes=$OPTARG;;
     (K) keeptmp=1;;
     (*) usage; exit 0;;
@@ -46,7 +49,7 @@ echo "=== Building pattern list ==="
 colibri-patternmodeller -f patternlist.colibri.dat -o patternlist.colibri.patternmodel -L $1
 
 echo "=== Building pattern model ===">&2
-colibri-patternmodeller -I -i patternlist.colibri.patternmodel -f tmp.colibri.dat -o output.colibri.patternmodel -t $mintokens -T $minskiptypes $opt_u -s -c output.colibri.cls -P 
+colibri-patternmodeller -I -i patternlist.colibri.patternmodel -f tmp.colibri.dat -o output.colibri.patternmodel -t $mintokens -T $minskiptypes $opt_u $opt_I -s -c output.colibri.cls -P 
 
 #cleanup
 if [ $keeptmp -eq 0 ]; then
