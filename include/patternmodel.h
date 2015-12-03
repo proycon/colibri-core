@@ -2672,13 +2672,14 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             throw InternalError();
         }
 
-        if (pattern.category() == SKIPGRAM) {
+        if (pattern.category() != NGRAM) {
 			const unsigned int n = pattern.n();
 			const uint32_t skipcontent_mask = reversemask(pattern.mask,n );
 
 			const int head = maskheadskip(skipcontent_mask, n); //skip at begin
 			const int tail = masktailskip(skipcontent_mask,n); //skip at end
 
+            //iterate over forward index
             const IndexedData * data = getdata(pattern);
             for (IndexedData::const_iterator iter2 = data->begin(); iter2 != data->end(); iter2++) {                    
                 const IndexReference ref = *iter2;
@@ -2691,9 +2692,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 				Pattern skipcontent_atref = PatternPointer(skipcontent_atref_raw, head, n-head-tail); //pattern from patternpointer
                 skipcontent[skipcontent_atref] += 1;
             }
-
-        } else if (pattern.category() == FLEXGRAM) {
-            //TODO: implement
         }
         //std::cerr << "Total found " << skipcontent.size() << std::endl;
         return skipcontent;
