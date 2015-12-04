@@ -281,8 +281,17 @@ class IndexedCorpus {
                 PatternPointer & patternpointer() { return pairpointer->second; } 
                 IndexedCorpus * corpus() { return indexedcorpus; } 
 
-                bool operator==(self_type rhs) { return pairpointer->first == rhs.index(); }
-                bool operator!=(self_type rhs) { return pairpointer->first != rhs.index(); }
+                bool operator==(self_type rhs) { 
+                    if ((pairpointer == NULL) || (pairpointer->second.data == NULL)) {
+                        return ((rhs.pairpointer == NULL) || (rhs.pairpointer->second.data == NULL));
+                    } else if ((rhs.pairpointer == NULL) || (rhs.pairpointer->second.data == NULL)) {
+                        return ((pairpointer == NULL) || (pairpointer->second.data == NULL));
+                    } else {
+                        return pairpointer->first == rhs.index();
+                    }
+                }
+                bool operator!=(self_type rhs) { return !(*this == rhs); }
+
                 void debug() {
                     std::cerr << (size_t) pairpointer << std::endl;
                 }
