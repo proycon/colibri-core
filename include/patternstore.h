@@ -151,6 +151,11 @@ class IndexedCorpus {
         PatternPointer findpattern(const IndexReference & begin, const Pattern & pattern, PatternCategory resultcategory = NGRAM) const;
 
         /**
+         * Alias for low-level findpattern() method
+         */
+        PatternPointer getinstance(const IndexReference & begin, const Pattern & pattern, PatternCategory resultcategory = NGRAM) const { return findpattern(begin, pattern, resultcategory); } //alias, to be consistent with Cython names
+
+        /**
          * Returns a valid patternpointer for the flexgram at the indicated
          * position. Effectively removing a level of abstraction. If the
          * flexgram can not be found, a KeyError will be raised. 

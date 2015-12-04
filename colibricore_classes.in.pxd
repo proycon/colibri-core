@@ -28,6 +28,8 @@ cdef extern from "<iostream>" namespace "std":
 
 
 cdef extern from "pattern.h":
+    cdef cppclass PatternPointer #forward declaration
+
     cdef cppclass Pattern:
         unsigned char * data
         Pattern() nogil
@@ -59,6 +61,7 @@ cdef extern from "pattern.h":
         bool isflexgram() nogil
         bool unknown() nogil
         Pattern reverse() nogil
+        PatternPointer getpointer() nogil
 
     Pattern patternfromfile(const string&)
 
@@ -234,7 +237,8 @@ cdef extern from "patternstore.h":
         void load(string, bool) nogil
         bool has(IndexReference&) nogil
         Pattern getpattern(IndexReference&,int)  except +KeyError #PatternPointer in reality
-        vector[pair[IndexReference,PatternPointer]] findpattern(Pattern,int sentence,bool instantiate) nogil
+        vector[pair[IndexReference,PatternPointer]] findpattern(Pattern,int sentence,bool instantiate) nogil #high level
+        PatternPointer getinstance(IndexReference begin, PatternPointer pattern) nogil #low level (alias for findpattern), returns ngrams since outputcategory uses default parameter NGRAM  in C++ code
         int operator[](IndexReference&) nogil except +KeyError
         int sentencelength(int) nogil
         int sentences() nogil
@@ -416,6 +420,8 @@ cdef extern from "patternmodel.h":
         unordered_set[PatternPointer] getreverseindex(IndexReference&)
         vector[pair[IndexReference,PatternPointer]] getreverseindex_bysentence(int)
 
+        Pattern getinstance(IndexReference & begin, const Pattern & pattern) except +KeyError 
+
     cdef cppclass IndexedPatternModel[MapType]:
         cppclass iterator:
             pair[Pattern,IndexedData] & operator*() nogil
@@ -483,6 +489,8 @@ cdef extern from "patternmodel.h":
         t_relationmap getcooc(Pattern & pattern,  unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
         t_relationmap getleftcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
         t_relationmap getrightcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
+
+        Pattern getinstance(IndexReference & begin, const Pattern & pattern) except +KeyError 
 
 cdef extern from "alignmodel.h":
     cdef cppclass PatternAlignmentModel[FeatureType]:

@@ -383,7 +383,6 @@ bool PatternPointer::out() const {
 const bool Pattern::unknown() const {
     if (data == NULL) return false;
     int i = 0;
-    int n = 0;
     bool prevhigh = false;
     do {
         if ((!prevhigh) && (data[i] == ClassDecoder::unknownclass)) {
@@ -399,7 +398,6 @@ const bool Pattern::unknown() const {
 const bool PatternPointer::unknown() const {
     if (data == NULL) return false;
     int i = 0;
-    int n = 0;
     bool prevhigh = false;
     do {
         if ((bytes > 0) && (i >= bytes)) {
@@ -1876,7 +1874,7 @@ PatternPointer IndexedCorpus::findpattern(const IndexReference & begin, const Pa
         result.mask = pattern.getmask(); //to skipgram
         if (resultcategory == FLEXGRAM) result.mask = result.mask | (1<<31); //make flexgram
         return result; //SKIPGRAM
-    } else if (pattern.category() == FLEXGRAM) {
+    } else { // if (pattern.category() == FLEXGRAM) {
         std::vector<PatternPointer> parts;
         pattern.parts(parts);
         std::vector<std::pair<int,int>> newskips;
@@ -1884,7 +1882,6 @@ PatternPointer IndexedCorpus::findpattern(const IndexReference & begin, const Pa
         IndexReference ref = begin;
         IndexReference gapbegin;
         bool found = true;
-        unsigned int totaln = 0;
         while (partiter != parts.end()) {
             const PatternPointer part = *partiter;
             try {

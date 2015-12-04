@@ -831,6 +831,8 @@ cdef class PatternSetModel:
         """
         if options is None:
             options = PatternModelOptions()
+        if filename and not os.path.exists(filename):
+            raise FileNotFoundError(filename)
         self.data.load(encode(filename), options.coptions)
 
     def read(self, str filename, PatternModelOptions options=None):
@@ -1096,6 +1098,16 @@ cdef class IndexedCorpus:
             foundpattern.bind(cpattern)
             yield ((ref.sentence, ref.token), foundpattern)
             inc(it)
+
+    def getinstance(self, tuple pos, Pattern pattern):
+        """Gets a specific instance of a pattern (skipgram or flexgram), at the specified position. Raises a KeyError when not found."""
+        cdef cIndexReference ref = cIndexReference(pos[0],pos[1])
+        cdef cPatternPointer ppin = pattern.cpattern.getpointer()
+        cdef cPatternPointer ppout = self.data.getinstance(ref,ppin)
+        foundpattern = Pattern()
+        cdef cPattern cpattern = ppout.pattern()
+        foundpattern.bind(cpattern)
+        return foundpattern
 
 
     def sentencecount(self):
@@ -1405,6 +1417,8 @@ cdef class PatternAlignmentModel_float:
         """
         if options is None:
             options = PatternModelOptions()
+        if filename and not os.path.exists(filename):
+            raise FileNotFoundError(filename)
         self.data.load(encode(filename), options.coptions)
 
     def read(self, str filename, PatternModelOptions options=None):

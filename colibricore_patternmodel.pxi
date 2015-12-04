@@ -196,6 +196,8 @@ def __init__(self, str filename = "",PatternModelOptions options = None, constra
     if filename:
         if not options:
             options = PatternModelOptions()
+        if filename and not os.path.exists(filename):
+            raise FileNotFoundError(filename)
         self.load(filename,options, constrainmodel)
 
 def load(self, str filename, PatternModelOptions options=None, constrainmodel = None):
@@ -209,6 +211,8 @@ def load(self, str filename, PatternModelOptions options=None, constrainmodel = 
     if not options:
         options = PatternModelOptions()
 
+    if filename and not os.path.exists(filename):
+        raise FileNotFoundError(filename)
 
     if isinstance(constrainmodel, IndexedPatternModel):
         self.loadconstrainedbyindexedmodel(filename,options, constrainmodel)
@@ -354,6 +358,8 @@ def getreverseindex(self, indexreference):
 
     if not isinstance(indexreference, tuple) or not len(indexreference) == 2:
         raise ValueError("Expected tuple")
+    if self.data.reverseindex == NULL:
+        raise ValueError("No reverse index loaded")
 
     cdef int sentence = indexreference[0]
     cdef int token = indexreference[1]
@@ -373,6 +379,9 @@ def getreverseindex_bysentence(self, int sentence):
 
     :param sentence: a sentence number
     """
+
+    if self.data.reverseindex == NULL:
+        raise ValueError("No reverse index loaded")
 
     cdef vector[pair[cIndexReference,cPatternPointer]] results = self.data.getreverseindex_bysentence(sentence)
     cdef vector[pair[cIndexReference,cPatternPointer]].iterator resit = results.begin()
@@ -421,3 +430,10 @@ def filter(self, unsigned int threshold, int category = 0, int size = 0):
             pattern = Pattern()
             pattern.bind(cpattern)
             yield pattern, count
+
+def getinstance(self, tuple pos, Pattern pattern):
+    """Gets a specific instance of a pattern (skipgram or flexgram), at the specified position. Raises a KeyError when not found."""
+    if self.data.reverseindex == NULL:
+        raise ValueError("No reverse index loaded")
+    return self.corpus.getinstance(pos, pattern)
+    

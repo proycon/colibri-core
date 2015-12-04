@@ -2340,6 +2340,19 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual int computeflexgrams_fromcooc(double threshold) {return 0; }//does nothing for unindexed models
         virtual void outputcooc_npmi(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {}
         virtual void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {}
+
+        /**
+         * Get the instance of the pattern at the specified position
+         * Alias for IndexedCorpus.findpattern()
+         * Throws a KeyError if the pattern was not found.
+         */
+        PatternPointer getinstance(const IndexReference & begin, const PatternPointer & pattern) { 
+            if ((this->reverseindex == NULL)) {
+                std::cerr << "ERROR: You must specify a reverse index to use getinstance()!" << std::endl;
+                throw InternalError();
+            }
+            return this->reverseindex->findpattern(begin, pattern);
+        } 
 };
 
 

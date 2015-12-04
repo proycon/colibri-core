@@ -110,7 +110,7 @@ def getsubchildren(self, Pattern pattern, int occurrencethreshold = 0, int categ
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
     if self.data.reverseindex == NULL:
-        raise ValueError("No reversindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
+        raise ValueError("No reverseindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
 
     cdef t_relationmap  relations = self.data.getsubchildren(pattern.cpattern, occurrencethreshold, category, size)
     cdef t_relationmap_iterator relit = relations.begin()
@@ -137,7 +137,7 @@ def getsubparents(self, Pattern pattern, int occurrencethreshold = 0, int catego
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
     if self.data.reverseindex == NULL:
-        raise ValueError("No reversindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
+        raise ValueError("No reverseindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
 
     cdef t_relationmap  relations = self.data.getsubparents(pattern.cpattern, occurrencethreshold, category, size)
     cdef t_relationmap_iterator relit = relations.begin()
@@ -163,7 +163,7 @@ def getleftneighbours(self, Pattern pattern, int occurrencethreshold = 0, int ca
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
     if self.data.reverseindex == NULL:
-        raise ValueError("No reversindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
+        raise ValueError("No reverseindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
 
     cdef t_relationmap  relations = self.data.getleftneighbours(pattern.cpattern, occurrencethreshold, category, size,cutoff)
     cdef t_relationmap_iterator relit = relations.begin()
@@ -189,7 +189,7 @@ def getrightneighbours(self, Pattern pattern, int occurrencethreshold = 0, int c
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
     """
     if self.data.reverseindex == NULL:
-        raise ValueError("No reversindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
+        raise ValueError("No reverseindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
 
     cdef t_relationmap  relations = self.data.getrightneighbours(pattern.cpattern, occurrencethreshold, category, size,cutoff)
     cdef t_relationmap_iterator relit = relations.begin()
@@ -210,7 +210,7 @@ def getskipcontent(self, Pattern pattern):
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
     if self.data.reverseindex == NULL:
-        raise ValueError("No reversindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
+        raise ValueError("No reverseindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
 
     cdef t_relationmap  relations = self.data.getskipcontent(pattern.cpattern)
     cdef t_relationmap_iterator relit = relations.begin()
@@ -233,7 +233,7 @@ def gettemplates(self, Pattern pattern, int occurrencethreshold = 0):
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
     if self.data.reverseindex == NULL:
-        raise ValueError("No reversindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
+        raise ValueError("No reverseindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
 
     cdef t_relationmap  relations = self.data.gettemplates(pattern.cpattern, occurrencethreshold)
     cdef t_relationmap_iterator relit = relations.begin()
@@ -256,7 +256,7 @@ def getinstances(self, Pattern pattern, int occurrencethreshold = 0):
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
     if self.data.reverseindex == NULL:
-        raise ValueError("No reversindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
+        raise ValueError("No reverseindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
 
     cdef t_relationmap  relations = self.data.getinstances(pattern.cpattern, occurrencethreshold)
     cdef t_relationmap_iterator relit = relations.begin()
@@ -282,7 +282,7 @@ def getcooc(self, Pattern pattern,  int occurrencethreshold = 0, int category = 
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
     if self.data.reverseindex == NULL:
-        raise ValueError("No reversindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
+        raise ValueError("No reverseindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
 
     cdef t_relationmap  relations = self.data.getcooc(pattern.cpattern, occurrencethreshold, category, size)
     cdef t_relationmap_iterator relit = relations.begin()
@@ -308,7 +308,7 @@ def getleftcooc(self, Pattern pattern, int occurrencethreshold = 0, int category
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
     if self.data.reverseindex == NULL:
-        raise ValueError("No reversindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
+        raise ValueError("No reverseindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
 
     cdef t_relationmap  relations = self.data.getleftcooc(pattern.cpattern, occurrencethreshold, category, size)
     cdef t_relationmap_iterator relit = relations.begin()
@@ -334,7 +334,7 @@ def getrightcooc(self, Pattern pattern, int occurrencethreshold = 0, int categor
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
     """
     if self.data.reverseindex == NULL:
-        raise ValueError("No reversindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
+        raise ValueError("No reverseindex was specified but this method requires it, set reverseindex to an IndexedCorpus instance upon model construction")
 
     cdef t_relationmap  relations = self.data.getrightcooc(pattern.cpattern, occurrencethreshold, category, size)
     cdef t_relationmap_iterator relit = relations.begin()
