@@ -27,6 +27,9 @@ from sys import version
 
 
 PYTHON2=(version[0] == '2')
+if PYTHON2:
+    FileNotFoundError = IOError
+
 def encode(s):
     if PYTHON2:
         if isinstance(s, unicode):
