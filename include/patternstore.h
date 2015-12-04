@@ -195,20 +195,31 @@ class IndexedCorpus {
                 typedef IndexPattern * pointer;
                 typedef std::forward_iterator_tag iterator_category;
                 typedef int difference_type;
+
                 iterator(const self_type & ref) { //copy constructor
 					pairpointer = new std::pair<IndexReference,PatternPointer>(*ref.pairpointer);
+                    indexedcorpus = ref.indexedcorpus;
                 }
-                iterator(pointer ptr) { 
-					pairpointer = new std::pair<IndexReference,PatternPointer>(*ptr);
+                
+                iterator(IndexedCorpus * indexedcorpus, pointer ptr) { 
+                    if (ptr != NULL) {
+                        pairpointer = new std::pair<IndexReference,PatternPointer>(*ptr);
+                    } else {
+                        pairpointer = NULL;
+                    }
+                    this->indexedcorpus = indexedcorpus;
                 }
-                iterator(IndexReference iref, PatternPointer pp) { 
+                iterator(IndexedCorpus * indexedcorpus, IndexReference iref, PatternPointer pp) { 
 					pairpointer = new std::pair<IndexReference,PatternPointer>(iref, pp);
+                    this->indexedcorpus = indexedcorpus;
 				}
-                iterator(reference ref) { 
+                iterator(IndexedCorpus * indexedcorpus, reference ref) { 
 					pairpointer = new std::pair<IndexReference,PatternPointer>(ref.first, ref.second);
+                    this->indexedcorpus = indexedcorpus;
 				}
                 iterator() { //default constructor, required for cython
                     pairpointer = NULL;
+                    indexedcorpus = NULL;
                 }
    				~iterator() {
 					if (pairpointer != NULL) delete pairpointer;
@@ -225,33 +236,59 @@ class IndexedCorpus {
                     } else {
                         pairpointer = NULL;
                     }
+                    indexedcorpus = ref.indexedcorpus;
                     return *this;
                 }
 
 				void next() {
-                    if (pairpointer != NULL) {
-                        ++(pairpointer->second);
+                    if ((pairpointer != NULL) && (pairpointer->second.data != NULL)) {
+                        if ((indexedcorpus == NULL) || (indexedcorpus->corpus == NULL))  {
+                            std::cerr << "ERROR: No indexedcorpus associated with iterator" << std::endl;
+                            throw InternalError();
+                        }
+                        if (pairpointer->second.data + pairpointer->second.bytes >= indexedcorpus->corpus + indexedcorpus->corpussize) {
+                            pairpointer->first.sentence++;
+                            pairpointer->first.token = 0;
+                            pairpointer->second = PatternPointer(); //null pointer
+                            return;
+                        } else {
+                            ++(pairpointer->second);
+                        }
                         if (*(pairpointer->second.data) == ClassDecoder::delimiterclass) {
                             //we never stop at delimiterclasses, iterate again:
                             pairpointer->first.sentence++;
                             pairpointer->first.token = 0;
-                            ++(pairpointer->second);
+                            if (pairpointer->second.data + pairpointer->second.bytes < indexedcorpus->corpus + indexedcorpus->corpussize) {
+                                ++(pairpointer->second);
+                            } else {
+                                pairpointer->second = PatternPointer(); //null pointer
+                            }
                         } else {
                             pairpointer->first.token++;	
                         }
-                        //Note: At the end of the data, the patternpointer is out of bounds, checking against end() should work fine though
+                        //Note: At the end of the data, the patternpointer points to NULL, checking against end() should work fine though
                     }
 				}
-                self_type operator++(int junk) { self_type tmpiter = *this; next(); return *tmpiter; } //postfix
-                reference operator*() { return *pairpointer; }
-                pointer operator->()  { return pairpointer; }
-                bool operator==(self_type rhs) { return pairpointer->first == rhs->first; }
-                bool operator!=(self_type rhs) { return pairpointer->first != rhs->first; }
+
+
+
+                self_type operator++(int junk) { self_type tmpiter = *this; next(); return tmpiter; } //postfix
+
+                //reference operator*() { return *pairpointer; }
+                //pointer operator->()  { return pairpointer; }
+                IndexReference & index() { return pairpointer->first; } 
+                PatternPointer & pattern() { return pairpointer->second; } 
+                PatternPointer & patternpointer() { return pairpointer->second; } 
+                IndexedCorpus * corpus() { return indexedcorpus; } 
+
+                bool operator==(self_type rhs) { return pairpointer->first == rhs.index(); }
+                bool operator!=(self_type rhs) { return pairpointer->first != rhs.index(); }
                 void debug() {
                     std::cerr << (size_t) pairpointer << std::endl;
                 }
 
                 pointer pairpointer;
+                IndexedCorpus * indexedcorpus;
         };
     
         /*
@@ -260,7 +297,7 @@ class IndexedCorpus {
         iterator begin() { 
 			IndexReference iref = IndexReference(1,0);
 			PatternPointer p = getpattern(iref,1);
-			return iterator(iref,p); 
+			return iterator(this,iref,p); 
 		}
         //const_iterator begin() const { return data.begin(); }
 
@@ -269,8 +306,7 @@ class IndexedCorpus {
          */
         iterator end() { 
 			IndexReference iref = IndexReference(sentences() + 1,0);
-			PatternPointer p = PatternPointer(corpus,corpussize+1); //will be an invalid pointer, should never be used though
-			return iterator(iref,p); 
+            return iterator(this,iref, PatternPointer());
 		}
         //const_iterator end() const { return data.end(); }
 
@@ -281,7 +317,7 @@ class IndexedCorpus {
         iterator find(const IndexReference & ref) {
 			try {
 				PatternPointer p = getpattern(ref);
-				return iterator(ref,p);
+				return iterator(this, ref,p);
 			} catch (KeyError &e) {
 				return end();
 			}

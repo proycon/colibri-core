@@ -1329,14 +1329,14 @@ int main( int argc, char *argv[] ) {
 
         IndexedCorpus::iterator ri_iter = corpus.begin();
         cerr << "Testing first word (index)";
-        test(ri_iter->first == IndexReference(1,0));
+        test(ri_iter.index()== IndexReference(1,0));
         cerr << "Testing first word (string)";
-        test(ri_iter->second.tostring(classdecoder), "To");
+        test(ri_iter.patternpointer().tostring(classdecoder), "To");
         ri_iter++;
         cerr << "Testing second word (index)";
-        test(ri_iter->first == IndexReference(1,1));
+        test(ri_iter.index() == IndexReference(1,1));
         cerr << "Testing second word (string)";
-        test(ri_iter->second.tostring(classdecoder), "be");
+        test(ri_iter.patternpointer().tostring(classdecoder), "be");
         cerr << "Testing sentence by index: ";
         test(corpus.getsentence(33).tostring(classdecoder), "And lose the name of action .");
 
@@ -1355,8 +1355,8 @@ int main( int argc, char *argv[] ) {
         cerr << "Iterating over reverse index..." << endl;
         int i = 0;
         for (IndexedCorpus::iterator iter = corpus.begin(); iter != corpus.end(); iter++) {
-            cerr << "\tGetting pattern for index " << iter->first.tostring() << " = " << iter->second.tostring(classdecoder) << endl;
-            unordered_set<PatternPointer> patterns = model.getreverseindex(iter->first);
+            cerr << "\tGetting pattern for index " << iter.index().tostring() << " = " << iter.patternpointer().tostring(classdecoder) << endl;
+            unordered_set<PatternPointer> patterns = model.getreverseindex(iter.index());
             for (PatternPointer p : patterns) {
                 cerr << "\t\t" << p.tostring(classdecoder) << endl;
             }

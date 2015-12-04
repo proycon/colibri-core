@@ -1044,7 +1044,7 @@ cdef class IndexedCorpus:
         cdef cIndexedCorpus.iterator it = self.data.begin()
         cdef cIndexedCorpus.iterator endit = self.data.end()
         while it != endit:
-            yield (deref(it).first.sentence, deref(it).first.token)
+            yield (it.index().sentence, it.index().token)
             inc(it)
 
     def __getitem__(self, item):
@@ -1071,8 +1071,8 @@ cdef class IndexedCorpus:
         cdef cPattern cpattern
         cdef cIndexReference ref
         while it != self.data.end():
-            cpattern = deref(it).second.pattern()
-            ref = deref(it).first
+            cpattern = it.pattern()
+            ref = it.index()
             pattern = Pattern()
             pattern.bind(cpattern)
             yield ( (ref.sentence, ref.token), pattern )

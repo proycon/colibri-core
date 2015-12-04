@@ -1074,7 +1074,9 @@ Pattern Pattern::operator +(const Pattern & other) const {
     }
 }
 
-
+/*
+ * very unsafe method, only to be used if you verify it doesn't go out of bounds! Used by IndexedCorpus::iterator
+ */
 PatternPointer& PatternPointer::operator++() {
 	const size_t _n = n();
 	unsigned char * cursor  = data;
@@ -1763,6 +1765,7 @@ IndexedCorpus::IndexedCorpus(std::string filename, bool debug){
 
 
 void IndexedCorpus::load(std::istream *in, bool debug) {
+    totaltokens = 0;
     unsigned char version = getdataversion(in);
     if (version == 2) {
         in->seekg(0,ios_base::end);

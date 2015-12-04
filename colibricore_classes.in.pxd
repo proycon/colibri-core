@@ -225,10 +225,12 @@ cdef extern from "patternstore.h":
 
     cdef cppclass IndexedCorpus:
         cppclass iterator:
-            IndexPattern & operator*() nogil
             iterator operator++() nogil
             bint operator==(iterator) nogil
             bint operator!=(iterator) nogil
+            PatternPointer patternpointer() nogil
+            Pattern pattern() nogil #actually returns a patternpointer too but can be converted this way
+            IndexReference index() nogil
 
         size_t size() nogil
         iterator begin() nogil
