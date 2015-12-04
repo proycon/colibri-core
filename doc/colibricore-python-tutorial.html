@@ -183,7 +183,8 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>(<em>for Colibri Core v2</em>)</p>
+<p>(<em>for Colibri Core v2.1</em> - revision 2015-12-03)</p>
+<p><a href="https://proycon.github.io/colibri-core">https://proycon.github.io/colibri-core</a></p>
 <p><em>by Maarten van Gompel, Radboud University Nijmegen</em></p>
 
 </div>
@@ -212,7 +213,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[109]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="kn">import</span> <span class="nn">colibricore</span>
@@ -246,7 +247,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[110]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">corpustext</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;To be, or not to be, that is the question</span>
@@ -315,7 +316,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[111]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">classfile</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;hamlet.colibri.cls&quot;</span>
@@ -363,7 +364,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[112]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">corpusfile</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;hamlet.colibri.dat&quot;</span> <span class="c">#this will be the encoded corpus file</span>
@@ -387,7 +388,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[113]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#Load class decoder from the classfile we just made</span>
@@ -474,7 +475,7 @@ The fair Ophelia . Nymph , in all thy Orisons
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[114]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#Build a pattern from a string, using the class encoder</span>
@@ -517,7 +518,7 @@ The fair Ophelia . Nymph , in all thy Orisons
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[115]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#Iterate over the token in a pattern, each token will be a Pattern instance</span>
@@ -553,7 +554,7 @@ be
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[116]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#Extracting subpatterns by offset</span>
@@ -602,7 +603,7 @@ or not
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[117]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#let&#39;s get all bigrams</span>
@@ -635,7 +636,7 @@ to be
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[118]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#or all n-grams:</span>
@@ -683,7 +684,7 @@ be or not to be
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[119]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#or particular ngrams, such as unigrams up to trigrams:</span>
@@ -736,7 +737,7 @@ not to be
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[120]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#token</span>
@@ -780,7 +781,7 @@ True
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[121]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">p</span><span class="p">)))</span>
@@ -804,7 +805,7 @@ b&apos;To be or not to be&apos; 18
 </div>
 </div>
 
-<div class="output_area"><div class="prompt output_prompt">Out[121]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[13]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -838,7 +839,7 @@ b&apos;To be or not to be&apos; 18
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[122]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">corpusdata</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">IndexedCorpus</span><span class="p">(</span><span class="n">corpusfile</span><span class="p">)</span> <span class="c">#encoded data, will be loaded into memory entirely</span>
@@ -888,7 +889,7 @@ b&apos;To be or not to be&apos; 18
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[123]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">unigram</span> <span class="o">=</span> <span class="n">corpusdata</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]</span>
@@ -926,7 +927,7 @@ b&apos;To be or not to be&apos; 18
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[124]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">ngram</span> <span class="o">=</span> <span class="n">corpusdata</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">):(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)]</span>
@@ -964,7 +965,7 @@ b&apos;To be or not to be&apos; 18
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[125]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">sentencecount</span> <span class="o">=</span> <span class="n">corpusdata</span><span class="o">.</span><span class="n">sentencecount</span><span class="p">()</span>
@@ -1029,6 +1030,55 @@ Length of sentence 34: 10
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>You can also find specific patterns in <code>IndexedCorpus</code> data. However, it is usually more efficient to use a Pattern Model, as discussed in the next section.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">searchpattern</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;or not&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">sentence</span><span class="p">,</span><span class="n">token</span><span class="p">),</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">corpusdata</span><span class="o">.</span><span class="n">findpattern</span><span class="p">(</span><span class="n">searchpattern</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s">&quot;Pattern found at: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">token</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Pattern found at: 1:3
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can pass an extra parameter with a sentence index to <code>findpattern()</code> to limit your search to one particular sentence rather than the entire corpus.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Pattern-Models">Pattern Models<a class="anchor-link" href="#Pattern-Models">&#182;</a></h2>
 </div>
 </div>
@@ -1045,7 +1095,7 @@ Length of sentence 34: 10
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[126]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#Set the options</span>
@@ -1095,7 +1145,7 @@ To die , to sleep | die , to sleep | To die , to | , and the | , to sleep | die 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[127]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#Models behave much alike to Python dictionaries:</span>
@@ -1187,7 +1237,7 @@ of 15
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[128]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">querypattern</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;sleep&quot;</span><span class="p">)</span>
@@ -1218,7 +1268,7 @@ of 15
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[129]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#Like dictionaries, unknown patterns will trigger a KeyError</span>
@@ -1263,7 +1313,7 @@ Nope, KeyError, no such pattern in model..
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[130]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="k">if</span> <span class="n">querypattern</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
@@ -1303,7 +1353,7 @@ Nope, KeyError, no such pattern in model..
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[131]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">querypattern</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;and the&quot;</span><span class="p">)</span>
@@ -1342,7 +1392,7 @@ Nope, KeyError, no such pattern in model..
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[132]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="k">for</span> <span class="n">occurrencecount</span><span class="p">,</span> <span class="n">frequency</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">histogram</span><span class="p">():</span>
@@ -1389,7 +1439,7 @@ Nope, KeyError, no such pattern in model..
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[133]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">patternmodelfile</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;hamlet.colibri.patternmodel&quot;</span>
@@ -1417,7 +1467,7 @@ Nope, KeyError, no such pattern in model..
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[134]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#Set the options</span>
@@ -1525,7 +1575,7 @@ of (3, 4) (4, 7) (11, 4) (14, 3) (15, 8) (17, 2) (18, 2) (19, 3) (23, 4) (27, 8)
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[135]:</div>
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">querypattern</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;and the&quot;</span><span class="p">)</span>
@@ -1564,7 +1614,7 @@ of (3, 4) (4, 7) (11, 4) (14, 3) (15, 8) (17, 2) (18, 2) (19, 3) (23, 4) (27, 8)
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[136]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="s">&quot;Total amount of tokens in the corpus data:&quot;</span> <span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">tokens</span><span class="p">()</span> <span class="p">)</span>
@@ -1603,7 +1653,7 @@ Total amount of word types in the corpus data: 180
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[137]:</div>
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#Set the options</span>
@@ -1652,7 +1702,7 @@ Total amount of word types in the corpus data: 180
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[138]:</div>
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="s">&quot;Patterns at (1,5): &quot;</span><span class="p">)</span>
@@ -1671,11 +1721,8 @@ Total amount of word types in the corpus data: 180
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Patterns at (1,5): 
-to
 to be
-to be ,
-to be , that
-to be , that is
+to
 </pre>
 </div>
 </div>
@@ -1696,7 +1743,7 @@ to be , that is
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[139]:</div>
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="s">&quot;Patterns in first sentence&quot;</span><span class="p">)</span>
@@ -1716,55 +1763,18 @@ to be , that is
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Patterns in first sentence
 1 0  --  To
-1 0  --  To be
-1 0  --  To be ,
-1 0  --  To be , or
-1 0  --  To be , or not
-1 1  --  be
 1 1  --  be ,
-1 1  --  be , or
-1 1  --  be , or not
-1 1  --  be , or not to
+1 1  --  be
 1 2  --  ,
-1 2  --  , or
-1 2  --  , or not
-1 2  --  , or not to
-1 2  --  , or not to be
-1 3  --  or
-1 3  --  or not
-1 3  --  or not to
-1 3  --  or not to be
-1 3  --  or not to be ,
 1 4  --  not
-1 4  --  not to
-1 4  --  not to be
-1 4  --  not to be ,
-1 4  --  not to be , that
-1 5  --  to
 1 5  --  to be
-1 5  --  to be ,
-1 5  --  to be , that
-1 5  --  to be , that is
-1 6  --  be
+1 5  --  to
 1 6  --  be ,
-1 6  --  be , that
-1 6  --  be , that is
-1 6  --  be , that is the
+1 6  --  be
 1 7  --  ,
-1 7  --  , that
-1 7  --  , that is
-1 7  --  , that is the
-1 7  --  , that is the question
 1 8  --  that
-1 8  --  that is
-1 8  --  that is the
-1 8  --  that is the question
 1 9  --  is
-1 9  --  is the
-1 9  --  is the question
 1 10  --  the
-1 10  --  the question
-1 11  --  question
 </pre>
 </div>
 </div>
@@ -1785,7 +1795,7 @@ to be , that is
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[140]:</div>
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">reverseindex</span><span class="p">():</span>
@@ -1842,7 +1852,7 @@ to be , that is
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[141]:</div>
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="kn">import</span> <span class="nn">urllib.request</span>
@@ -1884,7 +1894,7 @@ to be , that is
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[142]:</div>
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">classfile_plato</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;republic.colibri.cls&quot;</span>
@@ -1940,7 +1950,7 @@ to be , that is
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[143]:</div>
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#Set the options, doskipgrams=True is the key to enabling skipgrams</span>
@@ -1966,7 +1976,7 @@ to be , that is
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Found  131818  patterns:
+<pre>Found  131725  patterns:
 </pre>
 </div>
 </div>
@@ -1987,7 +1997,7 @@ to be , that is
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[144]:</div>
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">skipgrams</span> <span class="o">=</span> <span class="mi">0</span>
@@ -2009,7 +2019,7 @@ to be , that is
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Found 1838  skipgrams
+<pre>Found 1716  skipgrams
 </pre>
 </div>
 </div>
@@ -2030,7 +2040,7 @@ to be , that is
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[145]:</div>
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">skipgrams</span> <span class="o">=</span> <span class="mi">0</span>
@@ -2049,7 +2059,7 @@ to be , that is
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Found 1838  skipgrams
+<pre>Found 1716  skipgrams
 </pre>
 </div>
 </div>
@@ -2070,7 +2080,7 @@ to be , that is
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[146]:</div>
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="k">for</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">occurrencecount</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">model</span><span class="o">.</span><span class="n">top</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="n">colibricore</span><span class="o">.</span><span class="n">Category</span><span class="o">.</span><span class="n">SKIPGRAM</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*-</span><span class="mi">1</span> <span class="p">):</span>
@@ -2124,17 +2134,17 @@ the {*} of  --  84
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The size of a skipgram gap is indicated by the number. We can create skipgrams from scratch using the same syntax with the classencoder:</p>
+<p>Each occurrence of <code>{*}</code> expresses a gap of exactly one word/token. We can create skipgrams from scratch using the same syntax with the classencoder, you can also use <code>{*2*}</code> for a gap covering two words etc..:</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[147]:</div>
+<div class="prompt input_prompt">In&nbsp;[40]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">skipgram</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;To {*1*} or not to {*1*} is the question&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">skipgram</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;To {*} or not to {*} is the question&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -2154,7 +2164,7 @@ the {*} of  --  84
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[41]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">skipgram</span><span class="o">.</span><span class="n">parts</span><span class="p">():</span>
@@ -2194,11 +2204,11 @@ is the question
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#let&#39;s pick a common skipgram from the data:</span>
-<span class="n">skipgram</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;to the {*1*} of&quot;</span><span class="p">)</span>
+<span class="n">skipgram</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;to the {*} of&quot;</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">ngram</span><span class="p">,</span> <span class="n">occurrences</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">getinstances</span><span class="p">(</span><span class="n">skipgram</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">ngram</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">classdecoder</span><span class="p">),</span> <span class="s">&quot; -- occurring &quot;</span><span class="p">,</span> <span class="n">occurrences</span><span class="p">,</span> <span class="s">&quot; times&quot;</span> <span class="p">)</span>
@@ -2237,16 +2247,14 @@ to the end of  -- occurring  3  times
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[43]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="c">#let&#39;s pick a common skipgram from the data:</span>
-<span class="n">ngram</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;to the idea of&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="c">#let&#39;s pick something that should be covered by a skipgram from the data:</span>
+<span class="n">ngram</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;to the question of&quot;</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">skipgram</span><span class="p">,</span> <span class="n">occurrences</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">gettemplates</span><span class="p">(</span><span class="n">ngram</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">skipgram</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">classdecoder</span><span class="p">),</span> <span class="s">&quot; -- occurring &quot;</span><span class="p">,</span> <span class="n">occurrences</span><span class="p">,</span> <span class="s">&quot; times&quot;</span> <span class="p">)</span>
-    
-<span class="c">#(TODO: a bug in colibri core has to be solved for this to work as it should)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">skipgram</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">classdecoder</span><span class="p">),</span> <span class="s">&quot; -- occurring &quot;</span><span class="p">,</span> <span class="n">occurrences</span><span class="p">,</span> <span class="s">&quot; times&quot;</span> <span class="p">)</span>    
 </pre></div>
 
 </div>
@@ -2259,7 +2267,8 @@ to the end of  -- occurring  3  times
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>to the persons of  -- occurring  8  times
+<pre>to the {*} of  -- occurring  2  times
+to {*} {*} of  -- occurring  2  times
 </pre>
 </div>
 </div>
@@ -2280,7 +2289,7 @@ to the end of  -- occurring  3  times
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">ngram</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;the law&quot;</span><span class="p">)</span>
@@ -2292,6 +2301,83 @@ to the end of  -- occurring  3  times
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>,  -- occurring  99  times
+the  -- occurring  97  times
+and  -- occurring  75  times
+of  -- occurring  72  times
+to  -- occurring  45  times
+in  -- occurring  34  times
+is  -- occurring  34  times
+.  -- occurring  32  times
+a  -- occurring  30  times
+;  -- occurring  24  times
+, and  -- occurring  24  times
+which  -- occurring  21  times
+they  -- occurring  19  times
+or  -- occurring  19  times
+not  -- occurring  18  times
+their  -- occurring  18  times
+by  -- occurring  16  times
+that  -- occurring  15  times
+be  -- occurring  15  times
+have  -- occurring  14  times
+of the  -- occurring  14  times
+them  -- occurring  13  times
+he  -- occurring  12  times
+are  -- occurring  12  times
+this  -- occurring  11  times
+, the  -- occurring  9  times
+; and  -- occurring  9  times
+we  -- occurring  9  times
+as  -- occurring  9  times
+in the  -- occurring  8  times
+his  -- occurring  8  times
+when  -- occurring  8  times
+man  -- occurring  8  times
+but  -- occurring  8  times
+these  -- occurring  8  times
+for  -- occurring  7  times
+to be  -- occurring  7  times
+And  -- occurring  7  times
+is not  -- occurring  7  times
+of a  -- occurring  7  times
+I  -- occurring  7  times
+with  -- occurring  6  times
+there  -- occurring  6  times
+to the  -- occurring  6  times
+him  -- occurring  6  times
+of these  -- occurring  6  times
+, or  -- occurring  6  times
+--  -- occurring  6  times
+by the  -- occurring  6  times
+has  -- occurring  5  times
+state  -- occurring  5  times
+what  -- occurring  5  times
+all  -- occurring  5  times
+State  -- occurring  5  times
+who  -- occurring  5  times
+&apos;  -- occurring  5  times
+own  -- occurring  5  times
+they have  -- occurring  5  times
+in which  -- occurring  5  times
+no  -- occurring  5  times
+father  -- occurring  5  times
+one  -- occurring  5  times
+her  -- occurring  5  times
+is the  -- occurring  5  times
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -2317,10 +2403,56 @@ to the end of  -- occurring  3  times
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><em>(TODO: this section is be continued later with flexgrams)</em></p>
+<p>In addition to skipgrams, Colibri Core core also supports <em>flexgrams</em>. Whereas the gaps in skipgrams are of a predefined size, in flexgrams they are by definition variable. A gap in a flexgram is represented as <code>{**}</code>. All of the existing functions that work on skipgrams, including the methods to extract relationsships, should also work on flexgrams.</p>
+<p>Flexgrams can be computed in two ways, but only on indexed pattern models:</p>
+<ul>
+<li>by abstracting from the skipgrams in the model using the <code>computeflexgrams_fromskipgrams()</code> method.</li>
+<li>by co-occurrence based on <em>normalised mutual pointwise information</em>. In this case a flexgram will have only one gap. Use the <code>computeflexgrams_fromcooc(threshold)</code> method for this.</li>
+</ul>
+<p>You have to explicitly choose one of these methods. An example of the first strategy:</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="c">#Set the options, doskipgrams=True is the key to enabling skipgrams</span>
+<span class="n">options</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">PatternModelOptions</span><span class="p">(</span><span class="n">mintokens</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">maxlength</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">doskipgrams</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+
+<span class="c">#Instantiate an empty indexed model </span>
+<span class="n">corpus_plato</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">IndexedCorpus</span><span class="p">(</span><span class="n">corpusfile_plato</span><span class="p">)</span>
+<span class="n">flexmodel</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">IndexedPatternModel</span><span class="p">(</span><span class="n">reverseindex</span><span class="o">=</span><span class="n">corpus_plato</span><span class="p">)</span>
+
+<span class="c">#Train it on our corpus file (class-encoded data, not plain text)</span>
+<span class="n">flexmodel</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">corpusfile_plato</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+
+<span class="c">#compute the flexgrams</span>
+<span class="n">found</span> <span class="o">=</span> <span class="n">flexmodel</span><span class="o">.</span><span class="n">computeflexgrams_fromskipgrams</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s">&quot;Found &quot;</span> <span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">found</span><span class="p">),</span> <span class="s">&quot; flexgrams&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Found  1605  flexgrams
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
@@ -2355,7 +2487,7 @@ to the end of  -- occurring  3  times
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[46]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">classfile2</span> <span class="o">=</span> <span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;platoandhamlet.colibri.cls&quot;</span>
@@ -2378,6 +2510,20 @@ to the end of  -- occurring  3  times
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Encoded  11540  classes, well done!
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
@@ -2392,7 +2538,7 @@ to the end of  -- occurring  3  times
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="nb">print</span><span class="p">(</span><span class="s">&quot;Class encoder has &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">classencoder</span><span class="p">),</span> <span class="s">&quot; classes prior to extension&quot;</span><span class="p">)</span>
@@ -2407,6 +2553,21 @@ to the end of  -- occurring  3  times
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Class encoder has  11544  classes prior to extension
+Class encoder has  11544  classes after extension
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -2433,7 +2594,7 @@ to the end of  -- occurring  3  times
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[48]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="c">#Set the options</span>
@@ -2463,7 +2624,7 @@ to the end of  -- occurring  3  times
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[49]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">testmodel</span><span class="p">:</span>
@@ -2471,6 +2632,66 @@ to the end of  -- occurring  3  times
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>When
+death ,
+, to
+by
+die
+No
+death
+and the
+of
+To
+end
+sleep ,
+And
+The
+For
+be
+in
+,
+a
+have
+sleep
+the
+bear
+not
+That
+is
+, and the
+to sleep
+, the
+.
+and
+to be
+die ,
+we have
+us
+makes
+be ,
+life
+this
+would
+, and
+to
+all
+we
+With
+that
+make
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -2487,7 +2708,7 @@ to the end of  -- occurring  3  times
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[50]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">testmodel</span><span class="p">:</span>
@@ -2495,6 +2716,66 @@ to the end of  -- occurring  3  times
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>When  ---  in training:  78 , in test:  2
+death ,  ---  in training:  14 , in test:  2
+, to  ---  in training:  131 , in test:  3
+by  ---  in training:  1324 , in test:  2
+die  ---  in training:  13 , in test:  2
+No  ---  in training:  85 , in test:  2
+death  ---  in training:  60 , in test:  2
+and the  ---  in training:  736 , in test:  2
+of  ---  in training:  10374 , in test:  15
+To  ---  in training:  88 , in test:  5
+end  ---  in training:  103 , in test:  2
+sleep ,  ---  in training:  3 , in test:  3
+And  ---  in training:  1071 , in test:  5
+The  ---  in training:  797 , in test:  6
+For  ---  in training:  169 , in test:  2
+be  ---  in training:  2930 , in test:  3
+in  ---  in training:  4319 , in test:  3
+,  ---  in training:  15352 , in test:  36
+a  ---  in training:  3924 , in test:  5
+have  ---  in training:  1485 , in test:  2
+sleep  ---  in training:  13 , in test:  5
+the  ---  in training:  14783 , in test:  15
+bear  ---  in training:  30 , in test:  3
+not  ---  in training:  2267 , in test:  2
+That  ---  in training:  197 , in test:  3
+is  ---  in training:  4619 , in test:  2
+, and the  ---  in training:  310 , in test:  2
+to sleep  ---  in training:  4 , in test:  2
+, the  ---  in training:  551 , in test:  2
+.  ---  in training:  7014 , in test:  5
+and  ---  in training:  8517 , in test:  7
+to be  ---  in training:  940 , in test:  2
+die ,  ---  in training:  3 , in test:  2
+we have  ---  in training:  138 , in test:  2
+us  ---  in training:  436 , in test:  3
+makes  ---  in training:  76 , in test:  2
+be ,  ---  in training:  23 , in test:  2
+life  ---  in training:  395 , in test:  2
+this  ---  in training:  936 , in test:  2
+would  ---  in training:  590 , in test:  2
+, and  ---  in training:  2899 , in test:  2
+to  ---  in training:  5917 , in test:  9
+all  ---  in training:  867 , in test:  2
+we  ---  in training:  1314 , in test:  4
+With  ---  in training:  9 , in test:  2
+that  ---  in training:  2830 , in test:  4
+make  ---  in training:  224 , in test:  2
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -2511,7 +2792,7 @@ to the end of  -- occurring  3  times
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[51]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">testmodel</span><span class="p">:</span>
@@ -2519,6 +2800,66 @@ to the end of  -- occurring  3  times
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>When  ---  in training:  0.0003101058733257265 , in test:  7.94148712287863e-06
+death ,  ---  in training:  0.00011132005709128642 , in test:  1.588297424575726e-05
+, to  ---  in training:  0.0010416376770684657 , in test:  2.382446136863589e-05
+by  ---  in training:  0.005263848413887972 , in test:  7.94148712287863e-06
+die  ---  in training:  5.168431222095441e-05 , in test:  7.94148712287863e-06
+No  ---  in training:  0.0003379358875985481 , in test:  7.94148712287863e-06
+death  ---  in training:  0.00023854297948132806 , in test:  7.94148712287863e-06
+and the  ---  in training:  0.005852254429941915 , in test:  1.588297424575726e-05
+of  ---  in training:  0.04124408115232162 , in test:  5.9561153421589724e-05
+To  ---  in training:  0.00034986303657261447 , in test:  1.9853717807196577e-05
+end  ---  in training:  0.0004094987814429465 , in test:  7.94148712287863e-06
+sleep ,  ---  in training:  2.3854297948132806e-05 , in test:  2.382446136863589e-05
+And  ---  in training:  0.004257992183741705 , in test:  1.9853717807196577e-05
+The  ---  in training:  0.003168645910776974 , in test:  2.382446136863589e-05
+For  ---  in training:  0.0006718960588724073 , in test:  7.94148712287863e-06
+be  ---  in training:  0.011648848831338186 , in test:  1.1912230684317945e-05
+in  ---  in training:  0.01717111880633093 , in test:  1.1912230684317945e-05
+,  ---  in training:  0.06103519701662247 , in test:  0.00014294676821181534
+a  ---  in training:  0.015600710858078855 , in test:  1.9853717807196577e-05
+have  ---  in training:  0.005903938742162869 , in test:  7.94148712287863e-06
+sleep  ---  in training:  5.168431222095441e-05 , in test:  1.9853717807196577e-05
+the  ---  in training:  0.05877301442787454 , in test:  5.9561153421589724e-05
+bear  ---  in training:  0.00011927148974066403 , in test:  1.1912230684317945e-05
+not  ---  in training:  0.009012948908069512 , in test:  7.94148712287863e-06
+That  ---  in training:  0.0007832161159636937 , in test:  1.1912230684317945e-05
+is  ---  in training:  0.01836383370373757 , in test:  7.94148712287863e-06
+, and the  ---  in training:  0.003697416181960585 , in test:  2.382446136863589e-05
+to sleep  ---  in training:  3.1805730597510405e-05 , in test:  1.588297424575726e-05
+, the  ---  in training:  0.0043812393898070585 , in test:  1.588297424575726e-05
+.  ---  in training:  0.02788567430136725 , in test:  1.9853717807196577e-05
+and  ---  in training:  0.03386117593737452 , in test:  2.7795204930075206e-05
+to be  ---  in training:  0.0074743466904149455 , in test:  1.588297424575726e-05
+die ,  ---  in training:  2.3854297948132806e-05 , in test:  1.588297424575726e-05
+we have  ---  in training:  0.001097297705614109 , in test:  1.588297424575726e-05
+us  ---  in training:  0.0017334123175643172 , in test:  1.1912230684317945e-05
+makes  ---  in training:  0.0003021544406763489 , in test:  7.94148712287863e-06
+be ,  ---  in training:  0.00018288295093568484 , in test:  1.588297424575726e-05
+life  ---  in training:  0.0015704079482520763 , in test:  7.94148712287863e-06
+this  ---  in training:  0.0037212704799087174 , in test:  7.94148712287863e-06
+would  ---  in training:  0.0023456726315663925 , in test:  7.94148712287863e-06
+, and  ---  in training:  0.023051203250545667 , in test:  1.588297424575726e-05
+to  ---  in training:  0.023524313493183634 , in test:  3.5736692052953834e-05
+all  ---  in training:  0.0034469460535051905 , in test:  7.94148712287863e-06
+we  ---  in training:  0.005224091250641084 , in test:  1.588297424575726e-05
+With  ---  in training:  3.578144692219921e-05 , in test:  7.94148712287863e-06
+that  ---  in training:  0.011251277198869307 , in test:  1.588297424575726e-05
+make  ---  in training:  0.0008905604567302914 , in test:  7.94148712287863e-06
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -2535,7 +2876,7 @@ to the end of  -- occurring  3  times
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[52]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">coverage</span> <span class="o">=</span> <span class="n">testmodel</span><span class="o">.</span><span class="n">totaltokensingroup</span><span class="p">()</span> <span class="o">/</span> <span class="n">testmodel</span><span class="o">.</span><span class="n">tokens</span><span class="p">()</span>
@@ -2544,6 +2885,20 @@ to the end of  -- occurring  3  times
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0.0006750264054446836
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -2560,7 +2915,7 @@ to the end of  -- occurring  3  times
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[53]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="n">sleep</span> <span class="o">=</span> <span class="n">classencoder</span><span class="o">.</span><span class="n">buildpattern</span><span class="p">(</span><span class="s">&quot;to sleep&quot;</span><span class="p">)</span>
@@ -2580,16 +2935,219 @@ to the end of  -- occurring  3  times
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Frequency in training: 2.1719535636328094e-05
+Frequency in test (constrained): 0.08333333333333333
+Coverage in test (constrained): 1.588297424575726e-05
+Frequency in test (unconstrained): 0.07692307692307693
+Coverage in test (unconstrained): 0.012698412698412698
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Efficiently-finding-specific-patterns-in-corpus-data">Efficiently finding specific patterns in corpus data<a class="anchor-link" href="#Efficiently-finding-specific-patterns-in-corpus-data">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Constrained models can be used if you want to search for a limited set of specific patterns in corpus data without the need to compute a full pattern model on the data. You create a pattern model from a pattern list, a plain text file with one pattern per line. Then you can use this model as a constraint model on your actual corpus data (the test data) and extract only occurrences of the patterns you are interested in, and in so doing conserving a lot of memory.</p>
+<p>To do this most efficiently we are going to use in-place rebuilding, where we simply load the contraint model, reset any count information, and then we recompute the patterns anew on the test data instead, 
+telling it to <em>constrain on itself</em>.</p>
+<p>First, however, we construct a patternlist file, containing the patterns we want to extract from Plato's Republic. The pattern list can include skipgrams and flexgrams as well:</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[54]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre> 
+<div class=" highlight hl-ipython3"><pre><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&#39;/patternlist.txt&#39;</span><span class="p">,</span><span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;irony</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;and all</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;one part of</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;to {*} the</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span> <span class="c">#skipgram</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;both {**} and</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span> <span class="c">#flexgram</span>
+    
+
+<span class="c">#Load our existing class encoding that already cover&#39;s Plato&#39;s Republic (and Hamlet, though we don&#39;t need it)</span>
+<span class="n">classencoder</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">ClassEncoder</span><span class="p">(</span><span class="n">TMPDIR</span> <span class="o">+</span> <span class="s">&quot;/platoplushamlet.colibri.cls&quot;</span><span class="p">)</span>
+
+<span class="c">#Encode the patternlist, adding any new classes unseen classes to the encoder (none in this case though)</span>
+<span class="n">classencoder</span><span class="o">.</span><span class="n">encodefile</span><span class="p">(</span><span class="n">TMPDIR</span><span class="o">+</span><span class="s">&quot;/patternlist.txt&quot;</span><span class="p">,</span><span class="n">TMPDIR</span><span class="o">+</span><span class="s">&quot;/patternlist.colibri.dat&quot;</span><span class="p">,</span><span class="k">True</span><span class="p">,</span><span class="k">True</span><span class="p">)</span>
+
+<span class="c">#Save it</span>
+<span class="n">classencoder</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">TMPDIR</span><span class="o">+</span><span class="s">&quot;/withpatternlist.colibri.cls&quot;</span><span class="p">)</span>
+<span class="c">#Load a class decoder</span>
+<span class="n">classdecoder</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">ClassDecoder</span><span class="p">(</span><span class="n">TMPDIR</span><span class="o">+</span><span class="s">&quot;/withpatternlist.colibri.cls&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we train an unindexed pattern model from our pattern list, by setting the <code>dopatternperline</code> option, which means our resulting model will only include exactly those patterns we specified in the list:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[55]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="c">#Set the option to say we are dealing with a pattern list here</span>
+<span class="n">options</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">PatternModelOptions</span><span class="p">(</span><span class="n">dopatternperline</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+
+<span class="c">#Create an unindexed model for our patternlist, this will be the constraint model</span>
+<span class="n">patternlistmodel</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">UnindexedPatternModel</span><span class="p">()</span>
+<span class="n">patternlistmodel</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">TMPDIR</span><span class="o">+</span><span class="s">&#39;/patternlist.colibri.dat&#39;</span><span class="p">,</span><span class="n">options</span><span class="p">)</span>
+
+<span class="n">patternlistmodel</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">TMPDIR</span><span class="o">+</span><span class="s">&quot;/patternlist.colibri.patternmodel&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s">&quot;Number of patterns in the model: &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">patternlistmodel</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Number of patterns in the model:  5
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The final step is to load our constraint model, and train it on the test data with <code>doreset=True</code> and using the model as its own contraint model. We are going to build an indexed model. It is possible to load unindexed models as indexed, but since you have no indices you automatically lose all counts. As we would explicitly force this with <code>doreset=True</code>, this is of no concern. A reverse index is always required for this, so we load the corpus data into an <code>IndexedCorpus</code>:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[56]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">testcorpus</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">IndexedCorpus</span><span class="p">(</span><span class="n">corpusfile_plato</span><span class="p">)</span>
+<span class="n">testmodel</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">IndexedPatternModel</span><span class="p">(</span><span class="n">TMPDIR</span><span class="o">+</span><span class="s">&quot;/patternlist.colibri.patternmodel&quot;</span><span class="p">,</span> <span class="n">reverseindex</span><span class="o">=</span><span class="n">testcorpus</span><span class="p">)</span>
+
+<span class="n">options</span> <span class="o">=</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">PatternModelOptions</span><span class="p">(</span><span class="n">doreset</span><span class="o">=</span><span class="k">True</span><span class="p">,</span><span class="n">doskipgrams</span><span class="o">=</span><span class="k">True</span><span class="p">,</span> <span class="n">mintokens</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="n">testmodel</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="n">options</span><span class="p">,</span><span class="n">testmodel</span><span class="p">)</span>
+<span class="c">#Notes:</span>
+<span class="c">#1 - No need to pass a filename as first parameter since we already have a testcorpus loaded     </span>
+<span class="c">#2 - The 3rd parameter is our contraint model, which is our own model. We thus constrain on our own pre-loaded model</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s">&quot;Found &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">testmodel</span><span class="p">))</span> <span class="o">+</span> <span class="s">&quot; patterns&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Found 5 patterns
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Iterate over all patterns found and instantiate any skipgrams/flexgrams using <code>getinstance()</code>:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[59]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="k">for</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">testmodel</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">classdecoder</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;: &quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pattern</span><span class="o">.</span><span class="n">category</span><span class="p">()</span> <span class="o">==</span> <span class="n">colibricore</span><span class="o">.</span><span class="n">Category</span><span class="o">.</span><span class="n">NGRAM</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c">#let&#39;s find out the precise instance of the skipgram/flexgram</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="n">testmodel</span><span class="o">.</span><span class="n">getinstance</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;[&quot;</span> <span class="o">+</span> <span class="n">instance</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">classdecoder</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+    
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>both {**} and: (730, 10)[both , and] (2683, 31)[both from and] 
+one part of: (101, 24) (1143, 56) (7644, 31) (7662, 56) (8987, 36) 
+irony: (33, 7) (183, 6) (359, 4) (836, 13) (1061, 58) (1722, 97) (2811, 31) (4303, 25) 
+to {*} the: (135, 26)[to bear the] (271, 34)[to be the] (303, 13)[to be the] (342, 23)[to know the] (402, 14)[to all the] (456, 31)[to be the] (483, 27)[to us the] (1021, 6)[to us the] (1051, 28)[to be the] (1068, 14)[to make the] (1120, 2)[to be the] (1255, 4)[to have the] (1279, 17)[to be the] (1485, 11)[to lose the] (1550, 2)[to make the] (1561, 1)[to others the] (1630, 15)[to be the] (1771, 48)[to be the] (2097, 25)[to all the] (2184, 34)[to be the] (2295, 4)[to be the] (2514, 18)[to be the] (2532, 5)[to be the] (2619, 6)[to say the] (3043, 17)[to be the] (3065, 6)[to be the] (3146, 7)[to be the] (3232, 22)[to make the] (3261, 16)[to be the] (3310, 3)[to be the] (3331, 2)[to be the] (3395, 16)[to be the] (3566, 7)[to be the] (3640, 10)[to be the] (3684, 12)[to be the] (3686, 2)[to be the] (3706, 8)[to be the] (3842, 24)[to be the] (3961, 4)[to be the] (4202, 6)[to be the] (4650, 10)[to be the] (5084, 3)[to be the] (5987, 50)[to be the] (6042, 7)[to have the] (6089, 5)[to make the] (6839, 2)[to be the] (7299, 6)[to make the] (7490, 7)[to be the] (7571, 9)[to be the] (7598, 4)[to be the] (7729, 9)[to be the] (8109, 5)[to have the] (8180, 11)[to have the] (8272, 6)[to have the] (8503, 14)[to be the] (8586, 6)[to be the] (8607, 7)[to be the] (8747, 8)[to be the] 
+and all: (43, 30) (136, 40) (445, 55) (540, 12) (970, 51) (1131, 30) (1437, 38) (1519, 9) (1573, 50) (1592, 25) (1735, 8) (1739, 15) (2102, 38) (2128, 10) (2538, 15) (2555, 12) (2942, 33) (2980, 7) (2988, 49) (3018, 9) (3622, 53) (3955, 94) (5422, 86) (5676, 29) (6299, 26) (6319, 44) (6331, 8) (6644, 101) (6674, 24) (7010, 10) (7021, 31) (7027, 107) (7048, 14) (7992, 31) (8653, 37) (9056, 24) (9374, 16) (9435, 87) (9892, 69) (10073, 7) (10861, 46) (10895, 7) (10994, 42) (11165, 54) (11332, 28) (11361, 46) (11361, 95) (11597, 7) (11730, 111) (12064, 17) (12090, 26) (12157, 13) (12623, 23) (12623, 42) (12939, 22) (12950, 58) (13058, 18) (13062, 25) (13356, 10) (13447, 24) (13488, 18) (13501, 69) (13593, 37) (13664, 7) (13779, 25) 
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
