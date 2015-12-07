@@ -157,7 +157,7 @@ if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' i
         print("--------------------------------------------------------------------------------------------------------------------\n",file=sys.stderr)
 
 extensions = [ Extension("colibricore",
-                ["unordered_map.pxd", "colibricore_classes.pxd", "colibricore_wrapper.pyx"],
+                ["unordered_set.pxd","unordered_map.pxd", "colibricore_classes.pxd", "colibricore_wrapper.pyx"],
                 language='c++',
                 include_dirs=includedirs,
                 library_dirs=libdirs,
@@ -174,7 +174,7 @@ setup(
     license = "GPL",
     keywords = "nlp computational_linguistics frequency ngram skipgram pmi cooccurrence linguistics",
     long_description=read('README.rst'),
-    version = '2.1.0',
+    version = '2.1.1',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},
     classifiers=[
