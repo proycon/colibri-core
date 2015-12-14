@@ -854,10 +854,13 @@ int main( int argc, char *argv[] ) {
 
         cerr << endl << "************************** Serialisation and low-level map test  ***************************************" << endl << endl;
         
+        Pattern empty = Pattern();
+
         cerr << "Writing patterns to file: " << endl;
         ofstream * out = new ofstream("/tmp/patterns.tmp");
         ngram.write(out);
         ngramhigh.write(out);
+        empty.write(out);
         skipgram.write(out);
         out->close();
 
@@ -865,10 +868,12 @@ int main( int argc, char *argv[] ) {
         ifstream * in = new ifstream("/tmp/patterns.tmp");
         Pattern ngram_read = Pattern(in);
         Pattern ngramhigh_read = Pattern(in);
+        Pattern empty_read = Pattern(in);
         Pattern skipgram_read = Pattern(in);
         in->close();
         cerr << "Integrity check for ngram? " ; test(ngram == ngram_read) ;
         cerr << "Integrity check for ngram (high)? " ; test(ngramhigh == ngramhigh_read) ;
+        cerr << "Integrity check for empty pattern? " ; test(empty == empty_read);
         cerr << "Integrity check for skipgram? " ; test(skipgram == skipgram_read) ;
 
 
@@ -876,9 +881,12 @@ int main( int argc, char *argv[] ) {
         PatternMap<uint32_t> map1;
         map1[ngram] = 1;
         map1[ngramhigh] = 1;
+        map1[empty] = 1;
         map1[flexgram5] = 2;
-        cerr << "Integrity for PatternMap" ; test(map1.size() , 3);
+        cerr << "Integrity for PatternMap" ; test(map1.size() , 4);
         cerr << "Integrity for PatternMap" ; test(map1[ngram], 1);
+        cerr << "Integrity for PatternMap" ; test(map1[ngramhigh], 1);
+        cerr << "Integrity for PatternMap" ; test(map1[empty], 1);
         cerr << "Integrity for PatternMap" ; test(map1[flexgram5] , 2);
         cerr << "Saving patternmap" << endl; 
         map1.write("/tmp/patternmap.tmp");
@@ -887,8 +895,10 @@ int main( int argc, char *argv[] ) {
         PatternMap<uint32_t> map2;
         cerr << "Loading patternmap" << endl; 
         map2.read("/tmp/patternmap.tmp");
-        cerr << "Integrity for PatternMap" ; test(map2.size() , 3);
+        cerr << "Integrity for PatternMap" ; test(map2.size() , 4);
         cerr << "Integrity for PatternMap" ; test(map2[ngram] , 1);
+        cerr << "Integrity for PatternMap" ; test(map2[ngramhigh] , 1);
+        cerr << "Integrity for PatternMap" ; test(map2[empty] , 1);
         cerr << "Integrity for PatternMap" ; test(map2[flexgram5] , 2);
 
         AlignedPatternMap<uint32_t> amap1;

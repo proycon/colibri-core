@@ -228,11 +228,12 @@ uint32_t PatternPointer::computemask() const {
 
 
 const size_t Pattern::hash() const {
-    if (data == NULL) return 0;
+    if (data == NULL || data[0] == 0) return 0;
     return SpookyHash::Hash64((const void*) data , bytesize());
 }
 
 const size_t PatternPointer::hash() const {
+    if ((data == NULL) || (data[0] == 0)) return 0;
     if (mask == 0) {
         return SpookyHash::Hash64((const void*) data , bytesize());
 	} else if (isflexgram()) {
@@ -259,10 +260,13 @@ const size_t PatternPointer::hash() const {
 
 
 void Pattern::write(ostream * out, const unsigned char * corpusstart) const {
-    //corpusstart is not used must does need to be present so we have the same signature as PatternPointer
+    //corpusstart is not used but does need to be present so we have the same signature as PatternPointer
     const int s = bytesize();
     if (s > 0) {
         out->write( (char*) data , (int) s + 1); //+1 to include the \0 marker
+    } else {
+        const unsigned char null = 0;
+        out->write( (char*) &null , (int) 1);  //marker only
     }
 }
 
@@ -274,9 +278,9 @@ void PatternPointer::write(ostream * out, const unsigned char * corpusstart) con
         out->write((char*) &mask, sizeof(uint32_t));
     } else {
         const int s = bytesize();
-        if (s > 0) {
-            out->write( (char*) data , (int) s + 1); //+1 to include the \0 marker
-        }
+        if (s > 0)  out->write( (char*) data , (int) s); //+1 to include the \0 marker
+        const unsigned char null = 0;
+        out->write( (char*) &null , (int) 1);  //marker
     }
 }
 
@@ -821,11 +825,13 @@ PatternPointer::PatternPointer(const PatternPointer& ref, unsigned int begin, un
 }
 
 Pattern::Pattern(const Pattern& ref) { //copy constructor
-    if (ref.data != NULL) {
+    if ((ref.data != NULL) && (ref.data[0] != 0)) {
         const int s = ref.bytesize();
         data = new unsigned char[s + 1];
         memcpy(data, ref.data, s);
         data[s] = ClassDecoder::delimiterclass;
+    } else {
+        data = NULL;
     }
 }
 
@@ -921,7 +927,7 @@ Pattern::~Pattern() {
 
 
 bool Pattern::operator==(const Pattern &other) const {
-    if (data == NULL) return (other.data == NULL);
+    if ((data == NULL) || (data[0] == 0)) return (other.data == NULL || other.data[0] == 0);
     unsigned int i = 0;
     do {
         if (data[i] != other.data[i]) return false;
@@ -934,7 +940,7 @@ bool Pattern::operator==(const PatternPointer &other) const {
 }
 
 bool PatternPointer::operator==(const Pattern &other) const {
-    if (other.data == NULL) return (bytesize() == 0);
+    if (other.data == NULL || other.data[0] == 0) return (bytesize() == 0);
     unsigned int i = 0;
     unsigned int n = 0;
     if ((mask != 0) && (isflexgram())) {
