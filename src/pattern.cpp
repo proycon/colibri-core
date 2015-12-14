@@ -286,6 +286,7 @@ void PatternPointer::write(ostream * out, const unsigned char * corpusstart) con
 
 std::string datatostring(unsigned char * data, const ClassDecoder& classdecoder, int maxbytes = 0) {
     std::string result = ""; 
+    if (data == NULL) return result;
     int i = 0;
     unsigned int length; 
     do {
