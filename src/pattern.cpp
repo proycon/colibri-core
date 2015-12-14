@@ -927,7 +927,11 @@ Pattern::~Pattern() {
 
 
 bool Pattern::operator==(const Pattern &other) const {
-    if ((data == NULL) || (data[0] == 0)) return (other.data == NULL || other.data[0] == 0);
+    if ((data == NULL) || (data[0] == 0)) {
+        return (other.data == NULL || other.data[0] == 0);
+    } else if ((other.data == NULL) || (other.data[0] == 0)) {
+        return false;
+    }
     unsigned int i = 0;
     do {
         if (data[i] != other.data[i]) return false;
@@ -940,7 +944,11 @@ bool Pattern::operator==(const PatternPointer &other) const {
 }
 
 bool PatternPointer::operator==(const Pattern &other) const {
-    if (other.data == NULL || other.data[0] == 0) return (bytesize() == 0);
+    if ((data == NULL) || (data[0] == 0)) {
+        return (other.data == NULL || other.data[0] == 0);
+    } else if ((other.data == NULL) || (other.data[0] == 0)) {
+        return false;
+    }
     unsigned int i = 0;
     unsigned int n = 0;
     if ((mask != 0) && (isflexgram())) {
