@@ -1031,6 +1031,8 @@ int main( int argc, char *argv[] ) {
 		cerr << "Types"; test(unindexedmodelNSR.types(),186);
 		cerr << "Tokens"; test(unindexedmodelNSR.tokens(),354);
 
+		cerr << "Unigram Types"; test(unindexedmodelNSR.totalwordtypesingroup(0,1),45);
+
 		cerr << "Building unindexed model (without preloaded corpus, no skipgrams)" << endl;
 		PatternModel<uint32_t> unindexedmodelNS;
 
@@ -1142,6 +1144,7 @@ int main( int argc, char *argv[] ) {
         cerr << endl;
         indexedmodel.histogram(&std::cerr);
 
+		cerr << "Unigram Types"; test(indexedmodel.totalwordtypesingroup(0,1),45);
 
 
         cerr << "Writing indexed model to file" << endl;
