@@ -80,6 +80,8 @@ class IndexedCorpus {
         ~IndexedCorpus() { 
 			if (corpus != NULL) delete[] corpus; 
 			if (patternpointer != NULL) delete patternpointer; 
+            corpus = NULL;
+            patternpointer = NULL;
 		}
         
         /*
