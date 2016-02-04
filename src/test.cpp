@@ -330,11 +330,20 @@ int main( int argc, char *argv[] ) {
         Pattern subngram5 = encoder.buildpattern(substring5, true);
 
         cerr << "----------------------------------------------------" << endl;
-        cerr << "Reverse of ngram #1: " << endl;
+        cerr << "aeverse of ngram #1: " << endl;
 
         Pattern revngram = ngram.reverse();
         cerr << "Reverse ngram: "; test(revngram.decode(classdecoder), "be to not or be To");
         cerr << "N: "; test(revngram.n(),6);
+
+        cerr << "----------------------------------------------------" << endl;
+        cerr << "Reverse of ngram with high bytes: " << endl;
+
+        string histring = "to blah blah or not";
+        Pattern hingram = encoder.buildpattern(histring);
+        Pattern revhingram = hingram.reverse();
+        cerr << "Reverse ngram: "; test(revhingram.decode(classdecoder), "not or blah blah to");
+        cerr << "N: "; test(revhingram.n(),5);
 
 
         cerr << "----------------------------------------------------" << endl;
