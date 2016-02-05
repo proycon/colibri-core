@@ -146,11 +146,11 @@ int main( int argc, char *argv[] ) {
         
             
         cerr << "Loading class decoder" << endl;
-        ClassDecoder classdecoder = ClassDecoder(classfile);
+        ClassDecoder classdecoder(classfile);
         cerr << "  Number of classes: "; test(classdecoder.size(),11); //including reserved classes
 
         cerr << "Loading class encoder" << endl;
-        ClassEncoder encoder = ClassEncoder(classfile);
+        ClassEncoder encoder(classfile);
         
         cerr << endl << "************************** Ngram tests  ***************************************" << endl << endl; 
         
@@ -229,7 +229,7 @@ int main( int argc, char *argv[] ) {
         }
         cerr << "----------------------------------------------------" << endl;
         cerr << "Copy constructor" << endl;
-        Pattern ngramcopy = Pattern(ngram);
+        Pattern ngramcopy(ngram);
 		cerr << "Testing equality "; test(ngram == ngramcopy);
         cerr << endl;
         
@@ -339,11 +339,11 @@ int main( int argc, char *argv[] ) {
 
         cerr << "----------------------------------------------------" << endl;
         cerr << "Pattern Pointer tests" << endl;
-        PatternPointer pngram = PatternPointer(&ngram);
+        PatternPointer pngram(&ngram);
         cerr << "Testing equivalence between pointer and pattern"; test(ngram == pngram);
         cerr << "Testing equivalence between pointer and pattern (rev)"; test(pngram == ngram);
         cerr << "Testing hash equivalence between pointer and pattern"; test(ngram.hash() == pngram.hash());
-        Pattern derefngram = Pattern(pngram);
+        Pattern derefngram(pngram);
         cerr << "Testing equivalence after pointer construction and dereference"; test(ngram == derefngram);
         cerr << "Testing equivalence after pointer construction and dereference (rev)"; test(derefngram == ngram);
         cerr << "Testing equivalence between pointer from pattern and pointer"; test(PatternPointer(ngram) == pngram);
@@ -1009,7 +1009,7 @@ int main( int argc, char *argv[] ) {
         ClassEncoder classencoder = ClassEncoder(classfile);
 
         cerr << "Loading corpus as IndexedCorpus" << endl;
-        IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
+        IndexedCorpus corpus("/tmp/hamlet.colibri.dat");
         cerr << "Total number of tokens: " << corpus.size() << endl;
         Pattern firstword = corpus.getpattern(IndexReference(1,0),1);
         cerr << "First word:  "; test(firstword.tostring(classdecoder),"To");
@@ -1335,7 +1335,7 @@ int main( int argc, char *argv[] ) {
         ClassEncoder classencoder = ClassEncoder(classfile);
 
         cerr << "Loading corpus as IndexedCorpus" << endl;
-        IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
+        IndexedCorpus corpus("/tmp/hamlet.colibri.dat");
 
         cerr << "Checking sentence count";
         test(corpus.sentences(),40);
@@ -1451,7 +1451,7 @@ int main( int argc, char *argv[] ) {
             test(alignmodel.getdata(p2,p2)->get(1), 0.24);
 
             cerr << "Training indexed model constrained by PatternAlignmentModel" << endl;
-            IndexedCorpus c = IndexedCorpus("/tmp/hamlet.colibri.dat");
+            IndexedCorpus c("/tmp/hamlet.colibri.dat");
 
             PatternModelOptions o;
             o.MINTOKENS = 1;
@@ -1496,7 +1496,7 @@ int main( int argc, char *argv[] ) {
         PatternPointer pngram = PatternPointer(ngram);
 
         cerr << "Loading corpus as IndexedCorpus" << endl;
-        IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
+        IndexedCorpus corpus("/tmp/hamlet.colibri.dat");
 
         PatternModelOptions options;
         options.DOSKIPGRAMS_EXHAUSTIVE = true;
@@ -1575,7 +1575,7 @@ int main( int argc, char *argv[] ) {
         PatternPointer pngram = PatternPointer(ngram);
 
         cerr << "Loading corpus as IndexedCorpus" << endl;
-        IndexedCorpus corpus = IndexedCorpus("/tmp/hamlet.colibri.dat");
+        IndexedCorpus corpus("/tmp/hamlet.colibri.dat");
 
         PatternModelOptions options;
         options.DOSKIPGRAMS_EXHAUSTIVE = false;
