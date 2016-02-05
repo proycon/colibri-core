@@ -48,6 +48,8 @@ class IndexedCorpus {
 		PatternPointer * patternpointer; //pattern pointer covering the whole corpus
         unsigned int totaltokens;
         std::map<uint32_t,unsigned char*> sentenceindex; //sentence pointers
+    private:
+        IndexedCorpus(IndexedCorpus& ) {};
     public:
         IndexedCorpus() {
             corpus = NULL;
@@ -80,7 +82,10 @@ class IndexedCorpus {
         ~IndexedCorpus() { 
 			if (corpus != NULL) delete[] corpus; 
 			if (patternpointer != NULL) delete patternpointer; 
+            corpus = NULL;
+            patternpointer = NULL;
 		}
+
         
         /*
          * Read an indexed corpus from stream. The stream must correspond to an

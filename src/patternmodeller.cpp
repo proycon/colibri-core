@@ -54,7 +54,7 @@ void usage() {
     cerr << "\t-F|--flexgrams S		         Compute flexgrams by abstracting over skipgrams (implies -s). Do not forget the S value!" << endl; 
     cerr << "\t-F|--flexgrams <number>       Compute flexgrams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
     cerr << "\t-L|--patternlist              States that the input data file (-f) is a list of one pattern per line. No subgrams will be stored, implies -t 1" <<endl;
-    cerr << "\t-I|--contrained               Builds a new model from an input model (-i) and corpus data (-f).  Only patterns present in the input model will be present in the final model, making" << endl;
+    cerr << "\t-I|--constrained               Builds a new model from an input model (-i) and corpus data (-f).  Only patterns present in the input model will be present in the final model, making" << endl;
     cerr << "\t                              the input model the training model and the corpus data the test data. This method uses memory-efficient in-place building, and does not hold " << endl;
     cerr << "\t                              two models (unlike -j). Input model (-i) and or output model (-o) may be indexed or unindexed (-u), this option also allows for constructing indexed models " << endl;
     cerr << "\t                              from unindexed models (given the same source corpus), and is used in two-stage building (-2)." <<endl;  

@@ -458,6 +458,11 @@ class PatternPointer {
      bool operator==(const Pattern & other) const;
      bool operator!=(const Pattern & other) const { return !(*this == other); }
 
+     /**
+      * Return a single token (not a byte!). index < size().
+      */
+     PatternPointer operator [](int index) const { return PatternPointer(*this, index,1); } 
+
      PatternPointer toflexgram() const;
      bool isgap(int i) const; 
 
