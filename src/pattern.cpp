@@ -1737,28 +1737,24 @@ Pattern Pattern::reverse() const {
     unsigned char * newdata = new unsigned char[_size];
 
     //set endmarker
-    newdata[_size - 1] = ClassDecoder::delimiterclass;
+    newdata[_size-1] = ClassDecoder::delimiterclass;
 
     //we fill the newdata from right to left
     unsigned char cursor = _size - 1;
 
-    bool prevhigh = false;
 	unsigned int high = 0;
     int i = 0;
     do {
         const unsigned char c = data[i];
-        if ((!prevhigh) && (c == ClassDecoder::delimiterclass)) {
+        if ((!high) && (c == ClassDecoder::delimiterclass)) {
             //end marker
             break;
         } else if (c < 128) {
-		    cursor = cursor - high - 1;	
-            //we have a size
-            strncpy((char*) newdata + cursor, (char*) data + i, high + 1);
-            i += high + 1;
+		    cursor -= high + 1;	
+            strncpy((char*) newdata + cursor, (char*) data + (i - high), high + 1);
+            i++;
 			high = 0;
-            prevhigh = false;
         } else {
-            prevhigh = true;
 			high++;
             i++;
         }
