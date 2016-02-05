@@ -64,7 +64,7 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
             ll += observed[i] * log(observed[i] / expected[i]);
     }
     ll = ll * 2;
-    if (isnan(ll)) ll = 0; //value too low, set to 0
+    if (std::isnan(ll)) ll = 0; //value too low, set to 0
 
     return ll;
 }
@@ -158,7 +158,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > &  models
             }
         }
         ll = ll * 2;
-        if (isnan(ll)) ll = 0; //value too low, set to 0
+        if (std::isnan(ll)) ll = 0; //value too low, set to 0
         //std::cerr << "DEBUG: ll = " << ll << std::endl;
 
         if (resultmap != NULL) 
