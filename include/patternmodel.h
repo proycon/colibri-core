@@ -1506,7 +1506,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
        
         /**
-         * Given a position in the corpus , return a vector of all the patterns (including skipgrams and flexgrams) that cover this position and are in the model.
+         * Given a position in the corpus , return a set of all the patterns (including skipgrams and flexgrams) that cover this position and are in the model.
          * Note that the flexgrams are computed from skipgrams and the maximum length is therefore constrained to 31 words.
          * @param ref The position in the corpus
          * @param occurrencecount If set above zero, filters to only include patterns occurring above or equal to this threshold
