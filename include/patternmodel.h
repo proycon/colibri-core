@@ -590,8 +590,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             for (t_matchflexgramhelper::iterator iter = matchflexgramhelper.begin(); iter != matchflexgramhelper.end(); iter++) {
                 iter->second.shrink_to_fit();
             }
-            if (!quiet && !matchskipgramhelper.empty()) std::cerr << "(" << matchskipgramhelper.size() << " skipgrams in constraint model)" << std::endl;
-            if (!quiet && !matchflexgramhelper.empty()) std::cerr << "(" << matchflexgramhelper.size() << " flexgrams in constraint model)" << std::endl;
+            //if (!quiet && !matchskipgramhelper.empty()) std::cerr << "(" << matchskipgramhelper.size() << " skipgrams in constraint model)" << std::endl;
+            //if (!quiet && !matchflexgramhelper.empty()) std::cerr << "(" << matchflexgramhelper.size() << " flexgrams in constraint model)" << std::endl;
         }
     public:
         IndexedCorpus * reverseindex; ///< Pointer to the reverse index and corpus data for this model (or NULL)
