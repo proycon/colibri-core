@@ -1280,7 +1280,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
                     if (skipgram_valid) {
-                        Pattern test = skipgram;
+                        /*Pattern test = skipgram;
                         if (test.category() != SKIPGRAM) {
                             std::cerr << "ERROR: skipgram is not a skipgram!!!" << std::endl;
                             std::cerr << "n=" << test.n() << std::endl;
@@ -1289,7 +1289,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             skipgram.out();
                             std::cerr << "pattern out: ";
                             test.out();
-                        }
+                        }*/
                         if (DEBUG) std::cerr << "  counted!" << std::endl;
                         if (targetcontainer == NULL) {
                             //put in model

@@ -904,29 +904,39 @@ Pattern::Pattern(const PatternPointer& ref, unsigned int begin, unsigned int len
     } while (1);
 
     const unsigned char _size = length_b + 1;
-    data = new unsigned char[_size];
-    memcpy(data, ref.data + begin_b, length_b);
-    data[length_b] = ClassDecoder::delimiterclass;
-
-    if (ref.mask != 0) { 
+    data = new unsigned char[_size]; //may overallocate a bit for skipgrams/flexgrams
+    if (ref.mask == 0) {
+        //NGRAM
+        memcpy(data, ref.data + begin_b, length_b);
+        data[length_b] = ClassDecoder::delimiterclass;
+    } else {
+        //SKIPGRAM OR FLEXGRAM
         const bool flex = ref.isflexgram();
-        i = 0;
         n = 0;
-        do {
-            if (ref.data[i] < 128) {
-                if ((i >= begin_b) && (i < begin_b + length_b)) {
-                    if (ref.isgap(n)) {
-                        if (flex) {
-                            data[i-begin_b] = ClassDecoder::flexclass;
-                        } else {
-                            data[i-begin_b] = ClassDecoder::skipclass;
-                        }
+        unsigned int cursor = 0;
+        bool skip = ref.isgap(n);
+        for (unsigned int j = 0; j < ref.bytes; j++) {
+            const unsigned char c = ref.data[j];
+            if (c < 128) {
+                if ((n >= begin) && (n < begin+length)) {
+                    if (flex) {
+                        data[cursor++] = ClassDecoder::flexclass;
+                    } else if (skip) {
+                        data[cursor++] = ClassDecoder::skipclass;
+                    } else {
+                        data[cursor++] = c;
                     }
                 }
                 n++;
+                if (n>= begin+length) break;
+                skip = ref.isgap(n);
+            } else if (!skip) {
+                if ((n >= begin) && (n < begin+length))  {
+                    data[cursor++] = c;
+                }
             }
-            i++;
-        } while (i < ref.bytesize()); 
+        }
+        data[cursor++] = ClassDecoder::delimiterclass;
     }
 
 }
