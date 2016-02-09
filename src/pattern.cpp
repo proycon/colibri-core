@@ -837,28 +837,40 @@ Pattern::Pattern(const Pattern& ref) { //copy constructor
 }
 
 Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
-	if ((ref.mask != 0) && (ref.isflexgram())) {
+    if (ref.mask == 0) {
+        //NGRAM
+		data = new unsigned char[ref.bytesize() + 1];
+		memcpy(data, ref.data, ref.bytesize());
+		data[ref.bytesize()] = ClassDecoder::delimiterclass;
+    } else if (ref.isflexgram()) {
+        //FLEXGRAM
 		unsigned char tmpdata[ref.bytesize()+1];
 		int size = ref.flexcollapse(tmpdata);
 		data = new unsigned char[size+1];
 		memcpy(data, tmpdata, size);
 		data[size] = ClassDecoder::delimiterclass;
-	} else {
-		data = new unsigned char[ref.bytesize() + 1];
-		memcpy(data, ref.data, ref.bytesize());
-		data[ref.bytesize()] = ClassDecoder::delimiterclass;
-
-		if (ref.mask != 0) { 
-			unsigned int n = 0;
-			for (unsigned int i = 0; i < ref.bytesize(); i++) {
-				if (ref.data[i] < 128) {
-					if (ref.isgap(n)) {
-						data[i] = ClassDecoder::skipclass;
-					}
-					n++;
-				}
-			}
-		}
+    } else {
+        //SKIPGRAM
+		data = new unsigned char[ref.bytesize() + 1]; //may overallocate by a small margin
+        
+        unsigned int n = 0;
+        unsigned int cursor = 0;
+        bool skip = ref.isgap(n);
+        for (unsigned int i = 0; i < ref.bytes; i++) {
+            const unsigned char c = ref.data[i];
+            if (c < 128) {
+                if (skip) {
+                    data[cursor++] = ClassDecoder::skipclass;
+                } else {
+                    data[cursor++] = c;
+                }
+                n++;
+                skip = ref.isgap(n);
+            } else if (!skip) {
+                data[cursor++] = c;
+            }
+        }
+        data[cursor++] = ClassDecoder::delimiterclass;
 	}
 }
 
