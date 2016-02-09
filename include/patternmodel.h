@@ -1131,6 +1131,10 @@ class PatternModel: public MapType, public PatternModelInterface {
                     if (!options.QUIET) std::cerr << " pruned " << prunednonsubsumed << " non-subsumed " << (n-1) << "-grams"  << std::endl;
                 }
             }
+            if ((options.MINLENGTH > 1) && (options.DOSKIPGRAMS || options.DOSKIPGRAMS_EXHAUSTIVE))  {
+                unsigned int pruned = this->prunebylength(options.MINLENGTH-1);
+                if (!options.QUIET) std::cerr << " pruned " << pruned << " patterns below minimum length (" << options.MINLENGTH << ")"  << std::endl;
+            }
             this->posttrain(options);
             if (linepattern != NULL) delete linepattern;
         }
@@ -1903,6 +1907,34 @@ class PatternModel: public MapType, public PatternModelInterface {
                 }
             };       
 
+            return pruned;
+        }
+
+        /**
+         * Prune all patterns small or equal than the specified length
+         * Pruning can be limited to patterns of a particular category.
+         * @param _n The size constraint, pattern of and below size will be pruned
+         * @param category Category constraint
+         * @return the number of distinct patterns pruned
+         */
+        unsigned int prunebylength(int _n, int category = 0, int threshold = -1) {
+            //prune all patterns under the specified threshold (set -1 for
+            //all) and of the specified length (set _n==0 for all)
+            unsigned int pruned = 0;
+            PatternModel::iterator iter = this->begin(); 
+            while (iter != this->end()) {
+                const PatternType pattern = iter->first;
+                if  (  (pattern.n() <= (unsigned int) _n)  && ( ( category == 0) || (pattern.category() == category)) && ((threshold == -1) || (occurrencecount(pattern) < (unsigned int) threshold))) {
+                    /*std::cerr << "preprune:" << this->size() << std::endl; 
+                    std::cerr << "DEBUG: pruning " << (int) pattern.category() << ",n=" << pattern.n() << ",skipcount=" << pattern.skipcount() << ",hash=" << pattern.hash() << std::endl;
+                    std::cerr << occurrencecount(pattern) << std::endl;*/
+                    iter = this->erase(iter); 
+                    //std::cerr << "postprune:" << this->size() << std::endl;
+                    pruned++;
+                } else {
+                    iter++;
+                }
+            }       
             return pruned;
         }
 
