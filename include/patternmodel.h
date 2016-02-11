@@ -1560,7 +1560,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 result.insert(ngram);
                         }
 
-                        if ((includeskipgrams || includeflexgrams) && (n >= 3))  {
+                        if ((includeskipgrams) && (n >= 3))  {
                             
                             //(we can't use gettemplates() because
                             //gettemplates() depends on us to do the actual
@@ -1571,15 +1571,13 @@ class PatternModel: public MapType, public PatternModelInterface {
                             const PatternPointer firstword = PatternPointer(ngram,0,1);
 
 
-                            if (includeskipgrams) {
-                                for (t_matchskipgramhelper::iterator iter = this->matchskipgramhelper.find(firstword); iter != this->matchskipgramhelper.end(); iter++) {
-                                    for (std::vector<std::pair<uint32_t,unsigned char>>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
-                                        if (n == iter2->second) {
-                                            PatternPointer skipgram = ngram;
-                                            skipgram.mask = iter2->first;
-                                            if ( ((occurrencecount == 0) && this->has(skipgram)) || ((occurrencecount != 0) && (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount)) ) {
-                                                result.insert(skipgram);
-                                            }
+                            for (t_matchskipgramhelper::iterator iter = this->matchskipgramhelper.find(firstword); iter != this->matchskipgramhelper.end(); iter++) {
+                                for (std::vector<std::pair<uint32_t,unsigned char>>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
+                                    if (n == iter2->second) {
+                                        PatternPointer skipgram = ngram;
+                                        skipgram.mask = iter2->first;
+                                        if ( ((occurrencecount == 0) && this->has(skipgram)) || ((occurrencecount != 0) && (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount)) ) {
+                                            result.insert(skipgram);
                                         }
                                     }
                                 }
