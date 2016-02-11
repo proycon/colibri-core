@@ -10,6 +10,8 @@ Colibri Core
 .. image:: https://zenodo.org/badge/doi/10.5281/zenodo.34706.svg
    :target: http://dx.doi.org/10.5281/zenodo.34706
 
+.. image:: http://applejack.science.ru.nl/lamabadge.php/colibri-core
+   :target: http://applejack.science.ru.nl/languagemachines/
 
 *by Maarten van Gompel, proycon@anaproy.nl, Radboud University Nijmegen*
 
