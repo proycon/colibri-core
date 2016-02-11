@@ -1582,7 +1582,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                             const PatternPointer firstword = PatternPointer(ngram,0,1);
 
 
-                            for (t_matchskipgramhelper::iterator iter = this->matchskipgramhelper.find(firstword); iter != this->matchskipgramhelper.end(); iter++) {
+                            t_matchskipgramhelper::iterator iter = this->matchskipgramhelper.find(firstword);
+                            if (iter != matchskipgramhelper.end()) {
                                 for (std::vector<std::pair<uint32_t,unsigned char>>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
                                     if (n == iter2->second) {
                                         PatternPointer skipgram = ngram;
