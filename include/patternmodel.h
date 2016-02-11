@@ -1605,7 +1605,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (includeflexgrams) {
                 try{
                     const PatternPointer firstword = this->reverseindex->getpattern(ref,1);
-                    for (t_matchflexgramhelper::iterator iter = this->matchflexgramhelper.find(firstword); iter != this->matchflexgramhelper.end(); iter++) {
+                    t_matchflexgramhelper::iterator iter = this->matchflexgramhelper.find(firstword);
+                    if (iter != this->matchflexgramhelper.end()) {
                         for (std::unordered_set<PatternPointer>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
                             PatternPointer flexgram = *iter2;
                             try  {
