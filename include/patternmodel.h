@@ -1577,10 +1577,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                                         if (n == iter2->second) {
                                             PatternPointer skipgram = ngram;
                                             skipgram.mask = iter2->first;
-                                            if ((includeskipgrams)) {
-                                                if ( ((occurrencecount == 0) && this->has(skipgram)) || ((occurrencecount != 0) && (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount)) ) {
-                                                    result.insert(skipgram);
-                                                }
+                                            if ( ((occurrencecount == 0) && this->has(skipgram)) || ((occurrencecount != 0) && (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount)) ) {
+                                                result.insert(skipgram);
                                             }
                                         }
                                     }
