@@ -572,6 +572,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             const bool doflexgrams = (matchflexgramhelper.empty() && hasflexgrams);
             if (!doskipgrams && !doflexgrams) return;
 
+            unsigned int skipgramcount = 0;
+            unsigned int flexgramcount = 0;
+
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
                 const PatternPointer pattern = iter->first;
                 const PatternCategory category = pattern.category();
@@ -579,8 +582,10 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (!firstword.unknown() && (!firstword.isgap(0))) {
                     if ((category == SKIPGRAM) && (doskipgrams)) {
                         matchskipgramhelper[firstword].push_back(std::pair<uint32_t,unsigned char>(pattern.getmask(),pattern.n()));
+                        skipgramcount++;
                     } else if ((category == FLEXGRAM) && (doflexgrams)) {
                         matchflexgramhelper[firstword].push_back(pattern);
+                        flexgramcount++;
                     }
                 }
             }
@@ -590,8 +595,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             for (t_matchflexgramhelper::iterator iter = matchflexgramhelper.begin(); iter != matchflexgramhelper.end(); iter++) {
                 iter->second.shrink_to_fit();
             }
-            //if (!quiet && !matchskipgramhelper.empty()) std::cerr << "(" << matchskipgramhelper.size() << " skipgrams in constraint model)" << std::endl;
-            //if (!quiet && !matchflexgramhelper.empty()) std::cerr << "(" << matchflexgramhelper.size() << " flexgrams in constraint model)" << std::endl;
+            if (!quiet && !matchskipgramhelper.empty()) std::cerr << "(helper structure has " << matchskipgramhelper.size() << " unigrams mapping to " << skipgramcount << " skipgrams total)" << std::endl;
+            if (!quiet && !matchflexgramhelper.empty()) std::cerr << "(helper structure has " << matchflexgramhelper.size() << " unigrams mapping to " << flexgramcount << " flexgrams total)" << std::endl;
         }
     public:
         IndexedCorpus * reverseindex; ///< Pointer to the reverse index and corpus data for this model (or NULL)
