@@ -130,7 +130,7 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
 }
 
 
-void ClassEncoder::processcorpus(const string & filename, unordered_map<string,unsigned int> & freqlist) {
+void ClassEncoder::processcorpus(const string & filename, unordered_map<string,unsigned int> & freqlist, unordered_set<string> * vocab) {
 	   //compute frequency list of all words        
        ifstream IN;
 	   if (filename.rfind(".bz2") != string::npos) {
@@ -152,7 +152,7 @@ void ClassEncoder::processcorpus(const string & filename, unordered_map<string,u
        IN.close();
 }
 
-void ClassEncoder::processcorpus(istream * IN , unordered_map<string,unsigned int> & freqlist) {
+void ClassEncoder::processcorpus(istream * IN , unordered_map<string,unsigned int> & freqlist, unordered_set<string> * vocab) {
         while (IN->good()) {
           string line;
           getline(*IN, line);         
@@ -165,13 +165,15 @@ void ClassEncoder::processcorpus(istream * IN , unordered_map<string,unsigned in
               	  string word = string(line.begin() + begin, line.begin() + i + offset);              	  
               	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
               	    word = trim(word, " \t\n\r"); //trim whitespace, control characters
-                    if ((minlength > 0) || (maxlength > 0))  {
-                        const unsigned int l = (unsigned int) utf8_strlen(word);
-                        if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
+                    if ((vocab == NULL) || ((vocab != NULL) && (vocab->find(word) != vocab->end()) ) ) {
+                        if ((minlength > 0) || (maxlength > 0))  {
+                            const unsigned int l = (unsigned int) utf8_strlen(word);
+                            if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
+                                freqlist[word]++;
+                            }
+                        } else {
                             freqlist[word]++;
                         }
-                    } else {
-                        freqlist[word]++;
                     }
               	  }
               	  begin = i+ 1; 
@@ -182,7 +184,7 @@ void ClassEncoder::processcorpus(istream * IN , unordered_map<string,unsigned in
 }
 
 #ifdef WITHFOLIA
-void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<string,unsigned int> & freqlist) {
+void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<string,unsigned int> & freqlist, unordered_set<string> * vocab) {
     folia::Document doc;
     doc.readFromFile(filename);
     
@@ -190,13 +192,15 @@ void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<str
     for (vector<folia::Word*>::iterator iterw = words.begin(); iterw != words.end(); iterw++) {
         folia::Word * word = *iterw;
         const string wordtext = word->str();
-        if ((minlength > 0) || (maxlength > 0))  {
-            const int l = utf8_strlen(wordtext);
-            if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
+        if ((vocab == NULL) || ((vocab != NULL) && (vocab->find(word) != vocab->end()) ) ) {
+            if ((minlength > 0) || (maxlength > 0))  {
+                const int l = utf8_strlen(wordtext);
+                if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
+                    freqlist[wordtext]++;
+                }
+            } else {
                 freqlist[wordtext]++;
             }
-        } else {
-            freqlist[wordtext]++;
         }
     }
 
@@ -221,37 +225,40 @@ void ClassEncoder::buildclasses(const unordered_map<string,unsigned int> & freql
         highestclass = cls;
 }
 
-void ClassEncoder::build(const string & filename, unsigned int threshold) {
+void ClassEncoder::build(const string & filename, unsigned int threshold, const string vocabfile) {
 	    unordered_map<string,unsigned int> freqlist;
+        unordered_set<string> vocab;
+        if (!vocabfile.empty()) loadvocab(vocabfile, vocab);
 	    if (filename.rfind(".xml") != string::npos) {
             #ifdef WITHFOLIA
-	        processfoliacorpus(filename, freqlist);
+	        processfoliacorpus(filename, freqlist, &vocab);
             #else
             cerr << "Colibri Core was not compiled with FoLiA support!" << endl;
             exit(2);
             #endif
 	    } else {
-	        processcorpus(filename, freqlist); //also handles bz2
+	        processcorpus(filename, freqlist, &vocab); //also handles bz2
 	    }
         buildclasses(freqlist, threshold);
 }
 
 
-void ClassEncoder::build(vector<string> & files, bool quiet, unsigned int threshold) {
+void ClassEncoder::build(vector<string> & files, bool quiet, unsigned int threshold, const string vocabfile) {
 	    unordered_map<string,unsigned int> freqlist;
-	    	    
+        unordered_set<string> vocab;
+        if (!vocabfile.empty()) loadvocab(vocabfile, vocab);
 	    for (vector<string>::iterator iter = files.begin(); iter != files.end(); iter++) {
 	        const string filename = *iter;
 	        if (!quiet) cerr << "Processing " << filename << endl;
 	        if (filename.rfind(".xml") != string::npos) {
                 #ifdef WITHFOLIA
-                processfoliacorpus(filename, freqlist);
+                processfoliacorpus(filename, freqlist, &vocab);
                 #else
                 cerr << "Colibri Core was not compiled with FoLiA support!" << endl;
                 exit(2);
                 #endif
 	        } else {
-	            processcorpus(filename, freqlist); //also handles bz2
+	            processcorpus(filename, freqlist, &vocab); //also handles bz2
 	        }
 	        
 	    } 	    	    
@@ -267,9 +274,21 @@ void ClassEncoder::save(const string & filename) {
 	OUT.close();
 }
 
-void ClassEncoder::import(const string & filename) {
-	bool isfreqlist = false;
-	bool firstline = true;
+void ClassEncoder::loadvocab(const string & filename, unordered_set<string> & vocab) {
+    cerr << "Loading vocabulary file" << endl;
+    ifstream IN(filename);
+    while (IN.good()) {
+        string line;
+        getline(IN, line);         
+        line = trim(line, " \t\n\r"); //trim whitespace, control characters
+        const int s = line.size();
+		if (s > 0) {
+            vocab.insert(line);
+		}
+    }
+}
+
+void ClassEncoder::buildclasses_freqlist(const string & filename, unsigned int threshold) {
 	unordered_map<string,unsigned int> freqlist;
     ifstream IN(filename);
     while (IN.good()) {
@@ -278,28 +297,18 @@ void ClassEncoder::import(const string & filename) {
         line = trim(line, " \t\n\r"); //trim whitespace, control characters
         const int s = line.size();
 		if (s > 0) {
-			if (firstline || isfreqlist) {
-				for (int i = 0; i < s; i++) {
-					if (line[i] == '\t') {
-						isfreqlist = true;
-						const string word = string(line.begin(), line.begin() + i);
-						const string freq_s = string(line.begin() + i + 1, line.end());                  
-						unsigned int freq = (unsigned int) atoi(freq_s.c_str());
-						freqlist[word] = freq;
-						break;
-					} 
-				}
-			}
-			if (!isfreqlist) {
-				classes[line] = ++highestclass;
-			}
-			firstline = false;
+            for (int i = 0; i < s; i++) {
+                if (line[i] == '\t') {
+                    const string word = string(line.begin(), line.begin() + i);
+                    const string freq_s = string(line.begin() + i + 1, line.end());                  
+                    unsigned int freq = (unsigned int) atoi(freq_s.c_str());
+                    freqlist[word] = freq;
+                    break;
+                } 
+            }
 		}
     }
-	if (isfreqlist) {
-		buildclasses(freqlist);
-	}
-
+    buildclasses(freqlist, threshold);
 }
         
 vector<unsigned int> ClassEncoder::encodeseq(const vector<string> & seq) {

@@ -37,7 +37,8 @@ void usage() {
     cerr << "         -e    extend specified class file with unseen classes" << endl;
     cerr << "         -U    encode all unseen classes using one special unknown class" << endl;
     cerr << "         -t    word occurrence threshold (default: 1)" << endl;
-    cerr << "         -I    Import classes form the provided vocabulary file (one word per line) or frequency list (word \\t frequency per line)" << endl;
+    cerr << "         -F    Import frequency list (word \\t frequency, per line)" << endl;
+    cerr << "         -V    Import vocabulary file (one word per line)" << endl;
 }
 
 int main( int argc, char *argv[] ) {    
@@ -45,7 +46,8 @@ int main( int argc, char *argv[] ) {
     string corpusfile = "";
     string outputprefix = "";
     string outputdirectoryprefix = "";
-    string importfile = "";
+    string freqlistfile = "";
+    string vocabfile = "";
     vector<string> corpusfiles;
     bool unified = false;
     bool extend = false;
@@ -55,9 +57,8 @@ int main( int argc, char *argv[] ) {
     string tmpfilename;
     
     char c;    
-    while ((c = getopt(argc, argv, "f:hc:o:d:ul:eUt:I:")) != -1) {
-        switch (c)
-        {
+    while ((c = getopt(argc, argv, "f:hc:o:d:ul:eUt:F:V:")) != -1) {
+        switch (c) {
         case 'f': //keep for backward compatibility
             corpusfile = optarg;
             corpusfiles.push_back(corpusfile);
@@ -96,8 +97,11 @@ int main( int argc, char *argv[] ) {
             }
             listin.close();
             break;
-        case 'I':
-            importfile = optarg;
+        case 'F':
+            freqlistfile = optarg;
+            break;
+        case 'V':
+            vocabfile = optarg;
             break;
         case 'h':
             usage();
@@ -113,10 +117,11 @@ int main( int argc, char *argv[] ) {
         corpusfiles.push_back(tmp);
     }
     
-    if (corpusfiles.empty() && (importfile.empty())) {
+    if (corpusfiles.empty() && (freqlistfile.empty())) {
     	usage();
     	exit(2);
     } 
+
 	if (!corpusfiles.empty()) {
         corpusfile = corpusfiles[0]; //only for extension determination
     }
@@ -133,11 +138,11 @@ int main( int argc, char *argv[] ) {
         strip_extension(outputprefix,"txt");    
     }
 
-	if ((!importfile.empty()) && (outputprefix.empty())) {
-        if (importfile.find_last_of("/") == string::npos) {
-            outputprefix = importfile;
+	if ((!freqlistfile.empty()) && (outputprefix.empty())) {
+        if (freqlistfile.find_last_of("/") == string::npos) {
+            outputprefix = freqlistfile;
         } else {
-            outputprefix = importfile.substr(importfile.find_last_of("/")+1);
+            outputprefix = freqlistfile.substr(freqlistfile.find_last_of("/")+1);
         }
         strip_extension(outputprefix,"bz2");     
         strip_extension(outputprefix,"xml");     
@@ -152,20 +157,20 @@ int main( int argc, char *argv[] ) {
         classencoder = ClassEncoder(classfile);
         if (extend) {
             cerr << "Building classes from corpus (extending existing classes)" << endl;
-            classencoder.build(corpusfiles, threshold);
+            classencoder.build(corpusfiles, false, threshold, vocabfile);
             classencoder.save(prefixedoutputprefix + ".colibri.cls");
             cerr << "Built " << prefixedoutputprefix << ".colibri.cls , extending " << classfile << endl;
         }
-    } else if (!importfile.empty()) {
+    } else if (!freqlistfile.empty()) {
         cerr << "Building classes from imported frequency list or vocabulary file" << endl;
         classencoder = ClassEncoder();
-        classencoder.import(importfile);
+        classencoder.buildclasses_freqlist(freqlistfile);
         classencoder.save(prefixedoutputprefix + ".colibri.cls");
         cerr << "Built " << prefixedoutputprefix << ".colibri.cls" << endl;
     } else {
         cerr << "Building classes from corpus" << endl;
         classencoder = ClassEncoder();
-        classencoder.build(corpusfiles, threshold);
+        classencoder.build(corpusfiles, false, threshold, vocabfile);
         classencoder.save(prefixedoutputprefix + ".colibri.cls");
         cerr << "Built " << prefixedoutputprefix << ".colibri.cls" << endl;
     }   
@@ -191,7 +196,7 @@ int main( int argc, char *argv[] ) {
         cerr << "...Done" << endl;
     }
 
-    if ((classencoder.gethighestclass() > highestclass)) {
+    if (classencoder.gethighestclass() > highestclass) {
         if (extend) {
             classencoder.save(outputprefix + ".colibri.cls");
             cerr << "Built " << outputprefix << ".colibri.cls" << endl;            

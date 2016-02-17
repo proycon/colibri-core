@@ -15,6 +15,7 @@
 #include <config.h>
 #endif
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <vector>
 #include <fstream>
@@ -82,27 +83,25 @@ class ClassEncoder {
      */
     void load(const std::string & filename, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
 
-    /**
-	 * Import a class encoding from a plaintext file with either a vocabulary file of one word per line, or a frequency list of one word, a tab, and an absolute frequency number per line.
-	 * Note only frequency files provide an optimal encoding!!!!
-     * @param filename The filename
-     */
-    void import(const std::string & filename); //load an existing classer
     
     /**
      * Build a class encoding from a plain-text corpus
      * @param filename A plain text corpus with the units of interest (e.g sentences) each on one line
      * @param threshold Occurrence threshold, words occurring less will be pruned
+     * @param vocabfile Plain text vocabulary file with one line per word,
+     * constrains the classes to these words only
      */
-    void build(const std::string & filename, unsigned int threshold=0); 
+    void build(const std::string & filename, unsigned int threshold=0, const std::string vocabfile = ""); 
 
     /**
      * Build a class encoding from multiple plain-text corpus files
      * @param files A list of plain text corpus files with the units of interest (e.g sentences) each on one line
      * @param quiet If true, do not output progress to stderr (default: false)
      * @param threshold Occurrence threshold, words occurring less will be pruned
+     * @param vocabfile Plain text vocabulary file with one line per word,
+     * constrains the classes to these words only
      */
-    void build(std::vector<std::string> & files, bool quiet=false, unsigned int threshold =0); 
+    void build(std::vector<std::string> & files, bool quiet=false, unsigned int threshold =0, const std::string vocabfile = ""); 
     
     //auxiliary functions called by build: first do processcorpus() for each
     //corpus, then call buildclasses() once when done:
@@ -117,24 +116,32 @@ class ClassEncoder {
     void buildclasses(const std::unordered_map<std::string,unsigned int> & freqlist, unsigned int threshold =0);
 
     /**
+     * Build classes from a pre-supplied frequency list (per line one word , a
+     * tab, and an occurrence count)
+     * @param filename The filename
+     */
+    void buildclasses_freqlist(const std::string & filename, unsigned int threshold = 0); 
+
+    void loadvocab(const std::string & filename, std::unordered_set<std::string> & vocab);
+    /**
      * Count word frequency in a given plain-text corpus. 
      * @param filename The corpus file
      * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
      */
-    void processcorpus(const std::string & filename, std::unordered_map<std::string,unsigned int> & freqlist);
+    void processcorpus(const std::string & filename, std::unordered_map<std::string,unsigned int> & freqlist, std::unordered_set<std::string> * vocab = NULL);
     /**
      * Count word frequency in a given plain-text corpus. 
      * @param in The input stream
      * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
      */
-    void processcorpus(std::istream * in, std::unordered_map<std::string,unsigned int> & freqlist);
+    void processcorpus(std::istream * in, std::unordered_map<std::string,unsigned int> & freqlist, std::unordered_set<std::string> * vocab = NULL);
     #ifdef WITHFOLIA
     /**
      * Count word frequency in a given FoLiA corpus. 
      * @param filename The corpus file (FoLiA XML)
      * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
      */
-    void processfoliacorpus(const std::string & filename, std::unordered_map<std::string,unsigned int> & freqlist);
+    void processfoliacorpus(const std::string & filename, std::unordered_map<std::string,unsigned int> & freqlist, std::unordered_set<std::string> * vocab = NULL);
     #endif
 
     std::unordered_map<unsigned int, std::string> added;
