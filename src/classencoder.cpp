@@ -116,6 +116,7 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
                   classes[word] = cls;
                   if (cls > (unsigned int) highestclass) highestclass = cls;
                   //cerr << "CLASS=" << cls << " WORD=" << word << endl;
+				  break;
               }
               
           }

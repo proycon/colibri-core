@@ -118,8 +118,8 @@ void ClassDecoder::load(const string & filename) {
                   classes[cls] = word;
                   if (cls > highestclass) highestclass = cls;
                   //cerr << "CLASS=" << cls << " WORD=" << word << endl;
+                  break;
               }
-              
           }
         }        
         IN->close();  
