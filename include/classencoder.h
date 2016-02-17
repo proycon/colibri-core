@@ -81,6 +81,13 @@ class ClassEncoder {
      * @param maxlength Maximum supported length of words (default: 0 = unlimited)
      */
     void load(const std::string & filename, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
+
+    /**
+	 * Import a class encoding from a plaintext file with either a vocabulary file of one word per line, or a frequency list of one word, a tab, and an absolute frequency number per line.
+	 * Note only frequency files provide an optimal encoding!!!!
+     * @param filename The filename
+     */
+    void import(const std::string & filename); //load an existing classer
     
     /**
      * Build a class encoding from a plain-text corpus

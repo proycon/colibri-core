@@ -37,6 +37,7 @@ void usage() {
     cerr << "         -e    extend specified class file with unseen classes" << endl;
     cerr << "         -U    encode all unseen classes using one special unknown class" << endl;
     cerr << "         -t    word occurrence threshold (default: 1)" << endl;
+    cerr << "         -I    Import classes form the provided vocabulary file (one word per line) or frequency list (word \\t frequency per line)" << endl;
 }
 
 int main( int argc, char *argv[] ) {    
@@ -44,6 +45,7 @@ int main( int argc, char *argv[] ) {
     string corpusfile = "";
     string outputprefix = "";
     string outputdirectoryprefix = "";
+    string importfile = "";
     vector<string> corpusfiles;
     bool unified = false;
     bool extend = false;
@@ -53,7 +55,7 @@ int main( int argc, char *argv[] ) {
     string tmpfilename;
     
     char c;    
-    while ((c = getopt(argc, argv, "f:hc:o:d:ul:eUt:")) != -1) {
+    while ((c = getopt(argc, argv, "f:hc:o:d:ul:eUt:I:")) != -1) {
         switch (c)
         {
         case 'f': //keep for backward compatibility
@@ -94,6 +96,9 @@ int main( int argc, char *argv[] ) {
             }
             listin.close();
             break;
+        case 'I':
+            importfile = optarg;
+            break;
         case 'h':
             usage();
             exit(0);  
@@ -108,12 +113,13 @@ int main( int argc, char *argv[] ) {
         corpusfiles.push_back(tmp);
     }
     
-    if (corpusfiles.empty()) {
+    if (corpusfiles.empty() && (importfile.empty())) {
     	usage();
     	exit(2);
     } else {
         corpusfile = corpusfiles[0]; //only for extension determination
     }
+
         
     if (outputprefix.empty()) {
         if (corpusfile.find_last_of("/") == string::npos) {
@@ -126,6 +132,16 @@ int main( int argc, char *argv[] ) {
         strip_extension(outputprefix,"txt");    
     }
 
+	if ((!importfile.empty()) && (outputprefix.empty())) {
+        if (importfile.find_last_of("/") == string::npos) {
+            outputprefix = importfile;
+        } else {
+            outputprefix = importfile.substr(importfile.find_last_of("/")+1);
+        }
+        strip_extension(outputprefix,"bz2");     
+        strip_extension(outputprefix,"xml");     
+        strip_extension(outputprefix,"txt");    
+	}
 
     ClassEncoder classencoder;
     
@@ -139,6 +155,12 @@ int main( int argc, char *argv[] ) {
             classencoder.save(prefixedoutputprefix + ".colibri.cls");
             cerr << "Built " << prefixedoutputprefix << ".colibri.cls , extending " << classfile << endl;
         }
+    } else if (!importfile.empty()) {
+        cerr << "Building classes from imported frequency list or vocabulary file" << endl;
+        classencoder = ClassEncoder();
+        classencoder.import(importfile);
+        classencoder.save(prefixedoutputprefix + ".colibri.cls");
+        cerr << "Built " << prefixedoutputprefix << ".colibri.cls" << endl;
     } else {
         cerr << "Building classes from corpus" << endl;
         classencoder = ClassEncoder();

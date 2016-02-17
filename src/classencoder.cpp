@@ -266,6 +266,38 @@ void ClassEncoder::save(const string & filename) {
 	OUT.close();
 }
 
+void ClassEncoder::import(const string & filename) {
+	bool isfreqlist = false;
+	bool firstline = true;
+	unordered_map<string,unsigned int> freqlist;
+    ifstream IN(filename);
+    while (IN.good()) {
+        string line;
+        getline(IN, line);         
+        line = trim(line, " \t\n\r"); //trim whitespace, control characters
+        const int s = line.size();
+		if (firstline || isfreqlist) {
+			for (int i = 0; i < s; i++) {
+				if (line[i] == '\t') {
+					isfreqlist = true;
+					const string word = string(line.begin(), line.begin() + i);
+					const string freq_s = string(line.begin() + i + 1, line.end());                  
+					unsigned int freq = (unsigned int) atoi(freq_s.c_str());
+					freqlist[word] = freq;
+					break;
+				} 
+			}
+		}
+		if (firstline || !isfreqlist) {
+			classes[line] = ++highestclass;
+		}
+		firstline = false;
+    }
+	if (isfreqlist) {
+		buildclasses(freqlist);
+	}
+
+}
         
 vector<unsigned int> ClassEncoder::encodeseq(const vector<string> & seq) {
     vector<unsigned int> result;
