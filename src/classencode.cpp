@@ -104,7 +104,7 @@ int main( int argc, char *argv[] ) {
             exit(0);  
 		default:
             cerr << "Unknown option: -" <<  optopt << endl;
-            abort ();
+			exit(2);
         }
     }
     
@@ -116,7 +116,8 @@ int main( int argc, char *argv[] ) {
     if (corpusfiles.empty() && (importfile.empty())) {
     	usage();
     	exit(2);
-    } else {
+    } 
+	if (!corpusfiles.empty()) {
         corpusfile = corpusfiles[0]; //only for extension determination
     }
 

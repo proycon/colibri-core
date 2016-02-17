@@ -277,22 +277,24 @@ void ClassEncoder::import(const string & filename) {
         getline(IN, line);         
         line = trim(line, " \t\n\r"); //trim whitespace, control characters
         const int s = line.size();
-		if (firstline || isfreqlist) {
-			for (int i = 0; i < s; i++) {
-				if (line[i] == '\t') {
-					isfreqlist = true;
-					const string word = string(line.begin(), line.begin() + i);
-					const string freq_s = string(line.begin() + i + 1, line.end());                  
-					unsigned int freq = (unsigned int) atoi(freq_s.c_str());
-					freqlist[word] = freq;
-					break;
-				} 
+		if (s > 0) {
+			if (firstline || isfreqlist) {
+				for (int i = 0; i < s; i++) {
+					if (line[i] == '\t') {
+						isfreqlist = true;
+						const string word = string(line.begin(), line.begin() + i);
+						const string freq_s = string(line.begin() + i + 1, line.end());                  
+						unsigned int freq = (unsigned int) atoi(freq_s.c_str());
+						freqlist[word] = freq;
+						break;
+					} 
+				}
 			}
+			if (!isfreqlist) {
+				classes[line] = ++highestclass;
+			}
+			firstline = false;
 		}
-		if (firstline || !isfreqlist) {
-			classes[line] = ++highestclass;
-		}
-		firstline = false;
     }
 	if (isfreqlist) {
 		buildclasses(freqlist);
