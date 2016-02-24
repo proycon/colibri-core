@@ -1624,7 +1624,7 @@ Pattern Pattern::extractskipcontent(const Pattern & instance) const {
     return pattern;
 }
 
-bool Pattern::instanceof(const Pattern & skipgram) const {  //TODO: refactor for v2
+bool Pattern::instanceof(const PatternPointer & skipgram) const {
     //Is this an instantiation of the skipgram?
     //Instantiation is not necessarily full, aka: A ? B C is also an instantiation
     //of A ? ? C
@@ -1632,8 +1632,7 @@ bool Pattern::instanceof(const Pattern & skipgram) const {  //TODO: refactor for
     if (skipgram.category() == NGRAM) return (*this) == skipgram;
 
     if (skipgram.category() == FLEXGRAM) {
-        //DYNAMIC SKIPGRAM
-        //TODO: NOT IMPLEMENTED YET!!
+        //TODO: Implement flexgram support!!!
        return false;
     } else {
         //FIXED SKIPGRAM
@@ -1641,16 +1640,16 @@ bool Pattern::instanceof(const Pattern & skipgram) const {  //TODO: refactor for
         if (skipgram.n() != _n) return false;
 
         for (unsigned int i = 0; i < _n; i++) {
-            const Pattern token1 = Pattern(skipgram, i, 1);
-            const Pattern token2 = Pattern(*this, i, 1);
-            if ((token1 != token2) && (token1.category() != SKIPGRAM)) return false;
+            const PatternPointer reftoken = PatternPointer(skipgram, i, 1);
+            const PatternPointer token = PatternPointer(*this, i, 1);
+            if ((reftoken != token) && (reftoken.category() != SKIPGRAM)) return false;
         }
         return true;
     }
 
 }
 
-bool PatternPointer::instanceof(const Pattern & skipgram) const {  //TODO: refactor for v2
+bool PatternPointer::instanceof(const PatternPointer & skipgram) const {  
     //Is this an instantiation of the skipgram?
     //Instantiation is not necessarily full, aka: A ? B C is also an instantiation
     //of A ? ? C
@@ -1658,8 +1657,7 @@ bool PatternPointer::instanceof(const Pattern & skipgram) const {  //TODO: refac
     if (skipgram.category() == NGRAM) return (*this) == skipgram;
 
     if (skipgram.category() == FLEXGRAM) {
-        //DYNAMIC SKIPGRAM
-        //TODO: NOT IMPLEMENTED YET!!
+        //TODO: Implement flexgram support!!!
        return false;
     } else {
         //FIXED SKIPGRAM
@@ -1667,9 +1665,9 @@ bool PatternPointer::instanceof(const Pattern & skipgram) const {  //TODO: refac
         if (skipgram.n() != _n) return false;
 
         for (unsigned int i = 0; i < _n; i++) {
-            const Pattern token1 = Pattern(skipgram, i, 1);
-            const PatternPointer token2 = PatternPointer(*this, i, 1);
-            if ((token2 != token1) && (token1.category() != SKIPGRAM)) return false;
+            const PatternPointer reftoken = PatternPointer(skipgram, i, 1);
+            const PatternPointer token = PatternPointer(*this, i, 1);
+            if ((token != reftoken) && (reftoken.category() != SKIPGRAM)) return false;
         }
         return true;
     }

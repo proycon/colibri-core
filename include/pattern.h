@@ -240,7 +240,7 @@ class Pattern {
      /**
       * Tests whether the pattern is an instantiation of the specified skipgram
       */
-     bool instanceof(const Pattern & skipgram) const; 
+     bool instanceof(const PatternPointer & skipgram) const; 
     
 
      /**
@@ -530,7 +530,7 @@ class PatternPointer {
 	  */
 	 int flexcollapse(unsigned char * collapseddata) const;
 
-     bool instanceof(const Pattern & skipgram) const; 
+     bool instanceof(const PatternPointer & skipgram) const; 
 
      operator Pattern() { return Pattern(*this); } //cast overload
      Pattern pattern() const { return Pattern(*this); } //cast overload
