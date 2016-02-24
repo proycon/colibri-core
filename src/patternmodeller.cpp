@@ -256,7 +256,7 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
 
 
             cerr << "Training" << outputqualifier << " model on  " << corpusfile <<endl;
-            inputmodel->train(corpusfile, options, constrainbymodel, continued,firstsentence,ignoreerrors);
+            inputmodel->train(corpusfile, options, constrainbymodel, NULL, continued,firstsentence,ignoreerrors);
             if (constrainbymodel) {
                 cerr << "Unloading constraint model" << endl;
                 delete constrainbymodel;
@@ -293,7 +293,7 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
 
             if ((!corpusfile.empty()) && (expand)) {
                 cerr << "Expanding model on  " << corpusfile <<endl;
-                inputmodel->train(corpusfile, options, constrainbymodel, continued,firstsentence,ignoreerrors);
+                inputmodel->train(corpusfile, options, constrainbymodel,NULL,  continued,firstsentence,ignoreerrors);
                 if (constrainbymodel) {
                     cerr << "Unloading constraint model" << endl;
                     delete constrainbymodel;
@@ -789,7 +789,7 @@ int main( int argc, char *argv[] ) {
 
                 //build new model from corpus
                 cerr << "Building new unindexed model from  " << corpusfile <<endl;
-                model.train(corpusfile, options, model.getinterface(), continued,firstsentence,ignoreerrors);
+                model.train(corpusfile, options, model.getinterface(), NULL, continued,firstsentence,ignoreerrors);
 
                 if (DOFLEXFROMSKIP) {
                     cerr << "Computing flexgrams from skipgrams" << corpusfile <<endl;
@@ -819,7 +819,7 @@ int main( int argc, char *argv[] ) {
 
                 //build new model from corpus
                 cerr << "Building new indexed model from  " << corpusfile <<endl;
-                model.train(corpusfile, options, model.getinterface(), continued, firstsentence,ignoreerrors);
+                model.train(corpusfile, options, model.getinterface(), NULL, continued, firstsentence,ignoreerrors);
 
                 if (!outputmodelfile.empty()) {
                     model.write(outputmodelfile);

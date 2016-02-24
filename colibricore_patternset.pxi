@@ -42,3 +42,6 @@ def add(self, Pattern pattern):
     if not isinstance(pattern, Pattern):
         raise ValueError("Expected instance of Pattern")
     self.data.insert(pattern.cpattern)
+
+#cdef getdatapointer(self):
+#    return address(self.data)

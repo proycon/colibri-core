@@ -820,11 +820,12 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param in The input stream of the corpus data (*.colibri.dat), may be NULL if a reverse index is loaded.
          * @param options Options for training
          * @param constrainbymodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
+         * @param filter A limited set of skipgrams/flexgrams to use as a filter, patterns will only be included if they are an instance of a skipgram in this list (i.e. disjunctive). Ngrams can also be included as filters, if a pattern subsumes one of the ngrams in the filter, it counts as a match (or if it matches it exactly).
          * @param continued Continued training on the same corpus data 
          * @param firstsentence First sentence index, useful for augmenting a model with another corpus (keep continued set to false in this case), defaults to 1
          * @param ignoreerrors Try to ignore errors (use for debug only)
          */
-        virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
+        virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL, PatternSet<> * filter = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
             if (options.MINTOKENS == -1) options.MINTOKENS = 2;
             if (options.MINTOKENS == 0)  options.MINTOKENS = 1;
             if (options.MINTOKENS_SKIPGRAMS < options.MINTOKENS) options.MINTOKENS_SKIPGRAMS = options.MINTOKENS;            
@@ -837,6 +838,24 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
             uint32_t sentence = firstsentence-1;
             const unsigned char version = (in != NULL) ? getdataversion(in) : 2;
+
+            bool filterhasngrams = false;
+            bool filterhasskipgrams = false; //(or flexgrams)
+            if (filter != NULL) {
+                if (filter->size() == 0) { //cython will pass empty sets
+                    filter = NULL;
+                } else {
+                    for (PatternSet<>::iterator iter = filter->begin(); iter != filter->end(); iter++) {
+                        if (iter->category() == NGRAM) {
+                            filterhasngrams = true;
+                        } else {
+                            filterhasskipgrams = true;
+                        }
+                        if (filterhasngrams && filterhasskipgrams) break;
+                    }
+                }
+            }
+
 
             bool iter_unigramsonly = false; //only needed for counting unigrams when we need them but they would be discarded
             bool skipunigrams = false; //will be set to true later only when MINTOKENS=1,MINLENGTH=1 to prevent double counting of unigrams
@@ -995,18 +1014,41 @@ class PatternModel: public MapType, public PatternModelInterface {
                                     }
                                 }
 
-
-                                //ngram (n-1) lookback
-                                if ((found) && (n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) { 
-                                    //check if sub-parts were counted
-                                    subngrams.clear();
-                                    backoffn = n - 1;
-                                    if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
-                                        iter->first.ngrams(subngrams, backoffn);
-                                    for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                                        if (!this->has(*iter2)) { 
-                                            found = false;
-                                            break;
+                                if ((found) && (filter != NULL) && (constrainbymodel == NULL)) {
+                                    //special behaviour: filter
+                                    bool matchfilter = false;
+                                    if ((filterhasngrams) && ( (n > 1) || (options.MINTOKENS == 1) ) ) {
+                                        subngrams.clear();
+                                        iter->first.subngrams(subngrams,1, n);
+                                        for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                            if (filter->has(*iter2)) {
+                                                matchfilter = true;
+                                                break;
+                                            }
+                                        }
+                                    } 
+                                    if ((!matchfilter) && (filterhasskipgrams)) {
+                                        for (PatternSet<Pattern>::iterator iter2 = filter->begin(); iter2 != filter->end(); iter2++) {
+                                            if (iter->first.instanceof(*iter2)) {
+                                                matchfilter = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (!matchfilter) continue;
+                                } else if (filter == NULL)  {
+                                    //normal behaviour: ngram (n-1) lookback
+                                    if ((found) && (n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) { 
+                                        //check if sub-parts were counted
+                                        subngrams.clear();
+                                        backoffn = n - 1;
+                                        if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
+                                            iter->first.ngrams(subngrams, backoffn);
+                                        for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                            if (!this->has(*iter2)) { 
+                                                found = false;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -1157,16 +1199,16 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param options Options for training
          * @param constrainbymodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          */
-        virtual void train(const std::string & filename, PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
+        virtual void train(const std::string & filename, PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL, PatternSet<> * filter = NULL,  bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
             if ((filename.size() > 3) && (filename.substr(filename.size()-3) == ".bz2")) {
                 std::ifstream * in = new std::ifstream(filename.c_str(), std::ios::in|std::ios::binary);
                 bz2istream * decompressor = new bz2istream(in->rdbuf());
-                this->train( (std::istream*) decompressor, options, constrainbymodel, continued, firstsentence, ignoreerrors);
+                this->train( (std::istream*) decompressor, options, constrainbymodel, filter, continued, firstsentence, ignoreerrors);
                 delete decompressor;
                 delete in;
             } else {
                 std::ifstream * in = new std::ifstream(filename.c_str());
-                this->train((std::istream*) in, options, constrainbymodel, continued, firstsentence, ignoreerrors);
+                this->train((std::istream*) in, options, constrainbymodel, filter, continued, firstsentence, ignoreerrors);
                 in->close();
                 delete in;
             }
@@ -2546,20 +2588,20 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
     
-    virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
+    virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL, PatternSet<> * filter = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
         if ((options.DOSKIPGRAMS) && (this->reverseindex == NULL)) {
             std::cerr << "ERROR: You must specify a reverse index if you want to train skipgrams (or train skipgrams exhaustively)" << std::endl;
             throw InternalError();
         }
-        PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::train(in,options,constrainbymodel,continued,firstsentence,ignoreerrors);
+        PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::train(in,options,constrainbymodel,filter,continued,firstsentence,ignoreerrors);
     }
 
-    virtual void train(const std::string & filename, PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
+    virtual void train(const std::string & filename, PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL,  PatternSet<> * filter = NULL,bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
         if ((options.DOSKIPGRAMS) && (this->reverseindex == NULL)) {
             std::cerr << "ERROR: You must specify a reverse index if you want to train skipgrams (or train skipgrams exhaustively)" << std::endl;
             throw InternalError();
         }
-        PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::train(filename,options,constrainbymodel,continued,firstsentence,ignoreerrors);
+        PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::train(filename,options,constrainbymodel,filter,continued,firstsentence,ignoreerrors);
     }
 
     /**

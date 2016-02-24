@@ -264,11 +264,15 @@ cpdef train(self, str filename, PatternModelOptions options, constrainmodel = No
     :type filename: str
     :param options: An instance of PatternModelOptions, containing the options used for loading
     :type options: PatternModelOptions
+    :param constrainmodel: A patternmodel or patternsetmodel to constrain training (default None)
+    :type constrainmodel: None, UnindexedPatternModel, IndexedPatternModel, PatternSetModel
     """
+
     if self.data.reverseindex != NULL:
         filename = ""
     if isinstance(self, IndexedPatternModel) and self.data.reverseindex == NULL and options.DOSKIPGRAMS:
         raise ValueError("No reversindex was specified but you are requesting to train skipgrams, set reverseindex to an IndexedCorpus instance upon model construction")
+
 
     if constrainmodel:
         assert len(constrainmodel) >= 0
@@ -281,48 +285,67 @@ cpdef train(self, str filename, PatternModelOptions options, constrainmodel = No
         elif isinstance(constrainmodel, PatternAlignmentModel_float):
             self.trainconstrainedbyalignmodel(filename, options, constrainmodel)
         else:
-            raise ValueError("Invalid valid for constrainmodel") #TODO: build patternmodel on the fly from an iterable of patterns or lower level patternstorage
+            raise ValueError("Invalid type for constrainmodel") #TODO: build patternmodel on the fly from an iterable of patterns or lower level patternstorage
     elif filename:
-        self.data.train(<string> encode(filename),options.coptions, NULL)
+        self.data.train(<string> encode(filename),options.coptions, NULL, NULL)
     elif self.data.reverseindex == NULL:
         raise ValueError("No filename or reverseindex specified!")
     else:
-        self.data.train(<istream*> NULL ,options.coptions, NULL)
+        self.data.train(<istream*> NULL ,options.coptions, NULL, NULL)
+
+cpdef train_filtered(self, str filename, PatternModelOptions options, PatternSet filterset):
+    """Train the patternmodel on the specified corpus data (a *.colibri.dat file)
+
+    :param filename: The name of the file to load, must be a valid colibri.dat file. Can be set to an empty string if a corpus was pre-loaded already.
+    :type filename: str
+    :param options: An instance of PatternModelOptions, containing the options used for loading
+    :type options: PatternModelOptions
+    :param filterset: An instance of PatternSet. A limited set of skipgrams/flexgrams to use as a filter, patterns will only be included if they are an instance of a skipgram in this list (i.e. disjunctive). Ngrams can also be included as filters, if a pattern subsumes one of the ngrams in the filter, it counts as a match (or if it matches it exactly).
+    """
+    cdef cPatternSet[uint] * cfilterset = address(filterset.data)
+
+    if filename:
+        self.data.train(<string> encode(filename),options.coptions, NULL, cfilterset)
+    elif self.data.reverseindex == NULL:
+        raise ValueError("No filename or reverseindex specified!")
+    else:
+        self.data.train(<istream*> NULL ,options.coptions, NULL, cfilterset)
+
 
 cdef cPatternModelInterface* getinterface(self):
     return self.data.getinterface()
 
 cpdef trainconstrainedbyindexedmodel(self, str filename, PatternModelOptions options, IndexedPatternModel constrainmodel):
     if filename:
-        self.data.train(<string> encode(filename),options.coptions,  constrainmodel.getinterface())
+        self.data.train(<string> encode(filename),options.coptions,  constrainmodel.getinterface(), NULL)
     elif self.data.reverseindex == NULL:
         raise ValueError("No filename or reverseindex specified!")
     else:
-        self.data.train(<istream*> NULL,options.coptions,  constrainmodel.getinterface())
+        self.data.train(<istream*> NULL,options.coptions,  constrainmodel.getinterface(), NULL)
 
 cpdef trainconstrainedbyunindexedmodel(self, str filename, PatternModelOptions options, UnindexedPatternModel constrainmodel):
     if filename:
-        self.data.train(<string> encode(filename),options.coptions,  constrainmodel.getinterface())
+        self.data.train(<string> encode(filename),options.coptions,  constrainmodel.getinterface(), NULL)
     elif self.data.reverseindex == NULL:
         raise ValueError("No filename or reverseindex specified!")
     else:
-        self.data.train(<istream*> NULL,options.coptions,  constrainmodel.getinterface())
+        self.data.train(<istream*> NULL,options.coptions,  constrainmodel.getinterface(), NULL)
 
 cpdef trainconstrainedbypatternsetmodel(self, str filename, PatternModelOptions options, PatternSetModel constrainmodel):
     if filename:
-        self.data.train(<string> encode(filename),options.coptions,  constrainmodel.getinterface())
+        self.data.train(<string> encode(filename),options.coptions,  constrainmodel.getinterface(), NULL)
     elif self.data.reverseindex == NULL:
         raise ValueError("No filename or reverseindex specified!")
     else:
-        self.data.train(<istream*> NULL,options.coptions,  constrainmodel.getinterface())
+        self.data.train(<istream*> NULL,options.coptions,  constrainmodel.getinterface(), NULL)
 
 cpdef trainconstrainedbyalignmodel(self, str filename, PatternModelOptions options, PatternAlignmentModel_float constrainmodel):
     if filename:
-        self.data.train(<string> encode(filename),options.coptions,  constrainmodel.getinterface())
+        self.data.train(<string> encode(filename),options.coptions,  constrainmodel.getinterface(), NULL)
     elif self.data.reverseindex == NULL:
         raise ValueError("No filename or reverseindex specified!")
     else:
-        self.data.train(<istream*>  NULL,options.coptions,  constrainmodel.getinterface())
+        self.data.train(<istream*>  NULL,options.coptions,  constrainmodel.getinterface(), NULL)
 
 cpdef report(self):
     """Print a detailed statistical report to stdout"""

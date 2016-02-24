@@ -380,8 +380,8 @@ cdef extern from "patternmodel.h":
         IndexedCorpus * reverseindex
 
         PatternModelInterface * getinterface() nogil
-        void train(string filename, PatternModelOptions options, PatternModelInterface *)
-        void train(istream*, PatternModelOptions options, PatternModelInterface *)
+        void train(string filename, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
+        void train(istream*, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
 
         unsigned int totaloccurrencesingroup(int category, int n)
         unsigned int totalpatternsingroup(int category, int n)
@@ -445,8 +445,8 @@ cdef extern from "patternmodel.h":
         float frequency(Pattern&) nogil
 
         PatternModelInterface * getinterface() nogil
-        void train(string filename, PatternModelOptions options, PatternModelInterface *)
-        void train(istream*, PatternModelOptions options, PatternModelInterface *)
+        void train(string filename, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
+        void train(istream*, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
 
         IndexedCorpus * reverseindex
         bool externalreverseindex
