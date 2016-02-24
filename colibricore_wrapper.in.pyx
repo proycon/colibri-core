@@ -475,7 +475,7 @@ cdef class Pattern:
         return self.cpattern.isflexgram()
 
     def instanceof(self, Pattern skipgram):
-       """Is this an instantiation of the skipgram/flexgram? Instantiation is not necessarily full, aka: A ? B C is also an instantiation of A ? ? C"""
+        """Is this an instantiation of the skipgram/flexgram? Instantiation is not necessarily full, aka: A ? B C is also an instantiation of A ? ? C"""
         return self.cpattern.instanceof(skipgram.cpattern.getpointer())
 
 
