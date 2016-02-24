@@ -474,6 +474,10 @@ cdef class Pattern:
     def isflexgram(self):
         return self.cpattern.isflexgram()
 
+    def instanceof(self, Pattern skipgram):
+       """Is this an instantiation of the skipgram/flexgram? Instantiation is not necessarily full, aka: A ? B C is also an instantiation of A ? ? C"""
+        return self.cpattern.instanceof(skipgram.cpattern.getpointer())
+
 
 cdef class IndexedData:
     """IndexedData is essentially a set of indexes in the form of (sentence,token) tuples, sentence is generally 1-indexed, token is always 0-indexed. It is used by Indexed Pattern Models to keep track of exact occurrences of all the patterns. Use len() to if you're merely interested in the number of occurrences, rather than their exact wherabouts."""

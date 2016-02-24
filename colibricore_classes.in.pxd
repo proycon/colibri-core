@@ -63,6 +63,8 @@ cdef extern from "pattern.h":
         Pattern reverse() nogil
         PatternPointer getpointer() nogil
 
+        bool instanceof(PatternPointer) nogil
+
     Pattern patternfromfile(const string&)
 
     cdef cppclass PatternPointer:
@@ -92,6 +94,8 @@ cdef extern from "pattern.h":
         bool isflexgram() nogil
         bool unknown() nogil
         PatternPointer reverse() nogil
+
+        bool instanceof(PatternPointer) nogil
 
 
 
