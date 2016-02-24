@@ -528,6 +528,11 @@ int main( int argc, char *argv[] ) {
 		cerr << "Count check "; test(i,2);
 		cerr << "Instanceof test (positive) "; test( ngram.instanceof(skipgram) );
         
+        string querystring2_1gap = "To be or {*1*} to be";
+        Pattern skipgram_1gap = encoder.buildpattern(querystring2_1gap, true);
+		cerr << "Instanceof test with less abstract skipgram "; test( skipgram_1gap.instanceof(skipgram) );
+		cerr << "Instanceof test (ngram equality) "; test( ngram.instanceof(ngram) );
+
         Pattern revskipgram = skipgram.reverse();
         cerr << "Reverse skipgram: "; test(revskipgram.decode(classdecoder),"be to {*} or {*} To");
         cerr << "N: "; test(revskipgram.n(),6);
