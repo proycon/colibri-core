@@ -526,10 +526,14 @@ int main( int argc, char *argv[] ) {
             i += 1;
         }
 		cerr << "Count check "; test(i,2);
+		cerr << "Instanceof test (positive) "; test( ngram.instanceof(skipgram) );
         
         Pattern revskipgram = skipgram.reverse();
         cerr << "Reverse skipgram: "; test(revskipgram.decode(classdecoder),"be to {*} or {*} To");
         cerr << "N: "; test(revskipgram.n(),6);
+		cerr << "Instanceof test (negative) "; test( !ngram.instanceof(revskipgram) );
+
+
         
         cerr << "--- Skipgram as pattern pointer ---" << endl;
 
@@ -575,6 +579,7 @@ int main( int argc, char *argv[] ) {
             i += 1;
         }
 		cerr << "Count check "; test(i,2);
+		cerr << "Instanceof test (positive) "; test( ngram.instanceof(pskipgram) );
         
         cerr << "----------------------------------------------------" << endl;
 
