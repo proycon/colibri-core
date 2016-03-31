@@ -26,7 +26,7 @@
     <link rel="top" title="Colibri Core 1.0.1 documentation" href="#" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">  
@@ -100,15 +100,15 @@ aspects of the software.</p>
 <h3>Installing dependencies<a class="headerlink" href="#installing-dependencies" title="Permalink to this headline">¶</a></h3>
 <p>To compile Colibri Core, you need a sane build environment, install the necessary dependencies for your distribution.</p>
 <p>For Debian/Ubuntu:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ sudo apt-get install make gcc g++ pkg-config autoconf-archive libtool autotools-dev libbz2-dev zlib1g-dev libtar-dev python3 python3-dev cython3&quot;
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ sudo apt-get install make gcc g++ pkg-config autoconf-archive libtool autotools-dev libbz2-dev zlib1g-dev libtar-dev python3 python3-dev cython3&quot;
 </pre></div>
 </div>
 <p>For RedHat-based systems (run as root):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># yum install pkgconfig libtool autoconf automake autoconf-archive make gcc gcc-c++ libtar libtar-devel python3 python3-devel zlib zlib-devel python3-pip bzip2 bzip2-devel cython3</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># yum install pkgconfig libtool autoconf automake autoconf-archive make gcc gcc-c++ libtar libtar-devel python3 python3-devel zlib zlib-devel python3-pip bzip2 bzip2-devel cython3</span>
 </pre></div>
 </div>
 <p>For Mac OS X with <a class="reference external" href="http://brew.sh">homebrew</a>:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ brew install autoconf automake libtool autoconf-archive python3 pkg-config
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ brew install autoconf automake libtool autoconf-archive python3 pkg-config
 </pre></div>
 </div>
 <p>Arch Linux users can simply install Colibri Core and all dependencies directly from the <a class="reference external" href="https://aur.archlinux.org/packages/colibri-core-git">Arch User Repository</a> , no further installation is necessary in this case.</p>
@@ -120,22 +120,22 @@ named <code class="docutils literal"><span class="pre">pip3</span></code> for th
 will automatically download, compile, and install all of Colibi Core.</p>
 <p>First ensure you installed all dependencies from the previous section!</p>
 <p>Colibri Core requires an up-to-date version of Cython first (0.23 or above), or the installation will fail, we use <code class="docutils literal"><span class="pre">pip</span></code> to compile it from scratch:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ sudo pip3 install cython
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ sudo pip3 install cython
 </pre></div>
 </div>
 <p>Then we can install Colibri Core itself:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ sudo pip3 install colibricore
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ sudo pip3 install colibricore
 </pre></div>
 </div>
 <p>For installation without root privileges we recommend creating a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">Python Virtual environment,</a> , in which case all of Colibri Code will be installed under it:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ virtualenv --python=python3 coco
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ virtualenv --python=python3 coco
 $ . coco/bin/activate       #you will need to do this each time you want to use Colibri Core
 (coco)$ pip install cython
 (coco)$ pip install colibricore
 </pre></div>
 </div>
 <p>Alternatively, pass a prefix:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ pip3 install --install-option=&quot;--prefix=/my/installation/directory&quot; colibricore
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ pip3 install --install-option=&quot;--prefix=/my/installation/directory&quot; colibricore
 </pre></div>
 </div>
 <p><strong>Important Note:</strong> If you install Colibri Core locally (in a Python Virtual Environment
@@ -153,25 +153,25 @@ Environment). Otherwise, you will be confronted with an error: <code class="docu
 <p>Colibri Core is hosted on <a class="reference external" href="https//github.com/proycon/colibri-core/">github</a>
 and should ideally be retrieved through the versioning control system <code class="docutils literal"><span class="pre">git</span></code>.
 Provided git is installed on your system, this is done as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ git clone https://github.com/proycon/colibri-core.git
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ git clone https://github.com/proycon/colibri-core.git
 </pre></div>
 </div>
 <p>Alternatively, you can download and extract release archives from the
 aforementioned Github page.</p>
 <p>Now we can install Colibri Core itself, the following will install everything globally under <code class="docutils literal"><span class="pre">/usr/</span></code> and hence requires administrative privileges:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ sudo python3 setup.py install
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ sudo python3 setup.py install
 </pre></div>
 </div>
 <p>If you install from within a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">Python Virtual environment,</a> everything will be
 installed under it. This does not require root privileges:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ virtualenv --python=python3 coco
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ virtualenv --python=python3 coco
 $ . coco/bin/activate       #you will need to do this each time you want to use Colibri Core
 (coco)$ pip install cython
 (coco)$ pip install colibricore
 </pre></div>
 </div>
 <p>For local installation elsewhere, pass a prefix, for example:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ python3 setup.py install --prefix=/home/yourname/local
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ python3 setup.py install --prefix=/home/yourname/local
 </pre></div>
 </div>
 <p>The note at the end of the previous section applies for any non-global installation!</p>
@@ -191,7 +191,7 @@ then first to install the following dependency. By default FoLiA support is disa
 </div></blockquote>
 <p>Including pulling the sources from github, Colibri Core can be compiled and
 installed as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ git clone https://github.com/proycon/colibri-core.git
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ git clone https://github.com/proycon/colibri-core.git
 $ cd colibri-core
 $ bash bootstrap
 $ ./configure [--prefix=/usr] [--with-folia --with-folia-path=/path/to/libfolia]
@@ -203,18 +203,18 @@ $ sudo make install
 <p>To compile the Python binding manually, we first create an empty file
 <code class="docutils literal"><span class="pre">manual</span></code> which signals the build process to not attempt to recompile the C++
 library itself:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ touch manual
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ touch manual
 </pre></div>
 </div>
 <p>Then build as follows, provided Colibri Core is in a globally accessible
 location already:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ sudo python3 ./setup.py install
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ sudo python3 ./setup.py install
 </pre></div>
 </div>
 <p>If you used a prefix and want to install in a customised non-global location,
 again use <code class="docutils literal"><span class="pre">--prefix</span></code> along with <code class="docutils literal"><span class="pre">--include-dirs</span></code> and <code class="docutils literal"><span class="pre">--library-dirs</span></code> to
 point to where the C++ headers and the library are installed:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ python3 ./setup.py build_ext --include-dirs=/path/to/include/colibri-core  --library-dirs=/path/to/lib/  install --prefix=/path/to/somewhere/
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ python3 ./setup.py build_ext --include-dirs=/path/to/include/colibri-core  --library-dirs=/path/to/lib/  install --prefix=/path/to/somewhere/
 </pre></div>
 </div>
 <p>Update <code class="docutils literal"><span class="pre">$LD_LIBRARY_PATH</span></code> and <code class="docutils literal"><span class="pre">$PYTHONPATH</span></code> where necessary.</p>
@@ -223,11 +223,11 @@ point to where the C++ headers and the library are installed:</p>
 <h3>Keeping colibri up to date<a class="headerlink" href="#keeping-colibri-up-to-date" title="Permalink to this headline">¶</a></h3>
 <p>It is recommended to often check back for new versions of Colibri Core.</p>
 <p>If you used, <code class="docutils literal"><span class="pre">pip</span></code> just run:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ pip3 install -U colibricore
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ pip3 install -U colibricore
 </pre></div>
 </div>
 <p>For the git version:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ git pull
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ git pull
 </pre></div>
 </div>
 <p>And then recompile as per the above instructions.</p>
@@ -257,7 +257,7 @@ users may it in the repository (<code class="docutils literal"><span class="pre"
 can find it in homebrew (<code class="docutils literal"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">naiaden/lama/ucto</span></code>). This will also do
 sentence detection and, with the <code class="docutils literal"><span class="pre">-n</span></code> flag output one line per sentence, as
 Colibri prefers:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ ucto -L en -n untokenisedcorpus.txt &gt; tokenisedcorpus.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ ucto -L en -n untokenisedcorpus.txt &gt; tokenisedcorpus.txt
 </pre></div>
 </div>
 <p>The <code class="docutils literal"><span class="pre">-L</span></code> specifies the language of your corpus (English in this case), several others are
@@ -276,7 +276,7 @@ text, in the order they occur, i.e. by moving a sliding window over the text.</p
 <li><dl class="first docutils">
 <dt><code class="docutils literal"><span class="pre">colibri-freqlist</span></code> - Extracts all n-grams from one or more corpus text files and</dt>
 <dd><p class="first last">outputs a frequency list. Also allows for the extraction of skipgrams. By
-default all n-grams are extract, but an occurrence threshold can be set with the <code class="docutils literal"><span class="pre">-t</span></code> flag.</p>
+default all n-grams are extracted, but an occurrence threshold can be set with the <code class="docutils literal"><span class="pre">-t</span></code> flag.</p>
 </dd>
 </dl>
 </li>
@@ -290,7 +290,7 @@ read the section <em>Statistical Reports and Histograms</em>.</p>
 <li><p class="first"><code class="docutils literal"><span class="pre">colibri-histogram</span></code> - Prints a histogram of ngram/skipgram occurrence count</p>
 </li>
 <li><p class="first"><code class="docutils literal"><span class="pre">colibri-queryngrams</span></code> - Interactive tool allowing you to query ngrams
-from standard input, various statistics and relations can be outputted.</p>
+from standard input, various statistics and relations can be output.</p>
 </li>
 <li><p class="first"><code class="docutils literal"><span class="pre">colibri-reverseindex</span></code> - Computes and prints a reverse index for the
 specified corpus text file. For each token position in the corpus, it will
@@ -338,7 +338,7 @@ and memory footprint significantly smaller.</p>
 <h3>Class-encoding your corpus<a class="headerlink" href="#class-encoding-your-corpus" title="Permalink to this headline">¶</a></h3>
 <p>When working with colibri, you first want to <strong>class encode</strong> your corpus. This is done by the program <code class="docutils literal"><span class="pre">colibri-classencode</span></code>. It takes as input a <em>tokenised</em> monolingual corpus in plain text format, containing <em>one sentence per line</em>, as a line is the only structural unit Colibri works with, extracted patterns will never cross line boundaries. Each line should be delimited by a single newline character (unix line endings). If you desire another structural unit (such as for example a tweet, or a paragraph), simply make sure each is on one line.</p>
 <p>Colibri is completely agnostic when it comes to the character encoding of the input. Given a corpus file <code class="docutils literal"><span class="pre">yourcorpus</span></code>, class encoding is done as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode yourcorpus
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-classencode yourcorpus
 </pre></div>
 </div>
 <p>This results in two files:</p>
@@ -349,7 +349,7 @@ and memory footprint significantly smaller.</p>
 </ul>
 </div></blockquote>
 <p>If your corpus is not tokenised yet, you can consider using the tokeniser <a class="reference external" href="http://ilk.uvt.nl/ucto">ucto</a> (not part of colibri), this will also do sentence detection and output one line per sentence:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ ucto -L en -n untokenisedcorpus.txt &gt; tokenisedcorpus.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ ucto -L en -n untokenisedcorpus.txt &gt; tokenisedcorpus.txt
 </pre></div>
 </div>
 <p>The above sample is for English (<code class="docutils literal"><span class="pre">-L</span> <span class="pre">en</span></code>), several other languages are also supported.</p>
@@ -357,7 +357,7 @@ and memory footprint significantly smaller.</p>
 XML</em> (<a class="reference external" href="http://proycon.github.com/folia">folia website</a>) if you compiled with
 FoLiA support, make sure such files end with the extension <code class="docutils literal"><span class="pre">xml</span></code> and they
 will be automatically interpreted as FoLiA XML:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode yourcorpus.xml
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-classencode yourcorpus.xml
 </pre></div>
 </div>
 <p>The class file is the vocabulary of your corpus, it simply maps word strings to
@@ -365,7 +365,7 @@ integer. You must always ensure that whenever you are working with multiple
 models, and you want to compare them, to use the exact same class file. It is
 possible to encode multiple corpus files similtaneously,  generating a joined
 class file:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode yourcorpus1.txt yourcorpus2.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-classencode yourcorpus1.txt yourcorpus2.txt
 </pre></div>
 </div>
 <p>This results in <code class="docutils literal"><span class="pre">yourcorpus1.colibri.cls</span></code> and <code class="docutils literal"><span class="pre">yourcorpus1.colibri.dat</span></code> and
@@ -373,12 +373,12 @@ class file:</p>
 explicit name can be passed with the <code class="docutils literal"><span class="pre">-o</span></code> flag. It is also possible to encode
 multiple corpora in a single unified file by passing the <code class="docutils literal"><span class="pre">-u</span></code> flag. This is
 often desired if you want to train a pattern model on all the joined data:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode -o out -u yourcorpus1.txt yourcorpus2.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-classencode -o out -u yourcorpus1.txt yourcorpus2.txt
 </pre></div>
 </div>
 <p>This will produce <code class="docutils literal"><span class="pre">out.colibri.dat</span></code> and <code class="docutils literal"><span class="pre">out.colibri.cls</span></code>. You can use the <code class="docutils literal"><span class="pre">-l</span></code> option to read input filenames from file instead of command line arguments (one filename per line).</p>
 <p>If you have a pre-existing class file you can load it with the <code class="docutils literal"><span class="pre">-c</span></code> flag, and use it to encode new data:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode -c yourcorpus1.colibri.cls yourcorpus2.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-classencode -c yourcorpus1.colibri.cls yourcorpus2.txt
 </pre></div>
 </div>
 <p>This will produce a <code class="docutils literal"><span class="pre">yourcorpus2.colibri.dat</span></code>, provided that all of the word
@@ -391,7 +391,7 @@ classes found. It has to be noted that this extension method spoils the optimal
 compression as classes are no longer strictly sorted by frequency. If you can
 all needed data in one go, then that is always preferred.</p>
 <p>This setup, however, is often seen in a train/test paradigm:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode -f testset.txt -c trainset.colibri.cls -e
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-classencode -f testset.txt -c trainset.colibri.cls -e
 </pre></div>
 </div>
 <p>This will result in an encoded corpus <code class="docutils literal"><span class="pre">testset.colibri.dat</span></code> and an <em>extended</em> class file <code class="docutils literal"><span class="pre">testset.colibri.cls</span></code>, which is a superset of the original <code class="docutils literal"><span class="pre">trainset.cls</span></code>, adding only those classes that did not yet exist in the training data.</p>
@@ -399,13 +399,13 @@ all needed data in one go, then that is always preferred.</p>
 <div class="section" id="class-decoding-your-corpus">
 <h3>Class-decoding your corpus<a class="headerlink" href="#class-decoding-your-corpus" title="Permalink to this headline">¶</a></h3>
 <p>Given an encoded corpus and a class file, the original corpus can always be reconstructed (unless the <code class="docutils literal"><span class="pre">-U</span></code> option was used in encoding to allow unknown words). This we call <em>class decoding</em> and is done using the <code class="docutils literal"><span class="pre">colibri-classdecode</span></code> program:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-classdecode -f yourcorpus.colibri.dat -c yourcorpus.colibri.cls
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-classdecode -f yourcorpus.colibri.dat -c yourcorpus.colibri.cls
 </pre></div>
 </div>
 <p>Partial decoding can be done by specifying start and end line numbers using the
 flags <code class="docutils literal"><span class="pre">-s</span></code> and <code class="docutils literal"><span class="pre">-e</span></code> respectively.</p>
 <p>Output will be to <code class="docutils literal"><span class="pre">stdout</span></code>, you can redirect it to a file as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-classdecode -f yourcorpus.colibri.dat -c yourcorpus.colibri.cls &gt; yourcorpus.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-classdecode -f yourcorpus.colibri.dat -c yourcorpus.colibri.cls &gt; yourcorpus.txt
 </pre></div>
 </div>
 </div>
@@ -465,7 +465,7 @@ Always specify the output file using the <code class="docutils literal"><span cl
 is specified with parameter <code class="docutils literal"><span class="pre">--threshold</span></code> or <code class="docutils literal"><span class="pre">-t</span></code>, patterns occuring less will not be counted.
 The default value is two.  The maximum value for n, i.e. the maximum
 n-gram/skipgram size, can be restricted using the parameter <code class="docutils literal"><span class="pre">-l</span></code>.:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller --datafile yourcorpus.dat --threshold 10 --outputmodel yourcorpus.colibri.indexedpatternmodel
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller --datafile yourcorpus.dat --threshold 10 --outputmodel yourcorpus.colibri.indexedpatternmodel
 </pre></div>
 </div>
 <p>This outputted model <code class="docutils literal"><span class="pre">yourcorpus.colibri.indexedpatternmodel</span></code> is stored in a
@@ -473,7 +473,7 @@ binary format. To print it into a human readable presentation it needs to be
 decoded. The <code class="docutils literal"><span class="pre">colibri-patternmodeller</span></code> program can do this by specifying an
 input model using the <code class="docutils literal"><span class="pre">--inputmodel</span></code> or <code class="docutils literal"><span class="pre">-i</span></code> flag, the class file using the <code class="docutils literal"><span class="pre">--classfile</span></code> (<code class="docutils literal"><span class="pre">-c</span></code>) parameter,
 and the desired action to print it all using <code class="docutils literal"><span class="pre">--print</span></code> (<code class="docutils literal"><span class="pre">-P</span></code>):</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --classfile yourcorpus.colibri.cls --print
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --classfile yourcorpus.colibri.cls --print
 </pre></div>
 </div>
 <p>Optionally, instead of or in addition to outputting a model to file using
@@ -482,7 +482,7 @@ and the desired action to print it all using <code class="docutils literal"><spa
 reserved for the header. This facilitates easy parsing as you can just load it
 into any software accepting CSV files, such as spreadsheets. An excerpt
 follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>PATTERN     COUNT   TOKENS  COVERAGE        CATEGORY        SIZE    FREQUENCY       REFERENCES
+<div class="highlight-python"><div class="highlight"><pre><span></span>PATTERN     COUNT   TOKENS  COVERAGE        CATEGORY        SIZE    FREQUENCY       REFERENCES
 For 2       2       0.0059  ngram   1       0.0121  11:0 15:0
 death       2       2       0.0059  ngram   1       0.0121  11:5 23:7
 who 2       2       0.0059  ngram   1       0.0121  15:1 21:5
@@ -517,17 +517,17 @@ as skip content, i.e. possible options filling the gaps, will be considered.
 The default is set to two.</li>
 </ul>
 <p>Here is an example of generating an indexed pattern model including skipgrams:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller --datafile yourcorpus.colibri.dat --threshold 10 --skipgrams --skiptypes 3 --outputmodel yourcorpus.colibri.indexedpatternmodel
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller --datafile yourcorpus.colibri.dat --threshold 10 --skipgrams --skiptypes 3 --outputmodel yourcorpus.colibri.indexedpatternmodel
 </pre></div>
 </div>
 <p>If you want to generate unindexed models, simply add the flag <code class="docutils literal"><span class="pre">--unindexed</span></code> or <code class="docutils literal"><span class="pre">-u</span></code> for short. Do note
 that for unindexed models the parameter <code class="docutils literal"><span class="pre">--skiptypes</span></code> has no effect, it will extract
 all skipgrams it can find as if <code class="docutils literal"><span class="pre">-skiptypes</span></code> were set to one! If you want decent
-skpigrams, you&#8217;re best off with an indexed model. Note that indexed models can
+skipgrams, you&#8217;re best off with an indexed model. Note that indexed models can
 always be read and printed in an unindexed way (with the <code class="docutils literal"><span class="pre">--unindexed</span></code> flag); but
 unindexed models can not be read in an indexed way, as they simply lack
 indices:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --classfile yourcorpus.colibri.cls --unindexed --print
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --classfile yourcorpus.colibri.cls --unindexed --print
 $ colibri-patternmodeller --inputmodel yourcorpus.colibri.unindexedpatternmodel --classfile yourcorpus.colibri.cls --unindexed --print
 </pre></div>
 </div>
@@ -562,18 +562,18 @@ and subsequently loads this model and searches the corpus for indices for all
 patterns in the model. Whilst this method is more time-consuming, it prevents
 the memory bump (after counting, prior to pruning) that normal one-stage
 building of indexed models have. Two-stage building is enabled using the <code class="docutils literal"><span class="pre">-2</span></code> flag:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -2 --datafile yourcorpus.colibri.dat --threshold 10 --skipgrams --skiptypes 3 -outputmodel yourcorpus.colibri.indexedpatternmodel
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller -2 --datafile yourcorpus.colibri.dat --threshold 10 --skipgrams --skiptypes 3 -outputmodel yourcorpus.colibri.indexedpatternmodel
 </pre></div>
 </div>
 </div>
 <div class="section" id="statistical-reports-and-histograms">
 <h3>Statistical reports and histograms<a class="headerlink" href="#statistical-reports-and-histograms" title="Permalink to this headline">¶</a></h3>
 <p>If you have a pattern model, you can generate a statistical report which includes information on the number of occurrences and number of types for patterns, grouped for n-grams or skipgrams for a specific value of <em>n</em>. A report is generated using the <code class="docutils literal"><span class="pre">-report</span></code> (<code class="docutils literal"><span class="pre">-R</span></code>) flag, the input model is specified using <code class="docutils literal"><span class="pre">--inputmodel</span></code> (<code class="docutils literal"><span class="pre">-i</span></code>):</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --report
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --report
 </pre></div>
 </div>
 <p>Example output:</p>
-<div class="highlight-python"><div class="highlight"><pre>REPORT
+<div class="highlight-python"><div class="highlight"><pre><span></span>REPORT
 ----------------------------------
                             PATTERNS    TOKENS  COVERAGE     TYPES
 Total:                             -       340         -       177
@@ -623,18 +623,18 @@ part of the pattern</li>
 </div></blockquote>
 <p>To better understand these metrics, let&#8217;s perceive them in the following test
 sentence:</p>
-<div class="highlight-python"><div class="highlight"><pre>to be or not to be , that is the question
+<div class="highlight-python"><div class="highlight"><pre><span></span>to be or not to be , that is the question
 </pre></div>
 </div>
 <p>If we generate an indexed pattern model purely on this sentence, <strong>with threshold two</strong>. We find the following three patterns:</p>
-<div class="highlight-python"><div class="highlight"><pre>PATTERN COUNT   TOKENS  COVERAGE        CATEGORY        SIZE    FREQUENCY REFERENCES
+<div class="highlight-python"><div class="highlight"><pre><span></span>PATTERN COUNT   TOKENS  COVERAGE        CATEGORY        SIZE    FREQUENCY REFERENCES
 to      2       2       0.181818        ngram            1       0.5     1:0 1:4
 be      2       2       0.181818        ngram            1       0.5     1:1 1:5
 to be   2       4       0.363636        ngram            2       1       1:0 1:4
 </pre></div>
 </div>
 <p>The report then looks as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>REPORT
+<div class="highlight-python"><div class="highlight"><pre><span></span>REPORT
 ----------------------------------
                             PATTERNS    TOKENS  COVERAGE     TYPES
 Total:                             -        11         -         9
@@ -668,11 +668,11 @@ this model to two.</p>
 were covered. Tokens and types not covered did not make the set thresholds.
 Make sure to use indexed models if you want accurate coverage data.</p>
 <p>A histogram can also be generated, using the <code class="docutils literal"><span class="pre">--histogram</span></code> (<code class="docutils literal"><span class="pre">-H</span></code>) flag:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --histogram
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --histogram
 </pre></div>
 </div>
 <p>Example output:</p>
-<div class="highlight-python"><div class="highlight"><pre>OCCURRENCES   PATTERNS
+<div class="highlight-python"><div class="highlight"><pre><span></span>OCCURRENCES   PATTERNS
 2   39
 3   5
 4   13
@@ -690,13 +690,13 @@ Make sure to use indexed models if you want accurate coverage data.</p>
 <div class="section" id="filtering-models">
 <h3>Filtering models<a class="headerlink" href="#filtering-models" title="Permalink to this headline">¶</a></h3>
 <p>Patterns models can be read with <code class="docutils literal"><span class="pre">--inputmodel</span></code> and filtered by setting stricter thresholds prior to printing, reporting or outputting to file. An example:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel -t 20 --skiptypes 10 --outputmodel yourcorpus_filtered.colibri.indexedpatternmodel --print
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel -t 20 --skiptypes 10 --outputmodel yourcorpus_filtered.colibri.indexedpatternmodel --print
 </pre></div>
 </div>
 <p>You can also filter pattern models by intersecting with another pattern model
 using the <code class="docutils literal"><span class="pre">--constraintmodel</span></code> option. This only works when both are built on
 the same class file:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --constraintmodel yourcorpus2.colibri.indexedpatternmodel --outputmodel yourcorpus_filtered.colibri.indexedpatternmodel
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller --inputmodel yourcorpus.colibri.indexedpatternmodel --constraintmodel yourcorpus2.colibri.indexedpatternmodel --outputmodel yourcorpus_filtered.colibri.indexedpatternmodel
 </pre></div>
 </div>
 <p>The output pattern model will contain only those patterns that were present in
@@ -728,7 +728,7 @@ with testing on another corpus:</p>
 <dd>$ colibri-patternmodeller &#8211;datafile testset.colibri.dat &#8211;constraintmodel trainset.indexedpatternmodel.colibri &#8211;outputmodel testset.colibri.indexedpatternmodel</dd>
 </dl>
 <p>It is, however, more memory efficient to load the constraint model as the inputmodel (using <code class="docutils literal"><span class="pre">--inputmodel</span></code>), and specify <code class="docutils literal"><span class="pre">--constrained</span></code>, this will do an in-place rebuilding of the model:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller --datafile testset.colibri.dat --constrained trainset.indexedpatternmodel.colibri --outputmodel testset.colibri.indexedpatternmodel
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller --datafile testset.colibri.dat --constrained trainset.indexedpatternmodel.colibri --outputmodel testset.colibri.indexedpatternmodel
 </pre></div>
 </div>
 <p>This results in a model <code class="docutils literal"><span class="pre">testset.colibri.indexedpatternmodel</span></code> that only contains patterns that also occur in the specified training model.</p>
@@ -752,7 +752,7 @@ reverse index makes loading a model faster (especially on larger models), but at
 the cost of higher memory usage, especially in case of sparse models. The usual
 <code class="docutils literal"><span class="pre">--datafile</span></code> flag takes enables a reverse index by definition.</p>
 <p>To compute and display the full reverse index, use the <code class="docutils literal"><span class="pre">--printreverseindex</span></code> (<code class="docutils literal"><span class="pre">-Z</span></code>) flag:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller  --inputmodel yourcorpus.indexedpatternmodel.colibri --datafile yourcorpus.colibri.dat --classfile yourcorpus.colibri.cls --printreverseindex
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller  --inputmodel yourcorpus.indexedpatternmodel.colibri --datafile yourcorpus.colibri.dat --classfile yourcorpus.colibri.cls --printreverseindex
 </pre></div>
 </div>
 <p>Indexes and/or reverse indexes are required for various purposes, one of which
@@ -768,7 +768,7 @@ the <code class="docutils literal"><span class="pre">--querymode</span></code> (
 it takes input from <code class="docutils literal"><span class="pre">stdin</span></code>, one <em>tokenised</em> sentence per line. The following
 example illustrates this, the sentence <em>&#8220;To be or not to be&#8221;</em> was typed as
 input:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller --inputmodel /tmp/data.colibri.patternmodel --classfile /tmp/hamlet.colibri.cls --querymode
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller --inputmodel /tmp/data.colibri.patternmodel --classfile /tmp/hamlet.colibri.cls --querymode
 Loading class decoder from file /tmp/hamlet.colibri.cls
 Loading class encoder from file /tmp/hamlet.colibri.cls
 Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
@@ -796,7 +796,7 @@ the modes.</p>
 <code class="docutils literal"><span class="pre">--query</span></code> (<code class="docutils literal"><span class="pre">-q</span></code>) in which you specify the pattern you want to query as argument on the command
 line. Multiple patterns can be specified by repeating the <code class="docutils literal"><span class="pre">-q</span></code> flag. This
 mode always behaves according to exact mode:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller --inputmodel /tmp/data.colibri.patternmodel --classfile /tmp/hamlet.colibri.cls --query &quot;to be&quot;
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller --inputmodel /tmp/data.colibri.patternmodel --classfile /tmp/hamlet.colibri.cls --query &quot;to be&quot;
 Loading class decoder from file /tmp/hamlet.colibri.cls
 Loading class encoder from file /tmp/hamlet.colibri.cls
 Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
@@ -826,7 +826,7 @@ a template.</li>
 <p>You can all of these extract relations using the <code class="docutils literal"><span class="pre">--relations</span></code> (<code class="docutils literal"><span class="pre">-g</span></code>) flag, which is to be
 used in combination with <code class="docutils literal"><span class="pre">--query</span></code> or <code class="docutils literal"><span class="pre">--querymode`</span></code>. Consider the
 following sample:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q &quot;to be&quot; -g
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -q &quot;to be&quot; -g
 Loading class decoder from file /tmp/hamlet.colibri.cls
 Loading class encoder from file /tmp/hamlet.colibri.cls
 Loading indexed pattern model /tmp/data.colibri.patternmodel as input model...
@@ -868,7 +868,7 @@ would show all patterns that occur at least five times in the same sentence.
 Note that the order of the pattern pairs does not matter; if there are two
 patterns X and Y then result X Y or Y X would be the same, yet only one of them
 is included in the output to prevent duplicating information:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -C 5
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller -i /tmp/data.colibri.patternmodel -c /tmp/hamlet.colibri.cls -C 5
 </pre></div>
 </div>
 <p>The <code class="docutils literal"><span class="pre">colibri-cooc</span></code> script provides a shortcut for this.</p>
@@ -885,7 +885,7 @@ gaps.</p>
 <p>As always, it is vital the test and training corpus share the same classfile.
 You can create one in the test data first and then extend it on the pattern
 list:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-classencode -o test testcorpus.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-classencode -o test testcorpus.txt
 $ colibri-classencode -c test.colibri.cls -e -o patternlist patternlist.txt
 </pre></div>
 </div>
@@ -895,7 +895,7 @@ on the patternlist, in which each line contains one pattern only, use the
 <blockquote>
 <div>$ colibri-patternmodeller &#8211;datafile patternlist.colibri.dat &#8211;outputmodel patternlist.colibri.patternmodel &#8211;patternlist</div></blockquote>
 <p>We can now load the patternlist model as a constraint, and build on the test data:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ colibri-patternmodeller --constrainted --inputmodel patternlist.colibri.patternmodel --datafile test.colibri.cls --classfile test.colibri.dat --outputmodel test.colibri.patternmodel
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ colibri-patternmodeller --constrainted --inputmodel patternlist.colibri.patternmodel --datafile test.colibri.cls --classfile test.colibri.dat --outputmodel test.colibri.patternmodel
 </pre></div>
 </div>
 <p>For skipgram support, add <code class="docutils literal"><span class="pre">--skipgrams</span></code> to this last command. If you want to
@@ -1012,8 +1012,8 @@ to the static, read-only, version <a class="reference external" href="http://pro
       &copy;2015, Maarten van Gompel.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="sources/index.txt"
