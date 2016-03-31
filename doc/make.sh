@@ -2,4 +2,4 @@
 mv sources _sources
 mv static _static
 mv images _images
-sphinx-build src .
+$VIRTUAL_ENV/bin/sphinx-build src .
