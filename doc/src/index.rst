@@ -266,13 +266,13 @@ documentation, Colibri Core offers the following scripts:
    text, in the order they occur, i.e. by moving a sliding window over the text.
  * ``colibri-freqlist`` - Extracts all n-grams from one or more corpus text files and
     outputs a frequency list. Also allows for the extraction of skipgrams. By
-    default all n-grams are extract, but an occurrence threshold can be set with the ``-t`` flag.
+    default all n-grams are extracted, but an occurrence threshold can be set with the ``-t`` flag.
  * ``colibri-ngramstats`` - Prints a summary report on the ngrams in one or
     more corpus text files. To get the full details on interpreting the output report,
     read the section *Statistical Reports and Histograms*.
  * ``colibri-histogram`` - Prints a histogram of ngram/skipgram occurrence count
  * ``colibri-queryngrams`` - Interactive tool allowing you to query ngrams
-   from standard input, various statistics and relations can be outputted.
+   from standard input, various statistics and relations can be output.
  * ``colibri-reverseindex`` - Computes and prints a reverse index for the
    specified corpus text file. For each token position in the corpus, it will
    output what patterns are found there (i.e start at that very same position)
@@ -525,7 +525,7 @@ Here is an example of generating an indexed pattern model including skipgrams::
 If you want to generate unindexed models, simply add the flag ``--unindexed`` or ``-u`` for short. Do note
 that for unindexed models the parameter ``--skiptypes`` has no effect, it will extract
 all skipgrams it can find as if ``-skiptypes`` were set to one! If you want decent
-skpigrams, you're best off with an indexed model. Note that indexed models can
+skipgrams, you're best off with an indexed model. Note that indexed models can
 always be read and printed in an unindexed way (with the ``--unindexed`` flag); but
 unindexed models can not be read in an indexed way, as they simply lack
 indices::
