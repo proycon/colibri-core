@@ -1633,6 +1633,18 @@ bool Pattern::instanceof(const PatternPointer & skipgram) const {
 
     if (skipgram.category() == FLEXGRAM) {
         //TODO: Implement flexgram support!!!
+        const unsigned int _n = n();
+        const unsigned int flex_n = skipgram.n(); //minlength
+        if (flex_n < _n) return false; //too small too match
+
+        for (unsigned int i = 0; i < flex_n; i++) {
+            const PatternPointer reftoken = PatternPointer(skipgram,i,1);
+
+            for (unsigned int j = begin; j < _n; j++) {
+            }
+
+        }
+
        return false;
     } else {
         //FIXED SKIPGRAM

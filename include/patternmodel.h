@@ -870,6 +870,12 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (iter_unigramsonly) std::cerr << ", secondary word occurrence threshold: " << options.MINTOKENS_UNIGRAMS;
                 if (version < 2) std::cerr << ", class encoding version: " << (int) version;
                 std::cerr << std::endl; 
+                if (filterhasngrams) {
+                    std::cerr << "Filter with ngrams provided, only patterns subsuming any of the filtered patterns will be included..." << std::endl;
+                }
+                if (filterhasskipgrams) {
+                    std::cerr << "Filter with skipgrams provided, only matching instances will be included..." << std::endl;
+                }
             }
 
             if (constrainbymodel != NULL) {
