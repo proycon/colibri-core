@@ -1637,13 +1637,14 @@ bool Pattern::instanceof(const PatternPointer & skipgram) const {
         const unsigned int flex_n = skipgram.n(); //minlength
         if (flex_n < _n) return false; //too small too match
 
+        /*
         for (unsigned int i = 0; i < flex_n; i++) {
             const PatternPointer reftoken = PatternPointer(skipgram,i,1);
 
             for (unsigned int j = begin; j < _n; j++) {
             }
 
-        }
+        }*/
 
        return false;
     } else {
