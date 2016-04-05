@@ -871,7 +871,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if (version < 2) std::cerr << ", class encoding version: " << (int) version;
                 std::cerr << std::endl; 
                 if (filterhasngrams) {
-                    std::cerr << "Filter with ngrams provided, only patterns subsuming any of the filtered patterns will be included..." << std::endl;
+                    std::cerr << "Filter with ngrams provided, only patterns that either match a filtered pattern or contain a smaller filtered pattern will be included..." << std::endl;
                 }
                 if (filterhasskipgrams) {
                     std::cerr << "Filter with skipgrams provided, only matching instances will be included..." << std::endl;
@@ -954,6 +954,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                 sentence = firstsentence-1; //reset
                 bool singlepass = false;
+                bool ignorefilter = false;
                 const unsigned int sentences = (reverseindex != NULL) ? reverseindex->sentences() : 0;
                 while (((reverseindex != NULL) && (sentence < sentences)) ||  ((reverseindex == NULL) && (in != NULL) && (!in->eof())))  {
                     sentence++;
@@ -1022,27 +1023,35 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                                 if ((found) && (filter != NULL) && (constrainbymodel == NULL)) {
                                     //special behaviour: filter
-                                    bool matchfilter = false;
-                                    if ((filterhasngrams) && ( (n > 1) || (options.MINTOKENS == 1) ) ) {
-                                        subngrams.clear();
-                                        iter->first.subngrams(subngrams,1, n);
-                                        for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
-                                            if (filter->has(*iter2)) {
-                                                matchfilter = true;
-                                                break;
+                                    ignorefilter = false;
+                                    if (((options.MINTOKENS > 1) && (n >= options.MINLENGTH)) || ((options.MINTOKENS == 1) && (iter->first.n() >= options.MINLENGTH))) {
+                                        //we only apply the filter if minlength is satisfied, earlier stages are not filtered (but will be pruned later when no longer needed)
+                                        bool matchfilter = false;
+                                        if (filterhasngrams) {
+                                            subngrams.clear();
+                                            iter->first.subngrams(subngrams,1, options.MINTOKENS > 1 ? n : iter->first.n());
+                                            for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                                if (filter->has(*iter2)) {
+                                                    matchfilter = true;
+                                                    break;
+                                                }
+                                            }
+                                        } 
+                                        if ((!matchfilter) && (filterhasskipgrams)) {
+                                            for (PatternSet<Pattern>::iterator iter2 = filter->begin(); iter2 != filter->end(); iter2++) {
+                                                if (iter->first.instanceof(*iter2)) {
+                                                    matchfilter = true;
+                                                    break;
+                                                }
                                             }
                                         }
-                                    } 
-                                    if ((!matchfilter) && (filterhasskipgrams)) {
-                                        for (PatternSet<Pattern>::iterator iter2 = filter->begin(); iter2 != filter->end(); iter2++) {
-                                            if (iter->first.instanceof(*iter2)) {
-                                                matchfilter = true;
-                                                break;
-                                            }
-                                        }
+                                        if (!matchfilter) continue;
+                                    } else {
+                                        ignorefilter = true;
                                     }
-                                    if (!matchfilter) continue;
-                                } else if (filter == NULL)  {
+                                }
+
+                                if ((filter == NULL) || (ignorefilter))  {
                                     //normal behaviour: ngram (n-1) lookback
                                     if ((found) && (n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) { 
                                         //check if sub-parts were counted
