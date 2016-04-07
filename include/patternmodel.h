@@ -1130,7 +1130,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             //we don't need n-1 anymore now we're done with n, it
                             //is below our threshold, prune it all (== -1)
                             this->prune(-1, n-1);
-                            if (!options.QUIET) std::cerr << " (pruned last iteration due to minimum length)" << pruned;
+                            if (!options.QUIET) std::cerr << " (pruned last iteration due to minimum length) ";
                         }
                     }
                     if (!options.QUIET) std::cerr << "pruned " << pruned;
