@@ -587,6 +587,7 @@ void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bo
         OUT->write((const char *) outputbuffer, outputsize);                        
         if (!ignorenewlines) OUT->write(&zero, sizeof(char)); //newline          
     }
+    if (ignorenewlines) OUT->write(&zero, sizeof(char)); //force newline at end of file even if ignorenewlines is set
     if (!quiet) cerr << "Encoded " << linenum << " lines" << endl;
     delete[] outputbuffer;
 }
