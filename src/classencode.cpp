@@ -35,6 +35,7 @@ void usage() {
     cerr << "         -l    read input filenames from list-file (one filename per line)" << endl;
     cerr << "         -u    produce one unified encoded corpus (in case multiple corpora are specified)" << endl;
     cerr << "         -e    extend specified class file with unseen classes" << endl;
+    cerr << "         -n    ignore newlines in input, treat everything as one text blob" << endl;
     cerr << "         -U    encode all unseen classes using one special unknown class" << endl;
     cerr << "         -t    word occurrence threshold (default: 1)" << endl;
     cerr << "         -F    Import frequency list (word \\t frequency, per line)" << endl;
@@ -52,12 +53,13 @@ int main( int argc, char *argv[] ) {
     bool unified = false;
     bool extend = false;
     bool allowunknown = false;
+    bool ignorenewlines = false;
     int threshold = 0;
     ifstream listin;
     string tmpfilename;
     
     char c;    
-    while ((c = getopt(argc, argv, "f:hc:o:d:ul:eUt:F:V:")) != -1) {
+    while ((c = getopt(argc, argv, "f:hc:o:d:ul:eUt:F:V:n")) != -1) {
         switch (c) {
         case 'f': //keep for backward compatibility
             corpusfile = optarg;
@@ -74,6 +76,9 @@ int main( int argc, char *argv[] ) {
         	break;
         case 'u':
             unified = true;
+            break;
+        case 'n':
+            ignorenewlines = true;
             break;
         case 'e':
             extend = true;
@@ -192,7 +197,7 @@ int main( int argc, char *argv[] ) {
         }
 
         cerr << "Encoding corpus " << corpusfiles[i] << " to " << outfile << ".colibri.dat" << endl;
-        classencoder.encodefile(corpusfiles[i], outfile + ".colibri.dat", allowunknown, extend, (unified && i>0));
+        classencoder.encodefile(corpusfiles[i], outfile + ".colibri.dat", allowunknown, extend, (unified && i>0), ignorenewlines);
         cerr << "...Done" << endl;
     }
 

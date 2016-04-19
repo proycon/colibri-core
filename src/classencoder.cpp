@@ -365,7 +365,7 @@ int ClassEncoder::outputlength(const string & line) {
 
 }
 
-int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown) {
+int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown, unsigned int * nroftokens) {
 	  int outputcursor = 0;
       int begin = 0;      
       const int l = line.length();
@@ -385,19 +385,23 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
                 if (word == "{*}") {
                     //fixed length skip
                     outputbuffer[outputcursor++] = skipclass; 
+                    if (nroftokens != NULL) (*nroftokens)++;
                     continue;
                 } else if (word == "{**}") {
                     //variable length skip
                     outputbuffer[outputcursor++] = flexclass;
+                    if (nroftokens != NULL) (*nroftokens)++;
                     continue;
                 } else if (word == "{?}") {
                     //unknown word
                     outputbuffer[outputcursor++] = unknownclass; 
+                    if (nroftokens != NULL) (*nroftokens)++;
                     continue;
                 } else if ((word.substr(0,2) == "{*")  && (word.substr(word.size() - 2,2) == "*}")) {
                     const int skipcount = atoi(word.substr(2,word.size() - 4).c_str()); 
                     for (int j = 0; j < skipcount; j++) {
                         outputbuffer[outputcursor++] = skipclass; //FIXEDGAP MARKER                     
+                        if (nroftokens != NULL) (*nroftokens)++;
                     }                
                     continue;
                 } else if (classes.find(word) == classes.end()) {
@@ -417,6 +421,7 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
           	  	}
   	        	classlength = inttobytes(outputbuffer + outputcursor, cls);
                 outputcursor += classlength;
+                if (nroftokens != NULL) (*nroftokens)++;
           	  }			 
           }
       }
@@ -455,7 +460,7 @@ void ClassEncoder::add(const std::string & s, const unsigned int cls) {
     if (cls > highestclass) highestclass = cls;
 }
 
-void ClassEncoder::encodefile(const std::string & inputfilename, const std::string & outputfilename, bool allowunknown, bool autoaddunknown, bool append, bool quiet) {
+void ClassEncoder::encodefile(const std::string & inputfilename, const std::string & outputfilename, bool allowunknown, bool autoaddunknown, bool append, bool ignorenewlines, bool quiet) {
 	    
     if ((inputfilename.rfind(".xml") != string::npos) ||  (inputfilename.rfind(".xml.bz2") != string::npos) ||  (inputfilename.rfind(".xml.gz") != string::npos)) {
         #ifdef WITHFOLIA
@@ -524,7 +529,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
                 exit(2);
             }
             bz2istream * decompressor = new bz2istream(IN.rdbuf());
-            encodefile((istream*) decompressor, (ostream*) &OUT, allowunknown, autoaddunknown, quiet, append);
+            encodefile((istream*) decompressor, (ostream*) &OUT, allowunknown, autoaddunknown, quiet, append, ignorenewlines);
             delete decompressor;
         } else {
             IN.open(inputfilename.c_str());
@@ -532,14 +537,14 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
                 cerr << "No such file: " << inputfilename << endl;
                 exit(2);
             }
-            encodefile((istream*) &IN, (ostream*) &OUT, allowunknown, autoaddunknown, quiet, append);
+            encodefile((istream*) &IN, (ostream*) &OUT, allowunknown, autoaddunknown, quiet, append, ignorenewlines);
         }
 	    IN.close();
 	    OUT.close();
 	}
 }
 
-void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet, bool append) {
+void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet, bool append, bool ignorenewlines) {
     if (!append) {
         const char mark = 0xa2;
         const char version = 2;
@@ -551,7 +556,10 @@ void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bo
     unsigned char * outputbuffer = new unsigned char[outputbuffersize];
     unsigned int outputsize;
     unsigned int linenum = 0;
+    unsigned int totalnroftokens = 0;
+    unsigned int nroftokens;
     while (IN->good()) {	
+        nroftokens = 0;
         string line = "";
         getline(*IN, line);
         if (!IN->good()) break;
@@ -564,9 +572,20 @@ void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bo
                 outputbuffer = new unsigned char[outputbuffersize];
             }
         }
-        outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
+        outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown, &nroftokens);
+        if (ignorenewlines) {
+            if (totalnroftokens + nroftokens >= 65536) { //max token count (uint16)
+                if (totalnroftokens == 0) {
+                    cerr << "ERROR: Each input line may not contain more than 65536 tokens/words. Limit exceeded on line " << linenum << " (" << nroftokens << " tokens)" << endl;
+                    throw InternalError();
+                }
+                OUT->write(&zero, sizeof(char)); //newline 
+                totalnroftokens = 0; //reset for next block
+            }
+            totalnroftokens += nroftokens;
+        }
         OUT->write((const char *) outputbuffer, outputsize);                        
-        OUT->write(&zero, sizeof(char)); //newline          
+        if (!ignorenewlines) OUT->write(&zero, sizeof(char)); //newline          
     }
     if (!quiet) cerr << "Encoded " << linenum << " lines" << endl;
     delete[] outputbuffer;

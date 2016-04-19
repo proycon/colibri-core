@@ -158,9 +158,10 @@ class ClassEncoder {
      * @param outputbuffer Pointer to the output buffer, must be pre-allocated and have enough space
      * @param allowunknown If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default: false)
      * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)
+     * @param nroftokens A pointer to a variable that contains the number of tokens outputted, will be written by this function if not NULL. (default: NULL)
      * @return The number of bytes written to outputbuffer
      */
-    int encodestring(const std::string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown=false);
+    int encodestring(const std::string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown=false, unsigned int * nroftokens = NULL);
 
     /**
      * Create a class-encoded corpus file from a plain-text corpus file. Each of the units of interest (e.g sentences) should occupy a single line (i.e., \n delimited)
@@ -168,10 +169,11 @@ class ClassEncoder {
      * @param outputfilename Filename of the output file (binary class-encoded corpus file, *.colibri.dat)
      * @param allowunknown If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default: false)
      * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)
+     * @param ignorenewlines Set to true to ignore newlines and have all text as one blob (may still result in several blobs if the text is really long)
      * @param append Set to true if this is not the first file to write to the stream 
      * @return The number of bytes written to outputbuffer
      */
-    void encodefile(const std::string & inputfilename, const std::string & outputfilename, bool allowunknown, bool autoaddunknown=false,  bool append=false, bool quiet=false);
+    void encodefile(const std::string & inputfilename, const std::string & outputfilename, bool allowunknown, bool autoaddunknown=false,  bool append=false, bool ignorenewlines=false, bool quiet=false);
     /**
      * Create a class-encoded corpus file from a plain-text corpus file. Each of the units of interest (e.g sentences) should occupy a single line (i.e., \n delimited)
      * @param IN Input stream of a plain-text corpus file
@@ -179,10 +181,11 @@ class ClassEncoder {
      * @param allowunknown If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default: false)
      * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)
      * @param quiet Set to true to suppress any output
+     * @param ignorenewlines Set to true to ignore newlines and have all text as one blob (may still result in several blobs if the text is really long)
      * @param append Set to true if this is not the first file to write to the stream 
      * @return The number of bytes written to outputbuffer
      */
-    void encodefile(std::istream * IN, std::ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet=false, bool append=false);
+    void encodefile(std::istream * IN, std::ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet=false, bool append=false, bool ignorenewlines=false);
 
     std::vector<unsigned int> encodeseq(const std::vector<std::string> & seq);
     
