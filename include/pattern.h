@@ -97,8 +97,8 @@ class Pattern {
       * @param begin Index of the first token to copy (0-indexed)
       * @param length Number of tokens to copy
       */
-     Pattern(const Pattern& ref, unsigned int begin, unsigned int length); 
-     Pattern(const PatternPointer& ref,unsigned int begin, unsigned int length);
+     Pattern(const Pattern& ref, unsigned int begin, unsigned int length, unsigned int * byteoffset=NULL, bool byteoffset_shiftone = false); 
+     Pattern(const PatternPointer& ref,unsigned int begin, unsigned int length, unsigned int * byteoffset=NULL, bool byteoffset_shiftone = false);
 
      /**
       * Copy constructor for Pattern
@@ -427,9 +427,9 @@ class PatternPointer {
      void write(std::ostream * out, const unsigned char * corpusstart = NULL) const; 
 
      //slice construtors:
-     PatternPointer(unsigned char *, unsigned int,unsigned int);
-     PatternPointer(const PatternPointer&, unsigned int,unsigned int);
-     PatternPointer(const Pattern&, unsigned int,unsigned int);
+     PatternPointer(unsigned char *, unsigned int,unsigned int, unsigned int * byteoffset=NULL, bool byteoffset_shiftone = false);
+     PatternPointer(const PatternPointer&, unsigned int,unsigned int, unsigned int * byteoffset=NULL, bool byteoffset_shiftone = false);
+     PatternPointer(const Pattern&, unsigned int,unsigned int, unsigned int * byteoffset=NULL, bool byteoffset_shiftone = false);
 
      uint32_t computemask() const;
      uint32_t getmask() const { return mask; }

@@ -1029,7 +1029,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 if ((found) && (filter != NULL) && (constrainbymodel == NULL)) {
                                     //special behaviour: filter
                                     ignorefilter = false;
-                                    if (((options.MINTOKENS > 1) && (n >= options.MINLENGTH)) || ((options.MINTOKENS == 1) && (iter->first.n() >= options.MINLENGTH))) {
+                                    if (((options.MINTOKENS > 1) && (n >= options.MINLENGTH)) || ((options.MINTOKENS == 1) && (iter->first.n() >= (unsigned int) options.MINLENGTH))) {
                                         //we only apply the filter if minlength is satisfied, earlier stages are not filtered (but will be pruned later when no longer needed)
                                         bool matchfilter = false;
                                         if (filterhasngrams) {
