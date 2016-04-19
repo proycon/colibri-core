@@ -136,6 +136,8 @@ class PatternModelOptions {
         int MINSKIPTYPES;  ///< Minimum required amount of distinct patterns that can fit in a gap of a skipgram for the skipgram to be included (default: 2)
         int MAXSKIPS; ///< Maximum skips per skipgram
 
+        //bool CROSSBOUNDARIES; ///< Include n-grams that cross unit (e.g. sentence) boundaries (newlines in the original text). //MAYBE TODO
+
         bool DOREVERSEINDEX; ///< Obsolete now, only here for backward-compatibility with v1
         bool DOPATTERNPERLINE; ///< Assume each line contains one integral pattern, rather than actively extracting all subpatterns on a line (default: false)
 
