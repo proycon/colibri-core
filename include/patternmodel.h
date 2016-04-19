@@ -976,6 +976,9 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
                     ngrams.clear();
+                    ngrams.reserve(linesize);
+                    if (options.DEBUG) std::cerr << "   (container ready)" << std::endl;
+
                     if (options.DOPATTERNPERLINE) {
                         if (linesize > (unsigned int) options.MAXLENGTH) continue;
                         ngrams.push_back(std::pair<PatternPointer,int>(line,0));
