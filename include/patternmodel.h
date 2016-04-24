@@ -1819,7 +1819,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if ((category == 0) || (*iterc == category)) {
                  for (std::set<int>::iterator itern = cache_n.begin(); itern != cache_n.end(); itern++) {
                   if (((n == 0) || (*itern == n)) && (cache_grouptotalwordtypes[*iterc][*itern] == 0) )  {
-                    std::unordered_set<Pattern> types;
+                    std::unordered_set<PatternType> types;
                     PatternModel::iterator iter = this->begin(); 
                     while (iter != this->end()) {
                         const PatternType pattern = iter->first;                        
