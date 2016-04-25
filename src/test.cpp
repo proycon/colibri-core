@@ -1424,11 +1424,6 @@ int main( int argc, char *argv[] ) {
             i++;
         }
         cerr << "Size check: "; test(1, i);
-
-        //PatternPointer corpus_pp = corpus.getpattern();
-        //cerr << "Pattern pointer sanity check (bytesize)"; test(corpus_pp.bytesize(), corpus.bytesize());
-        //cerr << "Pattern pointer sanity check (n)"; test(corpus_pp.n(), i);
-
     }
     {
         cerr << endl << "************************** PatternAlignModel Tests ***************************************" << endl << endl;
