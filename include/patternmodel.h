@@ -1154,7 +1154,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 } else { //iter_unigramsonly
                     if (!options.QUIET) std::cerr <<  "found " << this->size() << std::endl;
 
-					if ((!continued) && ((constrainbymodel == NULL) or (constrainbymodel == this))) {
+					if ((!continued) && ((constrainbymodel == NULL) || (constrainbymodel == this))) {
 						if (!options.QUIET) std::cerr << " computing total word types prior to pruning...";
 						totaltypes = this->size();	
 						if (!options.QUIET) std::cerr << totaltypes << "...";							
