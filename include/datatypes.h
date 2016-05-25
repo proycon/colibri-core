@@ -70,7 +70,7 @@ class IndexReference {
     IndexReference operator+(const int other) const { return IndexReference(sentence, token+ other); };
     
     std::string tostring() const {
-        return std::to_string((unsigned int) sentence) + ":" + std::to_string((unsigned int) token);
+        return std::to_string((long long unsigned int) sentence) + ":" + std::to_string((long long unsigned int) token);
     }
 
     friend std::ostream& operator<<(std::ostream & out, const IndexReference & iref) {
