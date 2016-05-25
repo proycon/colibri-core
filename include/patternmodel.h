@@ -1152,11 +1152,13 @@ class PatternModel: public MapType, public PatternModelInterface {
                     if (!options.QUIET) std::cerr << "...total kept: " << (foundngrams + foundskipgrams) - pruned << std::endl;
                     if (((options.MINTOKENS == 1) || (constrainbymodel != NULL))) break; //no need for further n iterations, we did all in one pass since there's no point in looking back
                 } else { //iter_unigramsonly
-                    if (!options.QUIET) std::cerr <<  "found " << this->size() << std::endl;
+                    if (!options.QUIET) { 
+                        std::cerr <<  "found " << this->size() << std::endl;
+                    } 
 
 					if ((!continued) && ((constrainbymodel == NULL) || (constrainbymodel == this))) {
 						if (!options.QUIET) std::cerr << " computing total word types prior to pruning...";
-						totaltypes = this->size();	
+						totaltypes = this->size();
 						if (!options.QUIET) std::cerr << totaltypes << "...";							
 					}
                     //prune the unigrams based on the word occurrence threshold
