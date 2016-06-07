@@ -158,7 +158,7 @@ def main():
                         for ngram in ngrams(tokens, n):
                             fd[ngram] += 1
             end(b)
-            print("\t(Found " + str(len(ngrams)) + " ngrams)")
+            print("\t(Done)")
         elif testnum == 3:
 
             print("Extracting and counting ALL n-grams (up to 8-grams, threshold=1) with UnindexedPatternModel")
