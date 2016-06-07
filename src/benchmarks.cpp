@@ -352,6 +352,15 @@ int main( int argc, char *argv[] ) {
     }
 
 
+    
+    if (testnr == 99) {
+        Measurement m = begin(string("99 - Training indexed PatternModel from preloaded corpus: threshold 2, up to 8-grams, with skipgrams, skip-type threshold 12"));
+        PatternModelOptions options;
+        options.MINTOKENS = 2; options.MAXLENGTH = 8; options.DOSKIPGRAMS = true; options.MINSKIPTYPES = 12;
+        IndexedPatternModel<> model(&corpus);
+        model.train(datafile, options);
+        end(m);
+    }
 
 
 /*    if (testnr == 15) {
