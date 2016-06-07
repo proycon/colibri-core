@@ -144,8 +144,24 @@ def main():
             print("\t(Found " + str(len(ngrams)) + " ngrams)")
 
         elif testnum == 2:
+            print("Extracting and counting n-grams (up to 8-grams,threshold=1) naively with NLTK (nltk.FreqDist + nltk.util.ngrams)")
 
-            print("Extracting and counting ALL n-grams (up to 8-grams, threshold=1) with UnindexedPatternModel (without reverse index)")
+            from nltk.probability import FreqDist
+            from nltk.util import ngrams
+
+            fd=FreqDist()
+            b = begin()
+            with open(textfile,'r',encoding='utf-8') as f:
+                for line in f:
+                    tokens = line.split(' ')
+                    for n in range(1,9):
+                        for ngram in ngrams(tokens, n):
+                            fd[ngram] += 1
+            end(b)
+            print("\t(Found " + str(len(ngrams)) + " ngrams)")
+        elif testnum == 3:
+
+            print("Extracting and counting ALL n-grams (up to 8-grams, threshold=1) with UnindexedPatternModel")
             model = colibricore.UnindexedPatternModel()
             options = colibricore.PatternModelOptions(mintokens=1,maxlength=8,doreverseindex=False)
             b = begin()
@@ -154,7 +170,7 @@ def main():
             savemodel(model,modelfile)
             del model
 
-        if testnum == 3:
+        if testnum == 4:
             linecount = 0
             print("Extracting and counting n-grams (up to 8-grams, threshold=2, with look-back)  (Python defaultdict + Pynlpl Windower)")
             ngrams=defaultdict(int)
@@ -173,7 +189,7 @@ def main():
                                 ngrams[ngram] += 1
             end(b)
             print("\t(Found " + str(len(ngrams)) + " ngrams)")
-        if testnum == 4:
+        if testnum == 5:
             linecount = 0
             print("Extracting and counting n-grams (up to 8-grams, threshold=2, without look-back)  (Python defaultdict + Pynlpl Windower)")
             ngrams=defaultdict(int)
@@ -187,21 +203,11 @@ def main():
             gc.collect()
             end(b)
             print("\t(Found " + str(len(ngrams)) + " ngrams)")
-        elif testnum == 5:
-
-            print("Extracting and counting ALL n-grams (up to 8-grams, threshold=2) with UnindexedPatternModel (without reverse index)")
-            model = colibricore.UnindexedPatternModel()
-            options = colibricore.PatternModelOptions(mintokens=2,maxlength=8,doreverseindex=False)
-            b = begin()
-            model.train(datafile, options)
-            end(b)
-            savemodel(model,modelfile)
-
         elif testnum == 6:
 
-            print("Extracting and counting ALL n-grams (up to 8-grams,threshold=1) with UnindexedPatternModel (with reverse index)")
+            print("Extracting and counting ALL n-grams (up to 8-grams, threshold=2) with UnindexedPatternModel")
             model = colibricore.UnindexedPatternModel()
-            options = colibricore.PatternModelOptions(mintokens=1,maxlength=8,doreverseindex=True)
+            options = colibricore.PatternModelOptions(mintokens=2,maxlength=8)
             b = begin()
             model.train(datafile, options)
             end(b)
@@ -209,8 +215,20 @@ def main():
 
         elif testnum == 7:
 
-            print("Extracting and counting ALL n-grams (up to 8-grams,threshold=1) with IndexedPatternModel (with reverse index)")
-            model = colibricore.IndexedPatternModel()
+            print("Extracting and counting ALL n-grams (up to 8-grams,threshold=1) with UnindexedPatternModel (with preloaded corpus)")
+            corpus = colibricore.IndexedCorpus(datafile)
+            model = colibricore.UnindexedPatternModel(reverseindex=corpus)
+            options = colibricore.PatternModelOptions(mintokens=1,maxlength=8)
+            b = begin()
+            model.train(datafile, options)
+            end(b)
+            savemodel(model,modelfile)
+
+        elif testnum == 8:
+
+            print("Extracting and counting ALL n-grams (up to 8-grams,threshold=1) with IndexedPatternModel (with preloaded corpus)")
+            corpus = colibricore.IndexedCorpus(datafile)
+            model = colibricore.IndexedPatternModel(reverseindex=corpus)
             options = colibricore.PatternModelOptions(mintokens=1,maxlength=8)
             b = begin()
             model.train(datafile, options)
@@ -219,27 +237,29 @@ def main():
 
             del model
 
-        elif testnum == 8:
-            print("Extracting and counting n-grams with treshold 2 (up to 8-grams) with IndexedPatternModel (with reverse index)")
-            model = colibricore.IndexedPatternModel()
+        elif testnum == 9:
+            print("Extracting and counting n-grams with treshold 2 (up to 8-grams) with IndexedPatternModel (with preloaded corpus)")
+            corpus = colibricore.IndexedCorpus(datafile)
+            model = colibricore.IndexedPatternModel(reverseindex=corpus)
             options = colibricore.PatternModelOptions(mintokens=2,maxlength=8)
             b = begin()
             model.train(datafile, options)
             end(b)
             savemodel(model,modelfile)
 
-        elif testnum == 9:
+        elif testnum == 10:
 
-            print("Extracting and counting n-grams and skipgrams with treshold 2 (up to 8-grams) with IndexedPatternModel (with reverse index)")
-            model = colibricore.IndexedPatternModel()
+            print("Extracting and counting n-grams and skipgrams with treshold 2 (up to 8-grams) with IndexedPatternModel (with preloaded corpus)")
+            corpus = colibricore.IndexedCorpus(datafile)
+            model = colibricore.IndexedPatternModel(reverseindex=corpus)
             options = colibricore.PatternModelOptions(mintokens=2,maxlength=8, doskipgrams=True)
             b = begin()
             model.train(datafile, options)
             end(b)
             savemodel(model,modelfile)
 
-        elif testnum == 10:
-            print("Extracting and counting ALL n-grams (up to 8-grams, threshold=1) with OrderedUnindexedPatternModel (without reverse index)")
+        elif testnum == 11:
+            print("Extracting and counting ALL n-grams (up to 8-grams, threshold=1) with OrderedUnindexedPatternModel")
             model = colibricore.OrderedUnindexedPatternModel()
             options = colibricore.PatternModelOptions(mintokens=1,maxlength=8,doreverseindex=False)
             b = begin()
