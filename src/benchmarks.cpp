@@ -386,9 +386,9 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
     if (testnr == 103) {
-        Measurement m = begin(string("103 - Training highly-thresholded unindexed pattern pointer model with skipgrams (t=10,l=4,y=20,W=25)"));
+        Measurement m = begin(string("103 - Training highly-thresholded unindexed pattern pointer model with skipgrams (t=10,l=4,y=20)"));
         PatternModelOptions options;
-        options.MINTOKENS = 10; options.MAXLENGTH = 4; options.MINTOKENS_SKIPGRAMS = 20; options.MINTOKENS_UNIGRAMS=25; options.DOSKIPGRAMS_EXHAUSTIVE = true;
+        options.MINTOKENS = 10; options.MAXLENGTH = 4; options.MINTOKENS_SKIPGRAMS = 20; options.DOSKIPGRAMS_EXHAUSTIVE = true;
         PatternPointerModel<uint32_t> model(&corpus);
         model.train(datafile, options);
         end(m);
