@@ -370,7 +370,7 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
     if (testnr == 101) {
-        Measurement m = begin(string("99 - Training indexed PatternModel from preloaded corpus: threshold 2, up to 8-grams, with skipgrams, skip-type threshold 12, occurence 25"));
+        Measurement m = begin(string("101 - Training indexed PatternModel from preloaded corpus: threshold 2, up to 8-grams, with skipgrams, skip-type threshold 12, occurence 25"));
         PatternModelOptions options;
         options.MINTOKENS = 2; options.MINTOKENS_SKIPGRAMS=25, options.MAXLENGTH = 8; options.DOSKIPGRAMS = true; options.MINSKIPTYPES = 12;
         IndexedPatternModel<> model(&corpus);
@@ -378,7 +378,7 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
     if (testnr == 102) {
-        Measurement m = begin(string("99 - Training indexed PatternModel Pointer from preloaded corpus: threshold 2, up to 8-grams, with skipgrams, skip-type threshold 12, occurence 25"));
+        Measurement m = begin(string("102 - Training indexed PatternModel Pointer from preloaded corpus: threshold 2, up to 8-grams, with skipgrams, skip-type threshold 12, occurence 25"));
         PatternModelOptions options;
         options.MINTOKENS = 2; options.MINTOKENS_SKIPGRAMS=25, options.MAXLENGTH = 8; options.DOSKIPGRAMS = true; options.MINSKIPTYPES = 12;
         IndexedPatternPointerModel<> model(&corpus);
@@ -386,7 +386,7 @@ int main( int argc, char *argv[] ) {
         end(m);
     }
     if (testnr == 103) {
-        Measurement m = begin(string("101 - Training highly-thresholded unindexed pattern pointer model with skipgrams (t=10,l=4,y=20,W=25)"));
+        Measurement m = begin(string("103 - Training highly-thresholded unindexed pattern pointer model with skipgrams (t=10,l=4,y=20,W=25)"));
         PatternModelOptions options;
         options.MINTOKENS = 10; options.MAXLENGTH = 4; options.MINTOKENS_SKIPGRAMS = 20; options.MINTOKENS_UNIGRAMS=25; options.DOSKIPGRAMS_EXHAUSTIVE = true;
         PatternPointerModel<uint32_t> model(&corpus);
