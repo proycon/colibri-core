@@ -63,7 +63,7 @@ cdef class ClassEncoder:
             if os.path.exists(filename):
                 self.data.load(encode(filename), minlength, maxlength)
             else:
-                raise IOError("File " + filename + " does not exist")
+                raise FileNotFoundError("File " + filename + " does not exist")
         else:
             self._filename = ""
 
@@ -106,7 +106,7 @@ cdef class ClassEncoder:
         if os.path.exists(filename):
             self.data.build(encode(filename))
         else:
-            raise IOError("File " + filename + " does not exist")
+            raise FileNotFoundError("File " + filename + " does not exist")
 
     def encodefile(self, str sourcefile, str targetfile, bool allowunknown=True, bool addunknown=False, bool append=False, bool ignorenewlines=False): #apply the encoder to a file
         """Encodes the specified sourcefile according to the classer (as targetfile)
@@ -125,7 +125,7 @@ cdef class ClassEncoder:
         if os.path.exists(sourcefile):
             self.data.encodefile(encode(sourcefile), encode(targetfile),allowunknown, addunknown, append, ignorenewlines, True)
         else:
-            raise IOError("File " + sourcefile + " does not exist")
+            raise FileNotFoundError("File " + sourcefile + " does not exist")
 
     def save(self, str filename):
         if not self.filename:
@@ -145,7 +145,7 @@ cdef class ClassDecoder:
             if os.path.exists(filename):
                 self.data.load(encode(filename))
             else:
-                raise IOError("No such file: " + filename)
+                raise FileNotFoundError("No such file: " + filename)
         else:
             self._filename = ""
 
@@ -156,9 +156,12 @@ cdef class ClassDecoder:
 
     def decodefile(self, str filename):
         if os.path.exists(filename):
-            return str(self.data.decodefiletostring(encode(filename)),'utf-8')
+            if PYTHON2:
+                return self.data.decodefiletostring(encode(filename))
+            else:
+                return self.data.decodefiletostring(encode(filename)).decode('utf-8') #bytes to str (python3)
         else:
-            raise IOError("File " + filename + " does not exist")
+            raise FileNotFoundError("File " + filename + " does not exist")
 
     def filename(self):
         return self._filename
@@ -782,7 +785,7 @@ cdef class AlignedPatternDict_int32: #maps Patterns to Patterns to uint32 (neste
         if os.path.exists(filename):
             self.data.read(encode(filename))
         else:
-            raise IOError
+            raise FileNotFoundError
 
     def write(self, str filename):
         self.data.write(encode(filename))
