@@ -7,8 +7,8 @@ Colibri Core
 .. image:: https://badge.fury.io/py/colibricore.svg
     :target: http://badge.fury.io/py/colibricore
 
-.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.34706.svg
-   :target: http://dx.doi.org/10.5281/zenodo.34706
+.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.55641.svg
+   :target: http://dx.doi.org/10.5281/zenodo.55641
 
 .. image:: http://applejack.science.ru.nl/lamabadge.php/colibri-core
    :target: http://applejack.science.ru.nl/languagemachines/
