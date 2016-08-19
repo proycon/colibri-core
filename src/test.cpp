@@ -1670,7 +1670,7 @@ int main( int argc, char *argv[] ) {
         patternset.insert(ngram2);
 
         cerr << "Encoding and adding skipgram" << endl;
-        string querystring3 = "To {?} or {?} to be";
+        string querystring3 = "To {*} or {*} to be";
         Pattern skipgram = encoder.buildpattern(querystring3, true);
         patternset.insert(skipgram);
 
