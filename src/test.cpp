@@ -486,7 +486,23 @@ int main( int argc, char *argv[] ) {
         cerr << "Begin is less? " ; test(ngrambegin < ngramconc);
         cerr << "equivalence under less? " ; test(!(subngram < subngram));
 
+        cerr << "----------------------------------------------------" << endl;
 
+        cerr << "Testing handling of unknown tokens" << endl;
+
+        string unkstring = "to sdfdsf ksd32 or not";
+
+        cerr << "Raise exception when allowunknown=false: ";
+        bool caught = false;
+        try {
+            Pattern unkgram = encoder.buildpattern(unkstring);
+        } catch (const InternalError &e) {
+            caught = true;
+        }
+        test(caught,true);
+
+        Pattern unkgram2 = encoder.buildpattern(unkstring, true);
+        cerr << "Encode as unknown when allowunknown=true"; test(unkgram2.decode(classdecoder),"To {?} {?} or not");
 
         cerr << endl << "************************** Skipgram tests  ***************************************" << endl << endl;
 
