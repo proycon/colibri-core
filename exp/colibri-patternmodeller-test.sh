@@ -12,11 +12,11 @@ colibri-classencode republic.txt
 if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 
 echo -e "\n\nTEST> Class decoding corpus">&2
-colibri-classencode -f republic.colibri.dat -c republic.colibri.cls
+colibri-classdecode -f republic.colibri.dat -c republic.colibri.cls
 if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 
 echo -e "\n\nTEST> Class decoding v1 corpus">&2
-colibri-classencode -f hamlet.v1.colibri.dat -c hamlet.colibri.cls
+colibri-classdecode -f hamlet.v1.colibri.dat -c hamlet.colibri.cls
 if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 
 echo -e "\n\nTEST> Building unindexed model">&2
