@@ -496,13 +496,13 @@ int main( int argc, char *argv[] ) {
         bool caught = false;
         try {
             Pattern unkgram = encoder.buildpattern(unkstring);
-        } catch (const InternalError &e) {
+        } catch (const UnknownTokenError &e) {
             caught = true;
         }
         test(caught,true);
 
         Pattern unkgram2 = encoder.buildpattern(unkstring, true);
-        cerr << "Encode as unknown when allowunknown=true"; test(unkgram2.decode(classdecoder),"To {?} {?} or not");
+        cerr << "Encode as unknown when allowunknown=true"; test(unkgram2.decode(classdecoder),"to {?} {?} or not");
 
         cerr << endl << "************************** Skipgram tests  ***************************************" << endl << endl;
 

@@ -46,4 +46,11 @@ class KeyError: public std::exception {
     return "Colibri KeyError";
   }
 };
+
+class UnknownTokenError: public std::exception {
+  virtual const char* what() const throw()
+  {
+    return "The input contained an unknown token";
+  }
+};
 #endif
