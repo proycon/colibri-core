@@ -547,6 +547,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::map<int,std::map<int,unsigned int>> cache_grouptotalpatterns ; ///< total distinct patterns per group
         std::map<int,std::map<int,unsigned int>> cache_grouptotalwordtypes; ///< total covered word types per group
         std::map<int,std::map<int,unsigned int>> cache_grouptotaltokens; ///< total covered tokens per group
+        std::map<int,std::map<int,bool>> cache_processed; ///< are coverage statistics processed for this group?
+        bool cache_processed_all; ///< are coverage statistics processed for all groups?
         
 
         std::map<int, std::vector< uint32_t > > gapmasks; ///< pre-computed masks representing possible gap configurations for various pattern lengths
@@ -1820,7 +1822,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             for (std::set<int>::iterator iterc = cache_categories.begin(); iterc != cache_categories.end(); iterc++) {
                 if ((category == 0) || (*iterc == category)) {
                  for (std::set<int>::iterator itern = cache_n.begin(); itern != cache_n.end(); itern++) {
-                  if (((n == 0) || (*itern == n)) && (cache_grouptotalwordtypes[*iterc][*itern] == 0) )  {
+                  if (((n == 0) || (*itern == n)) && (!cache_processed[*iterc][*itern]) )  {
                     std::unordered_set<PatternType> types;
                     PatternModel::iterator iter = this->begin(); 
                     while (iter != this->end()) {
@@ -1842,6 +1844,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                         iter++;
                     }
                     cache_grouptotalwordtypes[*iterc][*itern] += types.size();
+                    cache_processed[*iterc][*itern] = true;
                   }
                  }
                 }
@@ -2331,7 +2334,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * Computes on first call when necessary.
          */
         void report(std::ostream * OUT) {
-            if ((cache_grouptotaltokens.empty()) && (!this->data.empty())) {
+            if ((!this->cache_processed_all) && (!this->data.empty())) {
                 std::cerr << "Computing statistics..." << std::endl;
                 this->computecoveragestats();
             }
@@ -3183,13 +3186,14 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 this->cache_grouptotaltokens[0][1] += this->valuehandler.count(iter->second);
                 iter++;
             }
+            this->cache_processed_all = true;
             return;
         }
 
         for (std::set<int>::iterator iterc = this->cache_categories.begin(); iterc != this->cache_categories.end(); iterc++) {
           if ((category == 0) || (*iterc == category)) {
             for (std::set<int>::iterator itern = this->cache_n.begin(); itern != this->cache_n.end(); itern++) {
-              if (((n == 0) || (*itern == n)) && (this->cache_grouptotalwordtypes[*iterc][*itern] == 0) )  {
+              if (((n == 0) || (*itern == n)) && (!this->cache_processed[*iterc][*itern]) )  {
                 std::unordered_set<PatternPointer> types;
                 std::set<IndexReference> tokens;
                 typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); 
@@ -3221,10 +3225,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 }
                 this->cache_grouptotalwordtypes[*iterc][*itern] += types.size();
                 this->cache_grouptotaltokens[*iterc][*itern] += tokens.size();
+                this->cache_processed[*iterc][*itern] = true;
             }
           }
         }
       }
+    
+      if ((category == 0) && (n == 0)) this->cache_processed_all = true;
     }
 
     /**
