@@ -3208,11 +3208,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                             }
                         }
                     }
-                    IndexedData * data = this->getdata(pattern);
-                    for (IndexedData::iterator dataiter = data->begin(); dataiter != data->end(); dataiter++) {
-                        //take into account all tokens 
-                        for (unsigned int i = 0; i < pattern.n(); i++) {
-                            tokens.insert(*dataiter + i);
+                    if (((*itern == 0) || (n == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
+                        IndexedData * data = this->getdata(pattern);
+                        for (IndexedData::iterator dataiter = data->begin(); dataiter != data->end(); dataiter++) {
+                            //take into account all tokens 
+                            for (unsigned int i = 0; i < pattern.n(); i++) {
+                                tokens.insert(*dataiter + i);
+                            }
                         }
                     }
                     iter++;
