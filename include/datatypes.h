@@ -520,4 +520,148 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
     void convertto(PatternFeatureVectorMap<FeatureType> * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
 };
 
+
+//------
+//
+class PatternVector { //acts like a (small) map (but implemented as a vector to save memory), for 2nd-order use (i.e, within another map)
+    public:
+
+
+        std::vector<Pattern> data;
+
+        typedef typename std::vector<Pattern>::const_iterator const_iterator;
+        typedef typename std::vector<Pattern>::iterator iterator;
+
+        PatternVector() {};
+
+        PatternVector(const PatternVector & ref) {
+            this->data = ref.data;
+        }
+
+
+        /*   get double free or corruption error: //TODO: possible memory
+         *   leak?? */
+        virtual ~PatternVector() {
+            /*
+            const size_t s = this->data.size();
+            for (int i = 0; i < s; i++) {
+                PatternFeatureVector<FeatureType> * pfv = this->data[i];
+                delete pfv;
+                data[i] = NULL;
+            }*/
+        }
+
+        bool has(const Pattern & ref) const { 
+            for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
+                if (*iter == ref) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+       iterator find(const Pattern & ref) { 
+            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+                if (*iter == ref) {
+                    return iter;
+                }
+            }
+            return this->end();
+        }
+
+        unsigned int count() const { return data.size(); }
+
+
+
+        void insert(Pattern & pattern, bool checkexists=true) { 
+            //make a copy, safer
+            if (checkexists) {
+                iterator found = this->find(pattern);
+                if (found == this->end()) {
+                    this->data.push_back(pattern);
+                }
+            } else {
+                this->data.push_back(pattern);
+            }
+        }
+
+        size_t size() const { return data.size(); }
+
+        virtual std::string tostring() {
+            //we have no classdecoder at this point
+            std::cerr << "ERROR: PatternFeatureVector does not support serialisation to string" << std::endl;
+            throw InternalError();
+        }
+        
+        iterator begin() { return data.begin(); }
+        const_iterator begin() const { return data.begin(); }
+
+        iterator end() { return data.end(); }
+        const_iterator end() const { return data.end(); }
+
+        virtual Pattern * getdata(const Pattern & pattern) { 
+            iterator iter = this->find(pattern);
+            if (iter != this->end()) {
+                Pattern * p = &(*iter);
+                return p;
+            }
+            return NULL;
+        }
+
+        void reserve(size_t size) {
+            data.reserve(size);
+        }
+        void shrink_to_fit() {
+            data.shrink_to_fit();
+        }
+
+
+};
+
+class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
+   public:
+    virtual std::string id() { return "PatternVectorHandler"; }
+    void read(std::istream * in, PatternVector & v) {
+        uint32_t c;
+        in->read((char*) &c, sizeof(uint32_t));
+        v.reserve(c); //reserve space to optimise
+        for (unsigned int i = 0; i < c; i++) {
+            Pattern pattern = Pattern(in);
+            v.insert(pattern, false); //checkifexists=false, to speed things up when loading, assuming data is sane
+        }
+        v.shrink_to_fit(); //try to keep vector as small as possible (slows additional insertions down a bit)
+
+    }
+    void write(std::ostream * out, PatternVector & value) {
+        unsigned int s = value.size();
+        if (s >= 4294967296) {
+            std::cerr << "ERROR: PatternVector size exceeds maximum 32-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
+            s = 4294967296;
+        }
+        const uint32_t c = (uint32_t) s;
+        out->write((char*) &c, sizeof(uint32_t));
+        unsigned int n = 0;
+        for (typename PatternVector::iterator iter = value.begin(); iter != value.end(); iter++) {
+            if (n==s) break; 
+            iter->write(out);
+            n++;
+        }
+    }
+    virtual std::string tostring(PatternVector & value) {
+        std::cerr << "ERROR: PatternVectorHandler does not support serialisation to string (no classdecoder at this point)" << std::endl;
+        throw InternalError();
+    }
+    unsigned int count(PatternVector & value) const {
+        return value.size();
+    }
+    void add(PatternVector * value, const IndexReference & ref ) const {
+        std::cerr << "ERROR: PatternVectorHandler does not support insertion of index references, model can not be computed with train()" << std::endl;
+        throw InternalError();
+    }
+    void convertto(PatternVector * source , PatternVector * & target) const { target = source; }; //noop
+    void convertto(PatternVector * source , IndexedData * & target) const { }; //not possible, noop (target = NULL)
+    void convertto(PatternVector * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
+};
+
 #endif
