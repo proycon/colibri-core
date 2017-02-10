@@ -213,7 +213,7 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
         PatternAlignmentModel<FeatureType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(filename, options, constrainmodel) {} 
 
 
-        virtual PatternFeatureVector<FeatureType> * getdata(const Pattern & pattern, const Pattern & pattern2, bool makeifnew=false) { 
+        virtual PatternFeatureVector<FeatureType> * getfeaturevector(const Pattern & pattern, const Pattern & pattern2, bool makeifnew=false) { 
             PatternFeatureVectorMap<FeatureType> * fvmap = AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::getdata(pattern, makeifnew);
             if (fvmap == NULL) return NULL;
             return fvmap->getdata(pattern2);
@@ -222,7 +222,7 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
         void add(const Pattern & pattern, const Pattern & pattern2, std::vector<FeatureType> & features, bool checkifexists= true) {
             PatternFeatureVector<FeatureType> * fv = NULL;
             if (checkifexists) {
-                fv = this->getdata(pattern,pattern2,true);
+                fv = this->getfeaturevector(pattern,pattern2,true);
             }
             if (fv == NULL) {
                 PatternFeatureVectorMap<FeatureType> * fvm = AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::getdata(pattern, true);

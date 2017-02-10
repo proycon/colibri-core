@@ -526,7 +526,7 @@ cdef extern from "alignmodel.h":
 
         PatternFeatureVectorMap[double]& operator[](Pattern&) nogil
         PatternFeatureVectorMap[double]* getdata(Pattern&, bool makeifnew=False) nogil
-        PatternFeatureVector[double]* getdata(Pattern&, Pattern&, bool makeifnew=False) nogil
+        PatternFeatureVector[double]* getfeaturevector(Pattern&, Pattern&, bool makeifnew=False) nogil
 
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil

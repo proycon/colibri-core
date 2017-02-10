@@ -1475,11 +1475,11 @@ int main( int argc, char *argv[] ) {
             cerr << "Testing size: ";
             test(alignmodel.size(),2);
             cerr << "Testing [p][p][0]: ";
-            test(alignmodel.getdata(p,p)->get(0), 3.14);
+            test(alignmodel.getfeaturevector(p,p)->get(0), 3.14);
             cerr << "Testing [p2][p2][0]: ";
-            test(alignmodel.getdata(p2,p2)->get(0), 2.17);
+            test(alignmodel.getfeaturevector(p2,p2)->get(0), 2.17);
             cerr << "Testing [p2][p2][1]: ";
-            test(alignmodel.getdata(p2,p2)->get(1), 0.24);
+            test(alignmodel.getfeaturevector(p2,p2)->get(1), 0.24);
 
             cerr << "Training indexed model constrained by PatternAlignmentModel" << endl;
             IndexedCorpus c("/tmp/hamlet.colibri.dat");
