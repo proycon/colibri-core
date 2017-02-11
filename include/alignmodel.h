@@ -254,4 +254,33 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
         }
 };
 
+class BasicPatternAlignmentModel: public AbstractAlignmentModel<PatternVector,PatternVectorHandler>  {
+    public:
+        typedef typename PatternMap<PatternVector,PatternVectorHandler>::iterator iterator;
+        typedef typename PatternMap<PatternVector,PatternVectorHandler>::const_iterator const_iterator;
+
+        BasicPatternAlignmentModel(): AbstractAlignmentModel<PatternVector,PatternVectorHandler>() {}
+        BasicPatternAlignmentModel(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternVector,PatternVectorHandler>(f, options, constrainmodel) {}
+
+        BasicPatternAlignmentModel(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternVector,PatternVectorHandler>(filename, options, constrainmodel) {} 
+
+
+       
+        void add(const Pattern & pattern, const Pattern & pattern2, bool checkifexists= true) {
+            PatternVector * pv = AbstractAlignmentModel<PatternVector,PatternVectorHandler>::getdata(pattern, true);
+            pv->insert(pattern2, checkifexists);
+        }
+
+
+        virtual void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) {
+            *out << "PATTERN\tPATTERN2" << std::endl;
+            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+                const Pattern sourcepattern = iter->first;
+                for (typename PatternVector::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
+                    const Pattern targetpattern = *iter2;
+                    *out << sourcepattern.tostring(sourcedecoder) << "\t" << targetpattern.tostring(targetdecoder) << std::endl;
+                }
+            }
+        }
+};
 #endif

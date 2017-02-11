@@ -574,7 +574,7 @@ class PatternVector { //acts like a (small) map (but implemented as a vector to 
 
 
 
-        void insert(Pattern & pattern, bool checkexists=true) { 
+        void insert(const Pattern & pattern, bool checkexists=true) { 
             //make a copy, safer
             if (checkexists) {
                 iterator found = this->find(pattern);
