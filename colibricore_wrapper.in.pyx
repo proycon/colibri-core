@@ -14,7 +14,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython import address
-from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, PatternPointer as cPatternPointer, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, HashOrderedPatternMap as cHashOrderedPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternSetModel as cPatternSetModel, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, IndexedCorpus as cIndexedCorpus, SKIPPATTERN as cSKIPPATTERN, FLEXPATTERN as cFLEXPATTERN, UNKPATTERN as cUNKPATTERN, BOUNDARYPATTERN as cBOUNDARYPATTERN, AlignedPatternMap as cAlignedPatternMap, PatternModelInterface as cPatternModelInterface, PatternFeatureVector as cPatternFeatureVector, PatternFeatureVectorMap as cPatternFeatureVectorMap, PatternAlignmentModel as cPatternAlignmentModel, patternfromfile as cpatternfromfile, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator, istream
+from colibricore_classes cimport ClassEncoder as cClassEncoder, ClassDecoder as cClassDecoder, Pattern as cPattern, PatternPointer as cPatternPointer, IndexedData as cIndexedData, IndexReference as cIndexReference, PatternMap as cPatternMap, HashOrderedPatternMap as cHashOrderedPatternMap, PatternSet as cPatternSet, PatternModelOptions as cPatternModelOptions, PatternSetModel as cPatternSetModel, PatternModel as cPatternModel,IndexedPatternModel as cIndexedPatternModel, IndexedDataHandler as cIndexedDataHandler, BaseValueHandler as cBaseValueHandler, cout, IndexedCorpus as cIndexedCorpus, SKIPPATTERN as cSKIPPATTERN, FLEXPATTERN as cFLEXPATTERN, UNKPATTERN as cUNKPATTERN, BOUNDARYPATTERN as cBOUNDARYPATTERN, AlignedPatternMap as cAlignedPatternMap, PatternModelInterface as cPatternModelInterface, PatternVector as cPatternVector, PatternFeatureVector as cPatternFeatureVector, PatternFeatureVectorMap as cPatternFeatureVectorMap, PatternAlignmentModel as cPatternAlignmentModel, BasicPatternAlignmentModel as cBasicPatternAlignmentModel, patternfromfile as cpatternfromfile, t_relationmap, t_relationmap_double, t_relationmap_iterator, t_relationmap_double_iterator, istream
 from unordered_map cimport unordered_map
 from unordered_set cimport unordered_set
 from libc.stdint cimport *
@@ -1142,9 +1142,35 @@ cdef class IndexedCorpus:
         """Returns the length of the specified sentences, raises KeyError when it doesn't exist"""
         return self.data.sentencelength(sentence)
 
+cdef class PatternVector:
+    cdef cPatternVector data
 
+    cdef bind(self, cPatternVector & cvec):
+        self.data = cvec
 
+    def __len__(self):
+        return self.data.size()
 
+    def __bool__(self):
+        return self.data.size() > 0
+
+    cdef has(self, Pattern pattern):
+        return self.data.has(pattern.cpattern)
+
+    def __contains__(self, Pattern pattern):
+        return self.has(pattern)
+
+    cdef append(self, Pattern pattern):
+        self.data.insert(pattern.cpattern)
+
+    def __iter__(self):
+        cdef cPatternVector.iterator it_end = self.data.end()
+        cdef cPatternVector.iterator it = self.data.begin()
+        while it != it_end:
+            pattern = Pattern()
+            pattern.bind(deref(it))
+            yield pattern
+            inc(it)
 
 cdef class PatternFeatureVectorMap_float:
     cdef cPatternFeatureVectorMap[double] data

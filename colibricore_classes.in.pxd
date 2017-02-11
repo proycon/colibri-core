@@ -153,6 +153,20 @@ cdef extern from "datatypes.h":
         void insert(PatternFeatureVector&)
         PatternFeatureVector[T] * getdata(Pattern&) nogil
 
+    cdef cppclass PatternVector:
+        vector[Pattern] data
+        cppclass iterator:
+            Pattern& operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        bool has(Pattern&) nogil
+        size_t size() nogil
+        iterator begin() nogil
+        iterator end() nogil
+        Pattern get(int) nogil
+        void clear() nogil
+        void insert(Pattern&) nogil
 
 cdef extern from "patternstore.h":
     cdef cppclass PatternMap[ValueType,ValueHandler,ReadWriteSizeType]:
@@ -534,3 +548,36 @@ cdef extern from "alignmodel.h":
         void load(string, PatternModelOptions) nogil except +IOError
         void write(string) nogil except +IOError
 
+    cdef cppclass BasicPatternAlignmentModel:
+        cppclass iterator:
+            pair[Pattern,PatternVector] & operator*() nogil
+            iterator operator++() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        iterator begin() nogil
+        iterator end() nogil
+        BasicPatternAlignmentModel() nogil
+        unsigned int types() nogil
+        unsigned int tokens() nogil
+        int getmodeltype()
+        int getmodelversion()
+        int maxlength() nogil
+        int minlength() nogil
+        void add(Pattern&, Pattern&)
+
+        PatternModelInterface * getinterface() nogil
+
+        void insert(Pattern&, PatternVector& value) nogil
+        bool has(Pattern&) nogil
+        bool has(Pattern&, Pattern&) nogil
+
+        unsigned int size() nogil
+
+        PatternVector& operator[](Pattern&) nogil
+        PatternVector* getdata(Pattern&, bool makeifnew=False) nogil
+
+        iterator erase(Pattern&) nogil
+        iterator find(Pattern&) nogil
+
+        void load(string, PatternModelOptions) nogil except +IOError
+        void write(string) nogil except +IOError
