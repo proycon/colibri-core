@@ -27,7 +27,7 @@
  * \brief Contains lower-level containers for patterns.
  *
  * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
- * 
+ *
  * @section LICENSE
  * Licensed under GPLv3
  *
@@ -38,7 +38,7 @@
 
 typedef std::pair<IndexReference,PatternPointer> IndexPattern;
 /**
- * \brief Class for reading an entire (class encoded) corpus into memory. 
+ * \brief Class for reading an entire (class encoded) corpus into memory.
  * It provides a reverse index by IndexReference. The reverse index stores positions and unigrams.
  */
 class IndexedCorpus {
@@ -79,14 +79,14 @@ class IndexedCorpus {
          */
         IndexedCorpus(std::string filename, bool debug = false);
 
-        ~IndexedCorpus() { 
-			if (corpus != NULL) delete[] corpus; 
-			if (patternpointer != NULL) delete patternpointer; 
+        ~IndexedCorpus() {
+			if (corpus != NULL) delete[] corpus;
+			if (patternpointer != NULL) delete patternpointer;
             corpus = NULL;
             patternpointer = NULL;
 		}
 
-        
+
         /*
          * Read an indexed corpus from stream. The stream must correspond to an
          * encoded corpus (*.colibri.dat)
@@ -101,7 +101,7 @@ class IndexedCorpus {
 
 
 
-        /** 
+        /**
          * Low-level function, returns a data pointer given an IndexReference.
          * Returns NULL when the index does not exist.
          * Use getpattern() instead.
@@ -131,7 +131,7 @@ class IndexedCorpus {
          */
         PatternPointer getsentence(int sentence) const; //returns sentence as a pattern pointer
         PatternPointer getsentence(unsigned char * sentencedata) const; //returns sentence as a pattern pointer
-         
+
         /**
          * Returns all positions at which the pattern occurs. Up to a certain
          * number of maximum matches if desired. Note that this iterates over
@@ -163,14 +163,14 @@ class IndexedCorpus {
         /**
          * Returns a valid patternpointer for the flexgram at the indicated
          * position. Effectively removing a level of abstraction. If the
-         * flexgram can not be found, a KeyError will be raised. 
+         * flexgram can not be found, a KeyError will be raised.
          * This is a specialised alias for the low-level findpattern() method
          */
         PatternPointer getflexgram(const IndexReference & begin, const Pattern flexgram) const;
 
         /**
          * Returns a valid patternpointer for the skipgram at the indicated
-         * position. If the skipgram can not be found, a KeyError will be raised. 
+         * position. If the skipgram can not be found, a KeyError will be raised.
          * This is a specialised alias for the low-level findpattern() method
          */
         PatternPointer getskipgram(const IndexReference & begin, const Pattern skipgram) const;
@@ -179,8 +179,8 @@ class IndexedCorpus {
          * Returns the length of the sentence (or whatever other unit your data
          * employs) at the given sentence index (starts at 1)
          */
-        int sentencelength(int sentence) const;  
-        int sentencelength(unsigned char * sentencebegin) const;  
+        int sentencelength(int sentence) const;
+        int sentencelength(unsigned char * sentencebegin) const;
 
         /**
          * Return the total number of sentences (or whatever other unit
@@ -205,8 +205,8 @@ class IndexedCorpus {
 					pairpointer = new std::pair<IndexReference,PatternPointer>(*ref.pairpointer);
                     indexedcorpus = ref.indexedcorpus;
                 }
-                
-                iterator(IndexedCorpus * indexedcorpus, pointer ptr) { 
+
+                iterator(IndexedCorpus * indexedcorpus, pointer ptr) {
                     if (ptr != NULL) {
                         pairpointer = new std::pair<IndexReference,PatternPointer>(*ptr);
                     } else {
@@ -214,11 +214,11 @@ class IndexedCorpus {
                     }
                     this->indexedcorpus = indexedcorpus;
                 }
-                iterator(IndexedCorpus * indexedcorpus, IndexReference iref, PatternPointer pp) { 
+                iterator(IndexedCorpus * indexedcorpus, IndexReference iref, PatternPointer pp) {
 					pairpointer = new std::pair<IndexReference,PatternPointer>(iref, pp);
                     this->indexedcorpus = indexedcorpus;
 				}
-                iterator(IndexedCorpus * indexedcorpus, reference ref) { 
+                iterator(IndexedCorpus * indexedcorpus, reference ref) {
 					pairpointer = new std::pair<IndexReference,PatternPointer>(ref.first, ref.second);
                     this->indexedcorpus = indexedcorpus;
 				}
@@ -229,9 +229,9 @@ class IndexedCorpus {
    				~iterator() {
 					if (pairpointer != NULL) delete pairpointer;
 				}
-				self_type operator++() { 
+				self_type operator++() {
 					next();
-					return *this; 
+					return *this;
 				} //prefix
 
                 self_type & operator=(const self_type & ref) {
@@ -269,7 +269,7 @@ class IndexedCorpus {
                                 pairpointer->second = PatternPointer(); //null pointer
                             }
                         } else {
-                            pairpointer->first.token++;	
+                            pairpointer->first.token++;
                         }
                         //Note: At the end of the data, the patternpointer points to NULL, checking against end() should work fine though
                     }
@@ -281,12 +281,12 @@ class IndexedCorpus {
 
                 //reference operator*() { return *pairpointer; }
                 //pointer operator->()  { return pairpointer; }
-                IndexReference & index() { return pairpointer->first; } 
-                PatternPointer & pattern() { return pairpointer->second; } 
-                PatternPointer & patternpointer() { return pairpointer->second; } 
-                IndexedCorpus * corpus() { return indexedcorpus; } 
+                IndexReference & index() { return pairpointer->first; }
+                PatternPointer & pattern() { return pairpointer->second; }
+                PatternPointer & patternpointer() { return pairpointer->second; }
+                IndexedCorpus * corpus() { return indexedcorpus; }
 
-                bool operator==(self_type rhs) { 
+                bool operator==(self_type rhs) {
                     if ((pairpointer == NULL) || (pairpointer->second.data == NULL)) {
                         return ((rhs.pairpointer == NULL) || (rhs.pairpointer->second.data == NULL));
                     } else if ((rhs.pairpointer == NULL) || (rhs.pairpointer->second.data == NULL)) {
@@ -304,21 +304,21 @@ class IndexedCorpus {
                 pointer pairpointer;
                 IndexedCorpus * indexedcorpus;
         };
-    
+
         /*
          * Returns the begin iterator over the corpus
          */
-        iterator begin() { 
+        iterator begin() {
 			IndexReference iref = IndexReference(1,0);
 			PatternPointer p = getpattern(iref,1);
-			return iterator(this,iref,p); 
+			return iterator(this,iref,p);
 		}
         //const_iterator begin() const { return data.begin(); }
 
         /*
          * Returns the end iterator of the corpus
          */
-        iterator end() { 
+        iterator end() {
 			IndexReference iref = IndexReference(sentences() + 1,0);
             return iterator(this,iref, PatternPointer());
 		}
@@ -343,9 +343,9 @@ class IndexedCorpus {
         /*const_iterator find(const IndexReference & ref) const {
             return std::lower_bound(this->begin(), this->end(), IndexPattern(ref) ); //does binary search
         }*/
-        
+
         /**
-         * Does the provided position occur in the corpus? 
+         * Does the provided position occur in the corpus?
          */
         bool has(const IndexReference & ref) const {
 			return (getpointer(ref) != NULL);
@@ -358,7 +358,7 @@ class IndexedCorpus {
 			if (totaltokens > 0) return totaltokens;
             for (iterator iter = begin(); iter != end(); iter++) totaltokens++;
 			return totaltokens;
-		} 
+		}
 
         /**
          * Is the corpus empty?
@@ -372,14 +372,14 @@ class IndexedCorpus {
          * encoding. Use getpattern() if you want a Pattern instance.
          * @see getpattern
          */
-        unsigned int operator [](const IndexReference & ref) { 
+        unsigned int operator [](const IndexReference & ref) {
 			try {
 				PatternPointer pp = getpattern(ref);
 				return bytestoint(pp.data);
 			} catch (KeyError &e) {
 				throw e;
 			}
-        } 
+        }
 
 
 
@@ -407,7 +407,7 @@ class PatternStoreInterface {
         /**
          * How many patterns are in the pattern store?
          */
-        virtual size_t size() const =0; 
+        virtual size_t size() const =0;
 
 
 
@@ -418,11 +418,11 @@ class PatternStoreInterface {
  * \brief Abstract Pattern store class, not to be instantiated directly.
  *
  * This is an abstract class, all Pattern storage containers are derived from
- * this. 
- * @tparam ContainerType The low-level container type used (an STL container such as set/map). 
+ * this.
+ * @tparam ContainerType The low-level container type used (an STL container such as set/map).
  * @tparam ReadWriteSizeType Data type for addressing, influences only the maximum number of items that can be stored (2**64) in the container, as this will be represented in the very beginning of the binary file. No reason to change this unless the container is very deeply nested in others and contains only few items.
  */
-template<class ContainerType,class ReadWriteSizeType = uint64_t,class PatternType = Pattern> 
+template<class ContainerType,class ReadWriteSizeType = uint64_t,class PatternType = Pattern>
 class PatternStore: public PatternStoreInterface {
     protected:
         unsigned char * corpusstart; //used only when PatternType=PatternPointer
@@ -432,7 +432,7 @@ class PatternStore: public PatternStoreInterface {
     public:
         PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {corpusstart = NULL; corpussize = 0; classencodingversion = 2; patterntype = PatternType::patterntype; };
         virtual ~PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {};
-    
+
         virtual void attachcorpus(unsigned char * corpusstart, unsigned int corpussize) {
             this->corpusstart = corpusstart;
             this->corpussize = corpussize;
@@ -451,7 +451,7 @@ class PatternStore: public PatternStoreInterface {
         unsigned int getcorpussize() const {
             return corpussize;
         }
-        
+
 
         /**
          * Set this to read patterns using the v1 classencoding (pre Colibri Core v2). Only for reading, write actions will always use the newest version.
@@ -464,11 +464,11 @@ class PatternStore: public PatternStoreInterface {
         virtual bool has(const PatternPointer &) const =0;
 
         virtual bool erase(const PatternType &) =0;
-        
-        virtual size_t size() const =0; 
+
+        virtual size_t size() const =0;
         virtual void reserve(size_t) =0; //might be a noop in some implementations
-        
-        
+
+
         typedef typename ContainerType::iterator iterator;
         typedef typename ContainerType::const_iterator const_iterator;
 
@@ -477,7 +477,7 @@ class PatternStore: public PatternStoreInterface {
         virtual typename ContainerType::iterator find(const Pattern & pattern)=0;
         virtual typename ContainerType::iterator find(const PatternPointer & pattern)=0;
 
-        
+
         virtual void write(std::ostream * out)=0;
         //virtual void read(std::istream * in, int MINTOKENS)=0;
 
@@ -494,13 +494,13 @@ class PatternStore: public PatternStoreInterface {
 
 /**
  * \brief Abstract class for map-like pattern stores, do not instantiate directly.
- * @tparam ContainerType The low-level container type used (an STL container such as set/map). 
+ * @tparam ContainerType The low-level container type used (an STL container such as set/map).
  * @tparam ValueType The type of Value this container stores
  * @tparam ValueHandler A handler class for this type of value
  * @tparam ReadWriteSizeType Data type for addressing, influences only the maximum number of items that can be stored (2**64) in the container, as this will be represented in the very beginning of the binary file. No reason to change this unless the container is very deeply nested in others and contains only few items.
  */
 template<class ContainerType, class ValueType, class ValueHandler,class ReadWriteSizeType = uint32_t,class PatternType=Pattern>
-class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,PatternType> { 
+class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,PatternType> {
      protected:
         ValueHandler valuehandler;
      public:
@@ -515,14 +515,14 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
 
         virtual bool erase(const PatternType &) =0;
 
-        
-        virtual size_t size() const =0; 
+
+        virtual size_t size() const =0;
         virtual void reserve(size_t) =0;
-        
-        
+
+
         virtual ValueType & operator [](const Pattern & pattern)=0;
         virtual ValueType & operator [](const PatternPointer & pattern)=0;
-        
+
         typedef typename ContainerType::iterator iterator;
         typedef typename ContainerType::const_iterator const_iterator;
 
@@ -544,7 +544,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
                 this->valuehandler.write(out, iter->second);
             }
         }
-        
+
         /**
          * Write the map to file (in binary format)
          */
@@ -589,7 +589,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
                             if (DORESET) {
                                 convertedvalue = new ValueType();
                             } else {
-                                readvaluehandler.convertto(&readvalue, convertedvalue); 
+                                readvaluehandler.convertto(&readvalue, convertedvalue);
                                 if (DEBUG) std::cerr << "...converted";
                                 if (convertedvalue == NULL) {
                                     if (DEBUG) std::cerr << std::endl;
@@ -602,9 +602,9 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
                             if ((convertedvalue != NULL) && ((void*) convertedvalue != (void*) &readvalue)) delete convertedvalue;
                     } else if (DEBUG) {
                         if (readvaluehandler.count(readvalue) < (unsigned int) MINTOKENS) {
-                            std::cerr << "...skipping because of occurrence (" << readvaluehandler.count(readvalue) << " below " << MINTOKENS;    
+                            std::cerr << "...skipping because of occurrence (" << readvaluehandler.count(readvalue) << " below " << MINTOKENS;
                         } else {
-                            std::cerr << "...skipping because of constraints";    
+                            std::cerr << "...skipping because of constraints";
                         }
                     }
                 } else if (DEBUG) {
@@ -634,7 +634,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
 typedef std::unordered_set<Pattern> t_patternset;
 
 /**
- * \brief A pattern store in the form of an unordered set (i.e, no duplicates). 
+ * \brief A pattern store in the form of an unordered set (i.e, no duplicates).
  * Stores only patterns, no values.
  * @tparam ReadWriteSizeType The data type for addressing, determines the
  * maximum amount of patterns that can be held, only used in
@@ -661,7 +661,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
                 unsigned char * buffer = new unsigned char[64];
                 int length = inttobytes(buffer, cls); //will be set by inttobytes
                 data.insert( Pattern(buffer, length) );
-                delete buffer;
+                delete [] buffer;
             }
         }
 
@@ -674,7 +674,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
                 unsigned char * buffer = new unsigned char[64];
                 int length = inttobytes(buffer, cls); //will be set by inttobytes
                 data.insert( Pattern(buffer, length) );
-                delete buffer;
+                delete [] buffer;
             }
         }
 
@@ -700,12 +700,12 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
         /**
          * Returns the number of patterns in the set
          */
-        size_t size() const { return data.size(); } 
+        size_t size() const { return data.size(); }
         void reserve(size_t s) { data.reserve(s); }
 
         typedef t_patternset::iterator iterator;
         typedef t_patternset::const_iterator const_iterator;
-        
+
         /**
          * Returns an iterator to iterate over the set
          */
@@ -826,12 +826,12 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
 
         bool has(const Pattern & pattern) const { return data.count(pattern); }
         bool has(const PatternPointer & pattern) const { return data.count(pattern); }
-        size_t size() const { return data.size(); } 
+        size_t size() const { return data.size(); }
         void reserve(size_t s) {} //noop
 
         typedef t_hashorderedpatternset::iterator iterator;
         typedef t_hashorderedpatternset::const_iterator const_iterator;
-        
+
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
 
@@ -846,7 +846,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         bool erase(const Pattern & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
 
-        
+
         void write(std::ostream * out) {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
@@ -877,7 +877,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
 
 
 /**
- * \brief A pattern map storing patterns and their values in a hash map (unordered_map). 
+ * \brief A pattern map storing patterns and their values in a hash map (unordered_map).
  * @tparam ValueType The type of Value this container stores
  * @tparam ValueHandler A handler class for this type of value
  * @tparam ReadWriteSizeType The data type for addressing, determines the
@@ -892,27 +892,27 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
         //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
         PatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
 
-        void insert(const Pattern & pattern, ValueType & value) { 
+        void insert(const Pattern & pattern, ValueType & value) {
             data[pattern] = value;
         }
 
         void insert(const Pattern & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
-        
-        bool has(const Pattern & pattern) const { 
+
+        bool has(const Pattern & pattern) const {
             return data.count(pattern);
         }
         bool has(const PatternPointer & pattern) const { return data.count(pattern); }
 
-        size_t size() const { return data.size(); } 
+        size_t size() const { return data.size(); }
         void reserve(size_t s) { data.reserve(s); }
 
 
-        ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
-        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; } 
-        
+        ValueType& operator [](const Pattern & pattern) { return data[pattern]; }
+        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; }
+
         typedef typename std::unordered_map<Pattern,ValueType>::iterator iterator;
         typedef typename std::unordered_map<Pattern,ValueType>::const_iterator const_iterator;
-        
+
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
 
@@ -923,7 +923,7 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
         const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
         iterator find(const PatternPointer & pattern) { return data.find(pattern); }
         const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
-        
+
         bool erase(const Pattern & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
 
@@ -944,34 +944,34 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
         PatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>() { corpus = NULL; }
 
 
-        void insert(const PatternPointer & pattern, ValueType & value) { 
+        void insert(const PatternPointer & pattern, ValueType & value) {
             data[pattern] = value;
         }
 
         void insert(const PatternPointer & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
-        
-        bool has(const Pattern & pattern) const { 
+
+        bool has(const Pattern & pattern) const {
             return data.count(pattern);
         }
         bool has(const PatternPointer & pattern) const { return data.count(pattern); }
 
-        size_t size() const { return data.size(); } 
+        size_t size() const { return data.size(); }
         void reserve(size_t s) { data.reserve(s); }
 
 
-        ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
-        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; } 
-        
+        ValueType& operator [](const Pattern & pattern) { return data[pattern]; }
+        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; }
+
         typedef typename std::unordered_map<PatternPointer,ValueType>::iterator iterator;
         typedef typename std::unordered_map<PatternPointer,ValueType>::const_iterator const_iterator;
-        
+
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
 
         iterator end() { return data.end(); }
         const_iterator end() const { return data.end(); }
 
-        iterator find(const Pattern & pattern) { 
+        iterator find(const Pattern & pattern) {
             PatternPointer pp = pattern.getpointer();
             return data.find(pp);
         }
@@ -979,7 +979,7 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
 
         iterator find(const PatternPointer & pattern) { return data.find(pattern); }
         const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
-        
+
         bool erase(const PatternPointer & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
 };
@@ -998,34 +998,34 @@ class OrderedPatternPointerMap: public PatternMapStore<std::map<PatternPointer,V
         OrderedPatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>() { corpus = NULL; }
 
 
-        void insert(const PatternPointer & pattern, ValueType & value) { 
+        void insert(const PatternPointer & pattern, ValueType & value) {
             data[pattern] = value;
         }
 
         void insert(const PatternPointer & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
-        
-        bool has(const Pattern & pattern) const { 
+
+        bool has(const Pattern & pattern) const {
             return data.count(pattern);
         }
         bool has(const PatternPointer & pattern) const { return data.count(pattern); }
 
-        size_t size() const { return data.size(); } 
+        size_t size() const { return data.size(); }
         void reserve(size_t s) { } //noop
 
 
-        ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
-        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; } 
-        
+        ValueType& operator [](const Pattern & pattern) { return data[pattern]; }
+        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; }
+
         typedef typename std::map<PatternPointer,ValueType>::iterator iterator;
         typedef typename std::map<PatternPointer,ValueType>::const_iterator const_iterator;
-        
+
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
 
         iterator end() { return data.end(); }
         const_iterator end() const { return data.end(); }
 
-        iterator find(const Pattern & pattern) { 
+        iterator find(const Pattern & pattern) {
             PatternPointer pp = pattern.getpointer();
             return data.find(pp);
         }
@@ -1033,7 +1033,7 @@ class OrderedPatternPointerMap: public PatternMapStore<std::map<PatternPointer,V
 
         iterator find(const PatternPointer & pattern) { return data.find(pattern); }
         const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
-        
+
         bool erase(const PatternPointer & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
 };
@@ -1046,7 +1046,7 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
         HashOrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>(): PatternMapStore<std::map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
         virtual ~HashOrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
 
-        void insert(const Pattern & pattern, ValueType & value) { 
+        void insert(const Pattern & pattern, ValueType & value) {
             data[pattern] = value;
         }
 
@@ -1055,15 +1055,15 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
         bool has(const Pattern & pattern) const { return data.count(pattern); }
         bool has(const PatternPointer & pattern) const { return data.count(pattern); }
 
-        size_t size() const { return data.size(); } 
+        size_t size() const { return data.size(); }
         void reserve(size_t s) {} //noop
 
-        ValueType& operator [](const Pattern & pattern) { return data[pattern]; } 
-        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; } 
-        
+        ValueType& operator [](const Pattern & pattern) { return data[pattern]; }
+        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; }
+
         typedef typename std::map<const Pattern,ValueType>::iterator iterator;
         typedef typename std::map<const Pattern,ValueType>::const_iterator const_iterator;
-        
+
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
 
@@ -1077,7 +1077,7 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
 
         bool erase(const Pattern & pattern) { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
-        
+
 
 };
 
@@ -1090,14 +1090,14 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
     void read(std::istream * in, std::array<T,N> & a) {
         for (int i = 0; i < N; i++) {
             T v;
-            in->read( (char*) &v, sizeof(T)); 
+            in->read( (char*) &v, sizeof(T));
             a[i] = v;
         }
     }
     void write(std::ostream * out, std::array<T,N> & a) {
         for (int i = 0; i < N; i++) {
             T v = a[i];
-            out->write( (char*) &v, sizeof(T)); 
+            out->write( (char*) &v, sizeof(T));
         }
     }
     std::string tostring(std::array<T,N> & a) {
