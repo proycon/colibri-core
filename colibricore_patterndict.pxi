@@ -27,7 +27,7 @@ def __iter__(self):
 
 def __getitem__(self, Pattern pattern):
     """Retrieve the value for a pattern in the dictionary
-    
+
     :param pattern: A pattern
     :type pattern: Pattern
     """

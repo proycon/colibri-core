@@ -7,7 +7,7 @@
 *   Radboud University Nijmegen
 *
 *   http://proycon.github.io/colibri-core
-*   
+*
 *   Licensed under GPLv3
 *****************************/
 
@@ -22,7 +22,7 @@
  * \brief Class for decoding binary class-encoded data back to plain-text.
  *
  * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
- * 
+ *
  * @section LICENSE
  * Licensed under GPLv3
  *
@@ -50,9 +50,9 @@ class ClassDecoder {
      static const unsigned char boundaryclass = 1;
      static const unsigned char skipclass = 3;
      static const unsigned char flexclass = 4;
-    
+
     /**
-     * Constructor for an empty class decoder 
+     * Constructor for an empty class decoder
      */
     ClassDecoder();
 
@@ -65,9 +65,9 @@ class ClassDecoder {
      * Load a class encoding from file
      */
     void load(const std::string & filename);
-    
+
     std::vector<std::string> decodeseq(const std::vector<int> & seq);
-    
+
     /**
      * Create a plain-text corpus file from a class-encoded corpus file (*.colibri.dat)
      * @param inputfilename Filename of the input file, a plain-text corpus file
@@ -88,14 +88,14 @@ class ClassDecoder {
      * @return A string with the plain-text corpus data, units (e.g sentences) are delimited with newlines
      */
     std::string decodefiletostring(const std::string & filename,  unsigned int start = 0, unsigned int end = 0, bool quiet=true);
-    
+
     /**
      * Return the number of classes, i.e. word types, in the class encoding
      */
     int size() const {
         return classes.size();
     }
-    
+
     /**
      * Return the word pertaining to the given class. Unknown classes will be
      * decoded as {?}.
@@ -108,11 +108,11 @@ class ClassDecoder {
              return "{?}";
          }
     }
-    
+
     /**
      * Add the class with the given word string to the class encoding
      */
-    void add(const unsigned int, const std::string &); 
+    void add(const unsigned int, const std::string &);
 
     /**
      * Return the highest class in the class encoding
@@ -123,16 +123,16 @@ class ClassDecoder {
      * Test if the specified class exists in this class encoding
      */
     bool hasclass(unsigned int key) const { return (classes.count(key) > 0); }
-    
+
     /**
      * Return a new class, not yet assigned
      */
-    unsigned int newclass(); 
-    
+    unsigned int newclass();
+
     /**
      * Retain only the specified number of most frequent classes, prune the remainder
      */
-    void prune(unsigned int threshold);    
+    void prune(unsigned int threshold);
 
 
     typedef std::unordered_map<unsigned int, std::string>::const_iterator const_iterator;

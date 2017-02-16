@@ -138,12 +138,12 @@ protected:
         int num = pptr() - pbase();
         cstream.next_in = pbase();
         cstream.avail_in = num;
-            
+
         while (cstream.avail_in) {
             // set the pointers to the output buffer
             cstream.next_out = &out_buffer[0];
             cstream.avail_out = out_buffer.size();
-            
+
             // compress the data; we don't need to check for errors
             // here because there is no possibility that they can
             // happen here; it is explained in the libbzip2 docs.
@@ -163,7 +163,7 @@ protected:
         bool flushed = false;
         cstream.next_in = NULL;
         cstream.avail_in = 0;
-        
+
         do {
             // set the pointers to the output buffer
             cstream.next_out = &out_buffer[0];
@@ -185,7 +185,7 @@ protected:
         bool finished = false;
         cstream.next_in = NULL;
         cstream.avail_in = 0;
-        
+
         do {
             // set the pointers to the output buffer
             cstream.next_out = &out_buffer[0];
@@ -250,56 +250,56 @@ protected:
     }
 public:
     /// \brief Constructs a new bz2outbuf object.
-    /// 
+    ///
     /// @param _dest The stream buffer to write the compressed data
     /// to.  Notice that this stream buffer must be in binary and not
     /// in text mode, because if the newline characters are processed
     /// the data will be corrupted.
-    /// 
+    ///
     /// @param block_size_100K The size of the blocks in 100K the
     /// bz2 algorithm should compress.  The bigger the blocks are, the
     /// slower and the more memory intensive the compression gets, but
     /// the data will be compressed more.  Valid values range from 1
     /// to 9.
-    /// 
+    ///
     /// @param verbostity The amount of debugging information libbz2
     /// should print to stderr.  Ranges from 0 (quiet) to 4 (very
     /// talkative).
-    /// 
+    ///
     /// @param work_factor The "work factor" of the compression
     /// algorithm.  It is described in the libbz2 documentation; leave
     /// it 0 if you don't know what you're doing.  Ranges from 1 to
     /// 250; 0 is a special value which will be internally replaced by
     /// the default value of 30.
-    /// 
+    ///
     /// @param bzalloc A pointer to a custom memory allocation
     /// routine, to be used by libbz2.  If NULL, malloc() will be
     /// used.  See also ::bzalloc_ptr.
-    /// 
+    ///
     /// @param bzfree A pointer to a custom memory deallocation
     /// routine, to be used by libbz2.  If NULL, free() will be used.
     /// See also ::bzfree_ptr.
-    /// 
+    ///
     /// @param opaque A pointer which will be passed to the custom
     /// routines bzalloc and bzfree, if you specified them.  See also
     /// ::bzalloc_ptr and ::bzfree_ptr.
-    /// 
+    ///
     /// @param buffer_size The size of the stream buffer used by
     /// bz2outbuf.  Leave it alone if you don't know what you're
     /// doing.  (Bigger values are not necessarily faster).  Must be
     /// positive.
-    ///  
+    ///
     /// @param out_buffer_size The size of the output buffer used by
     /// bz2outbuf.  Definitely leave it alone if you don't know what
     /// you're doing.  Must be positive, too.
     ///
     /// Currently, this constructor throws any of the following
     /// exceptions:
-    /// 
+    ///
     /// - std::range_error if one of the parameters is out of range.
     /// - std::bad_alloc if it runs out of memory.
     /// - std::runtime_error for other errors.
-    /// 
+    ///
     /// For future compatibility, you should expect it to throw any
     /// std::exception derived exception.  All exceptions but
     /// std::bad_alloc include descriptions of what went bad.  Thus
@@ -330,7 +330,7 @@ public:
 
         // allocate memory for the output buffer
         out_buffer.resize(out_buffer_size);
-            
+
         // set the buffer pointers; use one character less for the
         // stream buffer than the really available one
         setp(&buffer[0], &*--buffer.end());
@@ -340,7 +340,7 @@ public:
         cstream.bzalloc = bzalloc;
         cstream.bzfree = bzfree;
         cstream.opaque = opaque;
-        
+
         // create a bz2 compressor stream
         int ret = BZ2_bzCompressInit(&cstream, block_size_100K, verbosity,
                                      work_factor);
@@ -438,7 +438,7 @@ protected:
                 in_begin = &in_buffer[0];
                 in_end = in_begin + read_num;
             }
-            
+
             // decompress the data
             dstream.next_in = in_begin;
             dstream.avail_in = in_end - in_begin;
@@ -451,7 +451,7 @@ protected:
             case BZ_STREAM_END:
                 if (&*buffer.end() - putback_end == (int) dstream.avail_out)
                     return traits_type::eof();
-                break;            
+                break;
             case BZ_DATA_ERROR:
             case BZ_DATA_ERROR_MAGIC:
             case BZ_MEM_ERROR:
@@ -459,7 +459,7 @@ protected:
                 // TODO: handle these errors separately
                 return traits_type::eof();
             }
-            
+
             // update the input buffer pointers
             in_begin = in_end - dstream.avail_in;
 
@@ -473,7 +473,7 @@ protected:
         // return the next character
         return traits_type::to_int_type(*gptr());
     }
-    
+
 public:
     /// \brief Creates a new bz2inbuf object, using _source as
     /// underlying stream buffer.
@@ -489,7 +489,7 @@ public:
     /// @param small_but_slow If false, use default algorithm.  If
     /// true, use a less memory intensive but slower algorithm.  Not
     /// recommended.
-    /// 
+    ///
     /// @param bzalloc A pointer to a custom memory allocation
     /// function.  If NULL, malloc() is used. See also ::bzalloc_ptr.
     ///
@@ -516,7 +516,7 @@ public:
     ///
     /// Currently, this constructor throws any of the following
     /// exceptions:
-    /// 
+    ///
     /// - std::range_error if one of the arguments is out of range.
     /// - std::bad_alloc if it runs out of memory.
     /// - std::runtime_error for any other error.
@@ -524,7 +524,7 @@ public:
     /// All thrown exceptions except std::bad_alloc include a
     /// description of the encountered problem which you can access
     /// using the what() member function.
-    /// 
+    ///
     /// For future compatibility, expect this constructor to throw any
     /// std::exception derived exception.
     bz2inbuf(std::streambuf* _source, unsigned int verbosity = 0,
@@ -544,7 +544,7 @@ public:
         if (max_putback_size >= stream_buffer_size)
             throw std::range_error("The maximum size of the putback area must "
                                    "be less than the stream size.");
-        
+
         // allocate the buffers
         buffer.resize(stream_buffer_size);
         in_buffer.resize(in_buffer_size);
@@ -592,7 +592,7 @@ public:
 /// The actual decompression is achieved in the underlying ::bz2inbuf
 /// stream buffer; you should read its documentation before using this
 /// class.
-/// 
+///
 /// The data is read from a supplied stream buffer.
 class bz2istream : public std::istream {
 protected:

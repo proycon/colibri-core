@@ -19,7 +19,7 @@ def items(self):
 
 cpdef add(self, Pattern pattern, int count=1):
     """Add a pattern to the unindexed model
-    
+
     :param pattern: The pattern to add
     :type pattern: Pattern
     :param count: The number of occurrences

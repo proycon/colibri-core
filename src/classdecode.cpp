@@ -11,7 +11,7 @@
 *   Radboud University Nijmegen
 *
 *   http://proycon.github.io/colibri-core
-*   
+*
 *   Licensed under GPLv3
 *****************************/
 using namespace std;
@@ -27,13 +27,13 @@ void usage() {
     cerr << "\t-e 	end line number (default: infinite)" << endl;
 }
 
-int main( int argc, char *argv[] ) {    
+int main( int argc, char *argv[] ) {
     string classfile = "";
     string corpusfile = "";
     unsigned int start = 0;
-    unsigned int end = 0; 
-     
-    char c;    
+    unsigned int end = 0;
+
+    char c;
     while ((c = getopt(argc, argv, "c:f:hs:e:")) != -1)
         switch (c)
         {
@@ -42,26 +42,26 @@ int main( int argc, char *argv[] ) {
             break;
         case 'f':
             corpusfile = optarg;
-            break;  
-        case 's':    
+            break;
+        case 's':
         	start = atoi(optarg);
         	break;
-       	case 'e':    
+       	case 'e':
         	end = atoi(optarg);
-        	break;        	  
+        	break;
         case 'h':
             usage();
-            exit(0);            
+            exit(0);
 		default:
             cerr << "Unknown option: -" <<  optopt << endl;
             abort ();
         }
-        
+
     if (classfile.empty() || corpusfile.empty()) {
     	usage();
     	exit(2);
     }
-    
+
     ClassDecoder classdecoder = ClassDecoder(classfile);
-    classdecoder.decodefile(corpusfile, (ostream*) &cout, start, end);   
+    classdecoder.decodefile(corpusfile, (ostream*) &cout, start, end);
 }

@@ -12,7 +12,7 @@
 *   Radboud University Nijmegen
 *
 *   http://proycon.github.io/colibri-core
-*   
+*
 *   Licensed under GPLv3
 *****************************/
 using namespace std;
@@ -26,29 +26,29 @@ void usage() {
     cerr << "\t-c str   Class file for decoding" << endl;
 }
 
-int main( int argc, char *argv[] ) {    
+int main( int argc, char *argv[] ) {
     string classfile = "";
     vector<string> datafiles;
     int n = 3;
-    
-    char c;    
+
+    char c;
     while ((c = getopt(argc, argv, "c:hn:")) != -1) {
         switch (c) {
         case 'c':
             classfile = optarg;
-            break;   
+            break;
         case 'n':
             n = atoi(optarg);
             break;
         case 'h':
             usage();
-            exit(0);  
+            exit(0);
 		default:
             cerr << "ERROR: Unknown option: -" <<  optopt << endl;
             abort ();
         }
     }
-    
+
     for (int i = optind; i < argc; i++) {
         string tmp = argv[i];
         datafiles.push_back(tmp);
@@ -60,7 +60,7 @@ int main( int argc, char *argv[] ) {
         exit(2);
     }
 
-    ClassDecoder classdecoder = ClassDecoder(classfile); 
+    ClassDecoder classdecoder = ClassDecoder(classfile);
 
     std::vector<std::pair<PatternPointer,int>> ngrams;
 
@@ -72,7 +72,7 @@ int main( int argc, char *argv[] ) {
             Pattern line = Pattern(in);
             ngrams.clear();
             line.ngrams(ngrams, n);
-        
+
             for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
                 cout << iter->first.tostring(classdecoder) << endl;
             }

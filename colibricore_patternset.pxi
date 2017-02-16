@@ -12,7 +12,7 @@ cpdef has(self, Pattern pattern):
 
 def __contains__(self, pattern):
     """Test if the pattern is in the dictionary
-    
+
     :param pattern: A pattern
     :type pattern: Pattern
     :rtype: bool

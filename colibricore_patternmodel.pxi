@@ -84,7 +84,7 @@ def totaloccurrencesingroup(self, int category=0, int n=0):
     :param n: The size constraint (0= no constraint, default)
     :type n: int
     :rtype: int
-    """ 
+    """
     return self.data.totaloccurrencesingroup(category,n)
 
 def totalpatternsingroup(self, int category=0, int n=0):
@@ -95,7 +95,7 @@ def totalpatternsingroup(self, int category=0, int n=0):
     :param n: The size constraint (0= no constraint, default)
     :type n: int
     :rtype: int
-    """ 
+    """
     return self.data.totalpatternsingroup(category,n)
 
 def totaltokensingroup(self, int category=0, int n=0):
@@ -106,7 +106,7 @@ def totaltokensingroup(self, int category=0, int n=0):
     :param n: The size constraint (0= no constraint, default)
     :type n: int
     :rtype: int
-    """ 
+    """
     return self.data.totaltokensingroup(category,n)
 
 def totalwordtypesingroup(self, int category=0, int n=0):
@@ -117,7 +117,7 @@ def totalwordtypesingroup(self, int category=0, int n=0):
     :param n: The size constraint (0= no constraint, default)
     :type n: int
     :rtype: int
-    """ 
+    """
     return self.data.totaltokensingroup(category,n)
     return self.data.totalwordtypesingroup(category,n)
 
@@ -134,7 +134,7 @@ def __contains__(self, pattern):
     :rtype: bool
 
     Example::
-        
+
         pattern in patternmodel
     """
     if not isinstance(pattern, Pattern):
@@ -149,7 +149,7 @@ def __getitem__(self, pattern):
     :rtype: int (for Unindexed Models), IndexData (for Indexed models)
 
     Example (unindexed model)::
-        
+
         occurrences = model[pattern]
     """
     if not isinstance(pattern, Pattern):
@@ -160,9 +160,9 @@ def __getitem__(self, pattern):
 
 def __iter__(self):
     """Iterates over all patterns in the model. Also consider using the filter() or top() methods if they suit your needs, as they will be faster than doing it manually.
-    
+
     Example::
-    
+
         for pattern in model:
             print(pattern.tostring(classdecoder))
 
@@ -177,7 +177,7 @@ def __iter__(self):
         inc(it)
 
 def __init__(self, str filename = "",PatternModelOptions options = None, constrainmodel = None, reverseindex = None):
-    """Initialise a pattern model. Either an empty one or loading from file. 
+    """Initialise a pattern model. Either an empty one or loading from file.
 
     :param filename: The name of the file to load, must be a valid colibri patternmodel file
     :type filename: str
@@ -201,7 +201,7 @@ def __init__(self, str filename = "",PatternModelOptions options = None, constra
         self.load(filename,options, constrainmodel)
 
 def load(self, str filename, PatternModelOptions options=None, constrainmodel = None):
-    """Load a patternmodel from file. 
+    """Load a patternmodel from file.
 
     :param filename: The name of the file to load, must be a valid colibri patternmodel file
     :type filename: str
@@ -359,7 +359,7 @@ cpdef printhistogram(self):
 
 cpdef prune(self, int threshold, int n=0):
     """Prune all patterns occurring below the threshold.
-    
+
     :param threshold: the threshold value (minimum number of occurrences)
     :type threshold: int
     :param n: prune only patterns of the specified size, use 0 (default) for no size limitation
@@ -424,7 +424,7 @@ def histogram(self, unsigned int threshold=0, unsigned int cap=0, int category =
     cdef stdmap[unsigned int,unsigned int] hist
     cdef stdmap[unsigned int,unsigned int].iterator it
     self.data.histogram(hist,threshold,cap, category, size)
-    it = hist.begin()  
+    it = hist.begin()
     while it != hist.end():
         yield deref(it).first, deref(it).second
         inc(it)
@@ -435,21 +435,21 @@ def top(self, int amount, int category = 0, int size = 0):
 
     cdef unsigned int smallest = self.data.topthreshold(amount, category, size)
     return self.filter(smallest, category, size)
-            
-    
+
+
 
 def filter(self, unsigned int threshold, int category = 0, int size = 0):
-    """Generator over patterns occurring over the set occurrence threshold (and of specified category and size if set to values above 0). This is faster than iterating and filtering manually! Will return (pattern, occurrencecount) tuples (unsorted)""" 
+    """Generator over patterns occurring over the set occurrence threshold (and of specified category and size if set to values above 0). This is faster than iterating and filtering manually! Will return (pattern, occurrencecount) tuples (unsorted)"""
     cdef unsigned int count
     it = self.data.begin()
     cdef cPattern cpattern
     while it != self.data.end():
         cpattern = deref(it).first
         inc(it)
-        if ((category > 0) and (cpattern.category() != category)) or (size > 0) and (size != cpattern.n()): 
+        if ((category > 0) and (cpattern.category() != category)) or (size > 0) and (size != cpattern.n()):
             continue
         count = self.data.occurrencecount(cpattern)
-        if count >= threshold: 
+        if count >= threshold:
             pattern = Pattern()
             pattern.bind(cpattern)
             yield pattern, count
@@ -459,4 +459,4 @@ def getinstance(self, tuple pos, Pattern pattern):
     if self.data.reverseindex == NULL:
         raise ValueError("No reverse index loaded")
     return self.corpus.getinstance(pos, pattern)
-    
+

@@ -13,9 +13,9 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
         uint64_t totaltokens; //INCLUDES TOKENS NOT COVERED BY THE MODEL!
         uint64_t totaltypes; //TOTAL UNIGRAM TYPES, INCLUDING NOT COVERED BY THE MODEL!
 
-        int maxn; 
-        int minn; 
-        
+        int maxn;
+        int minn;
+
 
         virtual void postread(const PatternModelOptions options) {
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -28,7 +28,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
 
     public:
         typedef typename PatternMap<ValueType,ValueHandler>::iterator iterator;
-        typedef typename PatternMap<ValueType,ValueHandler>::const_iterator const_iterator;        
+        typedef typename PatternMap<ValueType,ValueHandler>::const_iterator const_iterator;
 
         AbstractAlignmentModel<ValueType,ValueHandler>() {
             totaltokens = 0;
@@ -86,9 +86,9 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             options.MINTOKENS = 1; //other values would be meaningless
 
             char null;
-            f->read( (char*) &null, sizeof(char));        
-            f->read( (char*) &model_type, sizeof(char));        
-            f->read( (char*) &model_version, sizeof(char));  
+            f->read( (char*) &null, sizeof(char));
+            f->read( (char*) &model_type, sizeof(char));
+            f->read( (char*) &model_version, sizeof(char));
             if (model_version == 1) this->classencodingversion = 1;
             if ((null != 0) || (model_type != PATTERNALIGNMENTMODEL ))  {
                 std::cerr << "File is not a colibri alignment model file (did you try to load a different type of pattern model?)" << std::endl;
@@ -97,32 +97,32 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             if (model_version > 2) {
                 std::cerr << "WARNING: Model is created with a newer version of Colibri Core! Attempting to continue but failure is likely..." << std::endl;
             }
-            f->read( (char*) &totaltokens, sizeof(uint64_t));        
-            f->read( (char*) &totaltypes, sizeof(uint64_t)); 
+            f->read( (char*) &totaltokens, sizeof(uint64_t));
+            f->read( (char*) &totaltypes, sizeof(uint64_t));
 
-            if (options.DEBUG) { 
-                std::cerr << "Debug enabled, loading Alignment Model type " << (int) model_type << ", version " << (int) model_version << std::endl;   
-                std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;   
+            if (options.DEBUG) {
+                std::cerr << "Debug enabled, loading Alignment Model type " << (int) model_type << ", version " << (int) model_version << std::endl;
+                std::cerr << "Total tokens: " << totaltokens << ", total types: " << totaltypes << std::endl;;
             }
 
             PatternStoreInterface * constrainstore = NULL;
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
 
-            PatternMap<ValueType,ValueHandler>::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, options.DEBUG);  
+            PatternMap<ValueType,ValueHandler>::template read(f, options.MINTOKENS,options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, options.DEBUG);
             if (options.DEBUG) std::cerr << "Read " << this->size() << " patterns" << std::endl;
             this->postread(options);
         }
 
         void write(std::ostream * out) {
             const char null = 0;
-            out->write( (char*) &null, sizeof(char));       
+            out->write( (char*) &null, sizeof(char));
             unsigned char t = this->getmodeltype();
-            out->write( (char*) &t, sizeof(char));        
+            out->write( (char*) &t, sizeof(char));
             unsigned char v = this->getmodelversion();
-            out->write( (char*) &v, sizeof(char));        
-            out->write( (char*) &totaltokens, sizeof(uint64_t));        
-            out->write( (char*) &totaltypes, sizeof(uint64_t)); 
-            PatternMap<ValueType,ValueHandler>::write(out); //write PatternStore 
+            out->write( (char*) &v, sizeof(char));
+            out->write( (char*) &totaltokens, sizeof(uint64_t));
+            out->write( (char*) &totaltypes, sizeof(uint64_t));
+            PatternMap<ValueType,ValueHandler>::write(out); //write PatternStore
         }
 
         void write(const std::string filename) {
@@ -149,10 +149,10 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
         virtual int maxlength() const { return maxn; };
         virtual int minlength() const { return minn; };
 
-        virtual unsigned int occurrencecount(const Pattern & pattern)  { 
-            return 0; // we don't do occurrence counts 
+        virtual unsigned int occurrencecount(const Pattern & pattern)  {
+            return 0; // we don't do occurrence counts
         }
-        virtual double frequency(const Pattern & pattern)  { 
+        virtual double frequency(const Pattern & pattern)  {
             return 0; // we don't do frequency
         }
         //
@@ -166,22 +166,22 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             this->print(out,sourcedecoder, targetdecoder);
         }
 
-        virtual ValueType * getdata(const Pattern & pattern, bool makeifnew=false) { 
+        virtual ValueType * getdata(const Pattern & pattern, bool makeifnew=false) {
             typename PatternMap<ValueType,ValueHandler>::iterator iter = this->find(pattern);
             if (iter != this->end()) {
-                return &(iter->second); 
+                return &(iter->second);
             } else if (makeifnew) {
                 return &((*this)[pattern]);
             } else {
                 return NULL;
             }
         }
-        
-        virtual ValueType * getdata(const PatternPointer & patternpointer, bool makeifnew=false) { 
+
+        virtual ValueType * getdata(const PatternPointer & patternpointer, bool makeifnew=false) {
             const Pattern pattern = Pattern(patternpointer);
             typename PatternMap<ValueType,ValueHandler>::iterator iter = this->find(pattern);
             if (iter != this->end()) {
-                return &(iter->second); 
+                return &(iter->second);
             } else if (makeifnew) {
                 return &((*this)[pattern]);
             } else {
@@ -210,15 +210,15 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
         PatternAlignmentModel<FeatureType>(): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>() {}
         PatternAlignmentModel<FeatureType>(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(f, options, constrainmodel) {}
 
-        PatternAlignmentModel<FeatureType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(filename, options, constrainmodel) {} 
+        PatternAlignmentModel<FeatureType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(filename, options, constrainmodel) {}
 
 
-        virtual PatternFeatureVector<FeatureType> * getfeaturevector(const Pattern & pattern, const Pattern & pattern2, bool makeifnew=false) { 
+        virtual PatternFeatureVector<FeatureType> * getfeaturevector(const Pattern & pattern, const Pattern & pattern2, bool makeifnew=false) {
             PatternFeatureVectorMap<FeatureType> * fvmap = AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::getdata(pattern, makeifnew);
             if (fvmap == NULL) return NULL;
             return fvmap->getdata(pattern2);
         }
-       
+
         void add(const Pattern & pattern, const Pattern & pattern2, std::vector<FeatureType> & features, bool checkifexists= true) {
             PatternFeatureVector<FeatureType> * fv = NULL;
             if (checkifexists) {
@@ -229,7 +229,7 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
                 PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(pattern2, features);
                 fvm->insert(pfv, checkifexists); //(will be freed again by fvm destructor)
             } else {
-                fv->clear(); //will be overwritten by new features 
+                fv->clear(); //will be overwritten by new features
                 for (typename std::vector<FeatureType>::iterator iter = features.begin(); iter != features.end(); iter++) {
                     fv->push_back(*iter);
                 }
@@ -262,10 +262,10 @@ class BasicPatternAlignmentModel: public AbstractAlignmentModel<PatternVector,Pa
         BasicPatternAlignmentModel(): AbstractAlignmentModel<PatternVector,PatternVectorHandler>() {}
         BasicPatternAlignmentModel(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternVector,PatternVectorHandler>(f, options, constrainmodel) {}
 
-        BasicPatternAlignmentModel(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternVector,PatternVectorHandler>(filename, options, constrainmodel) {} 
+        BasicPatternAlignmentModel(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternVector,PatternVectorHandler>(filename, options, constrainmodel) {}
 
 
-       
+
         void add(const Pattern & pattern, const Pattern & pattern2, bool checkifexists= true) {
             PatternVector * pv = AbstractAlignmentModel<PatternVector,PatternVectorHandler>::getdata(pattern, true);
             pv->insert(pattern2, checkifexists);
@@ -289,7 +289,7 @@ class KeywordModel: public BasicPatternAlignmentModel {
     public:
 
         template<class ValueType,class ValueHandler,class MapType>
-        void train(PatternModel<ValueType,ValueHandler,MapType> * patternmodel) { 
+        void train(PatternModel<ValueType,ValueHandler,MapType> * patternmodel) {
             for (typename PatternModel<ValueType,ValueHandler,MapType>::iterator iter = patternmodel->begin(); iter != patternmodel->end(); iter++) {
                 const Pattern pattern = iter->first;
                 if (pattern.size() > 1) {
@@ -303,12 +303,12 @@ class KeywordModel: public BasicPatternAlignmentModel {
             }
         }
 
-        template<class FeatureType> 
+        template<class FeatureType>
         void trainfromalignmodelsource(PatternAlignmentModel<FeatureType> * alignmodel) {
             this->train<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>( (PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>* ) alignmodel);
         }
 
-        template<class FeatureType> 
+        template<class FeatureType>
         void trainfromalignmodeltarget(PatternAlignmentModel<FeatureType> * alignmodel) {
 
         }
