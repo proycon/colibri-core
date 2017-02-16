@@ -283,4 +283,37 @@ class BasicPatternAlignmentModel: public AbstractAlignmentModel<PatternVector,Pa
             }
         }
 };
+
+/*
+class KeywordModel: public BasicPatternAlignmentModel {
+    public:
+
+        template<class ValueType,class ValueHandler,class MapType>
+        void train(PatternModel<ValueType,ValueHandler,MapType> * patternmodel) { 
+            for (typename PatternModel<ValueType,ValueHandler,MapType>::iterator iter = patternmodel->begin(); iter != patternmodel->end(); iter++) {
+                const Pattern pattern = iter->first;
+                if (pattern.size() > 1) {
+                    std::vector<Pattern> keywords;
+                    pattern.ngrams(keywords,1);
+                    for (std::vector<Pattern>::iterator iter2 = keywords.begin(); iter2 != keywords.end(); iter2++) {
+                        const Pattern keyword = *iter2;
+                        this->add(keyword, pattern);
+                    }
+                }
+            }
+        }
+
+        template<class FeatureType> 
+        void trainfromalignmodelsource(PatternAlignmentModel<FeatureType> * alignmodel) {
+            this->train<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>( (PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>* ) alignmodel);
+        }
+
+        template<class FeatureType> 
+        void trainfromalignmodeltarget(PatternAlignmentModel<FeatureType> * alignmodel) {
+
+        }
+
+};
+*/
+
 #endif
