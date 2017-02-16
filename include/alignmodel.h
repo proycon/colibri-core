@@ -17,7 +17,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
         int minn;
 
 
-        virtual void postread(const PatternModelOptions options) {
+        virtual void postread(const PatternModelOptions&) {
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern p = iter->first;
                 const int n = p.n();
@@ -149,10 +149,10 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
         virtual int maxlength() const { return maxn; };
         virtual int minlength() const { return minn; };
 
-        virtual unsigned int occurrencecount(const Pattern & pattern)  {
+        virtual unsigned int occurrencecount(const Pattern &)  {
             return 0; // we don't do occurrence counts
         }
-        virtual double frequency(const Pattern & pattern)  {
+        virtual double frequency(const Pattern &)  {
             return 0; // we don't do frequency
         }
         //

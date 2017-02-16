@@ -130,7 +130,7 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
 }
 
 
-void ClassEncoder::processcorpus(const string & filename, unordered_map<string,unsigned int> & freqlist, unordered_set<string> * vocab) {
+void ClassEncoder::processcorpus(const string & filename, unordered_map<string,unsigned int> & freqlist, unordered_set<string> * ) {
 	   //compute frequency list of all words
        ifstream IN;
 	   if (filename.rfind(".bz2") != string::npos) {

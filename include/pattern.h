@@ -141,35 +141,35 @@ class Pattern {
      /**
       * return the size of the pattern in tokens (will count flex gaps gaps as size 1)
       */
-     const size_t n() const;
+     size_t n() const;
 
 
      /**
       * return the size of the pattern (in bytes), this does not include the
       * final \0 end-marker.
       */
-     const size_t bytesize() const;
+     size_t bytesize() const;
 
      /**
       * return the size of the pattern in tokens (will count flex gaps gaps as size 1)
       */
-     const size_t size() const { return n(); }
+     size_t size() const { return n(); }
 
 
      /**
       * return the number of skips in this pattern
       */
-     const unsigned int skipcount() const;
+     unsigned int skipcount() const;
 
      /**
       * Returns the category of this pattern (value from enum PatternCategory)
       */
-     const PatternCategory category() const;
+     PatternCategory category() const;
 
 
-     const bool isskipgram() const { return category() == SKIPGRAM; }
-     const bool isflexgram() const { return category() == FLEXGRAM; }
-     const bool unknown() const;
+     bool isskipgram() const { return category() == SKIPGRAM; }
+     bool isflexgram() const { return category() == FLEXGRAM; }
+     bool unknown() const;
 
      /**
       * Return a single token (not a byte!). index < size().
@@ -179,7 +179,7 @@ class Pattern {
      /**
       * Compute a hash value for this pattern
       */
-     const size_t hash() const;
+     size_t hash() const;
 
      /**
       * Converts this pattern back into its string representation, using a
@@ -434,19 +434,19 @@ class PatternPointer {
      uint32_t computemask() const;
      uint32_t getmask() const { return mask; }
 
-     const size_t n() const;
-     const size_t bytesize() const { return bytes; }
-     const size_t size() const { return n(); }
+     size_t n() const;
+     size_t bytesize() const { return bytes; }
+     size_t size() const { return n(); }
 
      /**
       * Compute a hash value for this pattern
       */
-     const size_t hash() const;
+     size_t hash() const;
 
-     const PatternCategory category() const;
-     const bool isskipgram() const { return category() == SKIPGRAM; }
-     const bool isflexgram() const { return category() == FLEXGRAM; }
-     const bool unknown() const;
+     PatternCategory category() const;
+     bool isskipgram() const { return category() == SKIPGRAM; }
+     bool isflexgram() const { return category() == FLEXGRAM; }
+     bool unknown() const;
 
      std::string tostring(const ClassDecoder& classdecoder) const; //pattern to string (decode)
      std::string decode(const ClassDecoder& classdecoder) const { return tostring(classdecoder); } //pattern to string (decode)
@@ -509,7 +509,7 @@ class PatternPointer {
      /**
       * return the number of skips in this pattern
       */
-     const unsigned int skipcount() const;
+     unsigned int skipcount() const;
 
      /**
       * Replaces a series of tokens with a skip/gap of a particular size.

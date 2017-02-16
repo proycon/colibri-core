@@ -198,13 +198,13 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     unsigned int count(ValueType & value) const {
         return (unsigned int) value;
     }
-    void add(ValueType * value, const IndexReference & ref ) const {
+    void add(ValueType * value, const IndexReference & ) const {
         *value = *value + 1;
     }
 
     void convertto(ValueType * source, ValueType* & target ) const { target = source; }; //this doesn't really convert as source and target are same type, but it is required!
 
-    void convertto(ValueType * source, IndexedData* & target ) const { target = new IndexedData(); }; //this doesn't convert either, it returns a totally EMPTY indexeddata, allowing unindexed models to be read as indexed, but losing all counts!
+    void convertto(ValueType *, IndexedData* & target ) const { target = new IndexedData(); }; //this doesn't convert either, it returns a totally EMPTY indexeddata, allowing unindexed models to be read as indexed, but losing all counts!
 };
 
 
@@ -504,19 +504,19 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
             n++;
         }
     }
-    virtual std::string tostring(PatternFeatureVectorMap<FeatureType> & value) {
+    virtual std::string tostring(PatternFeatureVectorMap<FeatureType> &) {
         std::cerr << "ERROR: PatternFeatureVectorMapHandler does not support serialisation to string (no classdecoder at this point)" << std::endl;
         throw InternalError();
     }
     unsigned int count(PatternFeatureVectorMap<FeatureType> & value) const {
         return value.size();
     }
-    void add(PatternFeatureVectorMap<FeatureType> * value, const IndexReference & ref ) const {
+    void add(PatternFeatureVectorMap<FeatureType> *, const IndexReference & ) const {
         std::cerr << "ERROR: PatternFeatureVectorMapHandler does not support insertion of index references, model can not be computed with train()" << std::endl;
         throw InternalError();
     }
     void convertto(PatternFeatureVectorMap<FeatureType> * source , PatternFeatureVectorMap<FeatureType> * & target) const { target = source; }; //noop
-    void convertto(PatternFeatureVectorMap<FeatureType> * source , IndexedData * & target) const { }; //not possible, noop (target = NULL)
+    void convertto(PatternFeatureVectorMap<FeatureType> *, IndexedData * &) const { }; //not possible, noop (target = NULL)
     void convertto(PatternFeatureVectorMap<FeatureType> * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
 };
 
@@ -648,19 +648,19 @@ class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
             n++;
         }
     }
-    virtual std::string tostring(PatternVector & value) {
+    virtual std::string tostring( PatternVector& ) {
         std::cerr << "ERROR: PatternVectorHandler does not support serialisation to string (no classdecoder at this point)" << std::endl;
         throw InternalError();
     }
     unsigned int count(PatternVector & value) const {
         return value.size();
     }
-    void add(PatternVector * value, const IndexReference & ref ) const {
+    void add( PatternVector *, const IndexReference& ) const {
         std::cerr << "ERROR: PatternVectorHandler does not support insertion of index references, model can not be computed with train()" << std::endl;
         throw InternalError();
     }
     void convertto(PatternVector * source , PatternVector * & target) const { target = source; }; //noop
-    void convertto(PatternVector * source , IndexedData * & target) const { }; //not possible, noop (target = NULL)
+    void convertto(PatternVector *, IndexedData * & ) const { }; //not possible, noop (target = NULL)
     void convertto(PatternVector * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
 };
 

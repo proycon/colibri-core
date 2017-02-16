@@ -472,7 +472,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * This function does not perform anything in a set context, it always
          * returns zero
          */
-        virtual unsigned int occurrencecount(const Pattern & pattern) { return 0;  }
+        virtual unsigned int occurrencecount(const Pattern & ) { return 0;  }
 
         /**
          * This function does not perform anything in a set context, it always
@@ -553,7 +553,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
         std::map<int, std::vector< uint32_t > > gapmasks; ///< pre-computed masks representing possible gap configurations for various pattern lengths
 
-        virtual void postread(const PatternModelOptions options) {
+        virtual void postread(const PatternModelOptions& ) {
             //this function has a specialisation specific to indexed pattern models,
             //this is the generic version
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
@@ -566,7 +566,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if ((!hasflexgrams) && (category == FLEXGRAM)) hasflexgrams = true;
             }
         }
-        virtual void posttrain(const PatternModelOptions options) {
+        virtual void posttrain(const PatternModelOptions& ) {
             //nothing to do here, indexed model specialised this function to
             //sort indices
         }
@@ -1605,7 +1605,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param size Set to any value above zero to only include patterns of the specified length.
          * @param maxskips Maximum number of skips in a skipgram
          */
-        std::unordered_set<PatternPointer> getreverseindex(const IndexReference ref, int occurrencecount = 0, int category = 0, unsigned int size = 0, int maxskips = 3) {
+        std::unordered_set<PatternPointer> getreverseindex(const IndexReference ref, int occurrencecount = 0, int category = 0, unsigned int size = 0, int = 3) {
 
             std::unordered_set<PatternPointer> result;
             if (!this->reverseindex) return result;
@@ -1949,14 +1949,14 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param value A pointer to the value for this pattern, what kind of value depends on the ValueType template parameter.
          * @param ref The position in the corpus where the patterns occurs
          */
-        virtual void add(const Pattern & pattern, ValueType * value, const IndexReference & ref) {
+        virtual void add(const Pattern &, ValueType * value, const IndexReference & ref) {
             if (value == NULL) {
                 std::cerr << "Add() value is NULL!" << std::endl;
                 throw InternalError();
             }
             this->valuehandler.add(value, ref);
         }
-        virtual void add(const PatternPointer & pattern, ValueType * value, const IndexReference & ref) {
+        virtual void add(const PatternPointer &, ValueType * value, const IndexReference & ref) {
             if (value == NULL) {
                 std::cerr << "Add() value is NULL!" << std::endl;
                 throw InternalError();
@@ -2188,7 +2188,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param instantiate Explicitly instantiate all skipgrams and flexgrams (for indexed models only, requires a reverse index)
          * @param endline Output an end-of-line
          */
-        virtual void print(std::ostream* out, ClassDecoder &decoder, const PatternType & pattern, bool instantiate=false, bool endline = true) {
+        virtual void print(std::ostream* out, ClassDecoder &decoder, const PatternType & pattern, bool=false, bool endline = true) {
             const std::string pattern_s = pattern.tostring(decoder);
             const unsigned int count = this->occurrencecount(pattern);
             const unsigned int covcount = this->coveragecount(pattern);
@@ -2457,19 +2457,19 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
-        virtual void outputrelations(const PatternPointer & pattern, ClassDecoder & classdecoder, std::ostream * OUT, const std::string = "", bool=true) {} //does nothing for unindexed models
-        virtual t_relationmap getsubchildren(const PatternPointer & pattern,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getsubparents(const PatternPointer & pattern,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap gettemplates(const PatternPointer & pattern,int = 0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getinstances(const PatternPointer & pattern,int = 0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getskipcontent(const PatternPointer & pattern) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getleftneighbours(const PatternPointer & pattern,int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getrightneighbours(const PatternPointer & pattern,int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap_double getnpmi(const Pattern & pattern, double threshold) { return t_relationmap_double(); } //does nothing for unindexed models
+        virtual void outputrelations(const PatternPointer & , ClassDecoder & , std::ostream *, const std::string = "", bool=true) {} //does nothing for unindexed models
+        virtual t_relationmap getsubchildren(const PatternPointer & ,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getsubparents(const PatternPointer &,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap gettemplates(const PatternPointer & ,int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getinstances(const PatternPointer & ,int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getskipcontent(const PatternPointer & ) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getleftneighbours(const PatternPointer &, int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getrightneighbours(const PatternPointer &, int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap_double getnpmi(const Pattern & , double ) { return t_relationmap_double(); } //does nothing for unindexed models
         virtual int computeflexgrams_fromskipgrams() { return 0; }//does nothing for unindexed models
-        virtual int computeflexgrams_fromcooc(double threshold) {return 0; }//does nothing for unindexed models
-        virtual void outputcooc_npmi(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {}
-        virtual void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {}
+        virtual int computeflexgrams_fromcooc(double) {return 0; }//does nothing for unindexed models
+        virtual void outputcooc_npmi(std::ostream *, ClassDecoder& , double) {}
+        virtual void outputcooc(std::ostream *, ClassDecoder&, double) {}
 
         /**
          * Get the instance of the pattern at the specified position
@@ -2496,7 +2496,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 template<class MapType = PatternMap<IndexedData,IndexedDataHandler>,class PatternType = Pattern>
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType> {
     protected:
-        virtual void postread(const PatternModelOptions options) {
+        virtual void postread(const PatternModelOptions&) {
             for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const Pattern p = iter->first;
                 const PatternCategory category = p.category();
@@ -2507,7 +2507,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 if ((!this->hasflexgrams) && (category == FLEXGRAM)) this->hasflexgrams = true;
             }
         }
-        virtual void posttrain(const PatternModelOptions options) {
+        virtual void posttrain(const PatternModelOptions& options ) {
             if (!options.QUIET) std::cerr << "Sorting all indices..." << std::endl;
             for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); iter++) {
                 iter->second.sort();
@@ -3158,7 +3158,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * distinct patterns must fit in the gap for the skipgram to be retained.
     * @param _n Set to any value above zero to only include patterns of the specified length.
      */
-    int pruneskipgrams(int threshold, int minskiptypes, int _n = 0) {
+    int pruneskipgrams(int, int minskiptypes, int _n = 0) {
         int pruned = 0;
         if (minskiptypes <=1) return pruned; //nothing to do
 
@@ -3759,7 +3759,7 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
             std::cerr << "  New value verification (pointer): " << (size_t) data << " == " << (size_t) data2 << std::endl;*/
         }
 
-        virtual void add(const PatternPointer & pattern, ValueType * value, const IndexReference & ref) {
+        virtual void add(const PatternPointer &, ValueType * value, const IndexReference & ref) {
             if (value == NULL) {
                 std::cerr << "Add() value is NULL!" << std::endl;
                 throw InternalError();
