@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -Wall -O3 -std=c++11
+AM_CXXFLAGS = -Wall -O3 -std=c++11 -Wvla
 AM_CPPFLAGS = -I@top_srcdir@/include
 
 bin_PROGRAMS = colibri-classdecode colibri-classencode colibri-test colibri-benchmarks colibri-patternmodeller colibri-comparemodels colibri-extractngrams
