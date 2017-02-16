@@ -175,11 +175,11 @@ void naivetrain(string filename, std::unordered_map<string,uint32_t> & model, in
           getline(IN, line);
           vector<string> tokens;
           split(line, ' ', tokens);
-          for (int i = 0; i < tokens.size(); i++) {
+          for ( size_t i = 0; i < tokens.size(); i++) {
             string token = tokens[i];
             for (int n = 1; n <= maxlength && i+n <= tokens.size(); n++) {
-                  if (n > 1) token += " " + tokens[i+n-1];
-                  model[token] += 1;
+	      if (n > 1) token += " " + tokens[i+n-1];
+	      model[token] += 1;
             }
           }
        }
@@ -404,4 +404,3 @@ int main( int argc, char *argv[] ) {
         end(m);
     }*/
 }
-
