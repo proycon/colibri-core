@@ -46,9 +46,7 @@ unsigned int bytestoint(istream* IN, const unsigned char version) {
         unsigned char length;
         IN->read((char*) &length,sizeof(unsigned char));
         unsigned char * buffer = new unsigned char[length];;
-        for (int i = 0; i < length; i++) {
-            IN->read((char*) buffer[i], sizeof(unsigned char));
-        }
+        IN->read((char*) buffer, length);
         unsigned int result = bytestoint_v1(buffer, (int) length);
         delete[] buffer;
         return result;
