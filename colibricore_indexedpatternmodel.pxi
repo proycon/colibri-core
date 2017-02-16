@@ -104,7 +104,7 @@ def getsubchildren(self, Pattern pattern, int occurrencethreshold = 0, int categ
     :type pattern: Pattern
     :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
     :type occurrencethreshold: int
-    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM)
     :param size: Constrain by patterns of the specified size
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
@@ -131,7 +131,7 @@ def getsubparents(self, Pattern pattern, int occurrencethreshold = 0, int catego
     :type pattern: Pattern
     :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
     :type occurrencethreshold: int
-    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM)
     :param size: Constrain by patterns of the specified size
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
@@ -157,7 +157,7 @@ def getleftneighbours(self, Pattern pattern, int occurrencethreshold = 0, int ca
     :type pattern: Pattern
     :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
     :type occurrencethreshold: int
-    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM)
     :param size: Constrain by patterns of the specified size
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
@@ -183,7 +183,7 @@ def getrightneighbours(self, Pattern pattern, int occurrencethreshold = 0, int c
     :type pattern: Pattern
     :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
     :type occurrencethreshold: int
-    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM)
     :param size: Constrain by patterns of the specified size
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrences for this particularrelationship
@@ -276,7 +276,7 @@ def getcooc(self, Pattern pattern,  int occurrencethreshold = 0, int category = 
     :type pattern: Pattern
     :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
     :type occurrencethreshold: int
-    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM)
     :param size: Constrain by patterns of the specified size
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
@@ -302,7 +302,7 @@ def getleftcooc(self, Pattern pattern, int occurrencethreshold = 0, int category
     :type pattern: Pattern
     :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
     :type occurrencethreshold: int
-    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM)
     :param size: Constrain by patterns of the specified size
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship
@@ -328,7 +328,7 @@ def getrightcooc(self, Pattern pattern, int occurrencethreshold = 0, int categor
     :type pattern: Pattern
     :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
     :type occurrencethreshold: int
-    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM) 
+    :param category: Constrain by patterns of the specified category (colibricore.Category.NGRAM,colibricore.Category.SKIPGRAM, colibricore.Category.FLEXGRAM)
     :param size: Constrain by patterns of the specified size
     :type size: int
     :rtype: generator over (Pattern,value) tuples. The values correspond to the number of occurrence for this particularrelationship

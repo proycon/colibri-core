@@ -423,7 +423,7 @@ cdef extern from "patternmodel.h":
         unsigned int topthreshold(int,int,int) nogil
         void outputrelations(Pattern&,ClassDecoder&, ostream*)
 
-        
+
 
 
         t_relationmap getsubchildren(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
@@ -440,7 +440,7 @@ cdef extern from "patternmodel.h":
         unordered_set[PatternPointer] getreverseindex(IndexReference&)
         vector[pair[IndexReference,PatternPointer]] getreverseindex_bysentence(int)
 
-        Pattern getinstance(IndexReference & begin, const Pattern & pattern) except +KeyError 
+        Pattern getinstance(IndexReference & begin, const Pattern & pattern) except +KeyError
 
     cdef cppclass IndexedPatternModel[MapType]:
         cppclass iterator:
@@ -510,7 +510,7 @@ cdef extern from "patternmodel.h":
         t_relationmap getleftcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
         t_relationmap getrightcooc(Pattern & pattern, unsigned int occurrencethreshold, int category, unsigned int size) except +KeyError
 
-        Pattern getinstance(IndexReference & begin, const Pattern & pattern) except +KeyError 
+        Pattern getinstance(IndexReference & begin, const Pattern & pattern) except +KeyError
 
 cdef extern from "alignmodel.h":
     cdef cppclass PatternAlignmentModel[FeatureType]:
