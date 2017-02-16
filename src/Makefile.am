@@ -34,3 +34,6 @@ colibri_comparemodels_LDFLAGS = -static
 colibri_extractngrams_LDADD = libcolibricore.la
 colibri_extractngrams_SOURCES = extractngrams.cpp
 colibri_extractngrams_LDFLAGS = -static
+
+TESTS = tst.sh
+EXTRA_DIST = tst.sh
