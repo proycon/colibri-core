@@ -402,7 +402,7 @@ const bool Pattern::unknown() const {
 
 const bool PatternPointer::unknown() const {
     if (data == NULL) return false;
-    int i = 0;
+    unsigned int i = 0;
     bool prevhigh = false;
     do {
         if ((bytes > 0) && (i >= bytes)) {
@@ -525,7 +525,8 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
         }
         in->seekg(beginpos, ios::beg);
         std::streampos beginposcheck = in->tellg();
-        if ((beginposcheck != beginpos) && (beginposcheck >= 0xffffffffffffffff)) {
+        if ((beginposcheck != beginpos)
+	    && (beginposcheck >= numeric_limits<std::streampos>::max() ) ) {
             std::cerr << "ERROR: Resetting read pointer for stage 2 failed! (" << (unsigned long) beginposcheck << " != " << (unsigned long) beginpos << ")" << std::endl;
             throw InternalError();
         } else if (!in->good()) {

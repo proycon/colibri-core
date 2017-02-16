@@ -704,9 +704,10 @@ unsigned char * convert_v1_v2(istream * in, bool ignoreeol, bool debug) {
     }
     in->seekg(beginpos, ios::beg);
     std::streampos beginposcheck = in->tellg();
-    if ((beginposcheck != beginpos) && (beginposcheck >= ULLONG_MAX)) {
-        std::cerr << "ERROR: Resetting read pointer for stage 2 failed! (" << (unsigned long) beginposcheck << " != " << (unsigned long) beginpos << ")" << std::endl;
-        throw InternalError();
+    if ((beginposcheck != beginpos)
+	&& (beginposcheck >= numeric_limits<std::streampos>::max() )) {
+      std::cerr << "ERROR: Resetting read pointer for stage 2 failed! (" << (unsigned long) beginposcheck << " != " << (unsigned long) beginpos << ")" << std::endl;
+      throw InternalError();
     } else if (!in->good()) {
         std::cerr << "ERROR: After resetting readpointer for stage 2, istream is not 'good': eof=" << (int) in->eof() << ", fail=" << (int) in->fail() << ", badbit=" << (int) in->bad() << std::endl;
         throw InternalError();
