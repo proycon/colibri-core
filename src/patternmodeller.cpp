@@ -5,7 +5,7 @@
 *   Radboud University Nijmegen
 *
 *   http://proycon.github.io/colibri-core
-*   
+*
 *   Licensed under GPLv3
 *****************************/
 #include <fstream>
@@ -37,27 +37,27 @@ void usage() {
     cerr << endl;
     cerr << " Building a model:  colibri-patternmodeller -o [modelfile] -f [datafile] -c [classfile]" << endl;
     cerr << "\t-2|--twostage                 Enable two-stage building (for indexed models), takes longer but saves a lot of memory on large corpora! First builds an unindexed model and reuses that (via -I) to" << endl;
-    cerr << "\t                              build an indexed model (View options are ignored in two-stage building, whereas an output model (-o) is mandatory)" << endl;    
-    cerr << "\t-t|--threshold <number>       Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;    
-    cerr << "\t-u|--unindexed                Build an unindexed model (default is indexed)" << endl;    
-    cerr << "\t-M|--pointermodel             Build a patternpointer model instead of a normal pattern model, saves memory when thresholds are low" << endl;    
+    cerr << "\t                              build an indexed model (View options are ignored in two-stage building, whereas an output model (-o) is mandatory)" << endl;
+    cerr << "\t-t|--threshold <number>       Occurrence threshold: patterns occuring less than this will be pruned (default: 2)" << endl;
+    cerr << "\t-u|--unindexed                Build an unindexed model (default is indexed)" << endl;
+    cerr << "\t-M|--pointermodel             Build a patternpointer model instead of a normal pattern model, saves memory when thresholds are low" << endl;
     cerr << "\t-m|--minlength <number>       Minimum pattern length (default: 1)" << endl;
     cerr << "\t-l|--maxlength <number>       Maximum pattern length (default: 100)" << endl;
     cerr << "\t-b|--backofflength <number>   Maximum back-off length (default: 100). Only makes sense to set lower than minimum pattern length and may conserve memory during training then" << endl;
     cerr << "\t-W|--wordthreshold  <number>  Word occurrence threshold (secondary threshold): only count patterns in which the words/unigrams occur at least this many times, only effective when the primary " << endl;
-    cerr << "\t                              occurrence threshold (-t) is lower than this threshold (default: disabled)" << endl;    
+    cerr << "\t                              occurrence threshold (-t) is lower than this threshold (default: disabled)" << endl;
     cerr << "\t-p|--prune <number>           Prune all lower-order n-grams below the specified order that are *NOT* subsumed by higher order n-grams (default: 0, disabled). Only effective when used with -l, usually set to equal values" << endl;
-    cerr << "\t-s|--skipgrams                Compute skipgrams (costs extra memory and time)" << endl;    
-    cerr << "\t-y|--skipthreshold <number>   Occurrence threshold for skipgrams (overrides -t for skipgrams, defaults to -t). Skipgrams occurring less than this will be pruned. Value must be equal to or higher than -t." << endl;    
+    cerr << "\t-s|--skipgrams                Compute skipgrams (costs extra memory and time)" << endl;
+    cerr << "\t-y|--skipthreshold <number>   Occurrence threshold for skipgrams (overrides -t for skipgrams, defaults to -t). Skipgrams occurring less than this will be pruned. Value must be equal to or higher than -t." << endl;
     cerr << "\t-T|--skiptypes <number>       Skip type threshold (for use with -s): only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram " << endl;
     cerr << "\t                              will be pruned  (default: 2, unindexed models always act as if fixed to 1). Also note that only types that occur above the occurrent threshold (-t) are counted here! Requires indexed models" << endl;
-    cerr << "\t-F|--flexgrams S		         Compute flexgrams by abstracting over skipgrams (implies -s). Do not forget the S value!" << endl; 
-    cerr << "\t-F|--flexgrams <number>       Compute flexgrams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl; 
+    cerr << "\t-F|--flexgrams S		         Compute flexgrams by abstracting over skipgrams (implies -s). Do not forget the S value!" << endl;
+    cerr << "\t-F|--flexgrams <number>       Compute flexgrams (of type X {*} Y only) by using co-occurrence information. The number is the normalised pointwise information threshold above which to form skipgrams. Only for indexed models." << endl;
     cerr << "\t-L|--patternlist              States that the input data file (-f) is a list of one pattern per line. No subgrams will be stored, implies -t 1" <<endl;
     cerr << "\t-I|--constrained               Builds a new model from an input model (-i) and corpus data (-f).  Only patterns present in the input model will be present in the final model, making" << endl;
     cerr << "\t                              the input model the training model and the corpus data the test data. This method uses memory-efficient in-place building, and does not hold " << endl;
     cerr << "\t                              two models (unlike -j). Input model (-i) and or output model (-o) may be indexed or unindexed (-u), this option also allows for constructing indexed models " << endl;
-    cerr << "\t                              from unindexed models (given the same source corpus), and is used in two-stage building (-2)." <<endl;  
+    cerr << "\t                              from unindexed models (given the same source corpus), and is used in two-stage building (-2)." <<endl;
     cerr << "\t--ssr                         Perform Statistical Substring reduction, prunes n-grams that are only part of larger n-grams (TO BE IMPLEMENTED STILL)" << endl; //TODO
     cerr << "\t-E|--selfexpand               Expand the loaded pattern model *ON THE SAME CORPUS DATA*, allows you to add, for example, larger order ngrams to an existing model or skipgrams to an n-gram only model." << endl;
     cerr << "\t-e|--expand <number>          Expand the loaded pattern model *ON DIFFERENT CORPUS DATA*, the number is the sentence offset to use in the model (be careful not to overlap with existing sentence indices!)." << endl;
@@ -67,34 +67,34 @@ void usage() {
     cerr << endl;
     cerr << " Viewing a model:  colibri-patternmodeller -i [modelfile] -f [datafile] -c [classfile] -[PRHQ]" << endl;
     cerr << "\t-P|--print                    Print the entire model." << endl;
-    cerr << "\t--instantiate                 To use with --print, explicitly prints all instances of skipgrams/flexgrams, regardless of whether they are in the model or not. (only works for indexed models)" << endl; 
+    cerr << "\t--instantiate                 To use with --print, explicitly prints all instances of skipgrams/flexgrams, regardless of whether they are in the model or not. (only works for indexed models)" << endl;
     cerr << "\t-R|--report                   Generate a complete (statistical/coverage) report" << endl;
     cerr << "\t-r|--simplereport             Generate a statistical report without coverage information (much faster)" << endl;
-    cerr << "\t-H|--histogram                Generate a histogram" << endl;   
-    cerr << "\t-V|--info                     Storage information" << endl;   
-    cerr << "\t-Q|--querymode                Start interactive query mode, allows for pattern lookup against the loaded model (input from standard input)" << endl; 
+    cerr << "\t-H|--histogram                Generate a histogram" << endl;
+    cerr << "\t-V|--info                     Storage information" << endl;
+    cerr << "\t-Q|--querymode                Start interactive query mode, allows for pattern lookup against the loaded model (input from standard input)" << endl;
     cerr << "\t-Z|--printreverseindex        Print the reverse index" << endl;
-    cerr << "\t-q|--query <pattern>          Query a pattern (may be specified multiple times!)" << endl; 
-    cerr << "\t-g|--relations                Compute and show ALL relationships for the specified patterns (use with -q or -Q). Relationships are: subsumes, subsumed, instances, templates, leftneighbours,rightneighbours, leftcooc, rightcooc, skipcontent. Only for indexed models." << endl; 
-    cerr << "\t--instances                   Compute and show instances of the specified skipgrams/flexgrams. Use with -q or -Q to constrain to specific patterns; if used standalone it will print instances of all skipgrams/flexgrams in the model." << endl; 
-    cerr << "\t--skipcontent                 Compute and show the skip content of the specified skipgrams/flexgrams. Use with -q or -Q to constrain to specific patterns; if used standalone it will apply to all skipgrams/flexgrams in the model." << endl; 
-    cerr << "\t--templates                   Compute and show templates of the specified ngrams, i.e. the skipgrams/flexgrams that it is an instance of. Use with -q or -Q to constrain to specific patterns; if used standalone it will use all patterns in the model." << endl; 
-    cerr << "\t--subsumes                    Compute and show the patterns that are subsumed by the specified pattern (i.e. sub-parts). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl; 
-    cerr << "\t--subsumed                    Compute and show the patterns that subsume the specified pattern (i.e. larger patterns). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl; 
-    cerr << "\t--leftneighbours              Compute and show the left neighbours of the specified pattern (i.e. the specified pattern is to the right). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl; 
-    cerr << "\t--rightneighbours             Compute and show the right neighbours of the specified pattern (i.e. the specified pattern is to the left). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl; 
+    cerr << "\t-q|--query <pattern>          Query a pattern (may be specified multiple times!)" << endl;
+    cerr << "\t-g|--relations                Compute and show ALL relationships for the specified patterns (use with -q or -Q). Relationships are: subsumes, subsumed, instances, templates, leftneighbours,rightneighbours, leftcooc, rightcooc, skipcontent. Only for indexed models." << endl;
+    cerr << "\t--instances                   Compute and show instances of the specified skipgrams/flexgrams. Use with -q or -Q to constrain to specific patterns; if used standalone it will print instances of all skipgrams/flexgrams in the model." << endl;
+    cerr << "\t--skipcontent                 Compute and show the skip content of the specified skipgrams/flexgrams. Use with -q or -Q to constrain to specific patterns; if used standalone it will apply to all skipgrams/flexgrams in the model." << endl;
+    cerr << "\t--templates                   Compute and show templates of the specified ngrams, i.e. the skipgrams/flexgrams that it is an instance of. Use with -q or -Q to constrain to specific patterns; if used standalone it will use all patterns in the model." << endl;
+    cerr << "\t--subsumes                    Compute and show the patterns that are subsumed by the specified pattern (i.e. sub-parts). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl;
+    cerr << "\t--subsumed                    Compute and show the patterns that subsume the specified pattern (i.e. larger patterns). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl;
+    cerr << "\t--leftneighbours              Compute and show the left neighbours of the specified pattern (i.e. the specified pattern is to the right). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl;
+    cerr << "\t--rightneighbours             Compute and show the right neighbours of the specified pattern (i.e. the specified pattern is to the left). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl;
 
-    cerr << "\t--leftcooc                    Compute and show all patterns co-occurring left of the specified pattern within the same sentence/unit (i.e. the specified pattern is to the right). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl; 
-    cerr << "\t--rightcooc                   Compute and show all patterns co-occurring right of the specified pattern within the same sentence/unit (i.e. the specified pattern is to the left). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl; 
+    cerr << "\t--leftcooc                    Compute and show all patterns co-occurring left of the specified pattern within the same sentence/unit (i.e. the specified pattern is to the right). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl;
+    cerr << "\t--rightcooc                   Compute and show all patterns co-occurring right of the specified pattern within the same sentence/unit (i.e. the specified pattern is to the left). Use with -q or -Q to constrain to specific patterns; if used standalone it will print for all" << endl;
 
     cerr << "\t-C|--cooc <threshold>         Compute and show absolute co-occurrence counts above the specified threshold.. Only for indexed models." << endl;
     cerr << "\t-Y|--npmi <threshold>         Compute and show normalised pointwise mutual information co-occurrence  above the specified threshold [-1,1]. Only for indexed models." << endl;
     cerr << "\tOptions -tlT can be used to further filter the model" << endl;
     cerr << endl;
     cerr << " Editing a model:  colibri-patternmodeller -o [modelfile] -i [modelfile]" << endl;
-    cerr << "\t-x|--noskipgrams              Delete all skipgrams from the model" << endl;    
-    cerr << "\t-X|--noflexgrams              Delete all flexgrams from the model" << endl;    
-    cerr << "\t-N|--nongrams                 Delete all ngrams from the model" << endl;    
+    cerr << "\t-x|--noskipgrams              Delete all skipgrams from the model" << endl;
+    cerr << "\t-X|--noflexgrams              Delete all flexgrams from the model" << endl;
+    cerr << "\t-N|--nongrams                 Delete all ngrams from the model" << endl;
     cerr << "\tOptions -tlTmxXN can be used to filter the model, -u can be used to remove the index, -j can be used to take the intersection with another model, -F to compute and add flexgrams" << endl;
     cerr << endl;
     cerr << " Other options:" << endl;
@@ -122,7 +122,7 @@ void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassD
     unsigned char buffer[65536];
     for (vector<string>::const_iterator iter = querypatterns.begin(); iter != querypatterns.end(); iter++) {
        const string s = *iter;
-       const int buffersize = classencoder->encodestring(s, buffer, allowunknown); 
+       const int buffersize = classencoder->encodestring(s, buffer, allowunknown);
        const Pattern pattern = Pattern(buffer, buffersize);
        processquerypattern<ModelType>(model,classdecoder,pattern, dorelations, doinstantiate);
     }
@@ -140,8 +140,8 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
     bool exact = false;
     do {
             linenum++;
-            cerr << linenum << ">> "; 
-            getline(cin,line);            
+            cerr << linenum << ">> ";
+            getline(cin,line);
             if ((line == "X") || (line == "X\n")) {
                 exact = !exact;
                 if (exact) {
@@ -150,9 +150,9 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
                     cerr << "Switched to Extensive mode - Input will be scanned for all matching patterns" << endl;
                 }
             } else if (!line.empty()) {
-                const int buffersize = classencoder->encodestring(line, buffer, allowunknown); 
+                const int buffersize = classencoder->encodestring(line, buffer, allowunknown);
                 Pattern linepattern = Pattern(buffer, buffersize);
-                if (exact) { 
+                if (exact) {
                     processquerypattern<ModelType>(model,classdecoder, linepattern, dorelations, doinstantiate);
                 } else {
                     vector<pair<Pattern, int> > patterns = model.getpatterns(linepattern);
@@ -161,7 +161,7 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
 
                         //process and output instance
                         cout << ref.sentence << ':' << (int) ref.token << "\t";
-                        processquerypattern<ModelType>(model, classdecoder, linepattern, dorelations, doinstantiate);                                
+                        processquerypattern<ModelType>(model, classdecoder, linepattern, dorelations, doinstantiate);
                     }
                     for (vector<pair<Pattern,int> >::iterator iter = patterns.begin(); iter != patterns.end(); iter++) {
                             const Pattern pattern = iter->first;
@@ -169,11 +169,11 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
 
                             //process and output instance
                             cout << ref.sentence << ':' << (int) ref.token << "\t";
-                            processquerypattern<ModelType>(model, classdecoder, pattern, dorelations, doinstantiate);                                
-                    } 
+                            processquerypattern<ModelType>(model, classdecoder, pattern, dorelations, doinstantiate);
+                    }
                 }
             }
-    } while (!cin.eof() && (repeat)); 
+    } while (!cin.eof() && (repeat));
 }
 
 
@@ -216,7 +216,7 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
         if (classencoder == NULL) {
             cerr << "ERROR: Unable to query model, no class encoder specified (--classfile)" << endl;
         } else {
-            querymodel<ModelType>(model, classencoder, classdecoder, dorelations, doinstantiate); 
+            querymodel<ModelType>(model, classencoder, classdecoder, dorelations, doinstantiate);
         }
     } else if (!dorelations.empty()) {
         bool first = true;
@@ -239,7 +239,7 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
             cerr << "Ooops... You didn't really give me anything to do...that can't be right.. Please study the usage options (-h) again! Did you perhaps forget a --print or --outputmodel? " << endl;
             return false;
         }
-    
+
         ModelType * inputmodel;
 
         string outputqualifier = "";
@@ -263,7 +263,7 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
                 delete constrainbymodel;
                 constrainbymodel = NULL;
             }
-           
+
             if (options.DOSKIPGRAMS) {
                 if ((inputmodeltype == UNINDEXEDPATTERNMODEL) || (inputmodeltype == UNINDEXEDPATTERNPOINTERMODEL)) {
                     cerr << "WARNING: Can't compute skipgrams non-exhaustively on unindexed model" << endl;
@@ -322,13 +322,13 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
                 }
             }
         }
-        
+
 
         if (!outputmodelfile.empty()) {
             cerr << "Writing model to " << outputmodelfile << endl;
             inputmodel->write(outputmodelfile);
         }
-        viewmodel<ModelType>(*inputmodel, classdecoder, classencoder, print, report, nocoverage, histogram, query, dorelations, doinstantiate, info, printreverseindex, cooc, coocthreshold); 
+        viewmodel<ModelType>(*inputmodel, classdecoder, classencoder, print, report, nocoverage, histogram, query, dorelations, doinstantiate, info, printreverseindex, cooc, coocthreshold);
 
         if (!querypatterns.empty()) {
             processquerypatterns<ModelType>(*inputmodel,  classencoder, classdecoder, querypatterns, dorelations, doinstantiate);
@@ -341,22 +341,22 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
 
 
 int main( int argc, char *argv[] ) {
-    
+
     string classfile = "";
     string inputmodelfile = "";
     string inputmodelfile2 = "";
     string outputmodelfile = "";
     string corpusfile = "";
     string reverseindexfile = "";
-    
+
 
     string modelfile = "";
     string modelfile2 = "";
     string covviewfile = ""; //not used yet
-   
+
     vector<string> querypatterns;
-    
-    
+
+
     PatternModelOptions options;
 
     bool LOADCORPUS = true; //load corpus/reverse index
@@ -443,7 +443,7 @@ int main( int argc, char *argv[] ) {
 		{0,         0,                 0,  0 }
 	};
 
-    char c;    
+    char c;
     while ((c = getopt_long(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:rgGF:S:xXNIVC:Y:L2Zm:vb:y:W:p:Ee:0M", long_options, &option_index)) != -1)
         switch (c)
         {
@@ -462,27 +462,27 @@ int main( int argc, char *argv[] ) {
         	break;
         case 'R':
             DOREPORT = true;
-            break;            
+            break;
         case 'f':
             corpusfile = optarg;
-            break;        
+            break;
         case 't':
             options.MINTOKENS = atoi(optarg);
             break;
         case 'T':
-            options.MINSKIPTYPES = atoi(optarg);            
+            options.MINSKIPTYPES = atoi(optarg);
             break;
         case 'y':
             options.MINTOKENS_SKIPGRAMS = atoi(optarg);
             break;
         case 'l':
-            options.MAXLENGTH = atoi(optarg); 
+            options.MAXLENGTH = atoi(optarg);
             break;
         case 'm':
-            options.MINLENGTH = atoi(optarg);            
+            options.MINLENGTH = atoi(optarg);
             break;
         case 'b':
-            options.MAXBACKOFFLENGTH = atoi(optarg);            
+            options.MAXBACKOFFLENGTH = atoi(optarg);
             break;
         case 'W':
             options.MINTOKENS_UNIGRAMS = atoi(optarg);
@@ -496,7 +496,7 @@ int main( int argc, char *argv[] ) {
         case '2':
             DOTWOSTAGE = true;
             break;
-        case 'o': 
+        case 'o':
             outputmodelfile = optarg;
             break;
 		case 'u':
@@ -529,10 +529,10 @@ int main( int argc, char *argv[] ) {
             break;
         case 'H':
             DOHISTOGRAM = true;
-            break;        
+            break;
         case 'P':
             DOPRINT = true;
-            break;        
+            break;
         case 'S': //alias for F, backward compatibility
 		case 'F':
             if (string(optarg) == "S") {
@@ -584,7 +584,7 @@ int main( int argc, char *argv[] ) {
             usage();
             exit(0);
         case 'v':
-            cerr << VERSION << endl; 
+            cerr << VERSION << endl;
             exit(0);
         case '0':
             ignoreerrors = true;
@@ -595,7 +595,7 @@ int main( int argc, char *argv[] ) {
             } else {
                 cerr << "Unknown option: -" <<  optopt << endl;
             }
-            
+
             return 1;
 		case 0:
 			if (strcmp(long_options[option_index].name,"instances") == 0) {
@@ -626,7 +626,7 @@ int main( int argc, char *argv[] ) {
             cerr << "Unknown option: -" <<  optopt << endl;
             abort ();
         }
-  
+
 
     int stages = 1;
 
@@ -653,16 +653,16 @@ int main( int argc, char *argv[] ) {
 
         if (DOTWOSTAGE) {
             if (stage == 1) {
-                cerr << "********* STARTING STAGE 1/2: Building intermediary unindexed patternmodel ******" << endl; 
+                cerr << "********* STARTING STAGE 1/2: Building intermediary unindexed patternmodel ******" << endl;
                 DOINPLACEREBUILD = false;
-                outputmodelfile = outputmodelfile + ".stage1"; 
+                outputmodelfile = outputmodelfile + ".stage1";
                 outputmodeltype = UNINDEXEDPATTERNMODEL;
                 DOPRINT = DOHISTOGRAM = DOQUERIER = DOINFO = false;
                 DORELATIONS = "";
                 options.DOSKIPGRAMS = false;
                 DOFLEXFROMCOOC = false;
             } else if (stage == 2) {
-                cerr << "********* STARTING STAGE 2/2: Building indexed patternmodel ******" << endl; 
+                cerr << "********* STARTING STAGE 2/2: Building indexed patternmodel ******" << endl;
                 DOINPLACEREBUILD = true;
                 //back to originals
                 outputmodelfile = cached_outputmodelfile;
@@ -714,7 +714,7 @@ int main( int argc, char *argv[] ) {
                 cerr << "NOTE: Converting a pattern pointer model to a pattern model " << endl;
             }
         }
-        
+
 
         //operations without input model
         PatternSetModel * constrainbymodel = NULL;
@@ -760,7 +760,7 @@ int main( int argc, char *argv[] ) {
                 f->close();
             }
         }
-            
+
 
         if (DOINPLACEREBUILD) { ///*****************************************************
             cerr << "Constrained in-place rebuild (--constrained|-I) enabled, on " << corpusfile <<endl;
@@ -804,7 +804,7 @@ int main( int argc, char *argv[] ) {
                 if (!outputmodelfile.empty()) {
                     model.write(outputmodelfile);
                 }
-                viewmodel<PatternModel<uint32_t>>(model, classdecoder, classencoder, DOPRINT, DOREPORT, nocoverage, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINSTANTIATE, DOINFO, DOPRINTREVERSEINDEX, DOCOOC); 
+                viewmodel<PatternModel<uint32_t>>(model, classdecoder, classencoder, DOPRINT, DOREPORT, nocoverage, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINSTANTIATE, DOINFO, DOPRINTREVERSEINDEX, DOCOOC);
             } else if (outputmodeltype == INDEXEDPATTERNMODEL) {
                 cerr << "Loading model " << inputmodelfile << " as indexed pattern model..."<<endl;
                 PatternModelOptions optionscopy = PatternModelOptions(options);
@@ -828,7 +828,7 @@ int main( int argc, char *argv[] ) {
                 if (!outputmodelfile.empty()) {
                     model.write(outputmodelfile);
                 }
-                viewmodel<IndexedPatternModel<>>(model, classdecoder, classencoder, DOPRINT, DOREPORT,nocoverage,  DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINSTANTIATE,DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD); 
+                viewmodel<IndexedPatternModel<>>(model, classdecoder, classencoder, DOPRINT, DOREPORT,nocoverage,  DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINSTANTIATE,DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD);
                 if (!querypatterns.empty()) {
                     processquerypatterns<IndexedPatternModel<>>(model,  classencoder, classdecoder, querypatterns, DORELATIONS, DOINSTANTIATE);
                 }
@@ -836,7 +836,7 @@ int main( int argc, char *argv[] ) {
 
 
 
-        } else { 
+        } else {
             if (outputmodeltype == INDEXEDPATTERNMODEL) {
                 processmodel<IndexedPatternModel<>>(inputmodelfile, inputmodeltype,  outputmodelfile, outputmodeltype, corpusfile, constrainbymodel,  corpus, options, continued, expand, firstsentence,  ignoreerrors, inputmodelfile2, classdecoder,classencoder, DOPRINT, DOREPORT, nocoverage, DOHISTOGRAM, DOQUERIER, DORELATIONS, DOINSTANTIATE, DOINFO, DOPRINTREVERSEINDEX, DOCOOC, COOCTHRESHOLD, DOFLEXFROMSKIP, querypatterns);
             } else if (outputmodeltype == INDEXEDPATTERNPOINTERMODEL) {

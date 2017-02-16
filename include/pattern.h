@@ -8,7 +8,7 @@
 *   Radboud University Nijmegen
 *
 *   http://proycon.github.io/colibri-core
-*   
+*
 *   Licensed under GPLv3
 *****************************/
 
@@ -35,7 +35,7 @@
  * \brief Contains the Pattern class that is ubiquitous throughout Colibri Core.
  *
  * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
- * 
+ *
  * @section LICENSE
  * Licensed under GPLv3
  *
@@ -63,7 +63,7 @@ enum PatternType {
 };
 
 void readanddiscardpattern(std::istream * in, bool pointerformat = false);
-int reader_passmarker(const unsigned char c, std::istream * in); 
+int reader_passmarker(const unsigned char c, std::istream * in);
 
 
 
@@ -77,7 +77,7 @@ class Pattern {
     public:
      const static int patterntype = PATTERN;
      unsigned char * data; /**< This array holds the variable-width byte representation, it is always terminated by \0 (ENDMARKER). Though public, you usually do not want to access it directly */
-     
+
      /**
       * Default/empty Pattern constructor. Creates an empty pattern. Special case, allocates no extra data.
       */
@@ -85,11 +85,11 @@ class Pattern {
 
      /**
       * Low-level pattern constructor from character array. The size is in
-      * bytes and never includes the end-marker. 
+      * bytes and never includes the end-marker.
       * @param dataref Reference data, must be properly class-encoded
       * @param size The size (without \0 end marker!) to copy from dataref
       */
-     Pattern(const unsigned char* dataref, const int size); 
+     Pattern(const unsigned char* dataref, const int size);
 
      /**
       * Slice constructor for Pattern
@@ -97,7 +97,7 @@ class Pattern {
       * @param begin Index of the first token to copy (0-indexed)
       * @param length Number of tokens to copy
       */
-     Pattern(const Pattern& ref, unsigned int begin, unsigned int length, unsigned int * byteoffset=NULL, bool byteoffset_shiftone = false); 
+     Pattern(const Pattern& ref, unsigned int begin, unsigned int length, unsigned int * byteoffset=NULL, bool byteoffset_shiftone = false);
      Pattern(const PatternPointer& ref,unsigned int begin, unsigned int length, unsigned int * byteoffset=NULL, bool byteoffset_shiftone = false);
 
      /**
@@ -114,7 +114,7 @@ class Pattern {
       * @param version Version of file format (default: 2)
       * @param corpusoffset not used
       */
-     Pattern(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, const unsigned char * corpusstart = NULL, bool debug = false); 
+     Pattern(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, const unsigned char * corpusstart = NULL, bool debug = false);
      //Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, bool ignoreeol = false, const unsigned char version = 2, bool debug = false);
 
 
@@ -136,7 +136,7 @@ class Pattern {
       * Write Pattern to output stream (in binary form)
       * @param out The output stream
       */
-     void write(std::ostream * out, const unsigned char * corpusstart = NULL) const; 
+     void write(std::ostream * out, const unsigned char * corpusstart = NULL) const;
 
      /**
       * return the size of the pattern in tokens (will count flex gaps gaps as size 1)
@@ -148,12 +148,12 @@ class Pattern {
       * return the size of the pattern (in bytes), this does not include the
       * final \0 end-marker.
       */
-     const size_t bytesize() const; 
-     
+     const size_t bytesize() const;
+
      /**
       * return the size of the pattern in tokens (will count flex gaps gaps as size 1)
       */
-     const size_t size() const { return n(); } 
+     const size_t size() const { return n(); }
 
 
      /**
@@ -170,11 +170,11 @@ class Pattern {
      const bool isskipgram() const { return category() == SKIPGRAM; }
      const bool isflexgram() const { return category() == FLEXGRAM; }
      const bool unknown() const;
-     
+
      /**
       * Return a single token (not a byte!). index < size().
       */
-     Pattern operator [](int index) const { return Pattern(*this, index,1); } 
+     Pattern operator [](int index) const { return Pattern(*this, index,1); }
 
      /**
       * Compute a hash value for this pattern
@@ -206,13 +206,13 @@ class Pattern {
      bool operator==(const Pattern & other) const;
      bool operator!=(const Pattern & other) const;
 
-     bool operator==(const PatternPointer & other) const; 
-     bool operator!=(const PatternPointer & other) const; 
+     bool operator==(const PatternPointer & other) const;
+     bool operator!=(const PatternPointer & other) const;
 
      /**
       * Assignment operator
       */
-     void operator =(const Pattern & other);   
+     void operator =(const Pattern & other);
 
 
      /**
@@ -230,26 +230,26 @@ class Pattern {
       * Finds the specified subpattern in the this pattern. Returns the index
       * at which it is found, or -1 if it is not found at all.
       */
-     int find(const Pattern & subpattern) const; 
+     int find(const Pattern & subpattern) const;
 
      /**
       * Test whether the pattern contains the specified subpattern.
       */
      bool contains(const Pattern & subpattern) const; //does the pattern contain the smaller pattern?
-   
+
      /**
       * Tests whether the pattern is an instantiation of the specified skipgram
       */
-     bool instanceof(const PatternPointer & skipgram) const; 
-    
+     bool instanceof(const PatternPointer & skipgram) const;
+
 
      /**
       * Adds all patterns (not just ngrams) of size n that are contained within the pattern to
       * container. Does not extract skipgrams that are not directly present in
       * the pattern.
       */
-     int ngrams(std::vector<Pattern> & container, const int n) const; 
-     int ngrams(std::vector<PatternPointer> & container, const int n) const; 
+     int ngrams(std::vector<Pattern> & container, const int n) const;
+     int ngrams(std::vector<PatternPointer> & container, const int n) const;
 
      /**
       * Adds all patterns (not just ngrams) of all sizes that are contained within the pattern to
@@ -278,26 +278,26 @@ class Pattern {
      int subngrams(std::vector<std::pair<PatternPointer,int>> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
 
      /**
-      * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container... Thus 'to be {*} not {*} be' has three parts 
+      * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container... Thus 'to be {*} not {*} be' has three parts
       */
-     int parts(std::vector<Pattern> & container) const; 
-     int parts(std::vector<PatternPointer> & container) const; 
-     
+     int parts(std::vector<Pattern> & container) const;
+     int parts(std::vector<PatternPointer> & container) const;
+
      /**
-      * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container as begin,length pairs... Thus 'to be {*} not {*} be' has three parts 
+      * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container as begin,length pairs... Thus 'to be {*} not {*} be' has three parts
       */
-     int parts(std::vector<std::pair<int,int> > & container) const; 
+     int parts(std::vector<std::pair<int,int> > & container) const;
 
      /**
       * Finds all the gaps of a skipgram or flexgram., parts are the portions that are not skips and adds them to container as begin,length pairs... Thus 'to be {*} not {*} be' has three parts. The gap-length of a flexgram will always be its minimum length one.
       */
-     int gaps(std::vector<std::pair<int,int> > & container) const; 
+     int gaps(std::vector<std::pair<int,int> > & container) const;
 
 
      /**
       * Given a skipgram and an ngram instantation of it (i.e, both of the same length), extract a pattern from the instance that would fill the gaps. Raise an exception if the instance can not be matched with the skipgram
       */
-     Pattern extractskipcontent(const Pattern & instance) const; 
+     Pattern extractskipcontent(const Pattern & instance) const;
 
      /**
       * Replace the tokens from begin (0-indexed), up to the specified length,
@@ -327,7 +327,7 @@ class Pattern {
      /**
       * Returns a pattern with the tokens in reverse order
       */
-     Pattern reverse() const; 
+     Pattern reverse() const;
 
      /**
       * converts a skipgram into a flexgram (ngrams just come out unchanged)
@@ -339,18 +339,18 @@ class Pattern {
      /**
       * Is the word at the specified index (0 indexed) a gap?
       */
-     bool isgap(int i) const; 
+     bool isgap(int i) const;
 
-     
+
      //NOT IMPLEMENTED YET:
 
-     Pattern addcontext(const Pattern & leftcontext, const Pattern & rightcontext) const;    
+     Pattern addcontext(const Pattern & leftcontext, const Pattern & rightcontext) const;
      void mask(std::vector<bool> & container) const; //returns a boolean mask of the skipgram (0 = gap(encapsulation) , 1 = skipgram coverage)
 
      uint32_t getmask() const;
 
      //sets an entirely new value
-     void set(const unsigned char* dataref, const int size); 
+     void set(const unsigned char* dataref, const int size);
 };
 
 
@@ -364,7 +364,7 @@ class PatternPointer {
      uint32_t mask; //0 == NGRAM
                     //first bit high = flexgram, right-aligned, 0 = gap
                     //first bit low = skipgram, right-aligned, 0 = gap , max skipgram length 31 tokens
-    
+
 	 PatternPointer() {
 		data = NULL;
 		bytes = 0;
@@ -418,13 +418,13 @@ class PatternPointer {
          // by convention, always return *this (for chaining)
          return *this;
      }
-     PatternPointer(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, unsigned char * corpusstart = NULL, bool debug = false); 
+     PatternPointer(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, unsigned char * corpusstart = NULL, bool debug = false);
 
      /**
       * Write Pattern to output stream (in binary form)
       * @param out The output stream
       */
-     void write(std::ostream * out, const unsigned char * corpusstart = NULL) const; 
+     void write(std::ostream * out, const unsigned char * corpusstart = NULL) const;
 
      //slice construtors:
      PatternPointer(unsigned char *, unsigned int,unsigned int, unsigned int * byteoffset=NULL, bool byteoffset_shiftone = false);
@@ -442,7 +442,7 @@ class PatternPointer {
       * Compute a hash value for this pattern
       */
      const size_t hash() const;
-     
+
      const PatternCategory category() const;
      const bool isskipgram() const { return category() == SKIPGRAM; }
      const bool isflexgram() const { return category() == FLEXGRAM; }
@@ -451,7 +451,7 @@ class PatternPointer {
      std::string tostring(const ClassDecoder& classdecoder) const; //pattern to string (decode)
      std::string decode(const ClassDecoder& classdecoder) const { return tostring(classdecoder); } //pattern to string (decode)
      bool out() const;
-     
+
      bool operator==(const PatternPointer & other) const;
      bool operator!=(const PatternPointer & other) const { return !(*this == other); }
 
@@ -461,10 +461,10 @@ class PatternPointer {
      /**
       * Return a single token (not a byte!). index < size().
       */
-     PatternPointer operator [](int index) const { return PatternPointer(*this, index,1); } 
+     PatternPointer operator [](int index) const { return PatternPointer(*this, index,1); }
 
      PatternPointer toflexgram() const;
-     bool isgap(int i) const; 
+     bool isgap(int i) const;
 
 
 	 /**
@@ -486,25 +486,25 @@ class PatternPointer {
         }
      }
 
-     int ngrams(std::vector<PatternPointer> & container, const int n) const; 
+     int ngrams(std::vector<PatternPointer> & container, const int n) const;
      int subngrams(std::vector<PatternPointer> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
      int ngrams(std::vector<std::pair<PatternPointer,int>> & container, const int n) const; //return multiple ngrams
      int subngrams(std::vector<std::pair<PatternPointer,int>> & container, int minn = 1, int maxn=9) const; //return all subsumed ngrams (variable n)
 
      /**
-      * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container... Thus 'to be {*} not {*} be' has three parts 
+      * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container... Thus 'to be {*} not {*} be' has three parts
       */
-     int parts(std::vector<PatternPointer> & container) const; 
-     
+     int parts(std::vector<PatternPointer> & container) const;
+
      /**
-      * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container as begin,length pairs... Thus 'to be {*} not {*} be' has three parts 
+      * Finds all the parts of a skipgram, parts are the portions that are not skips and adds them to container as begin,length pairs... Thus 'to be {*} not {*} be' has three parts
       */
-     int parts(std::vector<std::pair<int,int> > & container) const; 
+     int parts(std::vector<std::pair<int,int> > & container) const;
 
      /**
       * Finds all the gaps of a skipgram or flexgram., parts are the portions that are not skips and adds them to container as begin,length pairs... Thus 'to be {*} not {*} be' has three parts. The gap-length of a flexgram will always be its minimum length one.
       */
-     int gaps(std::vector<std::pair<int,int> > & container) const; 
+     int gaps(std::vector<std::pair<int,int> > & container) const;
 
      /**
       * return the number of skips in this pattern
@@ -524,13 +524,13 @@ class PatternPointer {
       * @return A skipgram
       */
      PatternPointer addskips(const std::vector<std::pair<int,int> > & gaps) const;
-	
+
 	 /**
 	  * Low-level function for flexgrams, that returns a collapsed comparable representation of the flexgram in collapseddata (has to be pre-allocated). Return value is the number of bytes of the representation. In the collapsed representation adjacent flexgrams are removed.
 	  */
 	 int flexcollapse(unsigned char * collapseddata) const;
 
-     bool instanceof(const PatternPointer & skipgram) const; 
+     bool instanceof(const PatternPointer & skipgram) const;
 
      operator Pattern() { return Pattern(*this); } //cast overload
      Pattern pattern() const { return Pattern(*this); } //cast overload
@@ -550,9 +550,9 @@ namespace std {
 
     template <>
     struct hash<Pattern> {
-     public: 
-          size_t operator()(const Pattern &pattern) const throw() {                            
-              return pattern.hash();              
+     public:
+          size_t operator()(const Pattern &pattern) const throw() {
+              return pattern.hash();
           }
     };
 
@@ -560,17 +560,17 @@ namespace std {
 
     template <>
     struct hash<const Pattern *> {
-     public: 
-          size_t operator()(const Pattern * pattern) const throw() {                            
-              return pattern->hash();              
+     public:
+          size_t operator()(const Pattern * pattern) const throw() {
+              return pattern->hash();
           }
     };
 
     template <>
     struct hash<PatternPointer> {
-     public: 
-          size_t operator()(const PatternPointer &pattern) const throw() {                            
-              return pattern.hash();              
+     public:
+          size_t operator()(const PatternPointer &pattern) const throw() {
+              return pattern.hash();
           }
     };
 
@@ -578,9 +578,9 @@ namespace std {
 
     template <>
     struct hash<const PatternPointer *> {
-     public: 
-          size_t operator()(const PatternPointer * pattern) const throw() {                            
-              return pattern->hash();              
+     public:
+          size_t operator()(const PatternPointer * pattern) const throw() {
+              return pattern->hash();
           }
     };
 

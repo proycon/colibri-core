@@ -12,7 +12,7 @@
 *   Radboud University Nijmegen
 *
 *   http://proycon.github.io/colibri-core
-*   
+*
 *   Licensed under GPLv3
 *****************************/
 using namespace std;
@@ -42,7 +42,7 @@ void usage() {
     cerr << "         -V    Import vocabulary file (one word per line)" << endl;
 }
 
-int main( int argc, char *argv[] ) {    
+int main( int argc, char *argv[] ) {
     string classfile = "";
     string corpusfile = "";
     string outputprefix = "";
@@ -57,8 +57,8 @@ int main( int argc, char *argv[] ) {
     int threshold = 0;
     ifstream listin;
     string tmpfilename;
-    
-    char c;    
+
+    char c;
     while ((c = getopt(argc, argv, "f:hc:o:d:ul:eUt:F:V:n")) != -1) {
         switch (c) {
         case 'f': //keep for backward compatibility
@@ -67,7 +67,7 @@ int main( int argc, char *argv[] ) {
             break;
         case 'c':
             classfile = optarg;
-            break;   
+            break;
         case 'o':
             outputprefix = optarg;
             break;
@@ -110,37 +110,37 @@ int main( int argc, char *argv[] ) {
             break;
         case 'h':
             usage();
-            exit(0);  
+            exit(0);
 		default:
             cerr << "Unknown option: -" <<  optopt << endl;
 			exit(2);
         }
     }
-    
+
     for (int i = optind; i < argc; i++) {
         string tmp = argv[i];
         corpusfiles.push_back(tmp);
     }
-    
+
     if (corpusfiles.empty() && (freqlistfile.empty())) {
     	usage();
     	exit(2);
-    } 
+    }
 
 	if (!corpusfiles.empty()) {
         corpusfile = corpusfiles[0]; //only for extension determination
     }
 
-        
+
     if (outputprefix.empty()) {
         if (corpusfile.find_last_of("/") == string::npos) {
             outputprefix = corpusfile;
         } else {
             outputprefix = corpusfile.substr(corpusfile.find_last_of("/")+1);
         }
-        strip_extension(outputprefix,"bz2");     
-        strip_extension(outputprefix,"xml");     
-        strip_extension(outputprefix,"txt");    
+        strip_extension(outputprefix,"bz2");
+        strip_extension(outputprefix,"xml");
+        strip_extension(outputprefix,"txt");
     }
 
 	if ((!freqlistfile.empty()) && (outputprefix.empty())) {
@@ -149,13 +149,13 @@ int main( int argc, char *argv[] ) {
         } else {
             outputprefix = freqlistfile.substr(freqlistfile.find_last_of("/")+1);
         }
-        strip_extension(outputprefix,"bz2");     
-        strip_extension(outputprefix,"xml");     
-        strip_extension(outputprefix,"txt");    
+        strip_extension(outputprefix,"bz2");
+        strip_extension(outputprefix,"xml");
+        strip_extension(outputprefix,"txt");
 	}
 
     ClassEncoder classencoder;
-    
+
     string prefixedoutputprefix = outputdirectoryprefix + outputprefix;
     if (!classfile.empty()) {
         cerr << "Loading classes from file" << endl;
@@ -178,8 +178,8 @@ int main( int argc, char *argv[] ) {
         classencoder.build(corpusfiles, false, threshold, vocabfile);
         classencoder.save(prefixedoutputprefix + ".colibri.cls");
         cerr << "Built " << prefixedoutputprefix << ".colibri.cls" << endl;
-    }   
-    
+    }
+
     unsigned int highestclass = classencoder.gethighestclass();
     for (size_t i = 0; i < corpusfiles.size(); i++) {
         string outfile = corpusfiles[i];
@@ -204,10 +204,10 @@ int main( int argc, char *argv[] ) {
     if (classencoder.gethighestclass() > highestclass) {
         if (extend) {
             classencoder.save(outputprefix + ".colibri.cls");
-            cerr << "Built " << outputprefix << ".colibri.cls" << endl;            
+            cerr << "Built " << outputprefix << ".colibri.cls" << endl;
         } else {
             cerr << "WARNING: classes were added but the result was ignored! Use -e!" << endl;
         }
     }
-    
+
 }

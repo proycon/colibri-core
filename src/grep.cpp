@@ -12,7 +12,7 @@
 *   Radboud University Nijmegen
 *
 *   http://proycon.github.io/colibri-core
-*   
+*
 *   Licensed under GPLv3
 *****************************/
 using namespace std;
@@ -28,7 +28,7 @@ void usage() {
     cerr << "\t-i str   pattern model to search in (must be indexed)
 }
 
-int main( int argc, char *argv[] ) {    
+int main( int argc, char *argv[] ) {
     string classfile = "";
     string corpusfile = "";
     string modelfile = "";
@@ -36,19 +36,19 @@ int main( int argc, char *argv[] ) {
     int rightcontextsize = 0;
     vector<string> querystrings;
     int n = 3;
-    
-    char c;    
+
+    char c;
     while ((c = getopt(argc, argv, "c:hf:i::l:r:s:")) != -1) {
         switch (c) {
         case 'c':
             classfile = optarg;
-            break;   
+            break;
         case 'f':
             corpusfile = optarg;
-            break;   
+            break;
         case 'i':
             modelfile = optarg;
-            break;   
+            break;
         case 'l':
             leftcontextsize = atoi(optarg);
             break;
@@ -57,13 +57,13 @@ int main( int argc, char *argv[] ) {
             break;
         case 'h':
             usage();
-            exit(0);  
+            exit(0);
 		default:
             cerr << "ERROR: Unknown option: -" <<  optopt << endl;
             abort ();
         }
     }
-    
+
     for (int i = optind; i < argc; i++) {
         string tmp = argv[i];
         querystrings.push_back(tmp);
@@ -81,8 +81,8 @@ int main( int argc, char *argv[] ) {
         exit(2);
     }
 
-    ClassDecoder classdecoder = ClassDecoder(classfile); 
-    ClassEncoder classencoder = ClassEncoder(classfile); 
+    ClassDecoder classdecoder = ClassDecoder(classfile);
+    ClassEncoder classencoder = ClassEncoder(classfile);
 
     vector<Pattern> queries;
     for (int i = 0; i < querystrings.size(); i++) {
@@ -101,7 +101,7 @@ int main( int argc, char *argv[] ) {
             Pattern line = Pattern(in);
             ngrams.clear();
             line.ngrams(ngrams, n);
-        
+
             for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
                 cout << iter->first.tostring(classdecoder) << endl;
             }

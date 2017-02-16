@@ -13,7 +13,7 @@
 *   Radboud University Nijmegen
 *
 *   http://proycon.github.io/colibri-core
-*   
+*
 *   Licensed under GPLv3
 *****************************/
 using namespace std;
@@ -38,7 +38,7 @@ void usage() {
     cerr << "\t-d       Output directly, don't build a map, don't sort the output (conserves memory)" << endl;
 }
 
-int main( int argc, char *argv[] ) {    
+int main( int argc, char *argv[] ) {
     string classfile = "";
     vector<string> modelfiles;
     bool conjunctiononly = false;
@@ -46,19 +46,19 @@ int main( int argc, char *argv[] ) {
     PatternModelOptions options = PatternModelOptions();
     string inputfile;
     string outputfile;
-    
-    char c;    
+
+    char c;
     while ((c = getopt(argc, argv, "c:hl:m:SFad")) != -1) {
         switch (c)
         {
         case 'c':
             classfile = optarg;
-            break;   
+            break;
         case 'l':
-            options.MAXLENGTH = atoi(optarg); 
+            options.MAXLENGTH = atoi(optarg);
             break;
         case 'm':
-            options.MINLENGTH = atoi(optarg); 
+            options.MINLENGTH = atoi(optarg);
             break;
         case 'N':
             options.DOREMOVENGRAMS = true;
@@ -77,13 +77,13 @@ int main( int argc, char *argv[] ) {
             break;
         case 'h':
             usage();
-            exit(0);  
+            exit(0);
 		default:
             cerr << "ERROR: Unknown option: -" <<  optopt << endl;
             abort ();
         }
     }
-    
+
     for (int i = optind; i < argc; i++) {
         string tmp = argv[i];
         modelfiles.push_back(tmp);
@@ -99,14 +99,14 @@ int main( int argc, char *argv[] ) {
 
     if (!inputfile.empty()) {
         cerr << "Reading log-likelihood patternmap from " << inputfile << endl;
-        llmodel.read(inputfile, options.MINTOKENS, options.MINLENGTH, options.MAXLENGTH,NULL, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS); 
+        llmodel.read(inputfile, options.MINTOKENS, options.MINLENGTH, options.MAXLENGTH,NULL, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
     } else if (modelfiles.size() < 2) {
         cerr << "ERROR: Need at least two models" << endl;
     	usage();
     	exit(2);
     }
 
-    ClassDecoder classdecoder = ClassDecoder(classfile); 
+    ClassDecoder classdecoder = ClassDecoder(classfile);
 
     vector<PatternModel<uint32_t>* > models; //first model is training model or background model
 
@@ -119,9 +119,9 @@ int main( int argc, char *argv[] ) {
     cerr << "Computing log-likelihood..." << endl;
 
     if (directoutput) {
-        comparemodels_loglikelihood(models, &llmodel, conjunctiononly, (ostream*) &cout, &classdecoder); 
+        comparemodels_loglikelihood(models, &llmodel, conjunctiononly, (ostream*) &cout, &classdecoder);
     } else {
-        comparemodels_loglikelihood(models, &llmodel, conjunctiononly); 
+        comparemodels_loglikelihood(models, &llmodel, conjunctiononly);
 
         cerr << "Sorting results..." << endl;
         set<pair<double,Pattern>> results;
@@ -137,7 +137,7 @@ int main( int argc, char *argv[] ) {
         cout << endl;
 
         for (set<pair<double,Pattern>>::iterator iter = results.begin(); iter != results.end(); iter++) {
-            const Pattern pattern = iter->second; 
+            const Pattern pattern = iter->second;
             cout << pattern.tostring(classdecoder) << "\t" << (iter->first * -1);
             for (unsigned int i = 0; i < models.size(); i++) {
                 cout << "\t" << models[i]->occurrencecount(pattern) << "\t" << models[i]->frequency(pattern);

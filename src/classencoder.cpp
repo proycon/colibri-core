@@ -14,12 +14,12 @@
 *   Radboud University Nijmegen
 *
 *   http://proycon.github.io/colibri-core
-*   
+*
 *   Licensed under GPLv3
 *****************************/
 using namespace std;
 
-unsigned int inttobytes(unsigned char * buffer, unsigned int cls) {	
+unsigned int inttobytes(unsigned char * buffer, unsigned int cls) {
 	unsigned int cls2 = cls;
 	unsigned int length = 0;
 	do {
@@ -38,10 +38,10 @@ unsigned int inttobytes(unsigned char * buffer, unsigned int cls) {
             cls = cls / 128;
         } while (cls > 0);
     }
-	return length;    
+	return length;
 }
 
-unsigned char * inttobytes_v1(unsigned int cls, int & length) {	
+unsigned char * inttobytes_v1(unsigned int cls, int & length) {
 	//compute length of byte array
 	unsigned int cls2 = cls;
 	length = 0;
@@ -56,7 +56,7 @@ unsigned char * inttobytes_v1(unsigned int cls, int & length) {
     	byterep[i++] = (unsigned char) r;
     	cls = cls / 256;
     } while (cls > 0);
-	return byterep;    
+	return byterep;
 }
 
 //from http://www.zedwood.com/article/cpp-utf8-strlen-function
@@ -90,25 +90,25 @@ ClassEncoder::ClassEncoder(const string & filename,const unsigned int minlength,
 }
 
 void ClassEncoder::load(const string & filename,const unsigned int minlength, unsigned const int maxlength) {
-       highestclass = 0; 
+       highestclass = 0;
        this->minlength = minlength;
        this->maxlength = maxlength;
-       
+
 	   ifstream IN;
-	   IN.open( filename.c_str() );    
+	   IN.open( filename.c_str() );
        if (!(IN)) {
            cerr << "ERROR: File does not exist: " << filename << endl;
            exit(3);
        }
         while (IN.good()) {
           string line;
-          getline(IN, line);              
+          getline(IN, line);
           const int s = line.size();
           for (int i = 0; i < s; i++) {
               if (line[i] == '\t') {
                   const string cls_s = string(line.begin(), line.begin() + i);
                   unsigned int cls = (unsigned int) atoi(cls_s.c_str());
-                  const string word = string(line.begin() + i + 1, line.end());                  
+                  const string word = string(line.begin() + i + 1, line.end());
                   if ((minlength > 0) || (maxlength > 0))  {
                     const unsigned int l = (unsigned int) utf8_strlen(word);
                     if (((minlength > 0) && (l < minlength)) || ((maxlength > 0) && (l > maxlength))) continue;
@@ -118,11 +118,11 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
                   //cerr << "CLASS=" << cls << " WORD=" << word << endl;
 				  break;
               }
-              
+
           }
-        }        
-        IN.close();  
-        
+        }
+        IN.close();
+
         classes["{?}"] = unknownclass;
         classes["{*}"] = skipclass;
         classes["{**}"] = flexclass;
@@ -131,22 +131,22 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
 
 
 void ClassEncoder::processcorpus(const string & filename, unordered_map<string,unsigned int> & freqlist, unordered_set<string> * vocab) {
-	   //compute frequency list of all words        
+	   //compute frequency list of all words
        ifstream IN;
 	   if (filename.rfind(".bz2") != string::npos) {
-            IN.open( filename.c_str(), ios::in | ios::binary );    
+            IN.open( filename.c_str(), ios::in | ios::binary );
             if (!(IN)) {
                 cerr << "ERROR: File does not exist: " << filename << endl;
                 exit(3);
-            }       
+            }
             bz2istream * decompressor = new bz2istream(IN.rdbuf());
             processcorpus((istream*) decompressor,freqlist);
        } else {
-            IN.open( filename.c_str() );    
+            IN.open( filename.c_str() );
             if (!(IN)) {
                 cerr << "ERROR: File does not exist: " << filename << endl;
                 exit(3);
-            }       
+            }
             processcorpus(&IN, freqlist);
        }
        IN.close();
@@ -155,14 +155,14 @@ void ClassEncoder::processcorpus(const string & filename, unordered_map<string,u
 void ClassEncoder::processcorpus(istream * IN , unordered_map<string,unsigned int> & freqlist, unordered_set<string> * vocab) {
         while (IN->good()) {
           string line;
-          getline(*IN, line);         
+          getline(*IN, line);
           int begin = 0;
           const int s = line.size();
           for (int i = 0; i < s; i++) {
               if ((line[i] == ' ') || (i == s - 1)) {
               	  int offset = 0;
-              	  if (i == s - 1) offset = 1;              	  
-              	  string word = string(line.begin() + begin, line.begin() + i + offset);              	  
+              	  if (i == s - 1) offset = 1;
+              	  string word = string(line.begin() + begin, line.begin() + i + offset);
               	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
               	    word = trim(word, " \t\n\r"); //trim whitespace, control characters
                     if ((vocab == NULL) || ((vocab != NULL) && (vocab->find(word) != vocab->end()) ) ) {
@@ -176,18 +176,18 @@ void ClassEncoder::processcorpus(istream * IN , unordered_map<string,unsigned in
                         }
                     }
               	  }
-              	  begin = i+ 1; 
+              	  begin = i+ 1;
               }
-              
+
           }
-        }        
+        }
 }
 
 #ifdef WITHFOLIA
 void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<string,unsigned int> & freqlist, unordered_set<string> * vocab) {
     folia::Document doc;
     doc.readFromFile(filename);
-    
+
     vector<folia::Word*> words = doc.words();
     for (vector<folia::Word*>::iterator iterw = words.begin(); iterw != words.end(); iterw++) {
         folia::Word * word = *iterw;
@@ -213,11 +213,11 @@ void ClassEncoder::buildclasses(const unordered_map<string,unsigned int> & freql
         multimap<const unsigned int, const string> revfreqlist;
         for (unordered_map<string,unsigned int>::const_iterator iter = freqlist.begin(); iter != freqlist.end(); iter++) {
             if (iter->second > threshold) revfreqlist.insert( pair<const unsigned int,const string>(-1 * iter->second, iter->first) );
-        } 
-        
+        }
+
         int cls = highestclass;
         for (multimap<const unsigned int,const string>::const_iterator iter = revfreqlist.begin(); iter != revfreqlist.end(); iter++) {
-            if (!classes.count(iter->second)) { //check if it doesn't already exist, in case we are expanding on existing classes 
+            if (!classes.count(iter->second)) { //check if it doesn't already exist, in case we are expanding on existing classes
         	    cls++;
         	    classes[iter->second] = cls;
             }
@@ -260,8 +260,8 @@ void ClassEncoder::build(vector<string> & files, bool quiet, unsigned int thresh
 	        } else {
 	            processcorpus(filename, freqlist, &vocab); //also handles bz2
 	        }
-	        
-	    } 	    	    
+
+	    }
         buildclasses(freqlist, threshold);
 }
 
@@ -279,7 +279,7 @@ void ClassEncoder::loadvocab(const string & filename, unordered_set<string> & vo
     ifstream IN(filename);
     while (IN.good()) {
         string line;
-        getline(IN, line);         
+        getline(IN, line);
         line = trim(line, " \t\n\r"); //trim whitespace, control characters
         const int s = line.size();
 		if (s > 0) {
@@ -293,35 +293,35 @@ void ClassEncoder::buildclasses_freqlist(const string & filename, unsigned int t
     ifstream IN(filename);
     while (IN.good()) {
         string line;
-        getline(IN, line);         
+        getline(IN, line);
         line = trim(line, " \t\n\r"); //trim whitespace, control characters
         const int s = line.size();
 		if (s > 0) {
             for (int i = 0; i < s; i++) {
                 if (line[i] == '\t') {
                     const string word = string(line.begin(), line.begin() + i);
-                    const string freq_s = string(line.begin() + i + 1, line.end());                  
+                    const string freq_s = string(line.begin() + i + 1, line.end());
                     unsigned int freq = (unsigned int) atoi(freq_s.c_str());
                     freqlist[word] = freq;
                     break;
-                } 
+                }
             }
 		}
     }
     buildclasses(freqlist, threshold);
 }
-        
+
 vector<unsigned int> ClassEncoder::encodeseq(const vector<string> & seq) {
     vector<unsigned int> result;
     const int l = seq.size();
-    for (int i = 0; i < l; i++) 
-        result.push_back( classes[seq[i]] ); 
+    for (int i = 0; i < l; i++)
+        result.push_back( classes[seq[i]] );
     return result;
 }
 
 int ClassEncoder::outputlength(const string & line) {
 	  int outputcursor = 0;
-      int begin = 0;      
+      int begin = 0;
       int tmphighestclass = highestclass;
       unsigned int classlength;
       const int l = line.length();
@@ -346,10 +346,10 @@ int ClassEncoder::outputlength(const string & line) {
                     outputcursor++;
                     continue;
                 } else if ((word.substr(0,2) == "{*")  && (word.substr(word.size() - 2,2) == "*}")) {
-                    const int skipcount = atoi(word.substr(2,word.size() - 4).c_str()); 
+                    const int skipcount = atoi(word.substr(2,word.size() - 4).c_str());
                     for (int j = 0; j < skipcount; j++) {
                         outputcursor++;
-                    }                
+                    }
                     continue;
                 } else if (classes.count(word) == 0) {
                     cls = ++tmphighestclass; //as if autoaddunknown
@@ -358,16 +358,16 @@ int ClassEncoder::outputlength(const string & line) {
           	  	}
           	  	classlength = inttobytes(NULL, cls);
                 outputcursor += classlength;
-          	  }			 
+          	  }
           }
       }
-      return outputcursor; 
+      return outputcursor;
 
 }
 
 int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown, unsigned int * nroftokens) {
 	  int outputcursor = 0;
-      int begin = 0;      
+      int begin = 0;
       const int l = line.length();
       unsigned int classlength;
       for (int i = 0; i < l; i++) {
@@ -384,7 +384,7 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
           	    unsigned int cls;
                 if (word == "{*}") {
                     //fixed length skip
-                    outputbuffer[outputcursor++] = skipclass; 
+                    outputbuffer[outputcursor++] = skipclass;
                     if (nroftokens != NULL) (*nroftokens)++;
                     continue;
                 } else if (word == "{**}") {
@@ -394,38 +394,38 @@ int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer
                     continue;
                 } else if (word == "{?}") {
                     //unknown word
-                    outputbuffer[outputcursor++] = unknownclass; 
+                    outputbuffer[outputcursor++] = unknownclass;
                     if (nroftokens != NULL) (*nroftokens)++;
                     continue;
                 } else if ((word.substr(0,2) == "{*")  && (word.substr(word.size() - 2,2) == "*}")) {
-                    const int skipcount = atoi(word.substr(2,word.size() - 4).c_str()); 
+                    const int skipcount = atoi(word.substr(2,word.size() - 4).c_str());
                     for (int j = 0; j < skipcount; j++) {
-                        outputbuffer[outputcursor++] = skipclass; //FIXEDGAP MARKER                     
+                        outputbuffer[outputcursor++] = skipclass; //FIXEDGAP MARKER
                         if (nroftokens != NULL) (*nroftokens)++;
-                    }                
+                    }
                     continue;
                 } else if (classes.find(word) == classes.end()) {
                     if (autoaddunknown) {
                         cls = ++highestclass;
-                        classes[word] = cls;  
+                        classes[word] = cls;
                         added[cls] = word;
-          	    	} else if (!allowunknown) {	
+          	    	} else if (!allowunknown) {
                         //cerr << "ERROR: Unknown word '" << word << "', does not occur in model. You may want to pass either option -U or option -e to colibri-classencode to deal with unknown words." << endl;
                         throw UnknownTokenError();
 	  	        	} else {
 	  	        		//cerr << "WARNING: Unknown word '" << word << "', does not occur in model. Replacing with placeholder" << endl;
-	  	        		cls = unknownclass;	
-	  	        	}    	
+	  	        		cls = unknownclass;
+	  	        	}
           	    } else {
           	  		cls = classes[word];
           	  	}
   	        	classlength = inttobytes(outputbuffer + outputcursor, cls);
                 outputcursor += classlength;
                 if (nroftokens != NULL) (*nroftokens)++;
-          	  }			 
+          	  }
           }
       }
-      return outputcursor; 
+      return outputcursor;
 }
 
 
@@ -437,7 +437,7 @@ Pattern ClassEncoder::buildpattern(const std::string & patternstring, bool allow
         cerr << "INTERNAL ERROR: Exceeded buildpattern buffer size" << endl;
         exit(2);
     }
-    Pattern pattern = Pattern(buildbuffer,buffersize); 
+    Pattern pattern = Pattern(buildbuffer,buffersize);
 	return pattern;
 }
 
@@ -450,7 +450,7 @@ Pattern ClassEncoder::buildpattern_safe(const std::string & patternstring, bool 
         cerr << "INTERNAL ERROR: Exceeded buildpattern buffer size" << endl;
         exit(2);
     }
-    Pattern pattern = Pattern(buffer,buffersize); 
+    Pattern pattern = Pattern(buffer,buffersize);
 	return pattern;
 }
 
@@ -461,7 +461,7 @@ void ClassEncoder::add(const std::string & s, const unsigned int cls) {
 }
 
 void ClassEncoder::encodefile(const std::string & inputfilename, const std::string & outputfilename, bool allowunknown, bool autoaddunknown, bool append, bool ignorenewlines, bool quiet) {
-	    
+
     if ((inputfilename.rfind(".xml") != string::npos) ||  (inputfilename.rfind(".xml.bz2") != string::npos) ||  (inputfilename.rfind(".xml.gz") != string::npos)) {
         #ifdef WITHFOLIA
         const char zero = 0;
@@ -469,7 +469,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
         //FoLiA
         folia::Document doc;
         doc.readFromFile(inputfilename);
-        
+
 	    ofstream OUT;
 	    if (append) {
 	        OUT.open(outputfilename.c_str(), ios::app | ios::binary);
@@ -489,21 +489,21 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	    for (size_t i = 0; i < wl; i++) {
             folia::Word * word = words[i];
 	        if ((!line.empty()) && (word->parent() != prevparent)) {
-	            outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);     
+	            outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
 	            if (outputsize > 0) OUT.write((const char *) outputbuffer, outputsize);
           	    OUT.write(&zero, sizeof(char)); //newline
-          	    linenum++;        
+          	    linenum++;
           	    line = "";
 	        }
             prevparent = word->parent();
         	if (line.empty()) {
-                line += word->str(); 
+                line += word->str();
             } else {
                 line += " " + word->str();
             }
-        } 
+        }
         if (!line.empty()) {
-            outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);     
+            outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
 	        if (outputsize > 0) {
                 OUT.write((const char *) outputbuffer, outputsize);
           	    OUT.write(&zero, sizeof(char)); //newline
@@ -558,7 +558,7 @@ void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bo
     unsigned int linenum = 0;
     unsigned int totalnroftokens = 0;
     unsigned int nroftokens;
-    while (IN->good()) {	
+    while (IN->good()) {
         nroftokens = 0;
         string line = "";
         getline(*IN, line);
@@ -579,13 +579,13 @@ void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bo
                     cerr << "ERROR: Each input line may not contain more than 65536 tokens/words. Limit exceeded on line " << linenum << " (" << nroftokens << " tokens)" << endl;
                     throw InternalError();
                 }
-                OUT->write(&zero, sizeof(char)); //newline 
+                OUT->write(&zero, sizeof(char)); //newline
                 totalnroftokens = 0; //reset for next block
             }
             totalnroftokens += nroftokens;
         }
-        OUT->write((const char *) outputbuffer, outputsize);                        
-        if (!ignorenewlines) OUT->write(&zero, sizeof(char)); //newline          
+        OUT->write((const char *) outputbuffer, outputsize);
+        if (!ignorenewlines) OUT->write(&zero, sizeof(char)); //newline
     }
     if (ignorenewlines) OUT->write(&zero, sizeof(char)); //force newline at end of file even if ignorenewlines is set
     if (!quiet) cerr << "Encoded " << linenum << " lines" << endl;
@@ -633,7 +633,7 @@ unsigned char * convert_v1_v2(const unsigned char * olddata, unsigned int & newl
 		classlength = inttobytes(datacursor, *iter);
 		datacursor += classlength;
 	}
-    return data;   
+    return data;
 }
 
 unsigned char * convert_v1_v2(istream * in, bool ignoreeol, bool debug) {

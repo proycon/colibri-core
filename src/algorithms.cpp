@@ -14,10 +14,10 @@ vector< pair<int,int> > get_consecutive_gaps(const int n, const int leftmargin, 
             pair<int,int> gap = make_pair(begin, length);
             gaps.push_back(gap);
             length--;
-            
+
         }
         begin++;
-    }      
+    }
     return gaps;
 }
 
@@ -64,18 +64,18 @@ uint32_t reversemask(uint32_t mask, const unsigned int n) {
 
 int maskheadskip(uint32_t mask, const unsigned int n) {
 	unsigned int i = 0;
-	while (mask & bitmask[i]) { 
+	while (mask & bitmask[i]) {
 		i++;
-	} 	
+	}
 	return i;
 }
 
 
 int masktailskip(uint32_t mask, const unsigned int n) {
 	unsigned int i = 0;
-	while (mask & bitmask[n-i-1]) { 
+	while (mask & bitmask[n-i-1]) {
 		i++;
-	} 	
+	}
 	return i;
 }
 

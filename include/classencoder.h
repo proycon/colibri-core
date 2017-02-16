@@ -8,7 +8,7 @@
 *   Radboud University Nijmegen
 *
 *   http://proycon.github.io/colibri-core
-*   
+*
 *   Licensed under GPLv3
 *****************************/
 #if HAVE_CONFIG_H
@@ -32,7 +32,7 @@
  * \brief Class for encoding plain-text to binary class-encoded data.
  *
  * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
- * 
+ *
  * @section LICENSE
  * Licensed under GPLv3
  *
@@ -83,7 +83,7 @@ class ClassEncoder {
      */
     void load(const std::string & filename, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
 
-    
+
     /**
      * Build a class encoding from a plain-text corpus
      * @param filename A plain text corpus with the units of interest (e.g sentences) each on one line
@@ -91,7 +91,7 @@ class ClassEncoder {
      * @param vocabfile Plain text vocabulary file with one line per word,
      * constrains the classes to these words only
      */
-    void build(const std::string & filename, unsigned int threshold=0, const std::string vocabfile = ""); 
+    void build(const std::string & filename, unsigned int threshold=0, const std::string vocabfile = "");
 
     /**
      * Build a class encoding from multiple plain-text corpus files
@@ -101,12 +101,12 @@ class ClassEncoder {
      * @param vocabfile Plain text vocabulary file with one line per word,
      * constrains the classes to these words only
      */
-    void build(std::vector<std::string> & files, bool quiet=false, unsigned int threshold =0, const std::string vocabfile = ""); 
-    
+    void build(std::vector<std::string> & files, bool quiet=false, unsigned int threshold =0, const std::string vocabfile = "");
+
     //auxiliary functions called by build: first do processcorpus() for each
     //corpus, then call buildclasses() once when done:
     //
-    
+
     /**
      * Assign classes based on the computed frequency list. This method should
      * only be called once.
@@ -120,24 +120,24 @@ class ClassEncoder {
      * tab, and an occurrence count)
      * @param filename The filename
      */
-    void buildclasses_freqlist(const std::string & filename, unsigned int threshold = 0); 
+    void buildclasses_freqlist(const std::string & filename, unsigned int threshold = 0);
 
     void loadvocab(const std::string & filename, std::unordered_set<std::string> & vocab);
     /**
-     * Count word frequency in a given plain-text corpus. 
+     * Count word frequency in a given plain-text corpus.
      * @param filename The corpus file
      * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
      */
     void processcorpus(const std::string & filename, std::unordered_map<std::string,unsigned int> & freqlist, std::unordered_set<std::string> * vocab = NULL);
     /**
-     * Count word frequency in a given plain-text corpus. 
+     * Count word frequency in a given plain-text corpus.
      * @param in The input stream
      * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
      */
     void processcorpus(std::istream * in, std::unordered_map<std::string,unsigned int> & freqlist, std::unordered_set<std::string> * vocab = NULL);
     #ifdef WITHFOLIA
     /**
-     * Count word frequency in a given FoLiA corpus. 
+     * Count word frequency in a given FoLiA corpus.
      * @param filename The corpus file (FoLiA XML)
      * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
      */
@@ -145,7 +145,7 @@ class ClassEncoder {
     #endif
 
     std::unordered_map<unsigned int, std::string> added;
-    
+
 
     /**
      * Computes how many bytes the class repesentation for this input line would take
@@ -170,7 +170,7 @@ class ClassEncoder {
      * @param allowunknown If the string contains unknown words, represent those using a single unknown class. If set to false, an exception will be raised when unknown words are present. (default: false)
      * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)
      * @param ignorenewlines Set to true to ignore newlines and have all text as one blob (may still result in several blobs if the text is really long)
-     * @param append Set to true if this is not the first file to write to the stream 
+     * @param append Set to true if this is not the first file to write to the stream
      * @return The number of bytes written to outputbuffer
      */
     void encodefile(const std::string & inputfilename, const std::string & outputfilename, bool allowunknown, bool autoaddunknown=false,  bool append=false, bool ignorenewlines=false, bool quiet=false);
@@ -182,13 +182,13 @@ class ClassEncoder {
      * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)
      * @param quiet Set to true to suppress any output
      * @param ignorenewlines Set to true to ignore newlines and have all text as one blob (may still result in several blobs if the text is really long)
-     * @param append Set to true if this is not the first file to write to the stream 
+     * @param append Set to true if this is not the first file to write to the stream
      * @return The number of bytes written to outputbuffer
      */
     void encodefile(std::istream * IN, std::ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet=false, bool append=false, bool ignorenewlines=false);
 
     std::vector<unsigned int> encodeseq(const std::vector<std::string> & seq);
-    
+
     /**
      * Build a pattern from a string.
      * **Note:** This function is not thread-safe! Use buildpattern_safe() instead if you need thread safety!
@@ -207,29 +207,29 @@ class ClassEncoder {
      */
     Pattern buildpattern_safe(const std::string &  patternstring, bool allowunknown=false, bool autoaddunknown = false);  //thread-safe
 
- 
+
     /**
      * Add the word with the specified class to the class encoding
      */
     void add(const std::string &, const unsigned int cls);
-    
+
     /**
      * Returns the highest assigned class in the class encoding
      */
-    unsigned int gethighestclass() { return highestclass; } 
-    
+    unsigned int gethighestclass() { return highestclass; }
+
     /**
      * Save the class encoding to file
      */
     void save(const std::string & filename);
-    
+
     /**
      * Returns the number of classes, i.e. word types
      */
     int size() const {
         return classes.size();
     }
-    
+
     /**
      * Return the class for the given word
      */
@@ -245,7 +245,7 @@ class ClassEncoder {
     const_iterator end() const {
         return classes.end();
     }
-};    
+};
 
 unsigned int  inttobytes(unsigned char * buffer, unsigned int cls);
 unsigned char * inttobytes_v1(unsigned int, int & length);

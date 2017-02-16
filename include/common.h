@@ -12,7 +12,7 @@
  * \brief Basic largely trivial functions for the common good.
  *
  * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
- * 
+ *
  * @section LICENSE
  * Licensed under GPLv3
  *

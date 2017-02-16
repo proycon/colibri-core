@@ -15,10 +15,10 @@
 
 /**
  * @file datatypes.h
- * \brief Classes for data types and handlers for those data types. 
+ * \brief Classes for data types and handlers for those data types.
  *
  * @author Maarten van Gompel (proycon) <proycon@anaproy.nl>
- * 
+ *
  * @section LICENSE
  * Licensed under GPLv3
  *
@@ -34,24 +34,24 @@ class IndexReference {
    public:
     uint32_t sentence;
     uint16_t token;
-    IndexReference() { sentence=0; token = 0; } 
+    IndexReference() { sentence=0; token = 0; }
 
     /**
      * Constructor for a reference to a position in the corpus, sentences (or whatever other unit delimits your data) start at 1, tokens start at 0
      */
-    IndexReference(uint32_t sentence, uint16_t token ) { this->sentence = sentence; this->token = token; }  
+    IndexReference(uint32_t sentence, uint16_t token ) { this->sentence = sentence; this->token = token; }
 
     IndexReference(std::istream * in) {
-        in->read( (char*) &sentence, sizeof(uint32_t)); 
-        in->read( (char*) &token, sizeof(uint16_t)); 
+        in->read( (char*) &sentence, sizeof(uint32_t));
+        in->read( (char*) &token, sizeof(uint16_t));
     }
     IndexReference(const IndexReference& other) { //copy constructor
         sentence = other.sentence;
         token = other.token;
-    };     
+    };
     void write(std::ostream * out) const {
-        out->write( (char*) &sentence, sizeof(uint32_t)); 
-        out->write( (char*) &token, sizeof(uint16_t)); 
+        out->write( (char*) &sentence, sizeof(uint32_t));
+        out->write( (char*) &token, sizeof(uint16_t));
     }
     bool operator< (const IndexReference& other) const {
         if (sentence < other.sentence) {
@@ -68,7 +68,7 @@ class IndexReference {
     bool operator==(const IndexReference &other) const { return ( (sentence == other.sentence) && (token == other.token)); };
     bool operator!=(const IndexReference &other) const { return ( (sentence != other.sentence) || (token != other.token)); };
     IndexReference operator+(const int other) const { return IndexReference(sentence, token+ other); };
-    
+
     std::string tostring() const {
         return std::to_string((long long unsigned int) sentence) + ":" + std::to_string((long long unsigned int) token);
     }
@@ -80,7 +80,7 @@ class IndexReference {
 };
 
 /**
- * \brief Collection of references to position in the corpus (IndexReference). 
+ * \brief Collection of references to position in the corpus (IndexReference).
  * Used by Indexed Pattern models.
  */
 class IndexedData {
@@ -88,9 +88,9 @@ class IndexedData {
     std::vector<IndexReference> data;
     IndexedData() { };
     IndexedData(std::istream * in);
-    void write(std::ostream * out) const; 
-    
-    bool has(const IndexReference & ref, bool sorted = false) const { 
+    void write(std::ostream * out) const;
+
+    bool has(const IndexReference & ref, bool sorted = false) const {
         if (sorted) {
             return std::binary_search(this->begin(), this->end(), ref);
         } else {
@@ -108,7 +108,7 @@ class IndexedData {
 
     typedef std::vector<IndexReference>::iterator iterator;
     typedef std::vector<IndexReference>::const_iterator const_iterator;
-    
+
     iterator begin() { return data.begin(); }
     const_iterator begin() const { return data.begin(); }
 
@@ -116,7 +116,7 @@ class IndexedData {
     const_iterator end() const { return data.end(); }
 
     iterator find(const IndexReference & ref) { return std::find(this->begin(), this->end(), ref); }
-    const_iterator find(const IndexReference & ref) const { return std::find(this->begin(), this->end(), ref); }    
+    const_iterator find(const IndexReference & ref) const { return std::find(this->begin(), this->end(), ref); }
 
     /**
      * Returns a set of all unique sentences covered by this collection of references.
@@ -125,7 +125,7 @@ class IndexedData {
         std::set<int> sentences;
         for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
             const IndexReference ref = *iter;
-            sentences.insert(ref.sentence); 
+            sentences.insert(ref.sentence);
         }
         return sentences;
     }
@@ -187,7 +187,7 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     virtual std::string id() { return "BaseValueHandler"; }
     const static bool indexed = false;
     void read(std::istream * in, ValueType & v) {
-        in->read( (char*) &v, sizeof(ValueType)); 
+        in->read( (char*) &v, sizeof(ValueType));
     }
     void write(std::ostream * out, ValueType & value) {
         out->write( (char*) &value, sizeof(ValueType));
@@ -345,7 +345,7 @@ class PatternFeatureVector {
         void shrink_to_fit() {
             data.shrink_to_fit();
         }
-         
+
 };
 
 template<class FeatureType>
@@ -382,7 +382,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
             }*/
         }
 
-        bool has(const Pattern & ref) const { 
+        bool has(const Pattern & ref) const {
             for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
                 const PatternFeatureVector<FeatureType> * pfv = *iter;
                 if (pfv->pattern == ref) {
@@ -393,7 +393,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
         }
 
 
-       iterator find(const Pattern & ref) { 
+       iterator find(const Pattern & ref) {
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
                 const PatternFeatureVector<FeatureType> * pfv = *iter;
                 if (pfv->pattern == ref) {
@@ -407,7 +407,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
 
 
 
-        void insert(PatternFeatureVector<FeatureType> * pfv, bool checkexists=true) { 
+        void insert(PatternFeatureVector<FeatureType> * pfv, bool checkexists=true) {
             //inserts pointer directly, makes no copy!!
             if (checkexists) {
                 iterator found = this->find(pfv->pattern);
@@ -423,7 +423,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
             }
         }
 
-        void insert(PatternFeatureVector<FeatureType> & value, bool checkexists=true) { 
+        void insert(PatternFeatureVector<FeatureType> & value, bool checkexists=true) {
             //make a copy, safer
             PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(value);
             if (checkexists) {
@@ -447,14 +447,14 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
             std::cerr << "ERROR: PatternFeatureVector does not support serialisation to string" << std::endl;
             throw InternalError();
         }
-        
+
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
 
         iterator end() { return data.end(); }
         const_iterator end() const { return data.end(); }
 
-        virtual PatternFeatureVector<FeatureType> * getdata(const Pattern & pattern) { 
+        virtual PatternFeatureVector<FeatureType> * getdata(const Pattern & pattern) {
             iterator iter = this->find(pattern);
             if (iter != this->end()) {
                 PatternFeatureVector<FeatureType> * pfv = *iter;
@@ -498,7 +498,7 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
         out->write((char*) &c, sizeof(uint16_t));
         unsigned int n = 0;
         for (typename PatternFeatureVectorMap<FeatureType>::iterator iter = value.begin(); iter != value.end(); iter++) {
-            if (n==s) break; 
+            if (n==s) break;
             PatternFeatureVector<FeatureType> * pfv = *iter;
             pfv->write(out);
             n++;
@@ -551,7 +551,7 @@ class PatternVector { //acts like a (small) map (but implemented as a vector to 
             }*/
         }
 
-        bool has(const Pattern & ref) const { 
+        bool has(const Pattern & ref) const {
             for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
                 if (*iter == ref) {
                     return true;
@@ -561,7 +561,7 @@ class PatternVector { //acts like a (small) map (but implemented as a vector to 
         }
 
 
-       iterator find(const Pattern & ref) { 
+       iterator find(const Pattern & ref) {
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
                 if (*iter == ref) {
                     return iter;
@@ -574,7 +574,7 @@ class PatternVector { //acts like a (small) map (but implemented as a vector to 
 
 
 
-        void insert(const Pattern & pattern, bool checkexists=true) { 
+        void insert(const Pattern & pattern, bool checkexists=true) {
             //make a copy, safer
             if (checkexists) {
                 iterator found = this->find(pattern);
@@ -593,14 +593,14 @@ class PatternVector { //acts like a (small) map (but implemented as a vector to 
             std::cerr << "ERROR: PatternFeatureVector does not support serialisation to string" << std::endl;
             throw InternalError();
         }
-        
+
         iterator begin() { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
 
         iterator end() { return data.end(); }
         const_iterator end() const { return data.end(); }
 
-        virtual Pattern * getdata(const Pattern & pattern) { 
+        virtual Pattern * getdata(const Pattern & pattern) {
             iterator iter = this->find(pattern);
             if (iter != this->end()) {
                 Pattern * p = &(*iter);
@@ -643,7 +643,7 @@ class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
         out->write((char*) &c, sizeof(uint32_t));
         unsigned int n = 0;
         for (typename PatternVector::iterator iter = value.begin(); iter != value.end(); iter++) {
-            if (n==s) break; 
+            if (n==s) break;
             iter->write(out);
             n++;
         }

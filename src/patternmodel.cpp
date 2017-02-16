@@ -6,9 +6,9 @@ int getmodeltype(const std::string & filename) {
     unsigned char model_type;
     unsigned char model_version;
     std::ifstream * f = new std::ifstream(filename.c_str());
-    f->read( (char*) &null, sizeof(char));        
-    f->read( (char*) &model_type, sizeof(char));        
-    f->read( (char*) &model_version, sizeof(char));        
+    f->read( (char*) &null, sizeof(char));
+    f->read( (char*) &model_type, sizeof(char));
+    f->read( (char*) &model_version, sizeof(char));
     f->close();
     delete f;
     if (null != 0) return -1;
@@ -20,7 +20,7 @@ int getmodeltype(const std::string & filename) {
  *
  * Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (ACL 2000). 1-8 October 2000, Hong Kong, pp. 1 - 6: http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf
  */
-double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternModel<uint32_t>* > & models) {       
+double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternModel<uint32_t>* > & models) {
     if (models.size() < 2) {
         std::cerr << "compare_models_loglikelihood requires at least two models!" << std::endl;
         throw InternalError();
@@ -39,11 +39,11 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
     std::vector<int> total;
     std::vector<double> expected;
 
-    
+
 
     for (unsigned int i = 0; i < models.size(); i++) {
         o = models[i]->occurrencecount(pattern);
-        //n = models[i]->totaloccurrencesingroup(category,patternsize); 
+        //n = models[i]->totaloccurrencesingroup(category,patternsize);
         n = models[i]->tokens();
         total.push_back(n);
         n_sum += n;
@@ -60,7 +60,7 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
 
     ll = 0;
     for (unsigned int i = 0; i < models.size(); i++) {
-        if (observed[i] > 0) 
+        if (observed[i] > 0)
             ll += observed[i] * log(observed[i] / expected[i]);
     }
     ll = ll * 2;
@@ -75,7 +75,7 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
  *
  * Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (ACL 2000). 1-8 October 2000, Hong Kong, pp. 1 - 6: http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf
  */
-void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > &  models, PatternMap<double> * resultmap, bool conjunctiononly, std::ostream * output, ClassDecoder * classdecoder) {       
+void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > &  models, PatternMap<double> * resultmap, bool conjunctiononly, std::ostream * output, ClassDecoder * classdecoder) {
     if (models.size() < 2) {
         std::cerr << "compare_models_loglikelihood requires at least two models!" << std::endl;
         throw InternalError();
@@ -94,7 +94,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > &  models
     std::vector<int> observed;
     std::vector<int> total;
     std::vector<double> expected;
-    
+
     if (output != NULL) {
         *output << "PATTERN\tLOGLIKELIHOOD";
         for (unsigned int i = 0; i < models.size(); i++) {
@@ -116,7 +116,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > &  models
         const Pattern pattern = iter->first;
         if ((!conjunctiononly) && (resultmap->has(pattern))) continue; //already done
 
-        
+
         observed.clear();
         total.clear();
         expected.clear();
@@ -132,7 +132,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > &  models
                 abort = true;
                 break;
             }
-            //n = models[i]->totaloccurrencesingroup(category,patternsize); 
+            //n = models[i]->totaloccurrencesingroup(category,patternsize);
             n = models[i]->tokens();
             total.push_back(n);
             n_sum += n;
@@ -161,7 +161,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > &  models
         if (std::isnan(ll)) ll = 0; //value too low, set to 0
         //std::cerr << "DEBUG: ll = " << ll << std::endl;
 
-        if (resultmap != NULL) 
+        if (resultmap != NULL)
             (*resultmap)[pattern] = ll;
 
         if ((output != NULL) && (classdecoder != NULL)) {
@@ -178,5 +178,5 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > &  models
         }
      }
     }
-    
+
 }
