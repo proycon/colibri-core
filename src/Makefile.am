@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -Wall -O3 -std=c++11
+AM_CXXFLAGS = -Wall -O3 -std=c++11 -Wno-vla
 AM_CPPFLAGS = -I@top_srcdir@/include
 
 bin_PROGRAMS = colibri-classdecode colibri-classencode colibri-test colibri-benchmarks colibri-patternmodeller colibri-comparemodels colibri-extractngrams
@@ -34,3 +34,6 @@ colibri_comparemodels_LDFLAGS = -static
 colibri_extractngrams_LDADD = libcolibricore.la
 colibri_extractngrams_SOURCES = extractngrams.cpp
 colibri_extractngrams_LDFLAGS = -static
+
+TESTS = tst.sh
+EXTRA_DIST = tst.sh

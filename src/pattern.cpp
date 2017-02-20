@@ -21,7 +21,7 @@ using namespace std;
 
 unsigned char mainpatternbuffer[MAINPATTERNBUFFERSIZE+1];
 
-const PatternCategory datacategory(const unsigned char * data, int maxbytes = 0) {
+PatternCategory datacategory(const unsigned char * data, int maxbytes = 0) {
     PatternCategory category = NGRAM;
     if (data == NULL) return category;
     int i = 0;
@@ -41,11 +41,11 @@ const PatternCategory datacategory(const unsigned char * data, int maxbytes = 0)
     } while (1);
 }
 
-const PatternCategory Pattern::category() const {
+PatternCategory Pattern::category() const {
     return datacategory(data);
 }
 
-const PatternCategory PatternPointer::category() const {
+PatternCategory PatternPointer::category() const {
     if (mask == 0) {
         return datacategory(data, bytes);
     } else if (mask > B32 / 2) {
@@ -56,7 +56,7 @@ const PatternCategory PatternPointer::category() const {
 }
 
 
-const size_t Pattern::bytesize() const {
+size_t Pattern::bytesize() const {
     //return the size of the pattern (in bytes)
     if (data == NULL) return 0;
     unsigned int i = 0;
@@ -70,7 +70,7 @@ const size_t Pattern::bytesize() const {
     } while (1);
 }
 
-const size_t datasize(unsigned char * data, int maxbytes = 0) {
+size_t datasize(unsigned char * data, int maxbytes = 0) {
     //return the size of the pattern (in tokens)
     if (data == NULL) return 0;
     int i = 0;
@@ -94,11 +94,11 @@ const size_t datasize(unsigned char * data, int maxbytes = 0) {
     } while (1);
 }
 
-const size_t Pattern::n() const {
+size_t Pattern::n() const {
     return datasize(data);
 }
 
-const size_t PatternPointer::n() const {
+size_t PatternPointer::n() const {
     return datasize(data, bytes);
 }
 
@@ -227,12 +227,12 @@ uint32_t PatternPointer::computemask() const {
 
 
 
-const size_t Pattern::hash() const {
+size_t Pattern::hash() const {
     if (data == NULL || data[0] == 0) return 0;
     return SpookyHash::Hash64((const void*) data , bytesize());
 }
 
-const size_t PatternPointer::hash() const {
+size_t PatternPointer::hash() const {
     if ((data == NULL) || (data[0] == 0)) return 0;
     if (mask == 0) {
         return SpookyHash::Hash64((const void*) data , bytesize());
@@ -259,7 +259,7 @@ const size_t PatternPointer::hash() const {
 }
 
 
-void Pattern::write(ostream * out, const unsigned char * corpusstart) const {
+void Pattern::write(ostream * out, const unsigned char * ) const {
     //corpusstart is not used but does need to be present so we have the same signature as PatternPointer
     const int s = bytesize();
     if (s > 0) {
@@ -385,7 +385,7 @@ bool PatternPointer::out() const {
     return dataout(data, bytesize());
 }
 
-const bool Pattern::unknown() const {
+bool Pattern::unknown() const {
     if (data == NULL) return false;
     int i = 0;
     bool prevhigh = false;
@@ -400,7 +400,7 @@ const bool Pattern::unknown() const {
     } while (1);
 }
 
-const bool PatternPointer::unknown() const {
+bool PatternPointer::unknown() const {
     if (data == NULL) return false;
     unsigned int i = 0;
     bool prevhigh = false;
@@ -468,7 +468,7 @@ void readanddiscardpattern_v1(std::istream * in) {
 
 
 
-Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version, const unsigned char * corpusstart, bool debug) {
+Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version, const unsigned char *, bool debug) {
     if (version == 2) {
         //stage 1 -- get length
         unsigned char c = 0;
@@ -569,7 +569,7 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
 }
 
 
-PatternPointer::PatternPointer(std::istream * in, bool ignoreeol, const unsigned char version , unsigned char * corpusstart, bool debug) {
+PatternPointer::PatternPointer(std::istream * in, bool, const unsigned char, unsigned char * corpusstart, bool debug) {
     if (corpusstart == NULL) {
         std::cerr << "ERROR: Can not read PatternPointer, no corpusstart passed!" << std::endl;
         throw InternalError();
@@ -1498,7 +1498,7 @@ int PatternPointer::parts(vector<PatternPointer> & container) const {
     return found;
 }
 
-const unsigned int Pattern::skipcount() const {
+unsigned int Pattern::skipcount() const {
     if (data == NULL) return 0;
     int count = 0;
     int i = 0;
@@ -1519,7 +1519,7 @@ const unsigned int Pattern::skipcount() const {
     } while (1);
 }
 
-const unsigned int PatternPointer::skipcount() const {
+unsigned int PatternPointer::skipcount() const {
     if (data == NULL) return 0;
     if (mask == 0) return 0;
     unsigned int skipcount = 0;

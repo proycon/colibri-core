@@ -254,5 +254,5 @@ int readline(std::istream* IN, unsigned char* buffer, const int);
 unsigned char * convert_v1_v2(const unsigned char * olddata, unsigned int & newlength);
 unsigned char * convert_v1_v2(std::istream * in, bool ignoreeol, bool debug);
 
-const int countwords(const unsigned char* data, const int l);
+int countwords(const unsigned char* data, const int l);
 #endif

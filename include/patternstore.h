@@ -277,7 +277,7 @@ class IndexedCorpus {
 
 
 
-                self_type operator++(int junk) { self_type tmpiter = *this; next(); return tmpiter; } //postfix
+                self_type operator++(int) { self_type tmpiter = *this; next(); return tmpiter; } //postfix
 
                 //reference operator*() { return *pairpointer; }
                 //pointer operator->()  { return pairpointer; }
@@ -1056,7 +1056,7 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
         bool has(const PatternPointer & pattern) const { return data.count(pattern); }
 
         size_t size() const { return data.size(); }
-        void reserve(size_t s) {} //noop
+        void reserve(size_t) {} //noop
 
         ValueType& operator [](const Pattern & pattern) { return data[pattern]; }
         ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; }
@@ -1132,14 +1132,14 @@ class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
     void write(std::ostream * out,  PatternStoreType & value) {
         value.write(out);
     }
-    virtual std::string tostring(  PatternStoreType & value) {
+    virtual std::string tostring(  PatternStoreType & ) {
         std::cerr << "PatternStoreValueHandler::tostring() is not supported" << std::endl;
         throw InternalError();
     }
     unsigned int count( PatternStoreType & value) const {
         return value.size();
     }
-    void add( PatternStoreType * value, const IndexReference & ref ) const {
+    void add( PatternStoreType *, const IndexReference & ) const {
         std::cerr << "PatternStoreValueHandler::add() is not supported" << std::endl;
         throw InternalError();
     }

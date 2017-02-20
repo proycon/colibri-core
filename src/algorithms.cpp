@@ -62,7 +62,7 @@ uint32_t reversemask(uint32_t mask, const unsigned int n) {
     return mask;
 }
 
-int maskheadskip(uint32_t mask, const unsigned int n) {
+int maskheadskip(uint32_t mask, const unsigned int ) {
 	unsigned int i = 0;
 	while (mask & bitmask[i]) {
 		i++;
