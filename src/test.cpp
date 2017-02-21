@@ -136,7 +136,11 @@ int main( int argc, char *argv[] ) {
         */
 
 
-        chdir("/tmp");
+      int res = chdir("/tmp");
+      if ( res != 0 ){
+	cerr << "chdir /tmp FAILED" << endl;
+	return EXIT_FAILURE;
+      }
 
         string classfile = "/tmp/colibritest";
         ofstream f;
@@ -1028,15 +1032,21 @@ int main( int argc, char *argv[] ) {
         out->close();
 
         cerr << "Class encoding corpus..." << endl;
-        system("colibri-classencode /tmp/hamlet.txt");
-
-
+        int res = system("colibri-classencode /tmp/hamlet.txt");
+	if ( res != 0 ){
+	  cerr << "system( colibri-classencode /tmp/hamlet.txt ) FAILED" << endl;
+	  return EXIT_FAILURE;
+	}
 
         cerr << "Class decoding corpus..." << endl;
-        system("colibri-classdecode -c /tmp/hamlet.colibri.cls -f /tmp/hamlet.colibri.dat > /tmp/hamlet.decoded.txt");
-        int r = system("diff /tmp/hamlet.txt /tmp/hamlet.decoded.txt");
-        cerr << "Checking equivalence after decoding: "; test(r,0);
+        res = system("colibri-classdecode -c /tmp/hamlet.colibri.cls -f /tmp/hamlet.colibri.dat > /tmp/hamlet.decoded.txt");
+	if ( res != 0 ){
+	  cerr << "system( colibri-classdecode -c /tmp/hamlet.colibri.cls -f /tmp/hamlet.colibri.dat > /tmp/hamlet.decoded.txt) FAILED" << endl;
+	  return EXIT_FAILURE;
+	}
 
+        res = system("diff /tmp/hamlet.txt /tmp/hamlet.decoded.txt");
+        cerr << "Checking equivalence after decoding: "; test(res,0);
 
 
         cerr << "Loading class decoders/encoders" << endl;
@@ -1700,6 +1710,6 @@ int main( int argc, char *argv[] ) {
         cerr << "Set integrity #3: "; test(iter->tostring(decoder),querystring);
 
     }
-
+    return EXIT_SUCCESS;
 
 }
