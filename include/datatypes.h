@@ -635,9 +635,9 @@ class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
     }
     void write(std::ostream * out, PatternVector & value) {
         unsigned int s = value.size();
-        if (s >= 4294967296) {
+        if (s >= std::numeric_limits<uint32_t>::max()) {
             std::cerr << "ERROR: PatternVector size exceeds maximum 32-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
-            s = 4294967296;
+            throw InternalError();
         }
         const uint32_t c = (uint32_t) s;
         out->write((char*) &c, sizeof(uint32_t));
