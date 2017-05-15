@@ -1,6 +1,13 @@
 language: python
 dist: trusty
 sudo: required
+notifications:
+  irc:
+    channels:
+      - "irc.uvt.nl#gitlama"
+    template:
+      - "%{repository_slug}#%{build_number} %{message} --> %{build_url}"
+    skip_join: true
 python:
     - 2.7
     - 3.2
@@ -8,11 +15,11 @@ python:
     - 3.4
 before_install:
     - pip install cython
-install: 
+install:
     - python setup.py install
-script: 
+script:
     - colibri-test
     - LD_LIBRARY_PATH="$VIRTUAL_ENV/lib/" python test.py
     - cd exp
     - LD_LIBRARY_PATH="$VIRTUAL_ENV/lib/" ./colibri-patternmodeller-test.sh
-    
+
