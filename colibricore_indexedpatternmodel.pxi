@@ -323,7 +323,7 @@ def getleftcooc(self, Pattern pattern, int occurrencethreshold = 0, int category
         inc(relit)
 
 def getrightcooc(self, Pattern pattern, int occurrencethreshold = 0, int category = 0, int size = 0):
-    """Get left-side co-occurrences for the specified pattern
+    """Get right-side co-occurrences for the specified pattern
     :param pattern: The pattern
     :type pattern: Pattern
     :param occurrencethreshold: Constrain by patterns occurring at least this many times in this relationship (default: 0, unconstrained)
