@@ -3166,14 +3166,16 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         while(iter != this->end()) {
             const PatternType pattern = iter->first;
             if (( (_n == 0) || ((int) pattern.n() == _n) ) && (pattern.category() == SKIPGRAM)) {
-                t_relationmap skipcontent = getskipcontent(pattern);
-                //std::cerr << " Pattern " << pattern.hash() << " occurs: " << this->occurrencecount(pattern) << " skipcontent=" << skipcontent.size() << std::endl;
-                if ((int) skipcontent.size() < minskiptypes) { //will take care of token threshold too, patterns not meeting the token threshold are not included
-                    //std::cerr << "..pruning" << std::endl;
-                    iter = this->erase(iter);
-                    pruned++;
-                    continue;
-                }
+                try {
+					t_relationmap skipcontent = getskipcontent(pattern);
+					//std::cerr << " Pattern " << pattern.hash() << " occurs: " << this->occurrencecount(pattern) << " skipcontent=" << skipcontent.size() << std::endl;
+					if ((int) skipcontent.size() < minskiptypes) { //will take care of token threshold too, patterns not meeting the token threshold are not included
+						//std::cerr << "..pruning" << std::endl;
+						iter = this->erase(iter);
+						pruned++;
+						continue;
+					}
+                } catch(KeyError &e) { } // ignore
             }
             iter++;
         }
