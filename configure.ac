@@ -4,7 +4,7 @@
 # $URL: https://ilk.uvt.nl/svn/sources/ucto/trunk/configure.ac $
 
 AC_PREREQ([2.67])
-AC_INIT([colibri-core],[2.4.5],[proycon@anaproy.nl])
+AC_INIT([colibri-core],[2.4.6],[proycon@anaproy.nl])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADER([config.h])
@@ -56,7 +56,7 @@ if test "x$PKG_CONFIG_PATH" = x; then
      export PKG_CONFIG_PATH=""
 fi
 #AC_ARG_WITH(timbl,
-#       [  --with-timbl=DIR       use timbl installed in <DIR>; 
+#       [  --with-timbl=DIR       use timbl installed in <DIR>;
 #               note that you can install timbl in a non-default directory with
 #               ./configure --prefix=<DIR> in the timbl installation directory],
 #       [PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$withval/lib/pkgconfig"],
@@ -83,7 +83,7 @@ AS_IF([test "x$with_folia" = "xyes"], [
 
 
 #AC_ARG_WITH(ticcutils,
-#       [  --with-ticcutils=DIR       use ticcutils installed in <DIR>; 
+#       [  --with-ticcutils=DIR       use ticcutils installed in <DIR>;
 #               note that you can install ticcutils in a non-default directory with
 #               ./configure --prefix=<DIR> in the ticcutils installation directory],
 #       [PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$withval/lib/pkgconfig"],

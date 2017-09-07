@@ -212,7 +212,7 @@ void ClassEncoder::buildclasses(const unordered_map<string,unsigned int> & freql
         //sort by occurrence count  using intermediate representation
         multimap<const unsigned int, const string> revfreqlist;
         for (unordered_map<string,unsigned int>::const_iterator iter = freqlist.begin(); iter != freqlist.end(); iter++) {
-            if (iter->second > threshold) revfreqlist.insert( pair<const unsigned int,const string>(-1 * iter->second, iter->first) );
+            if (iter->second >= threshold) revfreqlist.insert( pair<const unsigned int,const string>(-1 * iter->second, iter->first) );
         }
 
         int cls = highestclass;

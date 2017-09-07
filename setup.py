@@ -8,7 +8,7 @@ import glob
 import os
 import sys
 from distutils.core import setup, Extension
-try: 
+try:
     from Cython.Distutils import build_ext
 except ImportError:
     print("Cython was not found, install Cython first through your package manager or using: pip install cython",file=sys.stderr)
@@ -42,7 +42,7 @@ if not compilerfound:
 
 compilerversion = open(compilerversionfile,'r').read()
 
-# cython's include is sucky unfortunately :( 
+# cython's include is sucky unfortunately :(
 # And we need some conditional includes based on gcc vs clang
 # We'll have our own:
 for filename in glob.glob(os.path.join(ROOTDIR ,"*.in.p??")):
@@ -53,7 +53,7 @@ for filename in glob.glob(os.path.join(ROOTDIR ,"*.in.p??")):
             for line in f_in:
                 found = line.find('@include') #generic include'
                 foundlen = 8
-    
+
                 foundgcc = line.find('@includegcc') #gcc-only include
                 if foundgcc != -1:
                     if compilerversion.find('clang') == -1: #anything that is not clang is gcc for our purposes
@@ -174,7 +174,7 @@ setup(
     license = "GPL",
     keywords = "nlp computational_linguistics frequency ngram skipgram pmi cooccurrence linguistics",
     long_description=read('README.rst'),
-    version = '2.4.5',
+    version = '2.4.6',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},
     classifiers=[
