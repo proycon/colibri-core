@@ -10,7 +10,6 @@ notifications:
     skip_join: true
 python:
     - 2.7
-    - 3.2
     - 3.3
     - 3.4
 before_install:
