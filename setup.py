@@ -5,8 +5,9 @@
 
 from __future__ import print_function
 import glob
-import os
 import sys
+import os
+from os.path import expanduser
 from distutils.core import setup, Extension
 try:
     from Cython.Distutils import build_ext
@@ -15,7 +16,6 @@ except ImportError:
     sys.exit(3)
 
 
-from os.path import expanduser
 HOMEDIR = expanduser("~")
 
 ROOTDIR = os.path.abspath(os.path.dirname(__file__))
@@ -89,7 +89,7 @@ def read(fname):
 #defaults:
 includedirs = ["/usr/local/include/colibri-core","/usr/include/colibri-core", "/usr/include/libxml2"]
 libdirs = ["/usr/local/lib","/usr/lib"]
-if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' in sys.argv[1:] and not os.path.exists('manual'):
+if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and '--help' not in sys.argv[1:]:
 
     if '-n' in sys.argv[1:]:
         print("Dry run not supported for colibri-core compilation",file=sys.stderr)
@@ -122,30 +122,33 @@ if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and not '--help' i
     if prefix is None:
         prefix = "/usr" #default location is /usr rather than /usr/local
 
-    if not os.path.exists(ROOTDIR + "/configure") or '-f' in sys.argv[1:] or '--force' in sys.argv[1:]:
-        print("Bootstrapping colibri-core",file=sys.stderr)
-        r = os.system("bash bootstrap")
+    if not os.path.exists('manual'):
+        if not os.path.exists(ROOTDIR + "/configure") or '-f' in sys.argv[1:] or '--force' in sys.argv[1:]:
+            print("Bootstrapping colibri-core",file=sys.stderr)
+            r = os.system("bash bootstrap")
+            if r != 0:
+                print("Bootstrapping colibri-core failed: make sure you have a basic build environment with gcc/clang, autoconf, automake and autoconf-archive installed",file=sys.stderr)
+                sys.exit(2)
+        if not os.path.exists(ROOTDIR + "/Makefile") or '-f' in sys.argv[1:] or '--force' in sys.argv[1:]:
+            if prefix:
+                r = os.system("./configure --prefix=" + prefix)
+            else:
+                r = os.system("./configure")
+            if r != 0:
+                print("Configure of colibri-core failed",file=sys.stderr)
+                sys.exit(2)
+        r = os.system("make")
         if r != 0:
-            print("Bootstrapping colibri-core failed: make sure you have a basic build environment with gcc/clang, autoconf, automake and autoconf-archive installed",file=sys.stderr)
+            print("Make of colibri-core failed",file=sys.stderr)
             sys.exit(2)
-    if not os.path.exists(ROOTDIR + "/Makefile") or '-f' in sys.argv[1:] or '--force' in sys.argv[1:]:
-        if prefix:
-            r = os.system("./configure --prefix=" + prefix)
+        r = os.system("make install")
+        if r != 0:
+            print("Make install of colibri-core failed",file=sys.stderr)
+            sys.exit(2)
         else:
-            r = os.system("./configure")
-        if r != 0:
-            print("Configure of colibri-core failed",file=sys.stderr)
-            sys.exit(2)
-    r = os.system("make")
-    if r != 0:
-        print("Make of colibri-core failed",file=sys.stderr)
-        sys.exit(2)
-    r = os.system("make install")
-    if r != 0:
-        print("Make install of colibri-core failed",file=sys.stderr)
-        sys.exit(2)
+            print("\nInstallation of Colibri Core C++ library and tools completed succesfully.",file=sys.stderr)
     else:
-        print("\nInstallation of Colibri Core C++ library and tools completed succesfully.",file=sys.stderr)
+        print("\nCompilation of Colibri Core C++ library skipped as requested... (remove 'manual' file to re-enable)",file=sys.stderr)
 
     if prefix != "/usr":
         includedirs = [prefix + "/include/colibri-core", prefix + "/include", prefix + "/include/libxml2"] + includedirs
@@ -174,7 +177,7 @@ setup(
     license = "GPL",
     keywords = "nlp computational_linguistics frequency ngram skipgram pmi cooccurrence linguistics",
     long_description=read('README.rst'),
-    version = '2.4.6',
+    version = '2.4.7',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},
     classifiers=[
