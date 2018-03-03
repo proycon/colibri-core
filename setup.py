@@ -7,6 +7,7 @@ from __future__ import print_function
 import glob
 import sys
 import os
+import platform
 from os.path import expanduser
 from distutils.core import setup, Extension
 try:
@@ -159,13 +160,18 @@ if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and '--help' not i
         print("          for it to be able to find the Colibri Core shared library!",file=sys.stderr)
         print("--------------------------------------------------------------------------------------------------------------------\n",file=sys.stderr)
 
+if platform.system() == "Darwin":
+    extra_options = ["--stdlib=libc++"]
+else:
+    extra_options = []
+
 extensions = [ Extension("colibricore",
                 ["unordered_set.pxd","unordered_map.pxd", "colibricore_classes.pxd", "colibricore_wrapper.pyx"],
                 language='c++',
                 include_dirs=includedirs,
                 library_dirs=libdirs,
                 libraries=['colibricore'],
-                extra_compile_args=['--std=c++0x'],
+                extra_compile_args=['--std=c++0x'] + extra_options,
                 pyrex_gdb=True
                 ) ]
 
@@ -177,7 +183,7 @@ setup(
     license = "GPL",
     keywords = "nlp computational_linguistics frequency ngram skipgram pmi cooccurrence linguistics",
     long_description=read('README.rst'),
-    version = '2.4.8',
+    version = '2.4.9',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},
     classifiers=[
