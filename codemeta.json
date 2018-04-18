@@ -1,0 +1,75 @@
+{
+    "@context": [
+        "https://doi.org/10.5063/schema/codemeta-2.0",
+        "http://schema.org"
+    ],
+    "@type": "SoftwareSourceCode",
+    "identifier": "colibricore",
+    "name": "Colibri Core",
+    "version": "2.4.9",
+    "description": "Colibri core is an NLP tool as well as a C++ and Python library for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. ",
+    "license": "https://spdx.org/licenses/GPL-3.0",
+	"url": "https://proycon.github.io/colibri-core",
+    "author": [
+		{
+			"@id": "https://orcid.org/0000-0002-1046-0006",
+			"@type": "Person",
+			"givenName": "Maarten",
+			"familyName": "van Gompel",
+			"email": "proycon@anaproy.nl",
+            "affiliation": {
+                "@id": "https://www.ru.nl/cls",
+                "@type": "Organization",
+                "name": "Centre for Language Studies",
+                "url": "https://www.ru.nl/cls",
+                "parentOrganization": {
+                    "@id": "https://www.ru.nl",
+                    "name": "Radboud University",
+                    "@type": "Organization",
+                    "url": "https://www.ru.nl",
+                    "location": {
+                        "@type": "Place",
+                        "name": "Nijmegen"
+                    }
+                }
+            }
+		}
+	],
+	"sourceOrganization": { "@id": "https://www.ru.nl/cls" },
+	"programmingLanguage": [{
+		"@type": "ComputerLanguage",
+		"identifier": "c++",
+		"name": "C++"
+	},
+	{
+        "@type": "ComputerLanguage",
+		"identifier": "cython",
+		"name": "Cython"
+	}
+    ],
+	"operatingSystem": "POSIX",
+	"codeRepository": "https://github.com/proycon/colibri-core",
+    "softwareRequirements": [ ],
+	"readme": "https://github.com/proycon/colibri-core/blob/master/README.md",
+	"issueTracker": "https://github.com/proycon/colibri-core/issues",
+	"contIntegration": "https://travis-ci.org/proycon/colibri-core",
+	"releaseNotes": "https://github.com/proycon/colibri-core/releases",
+	"developmentStatus": "active",
+	"keywords":  [ "nlp", "natural language processing", "ngrams", "skipgrams", "pattern recognition", "language modelling" ],
+    "referencePublication": [
+		{
+            "@id": "https://dx.doi.org/10.5334/jors.105",
+			"@type": "TechArticle",
+			"name": "Efficient n-gram, Skipgram and Flexgram Modelling with Colibri Core",
+			"author": [ "Maarten van Gompel", "Antal van den Bosch" ],
+			"isPartOf": {
+				"@type": "PublicationIssue",
+				"datePublised": "2016",
+				"name": "Journal of Open Research Software",
+				"issue": "4"
+			},
+            "url": "https://dx.doi.org/10.5334/jors.105"
+		}
+    ],
+    "dateCreated": "2013-09-15"
+}
