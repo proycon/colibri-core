@@ -13,8 +13,8 @@ notifications:
 
 python:
     - 2.7
-    - 3.3
     - 3.4
+    - 3.6
 before_install:
     - pip install cython
 install:
