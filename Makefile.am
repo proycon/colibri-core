@@ -5,7 +5,7 @@ ACLOCAL_AMFLAGS = -I m4 --install
 
 SUBDIRS = src include scripts
 
-EXTRA_DIST = bootstrap AUTHORS TODO NEWS colibri-core.pc.in
+EXTRA_DIST = bootstrap AUTHORS TODO NEWS colibri-core.pc.in codemeta.json
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = colibri-core.pc
