@@ -546,9 +546,9 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 
 void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet, bool append, bool ignorenewlines) {
     if (!append) {
-        const char mark = 0xa2;
+        const unsigned char mark = 0xa2;
         const char version = 2;
-        OUT->write(&mark,1);
+        OUT->write((const char*)&mark,1);
         OUT->write(&version,1);
     }
     const char zero = 0;
@@ -686,14 +686,6 @@ unsigned char * convert_v1_v2(istream * in, bool ignoreeol, bool debug) {
         throw InternalError();
     }
 
-    unsigned char * data;
-    //allocate buffer
-    if (c == 0) {
-        data  = new unsigned char[length];
-    } else {
-        data  = new unsigned char[length+1];
-    }
-
     //stage 2 -- read buffer
     int i = 0;
     readingdata = 0;
@@ -712,12 +704,21 @@ unsigned char * convert_v1_v2(istream * in, bool ignoreeol, bool debug) {
         std::cerr << "ERROR: After resetting readpointer for stage 2, istream is not 'good': eof=" << (int) in->eof() << ", fail=" << (int) in->fail() << ", badbit=" << (int) in->bad() << std::endl;
         throw InternalError();
     }
+    unsigned char * data;
+    //allocate buffer
+    if (c == 0) {
+        data  = new unsigned char[length];
+    } else {
+        data  = new unsigned char[length+1];
+    }
+
     while (i < length) {
         if (in->good()) {
             in->read( (char* ) &c, sizeof(char));
             if (debug) std::cerr << "DEBUG read2=" << (int) c << endl;
         } else {
             std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 2,i=" << i << ",length=" << length << ",beginpos=" << beginpos << ",eof=" << (int) in->eof() << ",fail=" << (int) in->fail() << ",badbit=" << (int) in->bad() << ")" << std::endl;
+	    delete [] data;
             throw InternalError();
         }
         data[i++] = c;
@@ -730,6 +731,7 @@ unsigned char * convert_v1_v2(istream * in, bool ignoreeol, bool debug) {
                 //we have a size
                 if (c == 0) {
                     std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 2)" << std::endl;
+		    delete [] data;
                     throw InternalError();
                 } else {
                     readingdata = c;

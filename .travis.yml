@@ -1,13 +1,16 @@
 language: python
-dist: trusty
+dist: xenial
 sudo: required
+
+
 notifications:
   irc:
     channels:
       - "irc.uvt.nl#gitlama"
     template:
-      - "%{repository_slug}#%{build_number} %{message} --> %{build_url}"
+      - "%{repository_slug}#%{build_number}-%{branch} : %{message} --> %{build_url}"
     skip_join: true
+
 python:
     - 2.7
     - 3.3
