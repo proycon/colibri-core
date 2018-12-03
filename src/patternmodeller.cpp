@@ -756,7 +756,7 @@ int main( int argc, char *argv[] ) {
                     cerr << "Can't open corpus data: " << corpusfile << endl;
                     exit(2);
                 }
-                corpus = new IndexedCorpus(f);
+                corpus = new IndexedCorpus(f, options.DEBUG);
                 f->close();
             }
         }

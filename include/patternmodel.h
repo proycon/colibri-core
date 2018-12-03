@@ -960,7 +960,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 bool singlepass = false;
                 bool ignorefilter = false;
                 const unsigned int sentences = (reverseindex != NULL) ? reverseindex->sentences() : 0;
-                if ((options.DEBUG) && (reverseindex != NULL)) std::cerr << "Reverse index sentence count: " << sentences <<  std::endl;
+                if ((options.DEBUG) && (reverseindex != NULL)) std::cerr << "Reverse index sentences: " << sentences <<  std::endl;
                 while (((reverseindex != NULL) && (sentence < sentences)) ||  ((reverseindex == NULL) && (in != NULL) && (!in->eof())))  {
                     sentence++;
                     //read line
