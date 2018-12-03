@@ -1832,11 +1832,20 @@ void IndexedCorpus::load(std::istream *in, bool debug) {
     unsigned char version = getdataversion(in);
     if (version == 2) {
         in->seekg(0,ios_base::end);
+        if (*in == false) {
+            std::cerr << "ERROR: Unable to seek to end of file" << std::endl;
+            throw InternalError();
+        }
         corpussize = in->tellg();
         in->seekg(2);
         corpussize = corpussize - 2;
         corpus = new unsigned char[corpussize];
+        if (debug) std::cerr << "Reading " << corpussize << " bytes" <<  std::endl;
         in->read((char*) corpus,sizeof(unsigned char) * corpussize);
+        if (*in == false) {
+            std::cerr << "ERROR: Only " << in->gcount() << " bytes were read!" << std::endl;
+            throw InternalError();
+        }
     } else {
         //old version
         in->seekg(0);
