@@ -1832,7 +1832,7 @@ void IndexedCorpus::load(std::istream *in, bool debug) {
     unsigned char version = getdataversion(in);
     if (version == 2) {
         in->seekg(0,ios_base::end);
-        if (*in == false) {
+        if (in->rdstate() & std::istream::failbit) {
             std::cerr << "ERROR: Unable to seek to end of file" << std::endl;
             throw InternalError();
         }
@@ -1842,7 +1842,7 @@ void IndexedCorpus::load(std::istream *in, bool debug) {
         corpus = new unsigned char[corpussize];
         if (debug) std::cerr << "Reading " << corpussize << " bytes" <<  std::endl;
         in->read((char*) corpus,sizeof(unsigned char) * corpussize);
-        if (*in == false) {
+        if (in->rdstate() & std::istream::failbit) {
             std::cerr << "ERROR: Only " << in->gcount() << " bytes were read!" << std::endl;
             throw InternalError();
         }
