@@ -1864,7 +1864,7 @@ void IndexedCorpus::load(std::istream *in, bool debug) {
         std::cerr << "ERROR: IndexedCorpus expected " << sentence-1 << " sentence, but loaded only " << sentenceindex.size() << "!! Max size is " << sentenceindex.max_size() << std::endl;
         throw InternalError();
     }
-    if (debug) cerr << "Loaded " << sentenceindex.size() << " sentences" << endl;
+    if (debug) cerr << "Loaded " << sentenceindex.size() << " sentences; corpussize (bytes) = " << corpussize << endl;
 	patternpointer = new PatternPointer(corpus,corpussize);
 }
 
