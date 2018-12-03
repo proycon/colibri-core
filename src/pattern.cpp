@@ -1860,8 +1860,8 @@ void IndexedCorpus::load(std::istream *in, bool debug) {
         prevhigh = (*cursor >= 128);
         cursor++;
     }
-    if (sentence != sentenceindex.size()) {
-        std::cerr << "ERROR: IndexedCorpus expected " << sentence << " sentence, but loaded only " << sentenceindex.size() << "!! Max size is " << sentenceindex.max_size() << std::endl;
+    if (sentence-1 != sentenceindex.size()) {
+        std::cerr << "ERROR: IndexedCorpus expected " << sentence-1 << " sentence, but loaded only " << sentenceindex.size() << "!! Max size is " << sentenceindex.max_size() << std::endl;
         throw InternalError();
     }
     if (debug) cerr << "Loaded " << sentenceindex.size() << " sentences" << endl;
