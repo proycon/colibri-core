@@ -6,7 +6,7 @@
     "@type": "SoftwareSourceCode",
     "identifier": "colibricore",
     "name": "Colibri Core",
-    "version": "2.4.9",
+    "version": "2.4.10",
     "description": "Colibri core is an NLP tool as well as a C++ and Python library for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. ",
     "license": "https://spdx.org/licenses/GPL-3.0",
 	"url": "https://proycon.github.io/colibri-core",
