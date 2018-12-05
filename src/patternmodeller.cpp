@@ -751,7 +751,7 @@ int main( int argc, char *argv[] ) {
                 }
             } else if (LOADCORPUS) {
                 cerr << "Loading corpus data..." << endl;
-                std::ifstream * f = new ifstream(corpusfile.c_str());
+                std::ifstream * f = new ifstream(corpusfile.c_str(), ifstream::in | ifstream::binary );
                 if (!f->good()) {
                     cerr << "Can't open corpus data: " << corpusfile << endl;
                     exit(2);
