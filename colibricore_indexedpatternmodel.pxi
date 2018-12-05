@@ -58,8 +58,8 @@ def items(self):
 def covered(self, indexreference):
     if not isinstance(indexreference, tuple) or not len(indexreference) == 2:
         raise ValueError("Expected tuple")
-    cdef int sentence = indexreference[0]
-    cdef int token = indexreference[1]
+    cdef unsigned int sentence = indexreference[0]
+    cdef unsigned int token = indexreference[1]
     cdef cIndexReference ref = cIndexReference(sentence, token)
     cdef cIndexReference ref2
     cdef unordered_set[cPatternPointer] results = self.data.getreverseindex(ref)

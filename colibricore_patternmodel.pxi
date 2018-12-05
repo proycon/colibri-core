@@ -419,7 +419,7 @@ def getreverseindex_bysentence(self, int sentence):
         inc(resit)
 
 
-def histogram(self, unsigned int threshold=0, unsigned int cap=0, int category = 0, int size = 0):
+def histogram(self, unsigned int threshold=0, unsigned int cap=0, int category = 0, unsigned int size = 0):
     """Generator over a histogram of occurrence count data, produces (occurrencecount, frequency) tuples. A minimum threshold may be configured, or a cap on total number of occurrences may be specified (to get only the top occurrences). The histogram can be constrained by category and/or pattern size (if set to >0 values)"""
     cdef stdmap[unsigned int,unsigned int] hist
     cdef stdmap[unsigned int,unsigned int].iterator it
@@ -430,7 +430,7 @@ def histogram(self, unsigned int threshold=0, unsigned int cap=0, int category =
         inc(it)
 
 
-def top(self, int amount, int category = 0, int size = 0):
+def top(self, int amount, int category = 0, unsigned int size = 0):
     """Generator over the top [amount] most occurring patterns (of specified category and size if set to values above 0). This is faster than iterating manually! Will return (pattern, occurrencecount) tuples (unsorted). Note that this may return less than the specified amount of patterns if there are multiple patterns with the same occurrence count in its tail. """
 
     cdef unsigned int smallest = self.data.topthreshold(amount, category, size)
@@ -438,9 +438,9 @@ def top(self, int amount, int category = 0, int size = 0):
 
 
 
-def filter(self, unsigned int threshold, int category = 0, int size = 0):
+def filter(self, unsigned int threshold, int category = 0, unsigned int size = 0):
     """Generator over patterns occurring over the set occurrence threshold (and of specified category and size if set to values above 0). This is faster than iterating and filtering manually! Will return (pattern, occurrencecount) tuples (unsorted)"""
-    cdef unsigned int count
+    cdef long unsigned int count
     it = self.data.begin()
     cdef cPattern cpattern
     while it != self.data.end():
