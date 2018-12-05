@@ -44,9 +44,9 @@ typedef std::pair<IndexReference,PatternPointer> IndexPattern;
 class IndexedCorpus {
     protected:
         unsigned char * corpus;
-        unsigned int corpussize; //in bytes
+        size_t corpussize; //in bytes
 		PatternPointer * patternpointer; //pattern pointer covering the whole corpus
-        unsigned int totaltokens;
+        size_t totaltokens;
         std::map<uint32_t,unsigned char*> sentenceindex; //sentence pointers
     private:
         IndexedCorpus(IndexedCorpus& ) {};
@@ -61,7 +61,7 @@ class IndexedCorpus {
         /*
          * Low-level constructor
          */
-        IndexedCorpus(unsigned char * corpus, unsigned int corpussize) {
+        IndexedCorpus(unsigned char * corpus, size_t corpussize) {
             this->corpus = corpus;
             this->corpussize = 0;
             totaltokens = 0; //will be computed when queried
@@ -121,7 +121,7 @@ class IndexedCorpus {
         unsigned char * beginpointer() const {
             return corpus;
         }
-        unsigned int bytesize() const {
+        size_t bytesize() const {
             return corpussize;
         }
 
@@ -179,8 +179,8 @@ class IndexedCorpus {
          * Returns the length of the sentence (or whatever other unit your data
          * employs) at the given sentence index (starts at 1)
          */
-        int sentencelength(int sentence) const;
-        int sentencelength(unsigned char * sentencebegin) const;
+        unsigned int sentencelength(int sentence) const;
+        unsigned int sentencelength(unsigned char * sentencebegin) const;
 
         /**
          * Return the total number of sentences (or whatever other unit
@@ -426,14 +426,14 @@ template<class ContainerType,class ReadWriteSizeType = uint64_t,class PatternTyp
 class PatternStore: public PatternStoreInterface {
     protected:
         unsigned char * corpusstart; //used only when PatternType=PatternPointer
-        unsigned int corpussize;
+        size_t corpussize;
         unsigned char classencodingversion;
         int patterntype;
     public:
         PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {corpusstart = NULL; corpussize = 0; classencodingversion = 2; patterntype = PatternType::patterntype; };
         virtual ~PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {};
 
-        virtual void attachcorpus(unsigned char * corpusstart, unsigned int corpussize) {
+        virtual void attachcorpus(unsigned char * corpusstart, size_t corpussize) {
             this->corpusstart = corpusstart;
             this->corpussize = corpussize;
         }
@@ -448,7 +448,7 @@ class PatternStore: public PatternStoreInterface {
         unsigned char * getcorpus() const {
             return corpusstart;
         }
-        unsigned int getcorpussize() const {
+        size_t getcorpussize() const {
             return corpussize;
         }
 
@@ -751,7 +751,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
-            for (unsigned int i = 0; i < s; i++) {
+            for (size_t i = 0; i < s; i++) {
                 Pattern p = Pattern(in, false, this->classencodingversion);
                 if (!DONGRAMS || !DOSKIPGRAMS || !DOFLEXGRAMS) {
                     const PatternCategory c = p.category();
@@ -860,7 +860,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
-            for (unsigned int i = 0; i < s; i++) {
+            for (size_t i = 0; i < s; i++) {
                 Pattern p = Pattern(in, false, this->classencodingversion);
                 if (!DONGRAMS || !DOSKIPGRAMS || !DOFLEXGRAMS) {
                     const PatternCategory c = p.category();

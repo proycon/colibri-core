@@ -1719,7 +1719,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::vector<std::pair<IndexReference,PatternPointer>> getreverseindex_bysentence(int sentence, int occurrencecount = 0, int category = 0, unsigned int size = 0) {
             //Auxiliary function
             std::vector<std::pair<IndexReference,PatternPointer>> result;
-            for (int i = 0; i < this->reverseindex->sentencelength(sentence); i++) {
+            for (unsigned int i = 0; i < this->reverseindex->sentencelength(sentence); i++) {
                 const IndexReference ref = IndexReference(sentence, i);
                 std::unordered_set<PatternPointer> tmpresult =  this->getreverseindex(ref, occurrencecount, category, size);
                 for (std::unordered_set<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
@@ -1737,7 +1737,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::vector<std::pair<IndexReference,PatternPointer>> getreverseindex_right(const IndexReference ref,int occurrencecount = 0, int category = 0, unsigned int size = 0) {
             //Auxiliary function
             std::vector<std::pair<IndexReference,PatternPointer>> result;
-            for (int i = ref.token+1; i < this->reverseindex->sentencelength(ref.sentence); i++) {
+            for (unsigned int i = ref.token+1; i < this->reverseindex->sentencelength(ref.sentence); i++) {
                 const IndexReference ref2 = IndexReference(ref.sentence, i);
                 std::unordered_set<PatternPointer> tmpresult =  this->getreverseindex(ref, occurrencecount, category, size);
                 for (std::unordered_set<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
@@ -1755,7 +1755,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         std::vector<std::pair<IndexReference,PatternPointer>> getreverseindex_left(const IndexReference ref, int occurrencecount = 0, int category = 0, unsigned int size = 0) {
             //Auxiliary function
             std::vector<std::pair<IndexReference,PatternPointer>> result;
-            for (int i = 0; i < ref.token; i++) {
+            for (unsigned int i = 0; i < ref.token; i++) {
                 const IndexReference ref2 = IndexReference(ref.sentence, i);
                 std::unordered_set<PatternPointer> tmpresult =  this->getreverseindex(ref,occurrencecount, category, size);
                 for (std::unordered_set<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); iter++) {
