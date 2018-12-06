@@ -1343,28 +1343,30 @@ unsigned char * IndexedCorpus::getpointer(const IndexReference & begin) const {
 
 
 
-PatternPointer IndexedCorpus::getpattern(const IndexReference & begin, int length) const {
+template<class SizeType, class MaskType>
+PatternPointer<SizeType,MaskType> IndexedCorpus::getpattern(const IndexReference & begin, SizeType length) const {
     if (corpus == NULL) {
         std::cerr << "ERROR: No corpus data loaded! (in IndexedCorpus::getpattern)" << std::endl;
         throw InternalError();
     }
     unsigned char * data = getpointer(begin);
     if (data == NULL) throw KeyError();
-    return PatternPointer(data,false,length);
+    return PatternPointer<SizeType,MaskType>(data,false,length);
 }
 
-PatternPointer IndexedCorpus::findpattern(const IndexReference & begin, const Pattern & pattern, PatternCategory resultcategory) const {
+template<class SizeType, class MaskType>
+PatternPointer<SizeType,MaskType> IndexedCorpus::findpattern(const IndexReference & begin, const Pattern & pattern, PatternCategory resultcategory) const {
     if (pattern.category() == NGRAM) {
-        const PatternPointer candidate = getpattern(begin, pattern.n());
+        const PatternPointer candidate = getpattern<SizeType,MaskType>(begin, pattern.n());
         if (candidate != pattern) throw KeyError();
         return candidate;
     } else if (pattern.category() == SKIPGRAM) {
         std::vector<std::pair<int,int>> parts;
         pattern.parts(parts);
         for (std::vector<std::pair<int,int>>::iterator partiter = parts.begin(); partiter != parts.end(); partiter++) {
-            const PatternPointer part = PatternPointer(pattern,partiter->first, partiter->second);
+            const PatternPointer<SizeType,MaskType> part = PatternPointer<SizeType,MaskType>(pattern,partiter->first, partiter->second);
             try {
-                const PatternPointer candidate = getpattern(IndexReference(begin.sentence,begin.token + partiter->first),partiter->second);
+                const PatternPointer candidate = getpattern<SizeType,MaskType>(IndexReference(begin.sentence,begin.token + partiter->first),partiter->second);
                 if (part != candidate) {
                     throw KeyError();
                 }
@@ -1373,23 +1375,23 @@ PatternPointer IndexedCorpus::findpattern(const IndexReference & begin, const Pa
             }
         }
         //found!
-        PatternPointer result = getpattern(begin, pattern.n());
+        PatternPointer result = getpattern<SizeType,MaskType>(begin, pattern.n());
         if (resultcategory == NGRAM) return result;
         result.mask = pattern.getmask(); //to skipgram
-        if (resultcategory == FLEXGRAM) result.mask = result.mask | (1<<31); //make flexgram
+        if (resultcategory == FLEXGRAM) result.mask = result.mask | (1<<(sizeof(MaskType)-1)); //make flexgram
         return result; //SKIPGRAM
     } else { // if (pattern.category() == FLEXGRAM) {
-        std::vector<PatternPointer> parts;
+        std::vector<PatternPointer<SizeType,MaskType>> parts;
         pattern.parts(parts);
         std::vector<std::pair<int,int>> newskips;
-        std::vector<PatternPointer>::iterator partiter = parts.begin();
+        std::vector<PatternPointer<SizeType,MaskType>>::iterator partiter = parts.begin();
         IndexReference ref = begin;
         IndexReference gapbegin;
         bool found = true;
         while (partiter != parts.end()) {
             const PatternPointer part = *partiter;
             try {
-                const PatternPointer candidate = getpattern(ref, part.n());
+                const PatternPointer candidate = getpattern<SizeType,MaskType>(ref, part.n());
                 if (candidate == part) {
                     partiter++;
                     if (gapbegin.sentence != 0) {
@@ -1410,32 +1412,34 @@ PatternPointer IndexedCorpus::findpattern(const IndexReference & begin, const Pa
             ref.token++;
         }
         if ((!found) || (newskips.size() != parts.size() - 1)) throw KeyError();
-        PatternPointer foundpattern = getpattern(begin, gapbegin.token - begin.token);
+        PatternPointer foundpattern = getpattern<SizeType,MaskType>(begin, gapbegin.token - begin.token);
         if (resultcategory == NGRAM) return foundpattern;
         foundpattern.mask = vector2mask(newskips);
         if (resultcategory == SKIPGRAM) return foundpattern;
-        foundpattern.mask = foundpattern.mask | (1<<31); //make flexgram
+        foundpattern.mask = foundpattern.mask | (1<<(sizeof(MaskType)-1)); //make flexgram
         return foundpattern; //FLEXGRAM
     }
 }
 
-PatternPointer IndexedCorpus::getflexgram(const IndexReference & begin, const Pattern flexgram) const {
-    return findpattern(begin,flexgram,FLEXGRAM);
+template<class SizeType, class MaskType>
+PatternPointer<SizeType,MaskType> IndexedCorpus::getflexgram(const IndexReference & begin, const Pattern flexgram) const {
+    return findpattern<SizeType,MaskType>(begin,flexgram,FLEXGRAM);
 }
 
-PatternPointer IndexedCorpus::getskipgram(const IndexReference & begin, const Pattern skipgram) const {
-    return findpattern(begin,skipgram,SKIPGRAM);
+template<class SizeType, class MaskType>
+PatternPointer<SizeType,MaskType> IndexedCorpus::getskipgram(const IndexReference & begin, const Pattern skipgram) const {
+    return findpattern<SizeType,MaskType>(begin,skipgram,SKIPGRAM);
 }
 
-
-void IndexedCorpus::findpattern(std::vector<std::pair<IndexReference,PatternPointer>> & result, const Pattern & pattern,  uint32_t sentence, bool instantiate) {
+template<class SizeType, class MaskType>
+void IndexedCorpus::findpattern(std::vector<std::pair<IndexReference,PatternPointer<SizeType,MaskType>>> & result, const Pattern & pattern,  uint32_t sentence, bool instantiate) {
     const int _n = pattern.size();
     int sentencelength = this->sentencelength(sentence);
     for (int i = 0; i < sentencelength - _n; i++) {
         IndexReference ref = IndexReference(sentence,i);
         try {
-            PatternPointer p = findpattern(ref, pattern, instantiate ? NGRAM : pattern.category()); //will generate KeyError when not found
-            result.push_back(std::pair<IndexReference,PatternPointer>(ref, p));
+            PatternPointer<SizeType,MaskType> p = findpattern<SizeType,MaskType>(ref, pattern, instantiate ? NGRAM : pattern.category()); //will generate KeyError when not found
+            result.push_back(std::pair<IndexReference,PatternPointer<SizeType,MaskType>>(ref, p));
         } catch (KeyError &e) {
             ; //ignore and continue
         }
@@ -1448,9 +1452,10 @@ void IndexedCorpus::findpattern(std::vector<std::pair<IndexReference,PatternPoin
  * @param instantiate Instantiate all found patterns (skipgrams and flexgrams will be resolved to ngrams) (default: false)
  *
  */
+template<class SizeType, class MaskType>
 std::vector<std::pair<IndexReference,PatternPointer>> IndexedCorpus::findpattern(const Pattern pattern, uint32_t sentence, bool instantiate) {
     //far more inefficient than a pattern model obviously
-    std::vector<std::pair<IndexReference,PatternPointer>> result;
+    std::vector<std::pair<IndexReference,PatternPointer<SizeType,MaskType>>> result;
     const int _n = pattern.size();
     if (_n == 0) return result;
 
@@ -1485,12 +1490,14 @@ unsigned int IndexedCorpus::sentencelength(unsigned char * cursor) const {
     return n;
 }
 
-PatternPointer IndexedCorpus::getsentence(int sentence) const {
-    return getpattern(IndexReference(sentence,0), sentencelength(sentence));
+template<class SizeType, class MaskType>
+PatternPointer<SizeType,MaskType> IndexedCorpus::getsentence(int sentence) const {
+    return getpattern<SizeType,MaskType>(IndexReference(sentence,0), sentencelength(sentence));
 }
 
-PatternPointer IndexedCorpus::getsentence(unsigned char * sentencedata) const {
-	return PatternPointer(sentencedata,sentencelength(sentencedata));
+template<class SizeType, class MaskType>
+PatternPointer<SizeType,MaskType> IndexedCorpus::getsentence(unsigned char * sentencedata) const {
+	return PatternPointer<SizeType,MaskType>(sentencedata,sentencelength(sentencedata));
 }
 
 

@@ -36,7 +36,7 @@
  */
 
 
-typedef std::pair<IndexReference,PatternPointer> IndexPattern;
+typedef std::pair<IndexReference,PatternPointer<unsigned char, unsigned char>> IndexPattern;
 /**
  * \brief Class for reading an entire (class encoded) corpus into memory.
  * It provides a reverse index by IndexReference. The reverse index stores positions and unigrams.
@@ -45,7 +45,7 @@ class IndexedCorpus {
     protected:
         unsigned char * corpus;
         size_t corpussize; //in bytes
-		PatternPointer * patternpointer; //pattern pointer covering the whole corpus
+		PatternPointer<uint64_t,unsigned char> * patternpointer; //pattern pointer covering the whole corpus
         size_t totaltokens;
         std::map<uint32_t,unsigned char*> sentenceindex; //sentence pointers
     private:
@@ -65,7 +65,7 @@ class IndexedCorpus {
             this->corpus = corpus;
             this->corpussize = 0;
             totaltokens = 0; //will be computed when queried
-            patternpointer = new PatternPointer(corpus,corpussize);
+            patternpointer = new PatternPointer<uint64_t,unsigned char>(corpus,corpussize);
         }
 
         /*
@@ -112,10 +112,11 @@ class IndexedCorpus {
          * Returns a pattern starting at the provided position and of the
          * specified length.
          */
-        PatternPointer getpattern(const IndexReference & begin, int length=1) const;
+        template<class SizeType=uint32_t, class MaskType=unsigned char>
+        PatternPointer<uint32_t,unsigned char> getpattern(const IndexReference & begin, SizeType length=1) const;
 
 
-        PatternPointer getpattern() const {
+        PatternPointer<uint64_t,unsigned char> getpattern() const {
             return *patternpointer;
         }
         unsigned char * beginpointer() const {
@@ -129,8 +130,11 @@ class IndexedCorpus {
          * Get the sentence (or whatever other unit your data employs)
          * specified by the given index. Sentences start at 1.
          */
-        PatternPointer getsentence(int sentence) const; //returns sentence as a pattern pointer
-        PatternPointer getsentence(unsigned char * sentencedata) const; //returns sentence as a pattern pointer
+        template<class SizeType=uint32_t, class MaskType=uint32_t>
+        PatternPointer<SizeType,MaskType> getsentence(int sentence) const; //returns sentence as a pattern pointer
+
+        template<class SizeType=uint32_t, class MaskType=uint32_t>
+        PatternPointer<SizeType,MaskType> getsentence(unsigned char * sentencedata) const; //returns sentence as a pattern pointer
 
         /**
          * Returns all positions at which the pattern occurs. Up to a certain
@@ -142,23 +146,26 @@ class IndexedCorpus {
          * @param sentence Restrict to a particular sentence (0=all sentences, default)
          * @param instantiate Instantiate skipgrams and flexgrams, i.e. return ngrams instead (default : false)
          */
-        std::vector<std::pair<IndexReference,PatternPointer>> findpattern(const Pattern pattern, uint32_t sentence=0, bool instantiate=false);
+        template<class SizeType=uint32_t, class MaskType=uint32_t>
+        std::vector<std::pair<IndexReference,PatternPointer<SizeType,MaskType>>> findpattern(const Pattern pattern, uint32_t sentence=0, bool instantiate=false);
 
         /**
          *  Middle level function, for specific sentence, call higher-level version instead.
          */
-        void findpattern(std::vector<std::pair<IndexReference,PatternPointer>> & result, const Pattern & pattern,  uint32_t sentence, bool instantiate=false);
+        template<class SizeType=uint32_t, class MaskType=uint32_t>
+        void findpattern(std::vector<std::pair<IndexReference,PatternPointer<SizeType,MaskType>>> & result, const Pattern & pattern,  uint32_t sentence, bool instantiate=false);
 
         /**
         * Low-level method to find a pattern at the predetermined position. Can also instantiate skipgrams/flexgrams by setting resultcategory to NGRAM (default!). Raises a KeyError when the pattern was not found at the specified position
         * getskipgram() and getflexgram() are higher level methods that use this one.
         */
-        PatternPointer findpattern(const IndexReference & begin, const Pattern & pattern, PatternCategory resultcategory = NGRAM) const;
+        template<class SizeType=uint32_t, class MaskType=uint32_t>
+        PatternPointer<SizeType,MaskType> findpattern(const IndexReference & begin, const Pattern & pattern, PatternCategory resultcategory = NGRAM) const;
 
         /**
          * Alias for low-level findpattern() method
          */
-        PatternPointer getinstance(const IndexReference & begin, const Pattern & pattern, PatternCategory resultcategory = NGRAM) const { return findpattern(begin, pattern, resultcategory); } //alias, to be consistent with Cython names
+        PatternPointer<uint32_t,uint32_t> getinstance(const IndexReference & begin, const Pattern & pattern, PatternCategory resultcategory = NGRAM) const { return findpattern(begin, pattern, resultcategory); } //alias, to be consistent with Cython names
 
         /**
          * Returns a valid patternpointer for the flexgram at the indicated
@@ -166,14 +173,16 @@ class IndexedCorpus {
          * flexgram can not be found, a KeyError will be raised.
          * This is a specialised alias for the low-level findpattern() method
          */
-        PatternPointer getflexgram(const IndexReference & begin, const Pattern flexgram) const;
+        template<class SizeType=uint32_t, class MaskType=uint32_t>
+        PatternPointer<SizeType,MaskType> getflexgram(const IndexReference & begin, const Pattern flexgram) const;
 
         /**
          * Returns a valid patternpointer for the skipgram at the indicated
          * position. If the skipgram can not be found, a KeyError will be raised.
          * This is a specialised alias for the low-level findpattern() method
          */
-        PatternPointer getskipgram(const IndexReference & begin, const Pattern skipgram) const;
+        template<class SizeType=uint32_t, class MaskType=uint32_t>
+        PatternPointer<SizeType,MaskType> getskipgram(const IndexReference & begin, const Pattern skipgram) const;
 
         /**
          * Returns the length of the sentence (or whatever other unit your data
@@ -202,24 +211,24 @@ class IndexedCorpus {
                 typedef int difference_type;
 
                 iterator(const self_type & ref) { //copy constructor
-					pairpointer = new std::pair<IndexReference,PatternPointer>(*ref.pairpointer);
+					pairpointer = new IndexPattern(*ref.pairpointer);
                     indexedcorpus = ref.indexedcorpus;
                 }
 
                 iterator(IndexedCorpus * indexedcorpus, pointer ptr) {
                     if (ptr != NULL) {
-                        pairpointer = new std::pair<IndexReference,PatternPointer>(*ptr);
+                        pairpointer = new std::pair<IndexReference,PatternPointer<unsigned char, unsigned char>>(*ptr);
                     } else {
                         pairpointer = NULL;
                     }
                     this->indexedcorpus = indexedcorpus;
                 }
-                iterator(IndexedCorpus * indexedcorpus, IndexReference iref, PatternPointer pp) {
-					pairpointer = new std::pair<IndexReference,PatternPointer>(iref, pp);
+                iterator(IndexedCorpus * indexedcorpus, IndexReference iref, PatternPointer<unsigned char, unsigned char> pp) {
+					pairpointer = new std::pair<IndexReference,PatternPointer<unsigned char, unsigned char>>(iref, pp);
                     this->indexedcorpus = indexedcorpus;
 				}
                 iterator(IndexedCorpus * indexedcorpus, reference ref) {
-					pairpointer = new std::pair<IndexReference,PatternPointer>(ref.first, ref.second);
+					pairpointer = new std::pair<IndexReference,PatternPointer<unsigned char, unsigned char>>(ref.first, ref.second);
                     this->indexedcorpus = indexedcorpus;
 				}
                 iterator() { //default constructor, required for cython
@@ -237,7 +246,7 @@ class IndexedCorpus {
                 self_type & operator=(const self_type & ref) {
 					if (pairpointer != NULL) delete pairpointer;
                     if (ref.pairpointer != NULL) {
-                        pairpointer = new std::pair<IndexReference,PatternPointer>(*ref.pairpointer);
+                        pairpointer = new std::pair<IndexReference,PatternPointer<unsigned char, unsigned char>>(*ref.pairpointer);
                     } else {
                         pairpointer = NULL;
                     }
@@ -254,7 +263,7 @@ class IndexedCorpus {
                         if (pairpointer->second.data + pairpointer->second.bytes >= indexedcorpus->corpus + indexedcorpus->corpussize) {
                             pairpointer->first.sentence++;
                             pairpointer->first.token = 0;
-                            pairpointer->second = PatternPointer(); //null pointer
+                            pairpointer->second = PatternPointer<unsigned char, unsigned char>(); //null pointer
                             return;
                         } else {
                             ++(pairpointer->second);
@@ -266,7 +275,7 @@ class IndexedCorpus {
                             if (pairpointer->second.data + pairpointer->second.bytes < indexedcorpus->corpus + indexedcorpus->corpussize) {
                                 ++(pairpointer->second);
                             } else {
-                                pairpointer->second = PatternPointer(); //null pointer
+                                pairpointer->second = PatternPointer<unsigned char, unsigned char>(); //null pointer
                             }
                         } else {
                             pairpointer->first.token++;
@@ -282,8 +291,8 @@ class IndexedCorpus {
                 //reference operator*() { return *pairpointer; }
                 //pointer operator->()  { return pairpointer; }
                 IndexReference & index() { return pairpointer->first; }
-                PatternPointer & pattern() { return pairpointer->second; }
-                PatternPointer & patternpointer() { return pairpointer->second; }
+                PatternPointer<unsigned char, unsigned char> & pattern() { return pairpointer->second; }
+                PatternPointer<unsigned char, unsigned char> & patternpointer() { return pairpointer->second; }
                 IndexedCorpus * corpus() { return indexedcorpus; }
 
                 bool operator==(self_type rhs) {
@@ -310,7 +319,7 @@ class IndexedCorpus {
          */
         iterator begin() {
 			IndexReference iref = IndexReference(1,0);
-			PatternPointer p = getpattern(iref,1);
+			PatternPointer<unsigned char, unsigned char> p = getpattern(iref,1);
 			return iterator(this,iref,p);
 		}
         //const_iterator begin() const { return data.begin(); }
@@ -320,7 +329,7 @@ class IndexedCorpus {
          */
         iterator end() {
 			IndexReference iref = IndexReference(sentences() + 1,0);
-            return iterator(this,iref, PatternPointer());
+            return iterator(this,iref, PatternPointer<unsigned char, unsigned char>());
 		}
         //const_iterator end() const { return data.end(); }
 
@@ -330,7 +339,7 @@ class IndexedCorpus {
          */
         iterator find(const IndexReference & ref) {
 			try {
-				PatternPointer p = getpattern(ref);
+				PatternPointer<unsigned char, unsigned char> p = getpattern(ref);
 				return iterator(this, ref,p);
 			} catch (KeyError &e) {
 				return end();
@@ -374,7 +383,7 @@ class IndexedCorpus {
          */
         unsigned int operator [](const IndexReference & ref) {
 			try {
-				PatternPointer pp = getpattern(ref);
+				PatternPointer<unsigned char,unsigned char> pp = getpattern(ref);
 				return bytestoint(pp.data);
 			} catch (KeyError &e) {
 				throw e;
