@@ -104,7 +104,7 @@ class Pattern {
       * @param length Number of tokens to copy
       */
      Pattern(const Pattern& ref, size_t begin, size_t length, size_t * byteoffset=NULL, bool byteoffset_shiftone = false);
-     template<class SizeType=uint32_t, class MaskType=uint32_t>
+     template<class SizeType, class MaskType>
      Pattern(const PatternPointer<SizeType,MaskType>& ref,size_t begin, size_t length, size_t * byteoffset=NULL, bool byteoffset_shiftone = false);
 
      /**
@@ -112,7 +112,7 @@ class Pattern {
       * @param ref Reference pattern
       */
      Pattern(const Pattern& ref);
-     template<class SizeType=uint32_t, class MaskType=uint32_t>
+     template<class SizeType, class MaskType>
      Pattern(const PatternPointer<SizeType,MaskType>& ref);
 
      /**
@@ -400,8 +400,8 @@ class PatternPointer {
      PatternPointer<SizeType,MaskType>(const Pattern & ref) {
          data = ref.data;
          const size_t b = ref.bytesize();
-         if (b > B32) {
-             std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << " bytes,implicit]" << std::endl;
+         if (b > sizeof(SizeType)) {
+             std::cerr << "ERROR: Pattern too long for this pattern pointer [" << b << " bytes,implicit]" << std::endl;
              throw InternalError();
          }
          bytes = b;
@@ -410,27 +410,30 @@ class PatternPointer {
      PatternPointer<SizeType,MaskType>(const Pattern * ref) {
          data = ref->data;
          const size_t b = ref->bytesize();
-         if (b > B32) {
-             std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << " bytes,implicit]" << std::endl;
+         if (b > sizeof(SizeType)) {
+             std::cerr << "ERROR: Pattern too long for this pattern pointer [" << b << " bytes,implicit]" << std::endl;
              throw InternalError();
          }
          bytes = b;
          mask = computemask();
      }
-     PatternPointer<SizeType,MaskType>(const PatternPointer& ref) {
+     template<class SizeType2, class MaskType2>
+     PatternPointer<SizeType,MaskType>(const PatternPointer<SizeType2,MaskType2>& ref) {
          data = ref.data;
-         bytes = ref.bytes;
-         mask = ref.mask;
+         bytes = (SizeType) ref.bytes;
+         mask = (MaskType) ref.mask;
      }
-     PatternPointer<SizeType,MaskType>(const PatternPointer* ref) {
+     template<class SizeType2, class MaskType2>
+     PatternPointer<SizeType,MaskType>(const PatternPointer<SizeType2,MaskType2>* ref) {
 		data = ref->data;
-		bytes = ref->bytes;
-		mask = ref->mask;
+		bytes = (SizeType) ref->bytes;
+		mask = (MaskType) ref->mask;
 	 }
-     PatternPointer<SizeType,MaskType> & operator =(const PatternPointer<SizeType,MaskType> & other) {
+     template<class SizeType2, class MaskType2>
+     PatternPointer<SizeType,MaskType> & operator =(const PatternPointer<SizeType2,MaskType2> & other) {
          data = other.data;
-         bytes = other.bytes;
-         mask = other.mask;
+         bytes = (SizeType) other.bytes;
+         mask = (MaskType) other.mask;
          // by convention, always return *this (for chaining)
          return *this;
      }
@@ -450,7 +453,7 @@ class PatternPointer {
      }
 
      /**
-      * Write Pattern to output stream (in binary form)
+      * Write PatternPointer to output stream (in binary form)
       * @param out The output stream
       */
      void write(std::ostream * out, const unsigned char * corpusstart = NULL) const {
@@ -544,8 +547,8 @@ class PatternPointer {
         if ((byteoffset != NULL) && (!byteoffset_shiftone)) *byteoffset = i+1;
 
         data = ref.data + begin_b;
-        bytes = length_b;
-        mask = computemask();
+        bytes = (SizeType) length_b;
+        mask = (MaskType) computemask();
 
         /*std::cerr << "Created patternpointer: b=" << bytes << " n=" << this->n() << " (begin="<<begin<<",length="<<length<<")" <<endl;
         this->out();
@@ -725,9 +728,9 @@ class PatternPointer {
         return dataout(data, bytesize());
      }
 
-     template<class SizeType2=SizeType, class MaskType2=MaskType>
+     template<class SizeType2,class MaskType2>
      bool operator==(const PatternPointer<SizeType2,MaskType2> & other) const {
-        if (bytes == other.bytes) {
+        if (bytes == (SizeType) other.bytes) {
             if ((mask != 0) && (isflexgram())) {
                 if ((other.mask == 0) || (!other.isflexgram())) return false;
                 unsigned char data1[bytes];
@@ -736,12 +739,12 @@ class PatternPointer {
                 int size2 = other.flexcollapse(data2);
                 if (size1 != size2) return false;
                 return (memcmp(data1,data2,size1) == 0);
-            } else if (mask != other.mask) {
+            } else if (mask != (MaskType) other.mask) {
                 return false;
             } else {
                 if (data == other.data) return true; //shortcut
-                size_t i = 0;
-                size_t n = 0;
+                SizeType i = 0;
+                SizeType n = 0;
                 while (i<bytes) {
                     if ((mask != 0) && (data[i] < 128))  {
                         if (isgap(n)) {
@@ -757,7 +760,7 @@ class PatternPointer {
         return false;
      }
 
-     template<class SizeType2=SizeType, class MaskType2=MaskType>
+     template<class SizeType2,class MaskType2>
      bool operator!=(const PatternPointer<SizeType2,MaskType2> & other) const { return !(*this == other); }
 
      bool operator==(const Pattern & other) const {
@@ -837,10 +840,10 @@ class PatternPointer {
      template<class SizeType2, class MaskType2>
      bool operator<(const PatternPointer<SizeType2,MaskType2> & other) const {
          if (data == other.data) {
-             if (bytes == other.bytes) {
-                 return mask < other.mask;
+             if (bytes == (SizeType) other.bytes) {
+                 return mask < (MaskType) other.mask;
              } else {
-                 return bytes < other.bytes;
+                 return bytes < (SizeType) other.bytes;
              }
          } else {
             return data < other.data;
