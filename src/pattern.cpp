@@ -707,7 +707,8 @@ bool Pattern::operator==(const PatternPointer<SizeType,MaskType> &other) const {
 bool Pattern::operator!=(const Pattern &other) const {
     return !(*this == other);
 }
-bool Pattern::operator!=(const PatternPointer &other) const {
+template<class SizeType, class MaskType>
+bool Pattern::operator!=(const PatternPointer<SizeType,MaskType> &other) const {
     return !(other == *this);
 }
 
@@ -828,14 +829,15 @@ int Pattern::ngrams(vector<pair<Pattern,int>> & container, const int n) const { 
     return found;
 }
 
-int Pattern::ngrams(vector<pair<PatternPointer,int>> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
+template<class SizeType, class MaskType>
+int Pattern::ngrams(vector<pair<PatternPointer<SizeType,MaskType>,int>> & container, const int n) const { //return multiple ngrams, also includes skipgrams!
     const int _n = this->n();
     if (n > _n) return 0;
 
     int found = 0;
     size_t byteoffset = 0;
     for (int i = 0; i < (_n - n)+1; i++) {
-        container.push_back( pair<PatternPointer,int>(PatternPointer(*this,0,n,&byteoffset,true),i) );
+        container.push_back( pair<PatternPointer<SizeType,MaskType>,int>(PatternPointer<SizeType,MaskType>(*this,0,n,&byteoffset,true),i) );
         found++;
     }
     return found;
@@ -853,7 +855,8 @@ int Pattern::subngrams(vector<Pattern> & container, int minn, int maxn) const { 
     return found;
 }
 
-int Pattern::subngrams(vector<PatternPointer> & container, int minn, int maxn) const { //also includes skipgrams!
+template<class SizeType, class MaskType>
+int Pattern::subngrams(vector<PatternPointer<SizeType,MaskType>> & container, int minn, int maxn) const { //also includes skipgrams!
     const int _n = n();
     if (maxn > _n) maxn = _n;
     if (minn > _n) return 0;
@@ -875,7 +878,8 @@ int Pattern::subngrams(vector<pair<Pattern,int>> & container, int minn, int maxn
     return found;
 }
 
-int Pattern::subngrams(vector<pair<PatternPointer,int>> & container, int minn, int maxn) const { //also includes skipgrams!
+template<class SizeType, class MaskType>
+int Pattern::subngrams(vector<pair<PatternPointer<SizeType,MaskType>,int>> & container, int minn, int maxn) const { //also includes skipgrams!
     const int _n = n();
     if (maxn > _n) maxn = _n;
     if (minn > _n) return 0;
@@ -967,7 +971,8 @@ int Pattern::parts(vector<Pattern> & container) const {
     return found;
 }
 
-int Pattern::parts(vector<PatternPointer> & container) const {
+template<class SizeType, class MaskType>
+int Pattern::parts(vector<PatternPointer<SizeType,MaskType>> & container) const {
     if (data == NULL) return 0;
     int partbegin = 0;
     int partlength = 0;
@@ -981,14 +986,14 @@ int Pattern::parts(vector<PatternPointer> & container) const {
         if ((!prevhigh) && (c == ClassDecoder::delimiterclass)) {
             partlength = n - partbegin;
             if (partlength > 0) {
-                container.push_back(PatternPointer(*this,partbegin,partlength));
+                container.push_back(PatternPointer<SizeType,MaskType>(*this,partbegin,partlength));
                 found++;
             }
             break;
         } else if ((!prevhigh) &&  ((c == ClassDecoder::skipclass) || (c == ClassDecoder::flexclass))) {
             partlength = n - partbegin;
             if (partlength > 0) {
-                container.push_back(PatternPointer(*this,partbegin,partlength));
+                container.push_back(PatternPointer<SizeType,MaskType>(*this,partbegin,partlength));
                 found++;
             }
             i++;
@@ -1299,7 +1304,7 @@ void IndexedCorpus::load(std::istream *in, bool debug) {
         throw InternalError();
     }
     if (debug) cerr << "Loaded " << sentenceindex.size() << " sentences; corpussize (bytes) = " << corpussize << endl;
-	patternpointer = new PatternPointer(corpus,corpussize);
+	patternpointer = new PatternPointer<uint64_t,unsigned char>(corpus,corpussize);
 }
 
 
@@ -1357,7 +1362,7 @@ PatternPointer<SizeType,MaskType> IndexedCorpus::getpattern(const IndexReference
 template<class SizeType, class MaskType>
 PatternPointer<SizeType,MaskType> IndexedCorpus::findpattern(const IndexReference & begin, const Pattern & pattern, PatternCategory resultcategory) const {
     if (pattern.category() == NGRAM) {
-        const PatternPointer candidate = getpattern<SizeType,MaskType>(begin, pattern.n());
+        const PatternPointer<SizeType,MaskType> candidate = getpattern<SizeType,MaskType>(begin, pattern.n());
         if (candidate != pattern) throw KeyError();
         return candidate;
     } else if (pattern.category() == SKIPGRAM) {
@@ -1366,7 +1371,7 @@ PatternPointer<SizeType,MaskType> IndexedCorpus::findpattern(const IndexReferenc
         for (std::vector<std::pair<int,int>>::iterator partiter = parts.begin(); partiter != parts.end(); partiter++) {
             const PatternPointer<SizeType,MaskType> part = PatternPointer<SizeType,MaskType>(pattern,partiter->first, partiter->second);
             try {
-                const PatternPointer candidate = getpattern<SizeType,MaskType>(IndexReference(begin.sentence,begin.token + partiter->first),partiter->second);
+                const PatternPointer<SizeType,MaskType> candidate = getpattern<SizeType,MaskType>(IndexReference(begin.sentence,begin.token + partiter->first),partiter->second);
                 if (part != candidate) {
                     throw KeyError();
                 }
@@ -1375,7 +1380,7 @@ PatternPointer<SizeType,MaskType> IndexedCorpus::findpattern(const IndexReferenc
             }
         }
         //found!
-        PatternPointer result = getpattern<SizeType,MaskType>(begin, pattern.n());
+        PatternPointer<SizeType,MaskType> result = getpattern<SizeType,MaskType>(begin, pattern.n());
         if (resultcategory == NGRAM) return result;
         result.mask = pattern.getmask(); //to skipgram
         if (resultcategory == FLEXGRAM) result.mask = result.mask | (1<<(sizeof(MaskType)-1)); //make flexgram
@@ -1389,9 +1394,9 @@ PatternPointer<SizeType,MaskType> IndexedCorpus::findpattern(const IndexReferenc
         IndexReference gapbegin;
         bool found = true;
         while (partiter != parts.end()) {
-            const PatternPointer part = *partiter;
+            const PatternPointer<SizeType,MaskType> part = *partiter;
             try {
-                const PatternPointer candidate = getpattern<SizeType,MaskType>(ref, part.n());
+                const PatternPointer<SizeType,MaskType> candidate = getpattern<SizeType,MaskType>(ref, part.n());
                 if (candidate == part) {
                     partiter++;
                     if (gapbegin.sentence != 0) {
@@ -1412,7 +1417,7 @@ PatternPointer<SizeType,MaskType> IndexedCorpus::findpattern(const IndexReferenc
             ref.token++;
         }
         if ((!found) || (newskips.size() != parts.size() - 1)) throw KeyError();
-        PatternPointer foundpattern = getpattern<SizeType,MaskType>(begin, gapbegin.token - begin.token);
+        PatternPointer<SizeType,MaskType> foundpattern = getpattern<SizeType,MaskType>(begin, gapbegin.token - begin.token);
         if (resultcategory == NGRAM) return foundpattern;
         foundpattern.mask = vector2mask(newskips);
         if (resultcategory == SKIPGRAM) return foundpattern;
@@ -1453,7 +1458,7 @@ void IndexedCorpus::findpattern(std::vector<std::pair<IndexReference,PatternPoin
  *
  */
 template<class SizeType, class MaskType>
-std::vector<std::pair<IndexReference,PatternPointer>> IndexedCorpus::findpattern(const Pattern pattern, uint32_t sentence, bool instantiate) {
+std::vector<std::pair<IndexReference,PatternPointer<SizeType,MaskType>>> IndexedCorpus::findpattern(const Pattern pattern, uint32_t sentence, bool instantiate) {
     //far more inefficient than a pattern model obviously
     std::vector<std::pair<IndexReference,PatternPointer<SizeType,MaskType>>> result;
     const int _n = pattern.size();
