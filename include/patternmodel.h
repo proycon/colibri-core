@@ -366,8 +366,9 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         virtual bool has(const Pattern & pattern) const {
             return PatternSet<uint64_t>::has(pattern);
         }
-        virtual bool has(const PatternPointer & pattern) const {
-            return PatternSet<uint64_t>::has(pattern);
+        template<class SizeType,class MaskType>
+        bool has(const PatternPointer<SizeType,MaskType> & pattern) const {
+            return PatternSet<uint64_t>::has((Pattern) pattern);
         }
 
         /**
@@ -517,8 +518,8 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         unsigned char version() const { return model_version; }
 };
 
-typedef std::unordered_map<PatternPointer,std::vector<std::pair<uint32_t,unsigned char>>> t_matchskipgramhelper; //firstword => [pair<mask,n>]
-typedef std::unordered_map<PatternPointer,std::unordered_set<PatternPointer>> t_matchflexgramhelper; //firstword => [flexgram]
+typedef std::unordered_map<PatternPointer<uint32_t,uint32_t>,std::vector<std::pair<uint32_t,unsigned char>>> t_matchskipgramhelper; //firstword => [pair<mask,n>]
+typedef std::unordered_map<PatternPointer<unsigned char,unsigned char,std::unordered_set<PatternPointer<uint32_t,uint32_t>>> t_matchflexgramhelper; //firstword => [flexgram]
 
 /**
  * \brief A model mapping patterns to values, high-level interface.
@@ -580,9 +581,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             unsigned int flexgramcount = 0;
 
             for (iterator iter = this->begin(); iter != this->end(); iter++) {
-                const PatternPointer pattern = iter->first;
+                const PatternPointer<uint64_t,uint64_t> pattern = iter->first;
                 const PatternCategory category = pattern.category();
-                const PatternPointer firstword = PatternPointer(pattern,0,1);
+                const PatternPointer<unsigned char, unsigned char> firstword = PatternPointer(pattern,0,1);
                 if (!firstword.unknown() && (!firstword.isgap(0))) {
                     if ((category == SKIPGRAM) && (doskipgrams)) {
                         bool found = false;
@@ -722,8 +723,9 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual bool has(const Pattern & pattern) const {
             return MapType::has(pattern);
         }
-        virtual bool has(const PatternPointer & pattern) const {
-            return MapType::has(pattern);
+        template<class SizeType, class MaskType>
+        bool has(const PatternPointer<SizeType,MaskType> & pattern) const {
+            return MapType::has((Pattern) pattern);
         }
 
         /**
@@ -797,10 +799,10 @@ class PatternModel: public MapType, public PatternModelInterface {
                  MapType::template read<uint32_t,BaseValueHandler<uint32_t>,PatternType>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
             } else if ((model_type == UNINDEXEDPATTERNPOINTERMODEL) && (this->getmodeltype() == UNINDEXEDPATTERNMODEL)) {
                  //reading unindexed pointermodel as unindexed patternmodel
-                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>,PatternPointer>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
+                 MapType::template read<uint32_t,BaseValueHandler<uint32_t>,PatternPointer<uint32_t,uint32_t>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
             } else if ((model_type == INDEXEDPATTERNPOINTERMODEL) && ((this->getmodeltype() == INDEXEDPATTERNMODEL) || (this->getmodeltype() == UNINDEXEDPATTERNMODEL))) {
                  //reading indexed patternpointermodel as (un)indexed patternmodel
-                 MapType::template read<IndexedData,IndexedDataHandler,PatternPointer>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
+                 MapType::template read<IndexedData,IndexedDataHandler,PatternPointer<uint32_t,uint32_t>(f, options.MINTOKENS, options.MINLENGTH,options.MAXLENGTH, constrainstore,  !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET,   options.DEBUG);
             } else if (model_type == PATTERNALIGNMENTMODEL)  {
                  //reading pattern alignment model as pattern model, can be
                  //done, but semantics change:  count corresponds to the number of distinct alignments (for unindexed models)
@@ -899,8 +901,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                 options.DOSKIPGRAMS = false;
             }
 
-            std::vector<std::pair<PatternPointer,int> > ngrams;
-            std::vector<PatternPointer> subngrams;
+            std::vector<std::pair<PatternPointer<uint32_t,unsigned char>,int> > ngrams;
+            std::vector<PatternPointer<uint32_t,unsigned char>> subngrams;
             bool found;
             IndexReference ref;
             int prevsize = this->size();
@@ -966,7 +968,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     //read line
                     if (linepattern != NULL) delete linepattern;
                     if (reverseindex == NULL) linepattern = new Pattern(in,false,version);
-                    PatternPointer line = (reverseindex != NULL) ? reverseindex->getsentence(sentence) : PatternPointer(linepattern);
+                    PatternPointer<uint32_t,unsigned char> line = (reverseindex != NULL) ? reverseindex->getsentence<uint32_t,unsigned char>(sentence) : PatternPointer<uint32_t,unsigned char>(linepattern);
                     //if (in->eof()) break;
                     const unsigned int linesize = line.n();
                     if (options.DEBUG) std::cerr << "Processing line " << sentence << ", size (tokens) " << linesize << " (bytes) " << line.bytesize() << ", n=" << n <<  std::endl;
@@ -984,7 +986,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                     if (options.DOPATTERNPERLINE) {
                         if (linesize > (unsigned int) options.MAXLENGTH) continue;
-                        ngrams.push_back(std::pair<PatternPointer,int>(line,0));
+                        ngrams.push_back(std::pair<PatternPointer<uint32_t,unsigned char>,int>(line,0));
                     } else {
                         if (iter_unigramsonly) {
                             line.ngrams(ngrams, n);
@@ -1001,7 +1003,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
                     // *** ITERATION OVER ALL NGRAMS OF CURRENT ORDER (n) IN THE LINE/SENTENCE ***
-                    for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
+                    for (std::vector<std::pair<PatternPointer<uint32_t,unsigned char>,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
 
                         try {
                             if ((singlepass) && (options.MINLENGTH == 1) && (skipunigrams) && (iter->first.n() == 1)) {
@@ -1020,7 +1022,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS) && ((n > 1) || (singlepass)) ) {
                                     subngrams.clear();
                                     iter->first.ngrams(subngrams,1); //get all unigrams
-                                    for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                    for (std::vector<PatternPointer<uint32_t,unsigned char>>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                                         //check if unigram reaches threshold
                                         if (this->occurrencecount(*iter2) < (unsigned int) options.MINTOKENS_UNIGRAMS) {
                                             found = false;
@@ -1038,7 +1040,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                         if (filterhasngrams) {
                                             subngrams.clear();
                                             iter->first.subngrams(subngrams,1, options.MINTOKENS > 1 ? n : iter->first.n());
-                                            for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                            for (std::vector<PatternPointer<uint32_t,unsigned char>>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                                                 if (filter->has(*iter2)) {
                                                     matchfilter = true;
                                                     break;
@@ -1067,7 +1069,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                         backoffn = n - 1;
                                         if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
                                             iter->first.ngrams(subngrams, backoffn);
-                                        for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+                                        for (std::vector<PatternPointer<uint32_t,unsigned char>>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
                                             if (!this->has(*iter2)) {
                                                 found = false;
                                                 break;
@@ -1201,7 +1203,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                         if (pattern_n == (unsigned int) n) {
                             subngrams.clear();
                             iter->first.ngrams(subngrams, n-1);
-                            for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) subsumed.insert(Pattern(*iter2));
+                            for (std::vector<PatternPointer<uint32_t,unsigned char>>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) subsumed.insert(Pattern(*iter2));
                         }
                         iter++;
                     };
@@ -1244,7 +1246,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * Low-level function to compute skipgrams for a given pattern . See
          * higher-level function instead
          */
-        virtual int computeskipgrams(const PatternPointer & pattern, int mintokens = 2,  const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, std::vector<PatternPointer> * targetcontainer = NULL,  const bool exhaustive = false, const int maxskips = 3, const bool DEBUG = false) {
+        virtual int computeskipgrams(const PatternPointer<uint32_t,unsigned char> & pattern, int mintokens = 2,  const IndexReference * singleref= NULL, const IndexedData * multiplerefs = NULL,  PatternModelInterface * constrainbymodel = NULL, std::vector<PatternPointer> * targetcontainer = NULL,  const bool exhaustive = false, const int maxskips = 3, const bool DEBUG = false) {
 
             //if targetcontainer is NULL, skipgrams will be added to the model,
             // if not null , they will be added to the targetcontainer instead
@@ -1257,7 +1259,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             //internal function for computing skipgrams for a single pattern
             int foundskipgrams = 0;
             const int n = pattern.n();
-            std::vector<PatternPointer> subngrams;
+            std::vector<PatternPointer<uint32_t,uint32_t>> subngrams;
 
             if (gapmasks[n].empty()) gapmasks[n] = compute_skip_configurations(n, maxskips);
 
@@ -1270,7 +1272,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                 //add skips
                 try {
-                    PatternPointer skipgram = pattern;
+                    PatternPointer<uint32_t,uint32_t> skipgram = pattern;
                     skipgram.mask = *iter2;
 
                     if (DEBUG) {
@@ -1293,8 +1295,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                         //check if sub-parts were counted
                         subngrams.clear();
                         skipgram.ngrams(subngrams,n-1); //this also works for and returns skipgrams, despite the name
-                        for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) { //only two patterns
-                            const PatternPointer subpattern = *iter2;
+                        for (std::vector<PatternPointer<uint32_t,uint32_t>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) { //only two patterns
+                            const PatternPointer<uint32_t,uint32_t> subpattern = *iter2;
                             if (!subpattern.isgap(0) && !subpattern.isgap(subpattern.n() - 1)) {
                                 //this subpattern is a valid
                                 //skipgram or ngram (no beginning or ending
@@ -1324,10 +1326,10 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                                 //test whether parts occur in model, otherwise skip
                                 //can't occur either and we can discard it
-                                std::vector<PatternPointer> parts;
+                                std::vector<PatternPointer<uint32_t,uint32_t>> parts;
                                 skipgram.parts(parts);
-                                for (std::vector<PatternPointer>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
-                                    const PatternPointer part = *iter3;
+                                for (std::vector<PatternPointer<uint32_t,uint32_t>>::iterator iter3 = parts.begin(); iter3 != parts.end(); iter3++) {
+                                    const PatternPointer<uint32_t,uint32_t> part = *iter3;
                                     if (!this->has(part)) {
                                         skipgram_valid = false;
                                         break;
@@ -1341,7 +1343,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             const std::vector<std::pair<int,int>> gapconfiguration = mask2vector(skipgram.mask, n);
                             for (std::vector<std::pair<int,int>>::const_iterator iter3 = gapconfiguration.begin(); iter3 != gapconfiguration.end(); iter3++) {
                                 if (!((iter3->first - 1 == 0) && (iter3->first + iter3->second + 1 == n))) { //entire skipgram is already X * Y format
-                                    const PatternPointer subskipgram = PatternPointer(skipgram, iter3->first - 1, iter3->second + 2);
+                                    const PatternPointer<uint32_t,uint32_t> subskipgram = PatternPointer<uint32_t,uint32_t>(skipgram, iter3->first - 1, iter3->second + 2);
                                     if (DEBUG) {
                                         std::cerr << "Subskipgram: " << std::endl;
                                         subskipgram.out();

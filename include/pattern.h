@@ -233,7 +233,7 @@ class Pattern {
      Pattern operator +(const Pattern&) const;
 
      template<class SizeType, class MaskType>
-     PatternPointer<SizeType,MaskType> Pattern::getpointer() const;
+     PatternPointer<SizeType,MaskType> getpointer() const;
 
      /**
       * Finds the specified subpattern in the this pattern. Returns the index
