@@ -258,7 +258,7 @@ class PatternModelInterface: public PatternStoreInterface {
         /**
          * Returns the number of times this pattern occurs in the model
          */
-        virtual unsigned int occurrencecount(const Pattern & pattern)=0;
+        virtual size_t occurrencecount(const Pattern & pattern)=0;
 
         /**
          * Returns the frequency of the pattern in the
@@ -279,13 +279,13 @@ class PatternModelInterface: public PatternStoreInterface {
          * Return the number of distinct words/unigram in the original corpus,
          * includes types not covered by the model!
          */
-        virtual unsigned int types() =0;
+        virtual size_t types() =0;
 
         /**
          * Returns the number of tokens in the original corpus, includes tokens
          * not covered by the model!
          */
-        virtual unsigned int tokens() const=0;
+        virtual size_t tokens() const=0;
 
         virtual PatternStoreInterface * getstoreinterface() {
             return (PatternStoreInterface*) this;
@@ -472,7 +472,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * This function does not perform anything in a set context, it always
          * returns zero
          */
-        virtual unsigned int occurrencecount(const Pattern & ) { return 0;  }
+        virtual size_t occurrencecount(const Pattern & ) { return 0;  }
 
         /**
          * This function does not perform anything in a set context, it always
@@ -497,14 +497,14 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * Returns the total amount of unigram/word types in the original corpus,
          * includes types not covered by the model!
          */
-        virtual unsigned int types()  {
+        virtual size_t types()  {
             return totaltypes;
         }
         /**
          * Returns the total amount of tokens in the original corpus,
          * includes tokens not covered by the model!
          */
-        virtual unsigned int tokens() const { return totaltokens; }
+        virtual size_t tokens() const { return totaltokens; }
 
         /**
          * Returns the type of the model, value is of the PatternType
@@ -769,8 +769,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             if ((model_type == UNINDEXEDPATTERNPOINTERMODEL) || (model_type == INDEXEDPATTERNPOINTERMODEL)) {
                 this->patterntype = PATTERNPOINTER;
                 if (options.DEBUG) std::cerr << "Reading corpus data" << std::endl;
-                unsigned int corpussize;
-                f->read( (char*) &corpussize, sizeof(unsigned int));
+                uint64_t corpussize;
+                f->read( (char*) &corpussize, sizeof(uint64_t)); //backward incompatible (since v2.5)
                 unsigned char * corpusdata = new unsigned char[corpussize];
                 f->read((char*) corpusdata,sizeof(unsigned char) * corpussize);
                 reverseindex = new IndexedCorpus(corpusdata, corpussize);
@@ -1483,7 +1483,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             unsigned char v = this->getmodelversion();
             out->write( (char*) &v, sizeof(char));
             if ((this->getmodeltype()== UNINDEXEDPATTERNPOINTERMODEL) || (this->getmodeltype() == INDEXEDPATTERNPOINTERMODEL)) {
-                out->write( (char*) &this->corpussize, sizeof(unsigned int));
+                out->write( (char*) &this->corpussize, sizeof(uint64_t)); //backward incompatibel since v2.5
                 out->write((char*) this->corpusstart, sizeof(unsigned char) * this->corpussize);
             }
             out->write( (char*) &totaltokens, sizeof(uint64_t));
@@ -1517,7 +1517,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * Returns the occurrenc count of the specified pattern, will return 0
          * if it does not exist in the model
          */
-        virtual unsigned int occurrencecount(const Pattern & pattern)  {
+        virtual size_t occurrencecount(const Pattern & pattern)  {
             ValueType * data = this->getdata(pattern);
             if (data != NULL) {
                 return this->valuehandler.count(*data);
@@ -1526,7 +1526,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
 
-        virtual unsigned int occurrencecount(const PatternPointer & pattern)  {
+        virtual size_t occurrencecount(const PatternPointer & pattern)  {
             ValueType * data = this->getdata(pattern);
             if (data != NULL) {
                 return this->valuehandler.count(*data);
@@ -1564,7 +1564,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Return the total amount of word/unigram types in the model
          */
-        virtual unsigned int types() {
+        virtual size_t types() {
             if ((totaltypes == 0) && (!this->data.empty())) totaltypes = this->totalwordtypesingroup(0, 0);
             return totaltypes;
         }
@@ -1572,7 +1572,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Return the total amount of word/unigram tokens in the model
          */
-        virtual unsigned int tokens() const { return totaltokens; }
+        virtual size_t tokens() const { return totaltokens; }
 
         unsigned char type() const { return model_type; }
         unsigned char version() const { return model_version; }
@@ -1585,7 +1585,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * models, the coverage count is a mere maximum projection equal to the
          * product of the occurence count and the size.
          */
-        unsigned int coveragecount(const Pattern &  key) {
+        size_t coveragecount(const Pattern &  key) {
            return this->occurrencecount(key) * key.size();
         }
         /**
@@ -2302,8 +2302,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
             *OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
             *OUT << "Size of ValueType: " << sizeof(ValueType) << " byte" << std::endl;
-            unsigned int totalkeybs = 0;
-            unsigned int totalvaluebs = 0;
+            size_t totalkeybs = 0;
+            size_t totalvaluebs = 0;
             for (PatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
                 const PatternType pattern = iter->first;
                 totalkeybs += sizeof(PatternType) + pattern.bytesize();
@@ -2314,8 +2314,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Mean key bytesize: " << (totalkeybs / (float) this->size()) << std::endl;
             *OUT << "Mean value bytesize: " << (totalvaluebs / (float) this->size()) << std::endl;
 
-            unsigned int ri_totalkeybs = 0;
-            unsigned int ri_totalvaluebs = 0;
+            size_t ri_totalkeybs = 0;
+            size_t ri_totalvaluebs = 0;
             if (this->reverseindex) {
                 for (IndexedCorpus::iterator iter = this->reverseindex->begin(); iter != this->reverseindex->end(); iter++) {
                     ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
@@ -2326,7 +2326,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
 
 
-            const unsigned int t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
+            const size_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
             *OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
         }
 
@@ -2355,11 +2355,11 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "Total:                    " << std::setw(15) << "-" << std::setw(15) << this->tokens() << std::setw(15) << "-" << std::setw(15) << this->types() <<  std::endl;
 
             if (!nocoverage) {
-                unsigned int coveredtypes = totalwordtypesingroup(0,0);  //will also work when no unigrams in model!
-                unsigned int coveredtokens = totaltokensingroup(0,0);
+                size_t coveredtypes = totalwordtypesingroup(0,0);  //will also work when no unigrams in model!
+                size_t coveredtokens = totaltokensingroup(0,0);
 
                 if (coveredtokens > this->tokens()) coveredtokens = this->tokens();
-                unsigned int uncoveredtokens = this->tokens() - coveredtokens;
+                size_t uncoveredtokens = this->tokens() - coveredtokens;
                 if (uncoveredtokens < 0) uncoveredtokens = 0;
                 *OUT << "Uncovered:                " << std::setw(15) << "-" << std::setw(15) << uncoveredtokens << std::setw(15) << uncoveredtokens / (double) this->tokens() << std::setw(15) << this->types() - coveredtypes <<  std::endl;
                 *OUT << "Covered:                  " << std::setw(15) << this->size() << std::setw(15) << coveredtokens << std::setw(15) << coveredtokens / (double) this->tokens() <<  std::setw(15) << coveredtypes <<  std::endl << std::endl;
@@ -2666,9 +2666,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             *OUT << "Reverse index: no" << std::endl;
         }
         *OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
-        unsigned int totalkeybs = 0;
-        unsigned int totalvaluebs = 0;
-        unsigned int indexlengthsum = 0;
+        size_t totalkeybs = 0;
+        size_t totalvaluebs = 0;
+        size_t indexlengthsum = 0;
         for (typename IndexedPatternModel::iterator iter = this->begin(); iter != this->end(); iter++) {
             const Pattern pattern = iter->first;
             totalkeybs += sizeof(Pattern) + pattern.bytesize();
@@ -2681,8 +2681,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         *OUT << "Mean value bytesize: " << (totalvaluebs / (float) this->size()) << std::endl;
         *OUT << "Mean index length (ttr): " << (indexlengthsum / (float) this->size()) << std::endl;
 
-        unsigned int ri_totalkeybs = 0;
-        unsigned int ri_totalvaluebs = 0;
+        size_t ri_totalkeybs = 0;
+        size_t ri_totalvaluebs = 0;
         if (this->reverseindex) {
             for (IndexedCorpus::iterator iter = this->reverseindex->begin(); iter != this->reverseindex->end(); iter++) {
                 ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
@@ -2692,7 +2692,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             *OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
         }
 
-        const unsigned int t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
+        const size_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
         *OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
     }
 
@@ -2729,8 +2729,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
     void print(std::ostream* out, ClassDecoder &decoder, const PatternPointer & pattern, bool instantiate=false, bool endline = true) {
             const std::string pattern_s = pattern.tostring(decoder);
-            const unsigned int count = this->occurrencecount(pattern);
-            const unsigned int covcount = this->coveragecount(pattern);
+            const size_t count = this->occurrencecount(pattern);
+            const size_t covcount = this->coveragecount(pattern);
             const double coverage = covcount / (double) this->tokens();
             const double freq = this->frequency(pattern);
             const PatternCategory cat = pattern.category();

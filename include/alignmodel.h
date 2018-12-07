@@ -149,7 +149,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
         virtual int maxlength() const { return maxn; };
         virtual int minlength() const { return minn; };
 
-        virtual unsigned int occurrencecount(const Pattern &)  {
+        virtual size_t occurrencecount(const Pattern &)  {
             return 0; // we don't do occurrence counts
         }
         virtual double frequency(const Pattern &)  {
@@ -157,8 +157,8 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
         }
         //
         //not really useful in this context, but required by the interface
-        virtual unsigned int types() { return totaltypes; }
-        virtual unsigned int tokens() const { return totaltokens; }
+        virtual size_t types() { return totaltypes; }
+        virtual size_t tokens() const { return totaltokens; }
 
         virtual void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) =0;
 

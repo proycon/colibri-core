@@ -67,6 +67,7 @@ int reader_passmarker(const unsigned char c, std::istream * in);
 
 
 
+
 class PatternPointer;
 
 /**
@@ -356,11 +357,14 @@ class Pattern {
 
 Pattern patternfromfile(const std::string & filename); //helper function to read pattern from file, mostly for Cython
 
+typedef uint32_t PPSizeType;
+const size_t PP_MAX_SIZE = pow(2,sizeof(PPSizeType)*8);
+
 class PatternPointer {
     public:
      const static int patterntype = PATTERNPOINTER;
      unsigned char * data; /** Pointer to Pattern data */
-     uint32_t bytes; //number of bytes
+     PPSizeType bytes; //number of bytes
      uint32_t mask; //0 == NGRAM
                     //first bit high = flexgram, right-aligned, 0 = gap
                     //first bit low = skipgram, right-aligned, 0 = gap , max skipgram length 31 tokens
@@ -373,7 +377,7 @@ class PatternPointer {
 
      PatternPointer(unsigned char* dataref, const bsize_t bytesize) {
          data = dataref;
-         if (bytesize > B32) {
+         if (bytesize > PP_MAX_SIZE) {
              std::cerr << "ERROR: Pattern too long for pattern pointer [" << bytesize << " bytes,explicit]" << std::endl;
              throw InternalError();
          }
@@ -384,7 +388,7 @@ class PatternPointer {
      PatternPointer(const Pattern & ref) {
          data = ref.data;
          const size_t b = ref.bytesize();
-         if (b > B32) {
+         if (b > PP_MAX_SIZE) {
              std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << " bytes,implicit]" << std::endl;
              throw InternalError();
          }
@@ -394,7 +398,7 @@ class PatternPointer {
      PatternPointer(const Pattern * ref) {
          data = ref->data;
          const size_t b = ref->bytesize();
-         if (b > B32) {
+         if (b > PP_MAX_SIZE) {
              std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << " bytes,implicit]" << std::endl;
              throw InternalError();
          }

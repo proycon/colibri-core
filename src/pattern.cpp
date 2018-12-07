@@ -59,7 +59,7 @@ PatternCategory PatternPointer::category() const {
 size_t Pattern::bytesize() const {
     //return the size of the pattern (in bytes)
     if (data == NULL) return 0;
-    unsigned int i = 0;
+    size_t i = 0;
     bool prevhigh = false;
     do {
         if ((!prevhigh) && (data[i] == ClassDecoder::delimiterclass)) { //end marker
@@ -70,11 +70,11 @@ size_t Pattern::bytesize() const {
     } while (1);
 }
 
-size_t datasize(unsigned char * data, int maxbytes = 0) {
+size_t datasize(unsigned char * data, size_t maxbytes = 0) {
     //return the size of the pattern (in tokens)
     if (data == NULL) return 0;
-    int i = 0;
-    int n = 0;
+    size_t i = 0;
+    size_t n = 0;
     bool prevhigh = false;
     do {
         if ((maxbytes > 0) && (i >= maxbytes)) {
@@ -183,10 +183,10 @@ PatternPointer PatternPointer::toflexgram() const { //converts a fixed skipgram 
 
 uint32_t Pattern::getmask() const {
     uint32_t mask = 0;
-    unsigned int n = 0;
+    unsigned char n = 0;
     bool isflex = false;
-    const unsigned int bytes = bytesize();
-    for (unsigned int i = 0; (i < bytes) && (n < 31); i++) {
+    const unsigned char bytes = (unsigned char) bytesize();
+    for (unsigned char i = 0; (i < bytes) && (n < 31); i++) {
         if (data[i] < 128) {
             if ((i == 0) || (data[i-1] < 128)) {
                 if (data[i] == ClassDecoder::flexclass){
@@ -205,9 +205,9 @@ uint32_t Pattern::getmask() const {
 
 uint32_t PatternPointer::computemask() const {
     uint32_t mask = 0;
-    unsigned int n = 0;
+    unsigned char n = 0;
     bool isflex = false;
-    for (unsigned int i = 0; (i < bytes) && (n < 31); i++) {
+    for (unsigned char i = 0; (i < (unsigned char) bytes) && (n < 31); i++) {
         if (data[i] < 128) {
             if ((i == 0) || (data[i-1] < 128)) {
                 if (data[i] == ClassDecoder::flexclass){
@@ -247,8 +247,8 @@ size_t PatternPointer::hash() const {
         unsigned char datacopy[bytes+1];
         memcpy(datacopy, data, bytes);
         datacopy[bytes] = ClassDecoder::delimiterclass;
-        unsigned int n = 0;
-		for (unsigned int i = 0; i < bytes; i++) {
+        PPSizeType n = 0;
+		for (PPSizeType i = 0; i < bytes; i++) {
             if (datacopy[i] < 128) {
                 if (isgap(n)) datacopy[i] = ClassDecoder::skipclass;
                 n++;
@@ -261,12 +261,12 @@ size_t PatternPointer::hash() const {
 
 void Pattern::write(ostream * out, const unsigned char * ) const {
     //corpusstart is not used but does need to be present so we have the same signature as PatternPointer
-    const int s = bytesize();
+    const size_t s = bytesize();
     if (s > 0) {
-        out->write( (char*) data , (int) s + 1); //+1 to include the \0 marker
+        out->write( (char*) data , s + 1); //+1 to include the \0 marker
     } else {
         const unsigned char null = 0;
-        out->write( (char*) &null , (int) 1);  //marker only
+        out->write( (char*) &null , 1);  //marker only
     }
 }
 
@@ -274,13 +274,13 @@ void PatternPointer::write(ostream * out, const unsigned char * corpusstart) con
     if (corpusstart != NULL) {
         const unsigned int offset = data - corpusstart;
         out->write((char*) &offset, sizeof(unsigned int));
-        out->write((char*) &bytes, sizeof(uint32_t));
+        out->write((char*) &bytes, sizeof(PPSizeType));
         out->write((char*) &mask, sizeof(uint32_t));
     } else {
-        const int s = bytesize();
-        if (s > 0)  out->write( (char*) data , (int) s); //+1 to include the \0 marker
+        const size_t s = bytesize();
+        if (s > 0)  out->write( (char*) data , s);
         const unsigned char null = 0;
-        out->write( (char*) &null , (int) 1);  //marker
+        out->write( (char*) &null , 1);  //marker
     }
 }
 
@@ -577,7 +577,7 @@ PatternPointer::PatternPointer(std::istream * in, bool, const unsigned char, uns
         unsigned int corpusoffset;
         in->read( (char* ) &corpusoffset, sizeof(unsigned int));
         data = corpusstart + corpusoffset;
-        in->read( (char* ) &bytes, sizeof(uint32_t));
+        in->read( (char* ) &bytes, sizeof(PPSizeType));
         in->read( (char* ) &mask, sizeof(uint32_t));
         if (debug) std::cerr << "DEBUG read patternpointer @corpusoffset=" << (size_t) data << " bytes=" << (int) bytes << " mask=" << (int) mask << std::endl;
     }
@@ -837,7 +837,7 @@ PatternPointer::PatternPointer(const PatternPointer& ref, size_t begin, size_t l
 
 Pattern::Pattern(const Pattern& ref) { //copy constructor
     if ((ref.data != NULL) && (ref.data[0] != 0)) {
-        const int s = ref.bytesize();
+        const size_t s = ref.bytesize();
         data = new unsigned char[s + 1];
         memcpy(data, ref.data, s);
         data[s] = ClassDecoder::delimiterclass;
@@ -855,7 +855,7 @@ Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
     } else if (ref.isflexgram()) {
         //FLEXGRAM
 		unsigned char tmpdata[ref.bytesize()+1];
-		int size = ref.flexcollapse(tmpdata);
+		size_t size = ref.flexcollapse(tmpdata);
 		data = new unsigned char[size+1];
 		memcpy(data, tmpdata, size);
 		data[size] = ClassDecoder::delimiterclass;
@@ -915,7 +915,7 @@ Pattern::Pattern(const PatternPointer& ref, size_t begin, size_t length, size_t 
     } while (1);
     if ((byteoffset != NULL) && (!byteoffset_shiftbyone)) *byteoffset = i+1;
 
-    const unsigned char _size = length_b + 1;
+    const size_t _size = length_b + 1;
     data = new unsigned char[_size]; //may overallocate a bit for skipgrams/flexgrams
     if (ref.mask == 0) {
         //NGRAM
@@ -1112,11 +1112,11 @@ Pattern Pattern::operator +(const Pattern & other) const {
     } else if (other.data == NULL) {
         return *this;
     } else {
-        const int s = bytesize();
-        const int s2 = other.bytesize();
+        const size_t s = bytesize();
+        const size_t s2 = other.bytesize();
         unsigned char buffer[s+s2];
         memcpy(buffer, data, s);
-        for (int i = 0; i < s2; i++) {
+        for (size_t i = 0; i < s2; i++) {
             buffer[s+i] = other.data[i];
         }
         return Pattern(buffer, s+s2);
@@ -1147,14 +1147,14 @@ PatternPointer& PatternPointer::operator++() {
 }
 
 int Pattern::find(const Pattern & pattern) const { //returns the index, -1 if not found
-    const int s = bytesize();
-    const int s2 = pattern.bytesize();
+    const size_t s = bytesize();
+    const size_t s2 = pattern.bytesize();
     if (s2 > s) return -1;
 
-    for (int i = 0; i < s; i++) {
+    for (size_t i = 0; i < s; i++) {
         if (data[i] == pattern.data[0]) {
             bool match = true;
-            for (int j = 0; j < s2; j++) {
+            for (size_t j = 0; j < s2; j++) {
                 if (data[i+j] != pattern.data[j]) {
                     match = false;
                     break;
@@ -1575,7 +1575,7 @@ int Pattern::gaps(vector<pair<int,int> > & container) const {
     parts(partscontainer);
 
     const int _n = n();
-    const int bs = bytesize();
+    const int bs = (int) bytesize();
 
 
     //compute inverse:
@@ -1785,17 +1785,17 @@ Pattern Pattern::addflexgaps(const std::vector<std::pair<int,int> > & gaps) cons
 
 Pattern Pattern::reverse() const {
     if (data == NULL) return *this;
-    const unsigned char _size = bytesize() + 1;
+    const size_t _size = bytesize() + 1;
     unsigned char * newdata = new unsigned char[_size];
 
     //set endmarker
     newdata[_size-1] = ClassDecoder::delimiterclass;
 
     //we fill the newdata from right to left
-    unsigned char cursor = _size - 1;
+    size_t cursor = _size - 1;
 
-	unsigned int high = 0;
-    int i = 0;
+	size_t high = 0;
+    size_t i = 0;
     do {
         const unsigned char c = data[i];
         if ((!high) && (c == ClassDecoder::delimiterclass)) {
