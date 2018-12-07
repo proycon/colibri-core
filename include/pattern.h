@@ -25,7 +25,7 @@
 #include <iomanip> // contains setprecision()
 #include <exception>
 #include <algorithm>
-#include <climits>
+#include <limits>
 #include "common.h"
 #include "classdecoder.h"
 
@@ -357,8 +357,8 @@ class Pattern {
 
 Pattern patternfromfile(const std::string & filename); //helper function to read pattern from file, mostly for Cython
 
-typedef uint32_t PPSizeType;
-const size_t PP_MAX_SIZE = pow(2,sizeof(PPSizeType)*8);
+typedef uint64_t PPSizeType;
+const size_t PP_MAX_SIZE = std::numeric_limits<PPSizeType>::max();
 
 class PatternPointer {
     public:
