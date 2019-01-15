@@ -7,8 +7,8 @@ Colibri Core
 .. image:: https://badge.fury.io/py/colibricore.svg
     :target: http://badge.fury.io/py/colibricore
 
-.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.55641.svg
-   :target: http://dx.doi.org/10.5281/zenodo.55641
+.. image:: https://zenodo.org/badge/12996232.svg
+   :target: https://zenodo.org/badge/latestdoi/12996232
 
 .. image:: http://applejack.science.ru.nl/lamabadge.php/colibri-core
    :target: http://applejack.science.ru.nl/languagemachines/
@@ -41,7 +41,7 @@ Skipgram and flexgram extraction are computationally more demanding but have
 been implemented with similar optimisations. Skipgrams are computed by
 abstracting over n-grams, and flexgrams in turn are computed either by
 abstracting over skipgrams, or directly from n-grams on the basis of
-co-occurrence information (mutual pointwise information).  
+co-occurrence information (mutual pointwise information).
 
 At the heart of the sofware is the notion of pattern models. The core tool, to
 be used from the command-line, is ``colibri-patternmodeller`` which enables you
@@ -61,7 +61,7 @@ relations to be inferred.
 The generation of pattern models is optionally parametrised by a minimum
 occurrence threshold, a maximum pattern length, and a lower-boundary on the
 different types that may instantiate a skipgram (i.e. possible fillings of the
-gaps). 
+gaps).
 
 Technical Details
 --------------------
@@ -69,7 +69,7 @@ Technical Details
 Colibri Core is available as a collection of **standalone command-line tools**,
 as a **C++ library**, and as a **Python library**.
 
-Please consult the full documentation at https://proycon.github.io/colibri-core 
+Please consult the full documentation at https://proycon.github.io/colibri-core
 
 Installation instructions are here:  https://proycon.github.io/colibri-core/doc/#installation
 
@@ -81,7 +81,7 @@ This software is extensively described in the following peer-reviewed publicatio
  van Gompel, M and van den Bosch, A (2016)
  Efficient n-gram, Skipgram and Flexgram Modelling with Colibri Core.
  *Journal of Open Research Software*
- 4: e30, DOI: http://dx.doi.org/10.5334/jors.105 
+ 4: e30, DOI: http://dx.doi.org/10.5334/jors.105
 
 Click the link to access the publication and please cite it if you make use of
 Colibri Core in your work.
