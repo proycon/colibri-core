@@ -239,6 +239,10 @@ class ClassEncoder {
 
     typedef std::unordered_map<std::string, unsigned int>::const_iterator const_iterator;
 
+    const_iterator find(const std::string & key) const {
+        return classes.find(key);
+    }
+
     const_iterator begin() const {
         return classes.begin();
     }
