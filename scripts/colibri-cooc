@@ -9,7 +9,7 @@ mode="absolute"
 
 usage() {
  echo "Syntax: colibri-cooc -t threshold -m minlength -l maxlength corpusfile [corpusfile2]..." >&2
- echo "Description: Computes a summary report on the count of ngrams (and optionally skipgrams) in the corpus " >&2
+ echo "Description: Computes co-occurrence statistics (absolute co-cooccurrence or pointwise mutual information) between patterns in a corpus" >&2
  echo "Arguments: corpusfiles should be plain text files, tokenised, and one sentence per line" >&2
  echo "Options:" >&2
  echo " -t int     Absolute co-occurrence threshold: Show patterns co-occuring at least this many times" >&2

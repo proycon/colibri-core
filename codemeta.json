@@ -6,7 +6,7 @@
     "@type": "SoftwareSourceCode",
     "identifier": "colibricore",
     "name": "Colibri Core",
-    "version": "2.5.0",
+    "version": "2.5.1",
     "description": "Colibri core is an NLP tool as well as a C++ and Python library for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. ",
     "license": "https://spdx.org/licenses/GPL-3.0",
 	"url": "https://proycon.github.io/colibri-core",
@@ -71,5 +71,98 @@
             "url": "https://dx.doi.org/10.5334/jors.105"
 		}
     ],
-    "dateCreated": "2013-09-15"
+    "dateCreated": "2013-09-15",
+    "entryPoints": [
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-classencode",
+            "urlTemplate": "file:///colibri-classencode",
+            "description": "Encodes a plain text corpus to a binary encoded corpus and a class file",
+            "interfaceType": "CLI"
+        },
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-classdecode",
+            "urlTemplate": "file:///colibri-classdecode",
+            "description": "Decodes a binary encoded corpus and a class file to a plain text corpus",
+            "interfaceType": "CLI"
+        },
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-patternmodeller",
+            "urlTemplate": "file:///colibri-patternmodeller",
+            "description": "Extract, model and compare recurring patterns (n-grams, skipgrams, flexgrams) and their frequencies in text corpus data. This is the main tool of Colibri Core.",
+            "interfaceType": "CLI"
+        },
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-cooc",
+            "urlTemplate": "file:///colibri-cooc",
+            "description": "Computes co-occurrence statistics (absolute co-cooccurrence or pointwise mutual information) between patterns in a corpus",
+            "interfaceType": "CLI"
+        },
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-ngrams",
+            "urlTemplate": "file:///colibri-ngrams",
+            "description": "Extract n-grams of a particular size by moving a sliding window over the corpus. This is a high-level convenience script over underlying tools.",
+            "interfaceType": "CLI"
+        },
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-freqlist",
+            "urlTemplate": "file:///colibri-freqlist",
+            "description": "Extract n-grams (and optionally skipgrams) with their counts from one or more plain-text corpus files. This is a high-level convenience script over underlying tools.",
+            "interfaceType": "CLI"
+        },
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-coverage",
+            "urlTemplate": "file:///colibri-coverage",
+            "description": "Computes the coverage of training/background corpus on a particular test/foreground corpus, i.e how many of the patterns in the test corpus were found during training, how many tokens are covered, and how is this all distributed?. This is a high-level convenience script over underlying tools.",
+            "interfaceType": "CLI"
+        },
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-findpatterns",
+            "urlTemplate": "file:///colibri-findpatterns",
+            "description": "Find patterns in corpus data based on a presupplied list of patterns (one per line). This is a high-level convenience script over underlying tools.",
+            "interfaceType": "CLI"
+        },
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-histogram",
+            "urlTemplate": "file:///colibri-histogram",
+            "description": "Computes a histogram for ngram occurrences (and optionally skipgrams) in the corpus. This is a high-level convenience script over underlying tools.",
+            "interfaceType": "CLI"
+        },
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-loglikelihood",
+            "urlTemplate": "file:///colibri-loglikelihood",
+            "description": "Compares the frequency of patterns between two or more corpus files (plain text) by computing log likelihood, following the methodology of Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (ACL 2000). 1-8 October 2000, Hong Kong, pp. 1 - 6: http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf. This is a high-level convenience script over underlying tools.",
+            "interfaceType": "CLI"
+        },
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-ngramstats",
+            "urlTemplate": "file:///colibri-ngramstats",
+            "description": "Computes a summary report on the count of ngrams (and optionally skipgrams) in the corpus. This is a high-level convenience script over underlying tools.",
+            "interfaceType": "CLI"
+        },
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-queryngrams",
+            "urlTemplate": "file:///colibri-queryngrams",
+            "description": "Interactive command line  tool to  n-grams with their counts from one or more plain-text corpus files. This is a high-level convenience script over underlying tools.",
+            "interfaceType": "CLI"
+        },
+        {
+            "@type": "EntryPoint",
+            "name": "colibri-reverseindex",
+            "urlTemplate": "file:///colibri-reverseindex",
+            "description": "Computes and prints reverse index of the corpus, for each token position in the corpus, all patterns that start at that position are shown. This is a high-level convenience script over underlying tools.",
+            "interfaceType": "CLI"
+        }
+    ]
 }
