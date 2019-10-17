@@ -13,6 +13,13 @@ Colibri Core
 .. image:: http://applejack.science.ru.nl/lamabadge.php/colibri-core
    :target: http://applejack.science.ru.nl/languagemachines/
 
+.. image:: https://img.shields.io/github/v/release/proycon/colibri-core
+   :alt: GitHub release (latest by date)
+
+.. image:: https://www.repostatus.org/badges/latest/active.svg
+   :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.
+   :target: https://www.repostatus.org/#active
+
 *by Maarten van Gompel, proycon@anaproy.nl, Radboud University Nijmegen*
 
 *Licensed under GPLv3 (See http://www.gnu.org/licenses/gpl-3.0.html)*
