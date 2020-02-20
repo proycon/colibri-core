@@ -3049,8 +3049,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
                 if (((int) candidate.n() >= minsubsize)  && (candidate != pattern)
                         && ((occurrencethreshold == 0) || (this->occurrencecount(candidate) >= occurrencethreshold))
-                        && ((category == 0) || (candidate.category() >= category))
-                        && ((size == 0) || (candidate.n() >= size))
+                        && ((category == 0) || (candidate.category() == category))
+                        && ((size == 0) || (candidate.n() == size))
                     ) {
                     if ((candidate.category() == SKIPGRAM) || (pattern.category() == SKIPGRAM))  {
                         //instance may not have skips in places where the larger candidate pattern does
@@ -3100,8 +3100,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const PatternPointer neighbour = iter2->second;
                 if ((ref2.token + neighbour.n() == ref.token)
                         && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() >= category))
-                        && ((size == 0) || (neighbour.n() >= size))
+                        && ((category == 0) || (neighbour.category() == category))
+                        && ((size == 0) || (neighbour.n() == size))
                     ){
                     neighbours[neighbour]++;
                     if ((cutoff > 0) && (neighbours.size() >= cutoff)) break;
@@ -3141,8 +3141,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); iter2++) {
                 const PatternPointer neighbour = *iter2;
                 if ( ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() >= category))
-                        && ((size == 0) || (neighbour.n() >= size)) ) {
+                        && ((category == 0) || (neighbour.category() == category))
+                        && ((size == 0) || (neighbour.n() == size)) ) {
                     neighbours[neighbour]++;
                     if ((cutoff > 0) && (neighbours.size() >= cutoff)) break;
                 }
@@ -3279,8 +3279,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const PatternPointer neighbour = iter2->second;
                 if ( (ref2.token > ref.token + _n)
                         && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() >= category))
-                        && ((size == 0) || (neighbour.n() >= size))
+                        && ((category == 0) || (neighbour.category() == category))
+                        && ((size == 0) || (neighbour.n() == size))
                      ) {
                     cooc[neighbour]++;
                     if (matches != NULL) matches->push_back(std::pair<IndexReference,IndexReference>(ref,ref2));
@@ -3322,8 +3322,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const int _n = neighbour.n();
                 if ( (ref2.token + _n < ref.token )
                         && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() >= category))
-                        && ((size == 0) || (neighbour.n() >= size))
+                        && ((category == 0) || (neighbour.category() == category))
+                        && ((size == 0) || (neighbour.n() == size))
                     ) {
                     cooc[neighbour]++;
                 }
@@ -3368,8 +3368,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 const int _n2 = neighbour.n();
                 if ( ((ref2.token + _n2 < ref.token ) || (ref2.token > ref.token + _n))
                         && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() >= category))
-                        && ((size == 0) || (neighbour.n() >= size))
+                        && ((category == 0) || (neighbour.category() == category))
+                        && ((size == 0) || (neighbour.n() == size))
                     ) {
                     cooc[neighbour]++;
                 }
