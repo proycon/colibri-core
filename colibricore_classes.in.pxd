@@ -315,11 +315,13 @@ cdef extern from "patternmodel.h":
     cdef cppclass PatternModelOptions:
         int MINTOKENS
         int MINTOKENS_UNIGRAMS
+        int MINTOKENS_SKIPGRAMS
         int MINLENGTH
         int MAXLENGTH
         bool DOSKIPGRAMS
         bool DOSKIPGRAMS_EXHAUSTIVE
         int MINSKIPTYPES
+        int MAXSKIPS
         bool DOREVERSEINDEX
         bool DEBUG
         bool QUIET
@@ -328,6 +330,7 @@ cdef extern from "patternmodel.h":
         bool DOREMOVESKIPGRAMS
         bool DOREMOVEFLEXGRAMS
         bool DORESET
+        int PRUNENONSUBSUMED
 
     cdef cppclass IndexedDataHandler:
         unsigned int count(IndexedData &)

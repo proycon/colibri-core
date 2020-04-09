@@ -890,13 +890,16 @@ cdef class PatternModelOptions:
     * DOSKIPGRAMS - Compute skipgrams?
     * DOSKIPGRAMS_EXHAUSTIVE - Compute skipgrams exhaustively?
     * MINSKIPTYPES - Minimum amount of different skip content types
+    * MAXSKIPS - The maximum amount of skips in a skipgram
     * DOREVERSEINDEX - Build reverse index? (default: True)
     * DOPATTERNPERLINE - Assume each line holds one single pattern.
     * MINTOKENS_UNIGRAMS - Word occurrence threshold (secondary threshold): only count patterns in which the words/unigrams occur at least this many times, only effective when the      primary
+    * MINTOKENS_SKIPGRAMS - The occurrence threshold for skipgrams, minimum amount of occurrences for a pattern to be included in a model. Defaults to the same value as MINTOKENS. Only used if DOSKIPGRAMS or DO_SKIPGRAMS_EXHAUSTIVE is set to true
     * DOREMOVENGRAMS - Remove n-grams from the model
     * DOREMOVESKIPGRAMS - Remove skipgrams from the model
     * DOREMOVEFLEXGRAMS - Remove flexgrams from the model
     * DORESET - Reset all counts before training
+    * PRUNENONSUBSUMED - Prune all n-grams up to this length that are not subsumed by higher-order ngrams
     * DEBUG
     * QUIET (default: False)
 
@@ -923,8 +926,12 @@ cdef class PatternModelOptions:
             self.coptions.DOSKIPGRAMS_EXHAUSTIVE = value
         elif key == 'MINTOKENS_UNIGRAMS':
             self.coptions.MINTOKENS_UNIGRAMS = value
+        elif key == 'MINTOKENS_SKIPGRAMS':
+            self.coptions.MINTOKENS_SKIPGRAMS = value
         elif key == 'MINSKIPTYPES':
             self.coptions.MINSKIPTYPES = value
+        elif key == 'MAXSKIPS':
+            self.coptions.MAXSKIPS = value
         elif key == 'DOREVERSEINDEX':
             self.coptions.DOREVERSEINDEX = value
         elif key == 'DOPATTERNPERLINE':
@@ -941,6 +948,8 @@ cdef class PatternModelOptions:
             self.coptions.DEBUG = value
         elif key == 'QUIET':
             self.coptions.QUIET = value
+        elif key == 'PRUNENONSUBSUMED':
+            self.coptions.PRUNENONSUBSUMED = value
         else:
             raise KeyError
 
@@ -957,8 +966,12 @@ cdef class PatternModelOptions:
             return self.coptions.DOSKIPGRAMS_EXHAUSTIVE
         elif key == 'MINTOKENS_UNIGRAMS':
             return self.coptions.MINTOKENS_UNIGRAMS
+        elif key == 'MINTOKENS_SKIPGRAMS':
+            return self.coptions.MINTOKENS_SKIPGRAMS
         elif key == 'MINSKIPTYPES':
             return self.coptions.MINSKIPTYPES
+        elif key == 'MAXSKIPS':
+            return self.coptions.MAXSKIPS
         elif key == 'DOREVERSEINDEX':
             return self.coptions.DOREVERSEINDEX
         elif key == 'DOPATTERNPERLINE':
@@ -975,6 +988,8 @@ cdef class PatternModelOptions:
             return self.coptions.DEBUG
         elif key == 'QUIET':
             return self.coptions.QUIET
+        elif key == 'PRUNENONSUBSUMED':
+            return self.coptions.PRUNENONSUBSUMED
         else:
             raise KeyError
 
