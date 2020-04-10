@@ -899,7 +899,8 @@ cdef class PatternModelOptions:
     * DOREMOVESKIPGRAMS - Remove skipgrams from the model
     * DOREMOVEFLEXGRAMS - Remove flexgrams from the model
     * DORESET - Reset all counts before training
-    * PRUNENONSUBSUMED - Prune all n-grams up to this length that are not subsumed by higher-order ngrams
+    * PRUNENONSUBSUMED - Prune all n-grams up to this length that are *NOT* subsumed by higher-order ngrams
+    * PRUNESUBSUMED - Prune all n-grams up to this length that are subsumed by higher-order ngrams
     * DEBUG
     * QUIET (default: False)
 
@@ -950,6 +951,8 @@ cdef class PatternModelOptions:
             self.coptions.QUIET = value
         elif key == 'PRUNENONSUBSUMED':
             self.coptions.PRUNENONSUBSUMED = value
+        elif key == 'PRUNESUBSUMED':
+            self.coptions.PRUNESUBSUMED = value
         else:
             raise KeyError
 
@@ -990,6 +993,8 @@ cdef class PatternModelOptions:
             return self.coptions.QUIET
         elif key == 'PRUNENONSUBSUMED':
             return self.coptions.PRUNENONSUBSUMED
+        elif key == 'PRUNESUBSUMED':
+            return self.coptions.PRUNESUBSUMED
         else:
             raise KeyError
 

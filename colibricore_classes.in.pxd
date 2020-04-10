@@ -331,6 +331,7 @@ cdef extern from "patternmodel.h":
         bool DOREMOVEFLEXGRAMS
         bool DORESET
         int PRUNENONSUBSUMED
+        int PRUNESUBSUMED
 
     cdef cppclass IndexedDataHandler:
         unsigned int count(IndexedData &)

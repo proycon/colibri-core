@@ -47,6 +47,7 @@ void usage() {
     cerr << "\t-W|--wordthreshold  <number>  Word occurrence threshold (secondary threshold): only count patterns in which the words/unigrams occur at least this many times, only effective when the primary " << endl;
     cerr << "\t                              occurrence threshold (-t) is lower than this threshold (default: disabled)" << endl;
     cerr << "\t-p|--prune <number>           Prune all lower-order n-grams below the specified order that are *NOT* subsumed by higher order n-grams (default: 0, disabled). Only effective when used with -l, usually set to equal values" << endl;
+    cerr << "\t   --prunesubsumed <number>           Prune all lower-order n-grams below the specified order that are subsumed by higher order n-grams (default: 0, disabled). Only effective when used with -l, usually set to equal values" << endl;
     cerr << "\t-s|--skipgrams                Compute skipgrams (costs extra memory and time)" << endl;
     cerr << "\t-y|--skipthreshold <number>   Occurrence threshold for skipgrams (overrides -t for skipgrams, defaults to -t). Skipgrams occurring less than this will be pruned. Value must be equal to or higher than -t." << endl;
     cerr << "\t-T|--skiptypes <number>       Skip type threshold (for use with -s): only skipgrams with at least x possible types for the skip will be considered, otherwise the skipgram " << endl;

@@ -141,7 +141,8 @@ class PatternModelOptions {
         bool DOREVERSEINDEX; ///< Obsolete now, only here for backward-compatibility with v1
         bool DOPATTERNPERLINE; ///< Assume each line contains one integral pattern, rather than actively extracting all subpatterns on a line (default: false)
 
-        int PRUNENONSUBSUMED; //< Prune all n-grams that are not subsumed by higher-order ngrams
+        int PRUNENONSUBSUMED; //< Prune all n-grams that are **NOT** subsumed by higher-order ngrams
+        int PRUNESUBSUMED; //< Prune all n-grams that are subsumed by higher-order ngrams
 
         bool DOREMOVEINDEX; ///< Do not load index information (for indexed models), loads just the patterns without any counts
         bool DOREMOVENGRAMS; ///< Remove n-grams from the model upon loading it
@@ -178,7 +179,8 @@ class PatternModelOptions {
             DOREMOVESKIPGRAMS = false;
             DOREMOVEFLEXGRAMS = false;
 
-            PRUNENONSUBSUMED = false;
+            PRUNENONSUBSUMED = 0;
+            PRUNESUBSUMED = 0;
 
             DEBUG = false;
             QUIET = false;
@@ -210,6 +212,7 @@ class PatternModelOptions {
             DOREMOVEFLEXGRAMS = ref.DOREMOVEFLEXGRAMS;
 
             PRUNENONSUBSUMED = ref.PRUNENONSUBSUMED;
+            PRUNESUBSUMED = ref.PRUNESUBSUMED;
 
             DEBUG = ref.DEBUG;
             QUIET = ref.QUIET;
@@ -1209,6 +1212,28 @@ class PatternModel: public MapType, public PatternModelInterface {
                     if (!options.QUIET) std::cerr << " pruned " << prunednonsubsumed << " non-subsumed " << (n-1) << "-grams"  << std::endl;
                 }
             }
+            if (options.PRUNESUBSUMED) {
+                if (!options.QUIET) std::cerr << "Pruning subsumed n-grams"  << std::endl;
+                int end_n = options.PRUNESUBSUMED;
+                if ((end_n > options.MAXLENGTH)) end_n = options.MAXLENGTH;
+                for (int n = 2; n <= end_n; n++) {
+                    std::unordered_set<Pattern> subsumed;
+                    unsigned int prunedsubsumed = 0;
+                    PatternModel::iterator iter = this->begin();
+                    while (iter != this->end()) {
+                        const unsigned int pattern_n = iter->first.n();
+                        if (pattern_n == (unsigned int) n) {
+                            subngrams.clear();
+                            iter->first.ngrams(subngrams, n-1);
+                            for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) subsumed.insert(Pattern(*iter2));
+                        }
+                        iter++;
+                    };
+                    prunedsubsumed += this->pruneinset(subsumed, n-1);
+                    if (!options.QUIET) std::cerr << " pruned " << prunedsubsumed << " subsumed " << (n-1) << "-grams"  << std::endl;
+                }
+
+            }
             if ((options.MINLENGTH > 1) && (options.DOSKIPGRAMS || options.DOSKIPGRAMS_EXHAUSTIVE))  {
                 unsigned int pruned = this->prunebylength(options.MINLENGTH-1);
                 if (!options.QUIET) std::cerr << " pruned " << pruned << " patterns below minimum length (" << options.MINLENGTH << ")"  << std::endl;
@@ -2070,6 +2095,34 @@ class PatternModel: public MapType, public PatternModelInterface {
                 if ( (_n == 0) || (pattern.n() == (unsigned int) _n) ) {
                     if (s.find(pattern) == s.end()) {
                         //not found in set
+                        iter = this->erase(iter);
+                        pruned++;
+                        continue;
+                    }
+                }
+                iter++;
+            };
+
+            return pruned;
+        }
+
+        /**
+         * Prune all patterns that are in the specified set.
+         * @param s The set containing the patterns not to prune
+         * @param _n The size constraint, limit to patterns of this size only (set to 0 for no constraint, default)
+         * @return the number of distinct patterns pruned
+         */
+        unsigned int pruneinset(const std::unordered_set<Pattern> & s, int _n) {
+            unsigned int pruned = 0;
+            if (s.empty()) {
+                return pruned;
+            }
+            PatternModel::iterator iter = this->begin();
+            while (iter != this->end()) {
+                const PatternType pattern = iter->first;
+                if ( (_n == 0) || (pattern.n() == (unsigned int) _n) ) {
+                    if (s.find(pattern) != s.end()) {
+                        //found in set
                         iter = this->erase(iter);
                         pruned++;
                         continue;
