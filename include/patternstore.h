@@ -827,7 +827,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         bool has(const Pattern & pattern) const { return data.count(pattern); }
         bool has(const PatternPointer & pattern) const { return data.count(pattern); }
         size_t size() const { return data.size(); }
-        void reserve(size_t s) {} //noop
+        void reserve(size_t) {} //noop
 
         typedef t_hashorderedpatternset::iterator iterator;
         typedef t_hashorderedpatternset::const_iterator const_iterator;
@@ -1010,7 +1010,7 @@ class OrderedPatternPointerMap: public PatternMapStore<std::map<PatternPointer,V
         bool has(const PatternPointer & pattern) const { return data.count(pattern); }
 
         size_t size() const { return data.size(); }
-        void reserve(size_t s) { } //noop
+        void reserve(size_t) { } //noop
 
 
         ValueType& operator [](const Pattern & pattern) { return data[pattern]; }
@@ -1112,7 +1112,7 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
     unsigned int count(std::array<T,N> & a) const {
         return (int) a[countindex];
     }
-    void add(std::array<T,N> * value, const IndexReference & ref ) const {
+    void add(std::array<T,N> * value, const IndexReference & ) const {
         (*value)[countindex] += 1;
     }
 };

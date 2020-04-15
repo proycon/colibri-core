@@ -192,7 +192,7 @@ uint32_t Pattern::getmask() const {
                 if (data[i] == ClassDecoder::flexclass){
                     isflex = true;
                     mask |= (1 << n);
-                } else if ((data[i] == ClassDecoder::skipclass)) {
+                } else if ( data[i] == ClassDecoder::skipclass ) {
                     mask |= (1 << n);
                 }
             }
@@ -213,7 +213,7 @@ uint32_t PatternPointer::computemask() const {
                 if (data[i] == ClassDecoder::flexclass){
                     isflex = true;
                     mask |= (1 << n);
-                } else if ((data[i] == ClassDecoder::skipclass)) {
+                } else if ( data[i] == ClassDecoder::skipclass ) {
                     mask |= (1 << n);
                 }
             }

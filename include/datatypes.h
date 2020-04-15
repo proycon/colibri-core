@@ -193,7 +193,7 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
         out->write( (char*) &value, sizeof(ValueType));
     }
     virtual std::string tostring(ValueType & value) {
-        return tostring(value);
+      return std::to_string(value);
     }
     unsigned int count(ValueType & value) const {
         return (unsigned int) value;
