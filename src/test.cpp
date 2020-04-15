@@ -33,6 +33,15 @@ void test(unsigned int value , unsigned int ref) {
     }
 }
 
+void test(double value , double ref) {
+    if (value != ref) {
+        cerr << " " << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
+        exit(2);
+    } else {
+        cerr << " " << value << " .... \33[1;32mok\33[m" << endl;
+    }
+}
+
 void testgt(unsigned int value , unsigned int ref) {
     if (value <= ref) {
         cerr << " " << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
