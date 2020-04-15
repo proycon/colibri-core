@@ -3691,7 +3691,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         std::vector<Pattern> parts;
         int numberofparts = pattern.parts(parts);
-        bool strictbegin = true;
         std::multimap<int, IndexReference> partmatches;
         int i = 0;
         std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_right(begin); //TODO: Check
