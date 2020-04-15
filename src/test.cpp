@@ -24,8 +24,9 @@ void test(bool r) {
     }
 }
 
-void test(unsigned int value , unsigned int ref) {
-    if (value != ref) {
+template <class T, class U=T>
+void test( T value , U ref) {
+  if (value != (T)ref) { // so cast the ref value to the type of the value
         cerr << " " << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
         exit(2);
     } else {
@@ -39,14 +40,6 @@ void testgt(unsigned int value , unsigned int ref) {
         exit(2);
     } else {
         cerr << " " <<value << " .... \33[1;32mok\33[m" << endl;
-    }
-}
-void test(string value , string ref) {
-    if (value != ref) {
-        cerr << " " << value << " .... \33[1;31mFAILED!\33[m expected " << ref << endl;
-        exit(2);
-    } else {
-        cerr << " " << value << " .... \33[1;32mok\33[m" << endl;
     }
 }
 
