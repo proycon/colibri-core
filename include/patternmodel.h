@@ -3738,6 +3738,8 @@ template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, clas
 class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,PatternPointer> {
     public:
 
+    using  PatternModel<ValueType,ValueHandler,MapType,PatternPointer>::add;
+
         PatternPointerModel<ValueType,ValueHandler,MapType>(IndexedCorpus * corpus): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() {
             this->model_type = this->getmodeltype();
             this->model_version = this->getmodelversion();
