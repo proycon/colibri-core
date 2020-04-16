@@ -2514,8 +2514,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual void outputrelations(const PatternPointer & , ClassDecoder & , std::ostream *, const std::string = "", bool=true) {} //does nothing for unindexed models
         virtual t_relationmap getsubchildren(const PatternPointer & , unsigned int = 0, int = 0, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getsubparents(const PatternPointer &, unsigned int = 0, int = 0, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap gettemplates(const PatternPointer & ,int = 0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getinstances(const PatternPointer & ,int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap gettemplates(const PatternPointer &, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getinstances(const PatternPointer &, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getskipcontent(const PatternPointer & ) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getleftneighbours(const PatternPointer &, unsigned int = 0, int = 0, unsigned int = 0, unsigned int =0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getrightneighbours(const PatternPointer &, unsigned int = 0, int = 0, unsigned int = 0, unsigned int =0) { return t_relationmap(); } //does nothing for unindexed models
