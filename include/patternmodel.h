@@ -2512,13 +2512,13 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
         virtual void outputrelations(const PatternPointer & , ClassDecoder & , std::ostream *, const std::string = "", bool=true) {} //does nothing for unindexed models
-        virtual t_relationmap getsubchildren(const PatternPointer & ,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getsubparents(const PatternPointer &,int = 0, int = 0, int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getsubchildren(const PatternPointer & , unsigned int = 0, int = 0, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getsubparents(const PatternPointer &, unsigned int = 0, int = 0, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap gettemplates(const PatternPointer & ,int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getinstances(const PatternPointer & ,int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getskipcontent(const PatternPointer & ) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getleftneighbours(const PatternPointer &, int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
-        virtual t_relationmap getrightneighbours(const PatternPointer &, int = 0, int = 0,int = 0,int =0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getleftneighbours(const PatternPointer &, unsigned int = 0, int = 0, unsigned int = 0, unsigned int =0) { return t_relationmap(); } //does nothing for unindexed models
+        virtual t_relationmap getrightneighbours(const PatternPointer &, unsigned int = 0, int = 0, unsigned int = 0, unsigned int =0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap_double getnpmi(const Pattern & , double ) { return t_relationmap_double(); } //does nothing for unindexed models
         virtual int computeflexgrams_fromskipgrams() { return 0; }//does nothing for unindexed models
         virtual int computeflexgrams_fromcooc(double) {return 0; }//does nothing for unindexed models
@@ -2568,8 +2568,17 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             }
 
         }
-   public:
+  using PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::gettemplates;
+  using PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::getinstances;
+  using PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::getsubchildren;
+  using PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::getsubparents;
+  using PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::getleftneighbours;
+  using PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::getrightneighbours;
+  using PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::pruneskipgrams;
+  using PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::add;
+ public:
 
+    using PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::print;
 
     /**
     * Begin a new pattern model, optionally pre-setting a reverseindex.
@@ -3827,6 +3836,8 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
 template<class MapType=PatternPointerMap<IndexedData, IndexedDataHandler>>
 class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPointer> {
     public:
+
+    using  IndexedPatternModel<MapType,PatternPointer>::add;
 
         IndexedPatternPointerModel<MapType>(IndexedCorpus * corpus): IndexedPatternModel<MapType,PatternPointer>() {
             this->model_type = this->getmodeltype();

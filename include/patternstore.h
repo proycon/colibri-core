@@ -20,7 +20,7 @@
 #include "classdecoder.h"
 #include "classencoder.h"
 
-/***********************************************************************************/
+/*********************************************************************************/
 
 /**
  * @file patternstore.h
@@ -507,6 +507,8 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
         PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType,PatternType>(): PatternStore<ContainerType,ReadWriteSizeType,PatternType>() { };
         virtual ~PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType,PatternType>() {};
 
+
+     using PatternStore<ContainerType,ReadWriteSizeType,PatternType>::insert;
 
         virtual void insert(const PatternType & pattern, ValueType & value)=0;
 
