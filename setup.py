@@ -90,7 +90,7 @@ def read(fname):
 #defaults:
 includedirs = ["/usr/local/include/colibri-core","/usr/include/colibri-core", "/usr/include/libxml2"]
 libdirs = ["/usr/local/lib","/usr/lib"]
-if ('install' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and '--help' not in sys.argv[1:]:
+if ('install' in sys.argv[1:] or 'build' in sys.argv[1:] or 'build_ext' in sys.argv[1:]) and '--help' not in sys.argv[1:]:
 
     if '-n' in sys.argv[1:]:
         print("Dry run not supported for colibri-core compilation",file=sys.stderr)
