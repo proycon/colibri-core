@@ -371,7 +371,7 @@ int main( int argc, char *argv[] ) {
     string DORELATIONS = "";
     bool DOINFO = false;
     bool DOFLEXFROMSKIP = false;
-    bool DOFLEXFROMCOOC = false;
+    //    bool DOFLEXFROMCOOC = false;
     bool DOTWOSTAGE =false;
     bool DOINPLACEREBUILD = false;
 	bool DOINSTANTIATE = false;
@@ -540,7 +540,7 @@ int main( int argc, char *argv[] ) {
                 DOFLEXFROMSKIP = true;
                 options.DOSKIPGRAMS = true;
             } else {
-                DOFLEXFROMCOOC = true;
+	      //                DOFLEXFROMCOOC = true;
                 COOCTHRESHOLD = atof(optarg);
             }
             break;
@@ -634,7 +634,7 @@ int main( int argc, char *argv[] ) {
     //cache options for two stage building (we will alter them)
     string cached_outputmodelfile = outputmodelfile;
     bool cached_DOSKIPGRAMS = options.DOSKIPGRAMS;
-    bool cached_DOFLEXFROMCOOC = DOFLEXFROMCOOC;
+    //    bool cached_DOFLEXFROMCOOC = DOFLEXFROMCOOC;
 
     if (DOTWOSTAGE) {
        if (options.MINTOKENS == 1) {
@@ -661,7 +661,7 @@ int main( int argc, char *argv[] ) {
                 DOPRINT = DOHISTOGRAM = DOQUERIER = DOINFO = false;
                 DORELATIONS = "";
                 options.DOSKIPGRAMS = false;
-                DOFLEXFROMCOOC = false;
+		//                DOFLEXFROMCOOC = false;
             } else if (stage == 2) {
                 cerr << "********* STARTING STAGE 2/2: Building indexed patternmodel ******" << endl;
                 DOINPLACEREBUILD = true;
@@ -669,7 +669,7 @@ int main( int argc, char *argv[] ) {
                 outputmodelfile = cached_outputmodelfile;
                 outputmodeltype = INDEXEDPATTERNMODEL;
                 options.DOSKIPGRAMS = cached_DOSKIPGRAMS;
-                DOFLEXFROMCOOC = cached_DOFLEXFROMCOOC;
+		//                DOFLEXFROMCOOC = cached_DOFLEXFROMCOOC;
                 inputmodelfile = outputmodelfile + ".stage1";
                 inputmodelfile2 = "";
             }
