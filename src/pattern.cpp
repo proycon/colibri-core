@@ -517,7 +517,6 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
 
         //stage 2 -- read buffer
         int i = 0;
-        prevhigh = false;
         if (debug) std::cerr << "STARTING STAGE 2: BEGINPOS=" << beginpos << ", LENGTH=" << length << std::endl;
         if (!gotbeginpos) {
             std::cerr << "ERROR: Invalid position in input stream whilst Reading pattern" << std::endl;

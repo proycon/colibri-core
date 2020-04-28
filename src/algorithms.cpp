@@ -50,7 +50,6 @@ vector<pair<int,int>> mask2vector(const uint32_t mask, const int n) {
     }
     if (gaplength > 0) {
         gaps.push_back(pair<int,int>(gapbegin,gaplength));
-        gaplength = 0;
     }
     return gaps;
 }
