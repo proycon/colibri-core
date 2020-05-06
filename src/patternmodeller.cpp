@@ -118,6 +118,9 @@ void processquerypattern(ModelType & model, ClassDecoder * classdecoder, const P
 
 template<class ModelType = IndexedPatternModel<>>
 void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, const vector<string> & querypatterns, const string & dorelations, bool doinstantiate) {
+  if ( classencoder == NULL ){
+    throw logic_error( "processquerypattern called with NULL classencoder");
+  }
     cerr << "Processing " << querypatterns.size() << " queries" << endl;
     const bool allowunknown = true;
     unsigned char buffer[65536];
@@ -220,7 +223,10 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
             querymodel<ModelType>(model, classencoder, classdecoder, dorelations, doinstantiate);
         }
     } else if (!dorelations.empty()) {
-        bool first = true;
+      if ( classencoder == NULL ){
+	throw logic_error( "processquerypattern called with NULL classencoder");
+      }
+      bool first = true;
         for (typename ModelType::iterator iter = model.begin(); iter != model.end(); iter++) {
             cout << iter->first.tostring(*classdecoder) << endl;
             const PatternPointer pp = iter->first;

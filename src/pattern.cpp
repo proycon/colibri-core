@@ -667,6 +667,9 @@ Pattern::Pattern(const Pattern& ref, size_t begin, size_t length, size_t * byteo
     size_t begin_b = (byteoffset != NULL) ? *byteoffset : 0;
     size_t length_b = 0;
     bool prevhigh = false;
+    if ( ref.data == NULL ){
+      throw logic_error( "Pattern( Pattern&, ....) called with NULL data");
+    }
 
     size_t i = (byteoffset != NULL) ? *byteoffset : 0;
     //std::cerr << "DEBUG: starting with offset " << i << ", begin=" << begin << ", length=" << length << std::endl;
