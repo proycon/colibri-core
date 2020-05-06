@@ -24,8 +24,8 @@ void usage() {
     cerr << "Search Options:" << endl;
     cerr << "\t-l int   Left context size" << endl;
     cerr << "\t-r int   Right context size" << endl;
-    cerr << "\t-f str   corpus data to search in (colibri.dat file)
-    cerr << "\t-i str   pattern model to search in (must be indexed)
+    cerr << "\t-f str   corpus data to search in (colibri.dat file)" << endl;
+    cerr << "\t-i str   pattern model to search in (must be indexed)" << endl;
 }
 
 int main( int argc, char *argv[] ) {
