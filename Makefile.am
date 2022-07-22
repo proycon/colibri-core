@@ -10,3 +10,11 @@ EXTRA_DIST = bootstrap AUTHORS TODO NEWS colibri-core.pc.in codemeta.json
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = colibri-core.pc
 
+docker:
+	docker build -t colibri-core:latest .
+
+docker-dev:
+	docker build -t colibri-core:dev --build-arg VERSION=development .
+
+deps:
+	./build-deps.sh
