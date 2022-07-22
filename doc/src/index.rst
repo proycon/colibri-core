@@ -63,10 +63,7 @@ aspects of the software.
 Installation
 ===============
 
-Installation via LaMachine
-------------------------------------------------------------
 
-Colibri Core is included in the `LaMachine <https://proycon.github.io/LaMachine>`_ distribution. This includes all dependencies and other NLP software. LaMachine can also run as a virtual machine on any host OS.
 
 Installing dependencies
 -------------------------------
@@ -87,15 +84,15 @@ For Mac OS X with `homebrew <http://brew.sh>`_::
 
 Arch Linux users can simply install Colibri Core and all dependencies directly from the `Arch User Repository <https://aur.archlinux.org/packages/colibri-core-git>`_ , no further installation is necessary in this case.
 
+
 Installation via the Python Package Index
 ------------------------------------------------------------
 
 Colibri Core can be installed from the `Python Package Index
-<https://pypi.python.org/pypi/colibricore>`_ using the ``pip`` tool, often
-named ``pip3`` for the Python 3 version, which we recommend. This procedure
-will automatically download, compile, and install all of Colibi Core.
+<https://pypi.python.org/pypi/colibricore>`_ using the ``pip`` tool (may be named ``pip3``).
+This procedure will automatically download, compile, and install all of Colibi Core.
 
-First ensure you installed all dependencies from the previous section!
+First ensure you installed all dependencies from the first section!
 
 Colibri Core requires an up-to-date version of Cython first (0.23 or above), or the installation will fail, we use ``pip`` to compile it from scratch::
 
@@ -108,14 +105,10 @@ Then we can install Colibri Core itself::
 For installation without root privileges we recommend creating a `Python Virtual environment,
 <https://virtualenv.pypa.io/en/latest/>`_ , in which case all of Colibri Code will be installed under it::
 
-    $ virtualenv --python=python3 coco
-    $ . coco/bin/activate       #you will need to do this each time you want to use Colibri Core
-    (coco)$ pip install cython
-    (coco)$ pip install colibricore
-
-Alternatively, pass a prefix::
-
-    $ pip3 install --install-option="--prefix=/my/installation/directory" colibricore
+    $ python3 -m venv env
+    $ . env/bin/activate       #you will need to do this each time you want to use Colibri Core
+    (env)$ pip install cython
+    (env)$ pip install colibricore
 
 **Important Note:** If you install Colibri Core locally (in a Python Virtual Environment
 or elsewhere), then you need to set ``LD_LIBRARY_PATH=$VIRTUAL_ENV/lib/`` prior
@@ -136,28 +129,29 @@ and should ideally be retrieved through the versioning control system ``git``.
 Provided git is installed on your system, this is done as follows::
 
 	$ git clone https://github.com/proycon/colibri-core.git
+    $ cd colibri-core
 
 Alternatively, you can download and extract release archives from the
 aforementioned Github page.
-
-Now we can install Colibri Core itself, the following will install everything globally under ``/usr/`` and hence requires administrative privileges::
-
-    $ sudo python3 setup.py install
 
 If you install from within a `Python Virtual environment,
 <https://virtualenv.pypa.io/en/latest/>`_ everything will be
 installed under it. This does not require root privileges::
 
-    $ virtualenv --python=python3 coco
-    $ . coco/bin/activate       #you will need to do this each time you want to use Colibri Core
-    (coco)$ pip install cython
-    (coco)$ pip install colibricore
-
-For local installation elsewhere, pass a prefix, for example::
-
-    $ python3 setup.py install --prefix=/home/yourname/local
+    $ python3 -m venv env
+    $ . env/bin/activate       #you will need to do this each time you want to use Colibri Core
+    (env)$ pip install cython
+    (env)$ pip install .
 
 The note at the end of the previous section applies for any non-global installation!
+
+Container image
+-------------------------------
+
+If you are interested in only the command-line tools (not the Python binding) and you don't want to compile from source, then an OCI container image is available for use with for example Docker::
+
+   $ docker pull proycon/colibri-core
+
 
 Manual compilation and installation (advanced)
 -------------------------------------------------
@@ -215,9 +209,13 @@ If you used, ``pip`` just run::
 For the git version::
 
  $ git pull
- 
-And then recompile as per the above instructions.
 
+For this one you'll need to recompile as per the above instructions.
+
+For the docker image::
+
+ $ docker pull proycon/colibricore
+ 
 General usage instructions
 ---------------------------------
 
