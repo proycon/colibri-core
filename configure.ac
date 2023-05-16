@@ -3,11 +3,11 @@
 # $Id: configure.ac 13188 2011-09-15 13:46:53Z sloot $
 # $URL: https://ilk.uvt.nl/svn/sources/ucto/trunk/configure.ac $
 
-AC_PREREQ([2.67])
+AC_PREREQ([2.69])
 AC_INIT([colibri-core],[2.5.6],[proycon@anaproy.nl])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE
 
 #AC_DEFINE_DIR([SYSCONF_PATH], sysconfdir, sysconfdir)
