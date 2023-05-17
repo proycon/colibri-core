@@ -45,10 +45,10 @@ class IndexReference {
         in->read( (char*) &sentence, sizeof(uint32_t));
         in->read( (char*) &token, sizeof(uint16_t));
     }
-    IndexReference(const IndexReference& other) { //copy constructor
-        sentence = other.sentence;
-        token = other.token;
-    };
+    // IndexReference(const IndexReference& other) { //copy constructor
+    //     sentence = other.sentence;
+    //     token = other.token;
+    // };
     void write(std::ostream * out) const {
         out->write( (char*) &sentence, sizeof(uint32_t));
         out->write( (char*) &token, sizeof(uint16_t));
