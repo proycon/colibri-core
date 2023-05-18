@@ -248,7 +248,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Testing correct size "; test(tokens.size() == 6);
         i = 0;
         vector<string> tokenref = {"To","be","or","not","to","be"};
-        for (vector<Pattern>::iterator iter2 = tokens.begin(); iter2 != tokens.end(); iter2++) {
+        for (vector<Pattern>::iterator iter2 = tokens.begin(); iter2 != tokens.end(); ++iter2) {
             const Pattern subngram = *iter2;
             cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref[i]);
             i += 1;
@@ -263,7 +263,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Testing correct size "; test(tokens.size() == 6);
         i = 0;
         vector<string> tokenref2 = {"to","test","or","not","to","test"};
-        for (vector<Pattern>::iterator iter2 = tokens.begin(); iter2 != tokens.end(); iter2++) {
+        for (vector<Pattern>::iterator iter2 = tokens.begin(); iter2 != tokens.end(); ++iter2) {
             const Pattern subngram = *iter2;
             cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref2[i]);
             i += 1;
@@ -299,7 +299,7 @@ int main( int argc, char *argv[] ) {
 			"To be or not to",
 			"be or not to be",
 			"To be or not to be"};
-        for (vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); iter2++) {
+        for (vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); ++iter2) {
             const Pattern subngram = *iter2;
             cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), subngramref[i]);
             i += 1;
@@ -426,7 +426,7 @@ int main( int argc, char *argv[] ) {
         ngram.ngrams(ptokens,1);
         cerr << "Testing correct size "; test(ptokens.size() == 6);
 		i = 0;
-        for (vector<PatternPointer>::iterator iter2 = ptokens.begin(); iter2 != ptokens.end(); iter2++) {
+        for (vector<PatternPointer>::iterator iter2 = ptokens.begin(); iter2 != ptokens.end(); ++iter2) {
             const PatternPointer subngram = *iter2;
             cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref[i]);
             i += 1;
@@ -437,7 +437,7 @@ int main( int argc, char *argv[] ) {
         vector<PatternPointer> psubngrams;
         pngram.subngrams(psubngrams);
 		i = 0;
-        for (vector<PatternPointer>::iterator iter2 = psubngrams.begin(); iter2 != psubngrams.end(); iter2++) {
+        for (vector<PatternPointer>::iterator iter2 = psubngrams.begin(); iter2 != psubngrams.end(); ++iter2) {
             const PatternPointer psubngram = *iter2;
             cerr << "#" << i << " -- "; test(psubngram.decode(classdecoder), subngramref[i]);
             i += 1;
@@ -450,7 +450,7 @@ int main( int argc, char *argv[] ) {
         vector<PatternPointer> psubngrams2;
         ngram.subngrams(psubngrams2);
 		i = 0;
-        for (vector<PatternPointer>::iterator iter2 = psubngrams2.begin(); iter2 != psubngrams2.end(); iter2++) {
+        for (vector<PatternPointer>::iterator iter2 = psubngrams2.begin(); iter2 != psubngrams2.end(); ++iter2) {
             const PatternPointer psubngram2 = *iter2;
             cerr << "#" << i << " -- "; test(psubngram2.decode(classdecoder), subngramref[i]);
             i += 1;
@@ -519,7 +519,7 @@ int main( int argc, char *argv[] ) {
         skipgram.parts(parts);
 		vector<string> partsref = {"To","or","to be"};
 		i = 0;
-        for (vector<Pattern>::iterator iter2 = parts.begin(); iter2 != parts.end(); iter2++) {
+        for (vector<Pattern>::iterator iter2 = parts.begin(); iter2 != parts.end(); ++iter2) {
             const Pattern part = *iter2;
             cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref[i]);
             i += 1;
@@ -534,7 +534,7 @@ int main( int argc, char *argv[] ) {
 		vector<int> gaprefbegin = {1,3};
 		vector<int> gapreflength = {1,1};
 		i = 0;
-        for (vector<std::pair<int,int>>::iterator iter2 = gapcontainer.begin(); iter2 != gapcontainer.end(); iter2++) {
+        for (vector<std::pair<int,int>>::iterator iter2 = gapcontainer.begin(); iter2 != gapcontainer.end(); ++iter2) {
             cerr << "#" << i << " -- begin "; test(iter2->first, gaprefbegin[i]);
             cerr << "#" << i << " -- length "; test(iter2->second, gapreflength[i]);
             i += 1;
@@ -580,7 +580,7 @@ int main( int argc, char *argv[] ) {
         vector<PatternPointer> pparts;
         pskipgram.parts(pparts);
 		i = 0;
-        for (vector<PatternPointer>::iterator iter2 = pparts.begin(); iter2 != pparts.end(); iter2++) {
+        for (vector<PatternPointer>::iterator iter2 = pparts.begin(); iter2 != pparts.end(); ++iter2) {
             const Pattern part = *iter2;
             cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref[i]);
             i += 1;
@@ -592,7 +592,7 @@ int main( int argc, char *argv[] ) {
         std::vector<std::pair<int,int> > pgapcontainer;
         pskipgram.gaps(pgapcontainer);
 		i = 0;
-        for (vector<std::pair<int,int>>::iterator iter2 = pgapcontainer.begin(); iter2 != pgapcontainer.end(); iter2++) {
+        for (vector<std::pair<int,int>>::iterator iter2 = pgapcontainer.begin(); iter2 != pgapcontainer.end(); ++iter2) {
             cerr << "#" << i << " -- begin "; test(iter2->first, gaprefbegin[i]);
             cerr << "#" << i << " -- length "; test(iter2->second, gapreflength[i]);
             i += 1;
@@ -624,7 +624,7 @@ int main( int argc, char *argv[] ) {
 
         cerr << "Parts: " << endl;
 
-        for (vector<EncNGram*>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {
+        for (vector<EncNGram*>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); ++iter2) {
             const EncAnyGram * subngram = *iter2;
             cerr << "'" << subngram->decode(classdecoder) << "'" << endl;
         }
@@ -645,7 +645,7 @@ int main( int argc, char *argv[] ) {
         skipgraminv2.parts(parts2);
 		vector<string> partsref2 = {"be","not"};
 		i = 0;
-        for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {
+        for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); ++iter2) {
             const Pattern part = *iter2;
             cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref2[i]);
             i += 1;
@@ -669,7 +669,7 @@ int main( int argc, char *argv[] ) {
         skipgram5.parts(parts2);
 		vector<string> skipgram5partsref = {"be","not","be"};
      	i = 0;
-        for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {
+        for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); ++iter2) {
             const Pattern part = *iter2;
             cerr << "#" << i << " -- "; test(part.decode(classdecoder), skipgram5partsref[i]);
             i += 1;
@@ -682,7 +682,7 @@ int main( int argc, char *argv[] ) {
 		vector<int> skipgram5gaprefbegin = {1,3};
 		vector<int> skipgram5gapreflength = {1,2};
 		i = 0;
-        for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); iter2++) {
+        for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); ++iter2) {
             cerr << "#" << i << " -- begin "; test(iter2->first, skipgram5gaprefbegin[i]);
             cerr << "#" << i << " -- length "; test(iter2->second, skipgram5gapreflength[i]);
             i += 1;
@@ -695,7 +695,7 @@ int main( int argc, char *argv[] ) {
 		vector<int> skipgram5partrefbegin = {0,2,5};
 		vector<int> skipgram5partreflength = {1,1,1};
 		i = 0;
-        for (vector<pair<int,int >>::iterator iter2 = p.begin(); iter2 != p.end(); iter2++) {
+        for (vector<pair<int,int >>::iterator iter2 = p.begin(); iter2 != p.end(); ++iter2) {
             cerr << "#" << i << " -- begin "; test(iter2->first, skipgram5partrefbegin[i]);
             cerr << "#" << i << " -- length "; test(iter2->second, skipgram5partreflength[i]);
 			i++;
@@ -704,7 +704,7 @@ int main( int argc, char *argv[] ) {
         /*cerr << "mask: " << endl;
         vector<bool> m;
         skipgram5.mask(m);
-        for (vector<bool>::iterator iter2 = m.begin(); iter2 != m.end(); iter2++) {
+        for (vector<bool>::iterator iter2 = m.begin(); iter2 != m.end(); ++iter2) {
             if (*iter2)  {
                 cerr << "1";
             } else {
@@ -739,7 +739,7 @@ int main( int argc, char *argv[] ) {
         parts2.clear();
         skipgram6.parts(parts2);
 		i = 0;
-        for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {
+        for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); ++iter2) {
             const Pattern part = *iter2;
             cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref2[i]);
             i += 1;
@@ -764,7 +764,7 @@ int main( int argc, char *argv[] ) {
 		cerr << "(computed)" << endl;
 		vector<string> skipgram7partsref = {"blah","or","blah"};
 		i = 0;
-        for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {
+        for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); ++iter2) {
             const Pattern part = *iter2;
             cerr << "#" << i << " -- "; test(part.decode(classdecoder), skipgram7partsref[i]);
 			i += 1;
@@ -777,7 +777,7 @@ int main( int argc, char *argv[] ) {
         vector<int> skipgram7gaprefbegin = {1,3};
         vector<int> skipgram7gapreflength = {1,2};
         i = 0;
-        for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); iter2++) {
+        for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); ++iter2) {
             cerr << "#" << i << " -- begin "; test(iter2->first, skipgram7gaprefbegin[i]);
             cerr << "#" << i << " -- length "; test(iter2->second, skipgram7gapreflength[i]);
 			i++;
@@ -787,7 +787,7 @@ int main( int argc, char *argv[] ) {
         /*cerr << "mask: " << endl;
         m.clear();
         skipgram7.mask(m);
-        for (vector<bool>::iterator iter2 = m.begin(); iter2 != m.end(); iter2++) {
+        for (vector<bool>::iterator iter2 = m.begin(); iter2 != m.end(); ++iter2) {
             if (*iter2)  {
                 cerr << "1";
             } else {
@@ -812,7 +812,7 @@ int main( int argc, char *argv[] ) {
         skipgram8.parts(parts2);
         vector<string> skipgram8partsref = {"or blah"};
         i = 0;
-        for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); iter2++) {
+        for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); ++iter2) {
             const Pattern part = *iter2;
             cerr << "#" << i << " -- "; test(part.decode(classdecoder), skipgram8partsref[i]);
             i++;
@@ -825,7 +825,7 @@ int main( int argc, char *argv[] ) {
         vector<int> skipgram8gaprefbegin= {0,3};
         vector<int> skipgram8gapreflength= {1,2};
         i = 0;
-        for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); iter2++) {
+        for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); ++iter2) {
             cerr << "#" << i << " -- begin "; test(iter2->first, skipgram8gaprefbegin[i]);
             cerr << "#" << i << " -- length "; test(iter2->second, skipgram8gapreflength[i]);
             i++;
@@ -835,7 +835,7 @@ int main( int argc, char *argv[] ) {
         /*cerr << "mask: " << endl;
         m.clear();
         skipgram8.mask(m);
-        for (vector<bool>::iterator iter2 = m.begin(); iter2 != m.end(); iter2++) {
+        for (vector<bool>::iterator iter2 = m.begin(); iter2 != m.end(); ++iter2) {
             if (*iter2)  {
                 cerr << "1";
             } else {
@@ -878,7 +878,7 @@ int main( int argc, char *argv[] ) {
 
         vector<string> flexrefparts = {"be","not","be"};
         i = 0;
-        for (vector<Pattern>::iterator iter2 = flexparts.begin(); iter2 != flexparts.end(); iter2++) {
+        for (vector<Pattern>::iterator iter2 = flexparts.begin(); iter2 != flexparts.end(); ++iter2) {
             const Pattern part = *iter2;
             cerr << "#" << i << " -- "; test(part.decode(classdecoder), flexrefparts[i]);
             i++;
@@ -987,10 +987,10 @@ int main( int argc, char *argv[] ) {
         masks = compute_skip_configurations(6,6);
         cerr << "Computing possible gaps in 6-grams: " << endl;
         int j = 0;
-        for (vector<uint32_t>::iterator iter = masks.begin(); iter != masks.end(); iter++) {
+        for (vector<uint32_t>::iterator iter = masks.begin(); iter != masks.end(); ++iter) {
             vector<pair<int,int>> gapconfig = mask2vector(*iter,6);
             int data[6] = {0,0,0,0,0,0};
-            for (vector<pair<int,int>>::iterator iter2 = gapconfig.begin(); iter2 != gapconfig.end(); iter2++) {
+            for (vector<pair<int,int>>::iterator iter2 = gapconfig.begin(); iter2 != gapconfig.end(); ++iter2) {
                 for (int i = iter2->first; i < iter2->first + iter2->second; i++) {
                     data[i] = 1;
                 }
@@ -1098,7 +1098,7 @@ int main( int argc, char *argv[] ) {
 		vector<PatternPointer> skipgrams;
 		int i = 0;
 		unindexedmodelNS.computeskipgrams(queryngram,1,NULL,NULL,NULL,&skipgrams,true,3);
-		for (vector<PatternPointer>::iterator iter = skipgrams.begin(); iter != skipgrams.end();iter++) {
+		for (vector<PatternPointer>::iterator iter = skipgrams.begin(); iter != skipgrams.end();++iter) {
 			cerr << iter->tostring(classdecoder) << endl;
 			i++;
 		}
@@ -1237,7 +1237,7 @@ int main( int argc, char *argv[] ) {
 
         t_relationmap relations6 = indexedmodel.getskipcontent(skipgram);
         indexedmodel.outputrelations(skipgram, relations6, classdecoder, &cerr,"SKIPCONTENT");
-        for (t_relationmap::iterator iter = relations6.begin(); iter != relations6.end(); iter++) {
+        for (t_relationmap::iterator iter = relations6.begin(); iter != relations6.end(); ++iter) {
             cerr << " length check: "; test(iter->first.n(), 3);
             cerr << " type check: "; test(iter->first.category(), NGRAM);
         }
@@ -1248,7 +1248,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Extracting instances for " << skipgram2.tostring(classdecoder) << endl;
         t_relationmap relations7 = indexedmodel.getinstances(skipgram2);
         indexedmodel.outputrelations(skipgram2, relations7, classdecoder, &cerr,"INSTANTIATED-BY");
-        for (t_relationmap::iterator iter = relations7.begin(); iter != relations7.end(); iter++) {
+        for (t_relationmap::iterator iter = relations7.begin(); iter != relations7.end(); ++iter) {
             cerr << " length check: "; test(iter->first.n(), 7);
             cerr << " type check: "; test(iter->first.category(), NGRAM);
         }
@@ -1258,7 +1258,7 @@ int main( int argc, char *argv[] ) {
         Pattern instance = classencoder.buildpattern("To flee or not to flee ."); //this is a pattern actually in the model (important!)
         cerr << "Extracting templates for " << instance.tostring(classdecoder) << endl;
         t_relationmap relations8 = indexedmodel.gettemplates(instance);
-        for (t_relationmap::iterator iter = relations8.begin(); iter != relations8.end(); iter++) {
+        for (t_relationmap::iterator iter = relations8.begin(); iter != relations8.end(); ++iter) {
             cerr << " " << iter->first.tostring(classdecoder);
             cerr << " length check: "; test(iter->first.n(), 7);
             cerr << " type check: "; test(iter->first.category(), SKIPGRAM);  //no flexgrams in model at this point
@@ -1284,7 +1284,7 @@ int main( int argc, char *argv[] ) {
         cerr << "Extracting skipcontent relations for flexgram " << flexgram.tostring(classdecoder) << endl;
         t_relationmap relations62 = indexedmodel.getskipcontent(flexgram);
         indexedmodel.outputrelations(flexgram, relations62, classdecoder, &cerr,"SKIPCONTENT");
-        for (t_relationmap::iterator iter = relations62.begin(); iter != relations62.end(); iter++) {
+        for (t_relationmap::iterator iter = relations62.begin(); iter != relations62.end(); ++iter) {
             cerr << " type check: "; test(iter->first.category(), NGRAM);
         }
         cerr << "Verify count: "; test(relations62.size(), 2);  //other two are below threshold
@@ -1293,7 +1293,7 @@ int main( int argc, char *argv[] ) {
         t_relationmap relations72 = indexedmodel.getinstances(flexgram2);
         cerr << "Extracting instances for flexgram " << flexgram2.tostring(classdecoder) << endl;
         indexedmodel.outputrelations(flexgram2, relations72, classdecoder, &cerr,"INSTANTIATED-BY");
-        for (t_relationmap::iterator iter = relations72.begin(); iter != relations72.end(); iter++) {
+        for (t_relationmap::iterator iter = relations72.begin(); iter != relations72.end(); ++iter) {
             cerr << " length check: "; test(iter->first.n(), 7);
             cerr << " type check: "; test(iter->first.category(), NGRAM);
         }
@@ -1303,13 +1303,13 @@ int main( int argc, char *argv[] ) {
         if (verbose) {
             cerr << "Iterating over all patterns and testing (non-)equivalence" << endl;
             int i = 0;
-            for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
+            for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); ++iter) {
                 const Pattern pattern = iter->first;
                 const PatternPointer pp = PatternPointer(pattern);
                 const IndexedData data = iter->second;
                 int j = 0;
                 cerr << pattern.tostring(classdecoder) << endl;
-                for (IndexedPatternModel<>::iterator iter2 = indexedmodel.begin(); iter2 != indexedmodel.end(); iter2++) {
+                for (IndexedPatternModel<>::iterator iter2 = indexedmodel.begin(); iter2 != indexedmodel.end(); ++iter2) {
                     const Pattern pattern2 = iter2->first;
                     const PatternPointer pp2 = PatternPointer(pattern2);
                     cerr << "\t" << pp2.tostring(classdecoder) << endl;
@@ -1354,12 +1354,12 @@ int main( int argc, char *argv[] ) {
 
         cerr << "Testing low-level PatternSet...";
         PatternSet<uint32_t> set;
-        for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
+        for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); ++iter) {
             set.insert(iter->first);
         }
 
         //double inserts:
-        for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); iter++) {
+        for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); ++iter) {
             set.insert(iter->first);
         }
         test(set.size(), 155);
@@ -1384,7 +1384,7 @@ int main( int argc, char *argv[] ) {
         test(ri_iter.index()== IndexReference(1,0));
         cerr << "Testing first word (string)";
         test(ri_iter.patternpointer().tostring(classdecoder), "To");
-        ri_iter++;
+        ++ri_iter;
         cerr << "Testing second word (index)";
         test(ri_iter.index() == IndexReference(1,1));
         cerr << "Testing second word (string)";
@@ -1406,7 +1406,7 @@ int main( int argc, char *argv[] ) {
 
         cerr << "Iterating over reverse index..." << endl;
         int i = 0;
-        for (IndexedCorpus::iterator iter = corpus.begin(); iter != corpus.end(); iter++) {
+        for (IndexedCorpus::iterator iter = corpus.begin(); iter != corpus.end(); ++iter) {
             cerr << "\tGetting pattern for index " << iter.index().tostring() << " = " << iter.patternpointer().tostring(classdecoder) << endl;
             unordered_set<PatternPointer> patterns = model.getreverseindex(iter.index());
             for (PatternPointer p : patterns) {
@@ -1423,7 +1423,7 @@ int main( int argc, char *argv[] ) {
         Pattern skipgram = classencoder.buildpattern("that {*} the");
         vector<std::pair<IndexReference,PatternPointer>> matches = corpus.findpattern(skipgram);
         i = 0;
-        for ( vector<std::pair<IndexReference,PatternPointer>>::iterator iter = matches.begin(); iter != matches.end(); iter++) {
+        for ( vector<std::pair<IndexReference,PatternPointer>>::iterator iter = matches.begin(); iter != matches.end(); ++iter) {
             //should be only 1
             cerr << "   " << iter->second.tostring(classdecoder) << endl;
             cerr << "   testing match equivalence: "; test(iter->second == skipgram);
@@ -1436,7 +1436,7 @@ int main( int argc, char *argv[] ) {
         Pattern flexgram = classencoder.buildpattern("that {**} the");
         matches = corpus.findpattern(flexgram);
         i = 0;
-        for ( vector<std::pair<IndexReference,PatternPointer>>::iterator iter = matches.begin(); iter != matches.end(); iter++) {
+        for ( vector<std::pair<IndexReference,PatternPointer>>::iterator iter = matches.begin(); iter != matches.end(); ++iter) {
             //should be only 1
             cerr << "   " << iter->second.tostring(classdecoder) << endl;
             cerr << "   testing match equivalence: "; test(iter->second == flexgram);
@@ -1549,7 +1549,7 @@ int main( int argc, char *argv[] ) {
 
         cerr << "Sanity check: ";
         unsigned int i = 0;
-        for (PatternPointerModel<uint32_t>::iterator iter = ppmodel.begin(); iter != ppmodel.end(); iter++) {
+        for (PatternPointerModel<uint32_t>::iterator iter = ppmodel.begin(); iter != ppmodel.end(); ++iter) {
             const PatternPointer p = iter->first;
             cerr << "Pattern #" << (i+1) << ", hash=" << p.hash() << ", mask=" << p.mask << "...";
             test(ppmodel.occurrencecount(p),iter->second);
@@ -1628,7 +1628,7 @@ int main( int argc, char *argv[] ) {
 
         cerr << "Sanity check: ";
         unsigned int i = 0;
-        for (IndexedPatternPointerModel<>::iterator iter = ppmodel.begin(); iter != ppmodel.end(); iter++) {
+        for (IndexedPatternPointerModel<>::iterator iter = ppmodel.begin(); iter != ppmodel.end(); ++iter) {
             const PatternPointer p = iter->first;
             cerr << "Pattern #" << (i+1) << ", hash=" << p.hash() << ", mask=" << p.mask << "...";
             test(ppmodel.occurrencecount(p),iter->second.count());
@@ -1697,9 +1697,9 @@ int main( int argc, char *argv[] ) {
 
         std::set<Pattern>::iterator iter = patternset.begin();
         cerr << "Set integrity #1: "; test(iter->tostring(decoder),querystring3);
-        iter++;
+        ++iter;
         cerr << "Set integrity #2: "; test(iter->tostring(decoder),querystring2);
-        iter++;
+        ++iter;
         cerr << "Set integrity #3: "; test(iter->tostring(decoder),querystring);
 
     }
