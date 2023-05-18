@@ -148,9 +148,11 @@ struct Measurement {
 Measurement begin(const string &  title) {
     cout << "====== " << title << "======" << endl;
     Measurement m;
+    m.duration = 0.0;
     m.begintime = clock();
-	m.beginmem = getCurrentRSS();
-	return m;
+    m.beginmem = getCurrentRSS();
+    m.endmem = getCurrentRSS();
+    return m;
 }
 
 void end(Measurement& m) {

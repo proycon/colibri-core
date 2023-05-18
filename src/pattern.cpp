@@ -177,7 +177,7 @@ Pattern Pattern::toflexgram() const { //converts a fixed skipgram into a dynamic
 
 PatternPointer PatternPointer::toflexgram() const { //converts a fixed skipgram into a flexgram, ngrams just come out unchanged
     PatternPointer copy = *this;
-    if (mask != 0) copy.mask = mask | (1<<31);
+    if (mask != 0) copy.mask = mask | (unsigned(1)<<31);
     return copy;
 }
 
@@ -199,7 +199,7 @@ uint32_t Pattern::getmask() const {
             n++;
         }
     }
-    if (isflex) mask |= (1 << 31);
+    if (isflex) mask |= (unsigned(1) << 31);
     return mask;
 }
 
@@ -220,7 +220,7 @@ uint32_t PatternPointer::computemask() const {
             n++;
         }
     }
-    if (isflex) mask |= (1 << 31);
+    if (isflex) mask |= (unsigned(1) << 31);
     return mask;
 }
 
@@ -1953,7 +1953,7 @@ PatternPointer IndexedCorpus::findpattern(const IndexReference & begin, const Pa
         PatternPointer result = getpattern(begin, pattern.n());
         if (resultcategory == NGRAM) return result;
         result.mask = pattern.getmask(); //to skipgram
-        if (resultcategory == FLEXGRAM) result.mask = result.mask | (1<<31); //make flexgram
+        if (resultcategory == FLEXGRAM) result.mask = result.mask | (unsigned(1)<<31); //make flexgram
         return result; //SKIPGRAM
     } else { // if (pattern.category() == FLEXGRAM) {
         std::vector<PatternPointer> parts;
@@ -1991,7 +1991,7 @@ PatternPointer IndexedCorpus::findpattern(const IndexReference & begin, const Pa
         if (resultcategory == NGRAM) return foundpattern;
         foundpattern.mask = vector2mask(newskips);
         if (resultcategory == SKIPGRAM) return foundpattern;
-        foundpattern.mask = foundpattern.mask | (1<<31); //make flexgram
+        foundpattern.mask = foundpattern.mask | (unsigned(1)<<31); //make flexgram
         return foundpattern; //FLEXGRAM
     }
 }
