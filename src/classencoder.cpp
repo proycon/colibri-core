@@ -62,10 +62,10 @@ unsigned char * inttobytes_v1(unsigned int cls, int & length) {
 //from http://www.zedwood.com/article/cpp-utf8-strlen-function
 int utf8_strlen(const string& str)
 {
-    int c,i,ix,q;
+    int i,ix,q;
     for (q=0, i=0, ix=str.length(); i < ix; i++, q++)
     {
-        c = (unsigned char) str[i];
+        int c = (unsigned char) str[i];
         if      (c>=0   && c<=127) i+=0;
         else if ((c & 0xE0) == 0xC0) i+=1;
         else if ((c & 0xF0) == 0xE0) i+=2;
@@ -165,7 +165,7 @@ void ClassEncoder::processcorpus(istream * IN , unordered_map<string,unsigned in
               	  string word = string(line.begin() + begin, line.begin() + i + offset);
               	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
               	    word = trim(word, " \t\n\r"); //trim whitespace, control characters
-                    if ((vocab == NULL) || ((vocab != NULL) && (vocab->find(word) != vocab->end()) ) ) {
+                    if ((vocab == NULL) || (vocab->find(word) != vocab->end() )) {
                         if ((minlength > 0) || (maxlength > 0))  {
                             const unsigned int l = (unsigned int) utf8_strlen(word);
                             if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
@@ -189,10 +189,10 @@ void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<str
     doc.readFromFile(filename);
 
     vector<folia::Word*> words = doc.words();
-    for (vector<folia::Word*>::iterator iterw = words.begin(); iterw != words.end(); iterw++) {
+    for (vector<folia::Word*>::iterator iterw = words.begin(); iterw != words.end(); ++iterw) {
         folia::Word * word = *iterw;
         const string wordtext = word->str();
-        if ((vocab == NULL) || ((vocab != NULL) && (vocab->find(word) != vocab->end()) ) ) {
+        if ((vocab == NULL) || (vocab->find(word) != vocab->end()) ) {
             if ((minlength > 0) || (maxlength > 0))  {
                 const int l = utf8_strlen(wordtext);
                 if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
@@ -211,12 +211,12 @@ void ClassEncoder::buildclasses(const unordered_map<string,unsigned int> & freql
 
         //sort by occurrence count  using intermediate representation
         multimap<const unsigned int, const string> revfreqlist;
-        for (unordered_map<string,unsigned int>::const_iterator iter = freqlist.begin(); iter != freqlist.end(); iter++) {
+        for (unordered_map<string,unsigned int>::const_iterator iter = freqlist.begin(); iter != freqlist.end(); ++iter) {
             if (iter->second >= threshold) revfreqlist.insert( pair<const unsigned int,const string>(-1 * iter->second, iter->first) );
         }
 
         int cls = highestclass;
-        for (multimap<const unsigned int,const string>::const_iterator iter = revfreqlist.begin(); iter != revfreqlist.end(); iter++) {
+        for (multimap<const unsigned int,const string>::const_iterator iter = revfreqlist.begin(); iter != revfreqlist.end(); ++iter) {
             if (!classes.count(iter->second)) { //check if it doesn't already exist, in case we are expanding on existing classes
         	    cls++;
         	    classes[iter->second] = cls;
@@ -247,7 +247,7 @@ void ClassEncoder::build(vector<string> & files, bool quiet, unsigned int thresh
 	    unordered_map<string,unsigned int> freqlist;
         unordered_set<string> vocab;
         if (!vocabfile.empty()) loadvocab(vocabfile, vocab);
-	    for (vector<string>::iterator iter = files.begin(); iter != files.end(); iter++) {
+	    for (vector<string>::iterator iter = files.begin(); iter != files.end(); ++iter) {
 	        const string filename = *iter;
 	        if (!quiet) cerr << "Processing " << filename << endl;
 	        if (filename.rfind(".xml") != string::npos) {
@@ -268,7 +268,7 @@ void ClassEncoder::build(vector<string> & files, bool quiet, unsigned int thresh
 void ClassEncoder::save(const string & filename) {
 	ofstream OUT;
 	OUT.open( filename.c_str() );
-	for (std::unordered_map<std::string,unsigned int>::iterator iter = classes.begin(); iter != classes.end(); iter++) {
+	for (std::unordered_map<std::string,unsigned int>::iterator iter = classes.begin(); iter != classes.end(); ++iter) {
 	    if (iter->second != unknownclass) OUT << iter->second << '\t' << iter->first << endl;
 	}
 	OUT.close();
@@ -465,7 +465,6 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
     if ((inputfilename.rfind(".xml") != string::npos) ||  (inputfilename.rfind(".xml.bz2") != string::npos) ||  (inputfilename.rfind(".xml.gz") != string::npos)) {
         #ifdef WITHFOLIA
         const char zero = 0;
-        const char one = 1;
         //FoLiA
         folia::Document doc;
         doc.readFromFile(inputfilename);
@@ -480,7 +479,6 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	        OUT.open(outputfilename.c_str(), ios::out | ios::binary);
 	    }
 	    unsigned char outputbuffer[65536];
-	    int outputsize = 0;
 	    unsigned int linenum = 1;
 	    vector<folia::Word*> words = doc.words();
 	    const size_t wl = words.size();
@@ -489,7 +487,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	    for (size_t i = 0; i < wl; i++) {
             folia::Word * word = words[i];
 	        if ((!line.empty()) && (word->parent() != prevparent)) {
-	            outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
+		  int outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
 	            if (outputsize > 0) OUT.write((const char *) outputbuffer, outputsize);
           	    OUT.write(&zero, sizeof(char)); //newline
           	    linenum++;
@@ -503,7 +501,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
             }
         }
         if (!line.empty()) {
-            outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
+            int outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
 	        if (outputsize > 0) {
                 OUT.write((const char *) outputbuffer, outputsize);
           	    OUT.write(&zero, sizeof(char)); //newline
@@ -628,10 +626,9 @@ unsigned char * convert_v1_v2(const unsigned char * olddata, unsigned int & newl
     //cerr<<"DEBUG: Newlength=" << newlength << endl;
 	unsigned char * data  = new unsigned char[newlength+1];
 	unsigned char * datacursor = data;
-    unsigned int classlength;
-	for (std::vector<unsigned int>::iterator iter = classes.begin(); iter != classes.end(); iter++) {
-		classlength = inttobytes(datacursor, *iter);
-		datacursor += classlength;
+	for (std::vector<unsigned int>::iterator iter = classes.begin(); iter != classes.end(); ++iter) {
+	  unsigned int classlength = inttobytes(datacursor, *iter);
+	  datacursor += classlength;
 	}
     return data;
 }
@@ -668,15 +665,10 @@ unsigned char * convert_v1_v2(istream * in, bool ignoreeol, bool debug) {
             readingdata--;
         } else {
             if (c == 0) {
-                if (!ignoreeol) break;
+	      if (!ignoreeol) break;
             } else if (c < 128) {
-                //we have a size
-                if (c == 0) {
-                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 1)" << std::endl;
-                    throw InternalError();
-                } else {
-                    readingdata = c;
-                }
+	      //we have a size
+	      readingdata = c;
             }
         }
     } while (1);
