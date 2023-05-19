@@ -225,7 +225,7 @@ void ClassEncoder::buildclasses(const unordered_map<string,unsigned int> & freql
         highestclass = cls;
 }
 
-void ClassEncoder::build(const string & filename, unsigned int threshold, const string vocabfile) {
+void ClassEncoder::build(const string & filename, unsigned int threshold, const string& vocabfile) {
 	    unordered_map<string,unsigned int> freqlist;
         unordered_set<string> vocab;
         if (!vocabfile.empty()) loadvocab(vocabfile, vocab);
@@ -243,7 +243,7 @@ void ClassEncoder::build(const string & filename, unsigned int threshold, const 
 }
 
 
-void ClassEncoder::build(vector<string> & files, bool quiet, unsigned int threshold, const string vocabfile) {
+void ClassEncoder::build(vector<string> & files, bool quiet, unsigned int threshold, const string& vocabfile) {
 	    unordered_map<string,unsigned int> freqlist;
         unordered_set<string> vocab;
         if (!vocabfile.empty()) loadvocab(vocabfile, vocab);

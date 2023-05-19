@@ -26,7 +26,7 @@ const uint32_t bitmask[] = { 1, 1<<1,1<<2,1<<3,1<<4,1<<5,1<<6,1<<7,1<<8,1<<9,1<<
 
 std::string trim(const std::string &t, const std::string &ws);
 std::string get_extension(const std::string& filename);
-bool strip_extension(std::string& filename, const std::string extension);
+bool strip_extension(std::string& filename, const std::string& extension);
 double listproduct(const std::vector<double> & l);
 double listsum(const std::vector<double> & l);
 void orderedinsert(std::list<double> & l, double value);
