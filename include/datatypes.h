@@ -123,7 +123,7 @@ class IndexedData {
      */
     std::set<int> sentences() const {
         std::set<int> sentences;
-        for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
+        for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
             const IndexReference ref = *iter;
             sentences.insert(ref.sentence);
         }
@@ -223,7 +223,7 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         uint32_t c;
         in->read((char*) &c, sizeof(uint32_t));
         v.reserve(c); //reserve space to optimise
-        for (unsigned int i = 0; i < c; i++) {
+        for (unsigned int i = 0; i < c; ++i) {
             IndexReference ref = IndexReference(in);
             v.insert(ref);
         }
@@ -233,13 +233,13 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         const uint32_t c = value.count();
         out->write((char*) &c, sizeof(uint32_t));
         //we already assume everything is nicely sorted!
-        for (IndexedData::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
+        for (IndexedData::iterator iter = value.data.begin(); iter != value.data.end(); ++iter) {
             iter->write(out);
         }
     }
     virtual std::string tostring(IndexedData & value) {
         std::string s = "";
-        for (IndexedData::iterator iter = value.data.begin(); iter != value.data.end(); iter++) {
+        for (IndexedData::iterator iter = value.data.begin(); iter != value.data.end(); ++iter) {
             if (!s.empty()) s += " ";
             s += iter->tostring();
         }
@@ -296,7 +296,7 @@ class PatternFeatureVector {
             uint16_t c;
             in->read((char*) &c, sizeof(uint16_t));
             data.reserve(c);
-            for (unsigned int i = 0; i < c; i++) {
+            for (unsigned int i = 0; i < c; ++i) {
                 FeatureType f;
                 in->read((char*) &f, sizeof(FeatureType));
                 data.push_back(f);
@@ -312,7 +312,7 @@ class PatternFeatureVector {
             }
             uint16_t c = (uint16_t) s;
             out->write((char*) &c , sizeof(uint16_t));
-            for (unsigned int i = 0; i < s; i++) {
+            for (unsigned int i = 0; i < s; ++i) {
                 FeatureType f = data[i];
                 out->write((char*) &f, sizeof(FeatureType));
             }
@@ -361,7 +361,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
         PatternFeatureVectorMap<FeatureType>() {};
 
         PatternFeatureVectorMap<FeatureType>(const PatternFeatureVectorMap<FeatureType> & ref) {
-            for (const_iterator iter = ref.begin(); iter != ref.end(); iter++) {
+            for (const_iterator iter = ref.begin(); iter != ref.end(); ++iter) {
                 //make a copy
                 const PatternFeatureVector<FeatureType> * pfv_ref = *iter;
                 PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(*pfv_ref);
@@ -383,7 +383,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
         }
 
         bool has(const Pattern & ref) const {
-            for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
+            for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
                 const PatternFeatureVector<FeatureType> * pfv = *iter;
                 if (pfv->pattern == ref) {
                     return true;
@@ -394,7 +394,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
 
 
        iterator find(const Pattern & ref) {
-            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+            for (iterator iter = this->begin(); iter != this->end(); ++iter) {
                 const PatternFeatureVector<FeatureType> * pfv = *iter;
                 if (pfv->pattern == ref) {
                     return iter;
@@ -481,7 +481,7 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
         uint16_t c;
         in->read((char*) &c, sizeof(uint16_t));
         v.reserve(c); //reserve space to optimise
-        for (unsigned int i = 0; i < c; i++) {
+        for (unsigned int i = 0; i < c; ++i) {
             PatternFeatureVector<FeatureType> ref = PatternFeatureVector<FeatureType>(in);
             v.insert(ref, false); //checkifexists=false, to speed things up when loading, assuming data is sane
         }
@@ -497,7 +497,7 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
         const uint16_t c = (uint16_t) s;
         out->write((char*) &c, sizeof(uint16_t));
         unsigned int n = 0;
-        for (typename PatternFeatureVectorMap<FeatureType>::iterator iter = value.begin(); iter != value.end(); iter++) {
+        for (typename PatternFeatureVectorMap<FeatureType>::iterator iter = value.begin(); iter != value.end(); ++iter) {
             if (n==s) break;
             PatternFeatureVector<FeatureType> * pfv = *iter;
             pfv->write(out);
@@ -552,7 +552,7 @@ class PatternVector { //acts like a (small) map (but implemented as a vector to 
         }
 
         bool has(const Pattern & ref) const {
-            for (const_iterator iter = this->begin(); iter != this->end(); iter++) {
+            for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
                 if (*iter == ref) {
                     return true;
                 }
@@ -562,7 +562,7 @@ class PatternVector { //acts like a (small) map (but implemented as a vector to 
 
 
        iterator find(const Pattern & ref) {
-            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+            for (iterator iter = this->begin(); iter != this->end(); ++iter) {
                 if (*iter == ref) {
                     return iter;
                 }
@@ -626,7 +626,7 @@ class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
         uint32_t c;
         in->read((char*) &c, sizeof(uint32_t));
         v.reserve(c); //reserve space to optimise
-        for (unsigned int i = 0; i < c; i++) {
+        for (unsigned int i = 0; i < c; ++i) {
             Pattern pattern = Pattern(in);
             v.insert(pattern, false); //checkifexists=false, to speed things up when loading, assuming data is sane
         }
@@ -642,7 +642,7 @@ class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
         const uint32_t c = (uint32_t) s;
         out->write((char*) &c, sizeof(uint32_t));
         unsigned int n = 0;
-        for (typename PatternVector::iterator iter = value.begin(); iter != value.end(); iter++) {
+        for (typename PatternVector::iterator iter = value.begin(); iter != value.end(); ++iter) {
             if (n==s) break;
             iter->write(out);
             n++;
