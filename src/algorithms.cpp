@@ -24,7 +24,7 @@ vector< pair<int,int> > get_consecutive_gaps(const int n, const int leftmargin, 
 uint32_t vector2mask(const vector<pair<int,int>> & skips) {
     //convert path to mask
     uint32_t mask = 0;
-    for (vector<pair<int,int>>::const_iterator iter2 = skips.begin(); iter2 != skips.end(); iter2++) {
+    for (vector<pair<int,int>>::const_iterator iter2 = skips.begin(); iter2 != skips.end(); ++iter2) {
         for (int i = iter2->first; i < (iter2->first + iter2->second) && (i < 31); i++ ) {
             mask |= bitmask[i];
         }
