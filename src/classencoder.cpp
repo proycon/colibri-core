@@ -156,13 +156,13 @@ void ClassEncoder::processcorpus(istream * IN , unordered_map<string,unsigned in
         while (IN->good()) {
           string line;
           getline(*IN, line);
-          int begin = 0;
+          int start = 0;
           const int s = line.size();
           for (int i = 0; i < s; i++) {
               if ((line[i] == ' ') || (i == s - 1)) {
               	  int offset = 0;
               	  if (i == s - 1) offset = 1;
-              	  string word = string(line.begin() + begin, line.begin() + i + offset);
+              	  string word = string(line.begin() + start, line.begin() + i + offset);
               	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
               	    word = trim(word, " \t\n\r"); //trim whitespace, control characters
                     if ((vocab == NULL) || (vocab->find(word) != vocab->end() )) {
@@ -176,7 +176,7 @@ void ClassEncoder::processcorpus(istream * IN , unordered_map<string,unsigned in
                         }
                     }
               	  }
-              	  begin = i+ 1;
+              	  start = i+ 1;
               }
 
           }
@@ -321,7 +321,7 @@ vector<unsigned int> ClassEncoder::encodeseq(const vector<string> & seq) {
 
 int ClassEncoder::outputlength(const string & line) {
 	  int outputcursor = 0;
-      int begin = 0;
+      int start = 0;
       int tmphighestclass = highestclass;
       unsigned int classlength;
       const int l = line.length();
@@ -329,12 +329,12 @@ int ClassEncoder::outputlength(const string & line) {
       	  if ((line[i] == ' ') || (i == l - 1)) {
           	  string word;
           	  if (line[i] == ' ') {
-          	  	word  = string(line.begin() + begin, line.begin() + i);
+          	  	word  = string(line.begin() + start, line.begin() + i);
           	  } else {
-			   	word  = string(line.begin() + begin, line.begin() + i + 1);
+			   	word  = string(line.begin() + start, line.begin() + i + 1);
           	  }
               word = trim(word, " \t\n\r\b"); //trim whitespace, control characters
-          	  begin = i+1;
+          	  start = i+1;
           	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
           	    unsigned int cls;
                 if ((word == "{*}") || (word == "{**}")) {
@@ -367,19 +367,19 @@ int ClassEncoder::outputlength(const string & line) {
 
 int ClassEncoder::encodestring(const string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown, unsigned int * nroftokens) {
 	  int outputcursor = 0;
-      int begin = 0;
+      int start = 0;
       const int l = line.length();
       unsigned int classlength;
       for (int i = 0; i < l; i++) {
       	  if ((line[i] == ' ') || (i == l - 1)) {
           	  string word;
           	  if (line[i] == ' ') {
-          	  	word  = string(line.begin() + begin, line.begin() + i);
+          	  	word  = string(line.begin() + start, line.begin() + i);
           	  } else {
-			   	word  = string(line.begin() + begin, line.begin() + i + 1);
+			   	word  = string(line.begin() + start, line.begin() + i + 1);
           	  }
               word = trim(word, " \t\n\r\b"); //trim whitespace, control characters
-          	  begin = i+1;
+          	  start = i+1;
           	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
           	    unsigned int cls;
                 if (word == "{*}") {

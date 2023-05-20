@@ -19,11 +19,10 @@ using namespace std;
 
 unsigned int bytestoint(const unsigned char* a, unsigned int * length) {
     unsigned int result = 0;
-    unsigned char b;
     unsigned int i = 0;
     if (length != NULL) *length = 0;
     do {
-        b = *(a+i);
+        unsigned char b = *(a+i);
         if (b >> 7) {
             //high
             result += (b ^ 128)* pow(128,i);
@@ -172,10 +171,9 @@ void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsi
         return;
     }
     unsigned int linenumber = 1;
-    unsigned int cls;
     bool first = true;
     while (IN->good()) {
-        cls = bytestoint(IN,version);
+      unsigned int cls = bytestoint(IN,version);
         if (!IN->good()) break;
         if (cls == delimiterclass) { //endmarker
             if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {

@@ -49,7 +49,7 @@ class IndexedCorpus {
         size_t totaltokens;
         std::map<uint32_t,unsigned char*> sentenceindex; //sentence pointers
     private:
-        IndexedCorpus(IndexedCorpus& ) {};
+      IndexedCorpus(IndexedCorpus& ) = delete;//{};
     public:
         IndexedCorpus() {
             corpus = NULL;
@@ -235,14 +235,16 @@ class IndexedCorpus {
 				} //prefix
 
                 self_type & operator=(const self_type & ref) {
-					if (pairpointer != NULL) delete pairpointer;
+		  if ( &ref != this ){
+		    if (pairpointer != NULL) delete pairpointer;
                     if (ref.pairpointer != NULL) {
                         pairpointer = new std::pair<IndexReference,PatternPointer>(*ref.pairpointer);
                     } else {
-                        pairpointer = NULL;
+		      pairpointer = NULL;
                     }
                     indexedcorpus = ref.indexedcorpus;
-                    return *this;
+		  }
+		  return *this;
                 }
 
 				void next() {
@@ -290,7 +292,9 @@ class IndexedCorpus {
                     if ((pairpointer == NULL) || (pairpointer->second.data == NULL)) {
                         return ((rhs.pairpointer == NULL) || (rhs.pairpointer->second.data == NULL));
                     } else if ((rhs.pairpointer == NULL) || (rhs.pairpointer->second.data == NULL)) {
-                        return ((pairpointer == NULL) || (pairpointer->second.data == NULL));
+		      return false; // ?? Ko vd Sloot
+		      // WAS: ((pairpointer == NULL) || (pairpointer->second.data == NULL));
+		      // BUT that is false, a required by the first if
                     } else {
                         return pairpointer->first == rhs.index();
                     }
@@ -377,7 +381,7 @@ class IndexedCorpus {
 				PatternPointer pp = getpattern(ref);
 				return bytestoint(pp.data);
 			} catch (KeyError &e) {
-				throw e;
+				throw;
 			}
         }
 
@@ -460,12 +464,8 @@ class PatternStore: public PatternStoreInterface {
 
         virtual void insert(const PatternType & pattern)=0; //might be a noop in some implementations that require a value
 
-  //        virtual bool has(const Pattern &) const =0;
-  //        virtual bool has(const PatternPointer &) const =0;
-
         virtual bool erase(const PatternType &) =0;
 
-  //        virtual size_t size() const =0;
         virtual void reserve(size_t) =0; //might be a noop in some implementations
 
 
@@ -512,27 +512,14 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
 
         virtual void insert(const PatternType & pattern, const ValueType & value)=0;
 
-        virtual bool has(const Pattern &) const =0;
-        virtual bool has(const PatternPointer &) const =0;
-
-        virtual bool erase(const PatternType &) =0;
-
-
         virtual size_t size() const =0;
         virtual void reserve(size_t) =0;
-
 
         virtual ValueType & operator [](const Pattern & pattern)=0;
         virtual ValueType & operator [](const PatternPointer & pattern)=0;
 
         typedef typename ContainerType::iterator iterator;
         typedef typename ContainerType::const_iterator const_iterator;
-
-        virtual typename ContainerType::iterator begin()=0;
-        virtual typename ContainerType::iterator end()=0;
-        virtual typename ContainerType::iterator find(const Pattern & pattern)=0;
-        virtual typename ContainerType::iterator find(const PatternPointer & pattern)=0;
-
 
         /**
          * Write the map to stream output (in binary format)
@@ -1088,7 +1075,7 @@ template<class T,size_t N,int countindex = 0>
 class ArrayValueHandler: public AbstractValueHandler<T> {
    public:
     const static bool indexed = false;
-    virtual std::string id() { return "ArrayValueHandler"; }
+    std::string id() { return "ArrayValueHandler"; }
     void read(std::istream * in, std::array<T,N> & a) {
         for (int i = 0; i < N; ++i) {
             T v;
@@ -1127,14 +1114,14 @@ template<class PatternStoreType>
 class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
   public:
     const static bool indexed = false;
-    virtual std::string id() { return "PatternStoreValueHandler"; }
+    std::string id() { return "PatternStoreValueHandler"; }
     void read(std::istream * in,  PatternStoreType & value) {
         value.read(in);
     }
     void write(std::ostream * out,  PatternStoreType & value) {
         value.write(out);
     }
-    virtual std::string tostring(  PatternStoreType & ) {
+    std::string tostring(  PatternStoreType & ) {
         std::cerr << "PatternStoreValueHandler::tostring() is not supported" << std::endl;
         throw InternalError();
     }
