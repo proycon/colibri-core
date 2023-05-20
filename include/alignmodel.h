@@ -49,7 +49,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             this->load(f,options,constrainmodel);
         }
 
-        AbstractAlignmentModel<ValueType,ValueHandler>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        AbstractAlignmentModel<ValueType,ValueHandler>(const std::string filename, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -70,7 +70,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
         virtual int getmodeltype() const { return PATTERNALIGNMENTMODEL; }
         virtual int getmodelversion() const { return 2; }
 
-        virtual void load(std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
+        virtual void load( const std::string& filename, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
             std::ifstream * in = new std::ifstream(filename.c_str());
             if (!in->good()) {
@@ -82,7 +82,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             delete in;
         }
 
-        virtual void load(std::istream * f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        virtual void load(std::istream * f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL) { //load from file
             options.MINTOKENS = 1; //other values would be meaningless
 
             char null;
@@ -125,7 +125,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             PatternMap<ValueType,ValueHandler>::write(out); //write PatternStore
         }
 
-        void write(const std::string filename) {
+        void write(const std::string& filename) {
             std::ofstream * out = new std::ofstream(filename.c_str());
             this->write(out);
             out->close();

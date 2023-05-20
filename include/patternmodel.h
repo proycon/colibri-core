@@ -3482,7 +3482,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * instances, templates
      * @param outputheader Output a header (default: true)
      */
-    void outputrelations(const PatternPointer & pattern, ClassDecoder & classdecoder, std::ostream * OUT, const std::string& filter="", bool outputheader=true) {
+    void outputrelations(const PatternPointer & pattern, const ClassDecoder & classdecoder, std::ostream * OUT, const std::string& filter="", bool outputheader=true) {
         if (outputheader) *OUT << "#\tPATTERN1\tRELATION\tPATTERN2\tREL.COUNT\tREL.FREQUENCY\tCOUNT2" << std::endl;
 
 
