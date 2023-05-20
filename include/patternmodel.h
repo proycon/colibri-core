@@ -327,7 +327,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * @param options The options for loading
          * @param constrainmodel Load only patterns that occur in this model
          */
-        PatternSetModel(std::istream *f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL) {
+        PatternSetModel(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL) {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -3458,7 +3458,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * @param OUT The output stream
      * @param label A label to insert between relations (defaults to: RELATED-TO)
      */
-    void outputrelations(const PatternPointer & pattern, t_relationmap & relations, ClassDecoder & classdecoder, std::ostream *OUT, const std::string& label = "RELATED-TO") {
+    void outputrelations(const PatternPointer & pattern, t_relationmap & relations, const ClassDecoder & classdecoder, std::ostream *OUT, const std::string& label = "RELATED-TO") {
         int total = 0;
         for (t_relationmap::iterator iter = relations.begin(); iter != relations.end(); ++iter) {
             total += iter->second;
@@ -3637,7 +3637,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * Compute and output co-occurrence relations as Normalised Pointwise Mutual Information
      * @param threshold Normalised Pointwise Mutual Information threshold
      */
-    void outputcooc_npmi(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {
+    void outputcooc_npmi(std::ostream * OUT, const ClassDecoder& classdecoder, double threshold) {
         std::map<PatternPointer,t_relationmap_double> npmimap;
         std::cerr << "Collecting patterns and computing NPMI..." << std::endl;
         computenpmi(npmimap, threshold);
@@ -3704,7 +3704,6 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         int i = 0;
         std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_right(begin); //TODO: Check
         for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter = rindex.begin(); iter != rindex.end(); ++iter) {
-            const PatternPointer part = iter->second;
             IndexReference ref = iter->first;
             partmatches.insert(std::pair<int,IndexReference>(i, ref));
             ++i;

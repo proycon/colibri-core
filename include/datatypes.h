@@ -423,7 +423,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
             }
         }
 
-        void insert(PatternFeatureVector<FeatureType> & value, bool checkexists=true) {
+        void insert(const PatternFeatureVector<FeatureType> & value, bool checkexists=true) {
             //make a copy, safer
             PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(value);
             if (checkexists) {

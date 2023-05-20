@@ -510,7 +510,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
 
      using PatternStore<ContainerType,ReadWriteSizeType,PatternType>::insert;
 
-        virtual void insert(const PatternType & pattern, ValueType & value)=0;
+        virtual void insert(const PatternType & pattern, const ValueType & value)=0;
 
         virtual bool has(const Pattern &) const =0;
         virtual bool has(const PatternPointer &) const =0;
@@ -822,7 +822,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         HashOrderedPatternSet<ReadWriteSizeType>(): PatternStore<t_hashorderedpatternset,ReadWriteSizeType>() {};
         virtual ~HashOrderedPatternSet<ReadWriteSizeType>();
 
-        void insert(const Pattern pattern) {
+        void insert(const Pattern& pattern) {
             data.insert(pattern);
         }
 
@@ -894,7 +894,7 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
         //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
         PatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
 
-        void insert(const Pattern & pattern, ValueType & value) {
+        void insert(const Pattern & pattern, const ValueType & value) {
             data[pattern] = value;
         }
 
@@ -946,7 +946,7 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
         PatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>() { corpus = NULL; }
 
 
-        void insert(const PatternPointer & pattern, ValueType & value) {
+        void insert(const PatternPointer & pattern, const ValueType & value) {
             data[pattern] = value;
         }
 
@@ -1000,7 +1000,7 @@ class OrderedPatternPointerMap: public PatternMapStore<std::map<PatternPointer,V
         OrderedPatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>() { corpus = NULL; }
 
 
-        void insert(const PatternPointer & pattern, ValueType & value) {
+        void insert(const PatternPointer & pattern, const ValueType & value) {
             data[pattern] = value;
         }
 
@@ -1048,7 +1048,7 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
         HashOrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>(): PatternMapStore<std::map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
         virtual ~HashOrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
 
-        void insert(const Pattern & pattern, ValueType & value) {
+        void insert(const Pattern & pattern, const ValueType & value) {
             data[pattern] = value;
         }
 
