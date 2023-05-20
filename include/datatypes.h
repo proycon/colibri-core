@@ -274,21 +274,20 @@ class PatternFeatureVector {
 
         PatternFeatureVector() {};
         virtual ~PatternFeatureVector() {};
-        PatternFeatureVector(const Pattern & ref) { pattern = ref; }
+  PatternFeatureVector(const Pattern & ref): pattern(ref) {}
 
-        PatternFeatureVector(const Pattern & ref, const std::vector<FeatureType> & dataref) {
-            pattern = ref;
-            data = dataref;
+  PatternFeatureVector(const Pattern & ref, const std::vector<FeatureType> & dataref): pattern(ref), data(dataref){
         }
 
         //copy constructor
-        PatternFeatureVector(const PatternFeatureVector & ref) {
-            pattern = ref.pattern;
-            data = ref.data;
-        };
-        PatternFeatureVector(std::istream * in) {
-            read(in);
-        }
+  PatternFeatureVector(const PatternFeatureVector & ref):
+    pattern(ref.pattern),
+    data(ref.data){
+  }
+
+  PatternFeatureVector(std::istream * in) {
+    read(in);
+  }
 
 
         void read(std::istream * in) {
