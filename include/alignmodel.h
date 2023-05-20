@@ -208,9 +208,9 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
         typedef typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::const_iterator const_iterator;
 
         PatternAlignmentModel<FeatureType>(): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>() {}
-        PatternAlignmentModel<FeatureType>(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(f, options, constrainmodel) {}
+        PatternAlignmentModel<FeatureType>(std::istream *f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(f, options, constrainmodel) {}
 
-        PatternAlignmentModel<FeatureType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(filename, options, constrainmodel) {}
+        PatternAlignmentModel<FeatureType>(const std::string& filename, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(filename, options, constrainmodel) {}
 
 
         virtual PatternFeatureVector<FeatureType> * getfeaturevector(const Pattern & pattern, const Pattern & pattern2, bool makeifnew=false) {
@@ -260,9 +260,9 @@ class BasicPatternAlignmentModel: public AbstractAlignmentModel<PatternVector,Pa
         typedef typename PatternMap<PatternVector,PatternVectorHandler>::const_iterator const_iterator;
 
         BasicPatternAlignmentModel(): AbstractAlignmentModel<PatternVector,PatternVectorHandler>() {}
-        BasicPatternAlignmentModel(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternVector,PatternVectorHandler>(f, options, constrainmodel) {}
+        BasicPatternAlignmentModel(std::istream *f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternVector,PatternVectorHandler>(f, options, constrainmodel) {}
 
-        BasicPatternAlignmentModel(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternVector,PatternVectorHandler>(filename, options, constrainmodel) {}
+        BasicPatternAlignmentModel(const std::string& filename, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternVector,PatternVectorHandler>(filename, options, constrainmodel) {}
 
 
 

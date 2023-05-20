@@ -327,7 +327,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * @param options The options for loading
          * @param constrainmodel Load only patterns that occur in this model
          */
-        PatternSetModel(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
+        PatternSetModel(std::istream *f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL) {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
