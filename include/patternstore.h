@@ -252,7 +252,7 @@ class IndexedCorpus {
                             throw InternalError();
                         }
                         if (pairpointer->second.data + pairpointer->second.bytes >= indexedcorpus->corpus + indexedcorpus->corpussize) {
-                            pairpointer->first.sentence++;
+                            ++pairpointer->first.sentence;
                             pairpointer->first.token = 0;
                             pairpointer->second = PatternPointer(); //null pointer
                             return;
@@ -261,7 +261,7 @@ class IndexedCorpus {
                         }
                         if (*(pairpointer->second.data) == ClassDecoder::delimiterclass) {
                             //we never stop at delimiterclasses, iterate again:
-                            pairpointer->first.sentence++;
+                            ++pairpointer->first.sentence;
                             pairpointer->first.token = 0;
                             if (pairpointer->second.data + pairpointer->second.bytes < indexedcorpus->corpus + indexedcorpus->corpussize) {
                                 ++(pairpointer->second);
@@ -269,7 +269,7 @@ class IndexedCorpus {
                                 pairpointer->second = PatternPointer(); //null pointer
                             }
                         } else {
-                            pairpointer->first.token++;
+                            ++pairpointer->first.token;
                         }
                         //Note: At the end of the data, the patternpointer points to NULL, checking against end() should work fine though
                     }
@@ -356,7 +356,7 @@ class IndexedCorpus {
          */
         size_t size() {
 			if (totaltokens > 0) return totaltokens;
-            for (iterator iter = begin(); iter != end(); iter++) totaltokens++;
+            for (iterator iter = begin(); iter != end(); ++iter) ++totaltokens;
 			return totaltokens;
 		}
 
@@ -540,7 +540,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
         virtual void write(std::ostream * out) {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
-            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+            for (iterator iter = this->begin(); iter != this->end(); ++iter) {
                 PatternType p = iter->first;
                 p.write(out, this->corpusstart);
                 this->valuehandler.write(out, iter->second);
@@ -570,7 +570,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
             reserve(s);
             if (DEBUG) std::cerr << "Reading " << s << " patterns, classencodingversion=" << (int) this->classencodingversion << ", @corpusstart=" << (size_t) this->corpusstart << std::endl;
             if (MINTOKENS == -1) MINTOKENS = 0;
-            for (ReadWriteSizeType i = 0; i < s; i++) {
+            for (ReadWriteSizeType i = 0; i < s; ++i) {
                 try {
                     p = ReadPatternType(in, false, this->classencodingversion, this->corpusstart, DEBUG);
                 } catch (std::exception &e) {
@@ -658,7 +658,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
          * Constructs a pattern set from a ClassDecoder
          */
         PatternSet<ReadWriteSizeType>(const ClassDecoder & classdecoder): PatternStore<t_patternset,ReadWriteSizeType>() {
-            for (ClassDecoder::const_iterator iter = classdecoder.begin(); iter != classdecoder.end(); iter++) {
+            for (ClassDecoder::const_iterator iter = classdecoder.begin(); iter != classdecoder.end(); ++iter) {
                 const int cls = iter->first;
                 unsigned char * buffer = new unsigned char[64];
                 int length = inttobytes(buffer, cls); //will be set by inttobytes
@@ -671,7 +671,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
          * Constructs a pattern set from a ClassEncoder
          */
         PatternSet<ReadWriteSizeType>(const ClassEncoder & classencoder): PatternStore<t_patternset,ReadWriteSizeType>() {
-            for (ClassEncoder::const_iterator iter = classencoder.begin(); iter != classencoder.end(); iter++) {
+            for (ClassEncoder::const_iterator iter = classencoder.begin(); iter != classencoder.end(); ++iter) {
                 const int cls = iter->second;
                 unsigned char * buffer = new unsigned char[64];
                 int length = inttobytes(buffer, cls); //will be set by inttobytes
@@ -740,7 +740,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
         void write(std::ostream * out) {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
-            for (iterator iter = begin(); iter != end(); iter++) {
+            for (iterator iter = begin(); iter != end(); ++iter) {
                 Pattern p = *iter;
                 p.write(out, this->corpusstart);
             }
@@ -753,7 +753,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
-            for (size_t i = 0; i < s; i++) {
+            for (size_t i = 0; i < s; ++i) {
                 Pattern p = Pattern(in, false, this->classencodingversion);
                 if (!DONGRAMS || !DOSKIPGRAMS || !DOFLEXGRAMS) {
                     const PatternCategory c = p.category();
@@ -777,7 +777,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
             //std::cerr << "Reading " << (int) s << " patterns" << std::endl;
-            for (ReadWriteSizeType i = 0; i < s; i++) {
+            for (ReadWriteSizeType i = 0; i < s; ++i) {
                 Pattern p;
                 try {
                     p = Pattern(in, false, this->classencodingversion);
@@ -852,7 +852,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         void write(std::ostream * out) {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
-            for (iterator iter = begin(); iter != end(); iter++) {
+            for (iterator iter = begin(); iter != end(); ++iter) {
                 Pattern p = *iter;
                 p.write(out, this->corpusstart);
             }
@@ -862,7 +862,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
             ReadWriteSizeType s; //read size:
             in->read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
-            for (size_t i = 0; i < s; i++) {
+            for (size_t i = 0; i < s; ++i) {
                 Pattern p = Pattern(in, false, this->classencodingversion);
                 if (!DONGRAMS || !DOSKIPGRAMS || !DOFLEXGRAMS) {
                     const PatternCategory c = p.category();
@@ -1090,21 +1090,21 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
     const static bool indexed = false;
     virtual std::string id() { return "ArrayValueHandler"; }
     void read(std::istream * in, std::array<T,N> & a) {
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < N; ++i) {
             T v;
             in->read( (char*) &v, sizeof(T));
             a[i] = v;
         }
     }
     void write(std::ostream * out, std::array<T,N> & a) {
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < N; ++i) {
             T v = a[i];
             out->write( (char*) &v, sizeof(T));
         }
     }
     std::string tostring(std::array<T,N> & a) {
         std::string s;
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < N; ++i) {
             T v = a[i];
             if (!s.empty()) s += " ";
             s += " " + tostring(a[i]);

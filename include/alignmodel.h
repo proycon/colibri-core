@@ -18,7 +18,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
 
 
         virtual void postread(const PatternModelOptions&) {
-            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+            for (iterator iter = this->begin(); iter != this->end(); ++iter) {
                 const Pattern p = iter->first;
                 const int n = p.n();
                 if (n > maxn) maxn = n;
@@ -230,7 +230,7 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
                 fvm->insert(pfv, checkifexists); //(will be freed again by fvm destructor)
             } else {
                 fv->clear(); //will be overwritten by new features
-                for (typename std::vector<FeatureType>::iterator iter = features.begin(); iter != features.end(); iter++) {
+                for (typename std::vector<FeatureType>::iterator iter = features.begin(); iter != features.end(); ++iter) {
                     fv->push_back(*iter);
                 }
             }
@@ -239,13 +239,13 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
 
         virtual void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) {
             *out << "PATTERN\tPATTERN2\tFEATURES" << std::endl;
-            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+            for (iterator iter = this->begin(); iter != this->end(); ++iter) {
                 const Pattern sourcepattern = iter->first;
-                for (typename PatternFeatureVectorMap<FeatureType>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
+                for (typename PatternFeatureVectorMap<FeatureType>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2) {
                     PatternFeatureVector<FeatureType> * pfv = *iter2;
                     const Pattern targetpattern = pfv->pattern;
                     *out << sourcepattern.tostring(sourcedecoder) << "\t" << targetpattern.tostring(targetdecoder);
-                    for (typename std::vector<FeatureType>::iterator iter3 = pfv->data.begin(); iter3 != pfv->data.end(); iter3++) {
+                    for (typename std::vector<FeatureType>::iterator iter3 = pfv->data.begin(); iter3 != pfv->data.end(); ++iter3) {
                         *out << "\t" << *iter3;
                     }
                     *out << std::endl;
@@ -274,9 +274,9 @@ class BasicPatternAlignmentModel: public AbstractAlignmentModel<PatternVector,Pa
 
         virtual void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) {
             *out << "PATTERN\tPATTERN2" << std::endl;
-            for (iterator iter = this->begin(); iter != this->end(); iter++) {
+            for (iterator iter = this->begin(); iter != this->end(); ++iter) {
                 const Pattern sourcepattern = iter->first;
-                for (typename PatternVector::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++) {
+                for (typename PatternVector::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2) {
                     const Pattern targetpattern = *iter2;
                     *out << sourcepattern.tostring(sourcedecoder) << "\t" << targetpattern.tostring(targetdecoder) << std::endl;
                 }
@@ -290,12 +290,12 @@ class KeywordModel: public BasicPatternAlignmentModel {
 
         template<class ValueType,class ValueHandler,class MapType>
         void train(PatternModel<ValueType,ValueHandler,MapType> * patternmodel) {
-            for (typename PatternModel<ValueType,ValueHandler,MapType>::iterator iter = patternmodel->begin(); iter != patternmodel->end(); iter++) {
+            for (typename PatternModel<ValueType,ValueHandler,MapType>::iterator iter = patternmodel->begin(); iter != patternmodel->end(); ++iter) {
                 const Pattern pattern = iter->first;
                 if (pattern.size() > 1) {
                     std::vector<Pattern> keywords;
                     pattern.ngrams(keywords,1);
-                    for (std::vector<Pattern>::iterator iter2 = keywords.begin(); iter2 != keywords.end(); iter2++) {
+                    for (std::vector<Pattern>::iterator iter2 = keywords.begin(); iter2 != keywords.end(); ++iter2) {
                         const Pattern keyword = *iter2;
                         this->add(keyword, pattern);
                     }

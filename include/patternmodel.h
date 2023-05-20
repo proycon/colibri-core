@@ -645,7 +645,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          * @param corpus Pointer to the loaded corpus, used as a reverse index.
          */
-        PatternModel<ValueType,ValueHandler,MapType,PatternType>(std::istream *f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) {
+        PatternModel<ValueType,ValueHandler,MapType,PatternType>(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -3665,7 +3665,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * Compute and output co-occurrence relations as joint occurrence count
      * @param threshold Normalised Pointwise Mutual Information threshold
      */
-    void outputcooc(std::ostream * OUT, ClassDecoder& classdecoder, double threshold) {
+    void outputcooc(std::ostream * OUT, const ClassDecoder& classdecoder, double threshold) {
         std::map<PatternPointer,t_relationmap> coocmap;
         std::cerr << "Collecting patterns and computing co-occurrence..." << std::endl;
         computecooc(coocmap, threshold);
