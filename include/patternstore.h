@@ -460,12 +460,12 @@ class PatternStore: public PatternStoreInterface {
 
         virtual void insert(const PatternType & pattern)=0; //might be a noop in some implementations that require a value
 
-        virtual bool has(const Pattern &) const =0;
-        virtual bool has(const PatternPointer &) const =0;
+  //        virtual bool has(const Pattern &) const =0;
+  //        virtual bool has(const PatternPointer &) const =0;
 
         virtual bool erase(const PatternType &) =0;
 
-        virtual size_t size() const =0;
+  //        virtual size_t size() const =0;
         virtual void reserve(size_t) =0; //might be a noop in some implementations
 
 
@@ -894,19 +894,19 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
         //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
         PatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
 
-        void insert(const Pattern & pattern, const ValueType & value) {
+        void insert(const Pattern & pattern, const ValueType & value) override {
             data[pattern] = value;
         }
 
         void insert(const Pattern & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
 
-        bool has(const Pattern & pattern) const {
+        bool has(const Pattern & pattern) const override {
             return data.count(pattern);
         }
-        bool has(const PatternPointer & pattern) const { return data.count(pattern); }
+        bool has(const PatternPointer & pattern) const override { return data.count(pattern); }
 
-        size_t size() const { return data.size(); }
-        void reserve(size_t s) { data.reserve(s); }
+        size_t size() const override { return data.size(); }
+        void reserve(size_t s) override { data.reserve(s); }
 
 
         ValueType& operator [](const Pattern & pattern) override { return data[pattern]; }

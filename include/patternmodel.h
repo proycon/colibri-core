@@ -489,25 +489,25 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         /**
          * Return the maximum length of patterns in this model
          */
-        virtual int maxlength() const override { return maxn; };
+        int maxlength() const override { return maxn; };
 
         /**
          * Return the minimum length of patterns in this model
          */
-        virtual int minlength() const override { return minn; };
+        int minlength() const override { return minn; };
 
         /**
          * Returns the total amount of unigram/word types in the original corpus,
          * includes types not covered by the model!
          */
-        virtual size_t types()  {
+        size_t types() override {
             return totaltypes;
         }
         /**
          * Returns the total amount of tokens in the original corpus,
          * includes tokens not covered by the model!
          */
-        virtual size_t tokens() const { return totaltokens; }
+        size_t tokens() const override { return totaltokens; }
 
         /**
          * Returns the type of the model, value is of the PatternType
@@ -1533,16 +1533,16 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Returns the maximum length of patterns in this model
          */
-        virtual int maxlength() const { return this->maxn; };
+        int maxlength() const override { return this->maxn; };
         /**
          * Returns the minimum length of patterns in this model
          */
-        virtual int minlength() const { return this->minn; };
+        int minlength() const override { return this->minn; };
         /**
          * Returns the occurrenc count of the specified pattern, will return 0
          * if it does not exist in the model
          */
-        virtual size_t occurrencecount(const Pattern & pattern)  {
+        size_t occurrencecount(const Pattern & pattern) override {
             ValueType * data = this->getdata(pattern);
             if (data != NULL) {
                 return this->valuehandler.count(*data);
@@ -1551,7 +1551,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
         }
 
-        virtual size_t occurrencecount(const PatternPointer & pattern)  {
+        size_t occurrencecount(const PatternPointer & pattern) {
             ValueType * data = this->getdata(pattern);
             if (data != NULL) {
                 return this->valuehandler.count(*data);
@@ -1564,7 +1564,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * Get the value stored for the specified pattern.
          * @param makeifnew Add the pattern with empty value if it does not exist (default: false)
          **/
-        virtual ValueType * getdata(const Pattern & pattern, bool makeifnew=false) {
+         virtual ValueType * getdata(const Pattern & pattern, bool makeifnew=false) {
             typename MapType::iterator iter = this->find(pattern);
             if (iter != this->end()) {
                 return &(iter->second);
@@ -1589,7 +1589,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Return the total amount of word/unigram types in the model
          */
-        virtual size_t types() {
+        size_t types() override {
             if ((totaltypes == 0) && (!this->data.empty())) totaltypes = this->totalwordtypesingroup(0, 0);
             return totaltypes;
         }
@@ -1597,7 +1597,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Return the total amount of word/unigram tokens in the model
          */
-        virtual size_t tokens() const { return totaltokens; }
+        size_t tokens() const override { return totaltokens; }
 
         unsigned char type() const { return model_type; }
         unsigned char version() const { return model_version; }
@@ -1937,7 +1937,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Returns the frequency of a pattern within its own group (category and size). For instance, if you pass a bigram you will get the occurence count as a fraction of the total occurrences of bigrams.
          */
-        double frequency(const Pattern & pattern) {
+        double frequency(const Pattern & pattern) override {
             //frequency within the same n and category class
             return this->occurrencecount(pattern) / (double) totaloccurrencesingroup(pattern.category(),pattern.n());
         }
@@ -2550,7 +2550,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 template<class MapType = PatternMap<IndexedData,IndexedDataHandler>,class PatternType = Pattern>
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType> {
     protected:
-        virtual void postread(const PatternModelOptions&) {
+        void postread(const PatternModelOptions&) override {
             for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); ++iter) {
                 const Pattern p = iter->first;
                 const PatternCategory category = p.category();
@@ -2561,7 +2561,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
                 if ((!this->hasflexgrams) && (category == FLEXGRAM)) this->hasflexgrams = true;
             }
         }
-        virtual void posttrain(const PatternModelOptions& options ) {
+        void posttrain(const PatternModelOptions& options ) override {
             if (!options.QUIET) std::cerr << "Sorting all indices..." << std::endl;
             for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); ++iter) {
                 iter->second.sort();
@@ -2638,8 +2638,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     virtual ~IndexedPatternModel<MapType,PatternType>() { }
 
 
-    int getmodeltype() const { return INDEXEDPATTERNMODEL; }
-    int getmodelversion() const { return 2;}
+    int getmodeltype() const override { return INDEXEDPATTERNMODEL; }
+    int getmodelversion() const override { return 2;}
 
 
     /**
@@ -2649,13 +2649,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * @param value A pointer to the value for this pattern, set to NULL and it will be automatically determined
      * @param IndexReference The position in the corpus where the patterns occurs
      */
-    virtual void add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) {
+     void add(const Pattern & pattern, IndexedData * value, const IndexReference & ref) override {
         if (value == NULL) {
             value = getdata(pattern,true);
         }
         this->valuehandler.add(value, ref);
     }
-    virtual void add(const PatternPointer & patternpointer, IndexedData * value, const IndexReference & ref) {
+    void add(const PatternPointer & patternpointer, IndexedData * value, const IndexReference & ref) override {
         if (value == NULL) {
             value = getdata(patternpointer,true);
         }
@@ -2666,7 +2666,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * Get the indices stored for the specified pattern.
      * @param makeifnew Add the pattern with empty value if it does not exist (default: false)
      **/
-    IndexedData * getdata(const Pattern & pattern, bool makeifnew=false)  {
+    IndexedData * getdata(const Pattern & pattern, bool makeifnew=false) override {
         typename MapType::iterator iter = this->find(pattern);
         if (iter != this->end()) {
             return &(iter->second);
@@ -2677,7 +2677,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
-    IndexedData * getdata(const PatternPointer & pattern, bool makeifnew=false) {
+    IndexedData * getdata(const PatternPointer & pattern, bool makeifnew=false) override {
         typename MapType::iterator iter = this->find(pattern);
         if (iter != this->end()) {
             return &(iter->second);
@@ -2688,7 +2688,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
-    virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL, PatternSet<> * filter = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
+     void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL, PatternSet<> * filter = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) override {
         if ((options.DOSKIPGRAMS) && (this->reverseindex == NULL)) {
             std::cerr << "ERROR: You must specify a reverse index if you want to train skipgrams (or train skipgrams exhaustively)" << std::endl;
             throw InternalError();
@@ -2696,7 +2696,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::train(in,options,constrainbymodel,filter,continued,firstsentence,ignoreerrors);
     }
 
-    virtual void train(const std::string & filename, PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL,  PatternSet<> * filter = NULL,bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
+    void train(const std::string & filename, PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL,  PatternSet<> * filter = NULL,bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) override {
         if ((options.DOSKIPGRAMS) && (this->reverseindex == NULL)) {
             std::cerr << "ERROR: You must specify a reverse index if you want to train skipgrams (or train skipgrams exhaustively)" << std::endl;
             throw InternalError();
@@ -2766,7 +2766,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * @param decoder The class decoder to use
     * @param instantiate Explicitly instantiate all skipgrams/flexgrams (default: false)
     */
-    void print(std::ostream * out, ClassDecoder & decoder, bool instantiate=false) {
+    void print(std::ostream * out, ClassDecoder & decoder, bool instantiate=false) override {
         bool haveoutput = false;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::iterator iter = this->begin(); iter != this->end(); ++iter) {
             if (!haveoutput) {
@@ -2829,7 +2829,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * @param options Pattern model options
      * @param constrainbymodel Pointer to a pattern model to use as contraint: only include skipgrams that occur in the constraint model (default: NULL)
      */
-    virtual void trainskipgrams(PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
+     void trainskipgrams(PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) override {
         if (options.MINTOKENS == -1) options.MINTOKENS = 2;
         this->cache_grouptotal.clear(); //forces recomputation of statistics
         if (constrainbymodel == this) {
@@ -2881,7 +2881,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * if inserted into the gaps. For skipgrams with multiple gaps, these skip content patterns are themselves skipgrams. Skipgram and skip content complement eachother
      * @returns A relation map
      */
-    t_relationmap getskipcontent(const PatternPointer & pattern) {
+    t_relationmap getskipcontent(const PatternPointer & pattern) override {
         t_relationmap skipcontent; //will hold all skipcontent
         if (this->reverseindex == NULL) {
             std::cerr << "ERROR: No corpus data loaded! (in PatternModel::getskipcontent)" << std::endl;
@@ -3248,7 +3248,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * automatically by methods who use it, and the statistics are cached
     * after computation.
     */
-    virtual void computecoveragestats(int category = 0, int n = 0) {
+    void computecoveragestats(int category = 0, int n = 0) override {
         //opting for memory over speed (more iterations, less memory)
         //overloaded version for indexedmodel
         if ((this->cache_grouptotal.empty()) && (!this->data.empty())) this->computestats();
@@ -3584,7 +3584,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * Compute flexgrams by abstracting from existing skipgrams in the model
      * @return The number of flexgrams found
      */
-    int computeflexgrams_fromskipgrams() {
+    int computeflexgrams_fromskipgrams() override {
         this->cache_grouptotal.clear(); //forces recomputation of statistics
         int count = 0;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::iterator iter = this->begin(); iter != this->end(); ++iter) {
@@ -3610,7 +3610,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * @param threshold Normalised Pointwise Mutual Information threshold
      * @return The number of flexgrams found
      */
-    int computeflexgrams_fromcooc(double threshold) { //TODO: won't work in pattern pointer model!!
+    int computeflexgrams_fromcooc(double threshold) override { //TODO: won't work in pattern pointer model!!
         this->cache_grouptotal.clear(); //forces recomputation of statistics
         int found = 0;
         for (typename PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::iterator iter = this->begin(); iter != this->end(); ++iter) {
@@ -3792,8 +3792,8 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
             delete in;
         }
 
-        int getmodeltype() const { return UNINDEXEDPATTERNPOINTERMODEL; }
-        int getmodelversion() const { return 2;}
+        int getmodeltype() const override { return UNINDEXEDPATTERNPOINTERMODEL; }
+        int getmodelversion() const override { return 2;}
 
         /**
          * Add a pattern, with a given position, to the model. This
@@ -3802,7 +3802,7 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
          * @param pattern The pattern to add (a patternpointer)
          * @param ref The position in the corpus where the patterns occurs
          */
-        virtual void add(const PatternPointer & patternpointer, const IndexReference & ref) {
+        void add(const PatternPointer & patternpointer, const IndexReference & ref) override {
             if ((patternpointer.data < this->reverseindex->beginpointer()) || (patternpointer.data > this->reverseindex->beginpointer() + this->reverseindex->bytesize())) {
                 std::cerr << "Pattern Pointer points outside contained corpus data..." << std::endl;
                 throw InternalError();
@@ -3822,7 +3822,7 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
             std::cerr << "  New value verification (pointer): " << (size_t) data << " == " << (size_t) data2 << std::endl;*/
         }
 
-        virtual void add(const PatternPointer &, ValueType * value, const IndexReference & ref) {
+        void add(const PatternPointer &, ValueType * value, const IndexReference & ref) override {
             if (value == NULL) {
                 std::cerr << "Add() value is NULL!" << std::endl;
                 throw InternalError();
@@ -3912,7 +3912,7 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
             this->add(patternpointer, data, ref );
         }
 
-        void add(const PatternPointer & patternpointer, IndexedData * value, const IndexReference & ref) {
+        void add(const PatternPointer & patternpointer, IndexedData * value, const IndexReference & ref) override {
             if (value == NULL) {
                 value = this->getdata(patternpointer,true);
             }

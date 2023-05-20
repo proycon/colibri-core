@@ -184,25 +184,25 @@ class AbstractValueHandler {
 template<class ValueType>
 class BaseValueHandler: public AbstractValueHandler<ValueType> {
    public:
-    virtual std::string id() { return "BaseValueHandler"; }
+    virtual std::string id() override { return "BaseValueHandler"; }
     const static bool indexed = false;
-    void read(std::istream * in, ValueType & v) {
+    void read(std::istream * in, ValueType & v) override {
         in->read( (char*) &v, sizeof(ValueType));
     }
-    void write(std::ostream * out, ValueType & value) {
+    void write(std::ostream * out, ValueType & value) override {
         out->write( (char*) &value, sizeof(ValueType));
     }
-    virtual std::string tostring(ValueType & value) {
+    virtual std::string tostring(ValueType & value) override {
       return std::to_string(value);
     }
-    unsigned int count(ValueType & value) const {
+    unsigned int count(ValueType & value) const override {
         return (unsigned int) value;
     }
-    void add(ValueType * value, const IndexReference & ) const {
+    void add(ValueType * value, const IndexReference & ) const override {
         *value = *value + 1;
     }
 
-    void convertto(ValueType * source, ValueType* & target ) const { target = source; }; //this doesn't really convert as source and target are same type, but it is required!
+    void convertto(ValueType * source, ValueType* & target ) const override { target = source; }; //this doesn't really convert as source and target are same type, but it is required!
 
     void convertto(ValueType *, IndexedData* & target ) const { target = new IndexedData(); }; //this doesn't convert either, it returns a totally EMPTY indexeddata, allowing unindexed models to be read as indexed, but losing all counts!
 };
@@ -476,8 +476,8 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
 template<class FeatureType>
 class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeatureVectorMap<FeatureType>> {
    public:
-    virtual std::string id() { return "PatternFeatureVectorMapHandler"; }
-    void read(std::istream * in, PatternFeatureVectorMap<FeatureType> & v) {
+    virtual std::string id() override { return "PatternFeatureVectorMapHandler"; }
+    void read(std::istream * in, PatternFeatureVectorMap<FeatureType> & v) override {
         uint16_t c;
         in->read((char*) &c, sizeof(uint16_t));
         v.reserve(c); //reserve space to optimise
@@ -488,7 +488,7 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
         v.shrink_to_fit(); //try to keep vector as small as possible (slows additional insertions down a bit)
 
     }
-    void write(std::ostream * out, PatternFeatureVectorMap<FeatureType> & value) {
+    void write(std::ostream * out, PatternFeatureVectorMap<FeatureType> & value)override {
         unsigned int s = value.size();
         if (s >= 65536) {
             std::cerr << "ERROR: PatternFeatureVector size exceeds maximum 16-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
@@ -504,18 +504,18 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
             n++;
         }
     }
-    virtual std::string tostring(PatternFeatureVectorMap<FeatureType> &) {
+    virtual std::string tostring(PatternFeatureVectorMap<FeatureType> &) override {
         std::cerr << "ERROR: PatternFeatureVectorMapHandler does not support serialisation to string (no classdecoder at this point)" << std::endl;
         throw InternalError();
     }
-    unsigned int count(PatternFeatureVectorMap<FeatureType> & value) const {
+    unsigned int count(PatternFeatureVectorMap<FeatureType> & value) const override {
         return value.size();
     }
-    void add(PatternFeatureVectorMap<FeatureType> *, const IndexReference & ) const {
+    void add(PatternFeatureVectorMap<FeatureType> *, const IndexReference & ) const override {
         std::cerr << "ERROR: PatternFeatureVectorMapHandler does not support insertion of index references, model can not be computed with train()" << std::endl;
         throw InternalError();
     }
-    void convertto(PatternFeatureVectorMap<FeatureType> * source , PatternFeatureVectorMap<FeatureType> * & target) const { target = source; }; //noop
+    void convertto(PatternFeatureVectorMap<FeatureType> * source , PatternFeatureVectorMap<FeatureType> * & target) const override { target = source; }; //noop
     void convertto(PatternFeatureVectorMap<FeatureType> *, IndexedData * &) const { }; //not possible, noop (target = NULL)
     void convertto(PatternFeatureVectorMap<FeatureType> * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
 };
