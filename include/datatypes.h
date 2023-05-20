@@ -218,8 +218,8 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
 class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
    public:
     const static bool indexed = true;
-    virtual std::string id() { return "IndexedDataHandler"; }
-    void read(std::istream * in, IndexedData & v) {
+    virtual std::string id() override { return "IndexedDataHandler"; }
+    void read(std::istream * in, IndexedData & v) override {
         uint32_t c;
         in->read((char*) &c, sizeof(uint32_t));
         v.reserve(c); //reserve space to optimise
@@ -229,7 +229,7 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         }
         v.shrink_to_fit(); //try to keep vector as small as possible (slows insertions down a bit)
     }
-    void write(std::ostream * out, IndexedData & value) {
+    void write(std::ostream * out, IndexedData & value) override {
         const uint32_t c = value.count();
         out->write((char*) &c, sizeof(uint32_t));
         //we already assume everything is nicely sorted!
@@ -237,7 +237,7 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
             iter->write(out);
         }
     }
-    virtual std::string tostring(IndexedData & value) {
+    virtual std::string tostring(IndexedData & value) override {
         std::string s = "";
         for (IndexedData::iterator iter = value.data.begin(); iter != value.data.end(); ++iter) {
             if (!s.empty()) s += " ";
@@ -245,17 +245,17 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         }
         return s;
     }
-    unsigned int count(IndexedData & value) const {
+    unsigned int count(IndexedData & value) const override {
         return value.data.size();
     }
-    void add(IndexedData * value, const IndexReference & ref ) const {
+    void add(IndexedData * value, const IndexReference & ref ) const override {
         if (value == NULL) {
             std::cerr << "ValueHandler: Value is NULL!" << std::endl;
             throw InternalError();
         }
         value->insert(ref);
     }
-    void convertto(IndexedData * source , IndexedData *&  target) const { target = source;  }; //noop
+    void convertto(IndexedData * source , IndexedData *&  target) const override { target = source;  }; //noop
     void convertto(IndexedData * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue =  value->count(); };
 };
 
@@ -621,8 +621,8 @@ class PatternVector { //acts like a (small) map (but implemented as a vector to 
 
 class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
    public:
-    virtual std::string id() { return "PatternVectorHandler"; }
-    void read(std::istream * in, PatternVector & v) {
+    virtual std::string id() override { return "PatternVectorHandler"; }
+    void read(std::istream * in, PatternVector & v) override{
         uint32_t c;
         in->read((char*) &c, sizeof(uint32_t));
         v.reserve(c); //reserve space to optimise
@@ -633,7 +633,7 @@ class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
         v.shrink_to_fit(); //try to keep vector as small as possible (slows additional insertions down a bit)
 
     }
-    void write(std::ostream * out, PatternVector & value) {
+    void write(std::ostream * out, PatternVector & value) override {
         unsigned int s = value.size();
         if (s >= std::numeric_limits<uint32_t>::max()) {
             std::cerr << "ERROR: PatternVector size exceeds maximum 32-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
@@ -648,18 +648,18 @@ class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
             n++;
         }
     }
-    virtual std::string tostring( PatternVector& ) {
+    virtual std::string tostring( PatternVector& ) override {
         std::cerr << "ERROR: PatternVectorHandler does not support serialisation to string (no classdecoder at this point)" << std::endl;
         throw InternalError();
     }
-    unsigned int count(PatternVector & value) const {
+    unsigned int count(PatternVector & value) const override {
         return value.size();
     }
-    void add( PatternVector *, const IndexReference& ) const {
+    void add( PatternVector *, const IndexReference& ) const override {
         std::cerr << "ERROR: PatternVectorHandler does not support insertion of index references, model can not be computed with train()" << std::endl;
         throw InternalError();
     }
-    void convertto(PatternVector * source , PatternVector * & target) const { target = source; }; //noop
+    void convertto(PatternVector * source , PatternVector * & target) const override { target = source; }; //noop
     void convertto(PatternVector *, IndexedData * & ) const { }; //not possible, noop (target = NULL)
     void convertto(PatternVector * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
 };

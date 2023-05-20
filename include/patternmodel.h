@@ -360,16 +360,16 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             in->close();
             delete in;
         }
-        virtual int getmodeltype() const { return PATTERNSETMODEL; }
-        virtual int getmodelversion() const { return 2; }
+        virtual int getmodeltype() const override { return PATTERNSETMODEL; }
+        virtual int getmodelversion() const override { return 2; }
 
-        virtual size_t size() const {
+        virtual size_t size() const override {
             return PatternSet<uint64_t>::size();
         }
-        virtual bool has(const Pattern & pattern) const {
+        virtual bool has(const Pattern & pattern) const override {
             return PatternSet<uint64_t>::has(pattern);
         }
-        virtual bool has(const PatternPointer & pattern) const {
+        virtual bool has(const PatternPointer & pattern) const override {
             return PatternSet<uint64_t>::has(pattern);
         }
 
@@ -440,7 +440,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         /**
          * Write a PatternSetModel to an output stream
          */
-        void write(std::ostream * out) {
+        void write(std::ostream * out) override {
             const char null = 0;
             out->write( (char*) &null, sizeof(char));
             unsigned char t = this->getmodeltype();
@@ -475,13 +475,13 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * This function does not perform anything in a set context, it always
          * returns zero
          */
-        virtual size_t occurrencecount(const Pattern & ) { return 0;  }
+        virtual size_t occurrencecount(const Pattern & ) override { return 0;  }
 
         /**
          * This function does not perform anything in a set context, it always
          * returns zero
          */
-        virtual double frequency(const Pattern &) { return 0; }
+        virtual double frequency(const Pattern &) override { return 0; }
 
         typedef typename PatternSet<uint64_t>::iterator iterator;
         typedef typename PatternSet<uint64_t>::const_iterator const_iterator;
@@ -489,12 +489,12 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         /**
          * Return the maximum length of patterns in this model
          */
-        virtual int maxlength() const { return maxn; };
+        virtual int maxlength() const override { return maxn; };
 
         /**
          * Return the minimum length of patterns in this model
          */
-        virtual int minlength() const { return minn; };
+        virtual int minlength() const override { return minn; };
 
         /**
          * Returns the total amount of unigram/word types in the original corpus,
@@ -706,26 +706,26 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
         * Returns the type of model (a value from ModelType)
         */
-        virtual int getmodeltype() const { return UNINDEXEDPATTERNMODEL; }
+        virtual int getmodeltype() const override { return UNINDEXEDPATTERNMODEL; }
         /**
          * Returns the version of the model implementation and binary serialisation format
          */
-        virtual int getmodelversion() const { return 2; }
+        virtual int getmodelversion() const override { return 2; }
 
         /**
          * Returns the number of distinct patterns in the model
          */
-        virtual size_t size() const {
+        virtual size_t size() const override {
             return MapType::size();
         }
 
         /**
          * Checks whether the given pattern occurs in the model
          */
-        virtual bool has(const Pattern & pattern) const {
+        virtual bool has(const Pattern & pattern) const override {
             return MapType::has(pattern);
         }
-        virtual bool has(const PatternPointer & pattern) const {
+        virtual bool has(const PatternPointer & pattern) const override {
             return MapType::has(pattern);
         }
 
