@@ -460,12 +460,12 @@ class PatternStore: public PatternStoreInterface {
 
         virtual void insert(const PatternType & pattern)=0; //might be a noop in some implementations that require a value
 
-        virtual bool has(const Pattern &) const =0;
-        virtual bool has(const PatternPointer &) const =0;
+  //        virtual bool has(const Pattern &) const =0;
+  //        virtual bool has(const PatternPointer &) const =0;
 
         virtual bool erase(const PatternType &) =0;
 
-        virtual size_t size() const =0;
+  //        virtual size_t size() const =0;
         virtual void reserve(size_t) =0; //might be a noop in some implementations
 
 
@@ -685,25 +685,25 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
         /**
          * Add a new pattern to the set
          */
-        void insert(const Pattern & pattern) {
+        void insert(const Pattern & pattern) override {
             data.insert(pattern);
         }
 
         /**
          * Checks if a pattern is in the set
          */
-        bool has(const Pattern & pattern) const { return data.count(pattern); }
+        bool has(const Pattern & pattern) const override { return data.count(pattern); }
 
         /**
          * Checks if a pattern is in the set
          */
-        bool has(const PatternPointer & pattern) const { return data.count(pattern); }
+        bool has(const PatternPointer & pattern) const override { return data.count(pattern); }
 
         /**
          * Returns the number of patterns in the set
          */
-        size_t size() const { return data.size(); }
-        void reserve(size_t s) { data.reserve(s); }
+        size_t size() const override { return data.size(); }
+        void reserve(size_t s) override { data.reserve(s); }
 
         typedef t_patternset::iterator iterator;
         typedef t_patternset::const_iterator const_iterator;
@@ -711,33 +711,33 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
         /**
          * Returns an iterator to iterate over the set
          */
-        iterator begin() { return data.begin(); }
+        iterator begin() override { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
 
-        iterator end() { return data.end(); }
+        iterator end() override { return data.end(); }
         const_iterator end() const { return data.end(); }
 
         /**
          * Returns an iterator to the pattern in the set or end() if no such
          * pattern was found.
          */
-        iterator find(const Pattern & pattern) { return data.find(pattern); }
+        iterator find(const Pattern & pattern) override { return data.find(pattern); }
         const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
 
-        iterator find(const PatternPointer & pattern) { return data.find(pattern); }
+        iterator find(const PatternPointer & pattern) override { return data.find(pattern); }
         const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
 
         /**
          * Removes the specified pattern from the set, returns true if successful
          */
-        bool erase(const Pattern & pattern) { return data.erase(pattern); }
+        bool erase(const Pattern & pattern) override { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
 
 
         /**
          * Write the set to output stream, in binary format
          */
-        void write(std::ostream * out) {
+        void write(std::ostream * out) override {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
             for (iterator iter = begin(); iter != end(); ++iter) {
@@ -894,39 +894,39 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
         //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
         PatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
 
-        void insert(const Pattern & pattern, const ValueType & value) {
+        void insert(const Pattern & pattern, const ValueType & value) override {
             data[pattern] = value;
         }
 
         void insert(const Pattern & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
 
-        bool has(const Pattern & pattern) const {
+        bool has(const Pattern & pattern) const override {
             return data.count(pattern);
         }
-        bool has(const PatternPointer & pattern) const { return data.count(pattern); }
+        bool has(const PatternPointer & pattern) const override { return data.count(pattern); }
 
-        size_t size() const { return data.size(); }
-        void reserve(size_t s) { data.reserve(s); }
+        size_t size() const override { return data.size(); }
+        void reserve(size_t s) override { data.reserve(s); }
 
 
-        ValueType& operator [](const Pattern & pattern) { return data[pattern]; }
-        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; }
+        ValueType& operator [](const Pattern & pattern) override { return data[pattern]; }
+        ValueType& operator [](const PatternPointer & pattern) override { return data[pattern]; }
 
         typedef typename std::unordered_map<Pattern,ValueType>::iterator iterator;
         typedef typename std::unordered_map<Pattern,ValueType>::const_iterator const_iterator;
 
-        iterator begin() { return data.begin(); }
+        iterator begin() override { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
 
-        iterator end() { return data.end(); }
+        iterator end() override { return data.end(); }
         const_iterator end() const { return data.end(); }
 
-        iterator find(const Pattern & pattern) { return data.find(pattern); }
+        iterator find(const Pattern & pattern) override { return data.find(pattern); }
         const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
-        iterator find(const PatternPointer & pattern) { return data.find(pattern); }
+        iterator find(const PatternPointer & pattern) override { return data.find(pattern); }
         const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
 
-        bool erase(const Pattern & pattern) { return data.erase(pattern); }
+        bool erase(const Pattern & pattern) override { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
 
 };

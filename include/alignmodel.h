@@ -49,7 +49,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             this->load(f,options,constrainmodel);
         }
 
-        AbstractAlignmentModel<ValueType,ValueHandler>(const std::string filename, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        AbstractAlignmentModel<ValueType,ValueHandler>(const std::string& filename, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -67,8 +67,8 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             delete in;
         }
 
-        virtual int getmodeltype() const { return PATTERNALIGNMENTMODEL; }
-        virtual int getmodelversion() const { return 2; }
+        int getmodeltype() const override { return PATTERNALIGNMENTMODEL; }
+        int getmodelversion() const override { return 2; }
 
         virtual void load( const std::string& filename, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
@@ -136,29 +136,29 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             return (PatternModelInterface*) this;
         }
 
-        virtual size_t size() const {
+        size_t size() const override {
             return PatternMap<ValueType,ValueHandler>::size();
         }
-        virtual bool has(const Pattern & pattern) const {
+        bool has(const Pattern & pattern) const override {
             return PatternMap<ValueType,ValueHandler>::has(pattern);
         }
-        virtual bool has(const PatternPointer & pattern) const {
+        bool has(const PatternPointer & pattern) const override {
             return PatternMap<ValueType,ValueHandler>::has(pattern);
         }
 
-        virtual int maxlength() const { return maxn; };
-        virtual int minlength() const { return minn; };
+        int maxlength() const override { return maxn; };
+        int minlength() const override { return minn; };
 
-        virtual size_t occurrencecount(const Pattern &)  {
+        size_t occurrencecount(const Pattern &) override {
             return 0; // we don't do occurrence counts
         }
-        virtual double frequency(const Pattern &)  {
+        double frequency(const Pattern &) override {
             return 0; // we don't do frequency
         }
         //
         //not really useful in this context, but required by the interface
-        virtual size_t types() { return totaltypes; }
-        virtual size_t tokens() const { return totaltokens; }
+        size_t types() override { return totaltypes; }
+        size_t tokens() const override { return totaltokens; }
 
         virtual void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) =0;
 
@@ -272,7 +272,7 @@ class BasicPatternAlignmentModel: public AbstractAlignmentModel<PatternVector,Pa
         }
 
 
-        virtual void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) {
+        void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) override {
             *out << "PATTERN\tPATTERN2" << std::endl;
             for (iterator iter = this->begin(); iter != this->end(); ++iter) {
                 const Pattern sourcepattern = iter->first;

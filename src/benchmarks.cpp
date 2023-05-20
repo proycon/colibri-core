@@ -165,7 +165,7 @@ void end(Measurement& m) {
     cout << "---> time: " <<  m.duration << " s res: " << mem << " MB peak: " << peak << " MB" << endl << endl;
 }
 
-void naivetrain(string filename, std::unordered_map<string,uint32_t> & model, int maxlength) {
+void naivetrain( const string& filename, std::unordered_map<string,uint32_t> & model, int maxlength) {
 	   ifstream IN;
 	   IN.open( filename.c_str() );
        if (!(IN)) {
