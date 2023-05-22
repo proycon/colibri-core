@@ -3739,7 +3739,7 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
 
     using  PatternModel<ValueType,ValueHandler,MapType,PatternPointer>::add;
 
-        PatternPointerModel<ValueType,ValueHandler,MapType>(IndexedCorpus * corpus): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() {
+   explicit  PatternPointerModel<ValueType,ValueHandler,MapType>(IndexedCorpus * corpus): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() {
             this->model_type = this->getmodeltype();
             this->model_version = this->getmodelversion();
             if (corpus) {
@@ -3840,7 +3840,7 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
 
     using  IndexedPatternModel<MapType,PatternPointer>::add;
 
-        IndexedPatternPointerModel<MapType>(IndexedCorpus * corpus): IndexedPatternModel<MapType,PatternPointer>() {
+  explicit IndexedPatternPointerModel<MapType>(IndexedCorpus * corpus): IndexedPatternModel<MapType,PatternPointer>() {
             this->model_type = this->getmodeltype();
             this->model_version = this->getmodelversion();
             if (corpus) {

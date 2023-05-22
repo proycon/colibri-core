@@ -369,60 +369,64 @@ class PatternPointer {
                     //first bit high = flexgram, right-aligned, 0 = gap
                     //first bit low = skipgram, right-aligned, 0 = gap , max skipgram length 31 tokens
 
-	 PatternPointer() {
-		data = NULL;
-		bytes = 0;
-		mask = 0;
-     }
+  PatternPointer() {
+    data = NULL;
+    bytes = 0;
+    mask = 0;
+  }
 
-     PatternPointer(unsigned char* dataref, const bsize_t bytesize) {
-         data = dataref;
-         if (bytesize > PP_MAX_SIZE) {
-             std::cerr << "ERROR: Pattern too long for pattern pointer [" << bytesize << " bytes,explicit]" << std::endl;
-             throw InternalError();
-         }
-         bytes = bytesize;
-         mask = computemask();
-     }
+  PatternPointer(unsigned char* dataref, const bsize_t bytesize) {
+    data = dataref;
+    if (bytesize > PP_MAX_SIZE) {
+      std::cerr << "ERROR: Pattern too long for pattern pointer [" << bytesize << " bytes,explicit]" << std::endl;
+      throw InternalError();
+    }
+    bytes = bytesize;
+    mask = computemask();
+  }
 
-     PatternPointer(const Pattern & ref) {
-         data = ref.data;
-         const size_t b = ref.bytesize();
-         if (b > PP_MAX_SIZE) {
-             std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << " bytes,implicit]" << std::endl;
-             throw InternalError();
-         }
-         bytes = b;
-         mask = computemask();
-     }
-     PatternPointer(const Pattern * ref) {
-         data = ref->data;
-         const size_t b = ref->bytesize();
-         if (b > PP_MAX_SIZE) {
-             std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << " bytes,implicit]" << std::endl;
-             throw InternalError();
-         }
-         bytes = b;
-         mask = computemask();
-     }
-     PatternPointer(const PatternPointer& ref) {
-         data = ref.data;
-         bytes = ref.bytes;
-         mask = ref.mask;
-     }
-     PatternPointer(const PatternPointer* ref) {
-		data = ref->data;
-		bytes = ref->bytes;
-		mask = ref->mask;
-	 }
-     PatternPointer & operator =(const PatternPointer & other) {
-         data = other.data;
-         bytes = other.bytes;
-         mask = other.mask;
-         // by convention, always return *this (for chaining)
-         return *this;
-     }
-     PatternPointer(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, unsigned char * corpusstart = NULL, bool debug = false);
+  PatternPointer(const Pattern & ref) {
+    data = ref.data;
+    const size_t b = ref.bytesize();
+    if (b > PP_MAX_SIZE) {
+      std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << " bytes,implicit]" << std::endl;
+      throw InternalError();
+    }
+    bytes = b;
+    mask = computemask();
+  }
+
+  PatternPointer(const Pattern * ref) {
+    data = ref->data;
+    const size_t b = ref->bytesize();
+    if (b > PP_MAX_SIZE) {
+      std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << " bytes,implicit]" << std::endl;
+      throw InternalError();
+    }
+    bytes = b;
+    mask = computemask();
+  }
+  PatternPointer(const PatternPointer& ref) {
+    data = ref.data;
+    bytes = ref.bytes;
+    mask = ref.mask;
+  }
+  explicit PatternPointer(const PatternPointer* ref) {
+    data = ref->data;
+    bytes = ref->bytes;
+    mask = ref->mask;
+  }
+
+  PatternPointer & operator =(const PatternPointer & other) {
+    if ( *this != other ){
+      data = other.data;
+      bytes = other.bytes;
+      mask = other.mask;
+    }
+    // by convention, always return *this (for chaining)
+    return *this;
+  }
+  PatternPointer(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, unsigned char * corpusstart = NULL, bool debug = false);
 
      /**
       * Write Pattern to output stream (in binary form)
