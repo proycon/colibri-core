@@ -99,14 +99,14 @@ void ClassDecoder::load(const string & filename) {
        classes[flexclass] = "{**}";
        classes[boundaryclass] = "{|}";
 
-       ifstream *IN =  new ifstream( filename.c_str() );
-       if (!(*IN)) {
+       ifstream IN(filename);
+       if (!(IN)) {
            cerr << "File does not exist: " << filename << endl;
            exit(3);
        }
-        while (IN->good()) {
+        while (IN.good()) {
           string line;
-          getline(*IN, line);
+          getline(IN, line);
           for (unsigned int i = 0; i < line.size(); i++) {
               if (line[i] == '\t') {
                   const string cls_s = string(line.begin(), line.begin() + i);
@@ -119,8 +119,6 @@ void ClassDecoder::load(const string & filename) {
               }
           }
         }
-        IN->close();
-        delete IN;
 }
 
 
@@ -164,30 +162,29 @@ string decodestring(const unsigned char * data, unsigned char datasize) {
 } */
 
 void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsigned int start, unsigned int end, bool quiet) {
-    ifstream *IN = new ifstream(filename.c_str()); //, ios::in | ios::binary);
-    unsigned char version = getdataversion(IN);
+    ifstream IN(filename); //, ios::in | ios::binary);
+    unsigned char version = getdataversion(&IN);
     if (version == 1) {
-        decodefile_v1(IN,out,start,end,quiet);
+        decodefile_v1(&IN,out,start,end,quiet);
         return;
     }
     unsigned int linenumber = 1;
     bool first = true;
-    while (IN->good()) {
-      unsigned int cls = bytestoint(IN,version);
-        if (!IN->good()) break;
+    while (IN.good()) {
+      unsigned int cls = bytestoint(&IN,version);
+        if (!IN.good()) break;
         if (cls == delimiterclass) { //endmarker
-            if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
-                *out << endl;
-            }
-            first = true;
-            linenumber++;
+	  if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
+	    *out << endl;
+	  }
+	  first = true;
+	  linenumber++;
         } else if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
-            if (!first) *out << " ";
-            *out << classes[cls];
-            first = false;
+	  if (!first) *out << " ";
+	  *out << classes[cls];
+	  first = false;
         }
     }
-    IN->close();
     linenumber--;
     if (!quiet) cerr << "Processed " << linenumber  << " lines" << endl;
 }

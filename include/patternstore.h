@@ -538,11 +538,9 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
         /**
          * Write the map to file (in binary format)
          */
-        virtual void write(std::string filename) {
-            std::ofstream * out = new std::ofstream(filename.c_str());
-            this->write(out);
-            out->close();
-            delete out;
+        virtual void write( const std::string& filename) {
+	  std::ofstream out(filename);
+	  this->write(&out);
         }
 
 
@@ -608,10 +606,8 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
          * Read a map from file (in binary format)
          */
         void read( const std::string& filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET = false, bool DEBUG=false) { //no templates for this one, easier on python/cython
-            std::ifstream * in = new std::ifstream(filename.c_str());
-            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET, DEBUG);
-            in->close();
-            delete in;
+            std::ifstream in(filename);
+            this->read<ValueType,ValueHandler>(&in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET, DEBUG);
         }
 
 };
@@ -724,7 +720,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
         /**
          * Write the set to output stream, in binary format
          */
-        void write(std::ostream * out) override {
+        void write( std::ostream * out) override {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
             for (iterator iter = begin(); iter != end(); ++iter) {
