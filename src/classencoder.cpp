@@ -94,11 +94,10 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
        this->minlength = minlength;
        this->maxlength = maxlength;
 
-	   ifstream IN;
-	   IN.open( filename.c_str() );
+       ifstream IN( filename );
        if (!(IN)) {
-           cerr << "ERROR: File does not exist: " << filename << endl;
-           exit(3);
+	 cerr << "ERROR: File does not exist: " << filename << endl;
+	 exit(3);
        }
         while (IN.good()) {
           string line;
@@ -133,21 +132,21 @@ void ClassEncoder::load(const string & filename,const unsigned int minlength, un
 void ClassEncoder::processcorpus(const string & filename, unordered_map<string,unsigned int> & freqlist, unordered_set<string> * ) {
 	   //compute frequency list of all words
        ifstream IN;
-	   if (filename.rfind(".bz2") != string::npos) {
-            IN.open( filename.c_str(), ios::in | ios::binary );
-            if (!(IN)) {
-                cerr << "ERROR: File does not exist: " << filename << endl;
-                exit(3);
-            }
-            bz2istream * decompressor = new bz2istream(IN.rdbuf());
-            processcorpus((istream*) decompressor,freqlist);
+       if (filename.rfind(".bz2") != string::npos) {
+	 IN.open( filename, ios::in | ios::binary );
+	 if (!(IN)) {
+	   cerr << "ERROR: File does not exist: " << filename << endl;
+	   exit(3);
+	 }
+	 bz2istream decompressor(IN.rdbuf());
+	 processcorpus(&decompressor,freqlist);
        } else {
-            IN.open( filename.c_str() );
-            if (!(IN)) {
-                cerr << "ERROR: File does not exist: " << filename << endl;
-                exit(3);
-            }
-            processcorpus(&IN, freqlist);
+	 IN.open( filename );
+	 if (!(IN)) {
+	   cerr << "ERROR: File does not exist: " << filename << endl;
+	   exit(3);
+	 }
+	 processcorpus(&IN, freqlist);
        }
        IN.close();
 }
@@ -266,12 +265,10 @@ void ClassEncoder::build(vector<string> & files, bool quiet, unsigned int thresh
 }
 
 void ClassEncoder::save(const string & filename) {
-	ofstream OUT;
-	OUT.open( filename.c_str() );
+	ofstream OUT( filename );
 	for (std::unordered_map<std::string,unsigned int>::iterator iter = classes.begin(); iter != classes.end(); ++iter) {
 	    if (iter->second != unknownclass) OUT << iter->second << '\t' << iter->first << endl;
 	}
-	OUT.close();
 }
 
 void ClassEncoder::loadvocab(const string & filename, unordered_set<string> & vocab) {
@@ -471,12 +468,12 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 
 	    ofstream OUT;
 	    if (append) {
-	        OUT.open(outputfilename.c_str(), ios::app | ios::binary);
+	        OUT.open(outputfilename, ios::app | ios::binary);
 	        if (OUT.tellp() > 0) {
           	    OUT.write(&zero, sizeof(char)); //write separator
 	        }
 	    } else {
-	        OUT.open(outputfilename.c_str(), ios::out | ios::binary);
+	        OUT.open(outputfilename, ios::out | ios::binary);
 	    }
 	    unsigned char outputbuffer[65536];
 	    unsigned int linenum = 1;
@@ -516,21 +513,20 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	    ofstream OUT;
 	    ifstream IN;
 	    if (append) {
-	        OUT.open(outputfilename.c_str(), ios::app | ios::binary);
+	        OUT.open(outputfilename, ios::app | ios::binary);
 	    } else {
-	        OUT.open(outputfilename.c_str(), ios::out | ios::binary);
+	        OUT.open(outputfilename, ios::out | ios::binary);
 	    }
         if (inputfilename.rfind(".bz2") != string::npos) {
-            IN.open(inputfilename.c_str(), ios::in | ios::binary);
+            IN.open(inputfilename, ios::in | ios::binary);
             if (!IN) {
                 cerr << "No such file: " << inputfilename << endl;
                 exit(2);
             }
-            bz2istream * decompressor = new bz2istream(IN.rdbuf());
-            encodefile((istream*) decompressor, (ostream*) &OUT, allowunknown, autoaddunknown, quiet, append, ignorenewlines);
-            delete decompressor;
+            bz2istream decompressor(IN.rdbuf());
+            encodefile(&decompressor, &OUT, allowunknown, autoaddunknown, quiet, append, ignorenewlines);
         } else {
-            IN.open(inputfilename.c_str());
+            IN.open(inputfilename);
             if (!IN) {
                 cerr << "No such file: " << inputfilename << endl;
                 exit(2);

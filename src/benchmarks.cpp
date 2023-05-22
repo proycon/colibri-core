@@ -166,9 +166,8 @@ void end(Measurement& m) {
 }
 
 void naivetrain( const string& filename, std::unordered_map<string,uint32_t> & model, int maxlength) {
-	   ifstream IN;
-	   IN.open( filename.c_str() );
-       if (!(IN)) {
+  ifstream IN( filename );
+  if (!(IN)) {
            cerr << "ERROR: File does not exist: " << filename << endl;
            exit(3);
        }

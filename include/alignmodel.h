@@ -57,14 +57,12 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
-            std::ifstream * in = new std::ifstream(filename.c_str());
-            if (!in->good()) {
+            std::ifstream in(filename);
+            if (!in.good()) {
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( (std::istream *) in, options, constrainmodel);
-            in->close();
-            delete in;
+            this->load( &in, options, constrainmodel);
         }
 
         int getmodeltype() const override { return PATTERNALIGNMENTMODEL; }
@@ -72,14 +70,12 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
 
         virtual void load( const std::string& filename, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) {
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
-            std::ifstream * in = new std::ifstream(filename.c_str());
-            if (!in->good()) {
+            std::ifstream in(filename);
+            if (!in.good()) {
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( (std::istream *) in, options, constrainmodel);
-            in->close();
-            delete in;
+            this->load( &in, options, constrainmodel);
         }
 
         virtual void load(std::istream * f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL) { //load from file
@@ -126,10 +122,8 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
         }
 
         void write(const std::string& filename) {
-            std::ofstream * out = new std::ofstream(filename.c_str());
-            this->write(out);
-            out->close();
-            delete out;
+            std::ofstream out(filename);
+            this->write(&out);
         }
 
         PatternModelInterface * getinterface() {
