@@ -351,14 +351,12 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
-            std::ifstream * in = new std::ifstream(filename.c_str());
-            if (!in->good()) {
+            std::ifstream in(filename);
+            if (!in.good()) {
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( (std::istream *) in, options, constrainmodel);
-            in->close();
-            delete in;
+            this->load( &in, options, constrainmodel);
         }
         virtual int getmodeltype() const override { return PATTERNSETMODEL; }
         virtual int getmodelversion() const override { return 2; }
@@ -381,14 +379,12 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          */
         virtual void load(std::string & filename, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) {
             if (!options.QUIET) std::cerr << "Loading " << filename << " as set-model" << std::endl;
-            std::ifstream * in = new std::ifstream(filename.c_str());
-            if (!in->good()) {
+            std::ifstream in(filename);
+            if (!in.good()) {
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( (std::istream *) in, options, constrainmodel);
-            in->close();
-            delete in;
+            this->load( &in, options, constrainmodel);
         }
 
         /**
@@ -458,10 +454,8 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * write(std::ostream *)
          */
         void write(const std::string & filename) {
-            std::ofstream * out = new std::ofstream(filename.c_str());
-            this->write(out);
-            out->close();
-            delete out;
+            std::ofstream out(filename);
+            this->write(&out);
         }
 
         /**
@@ -693,14 +687,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
             reverseindex_internal = false;
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
-            std::ifstream * in = new std::ifstream(filename.c_str());
-            if (!in->good()) {
+            std::ifstream in(filename);
+            if (!in.good()) {
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( (std::istream *) in, options, constrainmodel);
-            in->close();
-            delete in;
+            this->load( &in, options, constrainmodel);
         }
 
 
@@ -738,14 +730,12 @@ class PatternModel: public MapType, public PatternModelInterface {
          */
         virtual void load(std::string & filename, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) {
             if (!options.QUIET) std::cerr << "Loading " << filename << std::endl;
-            std::ifstream * in = new std::ifstream(filename.c_str());
-            if (!in->good()) {
+            std::ifstream in(filename);
+            if (!in.good()) {
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( (std::istream *) in, options, constrainmodel);
-            in->close();
-            delete in;
+            this->load( &in, options, constrainmodel);
         }
 
         /**
@@ -833,8 +823,15 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param firstsentence First sentence index, useful for augmenting a model with another corpus (keep continued set to false in this case), defaults to 1
          * @param ignoreerrors Try to ignore errors (use for debug only)
          */
-        virtual void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL, PatternSet<> * filter = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
-            if (options.MINTOKENS == -1) options.MINTOKENS = 2;
+        virtual void train( std::istream * in ,
+			    const PatternModelOptions& in_options,
+			    PatternModelInterface * constrainbymodel = NULL,
+			    PatternSet<> * filter = NULL,
+			    bool continued=false,
+			    uint32_t firstsentence=1,
+			    bool ignoreerrors=false ) {
+	  PatternModelOptions options = in_options; // we need a copy of the options
+	  if (options.MINTOKENS == -1) options.MINTOKENS = 2;
             if (options.MINTOKENS == 0)  options.MINTOKENS = 1;
             if (options.MINTOKENS_SKIPGRAMS < options.MINTOKENS) options.MINTOKENS_SKIPGRAMS = options.MINTOKENS;
             if (constrainbymodel == this) {
@@ -1249,18 +1246,17 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param options Options for training
          * @param constrainbymodel Pointer to another pattern model which should be used to constrain the training of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          */
-        virtual void train(const std::string & filename, PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL, PatternSet<> * filter = NULL,  bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
+        virtual void train( const std::string& filename,
+			    const PatternModelOptions& options,
+			    PatternModelInterface * constrainbymodel = NULL, PatternSet<> * filter = NULL,  bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) {
             if ((filename.size() > 3) && (filename.substr(filename.size()-3) == ".bz2")) {
-                std::ifstream * in = new std::ifstream(filename.c_str(), std::ios::in|std::ios::binary);
-                bz2istream * decompressor = new bz2istream(in->rdbuf());
-                this->train( (std::istream*) decompressor, options, constrainbymodel, filter, continued, firstsentence, ignoreerrors);
-                delete decompressor;
-                delete in;
+                std::ifstream in(filename, std::ios::in|std::ios::binary);
+                bz2istream decompressor(in.rdbuf());
+                this->train( (std::istream*) &decompressor, options, constrainbymodel, filter, continued, firstsentence, ignoreerrors);
             } else {
-                std::ifstream * in = new std::ifstream(filename.c_str());
-                this->train((std::istream*) in, options, constrainbymodel, filter, continued, firstsentence, ignoreerrors);
-                in->close();
-                delete in;
+                std::ifstream in( filename );
+                this->train((std::istream*) &in, options, constrainbymodel, filter, continued, firstsentence, ignoreerrors);
+                in.close();
             }
         }
 
@@ -1521,10 +1517,8 @@ class PatternModel: public MapType, public PatternModelInterface {
          * Save the entire pattern model to file
          */
         void write(const std::string& filename) {
-            std::ofstream * out = new std::ofstream(filename.c_str());
-            this->write(out);
-            out->close();
-            delete out;
+            std::ofstream out(filename);
+            this->write(&out);
         }
 
         typedef typename MapType::iterator iterator;
@@ -2629,10 +2623,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         } else {
             this->reverseindex = NULL;
         }
-        std::ifstream * in = new std::ifstream(filename.c_str());
-        this->load( (std::istream *) in, options, constrainmodel);
-        in->close();
-        delete in;
+        std::ifstream in(filename);
+        this->load( &in, options, constrainmodel);
     }
 
     virtual ~IndexedPatternModel<MapType,PatternType>() { }
@@ -2688,27 +2680,29 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
-     void train(std::istream * in , PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL, PatternSet<> * filter = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) override {
-        if ((options.DOSKIPGRAMS) && (this->reverseindex == NULL)) {
-            std::cerr << "ERROR: You must specify a reverse index if you want to train skipgrams (or train skipgrams exhaustively)" << std::endl;
-            throw InternalError();
-        }
-        PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::train(in,options,constrainbymodel,filter,continued,firstsentence,ignoreerrors);
+  void train(std::istream * in , const PatternModelOptions& options,  PatternModelInterface * constrainbymodel = NULL, PatternSet<> * filter = NULL, bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) override {
+    if ((options.DOSKIPGRAMS) && (this->reverseindex == NULL)) {
+      std::cerr << "ERROR: You must specify a reverse index if you want to train skipgrams (or train skipgrams exhaustively)" << std::endl;
+      throw InternalError();
     }
+    PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::train(in,options,constrainbymodel,filter,continued,firstsentence,ignoreerrors);
+  }
 
-    void train(const std::string & filename, PatternModelOptions options, PatternModelInterface * constrainbymodel = NULL,  PatternSet<> * filter = NULL,bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) override {
-        if ((options.DOSKIPGRAMS) && (this->reverseindex == NULL)) {
-            std::cerr << "ERROR: You must specify a reverse index if you want to train skipgrams (or train skipgrams exhaustively)" << std::endl;
-            throw InternalError();
-        }
-        PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::train(filename,options,constrainbymodel,filter,continued,firstsentence,ignoreerrors);
+  void train( const std::string & filename,
+	      const PatternModelOptions& options,
+	      PatternModelInterface * constrainbymodel = NULL,  PatternSet<> * filter = NULL,bool continued=false, uint32_t firstsentence=1, bool ignoreerrors=false) override {
+    if ((options.DOSKIPGRAMS) && (this->reverseindex == NULL)) {
+      std::cerr << "ERROR: You must specify a reverse index if you want to train skipgrams (or train skipgrams exhaustively)" << std::endl;
+      throw InternalError();
     }
+    PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::train(filename,options,constrainbymodel,filter,continued,firstsentence,ignoreerrors);
+  }
 
-    /**
-     * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
-     */
-    void info(std::ostream * OUT) {
-        if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
+  /**
+   * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
+   */
+  void info(std::ostream * OUT) {
+    if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
             *OUT << "Type: indexed" << std::endl;
         } else if (this->getmodeltype() == UNINDEXEDPATTERNMODEL) {
             *OUT << "Type: unindexed" << std::endl;
@@ -3786,10 +3780,8 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
             } else {
                 this->reverseindex = NULL;
             }
-            std::ifstream * in = new std::ifstream(filename.c_str());
-            this->load( (std::istream *) in, options, constrainmodel);
-            in->close();
-            delete in;
+            std::ifstream in(filename);
+            this->load( &in, options, constrainmodel);
         }
 
         int getmodeltype() const override { return UNINDEXEDPATTERNPOINTERMODEL; }
@@ -3887,10 +3879,8 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
             } else {
                 this->reverseindex = NULL;
             }
-            std::ifstream * in = new std::ifstream(filename.c_str());
-            this->load( (std::istream *) in, options, constrainmodel);
-            in->close();
-            delete in;
+            std::ifstream in(filename);
+            this->load( &in, options, constrainmodel);
         }
 
         int getmodeltype() const { return INDEXEDPATTERNPOINTERMODEL; }
