@@ -39,16 +39,16 @@ class IndexReference {
     /**
      * Constructor for a reference to a position in the corpus, sentences (or whatever other unit delimits your data) start at 1, tokens start at 0
      */
-    IndexReference(uint32_t sentence, uint16_t token ) { this->sentence = sentence; this->token = token; }
+  explicit IndexReference(uint32_t sentence, uint16_t token ) { this->sentence = sentence; this->token = token; }
 
-    IndexReference(std::istream * in) {
-        in->read( (char*) &sentence, sizeof(uint32_t));
-        in->read( (char*) &token, sizeof(uint16_t));
-    }
-    // IndexReference(const IndexReference& other) { //copy constructor
-    //     sentence = other.sentence;
-    //     token = other.token;
-    // };
+  explicit IndexReference(std::istream * in) {
+    in->read( (char*) &sentence, sizeof(uint32_t));
+    in->read( (char*) &token, sizeof(uint16_t));
+  }
+  // IndexReference(const IndexReference& other) { //copy constructor
+  //     sentence = other.sentence;
+  //     token = other.token;
+  // };
     void write(std::ostream * out) const {
         out->write( (char*) &sentence, sizeof(uint32_t));
         out->write( (char*) &token, sizeof(uint16_t));
@@ -86,8 +86,8 @@ class IndexReference {
 class IndexedData {
    public:
     std::vector<IndexReference> data;
-    IndexedData() { };
-    IndexedData(std::istream * in);
+  explicit IndexedData() { };
+  explicit IndexedData(std::istream * in);
     void write(std::ostream * out) const;
 
     bool has(const IndexReference & ref, bool sorted = false) const {
@@ -272,20 +272,20 @@ class PatternFeatureVector {
         Pattern pattern;
         std::vector<FeatureType> data;
 
-        PatternFeatureVector() {};
-        virtual ~PatternFeatureVector() {};
-  PatternFeatureVector(const Pattern & ref): pattern(ref) {}
+  explicit PatternFeatureVector() {};
+  virtual ~PatternFeatureVector() {};
+  explicit PatternFeatureVector(const Pattern & ref): pattern(ref) {}
 
-  PatternFeatureVector(const Pattern & ref, const std::vector<FeatureType> & dataref): pattern(ref), data(dataref){
-        }
+  explicit PatternFeatureVector(const Pattern & ref, const std::vector<FeatureType> & dataref): pattern(ref), data(dataref){
+  }
 
-        //copy constructor
+  //copy constructor
   PatternFeatureVector(const PatternFeatureVector & ref):
     pattern(ref.pattern),
     data(ref.data){
   }
 
-  PatternFeatureVector(std::istream * in) {
+  explicit PatternFeatureVector(std::istream * in) {
     read(in);
   }
 

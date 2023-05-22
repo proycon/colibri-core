@@ -51,40 +51,40 @@ class IndexedCorpus {
     private:
       IndexedCorpus(IndexedCorpus& ) = delete;//{};
     public:
-        IndexedCorpus() {
-            corpus = NULL;
-            corpussize = 0;
-		    totaltokens = 0; //will be computed when queried
-			patternpointer = NULL;
-        };
+      explicit IndexedCorpus() {
+	corpus = NULL;
+	corpussize = 0;
+	totaltokens = 0; //will be computed when queried
+	patternpointer = NULL;
+      };
 
-        /*
-         * Low-level constructor
-         */
-        IndexedCorpus(unsigned char * corpus, size_t corpussize) {
-            this->corpus = corpus;
-            this->corpussize = 0;
-            totaltokens = 0; //will be computed when queried
-            patternpointer = new PatternPointer(corpus,corpussize);
-        }
+  /*
+   * Low-level constructor
+   */
+  explicit IndexedCorpus(unsigned char * corpus, size_t corpussize) {
+    this->corpus = corpus;
+    this->corpussize = 0;
+    totaltokens = 0; //will be computed when queried
+    patternpointer = new PatternPointer(corpus,corpussize);
+  }
 
-        /*
-         * Read an indexed corpus from stream. The stream must correspond to an
-         * encoded corpus (*.colibri.dat)
-         */
-        IndexedCorpus(std::istream *in, bool debug = false);
-        /*
-         * Read an indexed corpus from file. The filename must correspond to an
-         * encoded corpus (*.colibri.dat)
-         */
-        IndexedCorpus(std::string filename, bool debug = false);
+  /*
+   * Read an indexed corpus from stream. The stream must correspond to an
+   * encoded corpus (*.colibri.dat)
+   */
+  explicit IndexedCorpus(std::istream *in, bool debug = false);
+  /*
+   * Read an indexed corpus from file. The filename must correspond to an
+   * encoded corpus (*.colibri.dat)
+   */
+  IndexedCorpus(std::string filename, bool debug = false);
 
-        ~IndexedCorpus() {
-			if (corpus != NULL) delete[] corpus;
-			if (patternpointer != NULL) delete patternpointer;
-            corpus = NULL;
-            patternpointer = NULL;
-		}
+  ~IndexedCorpus() {
+    if (corpus != NULL) delete[] corpus;
+    if (patternpointer != NULL) delete patternpointer;
+    corpus = NULL;
+    patternpointer = NULL;
+  }
 
 
         /*
@@ -635,39 +635,38 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
         t_patternset data;
     public:
 
-        /**
-         * Empty set constructor
-         */
-        PatternSet<ReadWriteSizeType>(): PatternStore<t_patternset,ReadWriteSizeType>() {};
+  /**
+   * Empty set constructor
+   */
+  explicit  PatternSet<ReadWriteSizeType>(): PatternStore<t_patternset,ReadWriteSizeType>() {};
 
+  /**
+   * Constructs a pattern set from a ClassDecoder
+   */
+  explicit PatternSet<ReadWriteSizeType>(const ClassDecoder & classdecoder): PatternStore<t_patternset,ReadWriteSizeType>() {
+    for (ClassDecoder::const_iterator iter = classdecoder.begin(); iter != classdecoder.end(); ++iter) {
+      const int cls = iter->first;
+      unsigned char * buffer = new unsigned char[64];
+      int length = inttobytes(buffer, cls); //will be set by inttobytes
+      data.insert( Pattern(buffer, length) );
+      delete [] buffer;
+    }
+  }
 
-        /**
-         * Constructs a pattern set from a ClassDecoder
-         */
-        PatternSet<ReadWriteSizeType>(const ClassDecoder & classdecoder): PatternStore<t_patternset,ReadWriteSizeType>() {
-            for (ClassDecoder::const_iterator iter = classdecoder.begin(); iter != classdecoder.end(); ++iter) {
-                const int cls = iter->first;
-                unsigned char * buffer = new unsigned char[64];
-                int length = inttobytes(buffer, cls); //will be set by inttobytes
-                data.insert( Pattern(buffer, length) );
+  /**
+   * Constructs a pattern set from a ClassEncoder
+   */
+  explicit PatternSet<ReadWriteSizeType>(const ClassEncoder & classencoder): PatternStore<t_patternset,ReadWriteSizeType>() {
+    for (ClassEncoder::const_iterator iter = classencoder.begin(); iter != classencoder.end(); ++iter) {
+      const int cls = iter->second;
+      unsigned char * buffer = new unsigned char[64];
+      int length = inttobytes(buffer, cls); //will be set by inttobytes
+      data.insert( Pattern(buffer, length) );
                 delete [] buffer;
-            }
-        }
+    }
+  }
 
-        /**
-         * Constructs a pattern set from a ClassEncoder
-         */
-        PatternSet<ReadWriteSizeType>(const ClassEncoder & classencoder): PatternStore<t_patternset,ReadWriteSizeType>() {
-            for (ClassEncoder::const_iterator iter = classencoder.begin(); iter != classencoder.end(); ++iter) {
-                const int cls = iter->second;
-                unsigned char * buffer = new unsigned char[64];
-                int length = inttobytes(buffer, cls); //will be set by inttobytes
-                data.insert( Pattern(buffer, length) );
-                delete [] buffer;
-            }
-        }
-
-        virtual ~PatternSet<ReadWriteSizeType>() {};
+  virtual ~PatternSet<ReadWriteSizeType>() {};
 
         /**
          * Add a new pattern to the set
@@ -924,14 +923,13 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
     protected:
         std::unordered_map<PatternPointer, ValueType> data;
     public:
-		IndexedCorpus * corpus;
-        //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
-        PatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>(IndexedCorpus * corpus) {
-			this->corpus = corpus;
-		};
+  IndexedCorpus * corpus;
+  //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
+  explicit PatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>(IndexedCorpus * corpus): corpus( corpus ) {
+  }
 
-        PatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>() { corpus = NULL; }
-
+  explicit PatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>():
+    corpus(NULL){ }
 
         void insert(const PatternPointer & pattern, const ValueType & value) {
             data[pattern] = value;
@@ -975,21 +973,20 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
 
 template<class ValueType, class ValueHandler = BaseValueHandler<ValueType>, class ReadWriteSizeType = uint64_t>
 class OrderedPatternPointerMap: public PatternMapStore<std::map<PatternPointer,ValueType>,ValueType,ValueHandler,ReadWriteSizeType,PatternPointer> {
-    protected:
-        std::map<PatternPointer, ValueType> data;
-    public:
-		IndexedCorpus * corpus;
-        //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
-        OrderedPatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>(IndexedCorpus * corpus) {
-			this->corpus = corpus;
-		};
+protected:
+  std::map<PatternPointer, ValueType> data;
+public:
+  IndexedCorpus * corpus;
+  //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
+  explicit OrderedPatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>(IndexedCorpus * _corpus):corpus(_corpus)
+  {}
 
-        OrderedPatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>() { corpus = NULL; }
+  explicit OrderedPatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>():
+    corpus( NULL){ }
 
-
-        void insert(const PatternPointer & pattern, const ValueType & value) {
-            data[pattern] = value;
-        }
+  void insert(const PatternPointer & pattern, const ValueType & value) {
+    data[pattern] = value;
+  }
 
         void insert(const PatternPointer & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
 
