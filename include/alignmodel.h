@@ -133,7 +133,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
         }
 
         PatternModelInterface * getinterface() {
-            return (PatternModelInterface*) this;
+	  return static_cast<PatternModelInterface*>(this);
         }
 
         size_t size() const override {

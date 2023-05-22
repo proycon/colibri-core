@@ -68,6 +68,7 @@ class IndexedCorpus {
     patternpointer = new PatternPointer(corpus,corpussize);
   }
 
+  IndexedCorpus& operator=( const IndexedCorpus& ) = delete;
   /*
    * Read an indexed corpus from stream. The stream must correspond to an
    * encoded corpus (*.colibri.dat)
@@ -482,7 +483,7 @@ class PatternStore: public PatternStoreInterface {
         //virtual void read(std::istream * in, int MINTOKENS)=0;
 
         virtual PatternStoreInterface * getstoreinterface() {
-            return (PatternStoreInterface*) this;
+	  return static_cast<PatternStoreInterface*>(this);
         }
 
 
@@ -588,7 +589,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
                             }
                             if (DEBUG) std::cerr << "...adding";
                             this->insert(p,*convertedvalue);
-                            if ((convertedvalue != NULL) && ((void*) convertedvalue != (void*) &readvalue)) delete convertedvalue;
+                            if ((void*) convertedvalue != (void*) &readvalue) delete convertedvalue;
                     } else if (DEBUG) {
                         if (readvaluehandler.count(readvalue) < (unsigned int) MINTOKENS) {
                             std::cerr << "...skipping because of occurrence (" << readvaluehandler.count(readvalue) << " below " << MINTOKENS;
