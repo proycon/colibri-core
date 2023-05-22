@@ -115,7 +115,7 @@ class Pattern {
       * @param version Version of file format (default: 2)
       * @param corpusoffset not used
       */
-     Pattern(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, const unsigned char * corpusstart = NULL, bool debug = false);
+     explicit Pattern(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, const unsigned char * corpusstart = NULL, bool debug = false);
      //Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, bool ignoreeol = false, const unsigned char version = 2, bool debug = false);
 
 
@@ -126,7 +126,7 @@ class Pattern {
       * Pattern constructor consisting of only a fixed-size gap
       * @param size The size of the gap
       */
-     Pattern(int size) {
+     explicit Pattern(int size) {
          //pattern consisting only of fixed skips
          data = new unsigned char[size+1];
          for (int i = 0; i < size; i++) data[i] = ClassDecoder::skipclass;
@@ -396,26 +396,17 @@ class PatternPointer {
     mask = computemask();
   }
 
-  PatternPointer(const Pattern * ref) {
-    data = ref->data;
-    const size_t b = ref->bytesize();
-    if (b > PP_MAX_SIZE) {
-      std::cerr << "ERROR: Pattern too long for pattern pointer [" << b << " bytes,implicit]" << std::endl;
-      throw InternalError();
-    }
-    bytes = b;
-    mask = computemask();
-  }
+  PatternPointer(const Pattern * ref): PatternPointer(*ref) {}
+  // living on the edge, what if ref == NULL?
+
   PatternPointer(const PatternPointer& ref) {
     data = ref.data;
     bytes = ref.bytes;
     mask = ref.mask;
   }
-  explicit PatternPointer(const PatternPointer* ref) {
-    data = ref->data;
-    bytes = ref->bytes;
-    mask = ref->mask;
-  }
+
+  PatternPointer(const PatternPointer* ref): PatternPointer(*ref) {}
+  // living on the edge, what if ref == NULL?
 
   PatternPointer & operator =(const PatternPointer & other) {
     if ( *this != other ){
@@ -426,7 +417,7 @@ class PatternPointer {
     // by convention, always return *this (for chaining)
     return *this;
   }
-  PatternPointer(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, unsigned char * corpusstart = NULL, bool debug = false);
+  explicit PatternPointer(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, unsigned char * corpusstart = NULL, bool debug = false);
 
      /**
       * Write Pattern to output stream (in binary form)

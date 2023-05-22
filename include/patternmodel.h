@@ -291,7 +291,7 @@ class PatternModelInterface: public PatternStoreInterface {
         virtual size_t tokens() const=0;
 
         virtual PatternStoreInterface * getstoreinterface() {
-            return (PatternStoreInterface*) this;
+	  return static_cast<PatternStoreInterface*>(this);
         };
 };
 
@@ -468,7 +468,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * Get the interface (just a basic typecast)
          */
         virtual PatternModelInterface * getinterface() {
-            return (PatternModelInterface*) this;
+	  return static_cast<PatternModelInterface*>(this);
         }
 
         /**
@@ -820,7 +820,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * Returns a more generic but limited PatternModelInterface instance (polymorphism)
          */
         PatternModelInterface * getinterface() {
-            return (PatternModelInterface*) this;
+	  return static_cast<PatternModelInterface*>(this);
         }
 
         /**
