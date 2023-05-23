@@ -78,7 +78,7 @@ class IndexedCorpus {
    * Read an indexed corpus from file. The filename must correspond to an
    * encoded corpus (*.colibri.dat)
    */
-  IndexedCorpus(std::string filename, bool debug = false);
+  IndexedCorpus( const std::string& filename, bool debug = false);
 
   ~IndexedCorpus() {
     if (corpus != NULL) delete[] corpus;
@@ -98,7 +98,7 @@ class IndexedCorpus {
          * Read an indexed corpus from file. The filename must correspond to an
          * encoded corpus (*.colibri.dat)
          */
-        void load(std::string filename, bool debug = false);
+        void load( const std::string& filename, bool debug = false);
 
 
 
@@ -1077,13 +1077,13 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
             a[i] = v;
         }
     }
-    void write(std::ostream * out, std::array<T,N> & a) {
+    void write(std::ostream * out, const std::array<T,N> & a) {
         for (int i = 0; i < N; ++i) {
             T v = a[i];
             out->write( (char*) &v, sizeof(T));
         }
     }
-    std::string tostring(std::array<T,N> & a) {
+    std::string tostring( const std::array<T,N> & a) {
         std::string s;
         for (int i = 0; i < N; ++i) {
             T v = a[i];
@@ -1092,7 +1092,7 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
         }
         return s;
     }
-    unsigned int count(std::array<T,N> & a) const {
+    unsigned int count( const std::array<T,N> & a) const {
         return (int) a[countindex];
     }
     void add(std::array<T,N> * value, const IndexReference & ) const {

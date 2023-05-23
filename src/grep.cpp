@@ -95,8 +95,8 @@ int main( int argc, char *argv[] ) {
 
 
     for (int i = 0; i < datafiles.size(); i++) {
-        std::ifstream * in = new std::ifstream(datafiles[i].c_str(), std::ios::in|std::ios::binary);
-        while (!in->eof()) {
+        std::ifstream in(datafiles[i], std::ios::in|std::ios::binary);
+        while (!in.eof()) {
             //read line
             Pattern line = Pattern(in);
             ngrams.clear();
@@ -106,7 +106,6 @@ int main( int argc, char *argv[] ) {
                 cout << iter->first.tostring(classdecoder) << endl;
             }
         }
-        delete in;
     }
 
 
