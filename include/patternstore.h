@@ -1077,7 +1077,7 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
             a[i] = v;
         }
     }
-    void write(std::ostream * out, std::array<T,N> & a) {
+    void write(std::ostream * out, const std::array<T,N> & a) {
         for (int i = 0; i < N; ++i) {
             T v = a[i];
             out->write( (char*) &v, sizeof(T));
