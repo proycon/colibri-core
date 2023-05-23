@@ -511,8 +511,8 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
 
         virtual void insert(const PatternType & pattern, const ValueType & value)=0;
 
-        virtual size_t size() const =0;
-        virtual void reserve(size_t) =0;
+        size_t size() const override =0;
+        void reserve(size_t) override =0;
 
         virtual ValueType & operator [](const Pattern & pattern)=0;
         virtual ValueType & operator [](const PatternPointer & pattern)=0;
@@ -523,20 +523,20 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
         /**
          * Write the map to stream output (in binary format)
          */
-        virtual void write(std::ostream * out) {
-            ReadWriteSizeType s = (ReadWriteSizeType) size();
-            out->write( (char*) &s, sizeof(ReadWriteSizeType));
-            for (iterator iter = this->begin(); iter != this->end(); ++iter) {
-                PatternType p = iter->first;
-                p.write(out, this->corpusstart);
-                this->valuehandler.write(out, iter->second);
-            }
+        void write(std::ostream * out) override {
+	  ReadWriteSizeType s = (ReadWriteSizeType) size();
+	  out->write( (char*) &s, sizeof(ReadWriteSizeType));
+	  for (iterator iter = this->begin(); iter != this->end(); ++iter) {
+	    PatternType p = iter->first;
+	    p.write(out, this->corpusstart);
+	    this->valuehandler.write(out, iter->second);
+	  }
         }
 
         /**
          * Write the map to file (in binary format)
          */
-        virtual void write( const std::string& filename) {
+        void write( const std::string& filename) {
 	  std::ofstream out(filename);
 	  this->write(&out);
         }
@@ -807,10 +807,10 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
             data.insert(pattern);
         }
 
-        bool has(const Pattern & pattern) const { return data.count(pattern); }
-        bool has(const PatternPointer & pattern) const { return data.count(pattern); }
-        size_t size() const { return data.size(); }
-        void reserve(size_t) {} //noop
+        bool has(const Pattern & pattern) const override { return data.count(pattern); }
+        bool has(const PatternPointer & pattern) const override { return data.count(pattern); }
+        size_t size() const override { return data.size(); }
+        void reserve(size_t) override {} //noop
 
         typedef t_hashorderedpatternset::iterator iterator;
         typedef t_hashorderedpatternset::const_iterator const_iterator;
@@ -932,17 +932,17 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
 
         void insert(const PatternPointer & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
 
-        bool has(const Pattern & pattern) const {
+        bool has(const Pattern & pattern) const override {
             return data.count(pattern);
         }
-        bool has(const PatternPointer & pattern) const { return data.count(pattern); }
+        bool has(const PatternPointer & pattern) const override { return data.count(pattern); }
 
-        size_t size() const { return data.size(); }
-        void reserve(size_t s) { data.reserve(s); }
+        size_t size() const override { return data.size(); }
+        void reserve(size_t s) override { data.reserve(s); }
 
 
-        ValueType& operator [](const Pattern & pattern) { return data[pattern]; }
-        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; }
+        ValueType& operator [](const Pattern & pattern) override { return data[pattern]; }
+        ValueType& operator [](const PatternPointer & pattern) override { return data[pattern]; }
 
         typedef typename std::unordered_map<PatternPointer,ValueType>::iterator iterator;
         typedef typename std::unordered_map<PatternPointer,ValueType>::const_iterator const_iterator;
@@ -985,17 +985,17 @@ public:
 
         void insert(const PatternPointer & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
 
-        bool has(const Pattern & pattern) const {
+        bool has(const Pattern & pattern) const override {
             return data.count(pattern);
         }
-        bool has(const PatternPointer & pattern) const { return data.count(pattern); }
+        bool has(const PatternPointer & pattern) const override { return data.count(pattern); }
 
-        size_t size() const { return data.size(); }
-        void reserve(size_t) { } //noop
+        size_t size() const override { return data.size(); }
+        void reserve(size_t) override { } //noop
 
 
-        ValueType& operator [](const Pattern & pattern) { return data[pattern]; }
-        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; }
+        ValueType& operator [](const Pattern & pattern) override { return data[pattern]; }
+        ValueType& operator [](const PatternPointer & pattern) override { return data[pattern]; }
 
         typedef typename std::map<PatternPointer,ValueType>::iterator iterator;
         typedef typename std::map<PatternPointer,ValueType>::const_iterator const_iterator;
@@ -1033,14 +1033,14 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
 
         void insert(const Pattern & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType
 
-        bool has(const Pattern & pattern) const { return data.count(pattern); }
-        bool has(const PatternPointer & pattern) const { return data.count(pattern); }
+        bool has(const Pattern & pattern) const override { return data.count(pattern); }
+        bool has(const PatternPointer & pattern) const override { return data.count(pattern); }
 
-        size_t size() const { return data.size(); }
-        void reserve(size_t) {} //noop
+        size_t size() const override { return data.size(); }
+        void reserve(size_t) override {} //noop
 
-        ValueType& operator [](const Pattern & pattern) { return data[pattern]; }
-        ValueType& operator [](const PatternPointer & pattern) { return data[pattern]; }
+        ValueType& operator [](const Pattern & pattern) override { return data[pattern]; }
+        ValueType& operator [](const PatternPointer & pattern) override { return data[pattern]; }
 
         typedef typename std::map<const Pattern,ValueType>::iterator iterator;
         typedef typename std::map<const Pattern,ValueType>::const_iterator const_iterator;
