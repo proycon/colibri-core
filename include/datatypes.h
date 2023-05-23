@@ -170,7 +170,7 @@ class AbstractValueHandler {
     virtual std::string id() const { return "AbstractValueHandler"; }
     virtual void read(std::istream * in, ValueType & value)=0; //read value from input stream (binary)
     virtual void write(std::ostream * out, ValueType & value)=0; //write value to output stream (binary)
-    virtual std::string tostring(ValueType & value)=0; //convert value to string)
+    virtual std::string tostring(ValueType & value) const =0; //convert value to string)
     virtual unsigned int count(ValueType & value) const =0; //what count does this value represent?
     virtual void add(ValueType * value, const IndexReference & ref ) const=0; //add the indexreference to the value, will be called whenever a token is found during pattern building
 
@@ -192,7 +192,7 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     void write(std::ostream * out, ValueType & value) override {
         out->write( (char*) &value, sizeof(ValueType));
     }
-    virtual std::string tostring(ValueType & value) override {
+    virtual std::string tostring(ValueType & value) const override {
       return std::to_string(value);
     }
     unsigned int count(ValueType & value) const override {
@@ -237,7 +237,7 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
             iter->write(out);
         }
     }
-    virtual std::string tostring(IndexedData & value) override {
+    virtual std::string tostring(IndexedData & value) const override {
         std::string s = "";
         for (IndexedData::iterator iter = value.data.begin(); iter != value.data.end(); ++iter) {
             if (!s.empty()) s += " ";
@@ -503,7 +503,7 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
             n++;
         }
     }
-    virtual std::string tostring(PatternFeatureVectorMap<FeatureType> &) override {
+    virtual std::string tostring(PatternFeatureVectorMap<FeatureType> &) const override {
         std::cerr << "ERROR: PatternFeatureVectorMapHandler does not support serialisation to string (no classdecoder at this point)" << std::endl;
         throw InternalError();
     }
@@ -620,7 +620,7 @@ class PatternVector { //acts like a (small) map (but implemented as a vector to 
 
 class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
    public:
-    std::string id() const { return "PatternVectorHandler"; }
+    std::string id() const override { return "PatternVectorHandler"; }
     void read(std::istream * in, PatternVector & v) override{
         uint32_t c;
         in->read((char*) &c, sizeof(uint32_t));
@@ -647,7 +647,7 @@ class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
             n++;
         }
     }
-    virtual std::string tostring( PatternVector& ) override {
+    virtual std::string tostring( PatternVector& ) const override {
         std::cerr << "ERROR: PatternVectorHandler does not support serialisation to string (no classdecoder at this point)" << std::endl;
         throw InternalError();
     }
