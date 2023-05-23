@@ -84,7 +84,7 @@ int main( int argc, char *argv[] ) {
         }
     }
 
-    for (int i = optind; i < argc; i++) {
+    for (int i = optind; i < argc; ++i) {
         string tmp = argv[i];
         modelfiles.push_back(tmp);
     }
@@ -110,7 +110,7 @@ int main( int argc, char *argv[] ) {
 
     vector<PatternModel<uint32_t>* > models; //first model is training model or background model
 
-    for (unsigned int i = 0; i < modelfiles.size(); i++) {
+    for (unsigned int i = 0; i < modelfiles.size(); ++i) {
         cerr << "Loading model " << modelfiles[i] << endl;
         PatternModel<uint32_t> * model = new PatternModel<uint32_t>(modelfiles[i], options);
         models.push_back(model);
@@ -125,28 +125,28 @@ int main( int argc, char *argv[] ) {
 
         cerr << "Sorting results..." << endl;
         set<pair<double,Pattern>> results;
-        for (PatternMap<double>::iterator iter = llmodel.begin(); iter != llmodel.end(); iter++) {
-            results.insert(pair<double,Pattern>(-1 * iter->second, iter->first));
+        for ( const auto& iter : llmodel ){
+            results.insert(pair<double,Pattern>(-1 * iter.second, iter.first));
         }
 
         cerr << "Output:" << endl;
         cout << "PATTERN\tLOGLIKELIHOOD";
-        for (unsigned int i = 0; i < modelfiles.size(); i++) {
+        for (unsigned int i = 0; i < modelfiles.size(); ++i) {
             cout << "\tOCC_" << i << "\tFREQ_" << i;
         }
         cout << endl;
 
-        for (set<pair<double,Pattern>>::iterator iter = results.begin(); iter != results.end(); iter++) {
-            const Pattern pattern = iter->second;
-            cout << pattern.tostring(classdecoder) << "\t" << (iter->first * -1);
-            for (unsigned int i = 0; i < models.size(); i++) {
+        for ( const auto& iter : results ){
+            const Pattern pattern = iter.second;
+            cout << pattern.tostring(classdecoder) << "\t" << (iter.first * -1);
+            for (unsigned int i = 0; i < models.size(); ++i) {
                 cout << "\t" << models[i]->occurrencecount(pattern) << "\t" << models[i]->frequency(pattern);
             }
             cout << endl;
         }
     }
 
-    for (unsigned int i = 0; i < models.size(); i++) {
+    for (unsigned int i = 0; i < models.size(); ++i) {
         delete models[i];
     }
 

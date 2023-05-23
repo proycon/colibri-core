@@ -414,8 +414,6 @@ class PatternStoreInterface {
          */
         virtual size_t size() const =0;
 
-
-
 };
 
 

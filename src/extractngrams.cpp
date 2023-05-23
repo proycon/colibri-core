@@ -49,7 +49,7 @@ int main( int argc, char *argv[] ) {
         }
     }
 
-    for (int i = optind; i < argc; i++) {
+    for (int i = optind; i < argc; ++i) {
         string tmp = argv[i];
         datafiles.push_back(tmp);
     }
@@ -65,7 +65,7 @@ int main( int argc, char *argv[] ) {
     std::vector<std::pair<PatternPointer,int>> ngrams;
 
 
-    for (unsigned int i = 0; i < datafiles.size(); i++) {
+    for (unsigned int i = 0; i < datafiles.size(); ++i) {
       std::ifstream in(datafiles[i], std::ios::in|std::ios::binary);
       while (!in.eof()) {
 	//read line
@@ -73,8 +73,8 @@ int main( int argc, char *argv[] ) {
 	ngrams.clear();
 	line.ngrams(ngrams, n);
 
-	for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
-	  cout << iter->first.tostring(classdecoder) << endl;
+	for ( const auto& iter : ngrams ){
+	  cout << iter.first.tostring(classdecoder) << endl;
 	}
       }
     }
