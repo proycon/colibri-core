@@ -1821,11 +1821,19 @@ Pattern Pattern::reverse() const {
 
 
 IndexedCorpus::IndexedCorpus(std::istream *in, bool debug){
-    this->load(in, debug);
+  corpus = NULL;
+  corpussize = 0;
+  patternpointer = NULL;
+  totaltokens = 0;
+  this->load(in, debug);
 }
 
 IndexedCorpus::IndexedCorpus( const std::string& filename, bool debug){
-    this->load(filename, debug);
+  corpus = NULL;
+  corpussize = 0;
+  patternpointer = 0;
+  totaltokens = 0;
+  this->load(filename, debug);
 }
 
 

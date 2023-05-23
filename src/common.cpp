@@ -31,36 +31,30 @@ bool strip_extension(std::string& filename, const std::string& extension) {
     return false;
 }
 
-
-
-
-
 double listproduct(const vector<double> & l) {
     double p = 1;
-    for (vector<double>::const_iterator iter = l.begin(); iter != l.end(); iter++) {
-        p = p * *iter;
+    for ( const auto& iter : l ){
+      p *= iter;
     }
     return p;
 }
 
-
-
 double listsum(const vector<double> & l) {
     double p = 0;
-    for (vector<double>::const_iterator iter = l.begin(); iter != l.end(); iter++) {
-        p += *iter;
+    for ( const auto& iter: l ){
+      p += iter;
     }
     return p;
 }
 
 void orderedinsert(list<double> & l, double value) {
-	for (list<double>::iterator iter = l.begin(); iter != l.end(); iter++) {
-		if (value < *iter) {
-			l.insert(iter, value);
-			return;
-		}
-	}
-	l.push_back(value);
+  for (list<double>::iterator iter = l.begin(); iter != l.end(); iter++) {
+    if (value < *iter) {
+      l.insert(iter, value);
+      return;
+    }
+  }
+  l.push_back(value);
 }
 
 
