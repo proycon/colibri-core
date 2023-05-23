@@ -1444,14 +1444,14 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Train skipgrams, for indexed models only
          */
-        virtual void trainskipgrams( const PatternModelOptions options,
+        virtual void trainskipgrams( const PatternModelOptions& options,
 				     PatternModelInterface * constrainbymodel = NULL) {
-            if (constrainbymodel == this) {
-                trainskipgrams_selfconstrained(options);
-            } else {
-                std::cerr << "Can not compute skipgrams on unindexed model (except exhaustively during train() )" << std::endl;
-                throw InternalError();
-            }
+	  if (constrainbymodel == this) {
+	    trainskipgrams_selfconstrained(options);
+	  } else {
+	    std::cerr << "Can not compute skipgrams on unindexed model (except exhaustively during train() )" << std::endl;
+	    throw InternalError();
+	  }
         }
 
         /*
@@ -1460,9 +1460,10 @@ class PatternModel: public MapType, public PatternModelInterface {
          * occurrence count. This will iterate over the corpusdata (reverseindex) again and find and count all skipgrams/flexgrams in the data.
          * Will be invoked by trainskipgrams usually.
          */
-        virtual void trainskipgrams_selfconstrained(PatternModelOptions options) {
+        virtual void trainskipgrams_selfconstrained( const PatternModelOptions& _options) {
+	  PatternModelOptions options = _options;  // need a copy to set MINTOKENS
             if (options.MINTOKENS == -1) options.MINTOKENS = 2;
-            this->cache_grouptotal.clear(); //forces recomputation of statistics
+            cache_grouptotal.clear(); //forces recomputation of statistics
             if (!options.QUIET) std::cerr << "Finding skipgrams/flexgrams matching preloaded constraints, occurrence threshold " << options.MINTOKENS << " ..." << std::endl;
             unsigned int foundskipgrams = 0;
             unsigned int foundflexgrams = 0;
@@ -2825,7 +2826,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * @param options Pattern model options
      * @param constrainbymodel Pointer to a pattern model to use as contraint: only include skipgrams that occur in the constraint model (default: NULL)
      */
-     void trainskipgrams(PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) override {
+     void trainskipgrams( const PatternModelOptions& _options,
+			  PatternModelInterface * constrainbymodel = NULL) override {
+       PatternModelOptions options = _options; // need a copy to set MINTOKENS
         if (options.MINTOKENS == -1) options.MINTOKENS = 2;
         this->cache_grouptotal.clear(); //forces recomputation of statistics
         if (constrainbymodel == this) {
