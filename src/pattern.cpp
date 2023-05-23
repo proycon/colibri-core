@@ -1824,7 +1824,7 @@ IndexedCorpus::IndexedCorpus(std::istream *in, bool debug){
     this->load(in, debug);
 }
 
-IndexedCorpus::IndexedCorpus(std::string filename, bool debug){
+IndexedCorpus::IndexedCorpus( const std::string& filename, bool debug){
     this->load(filename, debug);
 }
 
@@ -1880,15 +1880,13 @@ void IndexedCorpus::load(std::istream *in, bool debug) {
 }
 
 
-void IndexedCorpus::load(std::string filename, bool debug) {
-    std::ifstream * in = new std::ifstream(filename.c_str());
-    if (!in->good()) {
+void IndexedCorpus::load( const std::string& filename, bool debug) {
+    std::ifstream in(filename);
+    if (!in.good()) {
         std::cerr << "ERROR: Unable to load file " << filename << std::endl;
         throw InternalError();
     }
-    this->load( (std::istream *) in, debug);
-    in->close();
-    delete in;
+    this->load( &in, debug);
 }
 
 unsigned char * IndexedCorpus::getpointer(const IndexReference & begin) const {
@@ -2076,13 +2074,11 @@ PatternPointer Pattern::getpointer() const {
 }
 
 Pattern patternfromfile(const std::string & filename) {//helper function to read pattern from file, mostly for Cython
-    std::ifstream * in = new std::ifstream(filename.c_str());
-    if (!in->good()) {
-        std::cerr << "ERROR: Unable to load file " << filename << std::endl;
-        throw InternalError();
-    }
-    Pattern p = Pattern( (std::istream *) in, true);
-    in->close();
-    delete in;
-    return p;
+  std::ifstream in(filename);
+  if (!in.good()) {
+    std::cerr << "ERROR: Unable to load file " << filename << std::endl;
+    throw InternalError();
+  }
+  Pattern p = Pattern( &in, true);
+  return p;
 }

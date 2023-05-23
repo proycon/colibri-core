@@ -66,20 +66,18 @@ int main( int argc, char *argv[] ) {
 
 
     for (unsigned int i = 0; i < datafiles.size(); i++) {
-        std::ifstream * in = new std::ifstream(datafiles[i].c_str(), std::ios::in|std::ios::binary);
-        while (!in->eof()) {
-            //read line
-            Pattern line = Pattern(in);
-            ngrams.clear();
-            line.ngrams(ngrams, n);
+      std::ifstream in(datafiles[i], std::ios::in|std::ios::binary);
+      while (!in.eof()) {
+	//read line
+	Pattern line = Pattern(&in);
+	ngrams.clear();
+	line.ngrams(ngrams, n);
 
-            for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
-                cout << iter->first.tostring(classdecoder) << endl;
-            }
-        }
-        delete in;
+	for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); iter++) {
+	  cout << iter->first.tostring(classdecoder) << endl;
+	}
+      }
     }
-
 
 
 }

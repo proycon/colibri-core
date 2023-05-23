@@ -134,7 +134,7 @@ void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassD
 
 
 template<class ModelType = IndexedPatternModel<>>
-void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, string dorelations, bool doinstantiate, bool repeat = true) {
+void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, const string& dorelations, bool doinstantiate, bool repeat = true) {
     const bool allowunknown = true;
     unsigned char buffer[65536];
     uint32_t linenum = 0;
@@ -191,7 +191,7 @@ void assert_file_exists(const string & filename) {
 
 
 template<class ModelType = IndexedPatternModel<>>
-void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report, bool nocoverage, bool histogram , bool query, const string dorelations, bool doinstantiate, bool info, bool printreverseindex, int cooc, double coocthreshold = 0.1) {
+void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report, bool nocoverage, bool histogram , bool query, const string& dorelations, bool doinstantiate, bool info, bool printreverseindex, int cooc, double coocthreshold = 0.1) {
     cerr << "Generating desired views..." << endl;
 
     if (print) {
@@ -241,7 +241,7 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
 }
 
 template<class ModelType>
-bool processmodel(const string & inputmodelfile, int inputmodeltype, const string & outputmodelfile, int outputmodeltype, const string & corpusfile,   PatternSetModel * constrainbymodel, IndexedCorpus * corpus, PatternModelOptions & options, bool continued, bool expand, int firstsentence, bool ignoreerrors, string inputmodelfile2, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report, bool nocoverage, bool histogram , bool query, string dorelations, bool doinstantiate, bool info, bool printreverseindex, int cooc, double coocthreshold, bool flexfromskip, const vector<string> & querypatterns) {
+bool processmodel(const string & inputmodelfile, int inputmodeltype, const string & outputmodelfile, int outputmodeltype, const string & corpusfile,   PatternSetModel * constrainbymodel, IndexedCorpus * corpus, PatternModelOptions & options, bool continued, bool expand, int firstsentence, bool ignoreerrors, const string& inputmodelfile2, ClassDecoder * classdecoder,  ClassEncoder * classencoder, bool print, bool report, bool nocoverage, bool histogram , bool query, const string& dorelations, bool doinstantiate, bool info, bool printreverseindex, int cooc, double coocthreshold, bool flexfromskip, const vector<string> & querypatterns) {
         if (!(print || report || histogram || query || info || cooc || printreverseindex || (dorelations != "") || (!querypatterns.empty()) || (!outputmodelfile.empty()) )) {
             cerr << "Ooops... You didn't really give me anything to do...that can't be right.. Please study the usage options (-h) again! Did you perhaps forget a --print or --outputmodel? " << endl;
             return false;
@@ -758,13 +758,12 @@ int main( int argc, char *argv[] ) {
                 }
             } else if (LOADCORPUS) {
                 cerr << "Loading corpus data..." << endl;
-                std::ifstream * f = new ifstream(corpusfile.c_str(), ifstream::in | ifstream::binary );
-                if (!f->good()) {
-                    cerr << "Can't open corpus data: " << corpusfile << endl;
-                    exit(2);
+                std::ifstream f(corpusfile, ifstream::in | ifstream::binary );
+                if (!f.good()) {
+		  cerr << "Can't open corpus data: " << corpusfile << endl;
+		  exit(2);
                 }
-                corpus = new IndexedCorpus(f, options.DEBUG);
-                f->close();
+                corpus = new IndexedCorpus(&f, options.DEBUG);
             }
         }
 

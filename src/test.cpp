@@ -136,11 +136,9 @@ int main( int argc, char *argv[] ) {
       }
 
         string classfile = "/tmp/colibritest";
-        ofstream f;
-        f.open(classfile.c_str(), ios::out);
+        ofstream f(classfile, ios::out);
         f << "5\tbe\n6\tTo\n7\tto\n8\tor\n9\tnot\n73477272\tblah\n131\ttest\n";
         f.close();
-
 
 
         cerr << "Loading class decoder" << endl;
