@@ -1081,7 +1081,7 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
             out->write( (char*) &v, sizeof(T));
         }
     }
-    std::string tostring( const std::array<T,N> & a) {
+    std::string tostring( const std::array<T,N> & a) const {
         std::string s;
         for (int i = 0; i < N; ++i) {
             T v = a[i];
@@ -1113,7 +1113,7 @@ class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
     void write(std::ostream * out,  PatternStoreType & value) override {
         value.write(out);
     }
-    std::string tostring(  PatternStoreType & ) {
+    std::string tostring(  PatternStoreType & ) const {
         std::cerr << "PatternStoreValueHandler::tostring() is not supported" << std::endl;
         throw InternalError();
     }
