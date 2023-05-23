@@ -677,6 +677,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             minn = 999;
             hasskipgrams = false;
             hasflexgrams = false;
+	    cache_processed_all = false;
             model_type = this->getmodeltype();
             model_version = this->getmodelversion();
             if (corpus) {
@@ -1443,7 +1444,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Train skipgrams, for indexed models only
          */
-        virtual void trainskipgrams(const PatternModelOptions options,  PatternModelInterface * constrainbymodel = NULL) {
+        virtual void trainskipgrams( const PatternModelOptions options,
+				     PatternModelInterface * constrainbymodel = NULL) {
             if (constrainbymodel == this) {
                 trainskipgrams_selfconstrained(options);
             } else {
