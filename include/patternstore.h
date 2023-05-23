@@ -926,7 +926,7 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
   explicit PatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>():
     corpus(NULL){ }
 
-        void insert(const PatternPointer & pattern, const ValueType & value) {
+        void insert(const PatternPointer & pattern, const ValueType & value) override {
             data[pattern] = value;
         }
 
@@ -1067,7 +1067,7 @@ template<class T,size_t N,int countindex = 0>
 class ArrayValueHandler: public AbstractValueHandler<T> {
    public:
     const static bool indexed = false;
-    std::string id() { return "ArrayValueHandler"; }
+    std::string id() const override { return "ArrayValueHandler"; }
     void read(std::istream * in, std::array<T,N> & a) {
         for (int i = 0; i < N; ++i) {
             T v;
@@ -1106,21 +1106,21 @@ template<class PatternStoreType>
 class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
   public:
     const static bool indexed = false;
-    std::string id() { return "PatternStoreValueHandler"; }
-    void read(std::istream * in,  PatternStoreType & value) {
+    std::string id() const { return "PatternStoreValueHandler"; }
+    void read(std::istream * in,  PatternStoreType & value) override {
         value.read(in);
     }
-    void write(std::ostream * out,  PatternStoreType & value) {
+    void write(std::ostream * out,  PatternStoreType & value) override {
         value.write(out);
     }
     std::string tostring(  PatternStoreType & ) {
         std::cerr << "PatternStoreValueHandler::tostring() is not supported" << std::endl;
         throw InternalError();
     }
-    unsigned int count( PatternStoreType & value) const {
+    unsigned int count( PatternStoreType & value) const override {
         return value.size();
     }
-    void add( PatternStoreType *, const IndexReference & ) const {
+    void add( PatternStoreType *, const IndexReference & ) const override {
         std::cerr << "PatternStoreValueHandler::add() is not supported" << std::endl;
         throw InternalError();
     }
