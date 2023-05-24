@@ -43,18 +43,17 @@ void testgt(unsigned int value , unsigned int ref) {
     }
 }
 
-int main( int argc, char *argv[] ) {
+int main( int argc, const char *argv[] ) {
 
 
 	//string model = argv[1];
 	//string classfile = argv[1];
-    int i;
     bool verbose = false;
 
     if (argc == 2) {
-		string option = argv[1];
-		if (option == "-v") verbose = true;
-	}
+      string option = argv[1];
+      if (option == "-v") verbose = true;
+    }
 
     const char * poem =
     "To be or not to be , that is the question ;\n"
@@ -244,7 +243,7 @@ int main( int argc, char *argv[] ) {
         vector<Pattern> tokens;
         ngram.ngrams(tokens,1);
         cerr << "Testing correct size "; test(tokens.size() == 6);
-        i = 0;
+        int i = 0;
         vector<string> tokenref = {"To","be","or","not","to","be"};
         for (vector<Pattern>::iterator iter2 = tokens.begin(); iter2 != tokens.end(); ++iter2) {
             const Pattern subngram = *iter2;
@@ -425,8 +424,8 @@ int main( int argc, char *argv[] ) {
         cerr << "Testing correct size "; test(ptokens.size() == 6);
 		i = 0;
         for (vector<PatternPointer>::iterator iter2 = ptokens.begin(); iter2 != ptokens.end(); ++iter2) {
-            const PatternPointer subngram = *iter2;
-            cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref[i]);
+            const PatternPointer subngram1 = *iter2;
+            cerr << "#" << i << " -- "; test(subngram1.decode(classdecoder), tokenref[i]);
             i += 1;
         }
 		cerr << "Count check "; test(i,6);
@@ -989,12 +988,12 @@ int main( int argc, char *argv[] ) {
             vector<pair<int,int>> gapconfig = mask2vector(*iter,6);
             int data[6] = {0,0,0,0,0,0};
             for (vector<pair<int,int>>::iterator iter2 = gapconfig.begin(); iter2 != gapconfig.end(); ++iter2) {
-                for (int i = iter2->first; i < iter2->first + iter2->second; i++) {
-                    data[i] = 1;
+                for (int j = iter2->first; j < iter2->first + iter2->second; ++j) {
+                    data[j] = 1;
                 }
             }
-            for (int i = 0; i < 6; i++) {
-                cerr << data[i] << " ";
+            for (int j = 0; j < 6; ++j) {
+                cerr << data[j] << " ";
             }
             cerr << endl;
 
@@ -1300,24 +1299,23 @@ int main( int argc, char *argv[] ) {
 
         if (verbose) {
             cerr << "Iterating over all patterns and testing (non-)equivalence" << endl;
-            int i = 0;
+            int ii = 0;
             for (IndexedPatternModel<>::iterator iter = indexedmodel.begin(); iter != indexedmodel.end(); ++iter) {
                 const Pattern pattern = iter->first;
                 const PatternPointer pp = PatternPointer(pattern);
-                const IndexedData data = iter->second;
-                int j = 0;
+                int jj = 0;
                 cerr << pattern.tostring(classdecoder) << endl;
                 for (IndexedPatternModel<>::iterator iter2 = indexedmodel.begin(); iter2 != indexedmodel.end(); ++iter2) {
                     const Pattern pattern2 = iter2->first;
                     const PatternPointer pp2 = PatternPointer(pattern2);
                     cerr << "\t" << pp2.tostring(classdecoder) << endl;
-                    cerr << "\t\t...p vs p "; test(pattern == pattern2, i == j);
-                    cerr << "\t\t...pp vs pp "; test(pp == pp2, i == j);
-                    cerr << "\t\t...p vs pp "; test(pattern == pp2, i == j);
-                    cerr << "\t\t...pp vs p "; test(pp == pattern2, i == j);
-                    j++;
+                    cerr << "\t\t...p vs p "; test(pattern == pattern2, ii == jj);
+                    cerr << "\t\t...pp vs pp "; test(pp == pp2, ii == jj);
+                    cerr << "\t\t...p vs pp "; test(pattern == pp2, ii == jj);
+                    cerr << "\t\t...pp vs p "; test(pp == pattern2, ii == jj);
+                    ++jj;
                 }
-                i++;
+                ++ii;
             }
         }
 
@@ -1403,16 +1401,16 @@ int main( int argc, char *argv[] ) {
         model.train("/tmp/hamlet.colibri.dat", options);
 
         cerr << "Iterating over reverse index..." << endl;
-        int i = 0;
+        int ii = 0;
         for (IndexedCorpus::iterator iter = corpus.begin(); iter != corpus.end(); ++iter) {
             cerr << "\tGetting pattern for index " << iter.index().tostring() << " = " << iter.patternpointer().tostring(classdecoder) << endl;
             unordered_set<PatternPointer> patterns = model.getreverseindex(iter.index());
             for (PatternPointer p : patterns) {
                 cerr << "\t\t" << p.tostring(classdecoder) << endl;
             }
-            i++;
+            ++ii;
         }
-        cerr << "Size check: "; test(corpus.size(), i);
+        cerr << "Size check: "; test(corpus.size(), ii);
 
 
 
@@ -1420,28 +1418,28 @@ int main( int argc, char *argv[] ) {
         cerr << "Findpattern test with skipgram" << endl;
         Pattern skipgram = classencoder.buildpattern("that {*} the");
         vector<std::pair<IndexReference,PatternPointer>> matches = corpus.findpattern(skipgram);
-        i = 0;
+        ii = 0;
         for ( vector<std::pair<IndexReference,PatternPointer>>::iterator iter = matches.begin(); iter != matches.end(); ++iter) {
             //should be only 1
             cerr << "   " << iter->second.tostring(classdecoder) << endl;
             cerr << "   testing match equivalence: "; test(iter->second == skipgram);
             cerr << "   testing reference: "; test(iter->first == IndexReference(1,7));
-            i++;
+            ++ii;
         }
-        cerr << "Size check: "; test(1, i);
+        cerr << "Size check: "; test(1, ii);
 
         cerr << "Findpattern test with flexgram" << endl;
         Pattern flexgram = classencoder.buildpattern("that {**} the");
         matches = corpus.findpattern(flexgram);
-        i = 0;
+        ii = 0;
         for ( vector<std::pair<IndexReference,PatternPointer>>::iterator iter = matches.begin(); iter != matches.end(); ++iter) {
             //should be only 1
             cerr << "   " << iter->second.tostring(classdecoder) << endl;
             cerr << "   testing match equivalence: "; test(iter->second == flexgram);
             cerr << "   testing reference: "; test(iter->first == IndexReference(1,7));
-            i++;
+            ++ii;
         }
-        cerr << "Size check: "; test(1, i);
+        cerr << "Size check: "; test(1, ii);
     }
     {
         cerr << endl << "************************** PatternAlignModel Tests ***************************************" << endl << endl;
@@ -1540,20 +1538,20 @@ int main( int argc, char *argv[] ) {
 
         cerr << endl;
         std::string infilename = "/tmp/hamlet.colibri.dat";
-        std::string outputfilename = "/tmp/data.colibri.patternmodel";
+	//        std::string outputfilename = "/tmp/data.colibri.patternmodel";
         ppmodel.train(infilename, options);
         cerr << "Found " << ppmodel.size() << " patterns, " << ppmodel.types() << " types, " << ppmodel.tokens() << " tokens" << endl;
         ppmodel.print(&std::cerr, classdecoder);
 
         cerr << "Sanity check: ";
-        unsigned int i = 0;
+        unsigned int ui = 0;
         for (PatternPointerModel<uint32_t>::iterator iter = ppmodel.begin(); iter != ppmodel.end(); ++iter) {
             const PatternPointer p = iter->first;
-            cerr << "Pattern #" << (i+1) << ", hash=" << p.hash() << ", mask=" << p.mask << "...";
+            cerr << "Pattern #" << (ui+1) << ", hash=" << p.hash() << ", mask=" << p.mask << "...";
             test(ppmodel.occurrencecount(p),iter->second);
-            i++;
+            ++ui;
         }
-		cerr << "Count check "; test(i, ppmodel.size());
+		cerr << "Count check "; test(ui, ppmodel.size());
 
 
         cerr << "Checking presence of Pattern" ; test(ppmodel[ngram], 7);
@@ -1619,26 +1617,26 @@ int main( int argc, char *argv[] ) {
 
         cerr << endl;
         std::string infilename = "/tmp/hamlet.colibri.dat";
-        std::string outputfilename = "/tmp/data.colibri.patternmodel";
+	//        std::string outputfilename = "/tmp/data.colibri.patternmodel";
         ppmodel.train(infilename, options);
         cerr << "Found " << ppmodel.size() << " patterns, " << ppmodel.types() << " types, " << ppmodel.tokens() << " tokens" << endl;
         ppmodel.print(&std::cerr, classdecoder);
 
-        cerr << "Sanity check: ";
-        unsigned int i = 0;
-        for (IndexedPatternPointerModel<>::iterator iter = ppmodel.begin(); iter != ppmodel.end(); ++iter) {
-            const PatternPointer p = iter->first;
-            cerr << "Pattern #" << (i+1) << ", hash=" << p.hash() << ", mask=" << p.mask << "...";
-            test(ppmodel.occurrencecount(p),iter->second.count());
-            i++;
-        }
-		cerr << "Count check "; test(i, ppmodel.size());
+	cerr << "Sanity check: ";
+	unsigned int ui = 0;
+	for (IndexedPatternPointerModel<>::iterator iter = ppmodel.begin(); iter != ppmodel.end(); ++iter) {
+	  const PatternPointer p = iter->first;
+	  cerr << "Pattern #" << (ui+1) << ", hash=" << p.hash() << ", mask=" << p.mask << "...";
+	  test(ppmodel.occurrencecount(p),iter->second.count());
+	  ++ui;
+	}
+	cerr << "Count check "; test(ui, ppmodel.size());
 
 
-        cerr << "Checking presence of Pattern" ; test(ppmodel[ngram].count(), 7);
-        cerr << "Checking presence of PatternPointer" ; test(ppmodel[pngram].count(), 7);
-        cerr << "Querying occurrencecount with Pattern (ngram)" ; test(ppmodel.occurrencecount(ngram), 7);
-        cerr << "Querying occurrencecount with PatternPointer (ngram)" ; test(ppmodel.occurrencecount(pngram), 7);
+	cerr << "Checking presence of Pattern" ; test(ppmodel[ngram].count(), 7);
+	cerr << "Checking presence of PatternPointer" ; test(ppmodel[pngram].count(), 7);
+	cerr << "Querying occurrencecount with Pattern (ngram)" ; test(ppmodel.occurrencecount(ngram), 7);
+	cerr << "Querying occurrencecount with PatternPointer (ngram)" ; test(ppmodel.occurrencecount(pngram), 7);
         string querystring2 = "see or not to see";
         Pattern ngram2 = classencoder.buildpattern(querystring2);
         cerr << "Querying occurrencecount with Pattern (ngram) (2)" ; test(ppmodel.occurrencecount(ngram2), 2);

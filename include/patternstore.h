@@ -830,7 +830,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         iterator erase(const_iterator position) { return data.erase(position); }
 
 
-        void write(std::ostream * out) {
+        void write(std::ostream * out) override {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
             for (iterator iter = begin(); iter != end(); ++iter) {
