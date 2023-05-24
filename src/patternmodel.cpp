@@ -25,11 +25,7 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
         throw InternalError();
     }
 
-    int n = 0; //total
-    int o = 0; //observed
-    double e = 0; //expected
     double ll = 0; //Log Likelihood
-    double e_log = 0;
 
     unsigned long long int n_sum = 0;
     unsigned long long int o_sum = 0;
@@ -41,26 +37,25 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
 
 
     for (unsigned int i = 0; i < models.size(); i++) {
-        o = models[i]->occurrencecount(pattern);
+      int o = models[i]->occurrencecount(pattern); //observed
         //n = models[i]->totaloccurrencesingroup(category,patternsize);
-        n = models[i]->tokens();
-        total.push_back(n);
-        n_sum += n;
-        observed.push_back( o );
-        o_sum += o;
+      int n = models[i]->tokens();  //total
+      total.push_back(n);
+      n_sum += n;
+      observed.push_back( o );
+      o_sum += o;
     }
 
-
     for (unsigned int i = 0; i < total.size(); i++) {
-        e_log = (log(total[i]) + log(o_sum)) - log(n_sum); // do computation in logarithms to prevent overflows! e = (total[i] * o_sum) / n_sum
-        e = exp( e_log);
-        expected.push_back(e);
+      double e_log = (log(total[i]) + log(o_sum)) - log(n_sum); // do computation in logarithms to prevent overflows! e = (total[i] * o_sum) / n_sum
+      double e = exp( e_log);
+      expected.push_back(e);
     }
 
     ll = 0;
     for (unsigned int i = 0; i < models.size(); i++) {
-        if (observed[i] > 0)
-            ll += observed[i] * log(observed[i] / expected[i]);
+      if (observed[i] > 0)
+	ll += observed[i] * log(observed[i] / expected[i]);
     }
     ll = ll * 2;
     if (std::isnan(ll)) ll = 0; //value too low, set to 0
@@ -111,7 +106,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > &  models
 
 
     for (int m = startmodel; m < endmodel; m++) {
-     for (PatternModel<uint32_t>::iterator iter = models[m]->begin(); iter != models[m]->end(); iter++) {
+     for (PatternModel<uint32_t>::iterator iter = models[m]->begin(); iter != models[m]->end(); ++iter) {
         const Pattern pattern = iter->first;
         if ((!conjunctiononly) && (resultmap->has(pattern))) continue; //already done
 
