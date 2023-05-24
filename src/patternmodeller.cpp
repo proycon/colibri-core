@@ -609,20 +609,18 @@ int main( int argc, char *argv[] ) {
 	    DORELATIONS = "instances";
 	  } else if (strcmp(long_options[option_index].name,"templates") == 0) {
 	    DORELATIONS = "templates";
-	  } else if (strcmp(long_options[option_index].name,"templates") == 0) {
-	    DORELATIONS = "subsumes";
 	  } else if (strcmp(long_options[option_index].name,"subsumes") == 0) {
-	    DORELATIONS = "subsumed";
+	    DORELATIONS = "subsumes";
 	  } else if (strcmp(long_options[option_index].name,"subsumed") == 0) {
-	    DORELATIONS = "skipcontent";
+	    DORELATIONS = "subsumed";
 	  } else if (strcmp(long_options[option_index].name,"skipcontent") == 0) {
-	    DORELATIONS = "leftneighbours";
+	    DORELATIONS = "skipcontent";
 	  } else if (strcmp(long_options[option_index].name,"leftneighbours") == 0) {
-	    DORELATIONS = "rightneighbours";
+	    DORELATIONS = "leftneighbours";
 	  } else if (strcmp(long_options[option_index].name,"rightneighbours") == 0) {
-	    DORELATIONS = "leftcooc";
+	    DORELATIONS = "rightneighbours";
 	  } else if (strcmp(long_options[option_index].name,"leftcooc") == 0) {
-	    DORELATIONS = "rightcooc";
+	    DORELATIONS = "leftcooc";
 	  } else if (strcmp(long_options[option_index].name,"rightcooc") == 0) {
 	    DORELATIONS = "rightcooc";
 	  } else if (strcmp(long_options[option_index].name,"instantiate") == 0) {
