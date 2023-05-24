@@ -124,7 +124,7 @@ void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassD
     cerr << "Processing " << querypatterns.size() << " queries" << endl;
     const bool allowunknown = true;
     unsigned char buffer[65536];
-    for (vector<string>::const_iterator iter = querypatterns.begin(); iter != querypatterns.end(); iter++) {
+    for (vector<string>::const_iterator iter = querypatterns.begin(); iter != querypatterns.end(); ++iter) {
        const string s = *iter;
        const int buffersize = classencoder->encodestring(s, buffer, allowunknown);
        const Pattern pattern = Pattern(buffer, buffersize);
@@ -143,7 +143,7 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
     cerr << "  Type ctrl-D to quit, type X to switch between exact mode and extensive mode (default: extensive mode)." << endl;
     bool exact = false;
     do {
-            linenum++;
+            ++linenum;
             cerr << linenum << ">> ";
             getline(cin,line);
             if ((line == "X") || (line == "X\n")) {
@@ -167,7 +167,7 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
                         cout << ref.sentence << ':' << (int) ref.token << "\t";
                         processquerypattern<ModelType>(model, classdecoder, linepattern, dorelations, doinstantiate);
                     }
-                    for (vector<pair<Pattern,int> >::iterator iter = patterns.begin(); iter != patterns.end(); iter++) {
+                    for (vector<pair<Pattern,int> >::iterator iter = patterns.begin(); iter != patterns.end(); ++iter) {
                             const Pattern pattern = iter->first;
                             const IndexReference ref = IndexReference(linenum,iter->second);
 
@@ -227,7 +227,7 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
 	throw logic_error( "processquerypattern called with NULL classencoder");
       }
       bool first = true;
-        for (typename ModelType::iterator iter = model.begin(); iter != model.end(); iter++) {
+        for (typename ModelType::iterator iter = model.begin(); iter != model.end(); ++iter) {
             cout << iter->first.tostring(*classdecoder) << endl;
             const PatternPointer pp = iter->first;
             model.outputrelations(pp, *classdecoder, &cout, dorelations == "all" ? "" : dorelations,first);
@@ -293,7 +293,7 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
             //load model
 
             cerr << "Loading pattern model " << inputmodelfile << " as" << outputqualifier << " model..."<<endl;
-            inputmodel = new ModelType(inputmodelfile, options, (PatternModelInterface*) constrainbymodel, corpus);
+            inputmodel = new ModelType(inputmodelfile, options, static_cast<PatternModelInterface*>(constrainbymodel), corpus);
             if ((corpus != NULL) && (inputmodel->hasskipgrams)) {
                 cerr << "Filtering skipgrams..." << endl;
                 inputmodel->pruneskipgrams(options.MINTOKENS, options.MINSKIPTYPES);
@@ -656,7 +656,7 @@ int main( int argc, char *argv[] ) {
     }
 
 
-    for (int stage = 1; stage <= stages; stage++) {
+    for (int stage = 1; stage <= stages; ++stage) {
 
         if (DOTWOSTAGE) {
             if (stage == 1) {
@@ -784,7 +784,7 @@ int main( int argc, char *argv[] ) {
                 cerr << "Loading model " << inputmodelfile << " as unindexed pattern model..."<<endl;
                 PatternModelOptions optionscopy = PatternModelOptions(options);
                 optionscopy.DORESET = true;
-                PatternModel<uint32_t> model = PatternModel<uint32_t>(inputmodelfile, optionscopy, (PatternModelInterface*) constrainbymodel, corpus);
+                PatternModel<uint32_t> model = PatternModel<uint32_t>(inputmodelfile, optionscopy, static_cast<PatternModelInterface*>(constrainbymodel), corpus);
                 cerr << "(" << model.size() << " patterns" << ")" << endl;
 
                 if (constrainbymodel) {
@@ -815,7 +815,7 @@ int main( int argc, char *argv[] ) {
                 cerr << "Loading model " << inputmodelfile << " as indexed pattern model..."<<endl;
                 PatternModelOptions optionscopy = PatternModelOptions(options);
                 optionscopy.DORESET = true;
-                IndexedPatternModel<> model = IndexedPatternModel<>(inputmodelfile, optionscopy, (PatternModelInterface*) constrainbymodel, corpus);
+                IndexedPatternModel<> model = IndexedPatternModel<>(inputmodelfile, optionscopy, static_cast<PatternModelInterface*>(constrainbymodel), corpus);
                 cerr << "(" << model.size() << " patterns" << ")" << endl;
 
                 if (constrainbymodel) {
