@@ -452,184 +452,184 @@ int main( int argc, char *argv[] ) {
 
     char c;
     while ((c = getopt_long(argc, argv, "hc:i:j:o:f:t:ul:sT:PRHQDhq:rgGF:S:xXNIVC:Y:L2Zm:vb:y:W:p:Ee:0M", long_options, &option_index)) != -1)
-        switch (c)
+      switch (c)
         {
         case 'c':
-            classfile = optarg;
-            break;
+	  classfile = optarg;
+	  break;
         case 'i':
-            inputmodelfile = optarg;
-            break;
+	  inputmodelfile = optarg;
+	  break;
         case 'j':
-            inputmodelfile2 = optarg;
-            break;
+	  inputmodelfile2 = optarg;
+	  break;
         case 'D':
-            cerr << "(ENABLING DEBUG MODE)" << endl;
-            options.DEBUG = true;
-        	break;
+	  cerr << "(ENABLING DEBUG MODE)" << endl;
+	  options.DEBUG = true;
+	  break;
         case 'R':
-            DOREPORT = true;
-            break;
+	  DOREPORT = true;
+	  break;
         case 'f':
-            corpusfile = optarg;
-            break;
+	  corpusfile = optarg;
+	  break;
         case 't':
-            options.MINTOKENS = atoi(optarg);
-            break;
+	  options.MINTOKENS = atoi(optarg);
+	  break;
         case 'T':
-            options.MINSKIPTYPES = atoi(optarg);
-            break;
+	  options.MINSKIPTYPES = atoi(optarg);
+	  break;
         case 'y':
-            options.MINTOKENS_SKIPGRAMS = atoi(optarg);
-            break;
+	  options.MINTOKENS_SKIPGRAMS = atoi(optarg);
+	  break;
         case 'l':
-            options.MAXLENGTH = atoi(optarg);
-            break;
+	  options.MAXLENGTH = atoi(optarg);
+	  break;
         case 'm':
-            options.MINLENGTH = atoi(optarg);
-            break;
+	  options.MINLENGTH = atoi(optarg);
+	  break;
         case 'b':
-            options.MAXBACKOFFLENGTH = atoi(optarg);
-            break;
+	  options.MAXBACKOFFLENGTH = atoi(optarg);
+	  break;
         case 'W':
-            options.MINTOKENS_UNIGRAMS = atoi(optarg);
-            break;
+	  options.MINTOKENS_UNIGRAMS = atoi(optarg);
+	  break;
         case 'p':
-            options.PRUNENONSUBSUMED = atoi(optarg);
-            break;
+	  options.PRUNENONSUBSUMED = atoi(optarg);
+	  break;
         case 's':
-            options.DOSKIPGRAMS = true;
-            break;
+	  options.DOSKIPGRAMS = true;
+	  break;
         case '2':
-            DOTWOSTAGE = true;
-            break;
+	  DOTWOSTAGE = true;
+	  break;
         case 'o':
-            outputmodelfile = optarg;
-            break;
-		case 'u':
-            if (outputmodeltype == INDEXEDPATTERNMODEL) {
-                outputmodeltype = UNINDEXEDPATTERNMODEL;
-            } else {
-                outputmodeltype = UNINDEXEDPATTERNPOINTERMODEL;
-            }
-			break;
+	  outputmodelfile = optarg;
+	  break;
+	case 'u':
+	  if (outputmodeltype == INDEXEDPATTERNMODEL) {
+	    outputmodeltype = UNINDEXEDPATTERNMODEL;
+	  } else {
+	    outputmodeltype = UNINDEXEDPATTERNPOINTERMODEL;
+	  }
+	  break;
         case 'M':
-            if (outputmodeltype == INDEXEDPATTERNMODEL) {
-                outputmodeltype = INDEXEDPATTERNPOINTERMODEL;
-            } else {
-                outputmodeltype = UNINDEXEDPATTERNPOINTERMODEL;
-            }
-			break;
-		case 'r':
-            //note: prior to 2.4.4, this was an alias for -f for backwards compatibility, now breaking this compatibility
-            DOREPORT = true;
-            nocoverage = true;
-			break;
-		case 'g':
-            DORELATIONS = "all";
-			break;
-		case 'Q':
-			DOQUERIER = true;
-			break;
+	  if (outputmodeltype == INDEXEDPATTERNMODEL) {
+	    outputmodeltype = INDEXEDPATTERNPOINTERMODEL;
+	  } else {
+	    outputmodeltype = UNINDEXEDPATTERNPOINTERMODEL;
+	  }
+	  break;
+	case 'r':
+	  //note: prior to 2.4.4, this was an alias for -f for backwards compatibility, now breaking this compatibility
+	  DOREPORT = true;
+	  nocoverage = true;
+	  break;
+	case 'g':
+	  DORELATIONS = "all";
+	  break;
+	case 'Q':
+	  DOQUERIER = true;
+	  break;
         case 'q':
-            querypatterns.push_back(optarg);
-            break;
+	  querypatterns.push_back(optarg);
+	  break;
         case 'H':
-            DOHISTOGRAM = true;
-            break;
+	  DOHISTOGRAM = true;
+	  break;
         case 'P':
-            DOPRINT = true;
-            break;
+	  DOPRINT = true;
+	  break;
         case 'S': //alias for F, backward compatibility
-		case 'F':
-            if (string(optarg) == "S") {
-                DOFLEXFROMSKIP = true;
-                options.DOSKIPGRAMS = true;
-            } else {
-	      //                DOFLEXFROMCOOC = true;
-                COOCTHRESHOLD = atof(optarg);
-            }
-            break;
+	case 'F':
+	  if (string(optarg) == "S") {
+	    DOFLEXFROMSKIP = true;
+	    options.DOSKIPGRAMS = true;
+	  } else {
+	    //                DOFLEXFROMCOOC = true;
+	    COOCTHRESHOLD = atof(optarg);
+	  }
+	  break;
         case 'Y':
-            DOCOOC = 2; //npmi
-            COOCTHRESHOLD = atof(optarg);
-            break;
+	  DOCOOC = 2; //npmi
+	  COOCTHRESHOLD = atof(optarg);
+	  break;
         case 'C':
-            DOCOOC = 1;
-            COOCTHRESHOLD = atof(optarg);
-            break;
+	  DOCOOC = 1;
+	  COOCTHRESHOLD = atof(optarg);
+	  break;
         case 'x':
-            options.DOREMOVESKIPGRAMS = true;
-            break;
+	  options.DOREMOVESKIPGRAMS = true;
+	  break;
         case 'X':
-            options.DOREMOVEFLEXGRAMS = true;
-            break;
+	  options.DOREMOVEFLEXGRAMS = true;
+	  break;
         case 'N':
-            options.DOREMOVENGRAMS = true;
-            break;
+	  options.DOREMOVENGRAMS = true;
+	  break;
         case 'L':
-            options.DOPATTERNPERLINE = true;
-            outputmodeltype = UNINDEXEDPATTERNMODEL;
-            break;
+	  options.DOPATTERNPERLINE = true;
+	  outputmodeltype = UNINDEXEDPATTERNMODEL;
+	  break;
         case 'I':
-            DOINPLACEREBUILD = true;
-            break;
+	  DOINPLACEREBUILD = true;
+	  break;
         case 'V':
-            DOINFO = true;
-            break;
+	  DOINFO = true;
+	  break;
         case 'Z':
-            DOPRINTREVERSEINDEX = true;
-            break;
+	  DOPRINTREVERSEINDEX = true;
+	  break;
         case 'E':
-            continued = true;
-            break;
+	  continued = true;
+	  break;
         case 'e':
-            firstsentence = atoi(optarg);
-            expand = true;
-            break;
+	  firstsentence = atoi(optarg);
+	  expand = true;
+	  break;
         case 'h':
-            usage();
-            exit(0);
+	  usage();
+	  exit(0);
         case 'v':
-            cerr << VERSION << endl;
-            exit(0);
+	  cerr << VERSION << endl;
+	  exit(0);
         case '0':
-            ignoreerrors = true;
-            break;
+	  ignoreerrors = true;
+	  break;
         case '?':
-            if (optopt == 'c') {
-                cerr <<  "Option -" << optopt << " requires an argument." << endl;
-            } else {
-                cerr << "Unknown option: -" <<  optopt << endl;
-            }
+	  if (optopt == 'c') {
+	    cerr <<  "Option -" << optopt << " requires an argument." << endl;
+	  } else {
+	    cerr << "Unknown option: -" <<  optopt << endl;
+	  }
 
-            return 1;
-		case 0:
-			if (strcmp(long_options[option_index].name,"instances") == 0) {
-                DORELATIONS = "instances";
-            } else if (strcmp(long_options[option_index].name,"templates") == 0) {
-                DORELATIONS = "templates";
-            } else if (strcmp(long_options[option_index].name,"subsumes") == 0) {
-                DORELATIONS = "subsumes";
-            } else if (strcmp(long_options[option_index].name,"subsumed") == 0) {
-                DORELATIONS = "subsumed";
-            } else if (strcmp(long_options[option_index].name,"skipcontent") == 0) {
-                DORELATIONS = "skipcontent";
-            } else if (strcmp(long_options[option_index].name,"leftneighbours") == 0) {
-                DORELATIONS = "leftneighbours";
-            } else if (strcmp(long_options[option_index].name,"rightneighbours") == 0) {
-                DORELATIONS = "rightneighbours";
-            } else if (strcmp(long_options[option_index].name,"leftcooc") == 0) {
-                DORELATIONS = "leftcooc";
-            } else if (strcmp(long_options[option_index].name,"rightcooc") == 0) {
-                DORELATIONS = "rightcooc";
-            } else if (strcmp(long_options[option_index].name,"instantiate") == 0) {
-                DOINSTANTIATE = true;
-			}
-			break;
-        default:
-            cerr << "Unknown option: -" <<  optopt << endl;
-            abort ();
+        return 1;
+    case 0:
+        if (strcmp(long_options[option_index].name,"instances") == 0) {
+            DORELATIONS = "instances";
+        } else if (strcmp(long_options[option_index].name,"templates") == 0) {
+            DORELATIONS = "templates";
+        } else if (strcmp(long_options[option_index].name,"subsumes") == 0) {
+            DORELATIONS = "subsumes";
+        } else if (strcmp(long_options[option_index].name,"subsumed") == 0) {
+            DORELATIONS = "subsumed";
+        } else if (strcmp(long_options[option_index].name,"skipcontent") == 0) {
+            DORELATIONS = "skipcontent";
+        } else if (strcmp(long_options[option_index].name,"leftneighbours") == 0) {
+            DORELATIONS = "leftneighbours";
+        } else if (strcmp(long_options[option_index].name,"rightneighbours") == 0) {
+            DORELATIONS = "rightneighbours";
+        } else if (strcmp(long_options[option_index].name,"leftcooc") == 0) {
+            DORELATIONS = "leftcooc";
+        } else if (strcmp(long_options[option_index].name,"rightcooc") == 0) {
+            DORELATIONS = "rightcooc";
+        } else if (strcmp(long_options[option_index].name,"instantiate") == 0) {
+            DOINSTANTIATE = true;
+        }
+        break;
+    default:
+	  cerr << "Unknown option: -" <<  optopt << endl;
+	  abort ();
         }
 
 
