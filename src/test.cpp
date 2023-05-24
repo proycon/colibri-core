@@ -988,12 +988,12 @@ int main( int argc, const char *argv[] ) {
             vector<pair<int,int>> gapconfig = mask2vector(*iter,6);
             int data[6] = {0,0,0,0,0,0};
             for (vector<pair<int,int>>::iterator iter2 = gapconfig.begin(); iter2 != gapconfig.end(); ++iter2) {
-                for (int j = iter2->first; j < iter2->first + iter2->second; ++j) {
-                    data[j] = 1;
+                for (int jj = iter2->first; jj < iter2->first + iter2->second; ++jj) {
+                    data[jj] = 1;
                 }
             }
-            for (int j = 0; j < 6; ++j) {
-                cerr << data[j] << " ";
+            for (int jj = 0; jj < 6; ++jj) {
+                cerr << data[jj] << " ";
             }
             cerr << endl;
 

@@ -751,9 +751,8 @@ PatternPointer::PatternPointer(const Pattern& ref, size_t begin, size_t length, 
 
     size_t i = (byteoffset != NULL) ? *byteoffset : 0;
     size_t n = 0;
-    unsigned char c;
     do {
-        c = ref.data[i];
+        unsigned char c = ref.data[i];
         if (c < 128) {
             //we have a token
             n++;
