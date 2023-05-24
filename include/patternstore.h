@@ -1106,14 +1106,14 @@ template<class PatternStoreType>
 class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
   public:
     const static bool indexed = false;
-    std::string id() const { return "PatternStoreValueHandler"; }
+    std::string id() const override { return "PatternStoreValueHandler"; }
     void read(std::istream * in,  PatternStoreType & value) override {
         value.read(in);
     }
     void write(std::ostream * out,  PatternStoreType & value) override {
         value.write(out);
     }
-    std::string tostring(  PatternStoreType & ) const {
+    std::string tostring(  PatternStoreType & ) const override {
         std::cerr << "PatternStoreValueHandler::tostring() is not supported" << std::endl;
         throw InternalError();
     }

@@ -231,7 +231,7 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
         }
 
 
-        virtual void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) {
+        virtual void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) override {
             *out << "PATTERN\tPATTERN2\tFEATURES" << std::endl;
             for (iterator iter = this->begin(); iter != this->end(); ++iter) {
                 const Pattern sourcepattern = iter->first;
