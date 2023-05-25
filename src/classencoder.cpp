@@ -713,18 +713,12 @@ unsigned char * convert_v1_v2(istream * in, bool ignoreeol, bool debug) {
         if (readingdata) {
             readingdata--;
         } else {
-            if (c == 0) {
-                if (!ignoreeol) break;
-            } else if (c < 128) {
-                //we have a size
-                if (c == 0) {
-                    std::cerr << "ERROR: Pattern length is zero according to input stream.. not possible! (stage 2)" << std::endl;
-		    delete [] data;
-                    throw InternalError();
-                } else {
-                    readingdata = c;
-                }
-            }
+	  if (c == 0) {
+	    if (!ignoreeol) break;
+	  } else if (c < 128) {
+	    //we have a size
+	    readingdata = c;
+	  }
         }
     }
 
