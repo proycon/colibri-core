@@ -2409,8 +2409,13 @@ class PatternModel: public MapType, public PatternModelInterface {
                 size_t coveredtokens = totaltokensingroup(0,0);
 
                 if (coveredtokens > this->tokens()) coveredtokens = this->tokens();
-                size_t uncoveredtokens = this->tokens() - coveredtokens;
-                if (uncoveredtokens < 0) uncoveredtokens = 0;
+                size_t uncoveredtokens;
+		if ( this->tokens() >= coveredtokens ){
+		  uncoveredtokens = this->tokens() - coveredtokens;
+		}
+                else {
+		  uncoveredtokens = 0;
+		}
                 *OUT << "Uncovered:                " << std::setw(15) << "-" << std::setw(15) << uncoveredtokens << std::setw(15) << uncoveredtokens / (double) this->tokens() << std::setw(15) << this->types() - coveredtypes <<  std::endl;
                 *OUT << "Covered:                  " << std::setw(15) << this->size() << std::setw(15) << coveredtokens << std::setw(15) << coveredtokens / (double) this->tokens() <<  std::setw(15) << coveredtypes <<  std::endl << std::endl;
             } else {

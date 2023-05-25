@@ -325,7 +325,7 @@ bool processmodel(const string & inputmodelfile, int inputmodeltype, const strin
                 if (constrainbymodel) {
                     cerr << "Unloading constraint model" << endl;
                     delete constrainbymodel;
-                    constrainbymodel = NULL;
+		    //                    constrainbymodel = NULL;
                 }
             }
         }
