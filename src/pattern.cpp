@@ -154,20 +154,18 @@ Pattern Pattern::toflexgram() const { //converts a fixed skipgram into a dynamic
         if (copybytes) {
             mainpatternbuffer[j++] = c;
             copybytes--;
-        } else if (copybytes == 0) {
-            if ((!prevhigh) && (c == ClassDecoder::delimiterclass)) {
-                mainpatternbuffer[j++] = c;
-                break;
-            } else if ((!prevhigh) && (c == ClassDecoder::skipclass)) {
-                if (!skipgap) {
-                    mainpatternbuffer[j++] = ClassDecoder::flexclass; //store a DYNAMIC GAP instead
-                    skipgap = true; //skip next consecutive gap markers
-                }
-            } else {
-                mainpatternbuffer[j++] = c;
-                skipgap = false;
-            }
-        }
+        } else if ((!prevhigh) && (c == ClassDecoder::delimiterclass)) {
+	  mainpatternbuffer[j++] = c;
+	  break;
+	} else if ((!prevhigh) && (c == ClassDecoder::skipclass)) {
+	  if (!skipgap) {
+	    mainpatternbuffer[j++] = ClassDecoder::flexclass; //store a DYNAMIC GAP instead
+	    skipgap = true; //skip next consecutive gap markers
+	  }
+	} else {
+	  mainpatternbuffer[j++] = c;
+	  skipgap = false;
+	}
         prevhigh = (c >= 128);
     } while (1);
 
@@ -959,17 +957,17 @@ Pattern::~Pattern() {
 
 
 bool Pattern::operator==(const Pattern &other) const {
-    if ((data == NULL) || (data[0] == 0)) {
-        return (other.data == NULL || other.data[0] == 0);
-    } else if ((other.data == NULL) || (other.data[0] == 0)) {
-        return false;
-    }
-    size_t i = 0;
-    do {
-        if (data[i] != other.data[i]) return false;
-        if ((data[i] == 0) || (other.data[i] == 0)) return data[i] == other.data[i];
-        i++;
-    } while (true);
+  if ((data == NULL) || (data[0] == 0)) {
+    return (other.data == NULL || other.data[0] == 0);
+  } else if ((other.data == NULL) || (other.data[0] == 0)) {
+    return false;
+  }
+  size_t i = 0;
+  do {
+    if (data[i] != other.data[i]) return false;
+    if (data[i] == 0) return true;
+    i++;
+  } while (true);
 }
 bool Pattern::operator==(const PatternPointer &other) const {
     return other == *this;
@@ -1589,11 +1587,12 @@ int Pattern::gaps(vector<pair<int,int> > & container) const {
 
     int endskip = 0;
     for (int i = bs; i > 0; i--) {
-        if (((i == 0) || (data[i-1] >= 128) )&&  ((data[i] == ClassDecoder::skipclass) || (data[i] == ClassDecoder::flexclass))) {
-            endskip++;
-        } else {
-            break;
-        }
+      if ( (data[i-1] >= 128)
+	   && ((data[i] == ClassDecoder::skipclass) || (data[i] == ClassDecoder::flexclass)) ){
+	endskip++;
+      } else {
+	break;
+      }
     }
 
     if (endskip) container.push_back(pair<int,int>(_n - endskip,endskip));
