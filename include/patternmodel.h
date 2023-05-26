@@ -848,40 +848,39 @@ class PatternModel: public MapType, public PatternModelInterface {
             bool filterhasngrams = false;
             bool filterhasskipgrams = false; //(or flexgrams)
             if (filter != NULL) {
-                if (filter->size() == 0) { //cython will pass empty sets
-                    filter = NULL;
-                } else {
-                    for (PatternSet<>::iterator iter = filter->begin(); iter != filter->end(); ++iter) {
-                        if (iter->category() == NGRAM) {
-                            filterhasngrams = true;
-                        } else {
-                            filterhasskipgrams = true;
-                        }
-                        if (filterhasngrams && filterhasskipgrams) break;
-                    }
-                }
+	      if (filter->size() == 0) { //cython will pass empty sets
+		filter = NULL;
+	      } else {
+		for ( auto iter = filter->begin(); iter != filter->end(); ++iter ){
+		  if (iter->category() == NGRAM) {
+		    filterhasngrams = true;
+		  } else {
+		    filterhasskipgrams = true;
+		  }
+		  if (filterhasngrams && filterhasskipgrams) break;
+		}
+	      }
             }
-
 
             bool iter_unigramsonly = false; //only needed for counting unigrams when we need them but they would be discarded
             bool skipunigrams = false; //will be set to true later only when MINTOKENS=1,MINLENGTH=1 to prevent double counting of unigrams
             if (( (options.MINLENGTH > 1) ||(options.MINTOKENS == 1)) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS)) {
-                iter_unigramsonly = true;
+	      iter_unigramsonly = true;
             }
 
             if (!options.QUIET) {
-                std::cerr << "Training patternmodel";
-                if (constrainbymodel != NULL) std::cerr << ", constrained by another model";
-                std::cerr << ", occurrence threshold: " << options.MINTOKENS;
-                if (iter_unigramsonly) std::cerr << ", secondary word occurrence threshold: " << options.MINTOKENS_UNIGRAMS;
-                if (data_version < 2) std::cerr << ", class encoding version: " << (int) data_version;
-                std::cerr << std::endl;
-                if (filterhasngrams) {
-                    std::cerr << "Filter with ngrams provided, only patterns that either match a filtered pattern or contain a smaller filtered pattern will be included..." << std::endl;
-                }
-                if (filterhasskipgrams) {
-                    std::cerr << "Filter with skipgrams provided, only matching instances will be included..." << std::endl;
-                }
+	      std::cerr << "Training patternmodel";
+	      if (constrainbymodel != NULL) std::cerr << ", constrained by another model";
+	      std::cerr << ", occurrence threshold: " << options.MINTOKENS;
+	      if (iter_unigramsonly) std::cerr << ", secondary word occurrence threshold: " << options.MINTOKENS_UNIGRAMS;
+	      if (data_version < 2) std::cerr << ", class encoding version: " << (int) data_version;
+	      std::cerr << std::endl;
+	      if (filterhasngrams) {
+		std::cerr << "Filter with ngrams provided, only patterns that either match a filtered pattern or contain a smaller filtered pattern will be included..." << std::endl;
+	      }
+	      if (filterhasskipgrams) {
+		std::cerr << "Filter with skipgrams provided, only matching instances will be included..." << std::endl;
+	      }
             }
 
             if (constrainbymodel != NULL) {
