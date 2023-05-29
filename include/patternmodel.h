@@ -577,30 +577,30 @@ class PatternModel: public MapType, public PatternModelInterface {
             unsigned int flexgramcount = 0;
 
             for (iterator iter = this->begin(); iter != this->end(); ++iter) {
-                const PatternPointer pattern = iter->first;
-                const PatternCategory category = pattern.category();
-                const PatternPointer firstword = PatternPointer(pattern,0,1);
-                if (!firstword.unknown() && (!firstword.isgap(0))) {
-                    if ((category == SKIPGRAM) && (doskipgrams)) {
-                        bool found = false;
-                        for (std::vector<std::pair<uint32_t,unsigned char>>::iterator iter2 = matchskipgramhelper[firstword].begin(); iter2 != matchskipgramhelper[firstword].end(); ++iter2) {
-                            if ((iter2->first == pattern.getmask()) && (iter2->second == pattern.n())) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            matchskipgramhelper[firstword].push_back(std::pair<uint32_t,unsigned char>(pattern.getmask(),pattern.n()));
-                            ++skipgramcount;
-                        }
-                    } else if ((category == FLEXGRAM) && (doflexgrams)) {
-                        matchflexgramhelper[firstword].insert(pattern);
-                        ++flexgramcount;
-                    }
-                }
+	      const PatternPointer pattern = iter->first;
+	      const PatternCategory category = pattern.category();
+	      const PatternPointer firstword = PatternPointer(pattern,0,1);
+	      if (!firstword.unknown() && (!firstword.isgap(0))) {
+		if ((category == SKIPGRAM) && (doskipgrams)) {
+		  bool found = false;
+		  for ( const auto& iter2 : matchskipgramhelper[firstword] ){
+		    if ((iter2.first == pattern.getmask()) && (iter2.second == pattern.n())) {
+		      found = true;
+		      break;
+		    }
+		  }
+		  if (!found) {
+		    matchskipgramhelper[firstword].push_back(std::pair<uint32_t,unsigned char>(pattern.getmask(),pattern.n()));
+		    ++skipgramcount;
+		  }
+		} else if ((category == FLEXGRAM) && (doflexgrams)) {
+		  matchflexgramhelper[firstword].insert(pattern);
+		  ++flexgramcount;
+		}
+	      }
             }
-            for (t_matchskipgramhelper::iterator iter = matchskipgramhelper.begin(); iter != matchskipgramhelper.end(); ++iter) {
-                iter->second.shrink_to_fit();
+            for ( auto& iter : matchskipgramhelper ){
+	      iter.second.shrink_to_fit();
             }
             if (!quiet && !matchskipgramhelper.empty()) std::cerr << "(helper structure has " << matchskipgramhelper.size() << " unigrams mapping to " << skipgramcount << " skipgrams total)" << std::endl;
             if (!quiet && !matchflexgramhelper.empty()) std::cerr << "(helper structure has " << matchflexgramhelper.size() << " unigrams mapping to " << flexgramcount << " flexgrams total)" << std::endl;
@@ -915,53 +915,53 @@ class PatternModel: public MapType, public PatternModelInterface {
             }
 
             for (int n = 1; n <= options.MAXLENGTH; ++n) {
-                bool skipgramsonly = false; //only used when continued==true, prevent double counting of n-grams whilst allowing skipgrams to be counted later
-                if (continued) {
-                    if ((options.MINTOKENS > 1) && (constrainbymodel == NULL)) {
-                       if (cache_grouptotal[NGRAM][n] > 0) {
-                           if ((options.DOSKIPGRAMS_EXHAUSTIVE) && (cache_grouptotal[SKIPGRAM][n] == 0) ) {
-                               skipgramsonly= true;
-                           } else {
-                                if (!options.QUIET) std::cerr << "Skipping " << n << "-grams, already in model" << std::endl;
-                               continue;
-                           }
-                       }
-                    }
-                }
-                int foundskipgrams = 0;
-                if (in != NULL) {
-                    in->clear();
-                    if (data_version >= 2) {
-                        in->seekg(2);
-                    } else {
-                        in->seekg(0);
-                    }
-                }
-                if (!options.QUIET) {
-                    if (iter_unigramsonly) {
-                        std::cerr << "Counting unigrams using secondary word occurrence threshold (" << options.MINTOKENS_UNIGRAMS << ")" << std::endl;
-                    } else if (options.DOPATTERNPERLINE) {
-                        std::cerr << "Counting patterns from list, one per line" << std::endl;
-                    } else if (constrainbymodel != NULL) {
-                        std::cerr << "Counting n-grams that occur in constraint model" << std::endl;
-                    } else if (options.MINTOKENS > 1) {
-                        std::cerr << "Counting " << n << "-grams" << std::endl;
-                        if (skipgramsonly) std::cerr << "(only counting skipgrams actually, n-grams already counted earlier)" << std::endl;
-                    } else {
-                        std::cerr << "Counting *all* n-grams (occurrence threshold=1)" << std::endl;
-                    }
-                }
+	      bool skipgramsonly = false; //only used when continued==true, prevent double counting of n-grams whilst allowing skipgrams to be counted later
+	      if (continued) {
+		if ((options.MINTOKENS > 1) && (constrainbymodel == NULL)) {
+		  if (cache_grouptotal[NGRAM][n] > 0) {
+		    if ((options.DOSKIPGRAMS_EXHAUSTIVE) && (cache_grouptotal[SKIPGRAM][n] == 0) ) {
+		      skipgramsonly= true;
+		    } else {
+		      if (!options.QUIET) std::cerr << "Skipping " << n << "-grams, already in model" << std::endl;
+		      continue;
+		    }
+		  }
+		}
+	      }
+	      int foundskipgrams = 0;
+	      if (in != NULL) {
+		in->clear();
+		if (data_version >= 2) {
+		  in->seekg(2);
+		} else {
+		  in->seekg(0);
+		}
+	      }
+	      if (!options.QUIET) {
+		if (iter_unigramsonly) {
+		  std::cerr << "Counting unigrams using secondary word occurrence threshold (" << options.MINTOKENS_UNIGRAMS << ")" << std::endl;
+		} else if (options.DOPATTERNPERLINE) {
+		  std::cerr << "Counting patterns from list, one per line" << std::endl;
+		} else if (constrainbymodel != NULL) {
+		  std::cerr << "Counting n-grams that occur in constraint model" << std::endl;
+		} else if (options.MINTOKENS > 1) {
+		  std::cerr << "Counting " << n << "-grams" << std::endl;
+		  if (skipgramsonly) std::cerr << "(only counting skipgrams actually, n-grams already counted earlier)" << std::endl;
+		} else {
+		  std::cerr << "Counting *all* n-grams (occurrence threshold=1)" << std::endl;
+		}
+	      }
 
-                if ((options.DOSKIPGRAMS_EXHAUSTIVE) && (gapmasks[n].empty())) gapmasks[n] = compute_skip_configurations(n, options.MAXSKIPS);
+	      if ((options.DOSKIPGRAMS_EXHAUSTIVE) && (gapmasks[n].empty())) gapmasks[n] = compute_skip_configurations(n, options.MAXSKIPS);
 
 
 
-                sentence = firstsentence-1; //reset
-                bool singlepass = false;
-                bool ignorefilter = false;
-                const unsigned int sentences = (reverseindex != NULL) ? reverseindex->sentences() : 0;
-                if ((options.DEBUG) && (reverseindex != NULL)) std::cerr << "Reverse index sentence count: " << sentences <<  std::endl;
-                while (((reverseindex != NULL) && (sentence < sentences)) ||  ((reverseindex == NULL) && (in != NULL) && (!in->eof())))  {
+	      sentence = firstsentence-1; //reset
+	      bool singlepass = false;
+	      bool ignorefilter = false;
+	      const unsigned int sentences = (reverseindex != NULL) ? reverseindex->sentences() : 0;
+	      if ((options.DEBUG) && (reverseindex != NULL)) std::cerr << "Reverse index sentence count: " << sentences <<  std::endl;
+	      while (((reverseindex != NULL) && (sentence < sentences)) ||  ((reverseindex == NULL) && (in != NULL) && (!in->eof())))  {
                     ++sentence;
                     //read line
                     if (linepattern != NULL) delete linepattern;
@@ -1001,94 +1001,94 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
                     // *** ITERATION OVER ALL NGRAMS OF CURRENT ORDER (n) IN THE LINE/SENTENCE ***
-                    for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); ++iter) {
+                    for ( auto const& iter : ngrams ){
 
                         try {
-                            if ((singlepass) && (options.MINLENGTH == 1) && (skipunigrams) && (iter->first.n() == 1)) {
+                            if ((singlepass) && (options.MINLENGTH == 1) && (skipunigrams) && (iter.first.n() == 1)) {
                                 //prevent double counting of unigrams after a iter_unigramsonly run with mintokens==1
                                 continue;
                             }
 
 
                             if (!skipgramsonly) {
-                                //check against constraint model
-                                if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter->first)))  continue;  //skip when we have a constraintmodel and the pattern is not found
+			      //check against constraint model
+			      if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter.first)))  continue;  //skip when we have a constraintmodel and the pattern is not found
 
-                                found = true; //are the submatches in order? (default to true, attempt to falsify, needed for mintokens==1)
+			      found = true; //are the submatches in order? (default to true, attempt to falsify, needed for mintokens==1)
 
-                                //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
-                                if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS) && ((n > 1) || (singlepass)) ) {
-                                    subngrams.clear();
-                                    iter->first.ngrams(subngrams,1); //get all unigrams
-                                    for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); ++iter2) {
-                                        //check if unigram reaches threshold
-                                        if (this->occurrencecount(*iter2) < (unsigned int) options.MINTOKENS_UNIGRAMS) {
-                                            found = false;
-                                            break;
-                                        }
-                                    }
-                                }
+			      //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
+			      if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS) && ((n > 1) || (singlepass)) ) {
+				subngrams.clear();
+				iter.first.ngrams(subngrams,1); //get all unigrams
+				for ( auto& iter2 : subngrams ){
+				  //check if unigram reaches threshold
+				  if (this->occurrencecount(iter2) < (unsigned int) options.MINTOKENS_UNIGRAMS) {
+				    found = false;
+				    break;
+				  }
+				}
+			      }
 
-                                if ((found) && (filter != NULL) && (constrainbymodel == NULL)) {
-                                    //special behaviour: filter
-                                    ignorefilter = false;
-                                    if (((options.MINTOKENS > 1) && (n >= options.MINLENGTH)) || ((options.MINTOKENS == 1) && (iter->first.n() >= (unsigned int) options.MINLENGTH))) {
-                                        //we only apply the filter if minlength is satisfied, earlier stages are not filtered (but will be pruned later when no longer needed)
-                                        bool matchfilter = false;
-                                        if (filterhasngrams) {
-                                            subngrams.clear();
-                                            iter->first.subngrams(subngrams,1, options.MINTOKENS > 1 ? n : iter->first.n());
-                                            for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); ++iter2) {
-                                                if (filter->has(*iter2)) {
-                                                    matchfilter = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        if ((!matchfilter) && (filterhasskipgrams)) {
-                                            for (PatternSet<Pattern>::iterator iter2 = filter->begin(); iter2 != filter->end(); ++iter2) {
-                                                if (iter->first.instanceof(*iter2)) {
-                                                    matchfilter = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        if (!matchfilter) continue;
-                                    } else {
-                                        ignorefilter = true;
-                                    }
-                                }
+			      if ((found) && (filter != NULL) && (constrainbymodel == NULL)) {
+				//special behaviour: filter
+				ignorefilter = false;
+				if (((options.MINTOKENS > 1) && (n >= options.MINLENGTH)) || ((options.MINTOKENS == 1) && (iter.first.n() >= (unsigned int) options.MINLENGTH))) {
+				  //we only apply the filter if minlength is satisfied, earlier stages are not filtered (but will be pruned later when no longer needed)
+				  bool matchfilter = false;
+				  if (filterhasngrams) {
+				    subngrams.clear();
+				    iter.first.subngrams(subngrams,1, options.MINTOKENS > 1 ? n : iter.first.n());
+				    for ( const auto& iter2 : subngrams ){
+				      if (filter->has(iter2)) {
+					matchfilter = true;
+					break;
+				      }
+				    }
+				  }
+				  if ((!matchfilter) && (filterhasskipgrams)) {
+				    for ( auto iter2 = filter->begin(); iter2 != filter->end(); ++iter2) {
+				      if (iter.first.instanceof(*iter2)) {
+					matchfilter = true;
+					break;
+				      }
+				    }
+				  }
+				  if (!matchfilter) continue;
+				} else {
+				  ignorefilter = true;
+				}
+			      }
 
-                                if ((filter == NULL) || (ignorefilter))  {
-                                    //normal behaviour: ngram (n-1) lookback
-                                    if ((found) && (n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) {
-                                        //check if sub-parts were counted
-                                        subngrams.clear();
-                                        backoffn = n - 1;
-                                        if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
-                                            iter->first.ngrams(subngrams, backoffn);
-                                        for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); ++iter2) {
-                                            if (!this->has(*iter2)) {
-                                                found = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
+			      if ((filter == NULL) || (ignorefilter))  {
+				//normal behaviour: ngram (n-1) lookback
+				if ((found) && (n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) {
+				  //check if sub-parts were counted
+				  subngrams.clear();
+				  backoffn = n - 1;
+				  if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
+				  iter.first.ngrams(subngrams, backoffn);
+				  for ( const auto& iter2 : subngrams ){
+				    if (!this->has(iter2)) {
+				      found = false;
+				      break;
+				    }
+				  }
+				}
+			      }
 
 
-                                ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
+                                ref = IndexReference(sentence, iter.second); //this is one token, we add the tokens as we find them, one by one
                                 if ((found) && (!skipgramsonly)) {
-                                    if (options.DEBUG) std::cerr << "\t\tAdding @" << ref.sentence << ":" << ref.token << " n=" << iter->first.n() << " category=" <<(int) iter->first.category()<< std::endl;
-                                    add(iter->first, ref);
+                                    if (options.DEBUG) std::cerr << "\t\tAdding @" << ref.sentence << ":" << ref.token << " n=" << iter.first.n() << " category=" <<(int) iter.first.category()<< std::endl;
+                                    add(iter.first, ref);
                                 }
 
                             }
                             if (((n >= 3) || (options.MINTOKENS == 1)) //n is always 1 when mintokens == 1
                                     && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
                                 //if we have a constraint model, we need to compute skipgrams even if the ngram was not found
-                                ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
-                                int foundskipgrams_thisround = this->computeskipgrams(iter->first, options, &ref, NULL, constrainbymodel, true );
+                                ref = IndexReference(sentence, iter.second); //this is one token, we add the tokens as we find them, one by one
+                                int foundskipgrams_thisround = this->computeskipgrams(iter.first, options, &ref, NULL, constrainbymodel, true );
                                 if (foundskipgrams_thisround > 0) hasskipgrams = true;
                                 foundskipgrams += foundskipgrams_thisround;
                             }
@@ -1201,7 +1201,9 @@ class PatternModel: public MapType, public PatternModelInterface {
                         if (pattern_n == (unsigned int) n) {
                             subngrams.clear();
                             iter->first.ngrams(subngrams, n-1);
-                            for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); ++iter2) subsumed.insert(Pattern(*iter2));
+                            for ( const auto& iter2 : subngrams){
+			      subsumed.insert(Pattern(iter2));
+			    }
                         }
                         ++iter;
                     };
@@ -1214,20 +1216,22 @@ class PatternModel: public MapType, public PatternModelInterface {
                 int end_n = options.PRUNESUBSUMED;
                 if ((end_n > options.MAXLENGTH)) end_n = options.MAXLENGTH;
                 for (int n = 2; n <= end_n; ++n) {
-                    std::unordered_set<Pattern> subsumed;
-                    unsigned int prunedsubsumed = 0;
-                    PatternModel::iterator iter = this->begin();
-                    while (iter != this->end()) {
-                        const unsigned int pattern_n = iter->first.n();
-                        if (pattern_n == (unsigned int) n) {
-                            subngrams.clear();
-                            iter->first.ngrams(subngrams, n-1);
-                            for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); ++iter2) subsumed.insert(Pattern(*iter2));
-                        }
-                        ++iter;
-                    };
-                    prunedsubsumed += this->pruneinset(subsumed, n-1);
-                    if (!options.QUIET) std::cerr << " pruned " << prunedsubsumed << " subsumed " << (n-1) << "-grams"  << std::endl;
+		  std::unordered_set<Pattern> subsumed;
+		  unsigned int prunedsubsumed = 0;
+		  PatternModel::iterator iter = this->begin();
+		  while (iter != this->end()) {
+		    const unsigned int pattern_n = iter->first.n();
+		    if (pattern_n == (unsigned int) n) {
+		      subngrams.clear();
+		      iter->first.ngrams(subngrams, n-1);
+		      for ( const auto& iter2 : subngrams ){
+			subsumed.insert(Pattern(iter2));
+		      }
+		    }
+		    ++iter;
+		  };
+		  prunedsubsumed += this->pruneinset(subsumed, n-1);
+		  if (!options.QUIET) std::cerr << " pruned " << prunedsubsumed << " subsumed " << (n-1) << "-grams"  << std::endl;
                 }
 
             }
@@ -1285,136 +1289,133 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (DEBUG) std::cerr << "Computing skipgrams (" << gapmasks[n].size() << " permutations)" << std::endl;
 
             //loop over all possible gap configurations
-            int gapconf_i = 0;
-            for (std::vector<uint32_t>::iterator iter2 =  gapmasks[n].begin(); iter2 != gapmasks[n].end(); ++iter2, ++gapconf_i) {
-                if (*iter2 == 0) continue; //precaution (doesn't really happen anyway, but better safe than sorry)
+            for ( const auto& iter2 : gapmasks[n] ){
+	      if (iter2 == 0) continue; //precaution (doesn't really happen anyway, but better safe than sorry)
 
-                //add skips
-                try {
-                    PatternPointer skipgram = pattern;
-                    skipgram.mask = *iter2;
+	      //add skips
+	      try {
+		PatternPointer skipgram = pattern;
+		skipgram.mask = iter2;
 
-                    if (DEBUG) {
-                        std::cerr << "Checking for skipgram: " << std::endl;
-                        skipgram.out();
-                    }
+		if (DEBUG) {
+		  std::cerr << "Checking for skipgram: " << std::endl;
+		  skipgram.out();
+		}
 
-                    if ((constrainbymodel != NULL) && (!constrainbymodel->has(skipgram))) continue;
+		if ((constrainbymodel != NULL) && (!constrainbymodel->has(skipgram))) continue;
 
-                    if (DEBUG) {
-                        if ((int) skipgram.n() != n) {
-                            std::cerr << "Generated invalid skipgram, n=" << skipgram.n() << ", expected " << n << std::endl;
-                            throw InternalError();
-                        }
-                    }
+		if (DEBUG) {
+		  if ((int) skipgram.n() != n) {
+		    std::cerr << "Generated invalid skipgram, n=" << skipgram.n() << ", expected " << n << std::endl;
+		    throw InternalError();
+		  }
+		}
 
-                    bool skipgram_valid = true;
-                    if ((mintokens != 1) && (constrainbymodel == NULL)) {
-                        bool check_extra = false;
-                        //check if sub-parts were counted
-                        subngrams.clear();
-                        skipgram.ngrams(subngrams,n-1); //this also works for and returns skipgrams, despite the name
-                        for (std::vector<PatternPointer>::iterator iter3 = subngrams.begin(); iter3 != subngrams.end(); ++iter3) { //only two patterns
-                            const PatternPointer subpattern = *iter3;
-                            if (!subpattern.isgap(0) && !subpattern.isgap(subpattern.n() - 1)) {
-                                //this subpattern is a valid
-                                //skipgram or ngram (no beginning or ending
-                                //gaps) that should occur
-                                if (DEBUG) {
-                                    std::cerr << "Subpattern: " << std::endl;
-                                    subpattern.out();
-                                }
-                                if (!this->has(subpattern)) {
-                                    if (DEBUG) std::cerr << "  discarded" << std::endl;
-                                    skipgram_valid = false;
-                                    break;
-                                }
-                            } else {
-                                //this check isn't enough, subpattern
-                                //starts or ends with gap
-                                //do additional checks
-                                check_extra = true;
-                                break;
-                            }
-                        }
-                        if (!skipgram_valid) continue;
+		bool skipgram_valid = true;
+		if ((mintokens != 1) && (constrainbymodel == NULL)) {
+		  bool check_extra = false;
+		  //check if sub-parts were counted
+		  subngrams.clear();
+		  skipgram.ngrams(subngrams,n-1); //this also works for and returns skipgrams, despite the name
+		  for ( const auto& subpattern : subngrams ){
+		    if (!subpattern.isgap(0) && !subpattern.isgap(subpattern.n() - 1)) {
+		      //this subpattern is a valid
+		      //skipgram or ngram (no beginning or ending
+		      //gaps) that should occur
+		      if (DEBUG) {
+			std::cerr << "Subpattern: " << std::endl;
+			subpattern.out();
+		      }
+		      if (!this->has(subpattern)) {
+			if (DEBUG) std::cerr << "  discarded" << std::endl;
+			skipgram_valid = false;
+			break;
+		      }
+		    } else {
+		      //this check isn't enough, subpattern
+		      //starts or ends with gap
+		      //do additional checks
+		      check_extra = true;
+		      break;
+		    }
+		  }
+		  if (!skipgram_valid) continue;
 
 
-                        if (check_extra) {
-                            if (exhaustive) { //the following is by definition the case in non-exhaustive mode, so we need only do it in exhaustive mode:
+		  if (check_extra) {
+		    if (exhaustive) { //the following is by definition the case in non-exhaustive mode, so we need only do it in exhaustive mode:
 
-                                //test whether parts occur in model, otherwise skip
-                                //can't occur either and we can discard it
-                                std::vector<PatternPointer> parts;
-                                skipgram.parts(parts);
-                                for (std::vector<PatternPointer>::iterator iter3 = parts.begin(); iter3 != parts.end(); ++iter3) {
-                                    const PatternPointer part = *iter3;
-                                    if (!this->has(part)) {
-                                        skipgram_valid = false;
-                                        break;
-                                    }
-                                }
-                                if (!skipgram_valid) continue;
-                            }
+		      //test whether parts occur in model, otherwise skip
+		      //can't occur either and we can discard it
+		      std::vector<PatternPointer> parts;
+		      skipgram.parts(parts);
+		      for ( const auto& part : parts ){
+			if (!this->has(part)) {
+			  skipgram_valid = false;
+			  break;
+			}
+		      }
+		      if (!skipgram_valid) continue;
+		    }
 
-                            //check whether the gaps with single token context (X * Y) occur in model,
-                            //otherwise skipgram can't occur
-                            const std::vector<std::pair<int,int>> gapconfiguration = mask2vector(skipgram.mask, n);
-                            for (std::vector<std::pair<int,int>>::const_iterator iter3 = gapconfiguration.begin(); iter3 != gapconfiguration.end(); ++iter3) {
-                                if (!((iter3->first - 1 == 0) && (iter3->first + iter3->second + 1 == n))) { //entire skipgram is already X * Y format
-                                    const PatternPointer subskipgram = PatternPointer(skipgram, iter3->first - 1, iter3->second + 2);
-                                    if (DEBUG) {
-                                        std::cerr << "Subskipgram: " << std::endl;
-                                        subskipgram.out();
-                                    }
-                                    if (!this->has(subskipgram)) {
-                                        if (DEBUG) std::cerr << "  discarded" << std::endl;
-                                        skipgram_valid = false;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
+		    //check whether the gaps with single token context (X * Y) occur in model,
+		    //otherwise skipgram can't occur
+		    const std::vector<std::pair<int,int>> gapconfiguration = mask2vector(skipgram.mask, n);
+		    for ( const auto& iter3 : gapconfiguration ){
+		      if (!((iter3.first - 1 == 0) && (iter3.first + iter3.second + 1 == n))) { //entire skipgram is already X * Y format
+			const PatternPointer subskipgram = PatternPointer(skipgram, iter3.first - 1, iter3.second + 2);
+			if (DEBUG) {
+			  std::cerr << "Subskipgram: " << std::endl;
+			  subskipgram.out();
+			}
+			if (!this->has(subskipgram)) {
+			  if (DEBUG) std::cerr << "  discarded" << std::endl;
+			  skipgram_valid = false;
+			  break;
+			}
+		      }
+		    }
+		  }
+		}
 
 
-                    if (skipgram_valid) {
-                        /*Pattern test = skipgram;
-                        if (test.category() != SKIPGRAM) {
-                            std::cerr << "ERROR: skipgram is not a skipgram!!!" << std::endl;
-                            std::cerr << "n=" << test.n() << std::endl;
-                            std::cerr << "mask=" << skipgram.mask << std::endl;
-                            std::cerr << "patternpointer out: " ;
-                            skipgram.out();
-                            std::cerr << "pattern out: ";
-                            test.out();
-                        }*/
-                        if (DEBUG) std::cerr << "  counted!" << std::endl;
-                        if (targetcontainer == NULL) {
-                            //put in model
-                            if  (!has(skipgram)) ++foundskipgrams;
-                            if (singleref != NULL) {
-                                add(skipgram, *singleref ); //counts the actual skipgram, will add it to the model
-                            } else if (multiplerefs != NULL) {
-                                for (IndexedData::const_iterator refiter =  multiplerefs->begin(); refiter != multiplerefs->end(); ++refiter) {
-                                    const IndexReference ref = *refiter;
-                                    add(skipgram, ref ); //counts the actual skipgram, will add it to the model
-                                }
-                            } else {
-                                std::cerr << "ERROR: computeskipgrams() called with no singleref, no multiplerefs and no targetcontainer" << std::endl;
-                                throw InternalError();
-                            }
-                        } else {
-                            //put in target container, may contain duplicates
-                            ++foundskipgrams;
-                            targetcontainer->push_back(skipgram);
-                        }
+		if (skipgram_valid) {
+		  /*Pattern test = skipgram;
+		    if (test.category() != SKIPGRAM) {
+		    std::cerr << "ERROR: skipgram is not a skipgram!!!" << std::endl;
+		    std::cerr << "n=" << test.n() << std::endl;
+		    std::cerr << "mask=" << skipgram.mask << std::endl;
+		    std::cerr << "patternpointer out: " ;
+		    skipgram.out();
+		    std::cerr << "pattern out: ";
+		    test.out();
+		    }*/
+		  if (DEBUG) std::cerr << "  counted!" << std::endl;
+		  if (targetcontainer == NULL) {
+		    //put in model
+		    if  (!has(skipgram)) ++foundskipgrams;
+		    if (singleref != NULL) {
+		      add(skipgram, *singleref ); //counts the actual skipgram, will add it to the model
+		    } else if (multiplerefs != NULL) {
+		      for ( auto refiter = multiplerefs->begin(); refiter != multiplerefs->end(); ++refiter) {
+			const IndexReference ref = *refiter;
+			add(skipgram, ref ); //counts the actual skipgram, will add it to the model
+		      }
+		    } else {
+		      std::cerr << "ERROR: computeskipgrams() called with no singleref, no multiplerefs and no targetcontainer" << std::endl;
+		      throw InternalError();
+		    }
+		  } else {
+		    //put in target container, may contain duplicates
+		    ++foundskipgrams;
+		    targetcontainer->push_back(skipgram);
+		  }
 
-                    }
+		}
 
-                } catch (InternalError &e) {
-                    std::cerr << "IGNORING ERROR and continuing with next skipgram" << std::endl;
-                }
+	      } catch (InternalError &e) {
+		std::cerr << "IGNORING ERROR and continuing with next skipgram" << std::endl;
+	      }
             }
             return foundskipgrams;
         }
@@ -1467,17 +1468,17 @@ class PatternModel: public MapType, public PatternModelInterface {
             unsigned int foundskipgrams = 0;
             unsigned int foundflexgrams = 0;
             for (IndexedCorpus::iterator iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
-                const IndexReference ref = iter.index();
-                std::unordered_set<PatternPointer> skipgrams = this->getreverseindex(ref,0, SKIPGRAMORFLEXGRAM);  //will also match flexgrams
-                if (options.DEBUG && !skipgrams.empty()) std::cerr << skipgrams.size() << " skipgrams found @" << ref << std::endl;
-                for (std::unordered_set<PatternPointer>::iterator iter2 = skipgrams.begin(); iter2 != skipgrams.end(); ++iter2) {
-                    add(*iter2,ref); //add to model
-                    if (iter2->category() == SKIPGRAM) {
-                        ++foundskipgrams;
-                    } else {
-                        ++foundflexgrams;
-                    }
-                }
+	      const IndexReference ref = iter.index();
+	      std::unordered_set<PatternPointer> skipgrams = this->getreverseindex(ref,0, SKIPGRAMORFLEXGRAM);  //will also match flexgrams
+	      if (options.DEBUG && !skipgrams.empty()) std::cerr << skipgrams.size() << " skipgrams found @" << ref << std::endl;
+	      for ( auto& iter2 : skipgrams ){
+		add(iter2,ref); //add to model
+		if (iter2.category() == SKIPGRAM) {
+		  ++foundskipgrams;
+		} else {
+		  ++foundflexgrams;
+		}
+	      }
             }
             if ((!foundskipgrams) && (!foundflexgrams)) {
                 std::cerr << " None found" << std::endl;
@@ -1672,15 +1673,15 @@ class PatternModel: public MapType, public PatternModelInterface {
 
                             t_matchskipgramhelper::iterator iter = this->matchskipgramhelper.find(firstword);
                             if (iter != matchskipgramhelper.end()) {
-                                for (std::vector<std::pair<uint32_t,unsigned char>>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2) {
-                                    if (n == iter2->second) {
-                                        PatternPointer skipgram = ngram;
-                                        skipgram.mask = iter2->first;
-                                        if ( ((occurrencecount == 0) && this->has(skipgram)) || ((occurrencecount != 0) && (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount)) ) {
-                                            result.insert(skipgram);
-                                        }
-                                    }
-                                }
+			      for ( const auto& iter2 : iter->second ) {
+				if (n == iter2.second) {
+				  PatternPointer skipgram = ngram;
+				  skipgram.mask = iter2.first;
+				  if ( ((occurrencecount == 0) && this->has(skipgram)) || ((occurrencecount != 0) && (this->occurrencecount(skipgram) >= (unsigned int) occurrencecount)) ) {
+				    result.insert(skipgram);
+				  }
+				}
+			      }
                             }
 
                         }
@@ -1695,17 +1696,17 @@ class PatternModel: public MapType, public PatternModelInterface {
                     const PatternPointer firstword = this->reverseindex->getpattern(ref,1);
                     t_matchflexgramhelper::iterator iter = this->matchflexgramhelper.find(firstword);
                     if (iter != this->matchflexgramhelper.end()) {
-                        for (std::unordered_set<PatternPointer>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2) {
-                            PatternPointer flexgram = *iter2;
-                            try  {
-                                flexgram = this->reverseindex->getflexgram(ref, flexgram);
-                                if ( ((occurrencecount == 0) && this->has(flexgram)) || ((occurrencecount != 0) && (this->occurrencecount(flexgram) >= (unsigned int) occurrencecount)) ) {
-                                    result.insert(flexgram);
-                                }
-                            } catch (KeyError &e) {
-                                ;
-                            }
-                        }
+		      for ( const auto& iter2 : iter->second ){
+			PatternPointer flexgram = iter2;
+			try  {
+			  flexgram = this->reverseindex->getflexgram(ref, flexgram);
+			  if ( ((occurrencecount == 0) && this->has(flexgram)) || ((occurrencecount != 0) && (this->occurrencecount(flexgram) >= (unsigned int) occurrencecount)) ) {
+			    result.insert(flexgram);
+			  }
+			} catch (KeyError &e) {
+			  ;
+			}
+		      }
                     }
                 } catch (KeyError &e) {
                     ;
@@ -1743,9 +1744,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             for (unsigned int i = 0; i < this->reverseindex->sentencelength(sentence); ++i) {
                 const IndexReference ref = IndexReference(sentence, i);
                 std::unordered_set<PatternPointer> tmpresult =  this->getreverseindex(ref, occurrencecount, category, size);
-                for (std::unordered_set<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); ++iter) {
-                    const PatternPointer pattern = *iter;
-                    result.push_back(std::pair<IndexReference,PatternPointer>(ref,pattern));
+                for ( const auto& iter : tmpresult ){
+		  const PatternPointer pattern = iter;
+		  result.push_back(std::pair<IndexReference,PatternPointer>(ref,pattern));
                 }
             }
             return result;
@@ -1761,9 +1762,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             for (unsigned int i = ref.token+1; i < this->reverseindex->sentencelength(ref.sentence); ++i) {
                 const IndexReference ref2 = IndexReference(ref.sentence, i);
                 std::unordered_set<PatternPointer> tmpresult =  this->getreverseindex(ref, occurrencecount, category, size);
-                for (std::unordered_set<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); ++iter) {
-                    const PatternPointer pattern = *iter;
-                    result.push_back(std::pair<IndexReference,PatternPointer>(ref2,pattern));
+                for ( const auto& iter : tmpresult ){
+		  const PatternPointer pattern = iter;
+		  result.push_back(std::pair<IndexReference,PatternPointer>(ref2,pattern));
                 }
             }
             return result;
@@ -1779,9 +1780,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             for (unsigned int i = 0; i < ref.token; ++i) {
                 const IndexReference ref2 = IndexReference(ref.sentence, i);
                 std::unordered_set<PatternPointer> tmpresult =  this->getreverseindex(ref,occurrencecount, category, size);
-                for (std::unordered_set<PatternPointer>::iterator iter = tmpresult.begin(); iter != tmpresult.end(); ++iter) {
-                    const PatternPointer pattern = *iter;
-                    result.push_back(std::pair<IndexReference,PatternPointer>(ref2,pattern));
+                for ( const auto& pattern : tmpresult ){
+		  result.push_back(std::pair<IndexReference,PatternPointer>(ref2,pattern));
                 }
             }
             return result;
@@ -1841,9 +1841,9 @@ class PatternModel: public MapType, public PatternModelInterface {
 
             //opting for memory over speed (more iterations, less memory)
             // Indexed model overloads this for better cache_grouptotaltokens computation!
-            for (std::set<int>::iterator iterc = cache_categories.begin(); iterc != cache_categories.end(); ++iterc) {
+            for ( auto iterc = cache_categories.begin(); iterc != cache_categories.end(); ++iterc) {
                 if ((category == 0) || (*iterc == category)) {
-                 for (std::set<int>::iterator itern = cache_n.begin(); itern != cache_n.end(); ++itern) {
+                 for ( auto itern = cache_n.begin(); itern != cache_n.end(); ++itern) {
                   if (((n == 0) || (*itern == n)) && (!cache_processed[*iterc][*itern]) )  {
                     std::unordered_set<PatternType> p_types;
                     PatternModel::iterator iter = this->begin();
@@ -1856,9 +1856,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                             if (((*itern == 0) || (pn == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
                                 std::vector<PatternType> unigrams;
                                 pattern.ngrams(unigrams, 1);
-                                for (typename std::vector<PatternType>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); ++iter2) {
-                                    const PatternType p = *iter2;
-                                    p_types.insert(p);
+                                for ( const auto& p : unigrams ){
+				  p_types.insert(p);
                                 }
                             }
                         }
@@ -2163,9 +2162,9 @@ class PatternModel: public MapType, public PatternModelInterface {
             std::vector<std::pair<Pattern, int> > v;
             std::vector<std::pair<Pattern, int> > ngrams;
             pattern.subngrams(ngrams, minlength(), maxlength());
-            for (std::vector<std::pair<Pattern, int> >::iterator iter = ngrams.begin(); iter != ngrams.end(); ++iter) {
-                const Pattern p = iter->first;
-                if (this->has(p)) v.push_back(*iter);
+            for ( const auto& iter : ngrams ){
+	      const Pattern p = iter.first;
+	      if (this->has(p)) v.push_back(iter);
 
                 //TODO: match with skipgrams
             }
@@ -2210,13 +2209,12 @@ class PatternModel: public MapType, public PatternModelInterface {
          */
         virtual void printreverseindex(std::ostream * out, ClassDecoder & decoder) {
             if (!this->reverseindex) return;
-            for (IndexedCorpus::iterator iter = reverseindex->begin(); iter != reverseindex->end(); ++iter) {
+            for ( IndexedCorpus::iterator iter = reverseindex->begin(); iter != reverseindex->end(); ++iter) {
                 const IndexReference ref = iter.index();
                 std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref);
                 *out << ref.tostring();
-                for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                    const Pattern p = *iter2;
-                    *out << "\t" << p.tostring(decoder);
+                for ( const auto& p : rindex ){
+		  *out << "\t" << p.tostring(decoder);
                 }
                 *out << "\n";
             }
@@ -2321,8 +2319,8 @@ class PatternModel: public MapType, public PatternModelInterface {
             *OUT << "HISTOGRAM" << std::endl;
             *OUT << "------------------------------" << std::endl;
             *OUT << "OCCURRENCES\tPATTERNS" << std::endl;
-            for (std::map<unsigned int,unsigned int>::iterator iter = hist.begin(); iter != hist.end(); ++iter) {
-                *OUT << iter->first << "\t" << iter->second << std::endl;
+            for ( const auto& iter : hist ){
+                *OUT << iter.first << "\t" << iter.second << std::endl;
             }
         }
 
@@ -2366,12 +2364,12 @@ class PatternModel: public MapType, public PatternModelInterface {
             size_t ri_totalkeybs = 0;
             size_t ri_totalvaluebs = 0;
             if (this->reverseindex) {
-                for (IndexedCorpus::iterator iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
-                    ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
-                    ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
-                }
-                *OUT << "Total key bytesize in reverse index (references): " <<  ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
-                *OUT << "Total value bytesize in reverse index (patterns): " <<  ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
+	      for ( auto iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
+		ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
+		ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
+	      }
+	      *OUT << "Total key bytesize in reverse index (references): " <<  ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
+	      *OUT << "Total value bytesize in reverse index (patterns): " <<  ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
             }
 
 
@@ -2424,51 +2422,49 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
             bool haveoutput = false;
-            for (std::set<int>::iterator iterc = cache_categories.begin(); iterc != cache_categories.end(); ++iterc) {
-                const int c = *iterc;
-                if (cache_grouptotalpatterns.count(c))
-                for (std::set<int>::iterator itern = cache_n.begin(); itern != cache_n.end(); ++itern) {
-                    const int n = *itern;
-                    if (cache_grouptotalpatterns[c].count(n)) {
-                        if (!haveoutput) {
-                            //output headers
-                            *OUT << std::setw(15) << "CATEGORY" << std::setw(15) << "N (SIZE) "<< std::setw(15) << "PATTERNS";
-                            if ((this->getmodeltype() != UNINDEXEDPATTERNMODEL) && (!nocoverage)) *OUT << std::setw(15) << "TOKENS" << std::setw(15) << "COVERAGE";
-                            if (!nocoverage) *OUT << std::setw(15) << "TYPES";
-                            *OUT << std::setw(15) << "OCCURRENCES" << std::endl;
-                            haveoutput = true;
-                        }
-                        //category
-                        if (c == 0) {
-                            *OUT << std::setw(15) << "all";
-                        } else if (c == NGRAM) {
-                            *OUT << std::setw(15) << "n-gram";
-                        } else if (c == SKIPGRAM) {
-                            *OUT << std::setw(15) << "skipgram";
-                        } else if (c == FLEXGRAM) {
-                            *OUT << std::setw(15) << "flexgram";
-                        }
-                        //size
-                        if (n == 0) {
-                            *OUT << std::setw(15) << "all";
-                        } else {
-                            *OUT << std::setw(15) << n;
-                        }
-                        //patterns
-                        *OUT << std::setw(15) << cache_grouptotalpatterns[c][n];
-                        if ((this->getmodeltype() != UNINDEXEDPATTERNMODEL) && (!nocoverage)) {
-                            //tokens
-                            *OUT << std::setw(15) << cache_grouptotaltokens[c][n];
-                            //coverage
-                            *OUT << std::setw(15) << cache_grouptotaltokens[c][n] / (double) this->tokens();
-                        }
-                        if (!nocoverage) {
-                            //types
-                            *OUT << std::setw(15) << cache_grouptotalwordtypes[c][n];
-                        }
-                        //occurrences
-                        *OUT << std::setw(15) << cache_grouptotal[c][n] << std::endl;;
-                    }
+            for ( const auto& c : cache_categories ){
+	      if (cache_grouptotalpatterns.count(c))
+		for ( const auto& n : cache_n ){
+		  if (cache_grouptotalpatterns[c].count(n)) {
+		    if (!haveoutput) {
+		      //output headers
+		      *OUT << std::setw(15) << "CATEGORY" << std::setw(15) << "N (SIZE) "<< std::setw(15) << "PATTERNS";
+		      if ((this->getmodeltype() != UNINDEXEDPATTERNMODEL) && (!nocoverage)) *OUT << std::setw(15) << "TOKENS" << std::setw(15) << "COVERAGE";
+		      if (!nocoverage) *OUT << std::setw(15) << "TYPES";
+		      *OUT << std::setw(15) << "OCCURRENCES" << std::endl;
+		      haveoutput = true;
+		    }
+		    //category
+		    if (c == 0) {
+		      *OUT << std::setw(15) << "all";
+		    } else if (c == NGRAM) {
+		      *OUT << std::setw(15) << "n-gram";
+		    } else if (c == SKIPGRAM) {
+		      *OUT << std::setw(15) << "skipgram";
+		    } else if (c == FLEXGRAM) {
+		      *OUT << std::setw(15) << "flexgram";
+		    }
+		    //size
+		    if (n == 0) {
+		      *OUT << std::setw(15) << "all";
+		    } else {
+		      *OUT << std::setw(15) << n;
+		    }
+		    //patterns
+		    *OUT << std::setw(15) << cache_grouptotalpatterns[c][n];
+		    if ((this->getmodeltype() != UNINDEXEDPATTERNMODEL) && (!nocoverage)) {
+		      //tokens
+		      *OUT << std::setw(15) << cache_grouptotaltokens[c][n];
+		      //coverage
+		      *OUT << std::setw(15) << cache_grouptotaltokens[c][n] / (double) this->tokens();
+		    }
+		    if (!nocoverage) {
+		      //types
+		      *OUT << std::setw(15) << cache_grouptotalwordtypes[c][n];
+		    }
+		    //occurrences
+		    *OUT << std::setw(15) << cache_grouptotal[c][n] << std::endl;;
+		  }
                 }
             }
 
@@ -2502,9 +2498,8 @@ class PatternModel: public MapType, public PatternModelInterface {
                 } else if (patternlength > maxlength) {
                     std::vector<Pattern> subngrams;
                     pattern.subngrams(subngrams,minlength, maxlength);
-                    for (std::vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); ++iter2) {
-                        const Pattern pattern2 = *iter2;
-                        result.insert(pattern2);
+                    for ( const auto& pattern2 : subngrams ){
+		      result.insert(pattern2);
                     }
                 }
             }
@@ -2552,7 +2547,7 @@ template<class MapType = PatternMap<IndexedData,IndexedDataHandler>,class Patter
 class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType> {
     protected:
         void postread(const PatternModelOptions&) override {
-            for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); ++iter) {
+            for ( auto iter = this->begin(); iter != this->end(); ++iter) {
                 const Pattern p = iter->first;
                 const PatternCategory category = p.category();
                 const int n = p.n();
@@ -2564,7 +2559,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
         void posttrain(const PatternModelOptions& options ) override {
             if (!options.QUIET) std::cerr << "Sorting all indices..." << std::endl;
-            for (typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin(); iter != this->end(); ++iter) {
+            for ( auto iter = this->begin(); iter != this->end(); ++iter) {
                 iter->second.sort();
             }
 
@@ -2732,7 +2727,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         size_t totalkeybs = 0;
         size_t totalvaluebs = 0;
         size_t indexlengthsum = 0;
-        for (typename IndexedPatternModel::iterator iter = this->begin(); iter != this->end(); ++iter) {
+        for ( auto iter = this->begin(); iter != this->end(); ++iter) {
             const Pattern pattern = iter->first;
             totalkeybs += sizeof(Pattern) + pattern.bytesize();
             totalvaluebs += iter->second.size() * sizeof(IndexReference); //sentence + token;
@@ -2747,12 +2742,12 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         size_t ri_totalkeybs = 0;
         size_t ri_totalvaluebs = 0;
         if (this->reverseindex) {
-            for (IndexedCorpus::iterator iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
-                ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
-                ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
-            }
-            *OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
-            *OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
+	  for ( auto iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
+	    ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
+	    ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
+	  }
+	  *OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
+	  *OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
         }
 
         const size_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
@@ -2808,7 +2803,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             *out << pattern_s << "\t" << count << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq << "\t";
             IndexedData * data = this->getdata(pattern);
             unsigned int i = 0;
-            for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); ++iter2) {
+            for ( auto iter2 = data->begin(); iter2 != data->end(); ++iter2) {
                 ++i;
                 *out << iter2->tostring();
                 if (cat != NGRAM) {
@@ -2964,12 +2959,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
             //search in reverse index
             std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref);
-            for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const PatternPointer candidate = *iter2;
-
-                if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == SKIPGRAM)  && ((occurrencethreshold == 0) || (this->occurrencecount(pattern) >= occurrencethreshold)) ) {
-                    templates[candidate] += 1;
-                }
+            for ( const auto& candidate : rindex ){
+	      if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == SKIPGRAM)  && ((occurrencethreshold == 0) || (this->occurrencecount(pattern) >= occurrencethreshold)) ) {
+		templates[candidate] += 1;
+	      }
             }
         }
         if (occurrencethreshold > 0) this->prunerelations(templates, occurrencethreshold);
@@ -3005,12 +2998,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
             //search in reverse index
             std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref, occurrencethreshold,NGRAM);
-            for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const PatternPointer candidate = *iter2;
-
-                if (((int) candidate.n() == _n)  && (candidate != pattern) ) {
-                    instances[candidate] += 1;
-                }
+            for ( const auto& candidate : rindex ){
+	      if (((int) candidate.n() == _n)  && (candidate != pattern) ) {
+		instances[candidate] += 1;
+	      }
             }
         }
         if (occurrencethreshold > 0) this->prunerelations(instances, occurrencethreshold);
@@ -3053,23 +3044,22 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
                 //search in reverse index
                 std::unordered_set<PatternPointer> rindex = this->getreverseindex(first, occurrencethreshold, category,size);
-                for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                    const PatternPointer candidate = *iter2;
-                    //std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << ", bs=" << candidate.bytesize() <<  std::endl;
-                    //candidate.out();
-                    if (((int) candidate.n() <= maxsubn) && (candidate != pattern)) {
-                        if ((isskipgram) || (candidate.category() == SKIPGRAM)) {
-                            //candidate may not have skips in places where the larger pattern does
-                            Pattern tmpl = Pattern(pattern, i, candidate.n()); //get the proper slice to match
-                            if (candidate.instanceof(tmpl)) {
-                                subchildren[candidate] = subchildren[candidate] + 1;
-                            }
-                        } else if (candidate.category() == FLEXGRAM) {
-                            //TODO
-                        } else {
-			  ++subchildren[candidate];
-                        }
-                    }
+                for ( const auto& candidate : rindex ){
+		  //std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << ", bs=" << candidate.bytesize() <<  std::endl;
+		  //candidate.out();
+		  if (((int) candidate.n() <= maxsubn) && (candidate != pattern)) {
+		    if ((isskipgram) || (candidate.category() == SKIPGRAM)) {
+		      //candidate may not have skips in places where the larger pattern does
+		      Pattern tmpl = Pattern(pattern, i, candidate.n()); //get the proper slice to match
+		      if (candidate.instanceof(tmpl)) {
+			subchildren[candidate] = subchildren[candidate] + 1;
+		      }
+		    } else if (candidate.category() == FLEXGRAM) {
+		      //TODO
+		    } else {
+		      ++subchildren[candidate];
+		    }
+		  }
                 }
             }
         }
@@ -3106,29 +3096,29 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
             //search in reverse index
             std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_bysentence(ref.sentence, occurrencethreshold, category, size);
-            for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                if ((iter2->first.sentence != ref.sentence) || (iter2->first.token > ref.token)) break;
-                const PatternPointer candidate = iter2->second;
+            for ( const auto& iter2 : rindex ){
+	      if ((iter2.first.sentence != ref.sentence) || (iter2.first.token > ref.token)) break;
+	      const PatternPointer candidate = iter2.second;
 
-                int minsubsize = _n + (ref.token - iter2->first.token);
+	      int minsubsize = _n + (ref.token - iter2.first.token);
 
-                if (((int) candidate.n() >= minsubsize)  && (candidate != pattern)
-                        && ((occurrencethreshold == 0) || (this->occurrencecount(candidate) >= occurrencethreshold))
-                        && ((category == 0) || (candidate.category() == category))
-                        && ((size == 0) || (candidate.n() == size))
-                    ) {
-                    if ((candidate.category() == SKIPGRAM) || (pattern.category() == SKIPGRAM))  {
-                        //instance may not have skips in places where the larger candidate pattern does
-                        Pattern inst = Pattern(candidate, iter2->first.token, pattern.n()); //get the proper slice to match
-                        if (pattern.instanceof(candidate)) {
-                            subsumes[candidate] += 1;
-                        }
-                    } else if (candidate.category() == FLEXGRAM) {
-                        //TODO
-                    } else {
-                        subsumes[candidate] += 1;
-                    }
-                }
+	      if (((int) candidate.n() >= minsubsize)  && (candidate != pattern)
+		  && ((occurrencethreshold == 0) || (this->occurrencecount(candidate) >= occurrencethreshold))
+		  && ((category == 0) || (candidate.category() == category))
+		  && ((size == 0) || (candidate.n() == size))
+		  ) {
+		if ((candidate.category() == SKIPGRAM) || (pattern.category() == SKIPGRAM))  {
+		  //instance may not have skips in places where the larger candidate pattern does
+		  Pattern inst = Pattern(candidate, iter2.first.token, pattern.n()); //get the proper slice to match
+		  if (pattern.instanceof(candidate)) {
+		    subsumes[candidate] += 1;
+		  }
+		} else if (candidate.category() == FLEXGRAM) {
+		  //TODO
+		} else {
+		  subsumes[candidate] += 1;
+		}
+	      }
             }
         }
         if (occurrencethreshold > 0) this->prunerelations(subsumes, occurrencethreshold);
@@ -3160,9 +3150,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
             std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_bysentence(ref.sentence);
-            for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const IndexReference ref2 = iter2->first;
-                const PatternPointer neighbour = iter2->second;
+            for ( const auto& iter2 : rindex ){
+                const IndexReference ref2 = iter2.first;
+                const PatternPointer neighbour = iter2.second;
                 if ((ref2.token + neighbour.n() == ref.token)
                         && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
                         && ((category == 0) || (neighbour.category() == category))
@@ -3198,19 +3188,18 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         t_relationmap neighbours;
         for (IndexedData::iterator iter = data->begin(); iter != data->end(); ++iter) {
-            IndexReference ref = *iter;
+	    IndexReference ref = *iter;
             ref.token += pattern.size();
 
             //search in reverse index
             std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref);
-            for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const PatternPointer neighbour = *iter2;
-                if ( ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() == category))
-                        && ((size == 0) || (neighbour.n() == size)) ) {
-		  ++neighbours[neighbour];
-                    if ((cutoff > 0) && (neighbours.size() >= cutoff)) break;
-                }
+            for ( const auto& neighbour : rindex ){
+	      if ( ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+		   && ((category == 0) || (neighbour.category() == category))
+		   && ((size == 0) || (neighbour.n() == size)) ) {
+		++neighbours[neighbour];
+		if ((cutoff > 0) && (neighbours.size() >= cutoff)) break;
+	      }
             }
             if ((cutoff > 0) && (neighbours.size() >= cutoff)) break;
         }
@@ -3268,42 +3257,42 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             return;
         }
 
-        for (std::set<int>::iterator iterc = this->cache_categories.begin(); iterc != this->cache_categories.end(); ++iterc) {
-          if ((category == 0) || (*iterc == category)) {
-            for (std::set<int>::iterator itern = this->cache_n.begin(); itern != this->cache_n.end(); ++itern) {
-              if (((n == 0) || (*itern == n)) && (!this->cache_processed[*iterc][*itern]) )  {
+        for ( const auto& cat : this->cache_categories ){
+          if ((category == 0) || (cat == category)) {
+            for ( const auto& itern : this->cache_n ){
+              if (((n == 0) || (itern == n))
+		  && (!this->cache_processed[cat][itern]) )  {
                 std::unordered_set<PatternPointer> types;
                 std::set<IndexReference> tokens;
                 typename PatternModel<IndexedData,IndexedDataHandler,MapType>::iterator iter = this->begin();
                 while (iter != this->end()) {
-                    const PatternPointer pattern = iter->first;
-                    const int p_n = pattern.n();
-                    if ( (p_n == 1) && (*itern <= 1) && ((*iterc == 0) || (pattern.category() == *iterc))) {
-                        types.insert(pattern);
-                    } else {
-                        if (((*itern == 0) || (p_n == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
-                            std::vector<PatternPointer> unigrams;
-                            pattern.ngrams(unigrams, 1);
-                            for (std::vector<PatternPointer>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); ++iter2) {
-                                const PatternPointer p = *iter2;
-                                types.insert(p);
-                            }
-                        }
-                    }
-                    if (((*itern == 0) || (n == *itern))  && ((*iterc == 0) || (pattern.category() == *iterc))) {
-                        IndexedData * data = this->getdata(pattern);
-                        for (IndexedData::iterator dataiter = data->begin(); dataiter != data->end(); ++dataiter) {
-                            //take into account all tokens
-                            for (unsigned int i = 0; i < pattern.n(); ++i) {
-                                tokens.insert(*dataiter + i);
-                            }
-                        }
-                    }
-                    ++iter;
+		  const PatternPointer pattern = iter->first;
+		  const int p_n = pattern.n();
+		  if ( (p_n == 1) && (itern <= 1) && ((cat == 0) || (pattern.category() == cat))) {
+		    types.insert(pattern);
+		  } else {
+		    if (((itern == 0) || (p_n == itern))  && ((cat == 0) || (pattern.category() == cat))) {
+		      std::vector<PatternPointer> unigrams;
+		      pattern.ngrams(unigrams, 1);
+		      for ( const auto& p : unigrams ){
+			types.insert(p);
+		      }
+		    }
+		  }
+		  if (((itern == 0) || (n == itern))  && ((cat == 0) || (pattern.category() == cat))) {
+		    IndexedData * data = this->getdata(pattern);
+		    for (IndexedData::iterator dataiter = data->begin(); dataiter != data->end(); ++dataiter) {
+		      //take into account all tokens
+		      for (unsigned int i = 0; i < pattern.n(); ++i) {
+			tokens.insert(*dataiter + i);
+		      }
+		    }
+		  }
+		  ++iter;
                 }
-                this->cache_grouptotalwordtypes[*iterc][*itern] += types.size();
-                this->cache_grouptotaltokens[*iterc][*itern] += tokens.size();
-                this->cache_processed[*iterc][*itern] = true;
+                this->cache_grouptotalwordtypes[cat][itern] += types.size();
+                this->cache_grouptotaltokens[cat][itern] += tokens.size();
+                this->cache_processed[cat][itern] = true;
             }
           }
         }
@@ -3339,17 +3328,17 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
             std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_right(ref);
-            for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const IndexReference ref2 = iter2->first;
-                const PatternPointer neighbour = iter2->second;
-                if ( (ref2.token > ref.token + _n)
-                        && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() == category))
-                        && ((size == 0) || (neighbour.n() == size))
-                     ) {
-                    ++cooc[neighbour];
-                    if (matches != NULL) matches->push_back(std::pair<IndexReference,IndexReference>(ref,ref2));
-                }
+            for ( const auto& iter2 : rindex ){
+	      const IndexReference ref2 = iter2.first;
+	      const PatternPointer neighbour = iter2.second;
+	      if ( (ref2.token > ref.token + _n)
+		   && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+		   && ((category == 0) || (neighbour.category() == category))
+		   && ((size == 0) || (neighbour.n() == size))
+		   ) {
+		++cooc[neighbour];
+		if (matches != NULL) matches->push_back(std::pair<IndexReference,IndexReference>(ref,ref2));
+	      }
             }
         }
         if (occurrencethreshold > 0) this->prunerelations(cooc, occurrencethreshold);
@@ -3381,17 +3370,17 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const IndexReference ref = *iter;
 
             std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_left(ref);
-            for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const IndexReference ref2 = iter2->first;
-                const PatternPointer neighbour = iter2->second;
-                const int _n = neighbour.n();
-                if ( (ref2.token + _n < ref.token )
-                        && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() == category))
-                        && ((size == 0) || (neighbour.n() == size))
-                    ) {
-                    ++cooc[neighbour];
-                }
+            for ( const auto& iter2 : rindex ){
+	      const IndexReference ref2 = iter2.first;
+	      const PatternPointer neighbour = iter2.second;
+	      const int _n = neighbour.n();
+	      if ( (ref2.token + _n < ref.token )
+		   && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+		   && ((category == 0) || (neighbour.category() == category))
+		   && ((size == 0) || (neighbour.n() == size))
+		   ) {
+		++cooc[neighbour];
+	      }
             }
         }
         if (occurrencethreshold > 0) this->prunerelations(cooc, occurrencethreshold);
@@ -3426,18 +3415,18 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
             std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_bysentence(ref.sentence);
-            for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const IndexReference ref2 = iter2->first;
-                const PatternPointer neighbour = iter2->second;
-                if ((ordersignificant) && (neighbour.pattern() < pattern)) continue;
-                const int _n2 = neighbour.n();
-                if ( ((ref2.token + _n2 < ref.token ) || (ref2.token > ref.token + _n))
-                        && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() == category))
-                        && ((size == 0) || (neighbour.n() == size))
-                    ) {
-                    ++cooc[neighbour];
-                }
+            for ( const auto& iter2 : rindex ){
+	      const IndexReference ref2 = iter2.first;
+	      const PatternPointer neighbour = iter2.second;
+	      if ((ordersignificant) && (neighbour.pattern() < pattern)) continue;
+	      const int _n2 = neighbour.n();
+	      if ( ((ref2.token + _n2 < ref.token ) || (ref2.token > ref.token + _n))
+		   && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+		   && ((category == 0) || (neighbour.category() == category))
+		   && ((size == 0) || (neighbour.n() == size))
+		   ) {
+		++cooc[neighbour];
+	      }
             }
         }
         if (occurrencethreshold > 0) this->prunerelations(cooc, occurrencethreshold);
@@ -3461,17 +3450,21 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * @param OUT The output stream
      * @param label A label to insert between relations (defaults to: RELATED-TO)
      */
-    void outputrelations(const PatternPointer & pattern, t_relationmap & relations, const ClassDecoder & classdecoder, std::ostream *OUT, const std::string& label = "RELATED-TO") {
+    void outputrelations(const PatternPointer & pattern,
+			 const t_relationmap & relations, const ClassDecoder & classdecoder, std::ostream *OUT, const std::string& label = "RELATED-TO") {
         int total = 0;
-        for (t_relationmap::iterator iter = relations.begin(); iter != relations.end(); ++iter) {
-            total += iter->second;
+        for ( const auto& iter : relations ){
+	  total += iter.second;
         }
         if (total == 0) return;
         double total_f = total;
         const std::string pattern_s = pattern.tostring(classdecoder);
-        for (t_relationmap::iterator iter = relations.begin(); iter != relations.end(); ++iter) {
-            const PatternPointer pattern2 = iter->first;
-            *OUT << "\t" << pattern_s << "\t" << label << "\t" << pattern2.tostring(classdecoder) << "\t" << iter->second << "\t" << iter->second / total_f << "\t" << this->occurrencecount(pattern2) << std::endl;
+        for ( const auto& iter : relations ){
+	  const PatternPointer pattern2 = iter.first;
+	  *OUT << "\t" << pattern_s << "\t" << label
+	       << "\t" << pattern2.tostring(classdecoder)
+	       << "\t" << iter.second << "\t" << iter.second / total_f
+	       << "\t" << this->occurrencecount(pattern2) << std::endl;
         }
     }
 
@@ -3549,10 +3542,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             } else if (left && right) { //order not relevant
                 tmp =  this->getcooc(pattern);
             }
-            for (t_relationmap::iterator iter2 = tmp.begin(); iter2 != tmp.end(); ++iter2) {
-                const PatternPointer pattern2 = iter2->first;
-                const double value = npmi(pattern,pattern2,iter2->second);
-                if (value >= threshold) coocmap[pattern][pattern2] = value;
+            for ( const auto& iter2 : tmp ){
+	      const PatternPointer pattern2 = iter2.first;
+	      const double value = npmi(pattern,pattern2,iter2.second);
+	      if (value >= threshold) coocmap[pattern][pattern2] = value;
             }
         }
     }
@@ -3575,10 +3568,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             } else if (left && right) { //order not relevant
                 tmp =  this->getcooc(pattern, threshold);
             }
-            for (t_relationmap::iterator iter2 = tmp.begin(); iter2 != tmp.end(); ++iter2) {
-                const PatternPointer pattern2 = iter2->first;
-                const double value = iter2->second;
-                if (value >= threshold) coocmap[pattern][pattern2] = value;
+            for ( const auto& iter2 : tmp ){
+	      const PatternPointer pattern2 = iter2.first;
+	      const double value = iter2.second;
+	      if (value >= threshold) coocmap[pattern][pattern2] = value;
             }
         }
     }
@@ -3620,16 +3613,16 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const Pattern pattern = iter->first;
             std::vector<std::pair<IndexReference,IndexReference>> matches;
             t_relationmap tmp =  this->getrightcooc(pattern, 0,0,0, &matches);
-            for (t_relationmap::iterator iter2 = tmp.begin(); iter2 != tmp.end(); ++iter2) {
-                const Pattern pattern2 = iter2->first;
-                const double value = npmi(pattern,pattern2,iter2->second);
-                if (value >= threshold) {
-                    const Pattern flexgram = pattern + FLEXPATTERN + pattern2;
-                    if (!this->has(flexgram)) ++found;
-                    for (std::vector<std::pair<IndexReference,IndexReference>>::iterator iter3 = matches.begin(); iter3 != matches.end(); ++iter3) {
-                        this->data[flexgram].insert(iter3->first);
-                    }
-                }
+            for ( const auto& iter2 : tmp ){
+	      const Pattern pattern2 = iter2.first;
+	      const double value = npmi(pattern,pattern2,iter2.second);
+	      if (value >= threshold) {
+		const Pattern flexgram = pattern + FLEXPATTERN + pattern2;
+		if (!this->has(flexgram)) ++found;
+		for ( const auto& iter3 : matches ){
+		  this->data[flexgram].insert(iter3.first);
+		}
+	      }
             }
         }
         if (found) this->hasflexgrams = true;
@@ -3650,10 +3643,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         std::multimap<double,std::pair<PatternPointer,PatternPointer>> inversemap;
         std::map<PatternPointer,t_relationmap_double>::iterator iter = npmimap.begin();
         while (iter != npmimap.end()) {
-            for (t_relationmap_double::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2) {
-                inversemap.insert(std::pair<double,std::pair<PatternPointer,PatternPointer>>(iter2->second, std::pair<Pattern,Pattern>(iter->first, iter2->first)));
-            }
-            iter = npmimap.erase(iter);
+	  for ( const auto& rel : iter->second ){
+	    inversemap.insert(std::pair<double,std::pair<PatternPointer,PatternPointer>>(rel.second, std::pair<Pattern,Pattern>(iter->first, rel.first)));
+	  }
+	  iter = npmimap.erase(iter);
         }
 
         *OUT << "Pattern1\tPattern2\tNPMI" << std::endl;
@@ -3678,10 +3671,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         std::multimap<uint32_t,std::pair<PatternPointer,PatternPointer>> inversemap;
         std::map<PatternPointer,t_relationmap>::iterator iter = coocmap.begin();
         while (iter != coocmap.end()) {
-            for (t_relationmap::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2) {
-                inversemap.insert(std::pair<uint32_t,std::pair<PatternPointer,PatternPointer>>(iter2->second, std::pair<PatternPointer,PatternPointer>(iter->first, iter2->first)));
-            }
-            iter = coocmap.erase(iter);
+	  for ( const auto& rel : iter->second ){
+	    inversemap.insert(std::pair<uint32_t,std::pair<PatternPointer,PatternPointer>>(rel.second, std::pair<PatternPointer,PatternPointer>(iter->first, rel.first)));
+	  }
+	  iter = coocmap.erase(iter);
         }
 
         *OUT << "Pattern1\tPattern2\tCooc" << std::endl;
@@ -3706,10 +3699,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         std::multimap<int, IndexReference> partmatches;
         int i = 0;
         std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_right(begin); //TODO: Check
-        for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter = rindex.begin(); iter != rindex.end(); ++iter) {
-            IndexReference ref = iter->first;
-            partmatches.insert(std::pair<int,IndexReference>(i, ref));
-            ++i;
+        for ( const auto& iter : rindex ){
+	  IndexReference ref = iter.first;
+	  partmatches.insert(std::pair<int,IndexReference>(i, ref));
+	  ++i;
         }
 
         int firsttoken = begin.token;
@@ -3892,8 +3885,8 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
             this->load( &in, options, constrainmodel);
         }
 
-        int getmodeltype() const { return INDEXEDPATTERNPOINTERMODEL; }
-        int getmodelversion() const { return 2;}
+        int getmodeltype() const override { return INDEXEDPATTERNPOINTERMODEL; }
+        int getmodelversion() const override { return 2;}
 
         /**
         * Add a pattern, with a given position, and a value to the model. This
@@ -3902,7 +3895,7 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
         * @param value A pointer to the value for this pattern, set to NULL and it will be automatically determined
         * @param IndexReference The position in the corpus where the patterns occurs
         */
-        void add(const PatternPointer & patternpointer, const IndexReference & ref) {
+        void add(const PatternPointer & patternpointer, const IndexReference & ref) override {
             if ((patternpointer.data < this->reverseindex->beginpointer()) || (patternpointer.data > this->reverseindex->beginpointer() + this->reverseindex->bytesize())) {
                 std::cerr << "Pattern Pointer points outside contained corpus data..." << std::endl;
                 throw InternalError();

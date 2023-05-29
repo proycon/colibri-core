@@ -233,15 +233,15 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         const uint32_t c = value.count();
         out->write((char*) &c, sizeof(uint32_t));
         //we already assume everything is nicely sorted!
-        for (IndexedData::iterator iter = value.data.begin(); iter != value.data.end(); ++iter) {
-            iter->write(out);
+        for ( auto& iter : value.data ){
+	  iter.write(out);
         }
     }
     virtual std::string tostring(IndexedData & value) const override {
         std::string s = "";
-        for (IndexedData::iterator iter = value.data.begin(); iter != value.data.end(); ++iter) {
-            if (!s.empty()) s += " ";
-            s += iter->tostring();
+        for ( auto& iter : value.data ){
+	  if (!s.empty()) s += " ";
+	  s += iter.tostring();
         }
         return s;
     }
@@ -360,14 +360,12 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
         PatternFeatureVectorMap<FeatureType>() {};
 
         PatternFeatureVectorMap<FeatureType>(const PatternFeatureVectorMap<FeatureType> & ref) {
-            for (const_iterator iter = ref.begin(); iter != ref.end(); ++iter) {
-                //make a copy
-                const PatternFeatureVector<FeatureType> * pfv_ref = *iter;
-                PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(*pfv_ref);
-                this->data.push_back(pfv);
-            }
+	  for ( const auto& pfv_ref : ref ){
+	    //make a copy
+	    PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(*pfv_ref);
+	    this->data.push_back(pfv);
+	  }
         }
-
 
         /*   get double free or corruption error: //TODO: possible memory
          *   leak?? */
@@ -496,11 +494,10 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
         const uint16_t c = (uint16_t) s;
         out->write((char*) &c, sizeof(uint16_t));
         unsigned int n = 0;
-        for (typename PatternFeatureVectorMap<FeatureType>::iterator iter = value.begin(); iter != value.end(); ++iter) {
-            if (n==s) break;
-            PatternFeatureVector<FeatureType> * pfv = *iter;
-            pfv->write(out);
-            n++;
+        for ( auto& pfv : value ){
+	  if (n==s) break;
+	  pfv->write(out);
+	  n++;
         }
     }
     virtual std::string tostring(PatternFeatureVectorMap<FeatureType> &) const override {
@@ -641,10 +638,10 @@ class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
         const uint32_t c = (uint32_t) s;
         out->write((char*) &c, sizeof(uint32_t));
         unsigned int n = 0;
-        for (typename PatternVector::iterator iter = value.begin(); iter != value.end(); ++iter) {
-            if (n==s) break;
-            iter->write(out);
-            n++;
+        for ( auto& iter : value ){
+	  if (n==s) break;
+	  iter.write(out);
+	  n++;
         }
     }
     virtual std::string tostring( PatternVector& ) const override {
