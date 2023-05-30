@@ -3188,7 +3188,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
         t_relationmap neighbours;
         for (IndexedData::iterator iter = data->begin(); iter != data->end(); ++iter) {
-            IndexReference ref = *iter;
+	    IndexReference ref = *iter;
             ref.token += pattern.size();
 
             //search in reverse index
@@ -3450,7 +3450,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * @param OUT The output stream
      * @param label A label to insert between relations (defaults to: RELATED-TO)
      */
-    void outputrelations(const PatternPointer & pattern, t_relationmap & relations, const ClassDecoder & classdecoder, std::ostream *OUT, const std::string& label = "RELATED-TO") {
+    void outputrelations(const PatternPointer & pattern,
+			 const t_relationmap & relations, const ClassDecoder & classdecoder, std::ostream *OUT, const std::string& label = "RELATED-TO") {
         int total = 0;
         for ( const auto& iter : relations ){
 	  total += iter.second;
@@ -3698,10 +3699,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         std::multimap<int, IndexReference> partmatches;
         int i = 0;
         std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_right(begin); //TODO: Check
-        for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter = rindex.begin(); iter != rindex.end(); ++iter) {
-            IndexReference ref = iter->first;
-            partmatches.insert(std::pair<int,IndexReference>(i, ref));
-            ++i;
+        for ( const auto& iter : rindex ){
+	  IndexReference ref = iter.first;
+	  partmatches.insert(std::pair<int,IndexReference>(i, ref));
+	  ++i;
         }
 
         int firsttoken = begin.token;
@@ -3884,8 +3885,8 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
             this->load( &in, options, constrainmodel);
         }
 
-        int getmodeltype() const { return INDEXEDPATTERNPOINTERMODEL; }
-        int getmodelversion() const { return 2;}
+        int getmodeltype() const override { return INDEXEDPATTERNPOINTERMODEL; }
+        int getmodelversion() const override { return 2;}
 
         /**
         * Add a pattern, with a given position, and a value to the model. This
@@ -3894,7 +3895,7 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
         * @param value A pointer to the value for this pattern, set to NULL and it will be automatically determined
         * @param IndexReference The position in the corpus where the patterns occurs
         */
-        void add(const PatternPointer & patternpointer, const IndexReference & ref) {
+        void add(const PatternPointer & patternpointer, const IndexReference & ref) override {
             if ((patternpointer.data < this->reverseindex->beginpointer()) || (patternpointer.data > this->reverseindex->beginpointer() + this->reverseindex->bytesize())) {
                 std::cerr << "Pattern Pointer points outside contained corpus data..." << std::endl;
                 throw InternalError();

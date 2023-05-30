@@ -314,10 +314,10 @@ class IndexedCorpus {
          * Returns the begin iterator over the corpus
          */
         iterator begin() {
-			IndexReference iref = IndexReference(1,0);
-			PatternPointer p = getpattern(iref,1);
-			return iterator(this,iref,p);
-		}
+	  IndexReference iref = IndexReference(1,0);
+	  PatternPointer p = getpattern(iref,1);
+	  return iterator(this,iref,p);
+	}
         //const_iterator begin() const { return data.begin(); }
 
         /*
@@ -334,12 +334,12 @@ class IndexedCorpus {
          * end() when no such position is found.
          */
         iterator find(const IndexReference & ref) {
-			try {
-				PatternPointer p = getpattern(ref);
-				return iterator(this, ref,p);
-			} catch (KeyError &e) {
-				return end();
-			}
+	  try {
+	    PatternPointer p = getpattern(ref);
+	    return iterator(this, ref,p);
+	  } catch (KeyError &e) {
+	    return end();
+	  }
         }
         /**
          * Returns a const iterator starting at the given position. Correspond to
@@ -360,10 +360,10 @@ class IndexedCorpus {
          * Returns the number of tokens in the corpus
          */
         size_t size() {
-			if (totaltokens > 0) return totaltokens;
-            for (iterator iter = begin(); iter != end(); ++iter) ++totaltokens;
-			return totaltokens;
-		}
+	  if (totaltokens > 0) return totaltokens;
+	  for ( auto iter = begin(); iter != end(); ++iter) ++totaltokens;
+	  return totaltokens;
+	}
 
         /**
          * Is the corpus empty?
@@ -833,9 +833,8 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         void write(std::ostream * out) override {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out->write( (char*) &s, sizeof(ReadWriteSizeType));
-            for (iterator iter = begin(); iter != end(); ++iter) {
-                Pattern p = *iter;
-                p.write(out, this->corpusstart);
+            for ( auto& p : data ){
+	      p.write(out, this->corpusstart);
             }
         }
 
