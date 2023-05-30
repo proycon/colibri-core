@@ -887,12 +887,12 @@ int main( int argc, const char *argv[] ) {
         Pattern empty = Pattern();
 
         cerr << "Writing patterns to file: " << endl;
-        ofstream * out = new ofstream("/tmp/patterns.tmp");
+        ofstream out("/tmp/patterns.tmp");
         ngram.write(out);
         ngramhigh.write(out);
         empty.write(out);
         skipgram.write(out);
-        out->close();
+        out.close();
 
         cerr << "Reading from file" << endl;
         ifstream * in = new ifstream("/tmp/patterns.tmp");

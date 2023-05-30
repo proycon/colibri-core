@@ -49,9 +49,9 @@ class IndexReference {
   //     sentence = other.sentence;
   //     token = other.token;
   // };
-    void write(std::ostream * out) const {
-        out->write( (char*) &sentence, sizeof(uint32_t));
-        out->write( (char*) &token, sizeof(uint16_t));
+    void write( std::ostream& out) const {
+        out.write( (char*) &sentence, sizeof(uint32_t));
+        out.write( (char*) &token, sizeof(uint16_t));
     }
     bool operator< (const IndexReference& other) const {
         if (sentence < other.sentence) {
@@ -88,7 +88,7 @@ class IndexedData {
     std::vector<IndexReference> data;
   explicit IndexedData() { };
   explicit IndexedData(std::istream * in);
-    void write(std::ostream * out) const;
+    void write( std::ostream& out) const;
 
     bool has(const IndexReference & ref, bool sorted = false) const {
         if (sorted) {
@@ -168,8 +168,8 @@ template<class ValueType>
 class AbstractValueHandler {
    public:
     virtual std::string id() const { return "AbstractValueHandler"; }
-    virtual void read(std::istream * in, ValueType & value)=0; //read value from input stream (binary)
-    virtual void write(std::ostream * out, ValueType & value)=0; //write value to output stream (binary)
+    virtual void read( std::istream * in, ValueType & value)=0; //read value from input stream (binary)
+    virtual void write( std::ostream& out, ValueType & value)=0; //write value to output stream (binary)
     virtual std::string tostring(ValueType & value) const =0; //convert value to string)
     virtual unsigned int count(ValueType & value) const =0; //what count does this value represent?
     virtual void add(ValueType * value, const IndexReference & ref ) const=0; //add the indexreference to the value, will be called whenever a token is found during pattern building
@@ -189,8 +189,8 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
     void read(std::istream * in, ValueType & v) override {
         in->read( (char*) &v, sizeof(ValueType));
     }
-    void write(std::ostream * out, ValueType & value) override {
-        out->write( (char*) &value, sizeof(ValueType));
+    void write( std::ostream& out, ValueType & value) override {
+        out.write( (char*) &value, sizeof(ValueType));
     }
     virtual std::string tostring(ValueType & value) const override {
       return std::to_string(value);
@@ -229,9 +229,9 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         }
         v.shrink_to_fit(); //try to keep vector as small as possible (slows insertions down a bit)
     }
-    void write(std::ostream * out, IndexedData & value) override {
+    void write( std::ostream& out, IndexedData & value) override {
         const uint32_t c = value.count();
-        out->write((char*) &c, sizeof(uint32_t));
+        out.write((char*) &c, sizeof(uint32_t));
         //we already assume everything is nicely sorted!
         for ( auto& iter : value.data ){
 	  iter.write(out);
@@ -302,7 +302,7 @@ class PatternFeatureVector {
             }
             data.shrink_to_fit();
         }
-        void write(std::ostream * out) {
+        void write( std::ostream& out) {
             this->pattern.write(out);
             unsigned int s = data.size();
             if (s >= 65536) {
@@ -310,10 +310,10 @@ class PatternFeatureVector {
                 s = 65536;
             }
             uint16_t c = (uint16_t) s;
-            out->write((char*) &c , sizeof(uint16_t));
+            out.write((char*) &c , sizeof(uint16_t));
             for (unsigned int i = 0; i < s; ++i) {
                 FeatureType f = data[i];
-                out->write((char*) &f, sizeof(FeatureType));
+                out.write((char*) &f, sizeof(FeatureType));
             }
         }
 
@@ -485,14 +485,15 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
         v.shrink_to_fit(); //try to keep vector as small as possible (slows additional insertions down a bit)
 
     }
-    void write(std::ostream * out, PatternFeatureVectorMap<FeatureType> & value)override {
+  void write( std::ostream& out,
+	      PatternFeatureVectorMap<FeatureType> & value)override {
         unsigned int s = value.size();
         if (s >= 65536) {
             std::cerr << "ERROR: PatternFeatureVector size exceeds maximum 16-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
             s = 65535;
         }
         const uint16_t c = (uint16_t) s;
-        out->write((char*) &c, sizeof(uint16_t));
+        out.write((char*) &c, sizeof(uint16_t));
         unsigned int n = 0;
         for ( auto& pfv : value ){
 	  if (n==s) break;
@@ -629,14 +630,14 @@ class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
         v.shrink_to_fit(); //try to keep vector as small as possible (slows additional insertions down a bit)
 
     }
-    void write(std::ostream * out, PatternVector & value) override {
+    void write( std::ostream& out, PatternVector & value) override {
         unsigned int s = value.size();
         if (s >= std::numeric_limits<uint32_t>::max()) {
             std::cerr << "ERROR: PatternVector size exceeds maximum 32-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
             throw InternalError();
         }
         const uint32_t c = (uint32_t) s;
-        out->write((char*) &c, sizeof(uint32_t));
+        out.write((char*) &c, sizeof(uint32_t));
         unsigned int n = 0;
         for ( auto& iter : value ){
 	  if (n==s) break;

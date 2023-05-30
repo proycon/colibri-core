@@ -137,7 +137,7 @@ class Pattern {
       * Write Pattern to output stream (in binary form)
       * @param out The output stream
       */
-     void write(std::ostream * out, const unsigned char * corpusstart = NULL) const;
+     void write( std::ostream& out, const unsigned char * corpusstart = NULL) const;
 
      /**
       * return the size of the pattern in tokens (will count flex gaps gaps as size 1)
@@ -423,7 +423,7 @@ class PatternPointer {
       * Write Pattern to output stream (in binary form)
       * @param out The output stream
       */
-     void write(std::ostream * out, const unsigned char * corpusstart = NULL) const;
+     void write( std::ostream& out, const unsigned char * corpusstart = NULL) const;
 
      //slice construtors:
      PatternPointer(unsigned char *, size_t,size_t, size_t * byteoffset=NULL, bool byteoffset_shiftone = false);

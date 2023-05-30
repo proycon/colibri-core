@@ -257,28 +257,28 @@ size_t PatternPointer::hash() const {
 }
 
 
-void Pattern::write(ostream * out, const unsigned char * ) const {
+void Pattern::write( ostream& out, const unsigned char * ) const {
     //corpusstart is not used but does need to be present so we have the same signature as PatternPointer
     const size_t s = bytesize();
     if (s > 0) {
-        out->write( (char*) data , s + 1); //+1 to include the \0 marker
+        out.write( (char*) data , s + 1); //+1 to include the \0 marker
     } else {
         const unsigned char null = 0;
-        out->write( (char*) &null , 1);  //marker only
+        out.write( (char*) &null , 1);  //marker only
     }
 }
 
-void PatternPointer::write(ostream * out, const unsigned char * corpusstart) const {
+void PatternPointer::write( ostream& out, const unsigned char * corpusstart) const {
     if (corpusstart != NULL) {
         const unsigned int offset = data - corpusstart;
-        out->write((char*) &offset, sizeof(unsigned int));
-        out->write((char*) &bytes, sizeof(PPSizeType));
-        out->write((char*) &mask, sizeof(uint32_t));
+        out.write((char*) &offset, sizeof(unsigned int));
+        out.write((char*) &bytes, sizeof(PPSizeType));
+        out.write((char*) &mask, sizeof(uint32_t));
     } else {
         const size_t s = bytesize();
-        if (s > 0)  out->write( (char*) data , s);
+        if (s > 0)  out.write( (char*) data , s);
         const unsigned char null = 0;
-        out->write( (char*) &null , 1);  //marker
+        out.write( (char*) &null , 1);  //marker
     }
 }
 
