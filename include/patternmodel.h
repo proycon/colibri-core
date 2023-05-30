@@ -436,16 +436,16 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
         /**
          * Write a PatternSetModel to an output stream
          */
-        void write(std::ostream * out) override {
+        void write( std::ostream& out) override {
             const char null = 0;
-            out->write( (char*) &null, sizeof(char));
+            out.write( (char*) &null, sizeof(char));
             unsigned char t = this->getmodeltype();
-            out->write( (char*) &t, sizeof(char));
+            out.write( (char*) &t, sizeof(char));
             unsigned char v = this->getmodelversion();
-            out->write( (char*) &v, sizeof(char));
-            out->write( (char*) &totaltokens, sizeof(uint64_t));
+            out.write( (char*) &v, sizeof(char));
+            out.write( (char*) &totaltokens, sizeof(uint64_t));
             const uint64_t tp = this->types(); //use this instead of totaltypes, as it may need to be computed on-the-fly still
-            out->write( (char*) &tp, sizeof(uint64_t));
+            out.write( (char*) &tp, sizeof(uint64_t));
             PatternSet<uint64_t>::write(out); //write
         }
 
@@ -455,7 +455,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          */
         void write(const std::string & filename) {
             std::ofstream out(filename);
-            this->write(&out);
+            this->write(out);
         }
 
         /**
@@ -1499,20 +1499,20 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Write the pattern model to output stream
          */
-        void write(std::ostream * out) {
+        void write( std::ostream& out) {
             const char null = 0;
-            out->write( (char*) &null, sizeof(char));
+            out.write( (char*) &null, sizeof(char));
             unsigned char t = this->getmodeltype();
-            out->write( (char*) &t, sizeof(char));
+            out.write( (char*) &t, sizeof(char));
             unsigned char v = this->getmodelversion();
-            out->write( (char*) &v, sizeof(char));
+            out.write( (char*) &v, sizeof(char));
             if ((this->getmodeltype()== UNINDEXEDPATTERNPOINTERMODEL) || (this->getmodeltype() == INDEXEDPATTERNPOINTERMODEL)) {
-                out->write( (char*) &this->corpussize, sizeof(uint64_t)); //backward incompatibel since v2.5
-                out->write((char*) this->corpusstart, sizeof(unsigned char) * this->corpussize);
+                out.write( (char*) &this->corpussize, sizeof(uint64_t)); //backward incompatibel since v2.5
+                out.write((char*) this->corpusstart, sizeof(unsigned char) * this->corpussize);
             }
-            out->write( (char*) &totaltokens, sizeof(uint64_t));
+            out.write( (char*) &totaltokens, sizeof(uint64_t));
             const uint64_t tp = this->types(); //use this instead of totaltypes, as it may need to be computed on-the-fly still
-            out->write( (char*) &tp, sizeof(uint64_t));
+            out.write( (char*) &tp, sizeof(uint64_t));
             MapType::write(out); //write PatternStore
         }
 
@@ -1521,7 +1521,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          */
         void write(const std::string& filename) {
             std::ofstream out(filename);
-            this->write(&out);
+            this->write(out);
         }
 
         typedef typename MapType::iterator iterator;

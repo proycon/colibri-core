@@ -477,7 +477,7 @@ class PatternStore: public PatternStoreInterface {
         virtual typename ContainerType::iterator find(const PatternPointer & pattern)=0;
 
 
-        virtual void write(std::ostream * out)=0;
+        virtual void write( std::ostream& out)=0;
         //virtual void read(std::istream * in, int MINTOKENS)=0;
 
         virtual PatternStoreInterface * getstoreinterface() {
@@ -523,9 +523,9 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
         /**
          * Write the map to stream output (in binary format)
          */
-        void write(std::ostream * out) override {
+        void write( std::ostream& out) override {
 	  ReadWriteSizeType s = (ReadWriteSizeType) size();
-	  out->write( (char*) &s, sizeof(ReadWriteSizeType));
+	  out.write( (char*) &s, sizeof(ReadWriteSizeType));
 	  for (iterator iter = this->begin(); iter != this->end(); ++iter) {
 	    PatternType p = iter->first;
 	    p.write(out, this->corpusstart);
@@ -538,7 +538,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
          */
         void write( const std::string& filename) {
 	  std::ofstream out(filename);
-	  this->write(&out);
+	  this->write(out);
         }
 
 
@@ -718,9 +718,9 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
         /**
          * Write the set to output stream, in binary format
          */
-        void write( std::ostream * out) override {
+        void write( std::ostream& out) override {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
-            out->write( (char*) &s, sizeof(ReadWriteSizeType));
+            out.write( (char*) &s, sizeof(ReadWriteSizeType));
             for (iterator iter = begin(); iter != end(); ++iter) {
                 Pattern p = *iter;
                 p.write(out, this->corpusstart);
@@ -830,9 +830,9 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         iterator erase(const_iterator position) { return data.erase(position); }
 
 
-        void write(std::ostream * out) override {
+        void write( std::ostream& out) override {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
-            out->write( (char*) &s, sizeof(ReadWriteSizeType));
+            out.write( (char*) &s, sizeof(ReadWriteSizeType));
             for ( auto& p : data ){
 	      p.write(out, this->corpusstart);
             }
@@ -1074,11 +1074,11 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
             a[i] = v;
         }
     }
-    void write(std::ostream * out, const std::array<T,N> & a) {
-        for (int i = 0; i < N; ++i) {
-            T v = a[i];
-            out->write( (char*) &v, sizeof(T));
-        }
+    void write( std::ostream& out, const std::array<T,N> & a) {
+      for (int i = 0; i < N; ++i) {
+	T v = a[i];
+	out.write( (char*) &v, sizeof(T));
+      }
     }
     std::string tostring( const std::array<T,N> & a) const {
         std::string s;
@@ -1109,7 +1109,7 @@ class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
     void read(std::istream * in,  PatternStoreType & value) override {
         value.read(in);
     }
-    void write(std::ostream * out,  PatternStoreType & value) override {
+    void write( std::ostream& out,  PatternStoreType & value) override {
         value.write(out);
     }
     std::string tostring(  PatternStoreType & ) const override {

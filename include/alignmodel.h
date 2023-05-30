@@ -109,21 +109,21 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             this->postread(options);
         }
 
-        void write(std::ostream * out) {
+        void write( std::ostream& out) {
             const char null = 0;
-            out->write( (char*) &null, sizeof(char));
+            out.write( (char*) &null, sizeof(char));
             unsigned char t = this->getmodeltype();
-            out->write( (char*) &t, sizeof(char));
+            out.write( (char*) &t, sizeof(char));
             unsigned char v = this->getmodelversion();
-            out->write( (char*) &v, sizeof(char));
-            out->write( (char*) &totaltokens, sizeof(uint64_t));
-            out->write( (char*) &totaltypes, sizeof(uint64_t));
+            out.write( (char*) &v, sizeof(char));
+            out.write( (char*) &totaltokens, sizeof(uint64_t));
+            out.write( (char*) &totaltypes, sizeof(uint64_t));
             PatternMap<ValueType,ValueHandler>::write(out); //write PatternStore
         }
 
         void write(const std::string& filename) {
             std::ofstream out(filename);
-            this->write(&out);
+            this->write(out);
         }
 
         PatternModelInterface * getinterface() {
