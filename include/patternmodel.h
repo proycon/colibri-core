@@ -2803,7 +2803,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq << "\t";
             IndexedData * data = this->getdata(pattern);
             unsigned int i = 0;
-            for ( IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); ++iter2) {
+            for ( auto iter2 = data->begin(); iter2 != data->end(); ++iter2) {
                 ++i;
                 *out << iter2->tostring();
                 if (cat != NGRAM) {
@@ -2959,12 +2959,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
             //search in reverse index
             std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref);
-            for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const PatternPointer candidate = *iter2;
-
-                if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == SKIPGRAM)  && ((occurrencethreshold == 0) || (this->occurrencecount(pattern) >= occurrencethreshold)) ) {
-                    templates[candidate] += 1;
-                }
+            for ( const auto& candidate : rindex ){
+	      if (((int) candidate.n() == _n)  && (candidate != pattern) && (candidate.category() == SKIPGRAM)  && ((occurrencethreshold == 0) || (this->occurrencecount(pattern) >= occurrencethreshold)) ) {
+		templates[candidate] += 1;
+	      }
             }
         }
         if (occurrencethreshold > 0) this->prunerelations(templates, occurrencethreshold);
@@ -3000,12 +2998,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
             //search in reverse index
             std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref, occurrencethreshold,NGRAM);
-            for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const PatternPointer candidate = *iter2;
-
-                if (((int) candidate.n() == _n)  && (candidate != pattern) ) {
-                    instances[candidate] += 1;
-                }
+            for ( const auto& candidate : rindex ){
+	      if (((int) candidate.n() == _n)  && (candidate != pattern) ) {
+		instances[candidate] += 1;
+	      }
             }
         }
         if (occurrencethreshold > 0) this->prunerelations(instances, occurrencethreshold);
@@ -3048,23 +3044,22 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
                 //search in reverse index
                 std::unordered_set<PatternPointer> rindex = this->getreverseindex(first, occurrencethreshold, category,size);
-                for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                    const PatternPointer candidate = *iter2;
-                    //std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << ", bs=" << candidate.bytesize() <<  std::endl;
-                    //candidate.out();
-                    if (((int) candidate.n() <= maxsubn) && (candidate != pattern)) {
-                        if ((isskipgram) || (candidate.category() == SKIPGRAM)) {
-                            //candidate may not have skips in places where the larger pattern does
-                            Pattern tmpl = Pattern(pattern, i, candidate.n()); //get the proper slice to match
-                            if (candidate.instanceof(tmpl)) {
-                                subchildren[candidate] = subchildren[candidate] + 1;
-                            }
-                        } else if (candidate.category() == FLEXGRAM) {
-                            //TODO
-                        } else {
-			  ++subchildren[candidate];
-                        }
-                    }
+                for ( const auto& candidate : rindex ){
+		  //std::cerr << "Considering candidate @" << ref2.sentence << ":" << ref2.token << ", n=" << candidate.n() << ", bs=" << candidate.bytesize() <<  std::endl;
+		  //candidate.out();
+		  if (((int) candidate.n() <= maxsubn) && (candidate != pattern)) {
+		    if ((isskipgram) || (candidate.category() == SKIPGRAM)) {
+		      //candidate may not have skips in places where the larger pattern does
+		      Pattern tmpl = Pattern(pattern, i, candidate.n()); //get the proper slice to match
+		      if (candidate.instanceof(tmpl)) {
+			subchildren[candidate] = subchildren[candidate] + 1;
+		      }
+		    } else if (candidate.category() == FLEXGRAM) {
+		      //TODO
+		    } else {
+		      ++subchildren[candidate];
+		    }
+		  }
                 }
             }
         }
@@ -3101,29 +3096,29 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
             //search in reverse index
             std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_bysentence(ref.sentence, occurrencethreshold, category, size);
-            for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                if ((iter2->first.sentence != ref.sentence) || (iter2->first.token > ref.token)) break;
-                const PatternPointer candidate = iter2->second;
+            for ( const auto& iter2 : rindex ){
+	      if ((iter2.first.sentence != ref.sentence) || (iter2.first.token > ref.token)) break;
+	      const PatternPointer candidate = iter2.second;
 
-                int minsubsize = _n + (ref.token - iter2->first.token);
+	      int minsubsize = _n + (ref.token - iter2.first.token);
 
-                if (((int) candidate.n() >= minsubsize)  && (candidate != pattern)
-                        && ((occurrencethreshold == 0) || (this->occurrencecount(candidate) >= occurrencethreshold))
-                        && ((category == 0) || (candidate.category() == category))
-                        && ((size == 0) || (candidate.n() == size))
-                    ) {
-                    if ((candidate.category() == SKIPGRAM) || (pattern.category() == SKIPGRAM))  {
-                        //instance may not have skips in places where the larger candidate pattern does
-                        Pattern inst = Pattern(candidate, iter2->first.token, pattern.n()); //get the proper slice to match
-                        if (pattern.instanceof(candidate)) {
-                            subsumes[candidate] += 1;
-                        }
-                    } else if (candidate.category() == FLEXGRAM) {
-                        //TODO
-                    } else {
-                        subsumes[candidate] += 1;
-                    }
-                }
+	      if (((int) candidate.n() >= minsubsize)  && (candidate != pattern)
+		  && ((occurrencethreshold == 0) || (this->occurrencecount(candidate) >= occurrencethreshold))
+		  && ((category == 0) || (candidate.category() == category))
+		  && ((size == 0) || (candidate.n() == size))
+		  ) {
+		if ((candidate.category() == SKIPGRAM) || (pattern.category() == SKIPGRAM))  {
+		  //instance may not have skips in places where the larger candidate pattern does
+		  Pattern inst = Pattern(candidate, iter2.first.token, pattern.n()); //get the proper slice to match
+		  if (pattern.instanceof(candidate)) {
+		    subsumes[candidate] += 1;
+		  }
+		} else if (candidate.category() == FLEXGRAM) {
+		  //TODO
+		} else {
+		  subsumes[candidate] += 1;
+		}
+	      }
             }
         }
         if (occurrencethreshold > 0) this->prunerelations(subsumes, occurrencethreshold);
@@ -3155,9 +3150,9 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
             std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_bysentence(ref.sentence);
-            for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const IndexReference ref2 = iter2->first;
-                const PatternPointer neighbour = iter2->second;
+            for ( const auto& iter2 : rindex ){
+                const IndexReference ref2 = iter2.first;
+                const PatternPointer neighbour = iter2.second;
                 if ((ref2.token + neighbour.n() == ref.token)
                         && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
                         && ((category == 0) || (neighbour.category() == category))
@@ -3198,14 +3193,13 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
             //search in reverse index
             std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref);
-            for (std::unordered_set<PatternPointer>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const PatternPointer neighbour = *iter2;
-                if ( ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() == category))
-                        && ((size == 0) || (neighbour.n() == size)) ) {
-		  ++neighbours[neighbour];
-                    if ((cutoff > 0) && (neighbours.size() >= cutoff)) break;
-                }
+            for ( const auto& neighbour : rindex ){
+	      if ( ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+		   && ((category == 0) || (neighbour.category() == category))
+		   && ((size == 0) || (neighbour.n() == size)) ) {
+		++neighbours[neighbour];
+		if ((cutoff > 0) && (neighbours.size() >= cutoff)) break;
+	      }
             }
             if ((cutoff > 0) && (neighbours.size() >= cutoff)) break;
         }
@@ -3280,8 +3274,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 		    if (((itern == 0) || (p_n == itern))  && ((cat == 0) || (pattern.category() == cat))) {
 		      std::vector<PatternPointer> unigrams;
 		      pattern.ngrams(unigrams, 1);
-		      for (std::vector<PatternPointer>::iterator iter2 = unigrams.begin(); iter2 != unigrams.end(); ++iter2) {
-			const PatternPointer p = *iter2;
+		      for ( const auto& p : unigrams ){
 			types.insert(p);
 		      }
 		    }
@@ -3335,17 +3328,17 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
             std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_right(ref);
-            for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const IndexReference ref2 = iter2->first;
-                const PatternPointer neighbour = iter2->second;
-                if ( (ref2.token > ref.token + _n)
-                        && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() == category))
-                        && ((size == 0) || (neighbour.n() == size))
-                     ) {
-                    ++cooc[neighbour];
-                    if (matches != NULL) matches->push_back(std::pair<IndexReference,IndexReference>(ref,ref2));
-                }
+            for ( const auto& iter2 : rindex ){
+	      const IndexReference ref2 = iter2.first;
+	      const PatternPointer neighbour = iter2.second;
+	      if ( (ref2.token > ref.token + _n)
+		   && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+		   && ((category == 0) || (neighbour.category() == category))
+		   && ((size == 0) || (neighbour.n() == size))
+		   ) {
+		++cooc[neighbour];
+		if (matches != NULL) matches->push_back(std::pair<IndexReference,IndexReference>(ref,ref2));
+	      }
             }
         }
         if (occurrencethreshold > 0) this->prunerelations(cooc, occurrencethreshold);
@@ -3377,17 +3370,17 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             const IndexReference ref = *iter;
 
             std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_left(ref);
-            for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const IndexReference ref2 = iter2->first;
-                const PatternPointer neighbour = iter2->second;
-                const int _n = neighbour.n();
-                if ( (ref2.token + _n < ref.token )
-                        && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() == category))
-                        && ((size == 0) || (neighbour.n() == size))
-                    ) {
-                    ++cooc[neighbour];
-                }
+            for ( const auto& iter2 : rindex ){
+	      const IndexReference ref2 = iter2.first;
+	      const PatternPointer neighbour = iter2.second;
+	      const int _n = neighbour.n();
+	      if ( (ref2.token + _n < ref.token )
+		   && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+		   && ((category == 0) || (neighbour.category() == category))
+		   && ((size == 0) || (neighbour.n() == size))
+		   ) {
+		++cooc[neighbour];
+	      }
             }
         }
         if (occurrencethreshold > 0) this->prunerelations(cooc, occurrencethreshold);
@@ -3422,18 +3415,18 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
             std::vector<std::pair<IndexReference,PatternPointer>> rindex = this->getreverseindex_bysentence(ref.sentence);
-            for (std::vector<std::pair<IndexReference,PatternPointer>>::iterator iter2 = rindex.begin(); iter2 != rindex.end(); ++iter2) {
-                const IndexReference ref2 = iter2->first;
-                const PatternPointer neighbour = iter2->second;
-                if ((ordersignificant) && (neighbour.pattern() < pattern)) continue;
-                const int _n2 = neighbour.n();
-                if ( ((ref2.token + _n2 < ref.token ) || (ref2.token > ref.token + _n))
-                        && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
-                        && ((category == 0) || (neighbour.category() == category))
-                        && ((size == 0) || (neighbour.n() == size))
-                    ) {
-                    ++cooc[neighbour];
-                }
+            for ( const auto& iter2 : rindex ){
+	      const IndexReference ref2 = iter2.first;
+	      const PatternPointer neighbour = iter2.second;
+	      if ((ordersignificant) && (neighbour.pattern() < pattern)) continue;
+	      const int _n2 = neighbour.n();
+	      if ( ((ref2.token + _n2 < ref.token ) || (ref2.token > ref.token + _n))
+		   && ((occurrencethreshold == 0) || (this->occurrencecount(neighbour) >= occurrencethreshold))
+		   && ((category == 0) || (neighbour.category() == category))
+		   && ((size == 0) || (neighbour.n() == size))
+		   ) {
+		++cooc[neighbour];
+	      }
             }
         }
         if (occurrencethreshold > 0) this->prunerelations(cooc, occurrencethreshold);
