@@ -1001,94 +1001,94 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 
                     // *** ITERATION OVER ALL NGRAMS OF CURRENT ORDER (n) IN THE LINE/SENTENCE ***
-                    for (std::vector<std::pair<PatternPointer,int>>::iterator iter = ngrams.begin(); iter != ngrams.end(); ++iter) {
+                    for ( auto const& iter : ngrams ){
 
                         try {
-                            if ((singlepass) && (options.MINLENGTH == 1) && (skipunigrams) && (iter->first.n() == 1)) {
+                            if ((singlepass) && (options.MINLENGTH == 1) && (skipunigrams) && (iter.first.n() == 1)) {
                                 //prevent double counting of unigrams after a iter_unigramsonly run with mintokens==1
                                 continue;
                             }
 
 
                             if (!skipgramsonly) {
-                                //check against constraint model
-                                if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter->first)))  continue;  //skip when we have a constraintmodel and the pattern is not found
+			      //check against constraint model
+			      if ((constrainbymodel != NULL) && (!iter_unigramsonly) && (!constrainbymodel->has(iter.first)))  continue;  //skip when we have a constraintmodel and the pattern is not found
 
-                                found = true; //are the submatches in order? (default to true, attempt to falsify, needed for mintokens==1)
+			      found = true; //are the submatches in order? (default to true, attempt to falsify, needed for mintokens==1)
 
-                                //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
-                                if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS) && ((n > 1) || (singlepass)) ) {
-                                    subngrams.clear();
-                                    iter->first.ngrams(subngrams,1); //get all unigrams
-                                    for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); ++iter2) {
-                                        //check if unigram reaches threshold
-                                        if (this->occurrencecount(*iter2) < (unsigned int) options.MINTOKENS_UNIGRAMS) {
-                                            found = false;
-                                            break;
-                                        }
-                                    }
-                                }
+			      //unigram check, special scenario, not usually processed!! (normal lookback suffices for most uses)
+			      if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS) && ((n > 1) || (singlepass)) ) {
+				subngrams.clear();
+				iter.first.ngrams(subngrams,1); //get all unigrams
+				for ( auto& iter2 : subngrams ){
+				  //check if unigram reaches threshold
+				  if (this->occurrencecount(iter2) < (unsigned int) options.MINTOKENS_UNIGRAMS) {
+				    found = false;
+				    break;
+				  }
+				}
+			      }
 
-                                if ((found) && (filter != NULL) && (constrainbymodel == NULL)) {
-                                    //special behaviour: filter
-                                    ignorefilter = false;
-                                    if (((options.MINTOKENS > 1) && (n >= options.MINLENGTH)) || ((options.MINTOKENS == 1) && (iter->first.n() >= (unsigned int) options.MINLENGTH))) {
-                                        //we only apply the filter if minlength is satisfied, earlier stages are not filtered (but will be pruned later when no longer needed)
-                                        bool matchfilter = false;
-                                        if (filterhasngrams) {
-                                            subngrams.clear();
-                                            iter->first.subngrams(subngrams,1, options.MINTOKENS > 1 ? n : iter->first.n());
-                                            for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); ++iter2) {
-                                                if (filter->has(*iter2)) {
-                                                    matchfilter = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        if ((!matchfilter) && (filterhasskipgrams)) {
-                                            for (PatternSet<Pattern>::iterator iter2 = filter->begin(); iter2 != filter->end(); ++iter2) {
-                                                if (iter->first.instanceof(*iter2)) {
-                                                    matchfilter = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        if (!matchfilter) continue;
-                                    } else {
-                                        ignorefilter = true;
-                                    }
-                                }
+			      if ((found) && (filter != NULL) && (constrainbymodel == NULL)) {
+				//special behaviour: filter
+				ignorefilter = false;
+				if (((options.MINTOKENS > 1) && (n >= options.MINLENGTH)) || ((options.MINTOKENS == 1) && (iter.first.n() >= (unsigned int) options.MINLENGTH))) {
+				  //we only apply the filter if minlength is satisfied, earlier stages are not filtered (but will be pruned later when no longer needed)
+				  bool matchfilter = false;
+				  if (filterhasngrams) {
+				    subngrams.clear();
+				    iter.first.subngrams(subngrams,1, options.MINTOKENS > 1 ? n : iter.first.n());
+				    for ( const auto& iter2 : subngrams ){
+				      if (filter->has(iter2)) {
+					matchfilter = true;
+					break;
+				      }
+				    }
+				  }
+				  if ((!matchfilter) && (filterhasskipgrams)) {
+				    for (PatternSet<Pattern>::iterator iter2 = filter->begin(); iter2 != filter->end(); ++iter2) {
+				      if (iter.first.instanceof(*iter2)) {
+					matchfilter = true;
+					break;
+				      }
+				    }
+				  }
+				  if (!matchfilter) continue;
+				} else {
+				  ignorefilter = true;
+				}
+			      }
 
-                                if ((filter == NULL) || (ignorefilter))  {
-                                    //normal behaviour: ngram (n-1) lookback
-                                    if ((found) && (n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) {
-                                        //check if sub-parts were counted
-                                        subngrams.clear();
-                                        backoffn = n - 1;
-                                        if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
-                                            iter->first.ngrams(subngrams, backoffn);
-                                        for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); ++iter2) {
-                                            if (!this->has(*iter2)) {
-                                                found = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
+			      if ((filter == NULL) || (ignorefilter))  {
+				//normal behaviour: ngram (n-1) lookback
+				if ((found) && (n > 1) && (options.MINTOKENS > 1) && (!options.DOPATTERNPERLINE) && (constrainbymodel == NULL)) {
+				  //check if sub-parts were counted
+				  subngrams.clear();
+				  backoffn = n - 1;
+				  if (backoffn > options.MAXBACKOFFLENGTH) backoffn = options.MAXBACKOFFLENGTH;
+				  iter.first.ngrams(subngrams, backoffn);
+				  for (std::vector<PatternPointer>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); ++iter2) {
+				    if (!this->has(*iter2)) {
+				      found = false;
+				      break;
+				    }
+				  }
+				}
+			      }
 
 
-                                ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
+                                ref = IndexReference(sentence, iter.second); //this is one token, we add the tokens as we find them, one by one
                                 if ((found) && (!skipgramsonly)) {
-                                    if (options.DEBUG) std::cerr << "\t\tAdding @" << ref.sentence << ":" << ref.token << " n=" << iter->first.n() << " category=" <<(int) iter->first.category()<< std::endl;
-                                    add(iter->first, ref);
+                                    if (options.DEBUG) std::cerr << "\t\tAdding @" << ref.sentence << ":" << ref.token << " n=" << iter.first.n() << " category=" <<(int) iter.first.category()<< std::endl;
+                                    add(iter.first, ref);
                                 }
 
                             }
                             if (((n >= 3) || (options.MINTOKENS == 1)) //n is always 1 when mintokens == 1
                                     && (options.DOSKIPGRAMS_EXHAUSTIVE)) {
                                 //if we have a constraint model, we need to compute skipgrams even if the ngram was not found
-                                ref = IndexReference(sentence, iter->second); //this is one token, we add the tokens as we find them, one by one
-                                int foundskipgrams_thisround = this->computeskipgrams(iter->first, options, &ref, NULL, constrainbymodel, true );
+                                ref = IndexReference(sentence, iter.second); //this is one token, we add the tokens as we find them, one by one
+                                int foundskipgrams_thisround = this->computeskipgrams(iter.first, options, &ref, NULL, constrainbymodel, true );
                                 if (foundskipgrams_thisround > 0) hasskipgrams = true;
                                 foundskipgrams += foundskipgrams_thisround;
                             }
