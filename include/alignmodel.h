@@ -224,7 +224,7 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
                 fvm->insert(pfv, checkifexists); //(will be freed again by fvm destructor)
             } else {
                 fv->clear(); //will be overwritten by new features
-                for (typename std::vector<FeatureType>::iterator iter = features.begin(); iter != features.end(); ++iter) {
+                for ( auto iter = features.begin(); iter != features.end(); ++iter) {
                     fv->push_back(*iter);
                 }
             }
@@ -235,12 +235,12 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
             *out << "PATTERN\tPATTERN2\tFEATURES" << std::endl;
             for (iterator iter = this->begin(); iter != this->end(); ++iter) {
                 const Pattern sourcepattern = iter->first;
-                for (typename PatternFeatureVectorMap<FeatureType>::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2) {
-                    PatternFeatureVector<FeatureType> * pfv = *iter2;
+                for ( const auto& iter2 : iter->second ){
+                    PatternFeatureVector<FeatureType> * pfv = iter2;
                     const Pattern targetpattern = pfv->pattern;
                     *out << sourcepattern.tostring(sourcedecoder) << "\t" << targetpattern.tostring(targetdecoder);
-                    for (typename std::vector<FeatureType>::iterator iter3 = pfv->data.begin(); iter3 != pfv->data.end(); ++iter3) {
-                        *out << "\t" << *iter3;
+                    for ( const auto& d : pfv->data ){
+		      *out << "\t" << d;
                     }
                     *out << std::endl;
                 }
@@ -270,9 +270,9 @@ class BasicPatternAlignmentModel: public AbstractAlignmentModel<PatternVector,Pa
             *out << "PATTERN\tPATTERN2" << std::endl;
             for (iterator iter = this->begin(); iter != this->end(); ++iter) {
                 const Pattern sourcepattern = iter->first;
-                for (typename PatternVector::iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2) {
-                    const Pattern targetpattern = *iter2;
-                    *out << sourcepattern.tostring(sourcedecoder) << "\t" << targetpattern.tostring(targetdecoder) << std::endl;
+                for ( auto iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2) {
+		  const Pattern targetpattern = *iter2;
+		  *out << sourcepattern.tostring(sourcedecoder) << "\t" << targetpattern.tostring(targetdecoder) << std::endl;
                 }
             }
         }
