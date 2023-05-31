@@ -245,10 +245,9 @@ int main( int argc, const char *argv[] ) {
         cerr << "Testing correct size "; test(tokens.size() == 6);
         int i = 0;
         vector<string> tokenref = {"To","be","or","not","to","be"};
-        for (vector<Pattern>::iterator iter2 = tokens.begin(); iter2 != tokens.end(); ++iter2) {
-            const Pattern subngram = *iter2;
-            cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref[i]);
-            i += 1;
+        for ( const auto& subngram : tokens ){
+	  cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref[i]);
+	  i += 1;
         }
 		cerr << "Count check "; test(i,6);
 
@@ -260,12 +259,11 @@ int main( int argc, const char *argv[] ) {
         cerr << "Testing correct size "; test(tokens.size() == 6);
         i = 0;
         vector<string> tokenref2 = {"to","test","or","not","to","test"};
-        for (vector<Pattern>::iterator iter2 = tokens.begin(); iter2 != tokens.end(); ++iter2) {
-            const Pattern subngram = *iter2;
-            cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref2[i]);
-            i += 1;
+        for ( const auto& subngram : tokens ){
+	  cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), tokenref2[i]);
+	  i += 1;
         }
-		cerr << "Count check "; test(i,6);
+	cerr << "Count check "; test(i,6);
 
         cerr << "----------------------------------------------------" << endl;
         cerr << "Subgrams of ngram #1: " << endl;
@@ -296,12 +294,11 @@ int main( int argc, const char *argv[] ) {
 			"To be or not to",
 			"be or not to be",
 			"To be or not to be"};
-        for (vector<Pattern>::iterator iter2 = subngrams.begin(); iter2 != subngrams.end(); ++iter2) {
-            const Pattern subngram = *iter2;
-            cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), subngramref[i]);
-            i += 1;
+        for ( const auto& subngram : subngrams ){
+	  cerr << "#" << i << " -- "; test(subngram.decode(classdecoder), subngramref[i]);
+	  i += 1;
         }
-		cerr << "Count check "; test(i,21);
+	cerr << "Count check "; test(i,21);
 
 
         string substring = "or not";
@@ -422,22 +419,20 @@ int main( int argc, const char *argv[] ) {
         vector<PatternPointer> ptokens;
         ngram.ngrams(ptokens,1);
         cerr << "Testing correct size "; test(ptokens.size() == 6);
-		i = 0;
-        for (vector<PatternPointer>::iterator iter2 = ptokens.begin(); iter2 != ptokens.end(); ++iter2) {
-            const PatternPointer subngram1 = *iter2;
-            cerr << "#" << i << " -- "; test(subngram1.decode(classdecoder), tokenref[i]);
-            i += 1;
+	i = 0;
+	for ( const auto& subngram1 : ptokens ){
+	  cerr << "#" << i << " -- "; test(subngram1.decode(classdecoder), tokenref[i]);
+	  i += 1;
         }
-		cerr << "Count check "; test(i,6);
+	cerr << "Count check "; test(i,6);
 
         cerr << "Subgrams of ngram #1 (as patternpointers, from patternpointer): " << endl;
         vector<PatternPointer> psubngrams;
         pngram.subngrams(psubngrams);
-		i = 0;
-        for (vector<PatternPointer>::iterator iter2 = psubngrams.begin(); iter2 != psubngrams.end(); ++iter2) {
-            const PatternPointer psubngram = *iter2;
-            cerr << "#" << i << " -- "; test(psubngram.decode(classdecoder), subngramref[i]);
-            i += 1;
+	i = 0;
+	for ( const auto& psubngram : psubngrams ){
+	  cerr << "#" << i << " -- "; test(psubngram.decode(classdecoder), subngramref[i]);
+	  i += 1;
         }
 		cerr << "Count check "; test(i,21);
 
@@ -446,14 +441,12 @@ int main( int argc, const char *argv[] ) {
         cerr << "Subgrams of ngram #1 (as patternpointers, from pattern): " << endl;
         vector<PatternPointer> psubngrams2;
         ngram.subngrams(psubngrams2);
-		i = 0;
-        for (vector<PatternPointer>::iterator iter2 = psubngrams2.begin(); iter2 != psubngrams2.end(); ++iter2) {
-            const PatternPointer psubngram2 = *iter2;
-            cerr << "#" << i << " -- "; test(psubngram2.decode(classdecoder), subngramref[i]);
-            i += 1;
+	i = 0;
+        for ( const auto& psubngram2 : psubngrams2 ){
+	  cerr << "#" << i << " -- "; test(psubngram2.decode(classdecoder), subngramref[i]);
+	  i += 1;
         }
-		cerr << "Count check "; test(i,21);
-
+	cerr << "Count check "; test(i,21);
 
         cerr << "----------------------------------------------------" << endl;
         cerr << "Ngram addition: " << endl;
@@ -514,30 +507,28 @@ int main( int argc, const char *argv[] ) {
         cerr << "Parts: " << endl;
         vector<Pattern> parts;
         skipgram.parts(parts);
-		vector<string> partsref = {"To","or","to be"};
-		i = 0;
-        for (vector<Pattern>::iterator iter2 = parts.begin(); iter2 != parts.end(); ++iter2) {
-            const Pattern part = *iter2;
-            cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref[i]);
-            i += 1;
+	vector<string> partsref = {"To","or","to be"};
+	i = 0;
+        for ( const auto& part : parts ){
+	  cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref[i]);
+	  i += 1;
         }
-		cerr << "Count check "; test(i,3);
-
+	cerr << "Count check "; test(i,3);
 
         cerr << "Gaps: " << endl;
         std::vector<std::pair<int,int> > gapcontainer;
         skipgram.gaps(gapcontainer);
         skipgram.parts(parts);
-		vector<int> gaprefbegin = {1,3};
-		vector<int> gapreflength = {1,1};
-		i = 0;
-        for (vector<std::pair<int,int>>::iterator iter2 = gapcontainer.begin(); iter2 != gapcontainer.end(); ++iter2) {
-            cerr << "#" << i << " -- begin "; test(iter2->first, gaprefbegin[i]);
-            cerr << "#" << i << " -- length "; test(iter2->second, gapreflength[i]);
-            i += 1;
+	vector<int> gaprefbegin = {1,3};
+	vector<int> gapreflength = {1,1};
+	i = 0;
+        for ( const auto& iter2 : gapcontainer ){
+	  cerr << "#" << i << " -- begin "; test(iter2.first, gaprefbegin[i]);
+	  cerr << "#" << i << " -- length "; test(iter2.second, gapreflength[i]);
+	  i += 1;
         }
-		cerr << "Count check "; test(i,2);
-		cerr << "Instanceof test (positive) "; test( ngram.instanceof(skipgram) );
+	cerr << "Count check "; test(i,2);
+	cerr << "Instanceof test (positive) "; test( ngram.instanceof(skipgram) );
 
         string querystring2_1gap = "To be or {*1*} to be";
         Pattern skipgram_1gap = encoder.buildpattern(querystring2_1gap, true);

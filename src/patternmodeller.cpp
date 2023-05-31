@@ -124,11 +124,10 @@ void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassD
     cerr << "Processing " << querypatterns.size() << " queries" << endl;
     const bool allowunknown = true;
     unsigned char buffer[65536];
-    for (vector<string>::const_iterator iter = querypatterns.begin(); iter != querypatterns.end(); ++iter) {
-       const string s = *iter;
-       const int buffersize = classencoder->encodestring(s, buffer, allowunknown);
-       const Pattern pattern = Pattern(buffer, buffersize);
-       processquerypattern<ModelType>(model,classdecoder,pattern, dorelations, doinstantiate);
+    for ( const auto& s : querypatterns ){
+      const int buffersize = classencoder->encodestring(s, buffer, allowunknown);
+      const Pattern pattern = Pattern(buffer, buffersize);
+      processquerypattern<ModelType>(model,classdecoder,pattern, dorelations, doinstantiate);
     }
 }
 
@@ -159,22 +158,22 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
                 if (exact) {
                     processquerypattern<ModelType>(model,classdecoder, linepattern, dorelations, doinstantiate);
                 } else {
-                    vector<pair<Pattern, int> > patterns = model.getpatterns(linepattern);
-                    if (model.has(linepattern)) {
-                        const IndexReference ref = IndexReference(linenum,0);
+		  vector<pair<Pattern, int> > patterns = model.getpatterns(linepattern);
+		  if (model.has(linepattern)) {
+		    const IndexReference ref = IndexReference(linenum,0);
 
-                        //process and output instance
-                        cout << ref.sentence << ':' << (int) ref.token << "\t";
-                        processquerypattern<ModelType>(model, classdecoder, linepattern, dorelations, doinstantiate);
-                    }
-                    for (vector<pair<Pattern,int> >::iterator iter = patterns.begin(); iter != patterns.end(); ++iter) {
-                            const Pattern pattern = iter->first;
-                            const IndexReference ref = IndexReference(linenum,iter->second);
+		    //process and output instance
+		    cout << ref.sentence << ':' << (int) ref.token << "\t";
+		    processquerypattern<ModelType>(model, classdecoder, linepattern, dorelations, doinstantiate);
+		  }
+		  for ( const auto& iter : patterns ){
+		    const Pattern pattern = iter.first;
+		    const IndexReference ref = IndexReference(linenum,iter.second);
 
-                            //process and output instance
-                            cout << ref.sentence << ':' << (int) ref.token << "\t";
-                            processquerypattern<ModelType>(model, classdecoder, pattern, dorelations, doinstantiate);
-                    }
+		    //process and output instance
+		    cout << ref.sentence << ':' << (int) ref.token << "\t";
+		    processquerypattern<ModelType>(model, classdecoder, pattern, dorelations, doinstantiate);
+		  }
                 }
             }
     } while (!cin.eof() && (repeat));
@@ -227,12 +226,12 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
 	throw logic_error( "processquerypattern called with NULL classencoder");
       }
       bool first = true;
-        for (typename ModelType::iterator iter = model.begin(); iter != model.end(); ++iter) {
-            cout << iter->first.tostring(*classdecoder) << endl;
-            const PatternPointer pp = iter->first;
-            model.outputrelations(pp, *classdecoder, cout, dorelations == "all" ? "" : dorelations,first);
-            first = false;
-        }
+      for (typename ModelType::iterator iter = model.begin(); iter != model.end(); ++iter) {
+	cout << iter->first.tostring(*classdecoder) << endl;
+	const PatternPointer pp = iter->first;
+	model.outputrelations(pp, *classdecoder, cout, dorelations == "all" ? "" : dorelations,first);
+	first = false;
+      }
     }
 
     if (info) {
