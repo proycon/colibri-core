@@ -573,17 +573,17 @@ int main( int argc, const char *argv[] ) {
             cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref[i]);
             i += 1;
         }
-		cerr << "Count check "; test(i,3);
+	cerr << "Count check "; test(i,3);
 
 
         cerr << "Gaps: " << endl;
         std::vector<std::pair<int,int> > pgapcontainer;
         pskipgram.gaps(pgapcontainer);
-		i = 0;
-        for (vector<std::pair<int,int>>::iterator iter2 = pgapcontainer.begin(); iter2 != pgapcontainer.end(); ++iter2) {
-            cerr << "#" << i << " -- begin "; test(iter2->first, gaprefbegin[i]);
-            cerr << "#" << i << " -- length "; test(iter2->second, gapreflength[i]);
-            i += 1;
+	i = 0;
+	for ( const auto& iter2 : pgapcontainer ){
+	  cerr << "#" << i << " -- begin "; test(iter2.first, gaprefbegin[i]);
+	  cerr << "#" << i << " -- length "; test(iter2.second, gapreflength[i]);
+	  i += 1;
         }
 		cerr << "Count check "; test(i,2);
 		cerr << "Instanceof test (positive) "; test( ngram.instanceof(pskipgram) );
@@ -631,14 +631,13 @@ int main( int argc, const char *argv[] ) {
         cerr << "Parts: " << endl;
         parts2.clear();
         skipgraminv2.parts(parts2);
-		vector<string> partsref2 = {"be","not"};
-		i = 0;
-        for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); ++iter2) {
-            const Pattern part = *iter2;
-            cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref2[i]);
-            i += 1;
+	vector<string> partsref2 = {"be","not"};
+	i = 0;
+	for ( const auto& part : parts2 ){
+	  cerr << "#" << i << " -- "; test(part.decode(classdecoder), partsref2[i]);
+	  i += 1;
         }
-		cerr << "Count check "; test(i,2);
+	cerr << "Count check "; test(i,2);
         cerr << "----------------------------------------------------" << endl;
         /*cerr << "Re-instantiating skipgram with skipcontent" << endl;
         Pattern rengram = skipgram.instantiate(&skipgraminv2, parts2);
@@ -657,32 +656,31 @@ int main( int argc, const char *argv[] ) {
         skipgram5.parts(parts2);
 		vector<string> skipgram5partsref = {"be","not","be"};
      	i = 0;
-        for (vector<Pattern>::iterator iter2 = parts2.begin(); iter2 != parts2.end(); ++iter2) {
-            const Pattern part = *iter2;
-            cerr << "#" << i << " -- "; test(part.decode(classdecoder), skipgram5partsref[i]);
-            i += 1;
+        for ( const auto& part : parts2 ){
+	  cerr << "#" << i << " -- "; test(part.decode(classdecoder), skipgram5partsref[i]);
+	  i += 1;
         }
-		cerr << "Count check "; test(i,3);
+	cerr << "Count check "; test(i,3);
 
         cerr << "getgaps: " << endl;
         vector<pair<int,int> > gaps;
         skipgram5.gaps(gaps);
-		vector<int> skipgram5gaprefbegin = {1,3};
-		vector<int> skipgram5gapreflength = {1,2};
-		i = 0;
-        for (vector<pair<int,int >>::iterator iter2 = gaps.begin(); iter2 != gaps.end(); ++iter2) {
-            cerr << "#" << i << " -- begin "; test(iter2->first, skipgram5gaprefbegin[i]);
-            cerr << "#" << i << " -- length "; test(iter2->second, skipgram5gapreflength[i]);
-            i += 1;
+	vector<int> skipgram5gaprefbegin = {1,3};
+	vector<int> skipgram5gapreflength = {1,2};
+	i = 0;
+        for ( const auto& iter2 : gaps ){
+	  cerr << "#" << i << " -- begin "; test(iter2.first, skipgram5gaprefbegin[i]);
+	  cerr << "#" << i << " -- length "; test(iter2.second, skipgram5gapreflength[i]);
+	  i += 1;
         }
 		cerr << "Count check "; test(i,2);
 
         cerr << "getparts: " << endl;
         vector<pair<int,int> > p;
         skipgram5.parts(p);
-		vector<int> skipgram5partrefbegin = {0,2,5};
-		vector<int> skipgram5partreflength = {1,1,1};
-		i = 0;
+	vector<int> skipgram5partrefbegin = {0,2,5};
+	vector<int> skipgram5partreflength = {1,1,1};
+	i = 0;
         for (vector<pair<int,int >>::iterator iter2 = p.begin(); iter2 != p.end(); ++iter2) {
             cerr << "#" << i << " -- begin "; test(iter2->first, skipgram5partrefbegin[i]);
             cerr << "#" << i << " -- length "; test(iter2->second, skipgram5partreflength[i]);
