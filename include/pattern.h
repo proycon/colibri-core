@@ -62,8 +62,8 @@ enum PatternType {
     PATTERNPOINTER = 1,
 };
 
-void readanddiscardpattern(std::istream * in, bool pointerformat = false);
-int reader_passmarker(const unsigned char c, std::istream * in);
+void readanddiscardpattern( std::istream& in, bool pointerformat = false);
+int reader_passmarker(const unsigned char c, std::istream& in);
 
 
 
@@ -115,7 +115,7 @@ class Pattern {
       * @param version Version of file format (default: 2)
       * @param corpusoffset not used
       */
-     explicit Pattern(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, const unsigned char * corpusstart = NULL, bool debug = false);
+     explicit Pattern( std::istream& in, bool ignoreeol = false, const unsigned char version = 2, const unsigned char * corpusstart = NULL, bool debug = false);
      //Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, bool ignoreeol = false, const unsigned char version = 2, bool debug = false);
 
 
@@ -417,13 +417,13 @@ class PatternPointer {
     // by convention, always return *this (for chaining)
     return *this;
   }
-  explicit PatternPointer(std::istream * in, bool ignoreeol = false, const unsigned char version = 2, unsigned char * corpusstart = NULL, bool debug = false);
+  explicit PatternPointer(std::istream& in, bool ignoreeol = false, const unsigned char version = 2, unsigned char * corpusstart = NULL, bool debug = false);
 
-     /**
-      * Write Pattern to output stream (in binary form)
-      * @param out The output stream
-      */
-     void write( std::ostream& out, const unsigned char * corpusstart = NULL) const;
+  /**
+   * Write Pattern to output stream (in binary form)
+   * @param out The output stream
+   */
+  void write( std::ostream& out, const unsigned char * corpusstart = NULL) const;
 
      //slice construtors:
      PatternPointer(unsigned char *, size_t,size_t, size_t * byteoffset=NULL, bool byteoffset_shiftone = false);

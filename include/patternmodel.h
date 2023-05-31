@@ -327,7 +327,9 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * @param options The options for loading
          * @param constrainmodel Load only patterns that occur in this model
          */
-        PatternSetModel(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL) {
+        PatternSetModel( std::istream& f,
+			 const PatternModelOptions& options,
+			 PatternModelInterface * constrainmodel = NULL) {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -356,7 +358,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( &in, options, constrainmodel);
+            this->load( in, options, constrainmodel);
         }
         virtual int getmodeltype() const override { return PATTERNSETMODEL; }
         virtual int getmodelversion() const override { return 2; }
@@ -384,7 +386,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( &in, options, constrainmodel);
+            this->load( in, options, constrainmodel);
         }
 
         /**
@@ -392,11 +394,12 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
          * @param options The options for loading
          * @param constrainmodel Load only patterns that occur in this model
          */
-        virtual void load(std::istream * f, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        virtual void load( std::istream& f,
+			   const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) { //load from file
             char null;
-            f->read( (char*) &null, sizeof(char));
-            f->read( (char*) &model_type, sizeof(char));
-            f->read( (char*) &model_version, sizeof(char));
+            f.read( (char*) &null, sizeof(char));
+            f.read( (char*) &model_type, sizeof(char));
+            f.read( (char*) &model_version, sizeof(char));
             if (model_version == 1) this->classencodingversion = 1;
             if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNMODEL) && (model_type != PATTERNSETMODEL) && (model_type != PATTERNALIGNMENTMODEL) ))  {
                 std::cerr << "ERROR: File is not a colibri patternmodel file" << std::endl;
@@ -405,8 +408,8 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
             if (model_version > 2) {
                 std::cerr << "WARNING: Model is created with a newer version of Colibri Core! Attempting to continue but failure is likely..." << std::endl;
             }
-            f->read( (char*) &totaltokens, sizeof(uint64_t));
-            f->read( (char*) &totaltypes, sizeof(uint64_t));
+            f.read( (char*) &totaltokens, sizeof(uint64_t));
+            f.read( (char*) &totaltypes, sizeof(uint64_t));
 
             PatternStoreInterface * constrainstore = NULL;
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
@@ -640,7 +643,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          * @param corpus Pointer to the loaded corpus, used as a reverse index.
          */
-        PatternModel<ValueType,ValueHandler,MapType,PatternType>(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) {
+        PatternModel<ValueType,ValueHandler,MapType,PatternType>(std::istream&f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -693,7 +696,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( &in, options, constrainmodel);
+            this->load( in, options, constrainmodel);
         }
 
 
@@ -736,7 +739,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( &in, options, constrainmodel);
+            this->load( in, options, constrainmodel);
         }
 
         /**
@@ -745,11 +748,11 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
          * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          */
-        virtual void load(std::istream * f, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        virtual void load( std::istream&  f, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL) { //load from file
             char null;
-            f->read( (char*) &null, sizeof(char));
-            f->read( (char*) &model_type, sizeof(char));
-            f->read( (char*) &model_version, sizeof(char));
+            f.read( (char*) &null, sizeof(char));
+            f.read( (char*) &model_type, sizeof(char));
+            f.read( (char*) &model_version, sizeof(char));
             if (model_version == 1) this->classencodingversion = 1;
             if ((null != 0) || ((model_type != UNINDEXEDPATTERNMODEL) && (model_type != UNINDEXEDPATTERNPOINTERMODEL) && (model_type != INDEXEDPATTERNMODEL) && (model_type != INDEXEDPATTERNPOINTERMODEL) && (model_type != PATTERNALIGNMENTMODEL) ))  {
                 std::cerr << "File is not a colibri model file (or a very old one)" << std::endl;
@@ -765,16 +768,16 @@ class PatternModel: public MapType, public PatternModelInterface {
                 this->patterntype = PATTERNPOINTER;
                 if (options.DEBUG) std::cerr << "Reading corpus data" << std::endl;
                 uint64_t corpussize;
-                f->read( (char*) &corpussize, sizeof(uint64_t)); //backward incompatible (since v2.5)
+                f.read( (char*) &corpussize, sizeof(uint64_t)); //backward incompatible (since v2.5)
                 unsigned char * corpusdata = new unsigned char[corpussize];
-                f->read((char*) corpusdata,sizeof(unsigned char) * corpussize);
+                f.read((char*) corpusdata,sizeof(unsigned char) * corpussize);
                 reverseindex = new IndexedCorpus(corpusdata, corpussize);
                 this->attachcorpus(*reverseindex);
                 reverseindex_internal = true;
                 if (options.DEBUG) std::cerr << "(read " << corpussize << " bytes)" << std::endl;
             }
-            f->read( (char*) &totaltokens, sizeof(uint64_t));
-            f->read( (char*) &totaltypes, sizeof(uint64_t));
+            f.read( (char*) &totaltokens, sizeof(uint64_t));
+            f.read( (char*) &totaltypes, sizeof(uint64_t));
 
             PatternStoreInterface * constrainstore = NULL;
             if (constrainmodel) constrainstore = constrainmodel->getstoreinterface();
@@ -824,7 +827,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param firstsentence First sentence index, useful for augmenting a model with another corpus (keep continued set to false in this case), defaults to 1
          * @param ignoreerrors Try to ignore errors (use for debug only)
          */
-        virtual void train( std::istream * in ,
+        virtual void train( std::istream * in,
 			    const PatternModelOptions& in_options,
 			    PatternModelInterface * constrainbymodel = NULL,
 			    PatternSet<> * filter = NULL,
@@ -843,7 +846,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                 totaltokens = constrainbymodel->tokens();
             }
             uint32_t sentence = firstsentence-1;
-            const unsigned char data_version = (in != NULL) ? getdataversion(in) : 2;
+            const unsigned char data_version = (in != NULL) ? getdataversion(*in) : 2;
 
             bool filterhasngrams = false;
             bool filterhasskipgrams = false; //(or flexgrams)
@@ -965,7 +968,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                     ++sentence;
                     //read line
                     if (linepattern != NULL) delete linepattern;
-                    if (reverseindex == NULL) linepattern = new Pattern(in,false,data_version);
+                    if (reverseindex == NULL) linepattern = new Pattern(*in,false,data_version);
                     PatternPointer line = (reverseindex != NULL) ? reverseindex->getsentence(sentence) : PatternPointer(linepattern);
                     //if (in->eof()) break;
                     const unsigned int linesize = line.n();
@@ -2626,7 +2629,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             this->reverseindex = NULL;
         }
         std::ifstream in(filename);
-        this->load( &in, options, constrainmodel);
+        this->load( in, options, constrainmodel);
     }
 
     virtual ~IndexedPatternModel<MapType,PatternType>() { }
@@ -3783,7 +3786,7 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
                 this->reverseindex = NULL;
             }
             std::ifstream in(filename);
-            this->load( &in, options, constrainmodel);
+            this->load( in, options, constrainmodel);
         }
 
         int getmodeltype() const override { return UNINDEXEDPATTERNPOINTERMODEL; }
@@ -3882,7 +3885,7 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
                 this->reverseindex = NULL;
             }
             std::ifstream in(filename);
-            this->load( &in, options, constrainmodel);
+            this->load( in, options, constrainmodel);
         }
 
         int getmodeltype() const override { return INDEXEDPATTERNPOINTERMODEL; }

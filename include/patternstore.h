@@ -73,7 +73,7 @@ class IndexedCorpus {
    * Read an indexed corpus from stream. The stream must correspond to an
    * encoded corpus (*.colibri.dat)
    */
-  explicit IndexedCorpus(std::istream *in, bool debug = false);
+  explicit IndexedCorpus( std::istream& in, bool debug = false);
   /*
    * Read an indexed corpus from file. The filename must correspond to an
    * encoded corpus (*.colibri.dat)
@@ -92,7 +92,7 @@ class IndexedCorpus {
          * Read an indexed corpus from stream. The stream must correspond to an
          * encoded corpus (*.colibri.dat)
          */
-        void load(std::istream *in, bool debug = false);
+        void load(std::istream& in, bool debug = false);
 
         /*
          * Read an indexed corpus from file. The filename must correspond to an
@@ -546,11 +546,11 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
          * Read a map from input stream (in binary format)
          */
         template<class ReadValueType=ValueType, class ReadValueHandler=ValueHandler,class ReadPatternType=PatternType>
-        void read(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false,  bool DEBUG=false) {
+        void read( std::istream& in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET=false,  bool DEBUG=false) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             ReadPatternType p;
-            in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            in.read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
             if (DEBUG) std::cerr << "Reading " << s << " patterns, classencodingversion=" << (int) this->classencodingversion << ", @corpusstart=" << (size_t) this->corpusstart << std::endl;
             if (MINTOKENS == -1) MINTOKENS = 0;
@@ -605,7 +605,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
          */
         void read( const std::string& filename,int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true, bool DORESET = false, bool DEBUG=false) { //no templates for this one, easier on python/cython
             std::ifstream in(filename);
-            this->read<ValueType,ValueHandler>(&in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET, DEBUG);
+            this->read<ValueType,ValueHandler>(in,MINTOKENS,MINLENGTH,MAXLENGTH,constrainstore,DONGRAMS,DOSKIPGRAMS,DOFLEXGRAMS, DORESET, DEBUG);
         }
 
 };
@@ -730,9 +730,9 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
         /**
          * Read the set from input stream, in binary format
          */
-        void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
+        void read( std::istream& in, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadWriteSizeType s; //read size:
-            in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            in.read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
             for (size_t i = 0; i < s; ++i) {
                 Pattern p = Pattern(in, false, this->classencodingversion);
@@ -752,10 +752,10 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
          * and retains only the keys for the set.
          */
         template<class ReadValueType, class ReadValueHandler=BaseValueHandler<ReadValueType>>
-        void readmap(std::istream * in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
+        void readmap( std::istream& in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
-            in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            in.read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
             //std::cerr << "Reading " << (int) s << " patterns" << std::endl;
             for (ReadWriteSizeType i = 0; i < s; ++i) {
@@ -773,7 +773,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
                 const int n = p.size();
                 ReadValueType readvalue;
                 //std::cerr << "Read pattern: " << std::endl;
-                readvaluehandler.read(in, readvalue);
+                readvaluehandler.read( in, readvalue);
                 if (n >= MINLENGTH && n <= MAXLENGTH)  {
                     if ((readvaluehandler.count(readvalue) >= (unsigned int) MINTOKENS) && ((constrainstore == NULL) || (constrainstore->has(p)))) {
                         this->insert(p);
@@ -838,9 +838,9 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
             }
         }
 
-        void read(std::istream * in, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
+        void read( std::istream&  in, int MINLENGTH=0, int MAXLENGTH=999999, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadWriteSizeType s; //read size:
-            in->read( (char*) &s, sizeof(ReadWriteSizeType));
+            in.read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
             for (size_t i = 0; i < s; ++i) {
                 Pattern p = Pattern(in, false, this->classencodingversion);
@@ -1067,34 +1067,36 @@ class ArrayValueHandler: public AbstractValueHandler<T> {
    public:
     const static bool indexed = false;
     std::string id() const override { return "ArrayValueHandler"; }
-    void read(std::istream * in, std::array<T,N> & a) {
-        for (int i = 0; i < N; ++i) {
-            T v;
-            in->read( (char*) &v, sizeof(T));
-            a[i] = v;
-        }
+  void read( std::istream& in, std::array<T,N> & a) {
+    for (int i = 0; i < N; ++i) {
+      T v;
+      in.read( (char*) &v, sizeof(T));
+      a[i] = v;
     }
-    void write( std::ostream& out, const std::array<T,N> & a) {
-      for (int i = 0; i < N; ++i) {
-	T v = a[i];
-	out.write( (char*) &v, sizeof(T));
-      }
+  }
+
+  void write( std::ostream& out, const std::array<T,N> & a) {
+    for (int i = 0; i < N; ++i) {
+      T v = a[i];
+      out.write( (char*) &v, sizeof(T));
     }
-    std::string tostring( const std::array<T,N> & a) const {
-        std::string s;
-        for (int i = 0; i < N; ++i) {
-            T v = a[i];
-            if (!s.empty()) s += " ";
-            s += " " + tostring(a[i]);
-        }
-        return s;
+  }
+
+  std::string tostring( const std::array<T,N> & a) const {
+    std::string s;
+    for (int i = 0; i < N; ++i) {
+      T v = a[i];
+      if (!s.empty()) s += " ";
+	  s += " " + tostring(a[i]);
     }
-    unsigned int count( const std::array<T,N> & a) const {
-        return (int) a[countindex];
-    }
-    void add(std::array<T,N> * value, const IndexReference & ) const {
-        (*value)[countindex] += 1;
-    }
+    return s;
+  }
+  unsigned int count( const std::array<T,N> & a) const {
+    return (int) a[countindex];
+  }
+  void add(std::array<T,N> * value, const IndexReference & ) const {
+    (*value)[countindex] += 1;
+  }
 };
 
 
@@ -1106,7 +1108,7 @@ class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
   public:
     const static bool indexed = false;
     std::string id() const override { return "PatternStoreValueHandler"; }
-    void read(std::istream * in,  PatternStoreType & value) override {
+    void read( std::istream& in,  PatternStoreType & value) override {
         value.read(in);
     }
     void write( std::ostream& out,  PatternStoreType & value) override {

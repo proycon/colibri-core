@@ -69,7 +69,7 @@ int main( int argc, char *argv[] ) {
       std::ifstream in(datafiles[i], std::ios::in|std::ios::binary);
       while (!in.eof()) {
 	//read line
-	Pattern line = Pattern(&in);
+	Pattern line = Pattern(in);
 	ngrams.clear();
 	line.ngrams(ngrams, n);
 

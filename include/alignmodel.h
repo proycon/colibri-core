@@ -39,7 +39,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             model_version = this->getmodelversion();
         }
 
-        AbstractAlignmentModel<ValueType,ValueHandler>(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        AbstractAlignmentModel<ValueType,ValueHandler>(std::istream& f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -62,7 +62,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( &in, options, constrainmodel);
+            this->load( in, options, constrainmodel);
         }
 
         int getmodeltype() const override { return PATTERNALIGNMENTMODEL; }
@@ -75,16 +75,16 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
                 std::cerr << "ERROR: Unable to load file " << filename << std::endl;
                 throw InternalError();
             }
-            this->load( &in, options, constrainmodel);
+            this->load( in, options, constrainmodel);
         }
 
-        virtual void load(std::istream * f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        virtual void load(std::istream& f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL) { //load from file
             options.MINTOKENS = 1; //other values would be meaningless
 
             char null;
-            f->read( (char*) &null, sizeof(char));
-            f->read( (char*) &model_type, sizeof(char));
-            f->read( (char*) &model_version, sizeof(char));
+            f.read( (char*) &null, sizeof(char));
+            f.read( (char*) &model_type, sizeof(char));
+            f.read( (char*) &model_version, sizeof(char));
             if (model_version == 1) this->classencodingversion = 1;
             if ((null != 0) || (model_type != PATTERNALIGNMENTMODEL ))  {
                 std::cerr << "File is not a colibri alignment model file (did you try to load a different type of pattern model?)" << std::endl;
@@ -93,8 +93,8 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             if (model_version > 2) {
                 std::cerr << "WARNING: Model is created with a newer version of Colibri Core! Attempting to continue but failure is likely..." << std::endl;
             }
-            f->read( (char*) &totaltokens, sizeof(uint64_t));
-            f->read( (char*) &totaltypes, sizeof(uint64_t));
+            f.read( (char*) &totaltokens, sizeof(uint64_t));
+            f.read( (char*) &totaltypes, sizeof(uint64_t));
 
             if (options.DEBUG) {
                 std::cerr << "Debug enabled, loading Alignment Model type " << (int) model_type << ", version " << (int) model_version << std::endl;
@@ -154,9 +154,9 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
         size_t types() override { return totaltypes; }
         size_t tokens() const override { return totaltokens; }
 
-        virtual void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) =0;
+  virtual void print( std::ostream& out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) =0;
 
-        virtual void printmodel(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) { //alias for cython (doesn't like methods named print)
+        virtual void printmodel( std::ostream& out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) { //alias for cython (doesn't like methods named print)
             this->print(out,sourcedecoder, targetdecoder);
         }
 
@@ -202,7 +202,7 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
         typedef typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::const_iterator const_iterator;
 
         PatternAlignmentModel<FeatureType>(): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>() {}
-        PatternAlignmentModel<FeatureType>(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(f, options, constrainmodel) {}
+        PatternAlignmentModel<FeatureType>(std::istream& f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(f, options, constrainmodel) {}
 
         PatternAlignmentModel<FeatureType>(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(filename, options, constrainmodel) {}
 
@@ -231,21 +231,21 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
         }
 
 
-        virtual void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) override {
-            *out << "PATTERN\tPATTERN2\tFEATURES" << std::endl;
-            for (iterator iter = this->begin(); iter != this->end(); ++iter) {
-                const Pattern sourcepattern = iter->first;
-                for ( const auto& iter2 : iter->second ){
-                    PatternFeatureVector<FeatureType> * pfv = iter2;
-                    const Pattern targetpattern = pfv->pattern;
-                    *out << sourcepattern.tostring(sourcedecoder) << "\t" << targetpattern.tostring(targetdecoder);
-                    for ( const auto& d : pfv->data ){
-		      *out << "\t" << d;
-                    }
-                    *out << std::endl;
-                }
-            }
-        }
+  virtual void print(std::ostream& out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) override {
+    out << "PATTERN\tPATTERN2\tFEATURES" << std::endl;
+    for (iterator iter = this->begin(); iter != this->end(); ++iter) {
+      const Pattern sourcepattern = iter->first;
+      for ( const auto& iter2 : iter->second ){
+	PatternFeatureVector<FeatureType> * pfv = iter2;
+	const Pattern targetpattern = pfv->pattern;
+	out << sourcepattern.tostring(sourcedecoder) << "\t" << targetpattern.tostring(targetdecoder);
+	for ( const auto& d : pfv->data ){
+	  out << "\t" << d;
+	}
+	out << std::endl;
+      }
+    }
+  }
 };
 
 class BasicPatternAlignmentModel: public AbstractAlignmentModel<PatternVector,PatternVectorHandler>  {
@@ -254,7 +254,7 @@ class BasicPatternAlignmentModel: public AbstractAlignmentModel<PatternVector,Pa
         typedef typename PatternMap<PatternVector,PatternVectorHandler>::const_iterator const_iterator;
 
         BasicPatternAlignmentModel(): AbstractAlignmentModel<PatternVector,PatternVectorHandler>() {}
-        BasicPatternAlignmentModel(std::istream *f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternVector,PatternVectorHandler>(f, options, constrainmodel) {}
+        BasicPatternAlignmentModel(std::istream& f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternVector,PatternVectorHandler>(f, options, constrainmodel) {}
 
         BasicPatternAlignmentModel(const std::string filename, const PatternModelOptions options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternVector,PatternVectorHandler>(filename, options, constrainmodel) {}
 
@@ -266,16 +266,16 @@ class BasicPatternAlignmentModel: public AbstractAlignmentModel<PatternVector,Pa
         }
 
 
-        void print(std::ostream * out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) override {
-            *out << "PATTERN\tPATTERN2" << std::endl;
-            for (iterator iter = this->begin(); iter != this->end(); ++iter) {
-                const Pattern sourcepattern = iter->first;
-                for ( auto iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2) {
-		  const Pattern targetpattern = *iter2;
-		  *out << sourcepattern.tostring(sourcedecoder) << "\t" << targetpattern.tostring(targetdecoder) << std::endl;
-                }
-            }
-        }
+  void print(std::ostream& out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) override {
+    out << "PATTERN\tPATTERN2" << std::endl;
+    for (iterator iter = this->begin(); iter != this->end(); ++iter) {
+      const Pattern sourcepattern = iter->first;
+      for ( auto iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2) {
+	const Pattern targetpattern = *iter2;
+	out << sourcepattern.tostring(sourcedecoder) << "\t" << targetpattern.tostring(targetdecoder) << std::endl;
+      }
+    }
+  }
 };
 
 /*

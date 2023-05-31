@@ -895,12 +895,12 @@ int main( int argc, const char *argv[] ) {
         out.close();
 
         cerr << "Reading from file" << endl;
-        ifstream * in = new ifstream("/tmp/patterns.tmp");
+        ifstream in("/tmp/patterns.tmp");
         Pattern ngram_read = Pattern(in);
         Pattern ngramhigh_read = Pattern(in);
         Pattern empty_read = Pattern(in);
         Pattern skipgram_read = Pattern(in);
-        in->close();
+        in.close();
         cerr << "Integrity check for ngram? " ; test(ngram == ngram_read) ;
         cerr << "Integrity check for ngram (high)? " ; test(ngramhigh == ngramhigh_read) ;
         cerr << "Integrity check for empty pattern? " ; test(empty == empty_read);

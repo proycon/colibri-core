@@ -76,8 +76,8 @@ class ClassDecoder {
      * @param end End decoding at the specified line (this line will be included) (corresponds to sentences or whatever other unit the data employs)
      * @param quiet Do not report decoding problems to stderr
      */
-    void decodefile(const std::string & filename, std::ostream*,  unsigned int start = 0, unsigned int end = 0, bool quiet=false);
-    void decodefile_v1(std::ifstream* in,  std::ostream* out , unsigned int start=0, unsigned int end=0, bool quiet=false);
+    void decodefile(const std::string & filename, std::ostream&,  unsigned int start = 0, unsigned int end = 0, bool quiet=false);
+    void decodefile_v1( std::ifstream& in,  std::ostream& out , unsigned int start=0, unsigned int end=0, bool quiet=false);
 
     /**
      * Create a plain-text corpus file from a class-encoded corpus file (*.colibri.dat)
@@ -146,12 +146,12 @@ class ClassDecoder {
 
 };
 
-unsigned int bytestoint(std::istream* IN, const unsigned char version = 2);
+unsigned int bytestoint( std::istream& IN, const unsigned char version = 2);
 unsigned int bytestoint(const unsigned char* a, unsigned int * length = NULL);
 
 unsigned int bytestoint_v1(const unsigned char* a, const int l);
 
 
-unsigned char getdataversion(std::istream* IN);
-int readline(std::istream* IN, unsigned char* buffer, const int);
+unsigned char getdataversion(std::istream& IN);
+int readline(std::istream& IN, unsigned char* buffer, const int);
 #endif

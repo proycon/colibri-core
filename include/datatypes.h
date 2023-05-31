@@ -41,9 +41,9 @@ class IndexReference {
      */
   explicit IndexReference(uint32_t sentence, uint16_t token ) { this->sentence = sentence; this->token = token; }
 
-  explicit IndexReference(std::istream * in) {
-    in->read( (char*) &sentence, sizeof(uint32_t));
-    in->read( (char*) &token, sizeof(uint16_t));
+  explicit IndexReference( std::istream& in) {
+    in.read( (char*) &sentence, sizeof(uint32_t));
+    in.read( (char*) &token, sizeof(uint16_t));
   }
   // IndexReference(const IndexReference& other) { //copy constructor
   //     sentence = other.sentence;
@@ -168,7 +168,7 @@ template<class ValueType>
 class AbstractValueHandler {
    public:
     virtual std::string id() const { return "AbstractValueHandler"; }
-    virtual void read( std::istream * in, ValueType & value)=0; //read value from input stream (binary)
+    virtual void read( std::istream& in, ValueType & value)=0; //read value from input stream (binary)
     virtual void write( std::ostream& out, ValueType & value)=0; //write value to output stream (binary)
     virtual std::string tostring(ValueType & value) const =0; //convert value to string)
     virtual unsigned int count(ValueType & value) const =0; //what count does this value represent?
@@ -186,8 +186,8 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
    public:
     std::string id() const override { return "BaseValueHandler"; }
     const static bool indexed = false;
-    void read(std::istream * in, ValueType & v) override {
-        in->read( (char*) &v, sizeof(ValueType));
+    void read( std::istream& in, ValueType & v) override {
+        in.read( (char*) &v, sizeof(ValueType));
     }
     void write( std::ostream& out, ValueType & value) override {
         out.write( (char*) &value, sizeof(ValueType));
@@ -219,9 +219,9 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
    public:
     const static bool indexed = true;
     std::string id() const override { return "IndexedDataHandler"; }
-    void read(std::istream * in, IndexedData & v) override {
+    void read( std::istream& in, IndexedData & v) override {
         uint32_t c;
-        in->read((char*) &c, sizeof(uint32_t));
+        in.read((char*) &c, sizeof(uint32_t));
         v.reserve(c); //reserve space to optimise
         for (unsigned int i = 0; i < c; ++i) {
             IndexReference ref = IndexReference(in);
@@ -285,37 +285,38 @@ class PatternFeatureVector {
     data(ref.data){
   }
 
-  explicit PatternFeatureVector(std::istream * in) {
+  explicit PatternFeatureVector( std::istream& in) {
     read(in);
   }
 
 
-        void read(std::istream * in) {
-            this->pattern = Pattern(in);
-            uint16_t c;
-            in->read((char*) &c, sizeof(uint16_t));
-            data.reserve(c);
-            for (unsigned int i = 0; i < c; ++i) {
-                FeatureType f;
-                in->read((char*) &f, sizeof(FeatureType));
-                data.push_back(f);
-            }
-            data.shrink_to_fit();
-        }
-        void write( std::ostream& out) {
-            this->pattern.write(out);
-            unsigned int s = data.size();
-            if (s >= 65536) {
-                std::cerr << "ERROR: PatternFeatureVector size exceeds maximum 16-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
-                s = 65536;
-            }
-            uint16_t c = (uint16_t) s;
-            out.write((char*) &c , sizeof(uint16_t));
-            for (unsigned int i = 0; i < s; ++i) {
-                FeatureType f = data[i];
-                out.write((char*) &f, sizeof(FeatureType));
-            }
-        }
+  void read( std::istream& in) {
+    this->pattern = Pattern(in);
+    uint16_t c;
+    in.read((char*) &c, sizeof(uint16_t));
+    data.reserve(c);
+    for (unsigned int i = 0; i < c; ++i) {
+      FeatureType f;
+      in.read((char*) &f, sizeof(FeatureType));
+      data.push_back(f);
+    }
+    data.shrink_to_fit();
+  }
+
+  void write( std::ostream& out) {
+    this->pattern.write(out);
+    unsigned int s = data.size();
+    if (s >= 65536) {
+      std::cerr << "ERROR: PatternFeatureVector size exceeds maximum 16-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
+      s = 65536;
+    }
+    uint16_t c = (uint16_t) s;
+    out.write((char*) &c , sizeof(uint16_t));
+    for (unsigned int i = 0; i < s; ++i) {
+      FeatureType f = data[i];
+      out.write((char*) &f, sizeof(FeatureType));
+    }
+  }
 
         typedef typename std::vector<FeatureType>::iterator iterator;
         typedef typename std::vector<FeatureType>::const_iterator const_iterator;
@@ -474,9 +475,9 @@ template<class FeatureType>
 class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeatureVectorMap<FeatureType>> {
    public:
     std::string id() const override { return "PatternFeatureVectorMapHandler"; }
-    void read(std::istream * in, PatternFeatureVectorMap<FeatureType> & v) override {
+    void read( std::istream& in, PatternFeatureVectorMap<FeatureType> & v) override {
         uint16_t c;
-        in->read((char*) &c, sizeof(uint16_t));
+        in.read((char*) &c, sizeof(uint16_t));
         v.reserve(c); //reserve space to optimise
         for (unsigned int i = 0; i < c; ++i) {
             PatternFeatureVector<FeatureType> ref = PatternFeatureVector<FeatureType>(in);
@@ -619,18 +620,18 @@ class PatternVector { //acts like a (small) map (but implemented as a vector to 
 class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
    public:
     std::string id() const override { return "PatternVectorHandler"; }
-    void read(std::istream * in, PatternVector & v) override{
-        uint32_t c;
-        in->read((char*) &c, sizeof(uint32_t));
-        v.reserve(c); //reserve space to optimise
-        for (unsigned int i = 0; i < c; ++i) {
-            Pattern pattern = Pattern(in);
-            v.insert(pattern, false); //checkifexists=false, to speed things up when loading, assuming data is sane
-        }
-        v.shrink_to_fit(); //try to keep vector as small as possible (slows additional insertions down a bit)
-
+    void read( std::istream& in, PatternVector & v) override{
+      uint32_t c;
+      in.read((char*) &c, sizeof(uint32_t));
+      v.reserve(c); //reserve space to optimise
+      for (unsigned int i = 0; i < c; ++i) {
+	Pattern pattern = Pattern(in);
+	v.insert(pattern, false); //checkifexists=false, to speed things up when loading, assuming data is sane
+      }
+      v.shrink_to_fit(); //try to keep vector as small as possible (slows additional insertions down a bit)
     }
-    void write( std::ostream& out, PatternVector & value) override {
+
+  void write( std::ostream& out, PatternVector & value) override {
         unsigned int s = value.size();
         if (s >= std::numeric_limits<uint32_t>::max()) {
             std::cerr << "ERROR: PatternVector size exceeds maximum 32-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
