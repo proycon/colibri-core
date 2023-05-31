@@ -87,8 +87,8 @@ class IndexedData {
    public:
     std::vector<IndexReference> data;
   explicit IndexedData() { };
-  explicit IndexedData(std::istream * in);
-    void write( std::ostream& out) const;
+  explicit IndexedData( std::istream& in);
+  void write( std::ostream& out) const;
 
     bool has(const IndexReference & ref, bool sorted = false) const {
         if (sorted) {

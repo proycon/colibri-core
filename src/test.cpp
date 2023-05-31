@@ -1017,9 +1017,9 @@ int main( int argc, const char *argv[] ) {
         cerr << endl << "************************** Unindexed PatternModel Tests ***************************************" << endl << endl;
 
         string rawcorpusfile = "/tmp/hamlet.txt";
-        ofstream * out = new ofstream(rawcorpusfile);
-        *out << string(poem);
-        out->close();
+        ofstream out(rawcorpusfile);
+        out << string(poem);
+        out.close();
 
         cerr << "Class encoding corpus..." << endl;
         int res = system("colibri-classencode /tmp/hamlet.txt");
@@ -1078,9 +1078,9 @@ int main( int argc, const char *argv[] ) {
 		cerr << "Tokens"; test(unindexedmodelNS.tokens(),354);
 
 
-		unindexedmodelNS.print(&std::cerr, classdecoder);
+		unindexedmodelNS.print(std::cerr, classdecoder);
 		cerr << endl;
-		unindexedmodelNS.report(&std::cerr);
+		unindexedmodelNS.report(std::cerr);
 		cerr << endl;
 
 		Pattern ngramNS = classencoder.buildpattern(string("or not to"), true);
@@ -1128,11 +1128,11 @@ int main( int argc, const char *argv[] ) {
         cerr << "Tokens"; test(unindexedmodel.tokens(),354);
 
 
-        unindexedmodel.print(&std::cerr, classdecoder);
+        unindexedmodel.print(std::cerr, classdecoder);
         cerr << endl;
-        unindexedmodel.report(&std::cerr);
+        unindexedmodel.report(std::cerr);
         cerr << endl;
-        unindexedmodel.histogram(&std::cerr);
+        unindexedmodel.histogram(std::cerr);
 
 
 
@@ -1153,7 +1153,7 @@ int main( int argc, const char *argv[] ) {
         PatternModel<uint32_t> unindexedmodel2 = PatternModel<uint32_t>(outputfilename, options);
         //options.DEBUG = false;
         cerr << "Outputting report again" << endl;
-        unindexedmodel2.report(&std::cerr);
+        unindexedmodel2.report(std::cerr);
         cerr << "Equal tokens? " ; test(unindexedmodel.tokens() == unindexedmodel2.tokens() );
         cerr << "Equal types? " ; test(unindexedmodel.types() == unindexedmodel2.types() );
         cerr << "Equal size? " ; test(unindexedmodel.size() == unindexedmodel2.size() );
@@ -1174,11 +1174,11 @@ int main( int argc, const char *argv[] ) {
         cerr << "Equal types? " ; test(unindexedmodel.types() == indexedmodel.types() );
         cerr << "Testing indexedmodel.has()"; test( indexedmodel.has(ngram) );
         cerr << "Testing indexedmodel.occurrencecount()"; test( indexedmodel.occurrencecount(ngram),6 );
-        indexedmodel.print(&std::cerr, classdecoder);
+        indexedmodel.print(std::cerr, classdecoder);
         cerr << endl;
-        indexedmodel.report(&std::cerr);
+        indexedmodel.report(std::cerr);
         cerr << endl;
-        indexedmodel.histogram(&std::cerr);
+        indexedmodel.histogram(std::cerr);
 
 		cerr << "Unigram Types"; test(indexedmodel.totalwordtypesingroup(0,1),45);
 
@@ -1205,22 +1205,22 @@ int main( int argc, const char *argv[] ) {
         cerr << "Extracting subsumption relations for " << querystring << endl;
 
         t_relationmap relations = indexedmodel.getsubchildren(patterndiesleep);
-        indexedmodel.outputrelations(ngram, relations, classdecoder, &cerr,"SUBSUMES");
+        indexedmodel.outputrelations(ngram, relations, classdecoder, cerr,"SUBSUMES");
 
 
         string querystring2  = "not";
         cerr << "Extracting subsumption relations for " << querystring2 << endl;
         Pattern patternnot = classencoder.buildpattern(querystring2, true);
         t_relationmap relations2 = indexedmodel.getsubparents(patternnot);
-        indexedmodel.outputrelations(patternnot, relations2, classdecoder, &cerr,"SUBSUMED-BY");
+        indexedmodel.outputrelations(patternnot, relations2, classdecoder, cerr,"SUBSUMED-BY");
 
 
         cerr << "Extracting neighbour relations for " << querystring2 << endl;
         t_relationmap relations3 = indexedmodel.getleftneighbours(patternnot);
-        indexedmodel.outputrelations(patternnot, relations3, classdecoder, &cerr,"RIGHT-OF");
+        indexedmodel.outputrelations(patternnot, relations3, classdecoder, cerr,"RIGHT-OF");
 
         t_relationmap relations4 = indexedmodel.getrightneighbours(patternnot);
-        indexedmodel.outputrelations(patternnot, relations4, classdecoder, &cerr,"LEFT-OF");
+        indexedmodel.outputrelations(patternnot, relations4, classdecoder, cerr,"LEFT-OF");
 
 
         string querystring3 = "To {*3*} to";
@@ -1228,12 +1228,12 @@ int main( int argc, const char *argv[] ) {
         cerr << "Extracting subsumption relations for " << querystring3 << endl;
 
         t_relationmap relations5 = indexedmodel.getsubchildren(skipgram);
-        indexedmodel.outputrelations(skipgram, relations5, classdecoder, &cerr,"SUBSUMES");
+        indexedmodel.outputrelations(skipgram, relations5, classdecoder, cerr,"SUBSUMES");
 
         cerr << "Extracting skipcontent relations for " << querystring3 << endl;
 
         t_relationmap relations6 = indexedmodel.getskipcontent(skipgram);
-        indexedmodel.outputrelations(skipgram, relations6, classdecoder, &cerr,"SKIPCONTENT");
+        indexedmodel.outputrelations(skipgram, relations6, classdecoder, cerr,"SKIPCONTENT");
         for (t_relationmap::iterator iter = relations6.begin(); iter != relations6.end(); ++iter) {
             cerr << " length check: "; test(iter->first.n(), 3);
             cerr << " type check: "; test(iter->first.category(), NGRAM);
@@ -1244,7 +1244,7 @@ int main( int argc, const char *argv[] ) {
         Pattern skipgram2 = classencoder.buildpattern("To {*} or {*} to {*} ."); //this is a pattern actually in the model (important!)
         cerr << "Extracting instances for " << skipgram2.tostring(classdecoder) << endl;
         t_relationmap relations7 = indexedmodel.getinstances(skipgram2);
-        indexedmodel.outputrelations(skipgram2, relations7, classdecoder, &cerr,"INSTANTIATED-BY");
+        indexedmodel.outputrelations(skipgram2, relations7, classdecoder, cerr,"INSTANTIATED-BY");
         for (t_relationmap::iterator iter = relations7.begin(); iter != relations7.end(); ++iter) {
             cerr << " length check: "; test(iter->first.n(), 7);
             cerr << " type check: "; test(iter->first.category(), NGRAM);
@@ -1265,7 +1265,7 @@ int main( int argc, const char *argv[] ) {
 
 
         cerr << "All relations for  " << querystring3 << " in one go" << endl;
-        indexedmodel.outputrelations(skipgram, classdecoder, &cerr);
+        indexedmodel.outputrelations(skipgram, classdecoder, cerr);
 
         cerr << endl;
 
@@ -1280,7 +1280,7 @@ int main( int argc, const char *argv[] ) {
         Pattern flexgram = skipgram.toflexgram();
         cerr << "Extracting skipcontent relations for flexgram " << flexgram.tostring(classdecoder) << endl;
         t_relationmap relations62 = indexedmodel.getskipcontent(flexgram);
-        indexedmodel.outputrelations(flexgram, relations62, classdecoder, &cerr,"SKIPCONTENT");
+        indexedmodel.outputrelations(flexgram, relations62, classdecoder, cerr,"SKIPCONTENT");
         for (t_relationmap::iterator iter = relations62.begin(); iter != relations62.end(); ++iter) {
             cerr << " type check: "; test(iter->first.category(), NGRAM);
         }
@@ -1289,7 +1289,7 @@ int main( int argc, const char *argv[] ) {
         Pattern flexgram2 = skipgram2.toflexgram(); //this is a pattern actually in the model (important!)
         t_relationmap relations72 = indexedmodel.getinstances(flexgram2);
         cerr << "Extracting instances for flexgram " << flexgram2.tostring(classdecoder) << endl;
-        indexedmodel.outputrelations(flexgram2, relations72, classdecoder, &cerr,"INSTANTIATED-BY");
+        indexedmodel.outputrelations(flexgram2, relations72, classdecoder, cerr,"INSTANTIATED-BY");
         for (t_relationmap::iterator iter = relations72.begin(); iter != relations72.end(); ++iter) {
             cerr << " length check: "; test(iter->first.n(), 7);
             cerr << " type check: "; test(iter->first.category(), NGRAM);
@@ -1320,9 +1320,9 @@ int main( int argc, const char *argv[] ) {
         }
 
         cerr << "outputting all" << endl;
-        indexedmodel.print(&std::cerr, classdecoder);
+        indexedmodel.print(std::cerr, classdecoder);
         cerr << "Outputting report again, now with flexgrams" << endl;
-        indexedmodel.report(&std::cerr);
+        indexedmodel.report(std::cerr);
 
 
 
@@ -1541,7 +1541,7 @@ int main( int argc, const char *argv[] ) {
 	//        std::string outputfilename = "/tmp/data.colibri.patternmodel";
         ppmodel.train(infilename, options);
         cerr << "Found " << ppmodel.size() << " patterns, " << ppmodel.types() << " types, " << ppmodel.tokens() << " tokens" << endl;
-        ppmodel.print(&std::cerr, classdecoder);
+        ppmodel.print(std::cerr, classdecoder);
 
         cerr << "Sanity check: ";
         unsigned int ui = 0;
@@ -1566,10 +1566,10 @@ int main( int argc, const char *argv[] ) {
         PatternPointer pskipgram = PatternPointer(skipgram);
         cerr << "Querying occurrencecount with PatternPointer (skipgram)" ; test(ppmodel.occurrencecount(pskipgram), 4);
         cerr << "Querying occurrencecount with Pattern (skipgram)" ; test(ppmodel.occurrencecount(skipgram), 4);
-        ppmodel.report(&std::cerr);
+        ppmodel.report(std::cerr);
         cerr << endl;
         cerr << endl;
-        ppmodel.histogram(&std::cerr);
+        ppmodel.histogram(std::cerr);
 
         cerr << "Training reference PatternModel" << endl;
         refmodel.train(infilename, options);
@@ -1620,7 +1620,7 @@ int main( int argc, const char *argv[] ) {
 	//        std::string outputfilename = "/tmp/data.colibri.patternmodel";
         ppmodel.train(infilename, options);
         cerr << "Found " << ppmodel.size() << " patterns, " << ppmodel.types() << " types, " << ppmodel.tokens() << " tokens" << endl;
-        ppmodel.print(&std::cerr, classdecoder);
+        ppmodel.print(std::cerr, classdecoder);
 
 	cerr << "Sanity check: ";
 	unsigned int ui = 0;
@@ -1645,10 +1645,10 @@ int main( int argc, const char *argv[] ) {
         PatternPointer pskipgram = PatternPointer(skipgram);
         cerr << "Querying occurrencecount with PatternPointer (skipgram)" ; test(ppmodel.occurrencecount(pskipgram), 4);
         cerr << "Querying occurrencecount with Pattern (skipgram)" ; test(ppmodel.occurrencecount(skipgram), 4);
-        ppmodel.report(&std::cerr);
+        ppmodel.report(std::cerr);
         cerr << endl;
         cerr << endl;
-        ppmodel.histogram(&std::cerr);
+        ppmodel.histogram(std::cerr);
 
         cerr << "Training reference PatternModel" << endl;
         refmodel.train(infilename, options);

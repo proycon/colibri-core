@@ -454,7 +454,7 @@ class PatternSetModel: public PatternSet<uint64_t>, public PatternModelInterface
 
         /**
          * Write a PatternSetModel to an output file. This is a wrapper around
-         * write(std::ostream *)
+         * write(std::ostream&)
          */
         void write(const std::string & filename) {
             std::ofstream out(filename);
@@ -1602,7 +1602,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         unsigned char type() const { return model_type; }
         unsigned char version() const { return model_version; }
 
-        void output(std::ostream *);
+        void output(std::ostream& );
 
 
         /**
@@ -2181,119 +2181,119 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param decoder The class decoder to use
          * @param instantiate Explicitly instantiate all skipgrams/flexgrams (default: false)
          */
-        virtual void print(std::ostream * out, ClassDecoder & decoder, bool instantiate=false) {
-            bool haveoutput = false;
-            for (PatternModel::iterator iter = this->begin(); iter != this->end(); ++iter) {
-                if (!haveoutput) {
-                    *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY" << std::endl;
-                    haveoutput = true;
-                }
-                const PatternType pattern = iter->first;
-                this->print(out, decoder, pattern, instantiate, true);
-            }
-            if (haveoutput) {
-                std::cerr << std::endl << "Legend:" << std::endl;
-                std::cerr << " - PATTERN    : The pattern, Gaps in skipgrams are represented as {*}. Variable-width gaps in flexgrams are shown using  {**}." << std::endl;
-                std::cerr << " - COUNT      : The occurrence count - the amount of times the pattern occurs in the data" << std::endl;
-                std::cerr << " - TOKENS     : The maximum number of tokens in the corpus that this pattern covers. *THIS IS JUST A MAXIMUM PROJECTION* rather than an exact number because your model is not indexed" << std::endl;
-                std::cerr << " - COVERAGE   : The maximum number of tokens covered, as a fraction of the total in the corpus (projection)" << std::endl;
-                std::cerr << " - CATEGORY   : The pattern type category (ngram,skipgram,flexgram)" << std::endl;
-                std::cerr << " - SIZE       : The size of the pattern (in tokens)" << std::endl;
-                std::cerr << " - FREQUENCY  : The frequency of the pattern *within it's pattern type category and size-class*." << std::endl;
-                std::cerr << " - REFERENCES : A space-delimited list of sentence:token position where the pattern occurs in the data. Sentences start at 1, tokens at 0" << std::endl;
-            }
-        }
+  virtual void print( std::ostream& out, ClassDecoder & decoder, bool instantiate=false) {
+    bool haveoutput = false;
+    for (PatternModel::iterator iter = this->begin(); iter != this->end(); ++iter) {
+      if (!haveoutput) {
+	out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY" << std::endl;
+	haveoutput = true;
+      }
+      const PatternType pattern = iter->first;
+      this->print(out, decoder, pattern, instantiate, true);
+    }
+    if (haveoutput) {
+      std::cerr << std::endl << "Legend:" << std::endl;
+      std::cerr << " - PATTERN    : The pattern, Gaps in skipgrams are represented as {*}. Variable-width gaps in flexgrams are shown using  {**}." << std::endl;
+      std::cerr << " - COUNT      : The occurrence count - the amount of times the pattern occurs in the data" << std::endl;
+      std::cerr << " - TOKENS     : The maximum number of tokens in the corpus that this pattern covers. *THIS IS JUST A MAXIMUM PROJECTION* rather than an exact number because your model is not indexed" << std::endl;
+      std::cerr << " - COVERAGE   : The maximum number of tokens covered, as a fraction of the total in the corpus (projection)" << std::endl;
+      std::cerr << " - CATEGORY   : The pattern type category (ngram,skipgram,flexgram)" << std::endl;
+      std::cerr << " - SIZE       : The size of the pattern (in tokens)" << std::endl;
+      std::cerr << " - FREQUENCY  : The frequency of the pattern *within it's pattern type category and size-class*." << std::endl;
+      std::cerr << " - REFERENCES : A space-delimited list of sentence:token position where the pattern occurs in the data. Sentences start at 1, tokens at 0" << std::endl;
+    }
+  }
 
-        /**
-         * Print the full reverse index, a mapping of indices and all patterns
-         * that occur at those positions.
-         * @param out The output stream
-         * @param decoder The class decoder to use
-         */
-        virtual void printreverseindex(std::ostream * out, ClassDecoder & decoder) {
-            if (!this->reverseindex) return;
-            for ( IndexedCorpus::iterator iter = reverseindex->begin(); iter != reverseindex->end(); ++iter) {
-                const IndexReference ref = iter.index();
-                std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref);
-                *out << ref.tostring();
-                for ( const auto& p : rindex ){
-		  *out << "\t" << p.tostring(decoder);
-                }
-                *out << "\n";
-            }
-            *out << std::endl;
-        }
-
-
-        /**
-         * Just an alias for print()
-         */
-        void printmodel(std::ostream * out, ClassDecoder & decoder) { //an alias because cython can't deal with a method named print
-            this->print(out, decoder);
-        }
-
-        /**
-         * Print for one pattern only.
-         * @param out The output stream
-         * @param decoder The class decoder to use
-         * @param instantiate Explicitly instantiate all skipgrams and flexgrams (for indexed models only, requires a reverse index)
-         * @param endline Output an end-of-line
-         */
-        virtual void print(std::ostream* out, ClassDecoder &decoder, const PatternType & pattern, bool=false, bool endline = true) {
-            const std::string pattern_s = pattern.tostring(decoder);
-            const unsigned int count = this->occurrencecount(pattern);
-            const unsigned int covcount = this->coveragecount(pattern);
-            const double cover = covcount / (double) this->tokens();
-            const double freq = this->frequency(pattern);
-            const int cat = pattern.category();
-            std::string cat_s;
-            if (cat == 1) {
-                cat_s = "ngram";
-            } else if (cat == 2) {
-                cat_s = "skipgram";
-            } else if (cat == 3) {
-                cat_s = "flexgram";
-            }
-            *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << cover << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq;
-            if (endline) *out << std::endl;
-            //*out << pattern.hash() << "\t" << (size_t) pattern.data << std::endl;
-        }
+  /**
+   * Print the full reverse index, a mapping of indices and all patterns
+   * that occur at those positions.
+   * @param out The output stream
+   * @param decoder The class decoder to use
+   */
+  virtual void printreverseindex( std::ostream&  out, ClassDecoder & decoder) {
+    if (!this->reverseindex) return;
+    for ( IndexedCorpus::iterator iter = reverseindex->begin(); iter != reverseindex->end(); ++iter) {
+      const IndexReference ref = iter.index();
+      std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref);
+      out << ref.tostring();
+      for ( const auto& p : rindex ){
+	out << "\t" << p.tostring(decoder);
+      }
+      out << "\n";
+    }
+    out << std::endl;
+  }
 
 
-        /**
-         * Alias for per-pattern print()
-         */
-        void printpattern(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool instantiate=false, bool endline = true) {  //another alias for cython who can't deal with methods named print
-            return this->print(out,decoder,pattern,instantiate,endline);
-        }
+  /**
+   * Just an alias for print()
+   */
+  void printmodel( std::ostream& out, ClassDecoder & decoder) { //an alias because cython can't deal with a method named print
+    this->print(out, decoder);
+  }
+
+  /**
+   * Print for one pattern only.
+   * @param out The output stream
+   * @param decoder The class decoder to use
+   * @param instantiate Explicitly instantiate all skipgrams and flexgrams (for indexed models only, requires a reverse index)
+   * @param endline Output an end-of-line
+   */
+  virtual void print( std::ostream& out, ClassDecoder &decoder, const PatternType & pattern, bool=false, bool endline = true) {
+    const std::string pattern_s = pattern.tostring(decoder);
+    const unsigned int count = this->occurrencecount(pattern);
+    const unsigned int covcount = this->coveragecount(pattern);
+    const double cover = covcount / (double) this->tokens();
+    const double freq = this->frequency(pattern);
+    const int cat = pattern.category();
+    std::string cat_s;
+    if (cat == 1) {
+      cat_s = "ngram";
+    } else if (cat == 2) {
+      cat_s = "skipgram";
+    } else if (cat == 3) {
+      cat_s = "flexgram";
+    }
+    out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << cover << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq;
+    if (endline) out << std::endl;
+    //out << pattern.hash() << "\t" << (size_t) pattern.data << std::endl;
+  }
 
 
-        /**
-         * Generate a histogram for the occurrence count of patterns
-         * @param hist This will contain the to-be-computed histogram
-         * @param threshold Include only patterns at or above this occurrence threshold
-         * @param cap Include only this many of the top frequencies (0=unconstrained)
-         * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to filter or to 0 to cover all
-         * @param size Set to any value above zero to only include only patterns of the specified length. (0 for all sizes)
-         */
-        void histogram(std::map<unsigned int,unsigned int> & hist, unsigned int threshold = 0, unsigned int cap = 0, int category = 0, unsigned int size = 0) {
-            for (PatternModel::iterator iter = this->begin(); iter != this->end(); ++iter) {
-                const PatternType pattern = iter->first;
-                if (((category != 0) && (pattern.category() != category)) || ((size != 0) && (size != pattern.size()))) continue;
-                unsigned int c = this->occurrencecount(pattern);
-                if (c >= threshold) hist[c]++;
-            }
-            if (cap > 0) {
-                unsigned int sum = 0;
-                std::map<unsigned int,unsigned int>::reverse_iterator iter = hist.rbegin();
-                while ((sum < cap) && (iter != hist.rend())) {
-                    ++iter;
-                    sum += iter->second;
-                }
-                //delete everything else
-                hist.erase(iter.base(), hist.end());
-            }
-        }
+  /**
+   * Alias for per-pattern print()
+   */
+  void printpattern( std::ostream& out, ClassDecoder &decoder, const Pattern & pattern, bool instantiate=false, bool endline = true) {  //another alias for cython who can't deal with methods named print
+    return this->print(out,decoder,pattern,instantiate,endline);
+  }
+
+
+  /**
+   * Generate a histogram for the occurrence count of patterns
+   * @param hist This will contain the to-be-computed histogram
+   * @param threshold Include only patterns at or above this occurrence threshold
+   * @param cap Include only this many of the top frequencies (0=unconstrained)
+   * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to filter or to 0 to cover all
+   * @param size Set to any value above zero to only include only patterns of the specified length. (0 for all sizes)
+   */
+  void histogram(std::map<unsigned int,unsigned int> & hist, unsigned int threshold = 0, unsigned int cap = 0, int category = 0, unsigned int size = 0) {
+    for (PatternModel::iterator iter = this->begin(); iter != this->end(); ++iter) {
+      const PatternType pattern = iter->first;
+      if (((category != 0) && (pattern.category() != category)) || ((size != 0) && (size != pattern.size()))) continue;
+      unsigned int c = this->occurrencecount(pattern);
+      if (c >= threshold) hist[c]++;
+    }
+    if (cap > 0) {
+      unsigned int sum = 0;
+      std::map<unsigned int,unsigned int>::reverse_iterator iter = hist.rbegin();
+      while ((sum < cap) && (iter != hist.rend())) {
+	++iter;
+	sum += iter->second;
+      }
+      //delete everything else
+      hist.erase(iter.base(), hist.end());
+    }
+  }
 
         unsigned int topthreshold(int amount, int category=0, int size=0) {
             //compute occurrence threshold that holds the top $amount occurrences
@@ -2316,172 +2316,170 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param category Set to any value of PatternCategory (NGRAM,SKIPGRAM,FLEXGRAM) to filter or to 0 to cover all
          * @param size Set to any value above zero to only include only patterns of the specified length. (0 for all sizes)
          */
-        void histogram(std::ostream * OUT, unsigned int threshold = 0, unsigned int cap = 0 , int category = 0, unsigned int size = 0) {
-            std::map<unsigned int,unsigned int> hist;
-            histogram(hist,threshold,cap,category,size);
-            *OUT << "HISTOGRAM" << std::endl;
-            *OUT << "------------------------------" << std::endl;
-            *OUT << "OCCURRENCES\tPATTERNS" << std::endl;
-            for ( const auto& iter : hist ){
-                *OUT << iter.first << "\t" << iter.second << std::endl;
-            }
-        }
+  void histogram( std::ostream& OUT, unsigned int threshold = 0, unsigned int cap = 0 , int category = 0, unsigned int size = 0) {
+    std::map<unsigned int,unsigned int> hist;
+    histogram(hist,threshold,cap,category,size);
+    OUT << "HISTOGRAM" << std::endl;
+    OUT << "------------------------------" << std::endl;
+    OUT << "OCCURRENCES\tPATTERNS" << std::endl;
+    for ( const auto& iter : hist ){
+      OUT << iter.first << "\t" << iter.second << std::endl;
+    }
+  }
 
-        /**
-         * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
-         */
-        void info(std::ostream * OUT) {
-            if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
-                *OUT << "Type: indexed" << std::endl;
-            } else if (this->getmodeltype() == UNINDEXEDPATTERNMODEL) {
-                *OUT << "Type: unindexed" << std::endl;
-            } else {
-                //should never happen
-                *OUT << "Type: unknown" << std::endl;
-            }
-            *OUT << "Total tokens: " << this->totaltokens << std::endl;
-            *OUT << "Total word types: " << this->totaltypes << std::endl;
-            *OUT << "Types patterns loaded: " << this->size() << std::endl;
-            *OUT << "Min n: " << this->minn << std::endl;
-            *OUT << "Max n: " << this->maxn << std::endl;
-            if (this->reverseindex)  {
-                *OUT << "Reverse index: yes" << std::endl;
-                *OUT << "References in reverse index: " << this->reverseindex->size() << std::endl;
-            } else {
-                *OUT << "Reverse index: no" << std::endl;
-            }
-            *OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
-            *OUT << "Size of ValueType: " << sizeof(ValueType) << " byte" << std::endl;
-            size_t totalkeybs = 0;
-            size_t totalvaluebs = 0;
-            for (PatternModel::iterator iter = this->begin(); iter != this->end(); ++iter) {
-                const PatternType pattern = iter->first;
-                totalkeybs += sizeof(PatternType) + pattern.bytesize();
-                totalvaluebs += sizeof(ValueType);
-            }
-            *OUT << "Total key bytesize (patterns): " <<  totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
-            *OUT << "Total value bytesize (counts/index): " <<  totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
-            *OUT << "Mean key bytesize: " << (totalkeybs / (float) this->size()) << std::endl;
-            *OUT << "Mean value bytesize: " << (totalvaluebs / (float) this->size()) << std::endl;
+  /**
+   * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
+   */
+  void info( std::ostream& OUT) {
+    if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
+      OUT << "Type: indexed" << std::endl;
+    } else if (this->getmodeltype() == UNINDEXEDPATTERNMODEL) {
+      OUT << "Type: unindexed" << std::endl;
+    } else {
+      //should never happen
+      OUT << "Type: unknown" << std::endl;
+    }
+    OUT << "Total tokens: " << this->totaltokens << std::endl;
+    OUT << "Total word types: " << this->totaltypes << std::endl;
+    OUT << "Types patterns loaded: " << this->size() << std::endl;
+    OUT << "Min n: " << this->minn << std::endl;
+    OUT << "Max n: " << this->maxn << std::endl;
+    if (this->reverseindex)  {
+      OUT << "Reverse index: yes" << std::endl;
+      OUT << "References in reverse index: " << this->reverseindex->size() << std::endl;
+    } else {
+      OUT << "Reverse index: no" << std::endl;
+    }
+    OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
+    OUT << "Size of ValueType: " << sizeof(ValueType) << " byte" << std::endl;
+    size_t totalkeybs = 0;
+    size_t totalvaluebs = 0;
+    for (PatternModel::iterator iter = this->begin(); iter != this->end(); ++iter) {
+      const PatternType pattern = iter->first;
+      totalkeybs += sizeof(PatternType) + pattern.bytesize();
+      totalvaluebs += sizeof(ValueType);
+    }
+    OUT << "Total key bytesize (patterns): " <<  totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
+    OUT << "Total value bytesize (counts/index): " <<  totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
+    OUT << "Mean key bytesize: " << (totalkeybs / (float) this->size()) << std::endl;
+    OUT << "Mean value bytesize: " << (totalvaluebs / (float) this->size()) << std::endl;
 
-            size_t ri_totalkeybs = 0;
-            size_t ri_totalvaluebs = 0;
-            if (this->reverseindex) {
-	      for ( auto iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
-		ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
-		ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
-	      }
-	      *OUT << "Total key bytesize in reverse index (references): " <<  ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
-	      *OUT << "Total value bytesize in reverse index (patterns): " <<  ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
-            }
-
-
-            const size_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
-            *OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
-        }
-
-        /**
-         * Output an elaborate statistical report to the output stream.
-         * Computes on first call when necessary.
-         */
-        void report(std::ostream * OUT, bool nocoverage=false) {
-            if ((!this->cache_processed_all) && (!this->data.empty()) ) {
-                if (nocoverage) {
-                    std::cerr << "Computing statistics without coverage information..." << std::endl;
-                    this->computestats();
-                } else {
-                    std::cerr << "Computing statistics with coverage information (may take a while)..." << std::endl;
-                    this->computecoveragestats();
-                }
-            }
-            *OUT << std::setiosflags(std::ios::fixed) << std::setprecision(4) << std::endl;
-            *OUT << "REPORT" << std::endl;
-            if ((this->getmodeltype() == UNINDEXEDPATTERNMODEL) && (!nocoverage)) {
-                *OUT << "   Warning: Model is unindexed, token coverage counts are mere maximal projections" << std::endl;
-                *OUT << "            assuming no overlap at all!!! Use an indexed model for accurate coverage counts" << std::endl;
-            }
-            *OUT << "----------------------------------" << std::endl;
-            *OUT << "                          " << std::setw(15) << "PATTERNS" << std::setw(15) << "TOKENS" << std::setw(15) << "COVERAGE" << std::setw(15) << "TYPES" << std::setw(15) << std::endl;
-            *OUT << "Total:                    " << std::setw(15) << "-" << std::setw(15) << this->tokens() << std::setw(15) << "-" << std::setw(15) << this->types() <<  std::endl;
-
-            if (!nocoverage) {
-                size_t coveredtypes = totalwordtypesingroup(0,0);  //will also work when no unigrams in model!
-                size_t coveredtokens = totaltokensingroup(0,0);
-
-                if (coveredtokens > this->tokens()) coveredtokens = this->tokens();
-                size_t uncoveredtokens;
-		if ( this->tokens() >= coveredtokens ){
-		  uncoveredtokens = this->tokens() - coveredtokens;
-		}
-                else {
-		  uncoveredtokens = 0;
-		}
-                *OUT << "Uncovered:                " << std::setw(15) << "-" << std::setw(15) << uncoveredtokens << std::setw(15) << uncoveredtokens / (double) this->tokens() << std::setw(15) << this->types() - coveredtypes <<  std::endl;
-                *OUT << "Covered:                  " << std::setw(15) << this->size() << std::setw(15) << coveredtokens << std::setw(15) << coveredtokens / (double) this->tokens() <<  std::setw(15) << coveredtypes <<  std::endl << std::endl;
-            } else {
-                *OUT << std:: endl;
-            }
+    size_t ri_totalkeybs = 0;
+    size_t ri_totalvaluebs = 0;
+    if (this->reverseindex) {
+      for ( auto iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
+	ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
+	ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
+      }
+      OUT << "Total key bytesize in reverse index (references): " <<  ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
+      OUT << "Total value bytesize in reverse index (patterns): " <<  ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
+    }
 
 
+    const size_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
+    OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
+  }
 
-            bool haveoutput = false;
-            for ( const auto& c : cache_categories ){
-	      if (cache_grouptotalpatterns.count(c))
-		for ( const auto& n : cache_n ){
-		  if (cache_grouptotalpatterns[c].count(n)) {
-		    if (!haveoutput) {
-		      //output headers
-		      *OUT << std::setw(15) << "CATEGORY" << std::setw(15) << "N (SIZE) "<< std::setw(15) << "PATTERNS";
-		      if ((this->getmodeltype() != UNINDEXEDPATTERNMODEL) && (!nocoverage)) *OUT << std::setw(15) << "TOKENS" << std::setw(15) << "COVERAGE";
-		      if (!nocoverage) *OUT << std::setw(15) << "TYPES";
-		      *OUT << std::setw(15) << "OCCURRENCES" << std::endl;
-		      haveoutput = true;
-		    }
-		    //category
-		    if (c == 0) {
-		      *OUT << std::setw(15) << "all";
-		    } else if (c == NGRAM) {
-		      *OUT << std::setw(15) << "n-gram";
-		    } else if (c == SKIPGRAM) {
-		      *OUT << std::setw(15) << "skipgram";
-		    } else if (c == FLEXGRAM) {
-		      *OUT << std::setw(15) << "flexgram";
-		    }
-		    //size
-		    if (n == 0) {
-		      *OUT << std::setw(15) << "all";
-		    } else {
-		      *OUT << std::setw(15) << n;
-		    }
-		    //patterns
-		    *OUT << std::setw(15) << cache_grouptotalpatterns[c][n];
-		    if ((this->getmodeltype() != UNINDEXEDPATTERNMODEL) && (!nocoverage)) {
-		      //tokens
-		      *OUT << std::setw(15) << cache_grouptotaltokens[c][n];
-		      //coverage
-		      *OUT << std::setw(15) << cache_grouptotaltokens[c][n] / (double) this->tokens();
-		    }
-		    if (!nocoverage) {
-		      //types
-		      *OUT << std::setw(15) << cache_grouptotalwordtypes[c][n];
-		    }
-		    //occurrences
-		    *OUT << std::setw(15) << cache_grouptotal[c][n] << std::endl;;
-		  }
-                }
-            }
+  /**
+   * Output an elaborate statistical report to the output stream.
+   * Computes on first call when necessary.
+   */
+  void report(std::ostream& OUT, bool nocoverage=false) {
+    if ((!this->cache_processed_all) && (!this->data.empty()) ) {
+      if (nocoverage) {
+	std::cerr << "Computing statistics without coverage information..." << std::endl;
+	this->computestats();
+      } else {
+	std::cerr << "Computing statistics with coverage information (may take a while)..." << std::endl;
+	this->computecoveragestats();
+      }
+    }
+    OUT << std::setiosflags(std::ios::fixed) << std::setprecision(4) << std::endl;
+    OUT << "REPORT" << std::endl;
+    if ((this->getmodeltype() == UNINDEXEDPATTERNMODEL) && (!nocoverage)) {
+      OUT << "   Warning: Model is unindexed, token coverage counts are mere maximal projections" << std::endl;
+      OUT << "            assuming no overlap at all!!! Use an indexed model for accurate coverage counts" << std::endl;
+    }
+    OUT << "----------------------------------" << std::endl;
+    OUT << "                          " << std::setw(15) << "PATTERNS" << std::setw(15) << "TOKENS" << std::setw(15) << "COVERAGE" << std::setw(15) << "TYPES" << std::setw(15) << std::endl;
+    OUT << "Total:                    " << std::setw(15) << "-" << std::setw(15) << this->tokens() << std::setw(15) << "-" << std::setw(15) << this->types() <<  std::endl;
 
-            if (haveoutput) {
-                std::cerr << std::endl << "Legend:" << std::endl;
-                std::cerr << " - PATTERNS    : The number of distinct patterns within the group" << std::endl;
-                if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) {
-                    std::cerr << " - TOKENS      : The number of tokens that is covered by the patterns in the group." << std::endl;
-                    std::cerr << " - COVERAGE    : The number of tokens covered, as a fraction of the total in the corpus" << std::endl;
-                }
-                std::cerr << " - TYPES       : The number of unique *word/unigram* types in this group" << std::endl;
-                std::cerr << " - OCCURRENCES : The total number of occurrences of the patterns in this group" << std::endl;
-            }
-        }
+    if (!nocoverage) {
+      size_t coveredtypes = totalwordtypesingroup(0,0);  //will also work when no unigrams in model!
+      size_t coveredtokens = totaltokensingroup(0,0);
+
+      if (coveredtokens > this->tokens()) coveredtokens = this->tokens();
+      size_t uncoveredtokens;
+      if ( this->tokens() >= coveredtokens ){
+	uncoveredtokens = this->tokens() - coveredtokens;
+      }
+      else {
+	uncoveredtokens = 0;
+      }
+      OUT << "Uncovered:                " << std::setw(15) << "-" << std::setw(15) << uncoveredtokens << std::setw(15) << uncoveredtokens / (double) this->tokens() << std::setw(15) << this->types() - coveredtypes <<  std::endl;
+      OUT << "Covered:                  " << std::setw(15) << this->size() << std::setw(15) << coveredtokens << std::setw(15) << coveredtokens / (double) this->tokens() <<  std::setw(15) << coveredtypes <<  std::endl << std::endl;
+    } else {
+      OUT << std:: endl;
+    }
+
+    bool haveoutput = false;
+    for ( const auto& c : cache_categories ){
+      if (cache_grouptotalpatterns.count(c))
+	for ( const auto& n : cache_n ){
+	  if (cache_grouptotalpatterns[c].count(n)) {
+	    if (!haveoutput) {
+	      //output headers
+	      OUT << std::setw(15) << "CATEGORY" << std::setw(15) << "N (SIZE) "<< std::setw(15) << "PATTERNS";
+	      if ((this->getmodeltype() != UNINDEXEDPATTERNMODEL) && (!nocoverage)) OUT << std::setw(15) << "TOKENS" << std::setw(15) << "COVERAGE";
+	      if (!nocoverage) OUT << std::setw(15) << "TYPES";
+	      OUT << std::setw(15) << "OCCURRENCES" << std::endl;
+	      haveoutput = true;
+	    }
+	    //category
+	    if (c == 0) {
+	      OUT << std::setw(15) << "all";
+	    } else if (c == NGRAM) {
+	      OUT << std::setw(15) << "n-gram";
+	    } else if (c == SKIPGRAM) {
+	      OUT << std::setw(15) << "skipgram";
+	    } else if (c == FLEXGRAM) {
+	      OUT << std::setw(15) << "flexgram";
+	    }
+	    //size
+	    if (n == 0) {
+	      OUT << std::setw(15) << "all";
+	    } else {
+	      OUT << std::setw(15) << n;
+	    }
+	    //patterns
+	    OUT << std::setw(15) << cache_grouptotalpatterns[c][n];
+	    if ((this->getmodeltype() != UNINDEXEDPATTERNMODEL) && (!nocoverage)) {
+	      //tokens
+	      OUT << std::setw(15) << cache_grouptotaltokens[c][n];
+	      //coverage
+	      OUT << std::setw(15) << cache_grouptotaltokens[c][n] / (double) this->tokens();
+	    }
+	    if (!nocoverage) {
+	      //types
+	      OUT << std::setw(15) << cache_grouptotalwordtypes[c][n];
+	    }
+	    //occurrences
+	    OUT << std::setw(15) << cache_grouptotal[c][n] << std::endl;;
+	  }
+	}
+    }
+
+    if (haveoutput) {
+      std::cerr << std::endl << "Legend:" << std::endl;
+      std::cerr << " - PATTERNS    : The number of distinct patterns within the group" << std::endl;
+      if (this->getmodeltype() != UNINDEXEDPATTERNMODEL) {
+	std::cerr << " - TOKENS      : The number of tokens that is covered by the patterns in the group." << std::endl;
+	std::cerr << " - COVERAGE    : The number of tokens covered, as a fraction of the total in the corpus" << std::endl;
+      }
+      std::cerr << " - TYPES       : The number of unique *word/unigram* types in this group" << std::endl;
+      std::cerr << " - OCCURRENCES : The total number of occurrences of the patterns in this group" << std::endl;
+    }
+  }
 
 
         /**
@@ -2510,7 +2508,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
-        virtual void outputrelations(const PatternPointer & , ClassDecoder & , std::ostream *, const std::string = "", bool=true) {} //does nothing for unindexed models
+        virtual void outputrelations(const PatternPointer & , ClassDecoder & , std::ostream&, const std::string = "", bool=true) {} //does nothing for unindexed models
         virtual t_relationmap getsubchildren(const PatternPointer & , unsigned int = 0, int = 0, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getsubparents(const PatternPointer &, unsigned int = 0, int = 0, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap gettemplates(const PatternPointer &, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
@@ -2521,8 +2519,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual t_relationmap_double getnpmi(const Pattern & , double ) { return t_relationmap_double(); } //does nothing for unindexed models
         virtual int computeflexgrams_fromskipgrams() { return 0; }//does nothing for unindexed models
         virtual int computeflexgrams_fromcooc(double) {return 0; }//does nothing for unindexed models
-        virtual void outputcooc_npmi(std::ostream *, ClassDecoder& , double) {}
-        virtual void outputcooc(std::ostream *, ClassDecoder&, double) {}
+        virtual void outputcooc_npmi(std::ostream&, ClassDecoder& , double) {}
+        virtual void outputcooc(std::ostream&, ClassDecoder&, double) {}
 
         /**
          * Get the instance of the pattern at the specified position
@@ -2600,7 +2598,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
     * @param corpus Pointer to the loaded corpus, used as a reverse index.
     */
-    IndexedPatternModel<MapType,PatternType>(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>(){ //load from file
+    IndexedPatternModel<MapType,PatternType>( std::istream& f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>(){ //load from file
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
         if (corpus) {
@@ -2706,56 +2704,56 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
   /**
    * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
    */
-  void info(std::ostream * OUT) {
+  void info(std::ostream&  OUT) {
     if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
-            *OUT << "Type: indexed" << std::endl;
-        } else if (this->getmodeltype() == UNINDEXEDPATTERNMODEL) {
-            *OUT << "Type: unindexed" << std::endl;
-        } else {
-            //should never happen
-            *OUT << "Type: unknown" << std::endl;
-        }
-        *OUT << "Total tokens: " << this->totaltokens << std::endl;
-        *OUT << "Total word types: " << this->totaltypes << std::endl;
-        *OUT << "Types patterns loaded: " << this->size() << std::endl;
-        *OUT << "Min n: " << this->minn << std::endl;
-        *OUT << "Max n: " << this->maxn << std::endl;
-        if (this->reverseindex)  {
-            *OUT << "Reverse index: yes" << std::endl;
-            *OUT << "References in reverse index: " << this->reverseindex->size() << std::endl;
-        } else {
-            *OUT << "Reverse index: no" << std::endl;
-        }
-        *OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
-        size_t totalkeybs = 0;
-        size_t totalvaluebs = 0;
-        size_t indexlengthsum = 0;
-        for ( auto iter = this->begin(); iter != this->end(); ++iter) {
-            const Pattern pattern = iter->first;
-            totalkeybs += sizeof(Pattern) + pattern.bytesize();
-            totalvaluebs += iter->second.size() * sizeof(IndexReference); //sentence + token;
-            indexlengthsum += iter->second.size();
-        }
-        *OUT << "Total key bytesize (patterns): " << totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
-        *OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
-        *OUT << "Mean key bytesize: " << (totalkeybs / (float) this->size()) << std::endl;
-        *OUT << "Mean value bytesize: " << (totalvaluebs / (float) this->size()) << std::endl;
-        *OUT << "Mean index length (ttr): " << (indexlengthsum / (float) this->size()) << std::endl;
-
-        size_t ri_totalkeybs = 0;
-        size_t ri_totalvaluebs = 0;
-        if (this->reverseindex) {
-	  for ( auto iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
-	    ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
-	    ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
-	  }
-	  *OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
-	  *OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
-        }
-
-        const size_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
-        *OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
+      OUT << "Type: indexed" << std::endl;
+    } else if (this->getmodeltype() == UNINDEXEDPATTERNMODEL) {
+      OUT << "Type: unindexed" << std::endl;
+    } else {
+      //should never happen
+      OUT << "Type: unknown" << std::endl;
     }
+    OUT << "Total tokens: " << this->totaltokens << std::endl;
+    OUT << "Total word types: " << this->totaltypes << std::endl;
+    OUT << "Types patterns loaded: " << this->size() << std::endl;
+    OUT << "Min n: " << this->minn << std::endl;
+    OUT << "Max n: " << this->maxn << std::endl;
+    if (this->reverseindex)  {
+      OUT << "Reverse index: yes" << std::endl;
+      OUT << "References in reverse index: " << this->reverseindex->size() << std::endl;
+    } else {
+      OUT << "Reverse index: no" << std::endl;
+    }
+    OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
+    size_t totalkeybs = 0;
+    size_t totalvaluebs = 0;
+    size_t indexlengthsum = 0;
+    for ( auto iter = this->begin(); iter != this->end(); ++iter) {
+      const Pattern pattern = iter->first;
+      totalkeybs += sizeof(Pattern) + pattern.bytesize();
+      totalvaluebs += iter->second.size() * sizeof(IndexReference); //sentence + token;
+      indexlengthsum += iter->second.size();
+    }
+    OUT << "Total key bytesize (patterns): " << totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
+    OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
+    OUT << "Mean key bytesize: " << (totalkeybs / (float) this->size()) << std::endl;
+    OUT << "Mean value bytesize: " << (totalvaluebs / (float) this->size()) << std::endl;
+    OUT << "Mean index length (ttr): " << (indexlengthsum / (float) this->size()) << std::endl;
+
+    size_t ri_totalkeybs = 0;
+    size_t ri_totalvaluebs = 0;
+    if (this->reverseindex) {
+      for ( auto iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
+	ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
+	ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
+      }
+      OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
+      OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
+    }
+
+    const size_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
+    OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
+  }
 
 
     /**
@@ -2765,62 +2763,64 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * @param decoder The class decoder to use
     * @param instantiate Explicitly instantiate all skipgrams/flexgrams (default: false)
     */
-    void print(std::ostream * out, ClassDecoder & decoder, bool instantiate=false) override {
-        bool haveoutput = false;
-        for (typename PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::iterator iter = this->begin(); iter != this->end(); ++iter) {
-            if (!haveoutput) {
-                *out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY\tREFERENCES" << std::endl;
-                haveoutput = true;
-            }
-            const PatternPointer pattern = iter->first;
-            this->print(out, decoder, pattern, instantiate, true);
-        }
-        if (haveoutput) {
-            std::cerr << std::endl << "Legend:" << std::endl;
-            std::cerr << " - PATTERN    : The pattern, Gaps in skipgrams are represented as {*}. Variable-width gaps in flexgrams are shown using {**}." << std::endl;
-            std::cerr << " - COUNT      : The occurrence count - the amount of times the pattern occurs in the data" << std::endl;
-            std::cerr << " - TOKENS     : The number of tokens in the corpus that this pattern covers" << std::endl;
-            std::cerr << " - COVERAGE   : The number of tokens covered, as a fraction of the total in the corpus" << std::endl;
-            std::cerr << " - CATEGORY   : The pattern type category (ngram,skipgram,flexgram)" << std::endl;
-            std::cerr << " - SIZE       : The size of the pattern (in tokens)" << std::endl;
-            std::cerr << " - FREQUENCY  : The frequency of the pattern *within it's pattern type category and size-class*." << std::endl;
-            std::cerr << " - REFERENCES : A space-delimited list of sentence:token position where the pattern occurs in the data. Sentences start at 1, tokens at 0" << std::endl;
-        }
+  void print( std::ostream& out, ClassDecoder & decoder, bool instantiate=false) override {
+    bool haveoutput = false;
+    for (typename PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>::iterator iter = this->begin(); iter != this->end(); ++iter) {
+      if (!haveoutput) {
+	out << "PATTERN\tCOUNT\tTOKENS\tCOVERAGE\tCATEGORY\tSIZE\tFREQUENCY\tREFERENCES" << std::endl;
+	haveoutput = true;
+      }
+      const PatternPointer pattern = iter->first;
+      this->print(out, decoder, pattern, instantiate, true);
     }
-
-    void print(std::ostream* out, ClassDecoder &decoder, const PatternPointer & pattern, bool instantiate=false, bool endline = true) {
-            const std::string pattern_s = pattern.tostring(decoder);
-            const size_t count = this->occurrencecount(pattern);
-            const size_t covcount = this->coveragecount(pattern);
-            const double coverage = covcount / (double) this->tokens();
-            const double freq = this->frequency(pattern);
-            const PatternCategory cat = pattern.category();
-            std::string cat_s;
-            if (cat == 1) {
-                cat_s = "ngram";
-            } else if (cat == 2) {
-                cat_s = "skipgram";
-            } else if (cat == 3) {
-                cat_s = "flexgram";
-            }
-            *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq << "\t";
-            IndexedData * data = this->getdata(pattern);
-            unsigned int i = 0;
-            for ( auto iter2 = data->begin(); iter2 != data->end(); ++iter2) {
-                ++i;
-                *out << iter2->tostring();
-                if (cat != NGRAM) {
-                    if ((this->reverseindex != NULL) && (instantiate)) {
-                        const PatternPointer instance = this->reverseindex->findpattern(*iter2,pattern);
-                        *out << "[" << instance.tostring(decoder) <<  "]";
-                    }
-                }
-                if (i < count) *out << " ";
-            }
-            if (endline) *out << std::endl;
+    if (haveoutput) {
+      std::cerr << std::endl << "Legend:" << std::endl;
+      std::cerr << " - PATTERN    : The pattern, Gaps in skipgrams are represented as {*}. Variable-width gaps in flexgrams are shown using {**}." << std::endl;
+      std::cerr << " - COUNT      : The occurrence count - the amount of times the pattern occurs in the data" << std::endl;
+      std::cerr << " - TOKENS     : The number of tokens in the corpus that this pattern covers" << std::endl;
+      std::cerr << " - COVERAGE   : The number of tokens covered, as a fraction of the total in the corpus" << std::endl;
+      std::cerr << " - CATEGORY   : The pattern type category (ngram,skipgram,flexgram)" << std::endl;
+      std::cerr << " - SIZE       : The size of the pattern (in tokens)" << std::endl;
+      std::cerr << " - FREQUENCY  : The frequency of the pattern *within it's pattern type category and size-class*." << std::endl;
+      std::cerr << " - REFERENCES : A space-delimited list of sentence:token position where the pattern occurs in the data. Sentences start at 1, tokens at 0" << std::endl;
     }
+  }
 
-
+  void print( std::ostream& out, ClassDecoder &decoder, const PatternPointer & pattern, bool instantiate=false, bool endline = true) {
+    const std::string pattern_s = pattern.tostring(decoder);
+    const size_t count = this->occurrencecount(pattern);
+    const size_t covcount = this->coveragecount(pattern);
+    const double coverage = covcount / (double) this->tokens();
+    const double freq = this->frequency(pattern);
+    const PatternCategory cat = pattern.category();
+    std::string cat_s;
+    if (cat == 1) {
+      cat_s = "ngram";
+    } else if (cat == 2) {
+      cat_s = "skipgram";
+    } else if (cat == 3) {
+      cat_s = "flexgram";
+    }
+    out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq << "\t";
+    IndexedData * data = this->getdata(pattern);
+    unsigned int i = 0;
+    for ( auto iter2 = data->begin(); iter2 != data->end(); ++iter2) {
+      ++i;
+      out << iter2->tostring();
+      if (cat != NGRAM) {
+	if ((this->reverseindex != NULL) && (instantiate)) {
+	  const PatternPointer instance = this->reverseindex->findpattern(*iter2,pattern);
+	  out << "[" << instance.tostring(decoder) <<  "]";
+	}
+      }
+      if (i < count) {
+	out << " ";
+      }
+    }
+    if (endline) {
+      out << std::endl;
+    }
+  }
 
 
     /**
@@ -3454,21 +3454,21 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * @param label A label to insert between relations (defaults to: RELATED-TO)
      */
     void outputrelations(const PatternPointer & pattern,
-			 const t_relationmap & relations, const ClassDecoder & classdecoder, std::ostream *OUT, const std::string& label = "RELATED-TO") {
-        int total = 0;
-        for ( const auto& iter : relations ){
-	  total += iter.second;
-        }
-        if (total == 0) return;
-        double total_f = total;
-        const std::string pattern_s = pattern.tostring(classdecoder);
-        for ( const auto& iter : relations ){
-	  const PatternPointer pattern2 = iter.first;
-	  *OUT << "\t" << pattern_s << "\t" << label
-	       << "\t" << pattern2.tostring(classdecoder)
-	       << "\t" << iter.second << "\t" << iter.second / total_f
-	       << "\t" << this->occurrencecount(pattern2) << std::endl;
-        }
+			 const t_relationmap & relations, const ClassDecoder & classdecoder, std::ostream& OUT, const std::string& label = "RELATED-TO") {
+      int total = 0;
+      for ( const auto& iter : relations ){
+	total += iter.second;
+      }
+      if (total == 0) return;
+      double total_f = total;
+      const std::string pattern_s = pattern.tostring(classdecoder);
+      for ( const auto& iter : relations ){
+	const PatternPointer pattern2 = iter.first;
+	OUT << "\t" << pattern_s << "\t" << label
+	    << "\t" << pattern2.tostring(classdecoder)
+	    << "\t" << iter.second << "\t" << iter.second / total_f
+	    << "\t" << this->occurrencecount(pattern2) << std::endl;
+      }
     }
 
     /**
@@ -3481,46 +3481,47 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * instances, templates
      * @param outputheader Output a header (default: true)
      */
-    void outputrelations(const PatternPointer & pattern, const ClassDecoder & classdecoder, std::ostream * OUT, const std::string& filter="", bool outputheader=true) {
-        if (outputheader) *OUT << "#\tPATTERN1\tRELATION\tPATTERN2\tREL.COUNT\tREL.FREQUENCY\tCOUNT2" << std::endl;
+    void outputrelations(const PatternPointer & pattern, const ClassDecoder & classdecoder, std::ostream&  OUT, const std::string& filter="", bool outputheader=true) {
+      if (outputheader) {
+	OUT << "#\tPATTERN1\tRELATION\tPATTERN2\tREL.COUNT\tREL.FREQUENCY\tCOUNT2" << std::endl;
+      }
 
-
-        if (filter.empty() || (filter == "subparents") || (filter == "subsumed")) {
-            t_relationmap relations = this->getsubparents(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");
-        }
-        if (filter.empty() || (filter == "subchildren") || (filter == "subsumes")){
-            t_relationmap relations = this->getsubchildren(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMES");
-        }
-        if (filter.empty() || (filter == "rightneighbours") || (filter == "rightneighbors")){
-            t_relationmap relations = this->getleftneighbours(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-NEIGHBOUR-OF");
-        }
-        if (filter.empty() || (filter == "leftneighbours") || (filter == "leftneighbors")){
-            t_relationmap relations = this->getrightneighbours(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-NEIGHBOUR-OF");
-        }
-        if (filter.empty() || (filter == "rightcooc")){
-            t_relationmap relations = this->getrightcooc(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-COOC-OF");
-        }
-        if (filter.empty() || (filter == "leftcooc")){
-            t_relationmap relations = this->getleftcooc(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-COOC-OF");
-        }
-        if (filter.empty() || (filter == "skipcontent")){
-            t_relationmap relations = this->getskipcontent(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANTIATED-BY");
-        }
-        if (filter.empty() || (filter == "instances")){
-            t_relationmap relations = this->getinstances(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANCE-OF");
-        }
-        if (filter.empty() || (filter == "templates")){
-            t_relationmap relations = this->gettemplates(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "TEMPLATE-OF");
-        }
+      if (filter.empty() || (filter == "subparents") || (filter == "subsumed")) {
+	t_relationmap relations = this->getsubparents(pattern);
+	this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");
+      }
+      if (filter.empty() || (filter == "subchildren") || (filter == "subsumes")){
+	t_relationmap relations = this->getsubchildren(pattern);
+	this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMES");
+      }
+      if (filter.empty() || (filter == "rightneighbours") || (filter == "rightneighbors")){
+	t_relationmap relations = this->getleftneighbours(pattern);
+	this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-NEIGHBOUR-OF");
+      }
+      if (filter.empty() || (filter == "leftneighbours") || (filter == "leftneighbors")){
+	t_relationmap relations = this->getrightneighbours(pattern);
+	this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-NEIGHBOUR-OF");
+      }
+      if (filter.empty() || (filter == "rightcooc")){
+	t_relationmap relations = this->getrightcooc(pattern);
+	this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-COOC-OF");
+      }
+      if (filter.empty() || (filter == "leftcooc")){
+	t_relationmap relations = this->getleftcooc(pattern);
+	this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-COOC-OF");
+      }
+      if (filter.empty() || (filter == "skipcontent")){
+	t_relationmap relations = this->getskipcontent(pattern);
+	this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANTIATED-BY");
+      }
+      if (filter.empty() || (filter == "instances")){
+	t_relationmap relations = this->getinstances(pattern);
+	this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANCE-OF");
+      }
+      if (filter.empty() || (filter == "templates")){
+	t_relationmap relations = this->gettemplates(pattern);
+	this->outputrelations(pattern, relations, classdecoder, OUT, "TEMPLATE-OF");
+      }
 
     }
 
@@ -3636,57 +3637,57 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * Compute and output co-occurrence relations as Normalised Pointwise Mutual Information
      * @param threshold Normalised Pointwise Mutual Information threshold
      */
-    void outputcooc_npmi(std::ostream * OUT, const ClassDecoder& classdecoder, double threshold) {
-        std::map<PatternPointer,t_relationmap_double> npmimap;
-        std::cerr << "Collecting patterns and computing NPMI..." << std::endl;
-        computenpmi(npmimap, threshold);
+  void outputcooc_npmi( std::ostream& OUT, const ClassDecoder& classdecoder, double threshold) {
+    std::map<PatternPointer,t_relationmap_double> npmimap;
+    std::cerr << "Collecting patterns and computing NPMI..." << std::endl;
+    computenpmi(npmimap, threshold);
 
-        std::cerr << "Building inverse map..." << std::endl;
-        //we want the reverse, so we can sort by co-occurrence
-        std::multimap<double,std::pair<PatternPointer,PatternPointer>> inversemap;
-        std::map<PatternPointer,t_relationmap_double>::iterator iter = npmimap.begin();
-        while (iter != npmimap.end()) {
-	  for ( const auto& rel : iter->second ){
-	    inversemap.insert(std::pair<double,std::pair<PatternPointer,PatternPointer>>(rel.second, std::pair<Pattern,Pattern>(iter->first, rel.first)));
-	  }
-	  iter = npmimap.erase(iter);
-        }
-
-        *OUT << "Pattern1\tPattern2\tNPMI" << std::endl;
-        for (std::multimap<double,std::pair<PatternPointer,PatternPointer>>::reverse_iterator iter2 = inversemap.rbegin(); iter2 != inversemap.rend(); ++iter2) {
-            const PatternPointer pattern1 = iter2->second.first;
-            const PatternPointer pattern2 = iter2->second.second;
-            *OUT << pattern1.tostring(classdecoder) << "\t" << pattern2.tostring(classdecoder) << "\t" << iter2->first << std::endl;
-        }
+    std::cerr << "Building inverse map..." << std::endl;
+    //we want the reverse, so we can sort by co-occurrence
+    std::multimap<double,std::pair<PatternPointer,PatternPointer>> inversemap;
+    std::map<PatternPointer,t_relationmap_double>::iterator iter = npmimap.begin();
+    while (iter != npmimap.end()) {
+      for ( const auto& rel : iter->second ){
+	inversemap.insert(std::pair<double,std::pair<PatternPointer,PatternPointer>>(rel.second, std::pair<Pattern,Pattern>(iter->first, rel.first)));
+      }
+      iter = npmimap.erase(iter);
     }
 
-    /**
-     * Compute and output co-occurrence relations as joint occurrence count
-     * @param threshold Normalised Pointwise Mutual Information threshold
-     */
-    void outputcooc(std::ostream * OUT, const ClassDecoder& classdecoder, double threshold) {
-        std::map<PatternPointer,t_relationmap> coocmap;
-        std::cerr << "Collecting patterns and computing co-occurrence..." << std::endl;
-        computecooc(coocmap, threshold);
-
-        std::cerr << "Building inverse map..." << std::endl;
-        //we want the reverse, so we can sort by co-occurrence
-        std::multimap<uint32_t,std::pair<PatternPointer,PatternPointer>> inversemap;
-        std::map<PatternPointer,t_relationmap>::iterator iter = coocmap.begin();
-        while (iter != coocmap.end()) {
-	  for ( const auto& rel : iter->second ){
-	    inversemap.insert(std::pair<uint32_t,std::pair<PatternPointer,PatternPointer>>(rel.second, std::pair<PatternPointer,PatternPointer>(iter->first, rel.first)));
-	  }
-	  iter = coocmap.erase(iter);
-        }
-
-        *OUT << "Pattern1\tPattern2\tCooc" << std::endl;
-        for (std::multimap<uint32_t,std::pair<PatternPointer,PatternPointer>>::reverse_iterator iter2 = inversemap.rbegin(); iter2 != inversemap.rend(); ++iter2) {
-            const Pattern pattern1 = iter2->second.first;
-            const Pattern pattern2 = iter2->second.second;
-            *OUT << pattern1.tostring(classdecoder) << "\t" << pattern2.tostring(classdecoder) << "\t" << iter2->first << std::endl;
-        }
+    OUT << "Pattern1\tPattern2\tNPMI" << std::endl;
+    for (std::multimap<double,std::pair<PatternPointer,PatternPointer>>::reverse_iterator iter2 = inversemap.rbegin(); iter2 != inversemap.rend(); ++iter2) {
+      const PatternPointer pattern1 = iter2->second.first;
+      const PatternPointer pattern2 = iter2->second.second;
+      OUT << pattern1.tostring(classdecoder) << "\t" << pattern2.tostring(classdecoder) << "\t" << iter2->first << std::endl;
     }
+  }
+
+  /**
+   * Compute and output co-occurrence relations as joint occurrence count
+   * @param threshold Normalised Pointwise Mutual Information threshold
+   */
+  void outputcooc( std::ostream& OUT, const ClassDecoder& classdecoder, double threshold) {
+    std::map<PatternPointer,t_relationmap> coocmap;
+    std::cerr << "Collecting patterns and computing co-occurrence..." << std::endl;
+    computecooc(coocmap, threshold);
+
+    std::cerr << "Building inverse map..." << std::endl;
+    //we want the reverse, so we can sort by co-occurrence
+    std::multimap<uint32_t,std::pair<PatternPointer,PatternPointer>> inversemap;
+    std::map<PatternPointer,t_relationmap>::iterator iter = coocmap.begin();
+    while (iter != coocmap.end()) {
+      for ( const auto& rel : iter->second ){
+	inversemap.insert(std::pair<uint32_t,std::pair<PatternPointer,PatternPointer>>(rel.second, std::pair<PatternPointer,PatternPointer>(iter->first, rel.first)));
+      }
+      iter = coocmap.erase(iter);
+    }
+
+    OUT << "Pattern1\tPattern2\tCooc" << std::endl;
+    for (std::multimap<uint32_t,std::pair<PatternPointer,PatternPointer>>::reverse_iterator iter2 = inversemap.rbegin(); iter2 != inversemap.rend(); ++iter2) {
+      const Pattern pattern1 = iter2->second.first;
+      const Pattern pattern2 = iter2->second.second;
+      OUT << pattern1.tostring(classdecoder) << "\t" << pattern2.tostring(classdecoder) << "\t" << iter2->first << std::endl;
+    }
+  }
 
     /**
      * attempt to find the flexgram size for the given begin position,
@@ -3757,7 +3758,7 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
         * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
         * @param corpus Pointer to the loaded corpus, used as a reverse index.
         */
-        PatternPointerModel<ValueType,ValueHandler,MapType>(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<ValueType,ValueHandler,MapType,PatternPointer>(){ //load from file
+        PatternPointerModel<ValueType,ValueHandler,MapType>( std::istream& f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<ValueType,ValueHandler,MapType,PatternPointer>(){ //load from file
             this->model_type = this->getmodeltype();
             this->model_version = this->getmodelversion();
             if (corpus) {
@@ -3856,7 +3857,7 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
         * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
         * @param corpus Pointer to the loaded corpus, used as a reverse index.
         */
-        IndexedPatternPointerModel<MapType>(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): IndexedPatternModel<MapType,PatternPointer>(){ //load from file
+        IndexedPatternPointerModel<MapType>( std::istream& f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): IndexedPatternModel<MapType,PatternPointer>(){ //load from file
             this->model_type = this->getmodeltype();
             this->model_version = this->getmodelversion();
             if (corpus) {
