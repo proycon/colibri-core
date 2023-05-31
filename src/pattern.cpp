@@ -429,16 +429,16 @@ vector<unsigned int> Pattern::tovector() const {
     } while (1);
 }
 
-void readanddiscardpattern(std::istream * in, bool pointerformat) {
+void readanddiscardpattern( std::istream& in, bool pointerformat) {
     unsigned char c;
     if (pointerformat) {
-        in->read( (char*) &c, sizeof(unsigned int));
-        in->read( (char*) &c, sizeof(uint32_t));
-        in->read( (char*) &c, sizeof(uint32_t));
+        in.read( (char*) &c, sizeof(unsigned int));
+        in.read( (char*) &c, sizeof(uint32_t));
+        in.read( (char*) &c, sizeof(uint32_t));
     } else {
         bool prevhigh = false;
         do {
-            in->read( (char*) &c, sizeof(char));
+            in.read( (char*) &c, sizeof(char));
             if ((!prevhigh) && (c == ClassDecoder::delimiterclass)) {
                 return;
             }
@@ -447,16 +447,16 @@ void readanddiscardpattern(std::istream * in, bool pointerformat) {
     }
 }
 
-void readanddiscardpattern_v1(std::istream * in) {
+void readanddiscardpattern_v1( std::istream& in) {
     unsigned char c;
     do {
-        in->read( (char*) &c, sizeof(char));
+        in.read( (char*) &c, sizeof(char));
         if (c == 0) {
             return;
         } else if (c < 128) {
             //we have a size
-            const size_t pos = in->tellg();
-            in->seekg(pos + c);
+            const size_t pos = in.tellg();
+            in.seekg(pos + c);
         } else {
             //we have a marker
         }
@@ -465,7 +465,7 @@ void readanddiscardpattern_v1(std::istream * in) {
 
 
 
-Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version, const unsigned char *, bool debug) {
+Pattern::Pattern(std::istream& in, bool ignoreeol, const unsigned char version, const unsigned char *, bool debug) {
     if (version == 2) {
         //stage 1 -- get length
         unsigned char c = 0;
@@ -477,19 +477,19 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
         //stage 1 -- get length
         int length = 0;
         do {
-            if (in->good()) {
+            if (in.good()) {
                 if (!gotbeginpos) {
-                    beginpos = in->tellg();
+                    beginpos = in.tellg();
                     gotbeginpos = true;
                 }
-                in->read( (char* ) &c, sizeof(char));
+                in.read( (char* ) &c, sizeof(char));
                 if (debug) std::cerr << "DEBUG read1=" << (int) c << endl;
             } else {
                 if (ignoreeol) {
                     break;
                 } else {
                     std::cerr << "WARNING: Unexpected end of file (stage 1, length=" << length << "), no EOS marker found (adding and continuing)" << std::endl;
-                    in->clear(); //clear error bits
+                    in.clear(); //clear error bits
                     break;
                 }
             }
@@ -519,22 +519,22 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
             std::cerr << "ERROR: Invalid position in input stream whilst Reading pattern" << std::endl;
             throw InternalError();
         }
-        in->seekg(beginpos, ios::beg);
-        std::streampos beginposcheck = in->tellg();
+        in.seekg(beginpos, ios::beg);
+        std::streampos beginposcheck = in.tellg();
         if ((beginposcheck != beginpos)
 	    && (beginposcheck >= numeric_limits<std::streampos>::max() ) ) {
             std::cerr << "ERROR: Resetting read pointer for stage 2 failed! (" << (unsigned long) beginposcheck << " != " << (unsigned long) beginpos << ")" << std::endl;
             throw InternalError();
-        } else if (!in->good()) {
-            std::cerr << "ERROR: After resetting readpointer for stage 2, istream is not 'good': eof=" << (int) in->eof() << ", fail=" << (int) in->fail() << ", badbit=" << (int) in->bad() << std::endl;
+        } else if (!in.good()) {
+            std::cerr << "ERROR: After resetting readpointer for stage 2, istream is not 'good': eof=" << (int) in.eof() << ", fail=" << (int) in.fail() << ", badbit=" << (int) in.bad() << std::endl;
             throw InternalError();
         }
         while (i < length) { //TODO: read multiple bytes in one go
-            if (in->good()) {
-                in->read( (char* ) &c, sizeof(char));
+            if (in.good()) {
+                in.read( (char* ) &c, sizeof(char));
                 if (debug) std::cerr << "DEBUG read2=" << (int) c << endl;
             } else {
-                std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 2,i=" << i << ",length=" << length << ",beginpos=" << beginpos << ",eof=" << (int) in->eof() << ",fail=" << (int) in->fail() << ",badbit=" << (int) in->bad() << ")" << std::endl;
+                std::cerr << "ERROR: Invalid pattern data, unexpected end of file (stage 2,i=" << i << ",length=" << length << ",beginpos=" << beginpos << ",eof=" << (int) in.eof() << ",fail=" << (int) in.fail() << ",badbit=" << (int) in.bad() << ")" << std::endl;
                 throw InternalError();
             }
             data[i++] = c;
@@ -549,10 +549,10 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
 
         //if this is the end of file, we want the eof bit set already, so we try to
         //read one more byte (and wind back if succesful):
-        if (in->good()) {
+        if (in.good()) {
             if (debug) std::cerr << "DEBUG: (TESTING EOF)" << std::endl;
-            in->read( (char* ) &c, sizeof(char));
-            if (in->good()) in->unget();
+            in.read( (char* ) &c, sizeof(char));
+            if (in.good()) in.unget();
         }
 
     } else if (version == 1) {
@@ -565,16 +565,16 @@ Pattern::Pattern(std::istream * in, bool ignoreeol, const unsigned char version,
 }
 
 
-PatternPointer::PatternPointer(std::istream * in, bool, const unsigned char, unsigned char * corpusstart, bool debug) {
+PatternPointer::PatternPointer(std::istream& in, bool, const unsigned char, unsigned char * corpusstart, bool debug) {
     if (corpusstart == NULL) {
         std::cerr << "ERROR: Can not read PatternPointer, no corpusstart passed!" << std::endl;
         throw InternalError();
     } else {
         unsigned int corpusoffset;
-        in->read( (char* ) &corpusoffset, sizeof(unsigned int));
+        in.read( (char* ) &corpusoffset, sizeof(unsigned int));
         data = corpusstart + corpusoffset;
-        in->read( (char* ) &bytes, sizeof(PPSizeType));
-        in->read( (char* ) &mask, sizeof(uint32_t));
+        in.read( (char* ) &bytes, sizeof(PPSizeType));
+        in.read( (char* ) &mask, sizeof(uint32_t));
         if (debug) std::cerr << "DEBUG read patternpointer @corpusoffset=" << (size_t) data << " bytes=" << (int) bytes << " mask=" << (int) mask << std::endl;
     }
 }
@@ -587,8 +587,8 @@ Pattern::Pattern(std::istream * in, unsigned char * buffer, int maxbuffersize, b
         int readingdata = 0;
         unsigned char c = 0;
         do {
-            if (in->good()) {
-                in->read( (char* ) &c, sizeof(char));
+            if (in.good()) {
+                in.read( (char* ) &c, sizeof(char));
                 if (debug) std::cerr << "DEBUG read=" << (int) c << endl;
             } else {
                 std::cerr << "ERROR: Invalid pattern data, unexpected end of file i=" << i << std::endl;
@@ -1814,7 +1814,7 @@ Pattern Pattern::reverse() const {
 }
 
 
-IndexedCorpus::IndexedCorpus(std::istream *in, bool debug){
+IndexedCorpus::IndexedCorpus(std::istream& in, bool debug){
   corpus = NULL;
   corpussize = 0;
   patternpointer = NULL;
@@ -1831,28 +1831,28 @@ IndexedCorpus::IndexedCorpus( const std::string& filename, bool debug){
 }
 
 
-void IndexedCorpus::load(std::istream *in, bool debug) {
+void IndexedCorpus::load(std::istream& in, bool debug) {
     totaltokens = 0;
     unsigned char version = getdataversion(in);
     if (version == 2) {
-        in->seekg(0,ios_base::end);
-        if (in->rdstate() & std::istream::failbit) {
+        in.seekg(0,ios_base::end);
+        if (in.rdstate() & std::istream::failbit) {
             std::cerr << "ERROR: Unable to seek to end of file" << std::endl;
             throw InternalError();
         }
-        corpussize = in->tellg();
-        in->seekg(2);
+        corpussize = in.tellg();
+        in.seekg(2);
         corpussize = corpussize - 2;
         corpus = new unsigned char[corpussize];
         if (debug) std::cerr << "Reading " << corpussize << " bytes" <<  std::endl;
-        in->read((char*) corpus,sizeof(unsigned char) * corpussize);
-        if (in->rdstate() & std::istream::failbit) {
-            std::cerr << "ERROR: Only " << in->gcount() << " bytes were read!" << std::endl;
+        in.read((char*) corpus,sizeof(unsigned char) * corpussize);
+        if (in.rdstate() & std::istream::failbit) {
+            std::cerr << "ERROR: Only " << in.gcount() << " bytes were read!" << std::endl;
             throw InternalError();
         }
     } else {
         //old version
-        in->seekg(0);
+        in.seekg(0);
         corpus = convert_v1_v2(in,true,false);
     }
 
@@ -1888,7 +1888,7 @@ void IndexedCorpus::load( const std::string& filename, bool debug) {
         std::cerr << "ERROR: Unable to load file " << filename << std::endl;
         throw InternalError();
     }
-    this->load( &in, debug);
+    this->load( in, debug);
 }
 
 unsigned char * IndexedCorpus::getpointer(const IndexReference & begin) const {
@@ -2081,6 +2081,6 @@ Pattern patternfromfile(const std::string & filename) {//helper function to read
     std::cerr << "ERROR: Unable to load file " << filename << std::endl;
     throw InternalError();
   }
-  Pattern p = Pattern( &in, true);
+  Pattern p = Pattern( in, true);
   return p;
 }

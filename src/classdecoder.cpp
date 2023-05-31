@@ -40,33 +40,33 @@ unsigned int bytestoint(const unsigned char* a, unsigned int * length) {
     return result;
 }
 
-unsigned int bytestoint(istream* IN, const unsigned char version) {
-    if (version == 1) {
-        unsigned char length;
-        IN->read((char*) &length,sizeof(unsigned char));
-        unsigned char * buffer = new unsigned char[length];;
-        IN->read((char*) buffer, length);
-        unsigned int result = bytestoint_v1(buffer, (int) length);
-        delete[] buffer;
-        return result;
-    } else {
-        unsigned int result = 0;
-        unsigned char b;
-        unsigned int i = 0;
-        do {
-            IN->read((char*) &b,sizeof(unsigned char));
-            if (!IN->good()) break;
-            if (b >> 7) {
-                //high
-                result += (b ^ 128)* pow(128,i);
-            } else {
-                result += b * pow(128,i);
-                break;
-            }
-            i++;
-        } while (IN->good());
-        return result;
-    }
+unsigned int bytestoint( istream& IN, const unsigned char version) {
+  if (version == 1) {
+    unsigned char length;
+    IN.read((char*) &length,sizeof(unsigned char));
+    unsigned char * buffer = new unsigned char[length];;
+    IN.read((char*) buffer, length);
+    unsigned int result = bytestoint_v1(buffer, (int) length);
+    delete[] buffer;
+    return result;
+  } else {
+    unsigned int result = 0;
+    unsigned char b;
+    unsigned int i = 0;
+    do {
+      IN.read((char*) &b,sizeof(unsigned char));
+      if (!IN.good()) break;
+      if (b >> 7) {
+	//high
+	result += (b ^ 128)* pow(128,i);
+      } else {
+	result += b * pow(128,i);
+	break;
+      }
+      i++;
+    } while (IN.good());
+    return result;
+  }
 }
 
 unsigned int bytestoint_v1(const unsigned char* a, const int l) {
@@ -161,76 +161,80 @@ string decodestring(const unsigned char * data, unsigned char datasize) {
 	}
 } */
 
-void ClassDecoder::decodefile(const string & filename,  std::ostream* out , unsigned int start, unsigned int end, bool quiet) {
-    ifstream IN(filename); //, ios::in | ios::binary);
-    unsigned char version = getdataversion(&IN);
-    if (version == 1) {
-        decodefile_v1(&IN,out,start,end,quiet);
-        return;
+void ClassDecoder::decodefile( const string & filename,
+			      std::ostream& out , unsigned int start, unsigned int end, bool quiet) {
+  ifstream IN(filename); //, ios::in | ios::binary);
+  unsigned char version = getdataversion(IN);
+  if (version == 1) {
+    decodefile_v1(IN,out,start,end,quiet);
+    return;
+  }
+  unsigned int linenumber = 1;
+  bool first = true;
+  while (IN.good()) {
+    unsigned int cls = bytestoint(IN,version);
+    if (!IN.good()) break;
+    if (cls == delimiterclass) { //endmarker
+      if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
+	out << endl;
+      }
+      first = true;
+      linenumber++;
+    } else if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
+      if (!first) out << " ";
+      out << classes[cls];
+      first = false;
     }
-    unsigned int linenumber = 1;
-    bool first = true;
-    while (IN.good()) {
-      unsigned int cls = bytestoint(&IN,version);
-        if (!IN.good()) break;
-        if (cls == delimiterclass) { //endmarker
-	  if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
-	    *out << endl;
-	  }
-	  first = true;
-	  linenumber++;
-        } else if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
-	  if (!first) *out << " ";
-	  *out << classes[cls];
-	  first = false;
-        }
-    }
-    linenumber--;
-    if (!quiet) cerr << "Processed " << linenumber  << " lines" << endl;
+  }
+  linenumber--;
+  if (!quiet) cerr << "Processed " << linenumber  << " lines" << endl;
 }
 
-void ClassDecoder::decodefile_v1(ifstream *IN,  std::ostream* out , unsigned int start, unsigned int end, bool quiet) {
+void ClassDecoder::decodefile_v1( ifstream& IN,
+				  std::ostream& out,
+				  unsigned int start, unsigned int end, bool quiet) {
     unsigned char buffer[1024]; //bit large, only for one token
     unsigned int linenumber = 1;
     bool first = true;
     unsigned char c;
-    while (IN->good()) {
-        IN->read( (char* ) &c, sizeof(char));
-        if (!IN->good()) break;
+    while (IN.good()) {
+        IN.read( (char* ) &c, sizeof(char));
+        if (!IN.good()) break;
         if (c == 0) { //endmarker
-            if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
-                *out << endl;
-            }
-            linenumber++;
-            first = true;
+	  if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
+	    out << endl;
+	  }
+	  linenumber++;
+	  first = true;
         } else if (c < 128) {
-            //we have a size, load token
-            IN->read( (char*) buffer, c);
-            if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
-                int cls = bytestoint_v1(buffer, (int) c);
-                if (!first) *out << " ";
-                *out << classes[cls];
-                first = false;
-            }
+	  //we have a size, load token
+	  IN.read( (char*) buffer, c);
+	  if (((start == 0) && (end == 0)) || ((linenumber >= start) || (linenumber <= end))) {
+	    int cls = bytestoint_v1(buffer, (int) c);
+	    if (!first) out << " ";
+	    out << classes[cls];
+	    first = false;
+	  }
         } else if (c == 128) {
-            if (!first) *out << " ";
-            *out << "{*}";
-            first = false;
+	  if (!first) out << " ";
+	  out << "{*}";
+	  first = false;
         } else if (c == 129) {
-            if (!first) *out << " ";
-            *out << "{**}";
-            first = false;
+	  if (!first) out << " ";
+	  out << "{**}";
+	  first = false;
         }
     }
-    IN->close();
+    IN.close();
     linenumber--;
     if (!quiet) cerr << "Processed " << linenumber  << " lines" << endl;
 }
 
 
-std::string ClassDecoder::decodefiletostring(const std::string & filename,   unsigned int start, unsigned int end, bool quiet) {
+std::string ClassDecoder::decodefiletostring(const std::string & filename,
+					     unsigned int start, unsigned int end, bool quiet) {
     std::ostringstream ss;
-    decodefile(filename, (ostream*) &ss, start, end, quiet);
+    decodefile(filename, ss, start, end, quiet);
     return ss.str();
 }
 
@@ -249,21 +253,21 @@ void ClassDecoder::prune(unsigned int threshold) {
     highestclass = threshold - 1;
 }
 
-unsigned char getdataversion(std::istream * in) {
+unsigned char getdataversion( std::istream& in) {
     unsigned char b;
     unsigned char version = 1;
     version = 0;
-    if (!in->good())  {
+    if (!in.good())  {
         cerr << "ERROR: Supplied data file can not be opened. Check whether it exists and whether you have proper permissions..." << endl;
         throw InternalError();
     }
-    if (in->tellg() > 0) {
-        in->seekg(0);
+    if (in.tellg() > 0) {
+        in.seekg(0);
     }
-    in->read((char*) &b,sizeof(unsigned char));
+    in.read((char*) &b,sizeof(unsigned char));
     if (b == 0xa2) {
         //version 2 or higher
-        in->read((char*) &version, sizeof(unsigned char));
+        in.read((char*) &version, sizeof(unsigned char));
     } else {
         //no metadata, version 1, first byte is a length marker
         version = 1;
@@ -271,7 +275,7 @@ unsigned char getdataversion(std::istream * in) {
             cerr << "ERROR: Supplied data file is not a valid Colibri Data file, did you pass plain-text instead perhaps?..." << endl;
             throw InternalError();
         }
-        in->seekg(0); //reset
+        in.seekg(0); //reset
     }
     return version;
 }

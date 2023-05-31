@@ -63,5 +63,5 @@ int main( int argc, char *argv[] ) {
     }
 
     ClassDecoder classdecoder = ClassDecoder(classfile);
-    classdecoder.decodefile(corpusfile, (ostream*) &cout, start, end);
+    classdecoder.decodefile(corpusfile, cout, start, end);
 }
