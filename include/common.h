@@ -6,6 +6,7 @@
 #include <vector>
 #include <exception>
 #include <cmath>
+#include <cstdint>
 
 /**
  * @file common.h
