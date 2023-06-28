@@ -2804,7 +2804,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
             } else if (cat == 3) {
                 cat_s = "flexgram";
             }
-            *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq << "\t";
+            *out << pattern_s << "\t" << count << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq << "\t";
             IndexedData * data = this->getdata(pattern);
             unsigned int i = 0;
             for (IndexedData::iterator iter2 = data->begin(); iter2 != data->end(); ++iter2) {
