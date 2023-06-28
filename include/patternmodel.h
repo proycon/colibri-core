@@ -2257,7 +2257,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             } else if (cat == 3) {
                 cat_s = "flexgram";
             }
-            *out << pattern_s << "\t" << count << "\t" << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq;
+            *out << pattern_s << "\t" << count << "\t" << covcount << "\t" << coverage << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq;
             if (endline) *out << std::endl;
             //*out << pattern.hash() << "\t" << (size_t) pattern.data << std::endl;
         }
