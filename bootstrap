@@ -23,7 +23,7 @@ automake=automake
 aclocal=aclocal
 
 if [ ! -f README ]; then
-    ln -s README.rst README
+    ln -s README.md README
 fi
 
 # if you want to autogenerate a ChangeLog form svn:
