@@ -40,7 +40,7 @@ jobs:
         env:
           CXX:  ${{ matrix.compiler }}
         run: |
-          autoreconf -i && ./configure && make && make install
+          autoreconf -i && ./configure && make && sudo make install
 
       - name: Build and install Colibri-Core python bniding
         env:
