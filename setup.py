@@ -182,7 +182,7 @@ setup(
     description = ("Colibri Core is an NLP tool as well as a C++ and Python library (all included in this package) for working with basic linguistic constructions such as n-grams and skipgrams (i.e patterns with one or more gaps, either of fixed or dynamic size) in a quick and memory-efficient way. At the core is the tool ``colibri-patternmodeller`` which allows you to build, view, manipulate and query pattern models."),
     license = "GPLv3",
     keywords = "nlp computational_linguistics frequency ngram skipgram pmi cooccurrence linguistics",
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     version = '2.5.7',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},

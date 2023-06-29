@@ -1,4 +1,4 @@
-include bootstrap README README.rst AUTHORS configure.ac Makefile.am *.pc.in *.pxi *.in.pyx benchmarks.py test.py ChangeLog NEWS
+include bootstrap README README.md AUTHORS configure.ac Makefile.am *.pc.in *.pxi *.in.pyx benchmarks.py test.py ChangeLog NEWS
 recursive-include src *.cpp Makefile.am
 recursive-include include *.h Makefile.am
 recursive-include exp *
