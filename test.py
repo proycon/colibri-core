@@ -206,7 +206,7 @@ with open('/tmp/hamlet.txt','w') as f:
 
 
 print("Class encoding corpus...")
-os.system("colibri-classencode /tmp/hamlet.txt")
+assert os.system("cd /tmp/ && colibri-classencode hamlet.txt") > 0
 
 print("Loading new decoder")
 decoder = colibricore.ClassDecoder("/tmp/hamlet.colibri.cls")
