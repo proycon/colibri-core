@@ -30,7 +30,7 @@ jobs:
               if command -v apt-get; then
                 apt-get -y git autoconf automake autoconf-archive libtool autotools-dev libbz2-dev gcc g++ make
               elif command -v yum; then
-                yum install -y git libtool autoconf-archive bzip2-devel autoconf automake m4 wget pkg-config
+                yum install -y git libtool autoconf-archive bzip2-devel autoconf automake m4 wget pkgconfig
               elif command -v apk; then
                 apk add build-base git autoconf-archive autoconf automake libtool bzip2-dev rsync &&
                 rsync -av --ignore-existing /usr/share/aclocal/*.m4 /usr/local/share/aclocal/
