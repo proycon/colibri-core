@@ -64,7 +64,7 @@ Please consult the full documentation at <https://proycon.github.io/colibri-core
 
 ## Installation
 
-### Python
+### Python binding
 
 For the Colibri Core Python library, just install using:
 
@@ -78,8 +78,12 @@ is only available for unix-like systems, Windows is not supported.
 ### Installation from source
 
 For the command-line tools, check if your distribution has a package available.
-If not, you will need to compile from source or use the container build (e.g.
-Docker).
+There are packages for Alpine Linux (`apk add colibri-core`) and for macOS with
+homebrew (`brew tap fbkarsdorp/homebrew-lamachine && brew install
+colibri-core`). Note that these do not contain the Python binding!
+
+If no packages are available, you will need to compile from source or use the container build (e.g.
+Docker) as explained later on.
 
 In order to do so, you need a sane build environment, install the necessary dependencies for your distribution:
 
