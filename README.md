@@ -1,6 +1,7 @@
 # Colibri Core
 
-[![GitHub build](https://github.com/proycon/colibri-core/actions/workflows/colibri-core.yml/badge.svg?branch=master)](https://github.com/proycon/colibri-core/actions/)
+[![GitHub C++ build](https://github.com/proycon/colibri-core/actions/workflows/colibri-core.yml/badge.svg?branch=master)](https://github.com/proycon/colibri-core/actions/)
+[![GitHub Python build](https://github.com/proycon/colibri-core/actions/workflows/colibri-core-python.yml/badge.svg?branch=master)](https://github.com/proycon/colibri-core/actions/)
 [![DOI](https://zenodo.org/badge/12996232.svg)](https://zenodo.org/badge/latestdoi/12996232)
 [![GitHub release](https://img.shields.io/github/release/proycon/colibri-core.svg)](https://GitHub.com/proycon/colibri-core/releases/)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
