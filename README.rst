@@ -93,5 +93,9 @@ This software is extensively described in the following peer-reviewed publicatio
 Click the link to access the publication and please cite it if you make use of
 Colibri Core in your work.
 
+Demo
+--------------------
+
+.. image:: https://raw.githubusercontent.com/CLARIAH/wp3-demos/master/colibri-core.gif 
 
 
