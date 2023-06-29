@@ -109,6 +109,7 @@ $ brew install autoconf automake libtool autoconf-archive python3 pkg-config
 Then clone this repository and install as follows:
 
 ```
+$ bash bootstrap
 $ ./configure
 $ make
 $ sudo make install
