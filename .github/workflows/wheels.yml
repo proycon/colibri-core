@@ -35,7 +35,7 @@ jobs:
                 apk add build-base git autoconf-archive autoconf automake libtool bzip2-dev rsync &&
                 rsync -av --ignore-existing /usr/share/aclocal/*.m4 /usr/local/share/aclocal/
               fi &&
-              autoreconf -i && ./configure && make && make install
+              bash bootstrap && ./configure && make && make install
            CIBW_BEFORE_ALL_MACOS: >
               brew tap fbkarsdorp/homebrew-lamachine &&
               brew install colibri-core
