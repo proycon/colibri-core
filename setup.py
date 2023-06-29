@@ -86,7 +86,7 @@ setup(
     keywords = "nlp computational_linguistics frequency ngram skipgram pmi cooccurrence linguistics",
     long_description=read('README.md'),
     long_description_content_type = "text/markdown",
-    version = '2.5.8',
+    version = '2.5.9',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},
     classifiers=[

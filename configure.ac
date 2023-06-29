@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([colibri-core],[2.5.8],[proycon@anaproy.nl])
+AC_INIT([colibri-core],[2.5.9],[proycon@anaproy.nl])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h])
