@@ -100,5 +100,5 @@ setup(
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     ],
-    install_requires=['Cython >= 0.23'],
+    install_requires=['Cython >= 0.29'],
 )
