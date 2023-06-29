@@ -158,8 +158,7 @@ partsref = ["To","or","to be"]
 for part,partref in zip(flexgram.parts(),partsref) :
     print(test(part.tostring(decoder),partref))
 
-hamlet = """
-To be or not to be , that is the question ;
+hamlet = """To be or not to be , that is the question ;
 Whether 'tis nobler in the mind to suffer
 The slings and arrows of outrageous fortune ,
 Or to take arms against a sea of troubles ,
