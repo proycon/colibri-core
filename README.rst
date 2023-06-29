@@ -1,9 +1,6 @@
 Colibri Core
 ================
 
-.. image:: https://travis-ci.org/proycon/colibri-core.svg?branch=master
-    :target: https://travis-ci.org/proycon/colibri-core
-
 .. image:: https://badge.fury.io/py/colibricore.svg
     :target: http://badge.fury.io/py/colibricore
 
