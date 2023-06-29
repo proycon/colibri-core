@@ -352,7 +352,7 @@ cdef extern from "patternmodel.h":
         unsigned int tokens()
 
 
-    @include colibricore_relationmap.clang.pxi
+    @include colibricore_relationmap.pxi
 
 
     cdef cppclass PatternSetModel:
