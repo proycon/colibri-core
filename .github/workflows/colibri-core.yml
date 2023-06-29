@@ -1,12 +1,11 @@
-name: C/C++/Cython/Python CI
+name: C/C++ CI
 
 on:
   push:
     branches: [master]
     paths:
-      - '*.py'
-      - '*.pyx'
-      - '*.pxd'
+      - 'src/*'
+      - 'include/*'
       - '.github/**'
 
   pull_request:
@@ -40,33 +39,20 @@ jobs:
              if [ "$RUNNER_OS" == "Linux" ]; then
                 sudo apt-get install pkg-config autoconf-archive
              fi
-      - name: Install Dependencies
+
+      - name: Build and install Colibri-Core
+        env:
+          CXX:  ${{ matrix.compiler }}
         run: |
-             if [ "$RUNNER_OS" == "Linux" ]; then
-                sudo apt-get install python3 cython3 python3-lxml python3-pip
-             fi
+          bash bootstrap
+          ./configure
+          make
+          sudo make install
 
-      - name: build and install Colibri-Core
+      - name: test
         env:
           CXX:  ${{ matrix.compiler }}
-        run: sudo pip3 install --prefix /usr/local/ .
-
-      - name: check
-        env:
-          CXX:  ${{ matrix.compiler }}
-        run: LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib colibri-test
-        continue-on-error: true
-
-      - name: check-python
-        env:
-          CXX:  ${{ matrix.compiler }}
-        run: LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib python test.py
-        continue-on-error: true
-
-      - name: check-python-2
-        env:
-          CXX:  ${{ matrix.compiler }}
-        run: LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib cd exp && ./colibri-patternmodeller-test.sh
+        run: colibri-test
         continue-on-error: true
 
       - name: Notify IRC of failure
