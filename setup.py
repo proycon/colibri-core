@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-# This is a bit of a non-traditional setup, it does some fancy things such as
-# invoking compilation of the C++ part of Colibri Core
-
 from __future__ import print_function
 import glob
 import sys
