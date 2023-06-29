@@ -39,7 +39,8 @@ jobs:
               bash bootstrap && ./configure && make && make install
            CIBW_BEFORE_ALL_MACOS: >
               brew tap fbkarsdorp/homebrew-lamachine &&
-              brew install colibri-core
+              brew install colibri-core &&
+              pip install cython
            CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux2014_x86_64
            CIBW_SKIP: "*-win* *-manylinux_i686 pp*"
 
