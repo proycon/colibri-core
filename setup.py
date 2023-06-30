@@ -71,7 +71,7 @@ extensions = cythonize([ Extension("colibricore",
                 language='c++',
                 include_dirs=includedirs,
                 library_dirs=libdirs,
-                libraries=['colibricore'],
+                libraries=['colibricore','bz2'],
                 extra_compile_args=['--std=c++0x'] + extra_options,
                 ) ],
                 compiler_directives={"language_level": "3"}
