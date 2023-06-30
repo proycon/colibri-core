@@ -309,7 +309,7 @@ cdef extern from "classencoder.h":
         void build(string& filename,int threshold=0) nogil #build a class from this dataset
         void encodefile(string&, string&, bool allowunknown, bool autoaddunknown, bool append,bool ignorenewlines, bool quiet) nogil
         void save(string&)
-        Pattern buildpattern(string&, bool allowunknown, bool autoaddunknown) nogil
+        Pattern buildpattern(string&, bool allowunknown, bool autoaddunknown) nogil except +
 
 cdef extern from "patternmodel.h":
     cdef cppclass PatternModelOptions:
