@@ -1,6 +1,6 @@
-AM_CXXFLAGS = -Wall -O3 -std=c++11 -Wno-vla
+AM_CXXFLAGS = -Wall -O3 -std=c++11 -Wno-vla -fPIC
 AM_CPPFLAGS = -I@top_srcdir@/include
-AM_LDFLAGS = -static
+AM_LDFLAGS = -static -fPIC
 
 bin_PROGRAMS = colibri-classdecode colibri-classencode colibri-test colibri-benchmarks colibri-patternmodeller colibri-comparemodels colibri-extractngrams
 
