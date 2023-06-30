@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <exception>
+#include <stdexcept>
 #include <cmath>
 #include <cstdint>
 
@@ -34,25 +35,18 @@ void orderedinsert(std::list<double> & l, double value);
 std::vector<std::string> & split(const std::string &s, char delim, std::vector<std::string> &elems);
 std::vector<std::string> split(const std::string &s, char delim);
 
-class InternalError: public std::exception {
-  virtual const char* what() const throw()
-  {
-    return "Colibri internal error";
-  }
+class InternalError: public std::runtime_error {
+    public: 
+        explicit InternalError(): std::runtime_error("Colibri internal error") {}
 };
 
-
-class KeyError: public std::exception {
-  virtual const char* what() const throw()
-  {
-    return "Colibri KeyError";
-  }
+class KeyError: public std::runtime_error {
+    public: 
+        explicit KeyError(): std::runtime_error("Colibri KeyError") {}
 };
 
-class UnknownTokenError: public std::exception {
-  virtual const char* what() const throw()
-  {
-    return "The input contained an unknown token";
-  }
+class UnknownTokenError: public std::runtime_error {
+    public: 
+        explicit UnknownTokenError(): std::runtime_error("Colibri TokenError: the input contained an unknown token") {}
 };
 #endif
