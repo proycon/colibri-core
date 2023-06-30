@@ -59,8 +59,7 @@ jobs:
           server: irc.uvt.nl
           channel: '#gitlama'
           nickname: GitHub
-          message: |-
-            Building colibri-core with ${{ matrix.compiler }} by ${{ github.actor }} on ${{ matrix.os }}: FAILED
+          message: "Building colibri-core with ${{ matrix.compiler }} by ${{ github.actor }} on ${{ matrix.os }}: \u00034FAIL\u0003"
 
       - name: Notify IRC of success
         if: ${{ success() }}
@@ -69,5 +68,4 @@ jobs:
           server: irc.uvt.nl
           channel: '#gitlama'
           nickname: GitHub
-          message: |-
-            Building colibri-core with ${{ matrix.compiler }} by ${{ github.actor }} on ${{ matrix.os }}: SUCCESS
+          message: "Building colibri-core with ${{ matrix.compiler }} by ${{ github.actor }} on ${{ matrix.os }}: \u00033SUCCESS\u0003"
