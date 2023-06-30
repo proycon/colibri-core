@@ -352,58 +352,60 @@ template<class FeatureType>
 class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a vector to save memory), for 2nd-order use (i.e, within another map)
     public:
 
+  std::vector<PatternFeatureVector<FeatureType> *> data;
 
-        std::vector<PatternFeatureVector<FeatureType> *> data;
+  typedef typename std::vector<PatternFeatureVector<FeatureType>*>::const_iterator const_iterator;
+  typedef typename std::vector<PatternFeatureVector<FeatureType>*>::iterator iterator;
 
-        typedef typename std::vector<PatternFeatureVector<FeatureType>*>::const_iterator const_iterator;
-        typedef typename std::vector<PatternFeatureVector<FeatureType>*>::iterator iterator;
+  PatternFeatureVectorMap<FeatureType>() {};
 
-        PatternFeatureVectorMap<FeatureType>() {};
+  PatternFeatureVectorMap<FeatureType>(const PatternFeatureVectorMap<FeatureType> & ref) {
+    for ( const auto& pfv_ref : ref ){
+      //make a copy
+      PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(*pfv_ref);
+      this->data.push_back(pfv);
+    }
+  }
 
-        PatternFeatureVectorMap<FeatureType>(const PatternFeatureVectorMap<FeatureType> & ref) {
-	  for ( const auto& pfv_ref : ref ){
-	    //make a copy
-	    PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(*pfv_ref);
-	    this->data.push_back(pfv);
-	  }
-        }
+  PatternFeatureVectorMap<FeatureType>& operator=( const PatternFeatureVectorMap<FeatureType>& ref) {
+    if ( this != &ref ){
+      for ( const auto& pfv_ref : ref ){
+	//make a copy
+	PatternFeatureVector<FeatureType> *pfv = new PatternFeatureVector<FeatureType>(*pfv_ref);
+	this->data.push_back(pfv);
+      }
+    }
+    return *this;
+  }
+    /*   get double free or corruption error: //TODO: possible memory
+     *   leak?? */
+  virtual ~PatternFeatureVectorMap<FeatureType>() {
+    for ( const auto& d : data ) {
+      delete d;
+    }
+  }
 
-        /*   get double free or corruption error: //TODO: possible memory
-         *   leak?? */
-        virtual ~PatternFeatureVectorMap<FeatureType>() {
-            /*
-            const size_t s = this->data.size();
-            for (int i = 0; i < s; i++) {
-                PatternFeatureVector<FeatureType> * pfv = this->data[i];
-                delete pfv;
-                data[i] = NULL;
-            }*/
-        }
+    bool has(const Pattern & ref) const {
+      for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
+	const PatternFeatureVector<FeatureType> * pfv = *iter;
+	if (pfv->pattern == ref) {
+	  return true;
+	}
+      }
+      return false;
+    }
 
-        bool has(const Pattern & ref) const {
-            for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
-                const PatternFeatureVector<FeatureType> * pfv = *iter;
-                if (pfv->pattern == ref) {
-                    return true;
-                }
-            }
-            return false;
-        }
+    iterator find(const Pattern & ref) {
+      for (iterator iter = this->begin(); iter != this->end(); ++iter) {
+	const PatternFeatureVector<FeatureType> * pfv = *iter;
+	if (pfv->pattern == ref) {
+	  return iter;
+	}
+      }
+      return this->end();
+    }
 
-
-       iterator find(const Pattern & ref) {
-            for (iterator iter = this->begin(); iter != this->end(); ++iter) {
-                const PatternFeatureVector<FeatureType> * pfv = *iter;
-                if (pfv->pattern == ref) {
-                    return iter;
-                }
-            }
-            return this->end();
-        }
-
-        unsigned int count() const { return data.size(); }
-
-
+    unsigned int count() const { return data.size(); }
 
         void insert(PatternFeatureVector<FeatureType> * pfv, bool checkexists=true) {
             //inserts pointer directly, makes no copy!!
@@ -522,98 +524,101 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
 //------
 //
 class PatternVector { //acts like a (small) map (but implemented as a vector to save memory), for 2nd-order use (i.e, within another map)
-    public:
+public:
 
 
-        std::vector<Pattern> data;
+  std::vector<Pattern> data;
 
-        typedef typename std::vector<Pattern>::const_iterator const_iterator;
-        typedef typename std::vector<Pattern>::iterator iterator;
+  typedef typename std::vector<Pattern>::const_iterator const_iterator;
+  typedef typename std::vector<Pattern>::iterator iterator;
 
-        PatternVector() {};
+  PatternVector() {};
 
-        PatternVector(const PatternVector & ref) {
-            this->data = ref.data;
-        }
+  PatternVector( const PatternVector& ref) {
+    this->data = ref.data;
+  }
 
+  PatternVector& operator=( const PatternVector& ref) {
+    if ( this != &ref ){
+      this->data = ref.data;
+    }
+    return *this;
+  }
 
-        /*   get double free or corruption error: //TODO: possible memory
-         *   leak?? */
-        virtual ~PatternVector() {
-            /*
-            const size_t s = this->data.size();
-            for (int i = 0; i < s; i++) {
-                PatternFeatureVector<FeatureType> * pfv = this->data[i];
-                delete pfv;
-                data[i] = NULL;
-            }*/
-        }
+  /*   get double free or corruption error: //TODO: possible memory
+   *   leak?? */
+  virtual ~PatternVector() {
+    /*
+      const size_t s = this->data.size();
+      for (int i = 0; i < s; i++) {
+      PatternFeatureVector<FeatureType> * pfv = this->data[i];
+      delete pfv;
+      data[i] = NULL;
+      }*/
+  }
 
-        bool has(const Pattern & ref) const {
-            for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
-                if (*iter == ref) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-
-       iterator find(const Pattern & ref) {
-            for (iterator iter = this->begin(); iter != this->end(); ++iter) {
-                if (*iter == ref) {
-                    return iter;
-                }
-            }
-            return this->end();
-        }
-
-        unsigned int count() const { return data.size(); }
+  bool has(const Pattern & ref) const {
+    for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
+      if (*iter == ref) {
+	return true;
+      }
+    }
+    return false;
+  }
 
 
+  iterator find(const Pattern & ref) {
+    for (iterator iter = this->begin(); iter != this->end(); ++iter) {
+      if (*iter == ref) {
+	return iter;
+      }
+    }
+    return this->end();
+  }
 
-        void insert(const Pattern & pattern, bool checkexists=true) {
-            //make a copy, safer
-            if (checkexists) {
-                iterator found = this->find(pattern);
-                if (found == this->end()) {
-                    this->data.push_back(pattern);
-                }
-            } else {
-                this->data.push_back(pattern);
-            }
-        }
+  unsigned int count() const { return data.size(); }
 
-        size_t size() const { return data.size(); }
+  void insert(const Pattern & pattern, bool checkexists=true) {
+    //make a copy, safer
+    if (checkexists) {
+      iterator found = this->find(pattern);
+      if (found == this->end()) {
+	this->data.push_back(pattern);
+      }
+    } else {
+      this->data.push_back(pattern);
+    }
+  }
 
-        virtual std::string tostring() {
-            //we have no classdecoder at this point
-            std::cerr << "ERROR: PatternFeatureVector does not support serialisation to string" << std::endl;
-            throw InternalError();
-        }
+  size_t size() const { return data.size(); }
 
-        iterator begin() { return data.begin(); }
-        const_iterator begin() const { return data.begin(); }
+  virtual std::string tostring() {
+    //we have no classdecoder at this point
+    std::cerr << "ERROR: PatternFeatureVector does not support serialisation to string" << std::endl;
+    throw InternalError();
+  }
 
-        iterator end() { return data.end(); }
-        const_iterator end() const { return data.end(); }
+  iterator begin() { return data.begin(); }
+  const_iterator begin() const { return data.begin(); }
 
-        virtual Pattern * getdata(const Pattern & pattern) {
-            iterator iter = this->find(pattern);
-            if (iter != this->end()) {
-                Pattern * p = &(*iter);
-                return p;
-            }
-            return NULL;
-        }
+  iterator end() { return data.end(); }
+  const_iterator end() const { return data.end(); }
 
-        void reserve(size_t size) {
-            data.reserve(size);
-        }
-        void shrink_to_fit() {
-            data.shrink_to_fit();
-        }
+  virtual Pattern * getdata(const Pattern & pattern) {
+    iterator iter = this->find(pattern);
+    if (iter != this->end()) {
+      Pattern * p = &(*iter);
+      return p;
+    }
+    return NULL;
+  }
 
+  void reserve(size_t size) {
+    data.reserve(size);
+  }
+  void shrink_to_fit() {
+    data.shrink_to_fit();
+  }
 
 };
 
