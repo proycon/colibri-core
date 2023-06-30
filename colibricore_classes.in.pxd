@@ -293,10 +293,10 @@ cdef extern from "patternstore.h":
 cdef extern from "classdecoder.h":
     cdef cppclass ClassDecoder:
         ClassDecoder() nogil except +
-        ClassDecoder(string) nogil except +
-        void load(string) nogil
+        ClassDecoder(string&) nogil except +
+        void load(string&) nogil
         int size() nogil
-        string decodefiletostring(string,  int begin = 0, int end = 0, bool quiet = False) nogil
+        string decodefiletostring(string&,  int begin = 0, int end = 0, bool quiet = False) nogil
 
 cdef extern from "classencoder.h":
     cdef cppclass ClassEncoder:
@@ -305,11 +305,11 @@ cdef extern from "classencoder.h":
         void load(string, int minlength, int maxlength) nogil
         int size() nogil
         void processcorpus(string filename, unordered_map[string,unsigned int]) nogil
-        void buildclasses(unordered_map[string,unsigned int], int threshold=0) nogil
-        void build(string filename,int threshold=0) nogil #build a class from this dataset
-        void encodefile(string, string, bool allowunknown, bool autoaddunknown, bool append,bool ignorenewlines, bool quiet) nogil
-        void save(string)
-        Pattern buildpattern(string, bool allowunknown, bool autoaddunknown) nogil
+        void buildclasses(unordered_map[string,unsigned int] & , int threshold=0) nogil
+        void build(string& filename,int threshold=0) nogil #build a class from this dataset
+        void encodefile(string&, string&, bool allowunknown, bool autoaddunknown, bool append,bool ignorenewlines, bool quiet) nogil
+        void save(string&)
+        Pattern buildpattern(string&, bool allowunknown, bool autoaddunknown) nogil
 
 cdef extern from "patternmodel.h":
     cdef cppclass PatternModelOptions:
@@ -548,8 +548,8 @@ cdef extern from "alignmodel.h":
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
 
-        void load(string, PatternModelOptions) nogil except +IOError
-        void write(string) nogil except +IOError
+        void load(string&, PatternModelOptions) nogil except +IOError
+        void write(string&) nogil except +IOError
 
     cdef cppclass BasicPatternAlignmentModel:
         cppclass iterator:
@@ -582,5 +582,5 @@ cdef extern from "alignmodel.h":
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
 
-        void load(string, PatternModelOptions) nogil except +IOError
-        void write(string) nogil except +IOError
+        void load(string&, PatternModelOptions) nogil except +IOError
+        void write(string&) nogil except +IOError
