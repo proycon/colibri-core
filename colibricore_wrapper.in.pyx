@@ -26,18 +26,9 @@ from sys import version
 
 
 
-PYTHON2=(version[0] == '2')
-if PYTHON2:
-    FileNotFoundError = IOError
 
 def encode(s):
-    if PYTHON2:
-        if isinstance(s, unicode):
-            return s.encode('utf-8')
-        else:
-            return s #assume already encoded
-    else:
-        return s.encode('utf-8')
+    return s.encode('utf-8')
 
 
 class Category:
@@ -156,10 +147,7 @@ cdef class ClassDecoder:
 
     def decodefile(self, str filename):
         if os.path.exists(filename):
-            if PYTHON2:
-                return self.data.decodefiletostring(encode(filename))
-            else:
-                return self.data.decodefiletostring(encode(filename)).decode('utf-8') #bytes to str (python3)
+            return self.data.decodefiletostring(encode(filename)).decode('utf-8') #bytes to str (python3)
         else:
             raise FileNotFoundError("File " + filename + " does not exist")
 
@@ -204,10 +192,7 @@ cdef class Pattern:
         :rtype: str
         """
 
-        if PYTHON2:
-            return unicode(self.cpattern.tostring(decoder.data),'utf-8')
-        else:
-            return str(self.cpattern.tostring(decoder.data),'utf-8')
+        return str(self.cpattern.tostring(decoder.data),'utf-8')
 
     def unknown(self):
         return self.cpattern.unknown()
