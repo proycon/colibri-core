@@ -52,7 +52,7 @@ jobs:
         run: |
           autoreconf -i && ./configure && make && sudo make install
 
-      - name: Build and install Colibri-Core python bniding
+      - name: Build and install Colibri-Core python binding
         env:
           CXX: ${{ matrix.compiler }}
         run: |
