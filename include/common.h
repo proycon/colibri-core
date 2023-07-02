@@ -35,18 +35,20 @@ void orderedinsert(std::list<double> & l, double value);
 std::vector<std::string> & split(const std::string &s, char delim, std::vector<std::string> &elems);
 std::vector<std::string> split(const std::string &s, char delim);
 
+bool test_common();
+
 class InternalError: public std::runtime_error {
-    public: 
+    public:
         explicit InternalError(): std::runtime_error("Colibri internal error") {}
 };
 
 class KeyError: public std::runtime_error {
-    public: 
+    public:
         explicit KeyError(): std::runtime_error("Colibri KeyError") {}
 };
 
 class UnknownTokenError: public std::runtime_error {
-    public: 
+    public:
         explicit UnknownTokenError(): std::runtime_error("Colibri TokenError: the input contained an unknown token") {}
 };
 #endif

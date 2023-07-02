@@ -45,7 +45,6 @@ void testgt(unsigned int value , unsigned int ref) {
 
 int main( int argc, const char *argv[] ) {
 
-
 	//string model = argv[1];
 	//string classfile = argv[1];
     bool verbose = false;
@@ -127,6 +126,9 @@ int main( int argc, const char *argv[] ) {
         }
         */
 
+      {
+	cerr << "  common functions "; test(test_common(),true);
+      }
 
       int res = chdir("/tmp");
       if ( res != 0 ){
