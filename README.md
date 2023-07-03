@@ -76,12 +76,16 @@ pip install colibricore
 We strongly recommend you use a Virtual Environment for this. Do note that this
 is only available for unix-like systems, Windows is not supported.
 
-### Installation from source
+### Installation from packages
 
 For the command-line tools, check if your distribution has a package available.
 There are packages for Alpine Linux (`apk add colibri-core`) and for macOS with
 homebrew (`brew tap fbkarsdorp/homebrew-lamachine && brew install
 colibri-core`). Note that these do not contain the Python binding!
+
+Otherwise you will need to build and install from source:
+
+### Installation from source
 
 If no packages are available, you will need to compile from source or use the container build (e.g.
 Docker) as explained later on.
