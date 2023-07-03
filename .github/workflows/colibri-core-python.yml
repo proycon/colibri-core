@@ -1,0 +1,89 @@
+name: Python CI
+
+on:
+  push:
+    paths:
+      - 'src/*'
+      - 'include/*'
+      - '*.py'
+      - '*.pyx'
+      - '*.pxd'
+      - '.github/**'
+
+jobs:
+
+  notification:
+    runs-on: ubuntu-latest
+    name: Notify start to ##gitlama
+    steps:
+      - name: IRC notification
+        uses: Gottox/irc-message-action@v1
+        with:
+          server: irc.uvt.nl
+          channel: '#gitlama'
+          nickname: GitHub
+          message: |-
+            ${{ github.actor }} started a build of colibri-core-python
+
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        compiler: [g++]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Build Environment
+        run: |
+             if [ "$RUNNER_OS" == "Linux" ]; then
+                sudo apt-get install pkg-config autoconf-archive
+             fi
+
+      - name: Install Dependencies
+        run: |
+             if [ "$RUNNER_OS" == "Linux" ]; then
+                sudo apt-get install python3 cython3 python3-pip python3-wheel libbz2-dev
+             fi
+
+      - name: Build and install Colibri-Core library
+        env:
+          CXX: ${{ matrix.compiler }}
+        run: |
+          autoreconf -i && ./configure && make && sudo make install
+
+      - name: Build and install Colibri-Core python binding
+        env:
+          CXX: ${{ matrix.compiler }}
+        run: |
+          pip install .
+
+      - name: Test
+        env:
+          CXX: ${{ matrix.compiler }}
+        run: LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib python test.py
+        continue-on-error: true
+
+      - name: Test patternmodeller
+        env:
+          CXX: ${{ matrix.compiler }}
+        run: LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib cd exp && ./colibri-patternmodeller-test.sh
+        continue-on-error: true
+
+      - name: Notify IRC of failure
+        if: ${{ failure() }}
+        uses: Gottox/irc-message-action@v1
+        with:
+          server: irc.uvt.nl
+          channel: '#gitlama'
+          nickname: GitHub
+          message: "Building colibri-core-python with ${{ matrix.compiler }} by ${{ github.actor }} on ${{ matrix.os }}: \u00034FAIL\u0003"
+
+      - name: Notify IRC of success
+        if: ${{ success() }}
+        uses: Gottox/irc-message-action@v1
+        with:
+          server: irc.uvt.nl
+          channel: '#gitlama'
+          nickname: GitHub
+          message: "Building colibri-core-python with ${{ matrix.compiler }} by ${{ github.actor }} on ${{ matrix.os }}: \u00033SUCCESS\u0003"
