@@ -8,7 +8,6 @@ import sys
 from copy import copy
 import pickle
 
-
 def red(s):
    CSI="\x1B["
    return CSI+"1;31m" + s + CSI + "0m"
