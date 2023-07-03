@@ -83,7 +83,7 @@ There are packages for Alpine Linux (`apk add colibri-core`) and for macOS with
 homebrew (`brew tap fbkarsdorp/homebrew-lamachine && brew install
 colibri-core`). Note that these do not contain the Python binding!
 
-Otherwise you will need to build and install from source:
+Otherwise you will need to either use the container image or to build and install from source.
 
 ### Installation from source
 
