@@ -402,7 +402,7 @@ cdef extern from "patternmodel.h":
 
         PatternModelInterface * getinterface() nogil
         void train( const string& filename, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
-        void train(istream&, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
+        void train(istream*, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
 
         unsigned int totaloccurrencesingroup(int category, int n)
         unsigned int totalpatternsingroup(int category, int n)
@@ -467,7 +467,7 @@ cdef extern from "patternmodel.h":
 
         PatternModelInterface * getinterface() nogil
         void train( const string& filename, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
-        void train(istream&, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
+        void train(istream*, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
 
         IndexedCorpus * reverseindex
         bool externalreverseindex
