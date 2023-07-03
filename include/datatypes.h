@@ -534,92 +534,84 @@ public:
 
   PatternVector() {};
 
-  PatternVector(const PatternVector & ref) {
-    for ( const auto& pfv_ref : ref.data ){
-      //make a copy
-      Pattern *pfv = new Pattern(pfv_ref);
-      this->data.push_back(*pfv);
-    }
+  PatternVector( const PatternVector& ref ) {
+    data = ref.data;
   }
 
-  PatternVector& operator=( const PatternVector & ref) {
+  PatternVector& operator=( const PatternVector& ref ) {
     if ( this != &ref ){
-      for ( const auto& pfv_ref : ref.data ){
-	//make a copy
-	Pattern *pfv = new Pattern(pfv_ref);
-	this->data.push_back(*pfv);
-      }
+      data = ref.data;
     }
     return *this;
   }
 
   virtual ~PatternVector() {
   }
-        bool has(const Pattern & ref) const {
-            for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
-                if (*iter == ref) {
-                    return true;
-                }
-            }
-            return false;
-        }
+
+  bool has(const Pattern & ref) const {
+    for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
+      if (*iter == ref) {
+	return true;
+      }
+    }
+    return false;
+  }
 
 
-       iterator find(const Pattern & ref) {
-            for (iterator iter = this->begin(); iter != this->end(); ++iter) {
-                if (*iter == ref) {
-                    return iter;
-                }
-            }
-            return this->end();
-        }
+  iterator find(const Pattern & ref) {
+    for (iterator iter = this->begin(); iter != this->end(); ++iter) {
+      if (*iter == ref) {
+	return iter;
+      }
+    }
+    return this->end();
+  }
 
-        unsigned int count() const { return data.size(); }
+  unsigned int count() const { return data.size(); }
 
 
 
-        void insert(const Pattern & pattern, bool checkexists=true) {
-            //make a copy, safer
-            if (checkexists) {
-                iterator found = this->find(pattern);
-                if (found == this->end()) {
-                    this->data.push_back(pattern);
-                }
-            } else {
-                this->data.push_back(pattern);
-            }
-        }
+  void insert(const Pattern & pattern, bool checkexists=true) {
+    //make a copy, safer
+    if (checkexists) {
+      iterator found = this->find(pattern);
+      if (found == this->end()) {
+	this->data.push_back(pattern);
+      }
+    } else {
+      this->data.push_back(pattern);
+    }
+  }
 
-        size_t size() const { return data.size(); }
+  size_t size() const { return data.size(); }
 
-        virtual std::string tostring() {
-            //we have no classdecoder at this point
-            std::cerr << "ERROR: PatternFeatureVector does not support serialisation to string" << std::endl;
-            throw InternalError();
-        }
+  virtual std::string tostring() {
+    //we have no classdecoder at this point
+    std::cerr << "ERROR: PatternFeatureVector does not support serialisation to string" << std::endl;
+    throw InternalError();
+  }
 
-        iterator begin() { return data.begin(); }
-        const_iterator begin() const { return data.begin(); }
+  iterator begin() { return data.begin(); }
+  const_iterator begin() const { return data.begin(); }
 
-        iterator end() { return data.end(); }
-        const_iterator end() const { return data.end(); }
+  iterator end() { return data.end(); }
+  const_iterator end() const { return data.end(); }
 
-        virtual Pattern * getdata(const Pattern & pattern) {
-            iterator iter = this->find(pattern);
-            if (iter != this->end()) {
-                Pattern * p = &(*iter);
-                return p;
-            }
-            return NULL;
-        }
+  virtual Pattern * getdata(const Pattern & pattern) {
+    iterator iter = this->find(pattern);
+    if (iter != this->end()) {
+      Pattern * p = &(*iter);
+      return p;
+    }
+    return NULL;
+  }
 
-        void reserve(size_t size) {
-            data.reserve(size);
-        }
-        void shrink_to_fit() {
-            data.shrink_to_fit();
-        }
-
+  void reserve(size_t size) {
+    data.reserve(size);
+  }
+  void shrink_to_fit() {
+    data.shrink_to_fit();
+  }
 
 };
 
