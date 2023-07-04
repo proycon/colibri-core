@@ -51,8 +51,8 @@ if platform.system() == "Darwin":
         includedirs.append("/opt/homebrew/include/colibri-core")
 
 #add some common default paths
-includedirs += ['/usr/include/colibri-core', '/usr/local/include/colibri-core', '/home/sloot/usr/local/include/colibri-core' ]
-libdirs += ['/usr/lib','/usr/local/lib', '/home/sloot/usr/local/lib']
+includedirs += ['/usr/include/colibri-core', '/usr/local/include/colibri-core' ]
+libdirs += ['/usr/lib','/usr/local/lib']
 if 'VIRTUAL_ENV' in os.environ:
     includedirs.insert(0,os.environ['VIRTUAL_ENV'] + '/include/colibri-core')
     libdirs.insert(0,os.environ['VIRTUAL_ENV'] + '/lib')
