@@ -1,9 +1,7 @@
 #include "common.h"
 #include <glob.h>
 #include <sstream>
-#include <iostream>
 #include <vector>
-#include <numeric>
 
 using namespace std;
 
@@ -34,11 +32,19 @@ bool strip_extension(std::string& filename, const std::string& extension) {
 }
 
 double listproduct(const vector<double> & l) {
-  return std::accumulate( l.begin(), l.end(), 1, std::multiplies<double>() );
+    double p = 1;
+    for ( const auto& iter : l ){
+      p *= iter;
+    }
+    return p;
 }
 
 double listsum(const vector<double> & l) {
-  return std::accumulate( l.begin(), l.end(), 0 );
+    double p = 0;
+    for ( const auto& iter: l ){
+      p += iter;
+    }
+    return p;
 }
 
 void orderedinsert(list<double> & l, double value) {
@@ -65,31 +71,4 @@ vector<string> & split(const string &s, char delim, vector<string> &elems) {
 vector<string> split(const string &s, char delim) {
     vector<string> elems;
     return split(s, delim, elems);
-}
-
-bool test_common(){
-  int err_cnt = 0;
-  vector<double> v { 1.0, 2.0, 3.0, 4.0 };
-  if ( listproduct( v ) != 24.0 ) {
-    cerr << "listproduct problem: " << listproduct( v ) << " != 24.0" << endl;
-    ++err_cnt;
-  }
-  if ( listsum( v ) != 10.0 ){
-    cerr << "listproduct problem: " << listsum( v ) << " != 10" << endl;
-    ++err_cnt;
-  }
-  list<double> l { 1.0, 2.0, 3.0, 4.0 };
-  orderedinsert( l, 3.14 );
-  if ( l != list<double>({ 1.0, 2.0, 3.0, 3.14, 4.0 }) ){
-    cerr << "orderedinsert problem: { ";
-    for ( const auto& it : l ){
-      cerr << it;
-      if ( &it != &l.back() ){
-	cerr << ", ";
-      }
-    }
-    cerr << " } != { 1.0, 2.0, 3.0, 3.14, 4.0 }" << endl;
-    ++err_cnt;
-  }
-  return err_cnt == 0;
 }

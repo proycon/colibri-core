@@ -95,7 +95,7 @@ cpdef outputrelations(self, Pattern pattern, ClassDecoder decoder):
     :param decoder: The class decoder
     :type decoder: ClassDecoder
     """
-    self.data.outputrelations(pattern.cpattern,decoder.data,&cout)
+    self.data.outputrelations(pattern.cpattern,decoder.data,cout)
 
 
 def getsubchildren(self, Pattern pattern, int occurrencethreshold = 0, int category = 0, int size = 0):

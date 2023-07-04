@@ -111,8 +111,8 @@ void processquerypattern(ModelType & model, ClassDecoder * classdecoder, const P
     if (!model.has(pattern)) {
         cout << "PATTERN \"" << pattern.tostring(*classdecoder) << "\" NOT FOUND IN MODEL" << endl;
     } else {
-        model.print(&cout, *classdecoder, pattern, doinstantiate);
-        if (!dorelations.empty()) model.outputrelations(pattern, *classdecoder, &cout, dorelations == "all" ? "" : dorelations);
+        model.print(cout, *classdecoder, pattern, doinstantiate);
+        if (!dorelations.empty()) model.outputrelations(pattern, *classdecoder, cout, dorelations == "all" ? "" : dorelations);
     }
 }
 
@@ -124,11 +124,10 @@ void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassD
     cerr << "Processing " << querypatterns.size() << " queries" << endl;
     const bool allowunknown = true;
     unsigned char buffer[65536];
-    for (vector<string>::const_iterator iter = querypatterns.begin(); iter != querypatterns.end(); ++iter) {
-       const string s = *iter;
-       const int buffersize = classencoder->encodestring(s, buffer, allowunknown);
-       const Pattern pattern = Pattern(buffer, buffersize);
-       processquerypattern<ModelType>(model,classdecoder,pattern, dorelations, doinstantiate);
+    for ( const auto& s : querypatterns ){
+      const int buffersize = classencoder->encodestring(s, buffer, allowunknown);
+      const Pattern pattern = Pattern(buffer, buffersize);
+      processquerypattern<ModelType>(model,classdecoder,pattern, dorelations, doinstantiate);
     }
 }
 
@@ -159,22 +158,22 @@ void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * c
                 if (exact) {
                     processquerypattern<ModelType>(model,classdecoder, linepattern, dorelations, doinstantiate);
                 } else {
-                    vector<pair<Pattern, int> > patterns = model.getpatterns(linepattern);
-                    if (model.has(linepattern)) {
-                        const IndexReference ref = IndexReference(linenum,0);
+		  vector<pair<Pattern, int> > patterns = model.getpatterns(linepattern);
+		  if (model.has(linepattern)) {
+		    const IndexReference ref = IndexReference(linenum,0);
 
-                        //process and output instance
-                        cout << ref.sentence << ':' << (int) ref.token << "\t";
-                        processquerypattern<ModelType>(model, classdecoder, linepattern, dorelations, doinstantiate);
-                    }
-                    for (vector<pair<Pattern,int> >::iterator iter = patterns.begin(); iter != patterns.end(); ++iter) {
-                            const Pattern pattern = iter->first;
-                            const IndexReference ref = IndexReference(linenum,iter->second);
+		    //process and output instance
+		    cout << ref.sentence << ':' << (int) ref.token << "\t";
+		    processquerypattern<ModelType>(model, classdecoder, linepattern, dorelations, doinstantiate);
+		  }
+		  for ( const auto& iter : patterns ){
+		    const Pattern pattern = iter.first;
+		    const IndexReference ref = IndexReference(linenum,iter.second);
 
-                            //process and output instance
-                            cout << ref.sentence << ':' << (int) ref.token << "\t";
-                            processquerypattern<ModelType>(model, classdecoder, pattern, dorelations, doinstantiate);
-                    }
+		    //process and output instance
+		    cout << ref.sentence << ':' << (int) ref.token << "\t";
+		    processquerypattern<ModelType>(model, classdecoder, pattern, dorelations, doinstantiate);
+		  }
                 }
             }
     } while (!cin.eof() && (repeat));
@@ -198,22 +197,22 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
         if (classdecoder == NULL) {
             cerr << "ERROR: Unable to print model, no class file specified (--classfile)" << endl;
         } else {
-            model.print(&cout, *classdecoder, doinstantiate);
+            model.print(cout, *classdecoder, doinstantiate);
         }
     }
     if (printreverseindex) {
-        model.printreverseindex(&cout, *classdecoder);
+        model.printreverseindex(cout, *classdecoder);
     }
     if (report) {
-        model.report(&cout, nocoverage);
+        model.report(cout, nocoverage);
     }
     if (histogram) {
-        model.histogram(&cout);
+        model.histogram(cout);
     }
     if (cooc == 2) {
-        model.outputcooc_npmi(&cout, *classdecoder,coocthreshold);
+        model.outputcooc_npmi(cout, *classdecoder,coocthreshold);
     } else if (cooc == 1) {
-        model.outputcooc(&cout, *classdecoder,coocthreshold);
+        model.outputcooc(cout, *classdecoder,coocthreshold);
     }
 
     if (query) {
@@ -227,16 +226,16 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
 	throw logic_error( "processquerypattern called with NULL classencoder");
       }
       bool first = true;
-        for (typename ModelType::iterator iter = model.begin(); iter != model.end(); ++iter) {
-            cout << iter->first.tostring(*classdecoder) << endl;
-            const PatternPointer pp = iter->first;
-            model.outputrelations(pp, *classdecoder, &cout, dorelations == "all" ? "" : dorelations,first);
-            first = false;
-        }
+      for (typename ModelType::iterator iter = model.begin(); iter != model.end(); ++iter) {
+	cout << iter->first.tostring(*classdecoder) << endl;
+	const PatternPointer pp = iter->first;
+	model.outputrelations(pp, *classdecoder, cout, dorelations == "all" ? "" : dorelations,first);
+	first = false;
+      }
     }
 
     if (info) {
-        model.info(&cout);
+        model.info(cout);
     }
 }
 
@@ -603,31 +602,31 @@ int main( int argc, char *argv[] ) {
 	    cerr << "Unknown option: -" <<  optopt << endl;
 	  }
 
-        return 1;
-    case 0:
-        if (strcmp(long_options[option_index].name,"instances") == 0) {
-            DORELATIONS = "instances";
-        } else if (strcmp(long_options[option_index].name,"templates") == 0) {
-            DORELATIONS = "templates";
-        } else if (strcmp(long_options[option_index].name,"subsumes") == 0) {
-            DORELATIONS = "subsumes";
-        } else if (strcmp(long_options[option_index].name,"subsumed") == 0) {
-            DORELATIONS = "subsumed";
-        } else if (strcmp(long_options[option_index].name,"skipcontent") == 0) {
-            DORELATIONS = "skipcontent";
-        } else if (strcmp(long_options[option_index].name,"leftneighbours") == 0) {
-            DORELATIONS = "leftneighbours";
-        } else if (strcmp(long_options[option_index].name,"rightneighbours") == 0) {
-            DORELATIONS = "rightneighbours";
-        } else if (strcmp(long_options[option_index].name,"leftcooc") == 0) {
-            DORELATIONS = "leftcooc";
-        } else if (strcmp(long_options[option_index].name,"rightcooc") == 0) {
-            DORELATIONS = "rightcooc";
-        } else if (strcmp(long_options[option_index].name,"instantiate") == 0) {
-            DOINSTANTIATE = true;
-        }
-        break;
-    default:
+	  return 1;
+	case 0:
+	  if (strcmp(long_options[option_index].name,"instances") == 0) {
+	    DORELATIONS = "instances";
+	  } else if (strcmp(long_options[option_index].name,"templates") == 0) {
+	    DORELATIONS = "templates";
+	  } else if (strcmp(long_options[option_index].name,"subsumes") == 0) {
+	    DORELATIONS = "subsumes";
+	  } else if (strcmp(long_options[option_index].name,"subsumed") == 0) {
+	    DORELATIONS = "subsumed";
+	  } else if (strcmp(long_options[option_index].name,"skipcontent") == 0) {
+	    DORELATIONS = "skipcontent";
+	  } else if (strcmp(long_options[option_index].name,"leftneighbours") == 0) {
+	    DORELATIONS = "leftneighbours";
+	  } else if (strcmp(long_options[option_index].name,"rightneighbours") == 0) {
+	    DORELATIONS = "rightneighbours";
+	  } else if (strcmp(long_options[option_index].name,"leftcooc") == 0) {
+	    DORELATIONS = "leftcooc";
+	  } else if (strcmp(long_options[option_index].name,"rightcooc") == 0) {
+	    DORELATIONS = "rightcooc";
+	  } else if (strcmp(long_options[option_index].name,"instantiate") == 0) {
+	    DOINSTANTIATE = true;
+	  }
+	  break;
+        default:
 	  cerr << "Unknown option: -" <<  optopt << endl;
 	  abort ();
         }

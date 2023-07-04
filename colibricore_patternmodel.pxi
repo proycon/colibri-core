@@ -255,7 +255,7 @@ cpdef printmodel(self,ClassDecoder decoder):
     :param decoder: The class decoder
     :type decoder: ClassDecoder
     """
-    self.data.printmodel(&cout, decoder.data )
+    self.data.printmodel(cout, decoder.data )
 
 cpdef train(self, str filename, PatternModelOptions options, constrainmodel = None):
     """Train the patternmodel on the specified corpus data (a *.colibri.dat file)
@@ -349,11 +349,11 @@ cpdef trainconstrainedbyalignmodel(self, str filename, PatternModelOptions optio
 
 cpdef report(self):
     """Print a detailed statistical report to stdout"""
-    self.data.report(&cout)
+    self.data.report(cout)
 
 cpdef printhistogram(self):
     """Print a histogram to stdout"""
-    self.data.histogram(&cout)
+    self.data.histogram(cout)
 
 
 
@@ -459,4 +459,3 @@ def getinstance(self, tuple pos, Pattern pattern):
     if self.data.reverseindex == NULL:
         raise ValueError("No reverse index loaded")
     return self.corpus.getinstance(pos, pattern)
-

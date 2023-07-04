@@ -1008,20 +1008,20 @@ int PatternPointer::flexcollapse(unsigned char * collapseddata) const {
 	size_t j = 0;
 	size_t n = 0;
 	for (size_t i = 0; i < bytes; i++) {
-		if (data[i] < 128) {
-			if (isgap(n)) {
-				if (!prevgap) {
-					collapseddata[j++] = ClassDecoder::flexclass;
-					prevgap = true;
-				}
-			} else {
-				collapseddata[j++] = data[i];
-				prevgap = false;
-			}
-			n++;
-		} else {
-			collapseddata[j++] = data[i];
-		}
+	  if (data[i] < 128) {
+	    if (isgap(n)) {
+	      if (!prevgap) {
+		collapseddata[j++] = ClassDecoder::flexclass;
+		prevgap = true;
+	      }
+	    } else {
+	      collapseddata[j++] = data[i];
+	      prevgap = false;
+	    }
+	    n++;
+	  } else {
+	    collapseddata[j++] = data[i];
+	  }
 	}
 	return j;
 }
@@ -1069,11 +1069,11 @@ bool Pattern::operator<(const Pattern & other) const {
     const int s = bytesize();
     const int s2 = other.bytesize();
     for (int i = 0; (i <= s && i <= s2); i++) {
-        if (data[i] < other.data[i]) {
-            return true;
-        } else if (data[i] > other.data[i]) {
-            return false;
-        }
+      if (data[i] < other.data[i]) {
+	return true;
+      } else if (data[i] > other.data[i]) {
+	return false;
+      }
     }
     return (s < s2);
 }
@@ -1112,7 +1112,7 @@ Pattern Pattern::operator +(const Pattern & other) const {
         unsigned char buffer[s+s2];
         memcpy(buffer, data, s);
         for (size_t i = 0; i < s2; i++) {
-            buffer[s+i] = other.data[i];
+	  buffer[s+i] = other.data[i];
         }
         return Pattern(buffer, s+s2);
     }
@@ -1147,16 +1147,16 @@ int Pattern::find(const Pattern & pattern) const { //returns the index, -1 if no
     if (s2 > s) return -1;
 
     for (size_t i = 0; i < s; i++) {
-        if (data[i] == pattern.data[0]) {
-            bool match = true;
-            for (size_t j = 0; j < s2; j++) {
-                if (data[i+j] != pattern.data[j]) {
-                    match = false;
-                    break;
-                }
-            }
-            if (match) return i;
-        }
+      if (data[i] == pattern.data[0]) {
+	bool match = true;
+	for (size_t j = 0; j < s2; j++) {
+	  if (data[i+j] != pattern.data[j]) {
+	    match = false;
+	    break;
+	  }
+	}
+	if (match) return i;
+      }
     }
     return -1;
 }
@@ -1575,14 +1575,14 @@ int Pattern::gaps(vector<pair<int,int> > & container) const {
 
     //compute inverse:
     int begin = 0;
-    for (vector<pair<int,int>>::iterator iter = partscontainer.begin(); iter != partscontainer.end(); ++iter) {
-        if (iter->first > begin) {
-            container.push_back(pair<int,int>(begin,iter->first - begin));
-        }
-        begin = iter->first + iter->second;
+    for ( const auto& iter : partscontainer ){
+      if (iter.first > begin) {
+	container.push_back(pair<int,int>(begin,iter.first - begin));
+      }
+      begin = iter.first + iter.second;
     }
     if (begin != _n) {
-        container.push_back(pair<int,int>(begin,_n - begin));
+      container.push_back(pair<int,int>(begin,_n - begin));
     }
 
     int endskip = 0;
@@ -1743,13 +1743,13 @@ Pattern Pattern::addskips(const std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     const size_t _n = n();
     Pattern pattern = *this; //needless copy?
-    for (vector<pair<int,int> >::const_iterator iter = gaps.begin(); iter != gaps.end(); ++iter) {
-        const Pattern replacement = Pattern(iter->second);
-        pattern = pattern.replace(iter->first, iter->second, replacement);
-        if (pattern.n() != _n) {
-            std::cerr << "ERROR: addskip(): Pattern length changed from " << _n << " to " << pattern.n() << " after substituting slice (" << iter->first << "," <<iter->second << ")" << std::endl;
-            throw InternalError();
-        }
+    for ( const auto& iter : gaps ){
+      const Pattern replacement = Pattern(iter.second);
+      pattern = pattern.replace(iter.first, iter.second, replacement);
+      if (pattern.n() != _n) {
+	std::cerr << "ERROR: addskip(): Pattern length changed from " << _n << " to " << pattern.n() << " after substituting slice (" << iter.first << "," <<iter.second << ")" << std::endl;
+	throw InternalError();
+      }
     }
     return pattern;
 }
@@ -1772,8 +1772,8 @@ PatternPointer PatternPointer::addskips(const std::vector<std::pair<int,int> > &
 Pattern Pattern::addflexgaps(const std::vector<std::pair<int,int> > & gaps) const {
     //Returns a pattern with the specified spans replaced by fixed skips
     Pattern pattern = *this; //needless copy?
-    for (vector<pair<int,int> >::const_iterator iter = gaps.begin(); iter != gaps.end(); ++iter) {
-        pattern = pattern.replace(iter->first, iter->second, FLEXPATTERN);
+    for ( const auto& gap : gaps ){
+      pattern = pattern.replace( gap.first, gap.second, FLEXPATTERN);
     }
     return pattern;
 }
@@ -1938,16 +1938,16 @@ PatternPointer IndexedCorpus::findpattern(const IndexReference & begin, const Pa
     } else if (pattern.category() == SKIPGRAM) {
         std::vector<std::pair<int,int>> parts;
         pattern.parts(parts);
-        for (std::vector<std::pair<int,int>>::iterator partiter = parts.begin(); partiter != parts.end(); ++partiter) {
-            const PatternPointer part = PatternPointer(pattern,partiter->first, partiter->second);
-            try {
-                const PatternPointer candidate = getpattern(IndexReference(begin.sentence,begin.token + partiter->first),partiter->second);
-                if (part != candidate) {
-                    throw KeyError();
-                }
-            } catch (KeyError &e) {
-                throw KeyError(); //rethrow
-            }
+        for ( const auto& partiter : parts ){
+	  const PatternPointer part = PatternPointer(pattern,partiter.first, partiter.second);
+	  try {
+	    const PatternPointer candidate = getpattern(IndexReference(begin.sentence,begin.token + partiter.first),partiter.second);
+	    if (part != candidate) {
+	      throw KeyError();
+	    }
+	  } catch (KeyError &e) {
+	    throw KeyError(); //rethrow
+	  }
         }
         //found!
         PatternPointer result = getpattern(begin, pattern.n());
@@ -2033,11 +2033,11 @@ std::vector<std::pair<IndexReference,PatternPointer>> IndexedCorpus::findpattern
 
     IndexReference ref;
     if (sentence == 0) {
-        for (std::map<uint32_t,unsigned char*>::iterator iter = sentenceindex.begin(); iter != sentenceindex.end(); ++iter) {
-            findpattern(result, pattern, iter->first,instantiate);
-        }
+      for ( const auto& iter : sentenceindex ){
+	findpattern(result, pattern, iter.first,instantiate);
+      }
     } else {
-        findpattern(result, pattern, sentence,instantiate);
+      findpattern(result, pattern, sentence,instantiate);
     }
     return result;
 }

@@ -184,8 +184,8 @@ cdef extern from "patternstore.h":
         ValueType& operator[](Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
-        void read(string filename) nogil
-        void write(string filename) nogil
+        void read(const string& filename) nogil
+        void write(const string& filename) nogil
 
     cdef cppclass HashOrderedPatternMap[ValueType,ValueHandler,ReadWriteSizeType]:
         cppclass iterator:
@@ -202,8 +202,8 @@ cdef extern from "patternstore.h":
         ValueType& operator[](Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
-        void read(string filename) nogil
-        void write(string filename) nogil
+        void read(const string& filename) nogil
+        void write(const string& filename) nogil
 
     cdef cppclass PatternSet[ReadWriteSizeType]:
         cppclass iterator:
@@ -219,8 +219,8 @@ cdef extern from "patternstore.h":
         bool has(Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
-        void read(string filename) nogil
-        void write(string filename) nogil
+        void read(const string& filename) nogil
+        void write(const string& filename) nogil
 
     cdef cppclass HashOrderedPatternSet[ReadWriteSizeType]:
         cppclass iterator:
@@ -236,8 +236,8 @@ cdef extern from "patternstore.h":
         bool has(Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
-        void read(string filename) nogil
-        void write(string filename) nogil
+        void read(const string& filename) nogil
+        void write(const string& filename) nogil
 
     ctypedef pair[IndexReference,PatternPointer] IndexPattern
 
@@ -279,8 +279,8 @@ cdef extern from "patternstore.h":
         PatternMap[ValueType,ValueHandler,NestedSizeType]& operator[](Pattern&) nogil
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
-        void read(string filename) nogil
-        void write(string filename) nogil
+        void read(const string& filename) nogil
+        void write(const string& filename) nogil
 
 
 
@@ -304,10 +304,10 @@ cdef extern from "classencoder.h":
         ClassEncoder(string, int minlength=0, int maxlength=0) nogil except +
         void load(string, int minlength, int maxlength) nogil
         int size() nogil
-        void processcorpus(string filename, unordered_map[string,unsigned int]) nogil
+        void processcorpus(const string& filename, unordered_map[string,unsigned int]) nogil
         void buildclasses(unordered_map[string,unsigned int] & , int threshold=0) nogil
-        void build(string& filename,int threshold=0) nogil #build a class from this dataset
-        void encodefile(string&, string&, bool allowunknown, bool autoaddunknown, bool append,bool ignorenewlines, bool quiet) nogil
+        void build(const string& filename,int threshold=0) nogil #build a class from this dataset
+        void encodefile(const string&, string&, bool allowunknown, bool autoaddunknown, bool append,bool ignorenewlines, bool quiet) nogil
         void save(string&)
         Pattern buildpattern(string&, bool allowunknown, bool autoaddunknown) nogil except +
 
@@ -401,7 +401,7 @@ cdef extern from "patternmodel.h":
         IndexedCorpus * reverseindex
 
         PatternModelInterface * getinterface() nogil
-        void train(string filename, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
+        void train( const string& filename, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
         void train(istream*, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
 
         unsigned int totaloccurrencesingroup(int category, int n)
@@ -418,13 +418,13 @@ cdef extern from "patternmodel.h":
         iterator find(Pattern&) nogil
         void load(string, PatternModelOptions, PatternModelInterface*) nogil except +IOError
         void write(string) nogil except +IOError
-        void printmodel(ostream*, ClassDecoder&) nogil
-        void printpattern(ostream*, ClassDecoder&, Pattern&,bool instantiate=false,bool eol=true) nogil
-        void report(ostream*) nogil
+        void printmodel(ostream&, ClassDecoder&) nogil
+        void printpattern(ostream&, ClassDecoder&, Pattern&,bool instantiate=false,bool eol=true) nogil
+        void report(ostream&) nogil
         void histogram(stdmap[unsigned int,unsigned int] & hist, unsigned int threshold, unsigned int cap,int,unsigned int)
-        void histogram(ostream*) nogil
+        void histogram(ostream&) nogil
         unsigned int topthreshold(int,int,int) nogil
-        void outputrelations(Pattern&,ClassDecoder&, ostream*)
+        void outputrelations(Pattern&,ClassDecoder&, ostream&)
 
 
 
@@ -466,7 +466,7 @@ cdef extern from "patternmodel.h":
         float frequency(Pattern&) nogil
 
         PatternModelInterface * getinterface() nogil
-        void train(string filename, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
+        void train( const string& filename, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
         void train(istream*, PatternModelOptions options, PatternModelInterface *, PatternSet[uint] *)
 
         IndexedCorpus * reverseindex
@@ -486,13 +486,13 @@ cdef extern from "patternmodel.h":
         iterator find(Pattern&) nogil
         void load(string, PatternModelOptions, PatternModelInterface* ) nogil except +IOError
         void write(string) nogil except +IOError
-        void printmodel(ostream*, ClassDecoder&) nogil
-        void printpattern(ostream*, ClassDecoder&, Pattern&,bool instantiate=false,bool eol=true) nogil
-        void report(ostream*) nogil
-        void histogram(ostream*) nogil
+        void printmodel(ostream&, ClassDecoder&) nogil
+        void printpattern(ostream&, ClassDecoder&, Pattern&,bool instantiate=false,bool eol=true) nogil
+        void report(ostream&) nogil
+        void histogram(ostream&) nogil
         void histogram(stdmap[unsigned int,unsigned int] & hist, unsigned int threshold , unsigned int cap,int,unsigned int )
         unsigned int topthreshold(int,int,int) nogil
-        void outputrelations(Pattern&,ClassDecoder&, ostream*)
+        void outputrelations(Pattern&,ClassDecoder&, ostream&)
 
         void add(Pattern&, IndexedData*, IndexReference&)
 
