@@ -39,31 +39,35 @@ int main( int argc, char *argv[] ) {
 
     char c;
     while ((c = getopt(argc, argv, "c:hf:i::l:r:s:")) != -1) {
-        switch (c) {
-        case 'c':
-            classfile = optarg;
-            break;
-        case 'f':
-            corpusfile = optarg;
-            break;
-        case 'i':
-            modelfile = optarg;
-            break;
-        case 'l':
-            leftcontextsize = atoi(optarg);
-            break;
-        case 'r':
-            rightcontextsize = atoi(optarg);
-            break;
-        case 'h':
-            usage();
-            exit(0);
-		default:
-            cerr << "ERROR: Unknown option: -" <<  optopt << endl;
-            abort ();
-        }
+      switch (c) {
+      case 'c':
+	classfile = optarg;
+	break;
+      case 'f':
+	corpusfile = optarg;
+	break;
+      case 'i':
+	modelfile = optarg;
+	break;
+      case 'l':
+	leftcontextsize = atoi(optarg);
+	break;
+      case 'r':
+	rightcontextsize = atoi(optarg);
+	break;
+      case 'h':
+	usage();
+	exit(0);
+	default:
+	  cerr << "ERROR: Unknown option: -" <<  optopt << endl;
+	  abort ();
+      }
     }
-
+    if ( leftcontextsize != 0
+	 || rightcontextsize != 0 ){
+      cerr << "Sorry, options '-l' and '-r' are nor implemented yet." << endl;
+      abort();
+    }
     for (int i = optind; i < argc; i++) {
         string tmp = argv[i];
         querystrings.push_back(tmp);

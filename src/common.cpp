@@ -2,6 +2,7 @@
 #include <glob.h>
 #include <sstream>
 #include <vector>
+#include <numeric>
 
 using namespace std;
 
@@ -32,19 +33,11 @@ bool strip_extension(std::string& filename, const std::string& extension) {
 }
 
 double listproduct(const vector<double> & l) {
-    double p = 1;
-    for ( const auto& iter : l ){
-      p *= iter;
-    }
-    return p;
+  return std::accumulate( l.begin(), l.end(), 1, std::multiplies<double>() );
 }
 
 double listsum(const vector<double> & l) {
-    double p = 0;
-    for ( const auto& iter: l ){
-      p += iter;
-    }
-    return p;
+  return std::accumulate( l.begin(), l.end(), 0 );
 }
 
 void orderedinsert(list<double> & l, double value) {
