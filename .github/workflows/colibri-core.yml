@@ -14,7 +14,7 @@ jobs:
     name: Notify start to ##gitlama
     steps:
       - name: IRC notification
-        uses: Gottox/irc-message-action@v1
+        uses: Gottox/irc-message-action@v2
         with:
           server: irc.uvt.nl
           channel: '#gitlama'
@@ -30,7 +30,7 @@ jobs:
         compiler: [g++]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Build Environment
         run: |
              if [ "$RUNNER_OS" == "Linux" ]; then
@@ -54,7 +54,7 @@ jobs:
 
       - name: Notify IRC of failure
         if: ${{ failure() }}
-        uses: Gottox/irc-message-action@v1
+        uses: Gottox/irc-message-action@v2
         with:
           server: irc.uvt.nl
           channel: '#gitlama'
@@ -63,7 +63,7 @@ jobs:
 
       - name: Notify IRC of success
         if: ${{ success() }}
-        uses: Gottox/irc-message-action@v1
+        uses: Gottox/irc-message-action@v2
         with:
           server: irc.uvt.nl
           channel: '#gitlama'
