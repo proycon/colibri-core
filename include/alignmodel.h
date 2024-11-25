@@ -30,7 +30,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
         typedef typename PatternMap<ValueType,ValueHandler>::iterator iterator;
         typedef typename PatternMap<ValueType,ValueHandler>::const_iterator const_iterator;
 
-        AbstractAlignmentModel<ValueType,ValueHandler>() {
+        AbstractAlignmentModel() {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -39,7 +39,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             model_version = this->getmodelversion();
         }
 
-        AbstractAlignmentModel<ValueType,ValueHandler>(std::istream& f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        AbstractAlignmentModel(std::istream& f, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -49,7 +49,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             this->load(f,options,constrainmodel);
         }
 
-        AbstractAlignmentModel<ValueType,ValueHandler>(const std::string& filename, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
+        AbstractAlignmentModel(const std::string& filename, PatternModelOptions options, PatternModelInterface * constrainmodel = NULL) { //load from file
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -201,10 +201,10 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
         typedef typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::iterator iterator;
         typedef typename PatternMap<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>::const_iterator const_iterator;
 
-        PatternAlignmentModel<FeatureType>(): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>() {}
-        PatternAlignmentModel<FeatureType>(std::istream& f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(f, options, constrainmodel) {}
+        PatternAlignmentModel(): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>() {}
+        PatternAlignmentModel(std::istream& f, PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(f, options, constrainmodel) {}
 
-        PatternAlignmentModel<FeatureType>(const std::string& filename, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(filename, options, constrainmodel) {}
+        PatternAlignmentModel(const std::string& filename, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL): AbstractAlignmentModel<PatternFeatureVectorMap<FeatureType>,PatternFeatureVectorMapHandler<FeatureType>>(filename, options, constrainmodel) {}
 
 
         virtual PatternFeatureVector<FeatureType> * getfeaturevector(const Pattern & pattern, const Pattern & pattern2, bool makeifnew=false) {

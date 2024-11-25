@@ -433,8 +433,8 @@ class PatternStore: public PatternStoreInterface {
         unsigned char classencodingversion;
         int patterntype;
     public:
-        PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {corpusstart = NULL; corpussize = 0; classencodingversion = 2; patterntype = PatternType::patterntype; };
-        virtual ~PatternStore<ContainerType,ReadWriteSizeType,PatternType>() {};
+        PatternStore() {corpusstart = NULL; corpussize = 0; classencodingversion = 2; patterntype = PatternType::patterntype; };
+        virtual ~PatternStore() {};
 
         virtual void attachcorpus(unsigned char * corpusstart, size_t corpussize) {
             this->corpusstart = corpusstart;
@@ -503,8 +503,8 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
      protected:
         ValueHandler valuehandler;
      public:
-        PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType,PatternType>(): PatternStore<ContainerType,ReadWriteSizeType,PatternType>() { };
-        virtual ~PatternMapStore<ContainerType,ValueType,ValueHandler,ReadWriteSizeType,PatternType>() {};
+        PatternMapStore(): PatternStore<ContainerType,ReadWriteSizeType,PatternType>() { };
+        virtual ~PatternMapStore() {};
 
 
      using PatternStore<ContainerType,ReadWriteSizeType,PatternType>::insert;
@@ -633,12 +633,12 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
   /**
    * Empty set constructor
    */
-  explicit  PatternSet<ReadWriteSizeType>(): PatternStore<t_patternset,ReadWriteSizeType>() {};
+  explicit  PatternSet(): PatternStore<t_patternset,ReadWriteSizeType>() {};
 
   /**
    * Constructs a pattern set from a ClassDecoder
    */
-  explicit PatternSet<ReadWriteSizeType>(const ClassDecoder & classdecoder): PatternStore<t_patternset,ReadWriteSizeType>() {
+  explicit PatternSet(const ClassDecoder & classdecoder): PatternStore<t_patternset,ReadWriteSizeType>() {
     for (ClassDecoder::const_iterator iter = classdecoder.begin(); iter != classdecoder.end(); ++iter) {
       const int cls = iter->first;
       unsigned char * buffer = new unsigned char[64];
@@ -651,7 +651,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
   /**
    * Constructs a pattern set from a ClassEncoder
    */
-  explicit PatternSet<ReadWriteSizeType>(const ClassEncoder & classencoder): PatternStore<t_patternset,ReadWriteSizeType>() {
+  explicit PatternSet(const ClassEncoder & classencoder): PatternStore<t_patternset,ReadWriteSizeType>() {
     for (ClassEncoder::const_iterator iter = classencoder.begin(); iter != classencoder.end(); ++iter) {
       const int cls = iter->second;
       unsigned char * buffer = new unsigned char[64];
@@ -661,7 +661,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
     }
   }
 
-  virtual ~PatternSet<ReadWriteSizeType>() {};
+  virtual ~PatternSet() {};
 
         /**
          * Add a new pattern to the set
@@ -800,8 +800,8 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         t_hashorderedpatternset data;
     public:
 
-        HashOrderedPatternSet<ReadWriteSizeType>(): PatternStore<t_hashorderedpatternset,ReadWriteSizeType>() {};
-        virtual ~HashOrderedPatternSet<ReadWriteSizeType>();
+        HashOrderedPatternSet(): PatternStore<t_hashorderedpatternset,ReadWriteSizeType>() {};
+        virtual ~HashOrderedPatternSet();
 
         void insert(const Pattern& pattern) {
             data.insert(pattern);
@@ -872,7 +872,7 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
         std::unordered_map<Pattern, ValueType> data;
     public:
         //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
-        PatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
+        PatternMap() {};
 
         void insert(const Pattern & pattern, const ValueType & value) override {
             data[pattern] = value;
@@ -919,10 +919,10 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
     public:
   IndexedCorpus * corpus;
   //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
-  explicit PatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>(IndexedCorpus * corpus): corpus( corpus ) {
+  explicit PatternPointerMap(IndexedCorpus * corpus): corpus( corpus ) {
   }
 
-  explicit PatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>():
+  explicit PatternPointerMap():
     corpus(NULL){ }
 
         void insert(const PatternPointer & pattern, const ValueType & value) override {
@@ -972,10 +972,10 @@ protected:
 public:
   IndexedCorpus * corpus;
   //PatternMap(): PatternMapStore<std::unordered_map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
-  explicit OrderedPatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>(IndexedCorpus * _corpus):corpus(_corpus)
+  explicit OrderedPatternPointerMap(IndexedCorpus * _corpus):corpus(_corpus)
   {}
 
-  explicit OrderedPatternPointerMap<ValueType,ValueHandler,ReadWriteSizeType>():
+  explicit OrderedPatternPointerMap():
     corpus( NULL){ }
 
   void insert(const PatternPointer & pattern, const ValueType & value) {
@@ -1023,8 +1023,8 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
     protected:
         std::map<const Pattern, ValueType> data;
     public:
-        HashOrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>(): PatternMapStore<std::map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
-        virtual ~HashOrderedPatternMap<ValueType,ValueHandler,ReadWriteSizeType>() {};
+        HashOrderedPatternMap(): PatternMapStore<std::map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
+        virtual ~HashOrderedPatternMap() {};
 
         void insert(const Pattern & pattern, const ValueType & value) {
             data[pattern] = value;

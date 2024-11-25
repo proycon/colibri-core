@@ -357,9 +357,9 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
   typedef typename std::vector<PatternFeatureVector<FeatureType>*>::const_iterator const_iterator;
   typedef typename std::vector<PatternFeatureVector<FeatureType>*>::iterator iterator;
 
-  PatternFeatureVectorMap<FeatureType>() {};
+  PatternFeatureVectorMap() {};
 
-  PatternFeatureVectorMap<FeatureType>(const PatternFeatureVectorMap<FeatureType> & ref) {
+  PatternFeatureVectorMap(const PatternFeatureVectorMap<FeatureType> & ref) {
     for ( const auto& pfv_ref : ref ){
       //make a copy
       PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(*pfv_ref);
@@ -379,7 +379,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
   }
     /*   get double free or corruption error: //TODO: possible memory
      *   leak?? */
-  virtual ~PatternFeatureVectorMap<FeatureType>() {
+  virtual ~PatternFeatureVectorMap() {
     for ( const auto& d : data ) {
       delete d;
     }
@@ -454,7 +454,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
         iterator end() { return data.end(); }
         const_iterator end() const { return data.end(); }
 
-        virtual PatternFeatureVector<FeatureType> * getdata(const Pattern & pattern) {
+        virtual PatternFeatureVector<FeatureType> *getdata(const Pattern & pattern) {
             iterator iter = this->find(pattern);
             if (iter != this->end()) {
                 PatternFeatureVector<FeatureType> * pfv = *iter;

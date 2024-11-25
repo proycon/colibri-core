@@ -617,7 +617,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Begin a new pattern model, optionally pre-setting a reverseindex.
          */
-        PatternModel<ValueType,ValueHandler,MapType,PatternType>(IndexedCorpus * corpus = NULL) {
+        PatternModel(IndexedCorpus * corpus = NULL) {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -643,7 +643,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          * @param corpus Pointer to the loaded corpus, used as a reverse index.
          */
-        PatternModel<ValueType,ValueHandler,MapType,PatternType>(std::istream&f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) {
+        PatternModel(std::istream&f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) {
             totaltokens = 0;
             totaltypes = 0;
             maxn = 0;
@@ -662,7 +662,7 @@ class PatternModel: public MapType, public PatternModelInterface {
             reverseindex_internal = false;
         }
 
-        ~PatternModel<ValueType,ValueHandler,MapType,PatternType>() {
+        ~PatternModel() {
             if (reverseindex_internal && reverseindex != NULL) delete reverseindex;
         }
         /**
@@ -672,7 +672,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          * @param corpus Pointer to the loaded corpus, used as a reverse index.
          */
-        PatternModel<ValueType,ValueHandler,MapType,PatternType>(const std::string & filename, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) { //load from file
+        PatternModel(const std::string & filename, const PatternModelOptions & options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL) { //load from file
             //IndexedPatternModel will overload this
             totaltokens = 0;
             totaltypes = 0;
@@ -2522,7 +2522,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual int computeflexgrams_fromskipgrams() { return 0; }//does nothing for unindexed models
         virtual int computeflexgrams_fromcooc(double) {return 0; }//does nothing for unindexed models
         virtual void outputcooc_npmi(std::ostream *, ClassDecoder& , double) {}
-        virtual void outputcooc(std::ostream *, ClassDecoder&, double) {}
+        virtual void outputcooc(std::ostream *, const ClassDecoder&, double) {}
 
         /**
          * Get the instance of the pattern at the specified position
@@ -2582,7 +2582,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     /**
     * Begin a new pattern model, optionally pre-setting a reverseindex.
     */
-    IndexedPatternModel<MapType,PatternType>(IndexedCorpus * corpus = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>() {
+    IndexedPatternModel(IndexedCorpus * corpus = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>() {
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
         if (corpus) {
@@ -2600,7 +2600,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
     * @param corpus Pointer to the loaded corpus, used as a reverse index.
     */
-    IndexedPatternModel<MapType,PatternType>(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>(){ //load from file
+    IndexedPatternModel(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>(){ //load from file
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
         if (corpus) {
@@ -2619,7 +2619,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
     * @param corpus Pointer to the loaded corpus, used as a reverse index.
     */
-    IndexedPatternModel<MapType,PatternType>(const std::string& filename, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>() { //load from file
+    IndexedPatternModel(const std::string& filename, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): PatternModel<IndexedData,IndexedDataHandler,MapType,PatternType>() { //load from file
         this->model_type = this->getmodeltype();
         this->model_version = this->getmodelversion();
         if (corpus) {
@@ -2632,7 +2632,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         this->load( in, options, constrainmodel);
     }
 
-    virtual ~IndexedPatternModel<MapType,PatternType>() { }
+    virtual ~IndexedPatternModel() { }
 
 
     int getmodeltype() const override { return INDEXEDPATTERNMODEL; }
@@ -3738,7 +3738,7 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
 
     using  PatternModel<ValueType,ValueHandler,MapType,PatternPointer>::add;
 
-   explicit  PatternPointerModel<ValueType,ValueHandler,MapType>(IndexedCorpus * corpus): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() {
+   explicit  PatternPointerModel(IndexedCorpus * corpus): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() {
             this->model_type = this->getmodeltype();
             this->model_version = this->getmodelversion();
             if (corpus) {
@@ -3757,7 +3757,7 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
         * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
         * @param corpus Pointer to the loaded corpus, used as a reverse index.
         */
-        PatternPointerModel<ValueType,ValueHandler,MapType>(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<ValueType,ValueHandler,MapType,PatternPointer>(){ //load from file
+        PatternPointerModel(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL):  PatternModel<ValueType,ValueHandler,MapType,PatternPointer>(){ //load from file
             this->model_type = this->getmodeltype();
             this->model_version = this->getmodelversion();
             if (corpus) {
@@ -3776,7 +3776,7 @@ class PatternPointerModel: public PatternModel<ValueType,ValueHandler,MapType,Pa
         * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
         * @param corpus Pointer to the loaded corpus, used as a reverse index.
         */
-        PatternPointerModel<ValueType,ValueHandler,MapType>(const std::string& filename, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() { //load from file
+        PatternPointerModel(const std::string& filename, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): PatternModel<ValueType,ValueHandler,MapType,PatternPointer>() { //load from file
             this->model_type = this->getmodeltype();
             this->model_version = this->getmodelversion();
             if (corpus) {
@@ -3837,7 +3837,7 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
 
     using  IndexedPatternModel<MapType,PatternPointer>::add;
 
-  explicit IndexedPatternPointerModel<MapType>(IndexedCorpus * corpus): IndexedPatternModel<MapType,PatternPointer>() {
+  explicit IndexedPatternPointerModel(IndexedCorpus * corpus): IndexedPatternModel<MapType,PatternPointer>() {
             this->model_type = this->getmodeltype();
             this->model_version = this->getmodelversion();
             if (corpus) {
@@ -3856,7 +3856,7 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
         * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
         * @param corpus Pointer to the loaded corpus, used as a reverse index.
         */
-        IndexedPatternPointerModel<MapType>(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): IndexedPatternModel<MapType,PatternPointer>(){ //load from file
+        IndexedPatternPointerModel(std::istream *f, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): IndexedPatternModel<MapType,PatternPointer>(){ //load from file
             this->model_type = this->getmodeltype();
             this->model_version = this->getmodelversion();
             if (corpus) {
@@ -3875,7 +3875,7 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
         * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
         * @param corpus Pointer to the loaded corpus, used as a reverse index.
         */
-        IndexedPatternPointerModel<MapType>(const std::string& filename, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): IndexedPatternModel<MapType,PatternPointer>() { //load from file
+        IndexedPatternPointerModel(const std::string& filename, const PatternModelOptions& options, PatternModelInterface * constrainmodel = NULL, IndexedCorpus * corpus = NULL): IndexedPatternModel<MapType,PatternPointer>() { //load from file
             this->model_type = this->getmodeltype();
             this->model_version = this->getmodelversion();
             if (corpus) {
