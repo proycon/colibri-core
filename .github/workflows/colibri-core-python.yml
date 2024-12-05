@@ -25,7 +25,7 @@ jobs:
         with:
           server: irc.uvt.nl
           channel: '#gitlama'
-          nickname: GitHub
+          nickname: GitHubPy
           message: |-
             ${{ github.actor }} started a build of colibri-core-python
       - name: Cancel Previous Runs
