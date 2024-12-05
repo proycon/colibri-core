@@ -2,6 +2,10 @@ name: Python CI
 
 on:
   push:
+    branches:
+      - master
+      - develop
+
     paths:
       - 'src/*'
       - 'include/*'
@@ -33,7 +37,7 @@ jobs:
         compiler: [g++]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.1.1
       - name: Install Build Environment
         run: |
              if [ "$RUNNER_OS" == "Linux" ]; then
