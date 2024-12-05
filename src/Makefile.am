@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -Wall -O3 -std=c++17 -pedantic -g -fPIC
+AM_CXXFLAGS = -Wall -O3 -std=c++11 -Wno-vla -fPIC
 AM_CPPFLAGS = -I@top_srcdir@/include
 AM_LDFLAGS = -static -fPIC
 
