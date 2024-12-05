@@ -7,15 +7,15 @@ on:
       - develop
 
     paths:
-      - 'src/*'
-      - 'include/*'
-      - '.github/**'
+      - 'src/**'
+      - 'include/**'
+      - '.github/workflows/**'
 
 
 jobs:
   notification:
     runs-on: ubuntu-latest
-    name: Notify start to ##gitlama
+    name: Notify start to gitlama
     steps:
       - name: IRC notification
         uses: Gottox/irc-message-action@v2
@@ -25,8 +25,13 @@ jobs:
           nickname: GitHub
           message: |-
             ${{ github.actor }} started a build of colibri-core
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
 
   build:
+    needs: notification
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -43,7 +48,7 @@ jobs:
 
       - name: Build and install Colibri-Core
         env:
-          CXX:  ${{ matrix.compiler }}
+          CXX: ${{ matrix.compiler }}
         run: |
           bash bootstrap
           ./configure
@@ -52,7 +57,7 @@ jobs:
 
       - name: test
         env:
-          CXX:  ${{ matrix.compiler }}
+          CXX: ${{ matrix.compiler }}
         run: colibri-test
         continue-on-error: true
 
