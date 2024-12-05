@@ -233,26 +233,30 @@ size_t Pattern::hash() const {
 size_t PatternPointer::hash() const {
     if ((data == NULL) || (data[0] == 0)) return 0;
     if (mask == 0) {
-        return SpookyHash::Hash64((const void*) data , bytesize());
-	} else if (isflexgram()) {
-        //hashing skipgrams/flexgrams is a bit more expensive cause we need to process the mask before we can compute the hash:
-        unsigned char datacopy[bytes+1];
-		int size = flexcollapse(datacopy);
-        datacopy[size] = ClassDecoder::delimiterclass;
-        return SpookyHash::Hash64((const void*) datacopy , size+1);
+      return SpookyHash::Hash64((const void*) data , bytesize());
+    } else if (isflexgram()) {
+      //hashing skipgrams/flexgrams is a bit more expensive cause we need to process the mask before we can compute the hash:
+      unsigned char *datacopy = new unsigned char[bytes+1];
+      int size = flexcollapse(datacopy);
+      datacopy[size] = ClassDecoder::delimiterclass;
+      size_t result = SpookyHash::Hash64((const void*) datacopy , size+1);
+      delete [] datacopy;
+      return result;
     } else {
-        //hashing skipgrams/flexgrams is a bit more expensive cause we need to process the mask before we can compute the hash:
-        unsigned char datacopy[bytes+1];
-        memcpy(datacopy, data, bytes);
-        datacopy[bytes] = ClassDecoder::delimiterclass;
-        PPSizeType n = 0;
-	for (PPSizeType i = 0; i < bytes; ++i) {
-	  if (datacopy[i] < 128) {
-	    if (isgap(n)) datacopy[i] = ClassDecoder::skipclass;
-	    ++n;
-	  }
+      //hashing skipgrams/flexgrams is a bit more expensive cause we need to process the mask before we can compute the hash:
+      unsigned char *datacopy = new unsigned char[bytes+1];
+      memcpy(datacopy, data, bytes);
+      datacopy[bytes] = ClassDecoder::delimiterclass;
+      PPSizeType n = 0;
+      for (PPSizeType i = 0; i < bytes; ++i) {
+	if (datacopy[i] < 128) {
+	  if (isgap(n)) datacopy[i] = ClassDecoder::skipclass;
+	  ++n;
 	}
-        return SpookyHash::Hash64((const void*) datacopy , bytes);
+      }
+      size_t result = SpookyHash::Hash64((const void*) datacopy , bytes);
+      delete [] datacopy;
+      return result;
     }
 }
 
@@ -843,40 +847,41 @@ Pattern::Pattern(const Pattern& ref) { //copy constructor
 
 Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
     if (ref.mask == 0) {
-        //NGRAM
-		data = new unsigned char[ref.bytesize() + 1];
-		memcpy(data, ref.data, ref.bytesize());
-		data[ref.bytesize()] = ClassDecoder::delimiterclass;
+      //NGRAM
+      data = new unsigned char[ref.bytesize() + 1];
+      memcpy(data, ref.data, ref.bytesize());
+      data[ref.bytesize()] = ClassDecoder::delimiterclass;
     } else if (ref.isflexgram()) {
-        //FLEXGRAM
-		unsigned char tmpdata[ref.bytesize()+1];
-		size_t size = ref.flexcollapse(tmpdata);
-		data = new unsigned char[size+1];
-		memcpy(data, tmpdata, size);
-		data[size] = ClassDecoder::delimiterclass;
+      //FLEXGRAM
+      unsigned char *tmpdata = new unsigned char[ref.bytesize()+1];
+      size_t size = ref.flexcollapse(tmpdata);
+      data = new unsigned char[size+1];
+      memcpy(data, tmpdata, size);
+      delete [] tmpdata;
+      data[size] = ClassDecoder::delimiterclass;
     } else {
-        //SKIPGRAM
-		data = new unsigned char[ref.bytesize() + 1]; //may overallocate by a small margin
+      //SKIPGRAM
+      data = new unsigned char[ref.bytesize() + 1]; //may overallocate by a small margin
 
-        size_t n = 0;
-        size_t cursor = 0;
-        bool skip = ref.isgap(n);
-        for (size_t i = 0; i < ref.bytes; i++) {
-            const unsigned char c = ref.data[i];
-            if (c < 128) {
-                if (skip) {
-                    data[cursor++] = ClassDecoder::skipclass;
-                } else {
-                    data[cursor++] = c;
-                }
-                n++;
-                skip = ref.isgap(n);
-            } else if (!skip) {
-                data[cursor++] = c;
-            }
-        }
-        data[cursor++] = ClassDecoder::delimiterclass;
+      size_t n = 0;
+      size_t cursor = 0;
+      bool skip = ref.isgap(n);
+      for (size_t i = 0; i < ref.bytes; i++) {
+	const unsigned char c = ref.data[i];
+	if (c < 128) {
+	  if (skip) {
+	    data[cursor++] = ClassDecoder::skipclass;
+	  } else {
+	    data[cursor++] = c;
+	  }
+	  n++;
+	  skip = ref.isgap(n);
+	} else if (!skip) {
+	  data[cursor++] = c;
 	}
+      }
+      data[cursor++] = ClassDecoder::delimiterclass;
+    }
 }
 
 Pattern::Pattern(const PatternPointer& ref, size_t begin, size_t length, size_t * byteoffset, bool byteoffset_shiftbyone) { //slice constructor from patternpointer
@@ -983,10 +988,15 @@ bool PatternPointer::operator==(const Pattern &other) const {
     size_t n = 0;
     if ((mask != 0) && (isflexgram())) {
 		if (!other.isflexgram()) return false;
-		unsigned char data1[bytesize()];
+		unsigned char *data1 = new unsigned char[bytesize()];
 		const size_t size1 = flexcollapse(data1);
-		if (size1 != other.bytesize()) return false;
-		return (memcmp(data1,other.data,size1) == 0);
+		if (size1 != other.bytesize()) {
+		  delete [] data1;
+		  return false;
+		}
+		bool result = (memcmp(data1,other.data,size1) == 0);
+		delete [] data1;
+		return result;
     }
     while (i<bytes){
 	    if ((i>0) && (other.data[i-1] >= 128) && (other.data[i] == 0)) return false;
@@ -1031,12 +1041,20 @@ bool PatternPointer::operator==(const PatternPointer & other) const {
     if (bytes == other.bytes) {
 		if ((mask != 0) && (isflexgram())) {
 			if ((other.mask == 0) || (!other.isflexgram())) return false;
-			unsigned char data1[bytes];
+			unsigned char *data1 = new unsigned char[bytes];
 			int size1 = flexcollapse(data1);
-			unsigned char data2[other.bytesize()];
+			unsigned char *data2 = new unsigned char[other.bytesize()];
 			int size2 = other.flexcollapse(data2);
-			if (size1 != size2) return false;
-			return (memcmp(data1,data2,size1) == 0);
+			if (size1 != size2) {
+			  delete [] data1;
+			  delete [] data2;
+			  return false;
+			}
+			bool result = (memcmp(data1,data2,size1) == 0);
+			delete [] data1;
+			delete [] data2;
+			return result;
+
 		} else if (mask != other.mask) {
 			return false;
 		} else {
@@ -1109,12 +1127,14 @@ Pattern Pattern::operator +(const Pattern & other) const {
     } else {
         const size_t s = bytesize();
         const size_t s2 = other.bytesize();
-        unsigned char buffer[s+s2];
+        unsigned char *buffer = new unsigned char[s+s2];
         memcpy(buffer, data, s);
         for (size_t i = 0; i < s2; i++) {
-            buffer[s+i] = other.data[i];
+	  buffer[s+i] = other.data[i];
         }
-        return Pattern(buffer, s+s2);
+        Pattern result(buffer, s+s2);
+	delete [] buffer;
+	return result;
     }
 }
 
