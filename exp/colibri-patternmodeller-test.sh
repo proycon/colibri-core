@@ -82,11 +82,11 @@ if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 
 if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 echo -e "\n\nTEST> Building unindexed model on test data (using training data -j)">&2
-colibri-patternmodeller -f apology.colibri.dat -t 2 -l 10 -u -o apology-republic-overlap.colibri.unindexedpatternmodel -j republic.colibri.unindexedpatternmodel 
+colibri-patternmodeller -f apology.colibri.dat -t 2 -l 10 -u -o apology-republic-overlap.colibri.unindexedpatternmodel -j republic.colibri.unindexedpatternmodel
 if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 
 echo -e "\n\nTEST> Building indexed model on test data (using training data -j)">&2
-colibri-patternmodeller -f apology.colibri.dat -t 2 -l 10 -o apology-republic-overlap.colibri.indexedpatternmodel -j republic.colibri.indexedpatternmodel 
+colibri-patternmodeller -f apology.colibri.dat -t 2 -l 10 -o apology-republic-overlap.colibri.indexedpatternmodel -j republic.colibri.indexedpatternmodel
 if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 
 
@@ -113,3 +113,5 @@ if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
 echo -e "\n\nTEST> Building indexed model using Two-stage building">&2
 colibri-patternmodeller -2 -f republic.colibri.dat -t 2 -l 10 -o republic.colibri.indexedpatternmodel.2stage
 if [ ! "$?" = "0" ]; then echo "Test failed">&2; exit 2; fi
+
+echo "All tests passed" >&2
