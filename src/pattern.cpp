@@ -1028,6 +1028,9 @@ int PatternPointer::flexcollapse(unsigned char * collapseddata) const {
 
 
 bool PatternPointer::operator==(const PatternPointer & other) const {
+  if ( bytes == 0 ){
+    return false;
+  }
     if (bytes == other.bytes) {
 		if ((mask != 0) && (isflexgram())) {
 			if ((other.mask == 0) || (!other.isflexgram())) return false;
