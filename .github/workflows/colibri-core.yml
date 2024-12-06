@@ -55,6 +55,11 @@ jobs:
           make
           sudo make install
 
+      - name: run valgrind
+        uses: Ximaz/valgrind-action@v1.2.0
+        with:
+          binary_path: "colibri-test"
+
       - name: test
         env:
           CXX: ${{ matrix.compiler }}
