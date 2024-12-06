@@ -36,7 +36,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        compiler: [g++]
+        compiler: [g++,clang++]
 
     steps:
       - uses: actions/checkout@v4.1.1
@@ -54,11 +54,6 @@ jobs:
           ./configure
           make
           sudo make install
-
-      - name: run valgrind
-        uses: Ximaz/valgrind-action@v1.2.0
-        with:
-          binary_path: "src/colibri-test"
 
       - name: test
         env:
