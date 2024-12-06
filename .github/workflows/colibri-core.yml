@@ -58,7 +58,7 @@ jobs:
       - name: run valgrind
         uses: Ximaz/valgrind-action@v1.2.0
         with:
-          binary_path: "colibri-test"
+          binary_path: "src/colibri-test"
 
       - name: test
         env:
