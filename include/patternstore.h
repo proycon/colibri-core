@@ -815,10 +815,10 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         typedef t_hashorderedpatternset::iterator iterator;
         typedef t_hashorderedpatternset::const_iterator const_iterator;
 
-        iterator begin() { return data.begin(); }
+        iterator begin() override { return data.begin(); }
         const_iterator begin() const { return data.begin(); }
 
-        iterator end() { return data.end(); }
+        iterator end() override { return data.end(); }
         const_iterator end() const { return data.end(); }
 
         iterator find(const Pattern & pattern) { return data.find(pattern); }
@@ -1052,21 +1052,23 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
         typedef typename std::map<const Pattern,ValueType>::iterator iterator;
         typedef typename std::map<const Pattern,ValueType>::const_iterator const_iterator;
 
-        iterator begin() override { return data.begin(); }
-        const_iterator begin() const { return data.begin(); }
+  iterator begin() override { return data.begin(); }
+  const_iterator begin() const { return data.begin(); }
 
-        iterator end() override { return data.end(); }
-        const_iterator end() const { return data.end(); }
+  iterator end() override { return data.end(); }
+  const_iterator end() const { return data.end(); }
 
-        iterator find(const Pattern & pattern) { return data.find(pattern); }
-        const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
-        iterator find(const PatternPointer & pattern) { return data.find(pattern); }
-        const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
+  iterator find(const Pattern & pattern) override
+  { return data.find(pattern); }
+  const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+  iterator find(const PatternPointer & pattern) override
+  { return data.find(pattern); }
+  const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
 
-        bool erase(const Pattern & pattern) override
-  { return data.erase(pattern); }
-        iterator erase(const_iterator position) { return data.erase(position); }
-
+  bool erase(const Pattern & pattern) override
+  {
+    return data.erase(pattern); }
+  iterator erase(const_iterator position) { return data.erase(position); }
 
 };
 
@@ -1142,10 +1144,10 @@ class PatternStoreValueHandler: public AbstractValueHandler<PatternStoreType> {
  */
 template<class ValueType,class ValueHandler=BaseValueHandler<ValueType>, class NestedSizeType = uint16_t >
 class AlignedPatternMap: public PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>>, uint64_t > {
-    public:
-        typedef PatternMap<ValueType,ValueHandler,NestedSizeType> valuetype;
-        typedef typename PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>>, uint64_t >::iterator iterator;
-        typedef typename PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>>, uint64_t >::const_iterator const_iterator;
+public:
+  typedef PatternMap<ValueType,ValueHandler,NestedSizeType> valuetype;
+  typedef typename PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>>, uint64_t >::iterator iterator;
+  typedef typename PatternMap< PatternMap<ValueType,ValueHandler,NestedSizeType>,PatternStoreValueHandler<PatternMap<ValueType,ValueHandler,NestedSizeType>>, uint64_t >::const_iterator const_iterator;
 
 };
 
