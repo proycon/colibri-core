@@ -2521,7 +2521,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual t_relationmap_double getnpmi(const Pattern & , double ) { return t_relationmap_double(); } //does nothing for unindexed models
         virtual int computeflexgrams_fromskipgrams() { return 0; }//does nothing for unindexed models
         virtual int computeflexgrams_fromcooc(double) {return 0; }//does nothing for unindexed models
-        virtual void outputcooc_npmi(std::ostream *, ClassDecoder& , double) {}
+        virtual void outputcooc_npmi(std::ostream *, const ClassDecoder& , double) {}
         virtual void outputcooc(std::ostream *, const ClassDecoder&, double) {}
 
         /**
@@ -3019,7 +3019,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * @param size Set to any value above zero to only include patterns of the specified length.
     * @return a relation map
     */
-    t_relationmap getsubchildren(const PatternPointer & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0) {
+    t_relationmap getsubchildren(const PatternPointer & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0) override {
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -3077,7 +3077,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * @param size Set to any value above zero to only include patterns of the specified length.
     * @return a relation map
     */
-    t_relationmap getsubparents(const PatternPointer & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0) {
+    t_relationmap getsubparents(const PatternPointer & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0) override {
         //returns patterns that subsume the specified pattern (i.e. larger
         //patterns)
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
@@ -3136,7 +3136,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * @param size Set to any value above zero to only include patterns of the specified length.
     * @return a relation map
     */
-    t_relationmap getleftneighbours(const PatternPointer & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0, unsigned int cutoff=0) {
+    t_relationmap getleftneighbours(const PatternPointer & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0, unsigned int cutoff=0) override {
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -3178,7 +3178,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * @param size Set to any value above zero to only include patterns of the specified length.
     * @return a relation map
     */
-    t_relationmap getrightneighbours(const PatternPointer & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0, unsigned int cutoff=0) {
+    t_relationmap getrightneighbours(const PatternPointer & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0, unsigned int cutoff=0) override {
         if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
             std::cerr << "ERROR: No reverse index present" << std::endl;
             throw InternalError();
@@ -3312,11 +3312,11 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     * @param matches Pointer to a data structure that will be filled by this method to hold all the matches in pairs: first the match of the pattern, then the match of the co-occurrence.
     * @return a relation map
     */
-    t_relationmap getrightcooc(const PatternPointer & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0, std::vector<std::pair<IndexReference,IndexReference>> * matches = NULL) {
-        if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
-            std::cerr << "ERROR: No reverse index present" << std::endl;
-            throw InternalError();
-        }
+  t_relationmap getrightcooc(const PatternPointer & pattern, unsigned int occurrencethreshold = 0, int category = 0, unsigned int size = 0, std::vector<std::pair<IndexReference,IndexReference>> * matches = NULL) {
+    if ((this->reverseindex == NULL) || (this->reverseindex->empty())) {
+      std::cerr << "ERROR: No reverse index present" << std::endl;
+      throw InternalError();
+    }
 
         IndexedData * data = this->getdata(pattern);
         if (data == NULL) {
@@ -3454,7 +3454,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * @param label A label to insert between relations (defaults to: RELATED-TO)
      */
     void outputrelations(const PatternPointer & pattern,
-			 const t_relationmap & relations, const ClassDecoder & classdecoder, std::ostream *OUT, const std::string& label = "RELATED-TO") {
+			 const t_relationmap & relations,
+			 const ClassDecoder & classdecoder,
+			 std::ostream *OUT,
+			 const std::string& label = "RELATED-TO") {
         int total = 0;
         for ( const auto& iter : relations ){
 	  total += iter.second;
@@ -3486,8 +3489,8 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
 
 
         if (filter.empty() || (filter == "subparents") || (filter == "subsumed")) {
-            t_relationmap relations = this->getsubparents(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");
+	  t_relationmap relations = this->getsubparents(pattern);
+	  this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");
         }
         if (filter.empty() || (filter == "subchildren") || (filter == "subsumes")){
             t_relationmap relations = this->getsubchildren(pattern);
@@ -3636,10 +3639,10 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * Compute and output co-occurrence relations as Normalised Pointwise Mutual Information
      * @param threshold Normalised Pointwise Mutual Information threshold
      */
-    void outputcooc_npmi(std::ostream * OUT, const ClassDecoder& classdecoder, double threshold) {
-        std::map<PatternPointer,t_relationmap_double> npmimap;
-        std::cerr << "Collecting patterns and computing NPMI..." << std::endl;
-        computenpmi(npmimap, threshold);
+    void outputcooc_npmi(std::ostream * OUT, const ClassDecoder& classdecoder, double threshold) override {
+      std::map<PatternPointer,t_relationmap_double> npmimap;
+      std::cerr << "Collecting patterns and computing NPMI..." << std::endl;
+      computenpmi(npmimap, threshold);
 
         std::cerr << "Building inverse map..." << std::endl;
         //we want the reverse, so we can sort by co-occurrence
@@ -3664,7 +3667,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * Compute and output co-occurrence relations as joint occurrence count
      * @param threshold Normalised Pointwise Mutual Information threshold
      */
-    void outputcooc(std::ostream * OUT, const ClassDecoder& classdecoder, double threshold) {
+    void outputcooc(std::ostream * OUT, const ClassDecoder& classdecoder, double threshold) override {
         std::map<PatternPointer,t_relationmap> coocmap;
         std::cerr << "Collecting patterns and computing co-occurrence..." << std::endl;
         computecooc(coocmap, threshold);

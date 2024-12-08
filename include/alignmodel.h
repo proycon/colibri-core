@@ -109,7 +109,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
             this->postread(options);
         }
 
-        void write( std::ostream& out) {
+        void write( std::ostream& out) override {
             const char null = 0;
             out.write( (char*) &null, sizeof(char));
             unsigned char t = this->getmodeltype();
