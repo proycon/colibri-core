@@ -803,7 +803,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         HashOrderedPatternSet(): PatternStore<t_hashorderedpatternset,ReadWriteSizeType>() {};
         virtual ~HashOrderedPatternSet();
 
-        void insert(const Pattern& pattern) {
+        void insert(const Pattern& pattern) override {
             data.insert(pattern);
         }
 
@@ -878,7 +878,8 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
             data[pattern] = value;
         }
 
-        void insert(const Pattern & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
+        void insert(const Pattern & pattern) override {
+	  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
 
         bool has(const Pattern & pattern) const override {
             return data.count(pattern);
@@ -929,7 +930,8 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
             data[pattern] = value;
         }
 
-        void insert(const PatternPointer & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
+  void insert(const PatternPointer & pattern) override
+  {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
 
         bool has(const Pattern & pattern) const override {
             return data.count(pattern);
@@ -978,11 +980,13 @@ public:
   explicit OrderedPatternPointerMap():
     corpus( NULL){ }
 
-  void insert(const PatternPointer & pattern, const ValueType & value) {
+  void insert(const PatternPointer & pattern, const ValueType & value) override
+  {
     data[pattern] = value;
   }
 
-        void insert(const PatternPointer & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
+  void insert(const PatternPointer & pattern) override
+  {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType, usually 0
 
         bool has(const Pattern & pattern) const override {
             return data.count(pattern);
@@ -1026,11 +1030,12 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
         HashOrderedPatternMap(): PatternMapStore<std::map<const Pattern, ValueType>,ValueType,ValueHandler,ReadWriteSizeType>() {};
         virtual ~HashOrderedPatternMap() {};
 
-        void insert(const Pattern & pattern, const ValueType & value) {
-            data[pattern] = value;
-        }
+  void insert(const Pattern & pattern, const ValueType & value) override {
+    data[pattern] = value;
+  }
 
-        void insert(const Pattern & pattern) {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType
+  void insert(const Pattern & pattern) override
+  {  data[pattern] = ValueType(); } //singular insert required by PatternStore, implies 'default' ValueType
 
         bool has(const Pattern & pattern) const override { return data.count(pattern); }
         bool has(const PatternPointer & pattern) const override { return data.count(pattern); }

@@ -1502,7 +1502,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Write the pattern model to output stream
          */
-        void write( std::ostream& out) {
+        void write( std::ostream& out) override {
             const char null = 0;
             out.write( (char*) &null, sizeof(char));
             unsigned char t = this->getmodeltype();
