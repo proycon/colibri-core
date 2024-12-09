@@ -2239,7 +2239,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param instantiate Explicitly instantiate all skipgrams and flexgrams (for indexed models only, requires a reverse index)
          * @param endline Output an end-of-line
          */
-  void print(std::ostream* out, ClassDecoder &decoder, const PatternType & pattern, bool=false, bool endline = true) {
+  void print(std::ostream* out, const ClassDecoder &decoder, const PatternType & pattern, bool=false, bool endline = true) {
     const std::string pattern_s = pattern.tostring(decoder);
     const unsigned int count = this->occurrencecount(pattern);
     const unsigned int covcount = this->coveragecount(pattern);
@@ -2263,7 +2263,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Alias for per-pattern print()
          */
-        void printpattern(std::ostream* out, ClassDecoder &decoder, const Pattern & pattern, bool instantiate=false, bool endline = true) {  //another alias for cython who can't deal with methods named print
+        void printpattern( std::ostream* out, const ClassDecoder &decoder, const Pattern & pattern, bool instantiate=false, bool endline = true) {  //another alias for cython who can't deal with methods named print
             return this->print(out,decoder,pattern,instantiate,endline);
         }
 
@@ -2788,7 +2788,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
-  void print(std::ostream* out, ClassDecoder &decoder, const PatternPointer & pattern, bool instantiate=false, bool endline = true) {
+  void print(std::ostream* out, const ClassDecoder &decoder, const PatternPointer & pattern, bool instantiate=false, bool endline = true) {
             const std::string pattern_s = pattern.tostring(decoder);
             const size_t count = this->occurrencecount(pattern);
             const size_t covcount = this->coveragecount(pattern);

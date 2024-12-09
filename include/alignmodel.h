@@ -154,7 +154,7 @@ class AbstractAlignmentModel: public PatternMap<ValueType,ValueHandler>, public 
         size_t types() override { return totaltypes; }
         size_t tokens() const override { return totaltokens; }
 
-  virtual void print( std::ostream& out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) =0;
+  virtual void print( std::ostream& out, const ClassDecoder & sourcedecoder, const ClassDecoder & targetdecoder) =0;
 
         virtual void printmodel( std::ostream& out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) { //alias for cython (doesn't like methods named print)
             this->print(out,sourcedecoder, targetdecoder);
@@ -231,7 +231,7 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
         }
 
 
-  virtual void print(std::ostream& out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) override {
+  virtual void print(std::ostream& out, const ClassDecoder & sourcedecoder, const ClassDecoder & targetdecoder) override {
     out << "PATTERN\tPATTERN2\tFEATURES" << std::endl;
     for (iterator iter = this->begin(); iter != this->end(); ++iter) {
       const Pattern sourcepattern = iter->first;
@@ -266,7 +266,7 @@ class BasicPatternAlignmentModel: public AbstractAlignmentModel<PatternVector,Pa
         }
 
 
-  void print(std::ostream& out, ClassDecoder & sourcedecoder, ClassDecoder & targetdecoder) override {
+  void print(std::ostream& out, const ClassDecoder & sourcedecoder, const ClassDecoder & targetdecoder) override {
     out << "PATTERN\tPATTERN2" << std::endl;
     for (iterator iter = this->begin(); iter != this->end(); ++iter) {
       const Pattern sourcepattern = iter->first;

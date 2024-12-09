@@ -174,7 +174,7 @@ class AbstractValueHandler {
     virtual unsigned int count(ValueType & value) const =0; //what count does this value represent?
     virtual void add(ValueType * value, const IndexReference & ref ) const=0; //add the indexreference to the value, will be called whenever a token is found during pattern building
 
-    virtual void convertto(ValueType * source, ValueType* & target ) const { target = source; }; //this doesn't really convert as source and target are same type, but it is required!
+    virtual void convertto( ValueType * source, ValueType* & target ) const { target = source; }; //this doesn't really convert as source and target are same type, but it is required!
 };
 
 /**
@@ -202,9 +202,9 @@ class BaseValueHandler: public AbstractValueHandler<ValueType> {
         *value = *value + 1;
     }
 
-    void convertto(ValueType * source, ValueType* & target ) const override { target = source; }; //this doesn't really convert as source and target are same type, but it is required!
+    void convertto( ValueType * source, ValueType* & target ) const override { target = source; }; //this doesn't really convert as source and target are same type, but it is required!
 
-    void convertto(ValueType *, IndexedData* & target ) const { target = new IndexedData(); }; //this doesn't convert either, it returns a totally EMPTY indexeddata, allowing unindexed models to be read as indexed, but losing all counts!
+    void convertto( ValueType *, IndexedData* & target ) const { target = new IndexedData(); }; //this doesn't convert either, it returns a totally EMPTY indexeddata, allowing unindexed models to be read as indexed, but losing all counts!
 };
 
 
@@ -517,7 +517,7 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
     }
     void convertto(PatternFeatureVectorMap<FeatureType> * source , PatternFeatureVectorMap<FeatureType> * & target) const override { target = source; }; //noop
     void convertto(PatternFeatureVectorMap<FeatureType> *, IndexedData * &) const { }; //not possible, noop (target = NULL)
-    void convertto(const PatternFeatureVectorMap<FeatureType> * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
+    void convertto(PatternFeatureVectorMap<FeatureType> * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
 };
 
 

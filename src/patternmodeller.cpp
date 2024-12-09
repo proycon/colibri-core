@@ -107,7 +107,7 @@ void usage() {
 
 
 template<class ModelType = IndexedPatternModel<>>
-void processquerypattern(ModelType & model, ClassDecoder * classdecoder, const Pattern & pattern, const string & dorelations, bool doinstantiate) {
+void processquerypattern(ModelType & model, const ClassDecoder * classdecoder, const Pattern & pattern, const string & dorelations, bool doinstantiate) {
     if (!model.has(pattern)) {
         cout << "PATTERN \"" << pattern.tostring(*classdecoder) << "\" NOT FOUND IN MODEL" << endl;
     } else {
