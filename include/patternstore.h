@@ -472,9 +472,13 @@ class PatternStore: public PatternStoreInterface {
         typedef typename ContainerType::const_iterator const_iterator;
 
         virtual typename ContainerType::iterator begin()=0;
+        virtual typename ContainerType::const_iterator begin() const=0;
         virtual typename ContainerType::iterator end()=0;
+        virtual typename ContainerType::const_iterator end() const=0;
         virtual typename ContainerType::iterator find(const Pattern & pattern)=0;
+        virtual typename ContainerType::const_iterator find(const Pattern & pattern) const=0;
         virtual typename ContainerType::iterator find(const PatternPointer & pattern)=0;
+        virtual typename ContainerType::const_iterator find(const PatternPointer & pattern) const=0;
 
 
         virtual void write( std::ostream& out)=0;
@@ -693,20 +697,20 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
          * Returns an iterator to iterate over the set
          */
         iterator begin() override { return data.begin(); }
-        const_iterator begin() const { return data.begin(); }
+        const_iterator begin() const override { return data.begin(); }
 
         iterator end() override { return data.end(); }
-        const_iterator end() const { return data.end(); }
+        const_iterator end() const override { return data.end(); }
 
         /**
          * Returns an iterator to the pattern in the set or end() if no such
          * pattern was found.
          */
         iterator find(const Pattern & pattern) override { return data.find(pattern); }
-        const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+        const_iterator find(const Pattern & pattern) const override { return data.find(pattern); }
 
         iterator find(const PatternPointer & pattern) override { return data.find(pattern); }
-        const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
+        const_iterator find(const PatternPointer & pattern) const override { return data.find(pattern); }
 
         /**
          * Removes the specified pattern from the set, returns true if successful
@@ -900,15 +904,15 @@ class PatternMap: public PatternMapStore<std::unordered_map<Pattern,ValueType>,V
         typedef typename std::unordered_map<Pattern,ValueType>::const_iterator const_iterator;
 
         iterator begin() override { return data.begin(); }
-        const_iterator begin() const { return data.begin(); }
+        const_iterator begin() const override { return data.begin(); }
 
         iterator end() override { return data.end(); }
-        const_iterator end() const { return data.end(); }
+        const_iterator end() const override { return data.end(); }
 
         iterator find(const Pattern & pattern) override { return data.find(pattern); }
-        const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+        const_iterator find(const Pattern & pattern) const override { return data.find(pattern); }
         iterator find(const PatternPointer & pattern) override { return data.find(pattern); }
-        const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
+        const_iterator find(const PatternPointer & pattern) const override { return data.find(pattern); }
 
         bool erase(const Pattern & pattern) override { return data.erase(pattern); }
         iterator erase(const_iterator position) { return data.erase(position); }
@@ -952,19 +956,20 @@ class PatternPointerMap: public PatternMapStore<std::unordered_map<PatternPointe
         typedef typename std::unordered_map<PatternPointer,ValueType>::const_iterator const_iterator;
 
         iterator begin() override { return data.begin(); }
-        const_iterator begin() const { return data.begin(); }
+        const_iterator begin() const override { return data.begin(); }
 
         iterator end() override { return data.end(); }
-        const_iterator end() const { return data.end(); }
+        const_iterator end() const override { return data.end(); }
 
         iterator find(const Pattern & pattern) override {
             PatternPointer pp = pattern.getpointer();
             return data.find(pp);
         }
-        //const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+  const_iterator find(const Pattern & pattern) const override {
+    return data.find(pattern); }
 
         iterator find(const PatternPointer & pattern) override { return data.find(pattern); }
-        const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
+        const_iterator find(const PatternPointer & pattern) const override { return data.find(pattern); }
 
         bool erase(const PatternPointer & pattern) override
   { return data.erase(pattern); }
@@ -1011,7 +1016,7 @@ public:
         const_iterator begin() const { return data.begin(); }
 
         iterator end() override { return data.end(); }
-        const_iterator end() const { return data.end(); }
+        const_iterator end() const override { return data.end(); }
 
         iterator find( const Pattern & pattern ) override {
             PatternPointer pp = pattern.getpointer();
@@ -1055,17 +1060,19 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
         typedef typename std::map<const Pattern,ValueType>::const_iterator const_iterator;
 
   iterator begin() override { return data.begin(); }
-  const_iterator begin() const { return data.begin(); }
+  const_iterator begin() const override { return data.begin(); }
 
   iterator end() override { return data.end(); }
-  const_iterator end() const { return data.end(); }
+  const_iterator end() const override { return data.end(); }
 
   iterator find(const Pattern & pattern) override
   { return data.find(pattern); }
-  const_iterator find(const Pattern & pattern) const { return data.find(pattern); }
+  const_iterator find(const Pattern & pattern) const override {
+    return data.find(pattern); }
   iterator find(const PatternPointer & pattern) override
   { return data.find(pattern); }
-  const_iterator find(const PatternPointer & pattern) const { return data.find(pattern); }
+  const_iterator find(const PatternPointer & pattern) const override {
+    return data.find(pattern); }
 
   bool erase(const Pattern & pattern) override
   {
