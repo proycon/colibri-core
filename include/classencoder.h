@@ -101,7 +101,7 @@ class ClassEncoder {
      * @param vocabfile Plain text vocabulary file with one line per word,
      * constrains the classes to these words only
      */
-    void build(std::vector<std::string> & files, bool quiet=false, unsigned int threshold =0, const std::string & vocabfile = "");
+    void build( const std::vector<std::string> & files, bool quiet=false, unsigned int threshold =0, const std::string & vocabfile = "");
 
     //auxiliary functions called by build: first do processcorpus() for each
     //corpus, then call buildclasses() once when done:

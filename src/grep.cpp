@@ -58,10 +58,15 @@ int main( int argc, char *argv[] ) {
       case 'h':
 	usage();
 	exit(0);
-	default:
-	  cerr << "ERROR: Unknown option: -" <<  optopt << endl;
-	  abort ();
+      default:
+	cerr << "ERROR: Unknown option: -" <<  optopt << endl;
+	abort ();
       }
+    }
+    if ( !corpusfile.empty()
+	 || !modelfile.empty() ){
+      cerr << "ERROR: options: -i and -f are not implemented." << endl;
+      abort ();
     }
     if ( leftcontextsize != 0
 	 || rightcontextsize != 0 ){

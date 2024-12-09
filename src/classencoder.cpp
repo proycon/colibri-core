@@ -242,11 +242,11 @@ void ClassEncoder::build(const string & filename, unsigned int threshold, const 
 }
 
 
-void ClassEncoder::build(vector<string> & files, bool quiet, unsigned int threshold, const string& vocabfile) {
+void ClassEncoder::build( const vector<string>& files, bool quiet, unsigned int threshold, const string& vocabfile) {
 	    unordered_map<string,unsigned int> freqlist;
         unordered_set<string> vocab;
         if (!vocabfile.empty()) loadvocab(vocabfile, vocab);
-	    for (vector<string>::iterator iter = files.begin(); iter != files.end(); ++iter) {
+	    for ( vector<string>::const_iterator iter = files.begin(); iter != files.end(); ++iter) {
 	        const string filename = *iter;
 	        if (!quiet) cerr << "Processing " << filename << endl;
 	        if (filename.rfind(".xml") != string::npos) {
