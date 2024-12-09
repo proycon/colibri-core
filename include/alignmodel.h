@@ -279,6 +279,7 @@ class BasicPatternAlignmentModel: public AbstractAlignmentModel<PatternVector,Pa
 };
 
 /*
+  can be removed
 class KeywordModel: public BasicPatternAlignmentModel {
     public:
 

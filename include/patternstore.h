@@ -1075,8 +1075,8 @@ class HashOrderedPatternMap: public PatternMapStore<std::map<const Pattern,Value
 
 template<class T,size_t N,int countindex = 0>
 class ArrayValueHandler: public AbstractValueHandler<T> {
-   public:
-    const static bool indexed = false;
+public:
+  const static bool indexed = false;
     std::string id() const override { return "ArrayValueHandler"; }
   void read( std::istream& in, std::array<T,N> & a) {
     for (int i = 0; i < N; ++i) {

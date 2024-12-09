@@ -2239,25 +2239,25 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param instantiate Explicitly instantiate all skipgrams and flexgrams (for indexed models only, requires a reverse index)
          * @param endline Output an end-of-line
          */
-        virtual void print(std::ostream* out, ClassDecoder &decoder, const PatternType & pattern, bool=false, bool endline = true) {
-            const std::string pattern_s = pattern.tostring(decoder);
-            const unsigned int count = this->occurrencecount(pattern);
-            const unsigned int covcount = this->coveragecount(pattern);
-            const double cover = covcount / (double) this->tokens();
-            const double freq = this->frequency(pattern);
-            const int cat = pattern.category();
-            std::string cat_s;
-            if (cat == 1) {
-                cat_s = "ngram";
-            } else if (cat == 2) {
-                cat_s = "skipgram";
-            } else if (cat == 3) {
-                cat_s = "flexgram";
-            }
-            *out << pattern_s << "\t" << count << "\t" << covcount << "\t" << cover << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq;
-            if (endline) *out << std::endl;
-            //*out << pattern.hash() << "\t" << (size_t) pattern.data << std::endl;
-        }
+  virtual void print(std::ostream* out, ClassDecoder &decoder, const PatternType & pattern, bool=false, bool endline = true) {
+    const std::string pattern_s = pattern.tostring(decoder);
+    const unsigned int count = this->occurrencecount(pattern);
+    const unsigned int covcount = this->coveragecount(pattern);
+    const double cover = covcount / (double) this->tokens();
+    const double freq = this->frequency(pattern);
+    const int cat = pattern.category();
+    std::string cat_s;
+    if (cat == 1) {
+      cat_s = "ngram";
+    } else if (cat == 2) {
+      cat_s = "skipgram";
+    } else if (cat == 3) {
+      cat_s = "flexgram";
+    }
+    *out << pattern_s << "\t" << count << "\t" << covcount << "\t" << cover << "\t" << cat_s << "\t" << pattern.size() << "\t" << freq;
+    if (endline) *out << std::endl;
+    //*out << pattern.hash() << "\t" << (size_t) pattern.data << std::endl;
+  }
 
 
         /**
@@ -2510,7 +2510,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
-        virtual void outputrelations(const PatternPointer & , ClassDecoder & , std::ostream *, const std::string = "", bool=true) {} //does nothing for unindexed models
+  virtual void outputrelations(const PatternPointer & , const ClassDecoder & , std::ostream *, const std::string& = "", bool=true) {} //does nothing for unindexed models
         virtual t_relationmap getsubchildren(const PatternPointer & , unsigned int = 0, int = 0, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getsubparents(const PatternPointer &, unsigned int = 0, int = 0, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap gettemplates(const PatternPointer &, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
@@ -2788,7 +2788,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
         }
     }
 
-    void print(std::ostream* out, ClassDecoder &decoder, const PatternPointer & pattern, bool instantiate=false, bool endline = true) {
+  void print(std::ostream* out, ClassDecoder &decoder, const PatternPointer & pattern, bool instantiate=false, bool endline = true) {
             const std::string pattern_s = pattern.tostring(decoder);
             const size_t count = this->occurrencecount(pattern);
             const size_t covcount = this->coveragecount(pattern);
@@ -3484,7 +3484,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * instances, templates
      * @param outputheader Output a header (default: true)
      */
-    void outputrelations(const PatternPointer & pattern, const ClassDecoder & classdecoder, std::ostream * OUT, const std::string& filter="", bool outputheader=true) {
+  void outputrelations(const PatternPointer & pattern, const ClassDecoder & classdecoder, std::ostream * OUT, const std::string& filter="", bool outputheader=true) override {
         if (outputheader) *OUT << "#\tPATTERN1\tRELATION\tPATTERN2\tREL.COUNT\tREL.FREQUENCY\tCOUNT2" << std::endl;
 
 
