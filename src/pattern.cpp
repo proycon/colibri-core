@@ -180,7 +180,7 @@ PatternPointer PatternPointer::toflexgram() const { //converts a fixed skipgram 
 }
 
 uint32_t Pattern::getmask() const {
-    uint32_t _mask = 0;
+    uint32_t temp_mask = 0;
     unsigned char _n = 0;
     bool isflex = false;
     const unsigned char bytes = (unsigned char) bytesize();
@@ -189,20 +189,20 @@ uint32_t Pattern::getmask() const {
             if ((i == 0) || (data[i-1] < 128)) {
                 if (data[i] == ClassDecoder::flexclass){
                     isflex = true;
-                    _mask |= (1 << _n);
+                    temp_mask |= (1 << _n);
                 } else if ( data[i] == ClassDecoder::skipclass ) {
-                    _mask |= (1 << _n);
+                    temp_mask |= (1 << _n);
                 }
             }
             ++_n;
         }
     }
-    if (isflex) _mask |= (unsigned(1) << 31);
-    return _mask;
+    if (isflex) temp_mask |= (unsigned(1) << 31);
+    return temp_mask;
 }
 
 uint32_t PatternPointer::computemask() const {
-    uint32_t _mask = 0;
+    uint32_t temp_mask = 0;
     unsigned char _n = 0;
     bool isflex = false;
     for (unsigned char i = 0; (i < (unsigned char) bytes) && (_n < 31); ++i) {
@@ -210,16 +210,16 @@ uint32_t PatternPointer::computemask() const {
             if ((i == 0) || (data[i-1] < 128)) {
                 if (data[i] == ClassDecoder::flexclass){
                     isflex = true;
-                    _mask |= (1 << _n);
+                    temp_mask |= (1 << _n);
                 } else if ( data[i] == ClassDecoder::skipclass ) {
-                    _mask |= (1 << _n);
+                    temp_mask |= (1 << _n);
                 }
             }
             ++_n;
         }
     }
-    if (isflex) _mask |= (unsigned(1) << 31);
-    return _mask;
+    if (isflex) temp_mask |= (unsigned(1) << 31);
+    return temp_mask;
 }
 
 

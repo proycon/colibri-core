@@ -304,7 +304,7 @@ public:
     /// std::exception derived exception.  All exceptions but
     /// std::bad_alloc include descriptions of what went bad.  Thus
     /// using the what() member makes sense.
-    bz2outbuf(std::streambuf* _dest, unsigned int block_size_100K = 9,
+    explicit bz2outbuf(std::streambuf* _dest, unsigned int block_size_100K = 9,
               unsigned int verbosity = 0, unsigned int work_factor = 0,
               bzalloc_ptr bzalloc = NULL, bzfree_ptr bzfree = NULL,
               void* opaque = NULL, size_t stream_buffer_size = 2048,
@@ -389,7 +389,7 @@ protected:
 public:
     /// \brief Creates a new bz2ostream object.  See
     /// bz2outbuf::bz2outbuf for an explanation of the parameters.
-    bz2ostream(std::streambuf* dest, unsigned int block_size_100K = 9,
+    explicit bz2ostream(std::streambuf* dest, unsigned int block_size_100K = 9,
                unsigned int verbosity = 0, unsigned int work_factor = 0,
                bzalloc_ptr bzalloc = NULL, bzfree_ptr bzfree = NULL,
                void* opaque = NULL, size_t buffer_size = 1024,
@@ -527,7 +527,7 @@ public:
     ///
     /// For future compatibility, expect this constructor to throw any
     /// std::exception derived exception.
-    bz2inbuf(std::streambuf* _source, unsigned int verbosity = 0,
+    explicit bz2inbuf(std::streambuf* _source, unsigned int verbosity = 0,
              bool small_but_slow = false, bzalloc_ptr bzalloc = NULL,
              bzfree_ptr bzfree = NULL, void* opaque = NULL,
              size_t stream_buffer_size = 1024, size_t in_buffer_size = 1024,
@@ -602,7 +602,7 @@ public:
     /// buffer to read data from.
     ///
     /// See bz2inbuf::bz2inbuf for an explanation of the parameters.
-    bz2istream(std::streambuf* source, unsigned int verbosity = 0,
+    explicit bz2istream(std::streambuf* source, unsigned int verbosity = 0,
                bool small_but_slow = false, bzalloc_ptr bzalloc = NULL,
                bzfree_ptr bzfree = NULL, void* opaque = NULL,
                size_t buffer_size = 1024, size_t in_buffer_size = 1024,
