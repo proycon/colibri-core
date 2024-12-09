@@ -985,7 +985,6 @@ int main( int argc, const char *argv[] ) {
 
         masks = compute_skip_configurations(6,6);
         cerr << "Computing possible gaps in 6-grams: " << endl;
-        int j = 0;
         for (vector<uint32_t>::iterator iter = masks.begin(); iter != masks.end(); ++iter) {
             vector<pair<int,int>> gapconfig = mask2vector(*iter,6);
             int data[6] = {0,0,0,0,0,0};
@@ -1009,7 +1008,6 @@ int main( int argc, const char *argv[] ) {
             cerr << "   pattern vs patternpointer equivalence: "; test(skipgram == pskipgram);
             cerr << "   patternpointer vs patternpointer equivalence: "; test(pskipgram == pskipgram2);
             cerr << "   pattern from patternpointer equivalence: "; test(Pattern(pskipgram) == skipgram);
-            j++;
         }
         cerr << "Count check: "; test(masks.size(),15);
 
@@ -1407,7 +1405,7 @@ int main( int argc, const char *argv[] ) {
         for (IndexedCorpus::iterator iter = corpus.begin(); iter != corpus.end(); ++iter) {
             cerr << "\tGetting pattern for index " << iter.index().tostring() << " = " << iter.patternpointer().tostring(classdecoder) << endl;
             unordered_set<PatternPointer> patterns = model.getreverseindex(iter.index());
-            for (PatternPointer p : patterns) {
+            for ( const PatternPointer& p : patterns) {
                 cerr << "\t\t" << p.tostring(classdecoder) << endl;
             }
             ++ii;
@@ -1447,7 +1445,7 @@ int main( int argc, const char *argv[] ) {
         cerr << endl << "************************** PatternAlignModel Tests ***************************************" << endl << endl;
 
         const string classfile = "/tmp/hamlet.colibri.cls";
-        ClassDecoder classdecoder = ClassDecoder(classfile);
+	//        ClassDecoder classdecoder = ClassDecoder(classfile);
         ClassEncoder classencoder = ClassEncoder(classfile);
 
         string s = "To be or not to be";

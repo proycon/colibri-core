@@ -233,13 +233,13 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         const uint32_t c = value.count();
         out.write((char*) &c, sizeof(uint32_t));
         //we already assume everything is nicely sorted!
-        for ( auto& iter : value.data ){
+        for ( const auto& iter : value.data ){
 	  iter.write(out);
         }
     }
     virtual std::string tostring(IndexedData & value) const override {
         std::string s = "";
-        for ( auto& iter : value.data ){
+        for ( const auto& iter : value.data ){
 	  if (!s.empty()) s += " ";
 	  s += iter.tostring();
         }
@@ -255,8 +255,8 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         }
         value->insert(ref);
     }
-    void convertto(IndexedData * source , IndexedData *&  target) const override { target = source;  }; //noop
-    void convertto(IndexedData * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue =  value->count(); };
+    void convertto( IndexedData * source , IndexedData *&  target) const override { target = source;  }; //noop
+    void convertto( IndexedData * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue =  value->count(); };
 };
 
 
@@ -517,7 +517,7 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
     }
     void convertto(PatternFeatureVectorMap<FeatureType> * source , PatternFeatureVectorMap<FeatureType> * & target) const override { target = source; }; //noop
     void convertto(PatternFeatureVectorMap<FeatureType> *, IndexedData * &) const { }; //not possible, noop (target = NULL)
-    void convertto(PatternFeatureVectorMap<FeatureType> * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
+    void convertto(const PatternFeatureVectorMap<FeatureType> * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
 };
 
 

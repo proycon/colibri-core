@@ -1023,7 +1023,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 			      if ((!iter_unigramsonly) && (options.MINTOKENS_UNIGRAMS > options.MINTOKENS) && ((n > 1) || (singlepass)) ) {
 				subngrams.clear();
 				iter.first.ngrams(subngrams,1); //get all unigrams
-				for ( auto& iter2 : subngrams ){
+				for ( const auto& iter2 : subngrams ){
 				  //check if unigram reaches threshold
 				  if (this->occurrencecount(iter2) < (unsigned int) options.MINTOKENS_UNIGRAMS) {
 				    found = false;
@@ -1095,7 +1095,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                                 if (foundskipgrams_thisround > 0) hasskipgrams = true;
                                 foundskipgrams += foundskipgrams_thisround;
                             }
-                        } catch (std::exception &e) {
+                        } catch ( const std::exception &e) {
                             std::cerr << "ERROR: An internal error has occured during training!!!" << std::endl;
                             if (ignoreerrors) continue;
                             throw InternalError();
@@ -1416,7 +1416,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 
 		}
 
-	      } catch (InternalError &e) {
+	      } catch ( const InternalError &e) {
 		std::cerr << "IGNORING ERROR and continuing with next skipgram" << std::endl;
 	      }
             }
@@ -1474,7 +1474,7 @@ class PatternModel: public MapType, public PatternModelInterface {
 	      const IndexReference ref = iter.index();
 	      std::unordered_set<PatternPointer> skipgrams = this->getreverseindex(ref,0, SKIPGRAMORFLEXGRAM);  //will also match flexgrams
 	      if (options.DEBUG && !skipgrams.empty()) std::cerr << skipgrams.size() << " skipgrams found @" << ref << std::endl;
-	      for ( auto& iter2 : skipgrams ){
+	      for ( const auto& iter2 : skipgrams ){
 		add(iter2,ref); //add to model
 		if (iter2.category() == SKIPGRAM) {
 		  ++foundskipgrams;
@@ -1688,7 +1688,7 @@ class PatternModel: public MapType, public PatternModelInterface {
                             }
 
                         }
-                    } catch (KeyError &e) {
+                    } catch ( const KeyError &e) {
                         break;
                     }
                 }
@@ -1706,12 +1706,12 @@ class PatternModel: public MapType, public PatternModelInterface {
 			  if ( ((occurrencecount == 0) && this->has(flexgram)) || ((occurrencecount != 0) && (this->occurrencecount(flexgram) >= (unsigned int) occurrencecount)) ) {
 			    result.insert(flexgram);
 			  }
-			} catch (KeyError &e) {
+			} catch ( const KeyError &e) {
 			  ;
 			}
 		      }
                     }
-                } catch (KeyError &e) {
+                } catch ( const KeyError &e) {
                     ;
                 }
             }
@@ -2330,7 +2330,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
          */
-        void info(std::ostream * OUT) {
+        virtual void info(std::ostream * OUT) {
             if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
                 *OUT << "Type: indexed" << std::endl;
             } else if (this->getmodeltype() == UNINDEXEDPATTERNMODEL) {
@@ -2706,7 +2706,7 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
   /**
    * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
    */
-  void info(std::ostream * OUT) {
+  void info(std::ostream * OUT) override {
     if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
             *OUT << "Type: indexed" << std::endl;
         } else if (this->getmodeltype() == UNINDEXEDPATTERNMODEL) {

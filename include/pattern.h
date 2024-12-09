@@ -396,7 +396,7 @@ class PatternPointer {
     mask = computemask();
   }
 
-  PatternPointer(const Pattern * ref): PatternPointer(*ref) {}
+  explicit PatternPointer(const Pattern * ref): PatternPointer(*ref) {}
   // living on the edge, what if ref == NULL?
 
   PatternPointer(const PatternPointer& ref) {
@@ -405,7 +405,7 @@ class PatternPointer {
     mask = ref.mask;
   }
 
-  PatternPointer(const PatternPointer* ref): PatternPointer(*ref) {}
+  explicit PatternPointer(const PatternPointer* ref): PatternPointer(*ref) {}
   // living on the edge, what if ref == NULL?
 
   PatternPointer & operator =(const PatternPointer & other) {

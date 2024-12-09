@@ -236,7 +236,7 @@ class PatternAlignmentModel: public AbstractAlignmentModel<PatternFeatureVectorM
     for (iterator iter = this->begin(); iter != this->end(); ++iter) {
       const Pattern sourcepattern = iter->first;
       for ( const auto& iter2 : iter->second ){
-	PatternFeatureVector<FeatureType> * pfv = iter2;
+	const PatternFeatureVector<FeatureType> * pfv = iter2;
 	const Pattern targetpattern = pfv->pattern;
 	out << sourcepattern.tostring(sourcedecoder) << "\t" << targetpattern.tostring(targetdecoder);
 	for ( const auto& d : pfv->data ){

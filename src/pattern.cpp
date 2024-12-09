@@ -1948,7 +1948,7 @@ PatternPointer IndexedCorpus::findpattern(const IndexReference & begin, const Pa
                 if (part != candidate) {
                     throw KeyError();
                 }
-            } catch (KeyError &e) {
+            } catch ( const KeyError &e) {
                 throw KeyError(); //rethrow
             }
         }
@@ -1982,7 +1982,7 @@ PatternPointer IndexedCorpus::findpattern(const IndexReference & begin, const Pa
                     found = false;
                     break;
                 }
-            } catch (KeyError &e) {
+            } catch ( const KeyError &e) {
                 //we're out of bounds
                 found = false;
                 break;
@@ -2016,7 +2016,7 @@ void IndexedCorpus::findpattern(std::vector<std::pair<IndexReference,PatternPoin
         try {
             PatternPointer p = findpattern(ref, pattern, instantiate ? NGRAM : pattern.category()); //will generate KeyError when not found
             result.push_back(std::pair<IndexReference,PatternPointer>(ref, p));
-        } catch (KeyError &e) {
+        } catch ( const KeyError &e) {
             ; //ignore and continue
         }
     }

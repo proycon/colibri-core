@@ -337,7 +337,7 @@ class IndexedCorpus {
 	  try {
 	    PatternPointer p = getpattern(ref);
 	    return iterator(this, ref,p);
-	  } catch (KeyError &e) {
+	  } catch ( const KeyError &e) {
 	    return end();
 	  }
         }
@@ -381,7 +381,7 @@ class IndexedCorpus {
 			try {
 				PatternPointer pp = getpattern(ref);
 				return bytestoint(pp.data);
-			} catch (KeyError &e) {
+			} catch ( const KeyError &e) {
 				throw;
 			}
         }
@@ -557,7 +557,7 @@ class PatternMapStore: public PatternStore<ContainerType,ReadWriteSizeType,Patte
             for (ReadWriteSizeType i = 0; i < s; ++i) {
                 try {
                     p = ReadPatternType(in, false, this->classencodingversion, this->corpusstart, DEBUG);
-                } catch (std::exception &e) {
+                } catch ( const std::exception &e) {
                     std::cerr << "ERROR: Exception occurred at pattern " << (i+1) << " of " << s << std::endl;
                     throw InternalError();
                 }
@@ -730,7 +730,8 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
         /**
          * Read the set from input stream, in binary format
          */
-        void read( std::istream& in, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
+        void read( std::istream& in, int MINLENGTH=0, int MAXLENGTH=999999,
+		   const PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadWriteSizeType s; //read size:
             in.read( (char*) &s, sizeof(ReadWriteSizeType));
             reserve(s);
@@ -752,7 +753,8 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
          * and retains only the keys for the set.
          */
         template<class ReadValueType, class ReadValueHandler=BaseValueHandler<ReadValueType>>
-        void readmap( std::istream& in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999, PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
+        void readmap( std::istream& in, int MINTOKENS=0, int MINLENGTH=0, int MAXLENGTH=999999,
+		      const PatternStoreInterface * constrainstore = NULL, bool DONGRAMS=true, bool DOSKIPGRAMS=true, bool DOFLEXGRAMS=true) {
             ReadValueHandler readvaluehandler = ReadValueHandler();
             ReadWriteSizeType s; //read size:
             in.read( (char*) &s, sizeof(ReadWriteSizeType));
@@ -762,7 +764,7 @@ class PatternSet: public PatternStore<t_patternset,ReadWriteSizeType,Pattern> {
                 Pattern p;
                 try {
                     p = Pattern(in, false, this->classencodingversion);
-                } catch (std::exception &e) {
+                } catch ( const std::exception &e) {
                     std::cerr << "ERROR: Exception occurred at pattern " << (i+1) << " of " << s << std::endl;
                     throw InternalError();
                 }
@@ -834,7 +836,7 @@ class HashOrderedPatternSet: public PatternStore<t_hashorderedpatternset,ReadWri
         void write( std::ostream& out) override {
             ReadWriteSizeType s = (ReadWriteSizeType) size();
             out.write( (char*) &s, sizeof(ReadWriteSizeType));
-            for ( auto& p : data ){
+            for ( const auto& p : data ){
 	      p.write(out, this->corpusstart);
             }
         }

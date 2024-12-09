@@ -187,7 +187,7 @@ void naivetrain( const string& filename, std::unordered_map<string,uint32_t> & m
 }
 
 
-int main( int argc, char *argv[] ) {
+int main( int argc, const char *argv[] ) {
     if (argc != 3) {
         cerr<<"Syntax: colibri-benchmarks textfile testnr"<<endl;
         exit(2);
