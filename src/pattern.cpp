@@ -106,7 +106,7 @@ size_t PatternPointer::n() const {
 bool Pattern::isgap(int index) const { //is the word at this position a gap?
     if (data == NULL) return false;
     int i = 0;
-    int n = 0;
+    int _n = 0;
     bool prevhigh = false;
     do {
         const unsigned char c = data[i];
@@ -115,15 +115,15 @@ bool Pattern::isgap(int index) const { //is the word at this position a gap?
             return false;
         } else if ((!prevhigh) && ((c == ClassDecoder::skipclass)  || (c == ClassDecoder::flexclass))) {
             //FLEXMARKER is counted as 1, the minimum fill
-            if (n == index) return true;
+            if (_n == index) return true;
             ++i;
-            ++n;
+            ++_n;
             prevhigh = false;
         } else if (c < 128) {
             //we have a size
-            if (n == index) return false;
+            if (_n == index) return false;
             ++i;
-            ++n;
+            ++_n;
             prevhigh = false;
         } else {
             prevhigh = true;
@@ -180,46 +180,46 @@ PatternPointer PatternPointer::toflexgram() const { //converts a fixed skipgram 
 }
 
 uint32_t Pattern::getmask() const {
-    uint32_t mask = 0;
-    unsigned char n = 0;
+    uint32_t _mask = 0;
+    unsigned char _n = 0;
     bool isflex = false;
     const unsigned char bytes = (unsigned char) bytesize();
-    for (unsigned char i = 0; (i < bytes) && (n < 31); ++i) {
+    for (unsigned char i = 0; (i < bytes) && (_n < 31); ++i) {
         if (data[i] < 128) {
             if ((i == 0) || (data[i-1] < 128)) {
                 if (data[i] == ClassDecoder::flexclass){
                     isflex = true;
-                    mask |= (1 << n);
+                    _mask |= (1 << _n);
                 } else if ( data[i] == ClassDecoder::skipclass ) {
-                    mask |= (1 << n);
+                    _mask |= (1 << _n);
                 }
             }
-            ++n;
+            ++_n;
         }
     }
-    if (isflex) mask |= (unsigned(1) << 31);
-    return mask;
+    if (isflex) _mask |= (unsigned(1) << 31);
+    return _mask;
 }
 
 uint32_t PatternPointer::computemask() const {
-    uint32_t mask = 0;
-    unsigned char n = 0;
+    uint32_t _mask = 0;
+    unsigned char _n = 0;
     bool isflex = false;
-    for (unsigned char i = 0; (i < (unsigned char) bytes) && (n < 31); ++i) {
+    for (unsigned char i = 0; (i < (unsigned char) bytes) && (_n < 31); ++i) {
         if (data[i] < 128) {
             if ((i == 0) || (data[i-1] < 128)) {
                 if (data[i] == ClassDecoder::flexclass){
                     isflex = true;
-                    mask |= (1 << n);
+                    _mask |= (1 << _n);
                 } else if ( data[i] == ClassDecoder::skipclass ) {
-                    mask |= (1 << n);
+                    _mask |= (1 << _n);
                 }
             }
-            ++n;
+            ++_n;
         }
     }
-    if (isflex) mask |= (unsigned(1) << 31);
-    return mask;
+    if (isflex) _mask |= (unsigned(1) << 31);
+    return _mask;
 }
 
 
@@ -245,11 +245,11 @@ size_t PatternPointer::hash() const {
         unsigned char datacopy[bytes+1];
         memcpy(datacopy, data, bytes);
         datacopy[bytes] = ClassDecoder::delimiterclass;
-        PPSizeType n = 0;
+        PPSizeType _n = 0;
 	for (PPSizeType i = 0; i < bytes; ++i) {
 	  if (datacopy[i] < 128) {
-	    if (isgap(n)) datacopy[i] = ClassDecoder::skipclass;
-	    ++n;
+	    if (isgap(_n)) datacopy[i] = ClassDecoder::skipclass;
+	    ++_n;
 	  }
 	}
         return SpookyHash::Hash64((const void*) datacopy , bytes);
@@ -282,7 +282,7 @@ void PatternPointer::write( ostream& out, const unsigned char * corpusstart) con
     }
 }
 
-std::string datatostring(unsigned char * data, const ClassDecoder& classdecoder, int maxbytes = 0) {
+std::string datatostring( const unsigned char * data, const ClassDecoder& classdecoder, int maxbytes = 0) {
     std::string result = "";
     if (data == NULL) return result;
     int i = 0;
@@ -319,7 +319,7 @@ std::string Pattern::tostring(const ClassDecoder& classdecoder) const {
 std::string PatternPointer::tostring(const ClassDecoder& classdecoder) const {
     std::string result = "";
     unsigned int i = 0;
-    unsigned int n =0;
+    unsigned int _n =0;
     unsigned int length;
     bool flex = false;
     if (mask != 0) flex = isflexgram();
@@ -328,14 +328,14 @@ std::string PatternPointer::tostring(const ClassDecoder& classdecoder) const {
             return result;
         }
 	unsigned int cls = bytestoint(data + i, &length);
-        if ((mask != 0) && (isgap(n)))  {
+        if ((mask != 0) && (isgap(_n)))  {
             if (flex) {
                 cls = ClassDecoder::flexclass;
             } else {
                 cls = ClassDecoder::skipclass;
             }
         }
-        ++n;
+        ++_n;
         if (length == 0) {
             cerr << "ERROR: Class length==0, shouldn't happen" << endl;
             throw InternalError();
@@ -354,7 +354,7 @@ std::string PatternPointer::tostring(const ClassDecoder& classdecoder) const {
     return result;
 }
 
-bool dataout(unsigned char * data, int maxbytes = 0) {
+bool dataout( const unsigned char * data, int maxbytes = 0) {
     if (data == NULL) return true;
     int i = 0;
     unsigned int length;
@@ -670,14 +670,14 @@ Pattern::Pattern(const Pattern& ref, size_t begin, size_t length, size_t * byteo
 
     size_t i = (byteoffset != NULL) ? *byteoffset : 0;
     //std::cerr << "DEBUG: starting with offset " << i << ", begin=" << begin << ", length=" << length << std::endl;
-    size_t n = 0;
+    size_t _n = 0;
     do {
         const unsigned char c = ref.data[i];
         if (c < 128) {
             //we have a token
-            n++;
-            if ((n == 1) && (byteoffset_shiftbyone) && (byteoffset != NULL)) *byteoffset = i+1;
-            if (n - begin == length) {
+            _n++;
+            if ((_n == 1) && (byteoffset_shiftbyone) && (byteoffset != NULL)) *byteoffset = i+1;
+            if (_n - begin == length) {
                 length_b = (i + 1) - begin_b;
                 break;
             } else if ((c == ClassDecoder::delimiterclass) && (!prevhigh) ) {
@@ -685,7 +685,7 @@ Pattern::Pattern(const Pattern& ref, size_t begin, size_t length, size_t * byteo
                 break;
             }
             i++;
-            if (n == begin) begin_b = i;
+            if (_n == begin) begin_b = i;
             prevhigh = false;
         } else {
             prevhigh = true;
@@ -712,14 +712,14 @@ PatternPointer::PatternPointer(unsigned char * ref, size_t begin, size_t length,
     bool prevhigh = false;
 
     size_t i = (byteoffset != NULL) ? *byteoffset : 0;
-    size_t n = 0;
+    size_t _n = 0;
     do {
       unsigned char c = ref[i];
         if (c < 128) {
             //we have a token
-            n++;
-            if ((n == 1) && (byteoffset_shiftbyone) && (byteoffset != NULL)) *byteoffset = i+1;
-            if (n - begin == length) {
+            _n++;
+            if ((_n == 1) && (byteoffset_shiftbyone) && (byteoffset != NULL)) *byteoffset = i+1;
+            if (_n - begin == length) {
                 length_b = (i + 1) - begin_b;
                 break;
             } else if ((c == ClassDecoder::delimiterclass) && (!prevhigh) ) {
@@ -727,7 +727,7 @@ PatternPointer::PatternPointer(unsigned char * ref, size_t begin, size_t length,
                 break;
             }
             i++;
-            if (n ==  begin) begin_b = i;
+            if (_n ==  begin) begin_b = i;
             prevhigh = false;
         } else {
             prevhigh = true;
@@ -748,14 +748,14 @@ PatternPointer::PatternPointer(const Pattern& ref, size_t begin, size_t length, 
     bool prevhigh = false;
 
     size_t i = (byteoffset != NULL) ? *byteoffset : 0;
-    size_t n = 0;
+    size_t _n = 0;
     do {
         unsigned char c = ref.data[i];
         if (c < 128) {
             //we have a token
-            n++;
-            if ((n == 1) && (byteoffset_shiftbyone) && (byteoffset != NULL)) *byteoffset = i+1;
-            if (n - begin == length) {
+            _n++;
+            if ((_n == 1) && (byteoffset_shiftbyone) && (byteoffset != NULL)) *byteoffset = i+1;
+            if (_n - begin == length) {
                 length_b = (i + 1) - begin_b;
                 break;
             } else if ((c == ClassDecoder::delimiterclass) && (!prevhigh) ) {
@@ -763,7 +763,7 @@ PatternPointer::PatternPointer(const Pattern& ref, size_t begin, size_t length, 
                 break;
             }
             i++;
-            if (n == begin) begin_b = i;
+            if (_n == begin) begin_b = i;
             prevhigh = false;
         } else {
             prevhigh = true;
@@ -793,7 +793,7 @@ PatternPointer::PatternPointer(const PatternPointer& ref, size_t begin, size_t l
     bool prevhigh = false;
 
     size_t i = (byteoffset != NULL) ? *byteoffset : 0;
-    size_t n = 0;
+    size_t _n = 0;
     do {
         if (i == ref.bytes) {
             length_b = i - begin_b;
@@ -802,9 +802,9 @@ PatternPointer::PatternPointer(const PatternPointer& ref, size_t begin, size_t l
 	unsigned char c = ref.data[i];
         if (c < 128) {
             //we have a token
-            n++;
-            if ((n == 1) && (byteoffset_shiftbyone) && (byteoffset != NULL)) *byteoffset = i+1;
-            if (n - begin == length) {
+            _n++;
+            if ((_n == 1) && (byteoffset_shiftbyone) && (byteoffset != NULL)) *byteoffset = i+1;
+            if (_n - begin == length) {
                 length_b = (i + 1) - begin_b;
                 break;
             } else if ((c == ClassDecoder::delimiterclass) && (!prevhigh) ) {
@@ -812,7 +812,7 @@ PatternPointer::PatternPointer(const PatternPointer& ref, size_t begin, size_t l
                 break;
             }
             i++;
-            if (n == begin) begin_b = i;
+            if (_n == begin) begin_b = i;
             prevhigh = false;
         } else {
             prevhigh = true;
@@ -850,17 +850,17 @@ Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
     } else if (ref.isflexgram()) {
         //FLEXGRAM
 		unsigned char tmpdata[ref.bytesize()+1];
-		size_t size = ref.flexcollapse(tmpdata);
-		data = new unsigned char[size+1];
-		memcpy(data, tmpdata, size);
-		data[size] = ClassDecoder::delimiterclass;
+		size_t _size = ref.flexcollapse(tmpdata);
+		data = new unsigned char[_size+1];
+		memcpy(data, tmpdata, _size);
+		data[_size] = ClassDecoder::delimiterclass;
     } else {
         //SKIPGRAM
 		data = new unsigned char[ref.bytesize() + 1]; //may overallocate by a small margin
 
-        size_t n = 0;
+        size_t _n = 0;
         size_t cursor = 0;
-        bool skip = ref.isgap(n);
+        bool skip = ref.isgap(_n);
         for (size_t i = 0; i < ref.bytes; i++) {
             const unsigned char c = ref.data[i];
             if (c < 128) {
@@ -869,8 +869,8 @@ Pattern::Pattern(const PatternPointer& ref) { //constructor from patternpointer
                 } else {
                     data[cursor++] = c;
                 }
-                n++;
-                skip = ref.isgap(n);
+                _n++;
+                skip = ref.isgap(_n);
             } else if (!skip) {
                 data[cursor++] = c;
             }
@@ -886,14 +886,14 @@ Pattern::Pattern(const PatternPointer& ref, size_t begin, size_t length, size_t 
     bool prevhigh = false;
 
     size_t i = (byteoffset != NULL) ? *byteoffset : 0;
-    size_t n = 0;
+    size_t _n = 0;
     do {
         const unsigned char c = ref.data[i];
          if (c < 128) {
             //we have a token
-            n++;
-            if ((n == 1) && (byteoffset_shiftbyone) && (byteoffset != NULL)) *byteoffset = i+1;
-            if (n - begin == length) {
+            _n++;
+            if ((_n == 1) && (byteoffset_shiftbyone) && (byteoffset != NULL)) *byteoffset = i+1;
+            if (_n - begin == length) {
                 length_b = (i + 1) - begin_b;
                 break;
             } else if ((c == ClassDecoder::delimiterclass) && (!prevhigh) ) {
@@ -901,7 +901,7 @@ Pattern::Pattern(const PatternPointer& ref, size_t begin, size_t length, size_t 
                 break;
             }
             i++;
-            if (n == begin) begin_b = i;
+            if (_n == begin) begin_b = i;
             prevhigh = false;
         } else {
             prevhigh = true;
@@ -919,13 +919,13 @@ Pattern::Pattern(const PatternPointer& ref, size_t begin, size_t length, size_t 
     } else {
         //SKIPGRAM OR FLEXGRAM
         const bool flex = ref.isflexgram();
-        n = 0;
+        _n = 0;
         size_t cursor = 0;
-        bool skip = ref.isgap(n);
+        bool skip = ref.isgap(_n);
         for (size_t j = 0; j < ref.bytes; j++) {
             const unsigned char c = ref.data[j];
             if (c < 128) {
-                if ((n >= begin) && (n < begin+length)) {
+                if ((_n >= begin) && (_n < begin+length)) {
                     if (flex) {
                         data[cursor++] = ClassDecoder::flexclass;
                     } else if (skip) {
@@ -934,11 +934,11 @@ Pattern::Pattern(const PatternPointer& ref, size_t begin, size_t length, size_t 
                         data[cursor++] = c;
                     }
                 }
-                n++;
-                if (n>= begin+length) break;
-                skip = ref.isgap(n);
+                _n++;
+                if (_n>= begin+length) break;
+                skip = ref.isgap(_n);
             } else if (!skip) {
-                if ((n >= begin) && (n < begin+length))  {
+                if ((_n >= begin) && (_n < begin+length))  {
                     data[cursor++] = c;
                 }
             }
@@ -980,23 +980,23 @@ bool PatternPointer::operator==(const Pattern &other) const {
         return false;
     }
     size_t i = 0;
-    size_t n = 0;
+    size_t _n = 0;
     if ((mask != 0) && (isflexgram())) {
-		if (!other.isflexgram()) return false;
-		unsigned char data1[bytesize()];
-		const size_t size1 = flexcollapse(data1);
-		if (size1 != other.bytesize()) return false;
-		return (memcmp(data1,other.data,size1) == 0);
+      if (!other.isflexgram()) return false;
+      unsigned char data1[bytesize()];
+      const size_t size1 = flexcollapse(data1);
+      if (size1 != other.bytesize()) return false;
+      return (memcmp(data1,other.data,size1) == 0);
     }
     while (i<bytes){
-	    if ((i>0) && (other.data[i-1] >= 128) && (other.data[i] == 0)) return false;
-        if ((mask != 0) && (data[i] < 128))  {
-            if (isgap(n)) {
-                if (other.data[i] != ClassDecoder::skipclass)  return false;
-            } else if (data[i] != other.data[i]) return false;
-            n++;
-        } else if (data[i] != other.data[i]) return false;
-        i++;
+      if ((i>0) && (other.data[i-1] >= 128) && (other.data[i] == 0)) return false;
+      if ((mask != 0) && (data[i] < 128))  {
+	if (isgap(_n)) {
+	  if (other.data[i] != ClassDecoder::skipclass)  return false;
+	} else if (data[i] != other.data[i]) return false;
+	_n++;
+      } else if (data[i] != other.data[i]) return false;
+      i++;
     }
     return other.data[i] == ClassDecoder::delimiterclass;
 
@@ -1006,10 +1006,10 @@ int PatternPointer::flexcollapse(unsigned char * collapseddata) const {
 	//collapse data
 	bool prevgap = false;
 	size_t j = 0;
-	size_t n = 0;
+	size_t _n = 0;
 	for (size_t i = 0; i < bytes; i++) {
 		if (data[i] < 128) {
-			if (isgap(n)) {
+			if (isgap(_n)) {
 				if (!prevgap) {
 					collapseddata[j++] = ClassDecoder::flexclass;
 					prevgap = true;
@@ -1018,7 +1018,7 @@ int PatternPointer::flexcollapse(unsigned char * collapseddata) const {
 				collapseddata[j++] = data[i];
 				prevgap = false;
 			}
-			n++;
+			_n++;
 		} else {
 			collapseddata[j++] = data[i];
 		}
@@ -1043,19 +1043,19 @@ bool PatternPointer::operator==(const PatternPointer & other) const {
 		} else if (mask != other.mask) {
 			return false;
 		} else {
-			if (data == other.data) return true; //shortcut
-			size_t i = 0;
-			size_t n = 0;
-			while (i<bytes) {
-				if ((mask != 0) && (data[i] < 128))  {
-					if (isgap(n)) {
-						if (!other.isgap(n)) return false;
-					} else if (data[i] != other.data[i]) return false;
-					n++;
-				} else if (data[i] != other.data[i]) return false;
-				i++;
-			}
-			return true;
+		  if (data == other.data) return true; //shortcut
+		  size_t i = 0;
+		  size_t _n = 0;
+		  while (i<bytes) {
+		    if ((mask != 0) && (data[i] < 128))  {
+		      if (isgap(_n)) {
+			if (!other.isgap(_n)) return false;
+		      } else if (data[i] != other.data[i]) return false;
+		      _n++;
+		    } else if (data[i] != other.data[i]) return false;
+		    i++;
+		  }
+		  return true;
 		}
     }
     return false;
@@ -1318,30 +1318,29 @@ int Pattern::parts(vector<pair<int,int>> & container) const {
 
     int found = 0;
     int i = 0;
-    int n = 0;
+    int _n = 0;
     do {
         const unsigned char c = data[i];
-	int partlength = 0;
         if ((!prevhigh) && (c == ClassDecoder::delimiterclass)) {
-	  partlength = n - partbegin;
+	  int partlength = _n - partbegin;
 	  if (partlength > 0) {
 	    container.push_back(pair<int,int>(partbegin,partlength));
 	    found++;
 	  }
 	  break;
         } else if ((!prevhigh) &&  ((c == ClassDecoder::skipclass) || (c == ClassDecoder::flexclass))) {
-	  partlength = n - partbegin;
+	  int partlength = _n - partbegin;
 	  if (partlength > 0) {
 	    container.push_back(pair<int,int>(partbegin,partlength));
 	    found++;
 	  }
 	  i++;
-	  n++;
-	  partbegin = n; //for next part
+	  _n++;
+	  partbegin = _n; //for next part
         } else if (c < 128) {
 	  //low byte, end of token
 	  i++;
-	  n++;
+	  _n++;
         } else {
 	  //high byte
 	  i++;
@@ -1358,30 +1357,29 @@ int Pattern::parts(vector<Pattern> & container) const {
 
     int found = 0;
     int i = 0;
-    int n = 0;
+    int _n = 0;
     do {
         const unsigned char c = data[i];
-	int partlength = 0;
         if ((!prevhigh) && (c == ClassDecoder::delimiterclass)) {
-	  partlength = n - partbegin;
+	  int partlength = _n - partbegin;
 	  if (partlength > 0) {
 	    container.push_back(Pattern(*this,partbegin,partlength));
 	    found++;
 	  }
 	  break;
         } else if ((!prevhigh) &&  ((c == ClassDecoder::skipclass) || (c == ClassDecoder::flexclass))) {
-	  partlength = n - partbegin;
+	  int partlength = _n - partbegin;
 	  if (partlength > 0) {
 	    container.push_back(Pattern(*this,partbegin,partlength));
 	    found++;
 	  }
 	  i++;
-	  n++;
-	  partbegin = n; //for next part
+	  _n++;
+	  partbegin = _n; //for next part
         } else if (c < 128) {
 	  //low byte, end of token
 	  i++;
-	  n++;
+	  _n++;
         } else {
 	  //high byte
 	  i++;
@@ -1398,30 +1396,29 @@ int Pattern::parts(vector<PatternPointer> & container) const {
 
     int found = 0;
     int i = 0;
-    int n = 0;
+    int _n = 0;
     do {
         const unsigned char c = data[i];
-	int partlength = 0;
         if ((!prevhigh) && (c == ClassDecoder::delimiterclass)) {
-            partlength = n - partbegin;
+            int partlength = _n - partbegin;
             if (partlength > 0) {
                 container.push_back(PatternPointer(*this,partbegin,partlength));
                 found++;
             }
             break;
         } else if ((!prevhigh) &&  ((c == ClassDecoder::skipclass) || (c == ClassDecoder::flexclass))) {
-            partlength = n - partbegin;
+            int partlength = _n - partbegin;
             if (partlength > 0) {
                 container.push_back(PatternPointer(*this,partbegin,partlength));
                 found++;
             }
             i++;
-            n++;
-            partbegin = n; //for next part
+            _n++;
+            partbegin = _n; //for next part
         } else if (c < 128) {
             //low byte, end of token
             i++;
-            n++;
+            _n++;
         } else {
             //high byte
             i++;
@@ -1437,27 +1434,27 @@ int PatternPointer::parts(vector<pair<int,int>> & container) const {
     int partlength = 0;
 
     int found = 0;
-    size_t n = 0;
+    size_t _n = 0;
     for (size_t i = 0; (i<bytes) && (i<31); i++) {
         const unsigned char c = data[i];
         if (c < 128) {
             //low byte, end of token
-            if ((mask & bitmask[n]) == 0) {
-                partlength = n - partbegin;
+            if ((mask & bitmask[_n]) == 0) {
+                partlength = _n - partbegin;
                 if (partlength > 0) {
                     container.push_back(pair<int,int>(partbegin,partlength));
                     found++;
                 }
-                n++;
-                partbegin = n;
+                _n++;
+                partbegin = _n;
             } else {
-                n++;
+                _n++;
             }
         } else {
             //high byte
         }
     }
-    partlength = n - partbegin;
+    partlength = _n - partbegin;
     if (partlength > 0) {
         container.push_back(pair<int,int>(partbegin,partlength));
         found++;
@@ -1472,23 +1469,23 @@ int PatternPointer::parts(vector<PatternPointer> & container) const {
     int partlength = 0;
 
     int found = 0;
-    size_t n = 0;
+    size_t _n = 0;
     for (size_t i = 0; (i<bytes) && (i<31); i++) {
         const unsigned char c = data[i];
         if (c < 128) {
-            if (isgap(n)) {
-                partlength = n - partbegin;
+            if (isgap(_n)) {
+                partlength = _n - partbegin;
                 if (partlength > 0) {
                     container.push_back(PatternPointer(*this,partbegin,partlength));
                     found++;
                 }
-                partbegin = n+1;
+                partbegin = _n+1;
             }
             //low byte, end of token
-            n++;
+            _n++;
         }
     }
-    partlength = n - partbegin;
+    partlength = _n - partbegin;
     if (partlength > 0) {
         container.push_back(PatternPointer(*this,partbegin,partlength));
         found++;
@@ -1522,17 +1519,17 @@ unsigned int PatternPointer::skipcount() const {
     if (mask == 0) return 0;
     unsigned int skipcount = 0;
     size_t i = 0;
-    size_t n = 0;
+    size_t _n = 0;
     bool prevskip = false;
     do {
         if (data[i] < 128) {
-            if (isgap(n)) {
+            if (isgap(_n)) {
                 if (!prevskip) skipcount++;
                 prevskip = true;
             } else {
                 prevskip = false;
             }
-            n++;
+            _n++;
         }
         i++;
     } while (i < bytes);
@@ -1543,12 +1540,12 @@ int PatternPointer::gaps(vector<pair<int,int> > & container) const {
     if (data == NULL) return 0;
     if (mask == 0) return 0;
     int i = 0;
-    int n = 0;
+    int _n = 0;
     int beginskip = -1;
     int skiplength = 0;
     do {
         if (data[i] < 128) {
-            if (isgap(n)) {
+            if (isgap(_n)) {
                 if (beginskip > 0) {
                     skiplength++;
                 } else {
@@ -1559,7 +1556,7 @@ int PatternPointer::gaps(vector<pair<int,int> > & container) const {
                 if (beginskip > -1) container.push_back(pair<int,int>(beginskip,skiplength));
                 beginskip = -1;
             }
-            n++;
+            _n++;
         }
         i++;
     } while ((size_t) i < bytes);
@@ -2010,8 +2007,8 @@ PatternPointer IndexedCorpus::getskipgram(const IndexReference & begin, const Pa
 
 void IndexedCorpus::findpattern(std::vector<std::pair<IndexReference,PatternPointer>> & result, const Pattern & pattern,  uint32_t sentence, bool instantiate) {
     const int _n = pattern.size();
-    int sentencelength = this->sentencelength(sentence);
-    for (int i = 0; i < sentencelength - _n; i++) {
+    int sentence_length = this->sentencelength(sentence);
+    for (int i = 0; i < sentence_length - _n; i++) {
         IndexReference ref = IndexReference(sentence,i);
         try {
             PatternPointer p = findpattern(ref, pattern, instantiate ? NGRAM : pattern.category()); //will generate KeyError when not found

@@ -106,7 +106,7 @@ int main( int argc, char *argv[] ) {
     	exit(2);
     }
 
-    ClassDecoder classdecoder = ClassDecoder(classfile);
+    const ClassDecoder classdecoder = ClassDecoder(classfile);
 
     vector<PatternModel<uint32_t>* > models; //first model is training model or background model
 
@@ -121,7 +121,7 @@ int main( int argc, char *argv[] ) {
     if (directoutput) {
         comparemodels_loglikelihood(models, &llmodel, conjunctiononly, (ostream*) &cout, &classdecoder);
     } else {
-        comparemodels_loglikelihood(models, &llmodel, conjunctiononly);
+      comparemodels_loglikelihood(models, &llmodel, conjunctiononly, NULL );
 
         cerr << "Sorting results..." << endl;
         set<pair<double,Pattern>> results;

@@ -2239,7 +2239,7 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param instantiate Explicitly instantiate all skipgrams and flexgrams (for indexed models only, requires a reverse index)
          * @param endline Output an end-of-line
          */
-  virtual void print(std::ostream* out, ClassDecoder &decoder, const PatternType & pattern, bool=false, bool endline = true) {
+  void print(std::ostream* out, ClassDecoder &decoder, const PatternType & pattern, bool=false, bool endline = true) {
     const std::string pattern_s = pattern.tostring(decoder);
     const unsigned int count = this->occurrencecount(pattern);
     const unsigned int covcount = this->coveragecount(pattern);
@@ -3919,7 +3919,7 @@ class IndexedPatternPointerModel: public IndexedPatternModel<MapType,PatternPoin
 };
 
 double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternModel<uint32_t>* > & models);
-void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > & models, PatternMap<double> * resultmap, bool conjunctiononly = false, std::ostream * output = NULL, ClassDecoder * classdecoder = NULL );
+void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > & models, PatternMap<double> * resultmap, bool conjunctiononly = false, std::ostream * output = NULL, const ClassDecoder * classdecoder = NULL );
 
 
 #endif
