@@ -479,7 +479,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
 	    unsigned int linenum = 1;
 	    vector<folia::Word*> words = doc.words();
 	    const size_t wl = words.size();
-        folia::FoliaElement * prevparent = NULL;
+            const folia::FoliaElement * prevparent = NULL;
 	    string line = "";
 	    for (size_t i = 0; i < wl; i++) {
             folia::Word * word = words[i];
