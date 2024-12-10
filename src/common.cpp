@@ -18,7 +18,7 @@ std::string trim(const std::string &t, const std::string &ws) {
     return str;
 }
 
-std::string get_extension(const std::string& filename) {
+std::string get_extension( const std::string& filename) {
   auto pos = filename.find_last_of(".");
   if ( pos != std::string::npos ){
     return filename.substr(pos+1);
@@ -26,11 +26,11 @@ std::string get_extension(const std::string& filename) {
   return "";
 }
 
-bool strip_extension(std::string& filename, const std::string& extension) {
+bool strip_extension( std::string& filename, const std::string& extension) {
   auto pos = filename.find_last_of(".");
   if ( pos != std::string::npos) {
     if ( filename.substr(pos+1) == extension ) {
-      filename = filename.substr(0,pos);
+      filename.resize(pos);
       return true;
     }
   }
@@ -73,6 +73,20 @@ vector<string> split(const string &s, char delim) {
 
 bool test_common(){
   int err_cnt = 0;
+  string filename = "appel.taart";
+  if ( "taart" != get_extension( filename ) ){
+    cerr << "get_extension error" << endl;
+    ++err_cnt;
+  }
+  if ( strip_extension( filename, "paard" ) ){
+    cerr << "strip_extension error" << endl;
+    ++err_cnt;
+  }
+  if ( !strip_extension( filename, "taart" ) ){
+    cerr << "strip_extension error" << endl;
+    ++err_cnt;
+  };
+
   vector<double> v { 1.0, 2.0, 3.0, 4.0 };
   if ( listproduct( v ) != 24.0 ) {
     cerr << "listproduct problem: " << listproduct( v ) << " != 24.0" << endl;
