@@ -124,9 +124,9 @@ void ClassDecoder::load(const string & filename) {
 
 vector<string> ClassDecoder::decodeseq(const vector<int> & seq) {
     vector<string> result;
-    const int l = seq.size();
-    for (int i = 0; i < l; i++)
-        result.push_back( classes[seq[i]] );
+    for ( auto const& it : seq ){
+      result.push_back( classes[it] );
+    }
     return result;
 }
 /*

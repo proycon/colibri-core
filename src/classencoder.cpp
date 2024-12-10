@@ -210,16 +210,18 @@ void ClassEncoder::buildclasses(const unordered_map<string,unsigned int> & freql
 
         //sort by occurrence count  using intermediate representation
         multimap<const unsigned int, const string> revfreqlist;
-        for (unordered_map<string,unsigned int>::const_iterator iter = freqlist.begin(); iter != freqlist.end(); ++iter) {
-            if (iter->second >= threshold) revfreqlist.insert( pair<const unsigned int,const string>(-1 * iter->second, iter->first) );
+        for ( auto const& [str,freq] : freqlist ){
+	  if (freq >= threshold) {
+	    revfreqlist.insert( make_pair(-1 * freq, str) );
+	  }
         }
 
         int cls = highestclass;
-        for (multimap<const unsigned int,const string>::const_iterator iter = revfreqlist.begin(); iter != revfreqlist.end(); ++iter) {
-            if (!classes.count(iter->second)) { //check if it doesn't already exist, in case we are expanding on existing classes
-        	    cls++;
-        	    classes[iter->second] = cls;
-            }
+        for ( const auto& iter : revfreqlist ){
+	  if (!classes.count(iter.second)) { //check if it doesn't already exist, in case we are expanding on existing classes
+	    cls++;
+	    classes[iter.second] = cls;
+	  }
         }
         highestclass = cls;
 }
@@ -246,29 +248,30 @@ void ClassEncoder::build( const vector<string>& files, bool quiet, unsigned int 
 	    unordered_map<string,unsigned int> freqlist;
         unordered_set<string> vocab;
         if (!vocabfile.empty()) loadvocab(vocabfile, vocab);
-	    for ( vector<string>::const_iterator iter = files.begin(); iter != files.end(); ++iter) {
-	        const string filename = *iter;
-	        if (!quiet) cerr << "Processing " << filename << endl;
-	        if (filename.rfind(".xml") != string::npos) {
-                #ifdef WITHFOLIA
-                processfoliacorpus(filename, freqlist, &vocab);
-                #else
-                cerr << "Colibri Core was not compiled with FoLiA support!" << endl;
-                exit(2);
-                #endif
-	        } else {
-	            processcorpus(filename, freqlist, &vocab); //also handles bz2
-	        }
+	for ( auto const& filename : files ){
+	  if (!quiet) cerr << "Processing " << filename << endl;
+	  if (filename.rfind(".xml") != string::npos) {
+#ifdef WITHFOLIA
+	    processfoliacorpus(filename, freqlist, &vocab);
+#else
+	    cerr << "Colibri Core was not compiled with FoLiA support!" << endl;
+	    exit(2);
+#endif
+	  } else {
+	    processcorpus(filename, freqlist, &vocab); //also handles bz2
+	  }
 
-	    }
+	}
         buildclasses(freqlist, threshold);
 }
 
 void ClassEncoder::save(const string & filename) {
-	ofstream OUT( filename );
-	for (std::unordered_map<std::string,unsigned int>::iterator iter = classes.begin(); iter != classes.end(); ++iter) {
-	    if (iter->second != unknownclass) OUT << iter->second << '\t' << iter->first << endl;
-	}
+  ofstream OUT( filename );
+  for ( auto const& [str,cls] : classes ){
+    if ( cls != unknownclass ) {
+      OUT << cls << '\t' << str << endl;
+    }
+  }
 }
 
 void ClassEncoder::loadvocab(const string & filename, unordered_set<string> & vocab) {
