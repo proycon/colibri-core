@@ -1,3 +1,4 @@
+---
 name: C/C++ CI
 
 on:
@@ -7,10 +8,10 @@ on:
       - develop
 
     paths:
-      - 'src/**'
-      - 'include/**'
-      - '.github/workflows/**'
-
+      - configure.ac
+      - src/**
+      - include/**
+      - .github/workflows/**
 
 jobs:
   notification:
@@ -18,13 +19,7 @@ jobs:
     name: Notify start to gitlama
     steps:
       - name: IRC notification
-        uses: Gottox/irc-message-action@v2
-        with:
-          server: irc.uvt.nl
-          channel: '#gitlama'
-          nickname: GitHub
-          message: |-
-            ${{ github.actor }} started a build of colibri-core
+        uses: LanguageMachines/ticcactions/irc-init@v1
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.12.1
         with:
@@ -36,45 +31,46 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        compiler: [g++,clang++]
+        compiler: [g++, clang++]
 
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.1\
+
       - name: Install Build Environment
         run: |
              if [ "$RUNNER_OS" == "Linux" ]; then
-                sudo apt-get install pkg-config autoconf-archive
+             sudo apt-get install pkg-config autoconf-archive
              fi
+      - uses: LanguageMachines/ticcactions/setup-cppcheck@v1
+      - uses: LanguageMachines/ticcactions/irc-nick@v1
 
-      - name: Build and install Colibri-Core
-        env:
-          CXX: ${{ matrix.compiler }}
-        run: |
-          bash bootstrap
-          ./configure
-          make
-          sudo make install
+      - name: Static Code-check
+        if: ${{ env.action_status == '' }}
+        run: cppcheck ${{ env.cpc_opts }} .
+
+      - uses: LanguageMachines/ticcactions/cpp-safe-build@v1
+
+      - name: Notify IRC of build result
+        uses: LanguageMachines/ticcactions/irc-status@v1
+        with:
+          branch: ${{ github.ref_name }}
+          nickname: ${{ env.nick }}
+          step: build
+          status: ${{ env.action_status }}
+          details: ${{ env.action_details }}
 
       - name: test
+        id: colibrites
         env:
           CXX: ${{ matrix.compiler }}
         run: colibri-test
         continue-on-error: true
 
-      - name: Notify IRC of failure
-        if: ${{ failure() }}
-        uses: Gottox/irc-message-action@v2
+      - name: Notify IRC of end result
+        uses: LanguageMachines/ticcactions/irc-status@v1
         with:
-          server: irc.uvt.nl
-          channel: '#gitlama'
-          nickname: GitHub
-          message: "Building colibri-core with ${{ matrix.compiler }} by ${{ github.actor }} on ${{ matrix.os }}: \u00034FAIL\u0003"
-
-      - name: Notify IRC of success
-        if: ${{ success() }}
-        uses: Gottox/irc-message-action@v2
-        with:
-          server: irc.uvt.nl
-          channel: '#gitlama'
-          nickname: GitHub
-          message: "Building colibri-core with ${{ matrix.compiler }} by ${{ github.actor }} on ${{ matrix.os }}: \u00033SUCCESS\u0003"
+          branch: ${{ github.ref_name }}
+          nickname: ${{ env.nick }}
+          step: testing
+          status: ${{ env.action_status }}
+          details: ${{ env.action_details }}

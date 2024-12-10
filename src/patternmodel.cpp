@@ -19,7 +19,8 @@ int getmodeltype(const std::string & filename) {
  *
  * Computation is as in Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (ACL 2000). 1-8 October 2000, Hong Kong, pp. 1 - 6: http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf
  */
-double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternModel<uint32_t>* > & models) {
+double comparemodels_loglikelihood( const Pattern pattern,
+				   const std::vector<PatternModel<uint32_t>* > & models) {
     if (models.size() < 2) {
         std::cerr << "compare_models_loglikelihood requires at least two models!" << std::endl;
         throw InternalError();
