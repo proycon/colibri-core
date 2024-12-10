@@ -1,4 +1,4 @@
-#include <patternmodel.h>
+#include "patternmodel.h"
 
 
 int getmodeltype(const std::string & filename) {

@@ -256,7 +256,7 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         value->insert(ref);
     }
     void convertto( IndexedData * source , IndexedData *&  target) const { target = source;  }; //noop
-    void convertto( IndexedData * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue =  value->count(); };
+    void convertto( const IndexedData * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue =  value->count(); };
 };
 
 
@@ -517,7 +517,7 @@ class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeature
     }
     void convertto(PatternFeatureVectorMap<FeatureType> * source , PatternFeatureVectorMap<FeatureType> * & target) const { target = source; }; //noop
     void convertto(PatternFeatureVectorMap<FeatureType> *, IndexedData * &) const { }; //not possible, noop (target = NULL)
-    void convertto(PatternFeatureVectorMap<FeatureType> * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
+    void convertto( const PatternFeatureVectorMap<FeatureType> * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
 };
 
 
@@ -664,7 +664,7 @@ class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
     }
     void convertto(PatternVector * source , PatternVector * & target) const { target = source; }; //noop
     void convertto(PatternVector *, IndexedData * & ) const { }; //not possible, noop (target = NULL)
-    void convertto(PatternVector * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
+    void convertto( const PatternVector * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
 };
 
 #endif

@@ -5,11 +5,11 @@
 #include <string>
 #include <set>
 #include <unistd.h>
-#include <classencoder.cpp>
-#include <classdecoder.cpp>
-#include <pattern.h>
-#include <patternmodel.h>
-#include <alignmodel.h>
+#include "classencoder.cpp"
+#include "classdecoder.cpp"
+#include "pattern.h"
+#include "patternmodel.h"
+#include "alignmodel.h"
 #include <ctime>
 
 

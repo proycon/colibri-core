@@ -1,9 +1,9 @@
 #include <string>
 #include <iostream>
+#include <getopt.h>
 #include "classencoder.h"
-#include "getopt.h"
-#include <common.h>
-#include <config.h>
+#include "common.h"
+#include "config.h"
 
 /*****************************
 * Colibri Core

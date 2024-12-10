@@ -1,9 +1,9 @@
 #include <string>
 #include <iostream>
-#include "getopt.h"
+#include <getopt.h>
 #include "classdecoder.h"
 #include "patternmodel.h"
-#include <common.h>
+#include "common.h"
 #include <config.h>
 
 /*****************************

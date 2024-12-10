@@ -12,11 +12,11 @@
 #include <iostream>
 #include <string>
 #include <cmath>
-#include <algorithms.h>
-#include <common.h>
 #include <getopt.h>
-#include <patternmodel.h>
-#include <config.h>
+#include <algorithms.h>
+#include "common.h"
+#include "patternmodel.h"
+#include "config.h"
 
 using namespace std;
 
@@ -117,7 +117,7 @@ void processquerypattern(ModelType & model, const ClassDecoder * classdecoder, c
 }
 
 template<class ModelType = IndexedPatternModel<>>
-void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, const vector<string> & querypatterns, const string & dorelations, bool doinstantiate) {
+void processquerypatterns(ModelType & model, ClassEncoder * classencoder, const ClassDecoder * classdecoder, const vector<string> & querypatterns, const string & dorelations, bool doinstantiate) {
   if ( classencoder == NULL ){
     throw logic_error( "processquerypattern called with NULL classencoder");
   }
@@ -134,7 +134,7 @@ void processquerypatterns(ModelType & model, ClassEncoder * classencoder, ClassD
 
 
 template<class ModelType = IndexedPatternModel<>>
-void querymodel(ModelType & model, ClassEncoder * classencoder, ClassDecoder * classdecoder, const string& dorelations, bool doinstantiate, bool repeat = true) {
+void querymodel(ModelType & model, ClassEncoder * classencoder, const ClassDecoder * classdecoder, const string& dorelations, bool doinstantiate, bool repeat = true) {
     const bool allowunknown = true;
     unsigned char buffer[65536];
     uint32_t linenum = 0;
