@@ -65,14 +65,13 @@ int main( int argc, char *argv[] ) {
     std::vector<std::pair<PatternPointer,int>> ngrams;
 
 
-    for (unsigned int i = 0; i < datafiles.size(); ++i) {
-      std::ifstream in(datafiles[i], std::ios::in|std::ios::binary);
+    for ( const auto& file : datafiles ){
+      std::ifstream in(file, std::ios::in|std::ios::binary);
       while (!in.eof()) {
 	//read line
 	Pattern line = Pattern(in);
 	ngrams.clear();
 	line.ngrams(ngrams, n);
-
 	for ( const auto& iter : ngrams ){
 	  cout << iter.first.tostring(classdecoder) << endl;
 	}

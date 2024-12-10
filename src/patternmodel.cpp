@@ -36,10 +36,10 @@ double comparemodels_loglikelihood(const Pattern pattern, std::vector<PatternMod
 
 
 
-    for (unsigned int i = 0; i < models.size(); i++) {
-      int o = models[i]->occurrencecount(pattern); //observed
-        //n = models[i]->totaloccurrencesingroup(category,patternsize);
-      int n = models[i]->tokens();  //total
+    for ( const auto& model : models ){
+      int o = model->occurrencecount(pattern); //observed
+        //n = model->totaloccurrencesingroup(category,patternsize);
+      int n = model->tokens();  //total
       total.push_back(n);
       n_sum += n;
       observed.push_back( o );
@@ -106,8 +106,7 @@ void comparemodels_loglikelihood(std::vector<PatternModel<uint32_t>* > &  models
 
 
     for (int m = startmodel; m < endmodel; m++) {
-     for (PatternModel<uint32_t>::iterator iter = models[m]->begin(); iter != models[m]->end(); ++iter) {
-        const Pattern pattern = iter->first;
+      for ( const auto& [pattern,dummy] : *models[m] ){
         if ((!conjunctiononly) && (resultmap->has(pattern))) continue; //already done
 
 

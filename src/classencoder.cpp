@@ -313,14 +313,14 @@ void ClassEncoder::buildclasses_freqlist(const string & filename, unsigned int t
 
 vector<unsigned int> ClassEncoder::encodeseq(const vector<string> & seq) {
     vector<unsigned int> result;
-    const int l = seq.size();
-    for (int i = 0; i < l; i++)
-        result.push_back( classes[seq[i]] );
+    for ( const auto& ind : seq ){
+      result.push_back( classes[ind] );
+    }
     return result;
 }
 
 int ClassEncoder::outputlength(const string & line) {
-	  int outputcursor = 0;
+  int outputcursor = 0;
       int start = 0;
       int tmphighestclass = highestclass;
       unsigned int classlength;
@@ -485,7 +485,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
             const folia::FoliaElement * prevparent = NULL;
 	    string line = "";
 	    for (size_t i = 0; i < wl; i++) {
-            folia::Word * word = words[i];
+	      folia::Word * word = words[i];
 	        if ((!line.empty()) && (word->parent() != prevparent)) {
 		  int outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown);
 	            if (outputsize > 0) OUT.write((const char *) outputbuffer, outputsize);
@@ -625,8 +625,8 @@ unsigned char * convert_v1_v2(const unsigned char * olddata, unsigned int & newl
     //cerr<<"DEBUG: Newlength=" << newlength << endl;
 	unsigned char * data  = new unsigned char[newlength+1];
 	unsigned char * datacursor = data;
-	for (std::vector<unsigned int>::iterator iter = classes.begin(); iter != classes.end(); ++iter) {
-	  unsigned int classlength = inttobytes(datacursor, *iter);
+	for ( const auto& iter : classes ){
+	  unsigned int classlength = inttobytes(datacursor, iter);
 	  datacursor += classlength;
 	}
     return data;
