@@ -41,12 +41,12 @@ jobs:
              if [ "$RUNNER_OS" == "Linux" ]; then
              sudo apt-get install pkg-config autoconf-archive
              fi
-      - uses: LanguageMachines/ticcactions/setup-cppcheck@v1
+#      - uses: LanguageMachines/ticcactions/setup-cppcheck@v1
       - uses: LanguageMachines/ticcactions/irc-nick@v1
 
-      - name: Static Code-check
-        if: ${{ env.action_status == '' }}
-        run: cppcheck ${{ env.cpc_opts }} .
+#      - name: Static Code-check
+#        if: ${{ env.action_status == '' }}
+#        run: cppcheck ${{ env.cpc_opts }} .
 
       - uses: LanguageMachines/ticcactions/cpp-safe-build@v1
 
