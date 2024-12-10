@@ -21,13 +21,9 @@ jobs:
     name: Notify start to gitlama
     steps:
       - name: IRC notification
-        uses: Gottox/irc-message-action@v2
+        uses: LanguageMachines/ticcactions/irc-init@v1
         with:
-          server: irc.uvt.nl
-          channel: '#gitlama'
           nickname: GitHubPy
-          message: |-
-            ${{ github.actor }} started a build of colibri-core-python
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.12.1
         with:
@@ -54,48 +50,54 @@ jobs:
              if [ "$RUNNER_OS" == "Linux" ]; then
                 sudo apt-get install python3 cython3 python3-pip python3-wheel libbz2-dev
              fi
+      - uses: LanguageMachines/ticcactions/irc-nick@v1
 
-      - name: Build and install Colibri-Core library
-        env:
-          CXX: ${{ matrix.compiler }}
-        run: |
-          bash bootstrap
-          ./configure
-          make
-          sudo make install
+      - uses: LanguageMachines/ticcactions/cpp-safe-build@v1
 
       - name: Build and install Colibri-Core python binding
+        id: python
         env:
           CXX: ${{ matrix.compiler }}
         run: |
           pip install .
 
+      - name: get build status
+        uses: LanguageMachines/ticcactions/get-status@v1
+        with:
+          the-step: python
+          outcome: ${{ steps.python.outcome }}
+
       - name: Test
+        id: test_py
+        if: ${{ env.action_status == '' }}
         env:
           CXX: ${{ matrix.compiler }}
         run: LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib python test.py
         continue-on-error: true
+      - name: get Test status
+        uses: LanguageMachines/ticcactions/get-status@v1
+        with:
+          the-step: test_py
+          outcome: ${{ steps.test_py.outcome }}
 
       - name: Test patternmodeller
+        id: modeller
+        if: ${{ env.action_status == '' }}
         env:
           CXX: ${{ matrix.compiler }}
         run: LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib cd exp && ./colibri-patternmodeller-test.sh
         continue-on-error: true
-
-      - name: Notify IRC of failure
-        if: ${{ failure() }}
-        uses: Gottox/irc-message-action@v2
+      - name: get modeller status
+        uses: LanguageMachines/ticcactions/get-status@v1
         with:
-          server: irc.uvt.nl
-          channel: '#gitlama'
-          nickname: GitHub
-          message: "Building colibri-core-python with ${{ matrix.compiler }} by ${{ github.actor }} on ${{ matrix.os }}: \u00034FAIL\u0003"
+          the-step: modeller
+          outcome: ${{ steps.modeller.outcome }}
 
-      - name: Notify IRC of success
-        if: ${{ success() }}
-        uses: Gottox/irc-message-action@v2
+      - name: Notify IRC of end result
+        uses: LanguageMachines/ticcactions/irc-status@v1
         with:
-          server: irc.uvt.nl
-          channel: '#gitlama'
-          nickname: GitHub
-          message: "Building colibri-core-python with ${{ matrix.compiler }} by ${{ github.actor }} on ${{ matrix.os }}: \u00033SUCCESS\u0003"
+          branch: ${{ github.ref_name }}
+          nickname: ${{ env.nick }}
+          step: testing
+          status: ${{ env.action_status }}
+          details: ${{ env.action_details }}
