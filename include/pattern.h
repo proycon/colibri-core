@@ -531,7 +531,6 @@ class PatternPointer {
 
      bool instanceof(const PatternPointer & skipgram) const;
 
-     operator Pattern() { return Pattern(*this); } //cast overload
      Pattern pattern() const { return Pattern(*this); } //cast overload
 };
 
