@@ -98,6 +98,6 @@ jobs:
         with:
           branch: ${{ github.ref_name }}
           nickname: ${{ env.nick }}
-          step: testing
+          step: testing python binding
           status: ${{ env.action_status }}
           details: ${{ env.action_details }}
