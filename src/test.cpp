@@ -1061,9 +1061,9 @@ int main( int argc, const char *argv[] ) {
 		cerr << "Tokens"; test(unindexedmodelNS.tokens(),354);
 
 
-		unindexedmodelNS.print(&std::cerr, classdecoder);
+		unindexedmodelNS.print(std::cerr, classdecoder);
 		cerr << endl;
-		unindexedmodelNS.report(&std::cerr);
+		unindexedmodelNS.report(std::cerr);
 		cerr << endl;
 
 		Pattern ngramNS = classencoder.buildpattern(string("or not to"), true);
@@ -1106,11 +1106,11 @@ int main( int argc, const char *argv[] ) {
         cerr << "Tokens"; test(unindexedmodel.tokens(),354);
 
 
-        unindexedmodel.print(&std::cerr, classdecoder);
+        unindexedmodel.print(std::cerr, classdecoder);
         cerr << endl;
-        unindexedmodel.report(&std::cerr);
+        unindexedmodel.report(std::cerr);
         cerr << endl;
-        unindexedmodel.histogram(&std::cerr);
+        unindexedmodel.histogram(std::cerr);
 
 
 
@@ -1131,7 +1131,7 @@ int main( int argc, const char *argv[] ) {
         PatternModel<uint32_t> unindexedmodel2 = PatternModel<uint32_t>(outputfilename, options);
         //options.DEBUG = false;
         cerr << "Outputting report again" << endl;
-        unindexedmodel2.report(&std::cerr);
+        unindexedmodel2.report(std::cerr);
         cerr << "Equal tokens? " ; test(unindexedmodel.tokens() == unindexedmodel2.tokens() );
         cerr << "Equal types? " ; test(unindexedmodel.types() == unindexedmodel2.types() );
         cerr << "Equal size? " ; test(unindexedmodel.size() == unindexedmodel2.size() );
@@ -1152,11 +1152,11 @@ int main( int argc, const char *argv[] ) {
         cerr << "Equal types? " ; test(unindexedmodel.types() == indexedmodel.types() );
         cerr << "Testing indexedmodel.has()"; test( indexedmodel.has(ngram) );
         cerr << "Testing indexedmodel.occurrencecount()"; test( indexedmodel.occurrencecount(ngram),6 );
-        indexedmodel.print(&std::cerr, classdecoder);
+        indexedmodel.print(std::cerr, classdecoder);
         cerr << endl;
-        indexedmodel.report(&std::cerr);
+        indexedmodel.report(std::cerr);
         cerr << endl;
-        indexedmodel.histogram(&std::cerr);
+        indexedmodel.histogram(std::cerr);
 
 		cerr << "Unigram Types"; test(indexedmodel.totalwordtypesingroup(0,1),45);
 
@@ -1296,9 +1296,9 @@ int main( int argc, const char *argv[] ) {
         }
 
         cerr << "outputting all" << endl;
-        indexedmodel.print(&std::cerr, classdecoder);
+        indexedmodel.print(std::cerr, classdecoder);
         cerr << "Outputting report again, now with flexgrams" << endl;
-        indexedmodel.report(&std::cerr);
+        indexedmodel.report(std::cerr);
 
 
 
@@ -1475,20 +1475,20 @@ int main( int argc, const char *argv[] ) {
         stringstream sscls;
         sscls << poem;
         unordered_map<string,unsigned int> freqlist;
-        classencoder.processcorpus((istream*) &sscls, freqlist);
+        classencoder.processcorpus( &sscls, freqlist);
         classencoder.buildclasses(freqlist);
 
         stringstream sstxt;
         sstxt << poem;
 
         stringstream ssdat;
-        classencoder.encodefile((istream*) &sstxt, (ostream*) &ssdat,false, false);
+        classencoder.encodefile(&sstxt, &ssdat,false, false);
 
 
         PatternModelOptions options;
         stringstream ss2;
         PatternModel<uint32_t> model = PatternModel<uint32_t>();
-        model.train((istream*) &ssdat, options);
+        model.train( &ssdat, options);
     }
     {
         cerr << endl << "************************** Unindexed PatternPointerModel Tests ***************************************" << endl << endl;
@@ -1516,7 +1516,7 @@ int main( int argc, const char *argv[] ) {
 	//        std::string outputfilename = "/tmp/data.colibri.patternmodel";
         ppmodel.train(infilename, options);
         cerr << "Found " << ppmodel.size() << " patterns, " << ppmodel.types() << " types, " << ppmodel.tokens() << " tokens" << endl;
-        ppmodel.print(&std::cerr, classdecoder);
+        ppmodel.print(std::cerr, classdecoder);
 
         cerr << "Sanity check: ";
         unsigned int ui = 0;
@@ -1539,10 +1539,10 @@ int main( int argc, const char *argv[] ) {
         PatternPointer pskipgram = PatternPointer(skipgram);
         cerr << "Querying occurrencecount with PatternPointer (skipgram)" ; test(ppmodel.occurrencecount(pskipgram), 4);
         cerr << "Querying occurrencecount with Pattern (skipgram)" ; test(ppmodel.occurrencecount(skipgram), 4);
-        ppmodel.report(&std::cerr);
+        ppmodel.report(std::cerr);
         cerr << endl;
         cerr << endl;
-        ppmodel.histogram(&std::cerr);
+        ppmodel.histogram(std::cerr);
 
         cerr << "Training reference PatternModel" << endl;
         refmodel.train(infilename, options);
@@ -1593,7 +1593,7 @@ int main( int argc, const char *argv[] ) {
 	//        std::string outputfilename = "/tmp/data.colibri.patternmodel";
         ppmodel.train(infilename, options);
         cerr << "Found " << ppmodel.size() << " patterns, " << ppmodel.types() << " types, " << ppmodel.tokens() << " tokens" << endl;
-        ppmodel.print(&std::cerr, classdecoder);
+        ppmodel.print(std::cerr, classdecoder);
 
 	cerr << "Sanity check: ";
 	unsigned int ui = 0;
@@ -1617,10 +1617,10 @@ int main( int argc, const char *argv[] ) {
         PatternPointer pskipgram = PatternPointer(skipgram);
         cerr << "Querying occurrencecount with PatternPointer (skipgram)" ; test(ppmodel.occurrencecount(pskipgram), 4);
         cerr << "Querying occurrencecount with Pattern (skipgram)" ; test(ppmodel.occurrencecount(skipgram), 4);
-        ppmodel.report(&std::cerr);
+        ppmodel.report(std::cerr);
         cerr << endl;
         cerr << endl;
-        ppmodel.histogram(&std::cerr);
+        ppmodel.histogram(std::cerr);
 
         cerr << "Training reference PatternModel" << endl;
         refmodel.train(infilename, options);

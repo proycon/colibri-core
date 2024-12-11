@@ -111,7 +111,7 @@ void processquerypattern(ModelType & model, const ClassDecoder * classdecoder, c
     if (!model.has(pattern)) {
         cout << "PATTERN \"" << pattern.tostring(*classdecoder) << "\" NOT FOUND IN MODEL" << endl;
     } else {
-        model.print(&cout, *classdecoder, pattern, doinstantiate);
+        model.print(cout, *classdecoder, pattern, doinstantiate);
         if (!dorelations.empty()) model.outputrelations(pattern, *classdecoder, &cout, dorelations == "all" ? "" : dorelations);
     }
 }
@@ -196,17 +196,17 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
         if (classdecoder == NULL) {
             cerr << "ERROR: Unable to print model, no class file specified (--classfile)" << endl;
         } else {
-            model.print(&cout, *classdecoder, doinstantiate);
+            model.print(cout, *classdecoder, doinstantiate);
         }
     }
     if (printreverseindex) {
         model.printreverseindex(&cout, *classdecoder);
     }
     if (report) {
-        model.report(&cout, nocoverage);
+        model.report(cout, nocoverage);
     }
     if (histogram) {
-        model.histogram(&cout);
+        model.histogram(cout);
     }
     if (cooc == 2) {
         model.outputcooc_npmi(&cout, *classdecoder,coocthreshold);
