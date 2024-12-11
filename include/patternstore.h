@@ -482,7 +482,6 @@ class PatternStore: public PatternStoreInterface {
 
 
         virtual void write( std::ostream& out)=0;
-        //virtual void read(std::istream * in, int MINTOKENS)=0;
 
         virtual PatternStoreInterface * getstoreinterface() {
 	  return static_cast<PatternStoreInterface*>(this);

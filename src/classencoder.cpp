@@ -139,69 +139,69 @@ void ClassEncoder::processcorpus(const string & filename, unordered_map<string,u
 	   exit(3);
 	 }
 	 bz2istream decompressor(IN.rdbuf());
-	 processcorpus(&decompressor,freqlist);
+	 processcorpus(decompressor,freqlist);
        } else {
 	 IN.open( filename );
 	 if (!(IN)) {
 	   cerr << "ERROR: File does not exist: " << filename << endl;
 	   exit(3);
 	 }
-	 processcorpus(&IN, freqlist);
+	 processcorpus(IN, freqlist);
        }
        IN.close();
 }
 
-void ClassEncoder::processcorpus(istream * IN , unordered_map<string,unsigned int> & freqlist, unordered_set<string> * vocab) {
-        while (IN->good()) {
-          string line;
-          getline(*IN, line);
-          int start = 0;
-          const int s = line.size();
-          for (int i = 0; i < s; i++) {
-              if ((line[i] == ' ') || (i == s - 1)) {
-              	  int offset = 0;
-              	  if (i == s - 1) offset = 1;
-              	  string word = string(line.begin() + start, line.begin() + i + offset);
-              	  if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
-              	    word = trim(word, " \t\n\r"); //trim whitespace, control characters
-                    if ((vocab == NULL) || (vocab->find(word) != vocab->end() )) {
-                        if ((minlength > 0) || (maxlength > 0))  {
-                            const unsigned int l = (unsigned int) utf8_strlen(word);
-                            if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
-                                freqlist[word]++;
-                            }
-                        } else {
-                            freqlist[word]++;
-                        }
-                    }
-              	  }
-              	  start = i+ 1;
-              }
+void ClassEncoder::processcorpus( istream& IN , unordered_map<string,unsigned int> & freqlist, unordered_set<string> * vocab) {
+  while (IN.good()) {
+    string line;
+    getline(IN, line);
+    int start = 0;
+    const int s = line.size();
+    for (int i = 0; i < s; i++) {
+      if ((line[i] == ' ') || (i == s - 1)) {
+	int offset = 0;
+	if (i == s - 1) offset = 1;
+	string word = string(line.begin() + start, line.begin() + i + offset);
+	if ((word.length() > 0) && (word != "\r") && (word != "\t") && (word != " ")) {
+	  word = trim(word, " \t\n\r"); //trim whitespace, control characters
+	  if ((vocab == NULL) || (vocab->find(word) != vocab->end() )) {
+	    if ((minlength > 0) || (maxlength > 0))  {
+	      const unsigned int l = (unsigned int) utf8_strlen(word);
+	      if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
+		freqlist[word]++;
+	      }
+	    } else {
+	      freqlist[word]++;
+	    }
+	  }
+	}
+	start = i+ 1;
+      }
 
-          }
-        }
+    }
+  }
 }
 
 #ifdef WITHFOLIA
 void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<string,unsigned int> & freqlist, unordered_set<string> * vocab) {
-    folia::Document doc;
-    doc.readFromFile(filename);
+  folia::Document doc;
+  doc.readFromFile(filename);
 
-    vector<folia::Word*> words = doc.words();
-    for (vector<folia::Word*>::iterator iterw = words.begin(); iterw != words.end(); ++iterw) {
-        folia::Word * word = *iterw;
-        const string wordtext = word->str();
-        if ((vocab == NULL) || (vocab->find(word) != vocab->end()) ) {
-            if ((minlength > 0) || (maxlength > 0))  {
-                const int l = utf8_strlen(wordtext);
-                if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
-                    freqlist[wordtext]++;
-                }
-            } else {
-                freqlist[wordtext]++;
-            }
-        }
+  vector<folia::Word*> words = doc.words();
+  for (vector<folia::Word*>::iterator iterw = words.begin(); iterw != words.end(); ++iterw) {
+    folia::Word * word = *iterw;
+    const string wordtext = word->str();
+    if ((vocab == NULL) || (vocab->find(word) != vocab->end()) ) {
+      if ((minlength > 0) || (maxlength > 0))  {
+	const int l = utf8_strlen(wordtext);
+	if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
+	  freqlist[wordtext]++;
+	}
+      } else {
+	freqlist[wordtext]++;
+      }
     }
+  }
 
 }
 #endif
@@ -527,66 +527,66 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
                 exit(2);
             }
             bz2istream decompressor(IN.rdbuf());
-            encodefile(&decompressor, &OUT, allowunknown, autoaddunknown, quiet, append, ignorenewlines);
+            encodefile(decompressor, OUT, allowunknown, autoaddunknown, quiet, append, ignorenewlines);
         } else {
             IN.open(inputfilename);
             if (!IN) {
                 cerr << "No such file: " << inputfilename << endl;
                 exit(2);
             }
-            encodefile((istream*) &IN, (ostream*) &OUT, allowunknown, autoaddunknown, quiet, append, ignorenewlines);
+            encodefile(IN, OUT, allowunknown, autoaddunknown, quiet, append, ignorenewlines);
         }
 	    IN.close();
 	    OUT.close();
 	}
 }
 
-void ClassEncoder::encodefile(istream * IN, ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet, bool append, bool ignorenewlines) {
-    if (!append) {
-        const unsigned char mark = 0xa2;
-        const char version = 2;
-        OUT->write((const char*)&mark,1);
-        OUT->write(&version,1);
+void ClassEncoder::encodefile( istream& IN, ostream&  OUT, bool allowunknown, bool autoaddunknown, bool quiet, bool append, bool ignorenewlines) {
+  if (!append) {
+    const unsigned char mark = 0xa2;
+    const char version = 2;
+    OUT.write((const char*)&mark,1);
+    OUT.write(&version,1);
+  }
+  const char zero = 0;
+  size_t outputbuffersize = 65536;
+  unsigned char * outputbuffer = new unsigned char[outputbuffersize];
+  unsigned int outputsize;
+  unsigned int linenum = 0;
+  unsigned int totalnroftokens = 0;
+  unsigned int nroftokens;
+  while (IN.good()) {
+    nroftokens = 0;
+    string line = "";
+    getline(IN, line);
+    if (!IN.good()) break;
+    linenum++;
+    if (line.length() > outputbuffersize) { //heuristic to check if we need to compute the length, string will be longer than encoded representation
+      outputsize = outputlength(line);
+      if (outputsize > outputbuffersize) {
+	delete[] outputbuffer;
+	outputbuffersize = outputsize+1;
+	outputbuffer = new unsigned char[outputbuffersize];
+      }
     }
-    const char zero = 0;
-    size_t outputbuffersize = 65536;
-    unsigned char * outputbuffer = new unsigned char[outputbuffersize];
-    unsigned int outputsize;
-    unsigned int linenum = 0;
-    unsigned int totalnroftokens = 0;
-    unsigned int nroftokens;
-    while (IN->good()) {
-        nroftokens = 0;
-        string line = "";
-        getline(*IN, line);
-        if (!IN->good()) break;
-        linenum++;
-        if (line.length() > outputbuffersize) { //heuristic to check if we need to compute the length, string will be longer than encoded representation
-            outputsize = outputlength(line);
-            if (outputsize > outputbuffersize) {
-                delete[] outputbuffer;
-                outputbuffersize = outputsize+1;
-                outputbuffer = new unsigned char[outputbuffersize];
-            }
-        }
-        outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown, &nroftokens);
-        if (ignorenewlines) {
-            if (totalnroftokens + nroftokens >= 65536) { //max token count (uint16)
-                if (totalnroftokens == 0) {
-                    cerr << "ERROR: Each input line may not contain more than 65536 tokens/words. Limit exceeded on line " << linenum << " (" << nroftokens << " tokens)" << endl;
-                    throw InternalError();
-                }
-                OUT->write(&zero, sizeof(char)); //newline
-                totalnroftokens = 0; //reset for next block
-            }
-            totalnroftokens += nroftokens;
-        }
-        OUT->write((const char *) outputbuffer, outputsize);
-        if (!ignorenewlines) OUT->write(&zero, sizeof(char)); //newline
+    outputsize = encodestring(line, outputbuffer, allowunknown, autoaddunknown, &nroftokens);
+    if (ignorenewlines) {
+      if (totalnroftokens + nroftokens >= 65536) { //max token count (uint16)
+	if (totalnroftokens == 0) {
+	  cerr << "ERROR: Each input line may not contain more than 65536 tokens/words. Limit exceeded on line " << linenum << " (" << nroftokens << " tokens)" << endl;
+	  throw InternalError();
+	}
+	OUT.write(&zero, sizeof(char)); //newline
+	totalnroftokens = 0; //reset for next block
+      }
+      totalnroftokens += nroftokens;
     }
-    if (ignorenewlines) OUT->write(&zero, sizeof(char)); //force newline at end of file even if ignorenewlines is set
-    if (!quiet) cerr << "Encoded " << linenum << " lines" << endl;
-    delete[] outputbuffer;
+    OUT.write((const char *) outputbuffer, outputsize);
+    if (!ignorenewlines) OUT.write(&zero, sizeof(char)); //newline
+  }
+  if (ignorenewlines) OUT.write(&zero, sizeof(char)); //force newline at end of file even if ignorenewlines is set
+  if (!quiet) cerr << "Encoded " << linenum << " lines" << endl;
+  delete[] outputbuffer;
 }
 
 unsigned char * convert_v1_v2(const unsigned char * olddata, unsigned int & newlength) {

@@ -1494,11 +1494,6 @@ class PatternModel: public MapType, public PatternModelInterface {
             if (!options.QUIET) std::cerr << " pruned " << pruned << std::endl;;
         }
 
-        //creates a new test model using the current model as training
-        // i.e. only fragments existing in the training model are counted
-        // remaining fragments are 'uncovered'
-        void test(MapType & target, std::istream * in);
-
         /**
          * Write the pattern model to output stream
          */
@@ -2207,18 +2202,18 @@ class PatternModel: public MapType, public PatternModelInterface {
          * @param out The output stream
          * @param decoder The class decoder to use
          */
-        virtual void printreverseindex(std::ostream * out, ClassDecoder & decoder) {
-            if (!this->reverseindex) return;
-            for ( IndexedCorpus::iterator iter = reverseindex->begin(); iter != reverseindex->end(); ++iter) {
-                const IndexReference ref = iter.index();
-                std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref);
-                *out << ref.tostring();
-                for ( const auto& p : rindex ){
-		  *out << "\t" << p.tostring(decoder);
-                }
-                *out << "\n";
-            }
-            *out << std::endl;
+        virtual void printreverseindex( std::ostream& out, ClassDecoder & decoder) {
+	  if (!this->reverseindex) return;
+	  for ( IndexedCorpus::iterator iter = reverseindex->begin(); iter != reverseindex->end(); ++iter) {
+	    const IndexReference ref = iter.index();
+	    std::unordered_set<PatternPointer> rindex = this->getreverseindex(ref);
+	    out << ref.tostring();
+	    for ( const auto& p : rindex ){
+	      out << "\t" << p.tostring(decoder);
+	    }
+	    out << "\n";
+	  }
+	  out << std::endl;
         }
 
 
@@ -2327,54 +2322,54 @@ class PatternModel: public MapType, public PatternModelInterface {
         /**
          * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
          */
-        virtual void info(std::ostream * OUT) {
-            if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
-                *OUT << "Type: indexed" << std::endl;
-            } else if (this->getmodeltype() == UNINDEXEDPATTERNMODEL) {
-                *OUT << "Type: unindexed" << std::endl;
-            } else {
-                //should never happen
-                *OUT << "Type: unknown" << std::endl;
-            }
-            *OUT << "Total tokens: " << this->totaltokens << std::endl;
-            *OUT << "Total word types: " << this->totaltypes << std::endl;
-            *OUT << "Types patterns loaded: " << this->size() << std::endl;
-            *OUT << "Min n: " << this->minn << std::endl;
-            *OUT << "Max n: " << this->maxn << std::endl;
-            if (this->reverseindex)  {
-                *OUT << "Reverse index: yes" << std::endl;
-                *OUT << "References in reverse index: " << this->reverseindex->size() << std::endl;
-            } else {
-                *OUT << "Reverse index: no" << std::endl;
-            }
-            *OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
-            *OUT << "Size of ValueType: " << sizeof(ValueType) << " byte" << std::endl;
-            size_t totalkeybs = 0;
-            size_t totalvaluebs = 0;
-            for (PatternModel::iterator iter = this->begin(); iter != this->end(); ++iter) {
-                const PatternType pattern = iter->first;
-                totalkeybs += sizeof(PatternType) + pattern.bytesize();
-                totalvaluebs += sizeof(ValueType);
-            }
-            *OUT << "Total key bytesize (patterns): " <<  totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
-            *OUT << "Total value bytesize (counts/index): " <<  totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
-            *OUT << "Mean key bytesize: " << (totalkeybs / (float) this->size()) << std::endl;
-            *OUT << "Mean value bytesize: " << (totalvaluebs / (float) this->size()) << std::endl;
+        virtual void info( std::ostream&  OUT) {
+	  if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
+	    OUT << "Type: indexed" << std::endl;
+	  } else if (this->getmodeltype() == UNINDEXEDPATTERNMODEL) {
+	    OUT << "Type: unindexed" << std::endl;
+	  } else {
+	    //should never happen
+	    OUT << "Type: unknown" << std::endl;
+	  }
+	  OUT << "Total tokens: " << this->totaltokens << std::endl;
+	  OUT << "Total word types: " << this->totaltypes << std::endl;
+	  OUT << "Types patterns loaded: " << this->size() << std::endl;
+	  OUT << "Min n: " << this->minn << std::endl;
+	  OUT << "Max n: " << this->maxn << std::endl;
+	  if (this->reverseindex)  {
+	    OUT << "Reverse index: yes" << std::endl;
+	    OUT << "References in reverse index: " << this->reverseindex->size() << std::endl;
+	  } else {
+	    OUT << "Reverse index: no" << std::endl;
+	  }
+	  OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
+	  OUT << "Size of ValueType: " << sizeof(ValueType) << " byte" << std::endl;
+	  size_t totalkeybs = 0;
+	  size_t totalvaluebs = 0;
+	  for (PatternModel::iterator iter = this->begin(); iter != this->end(); ++iter) {
+	    const PatternType pattern = iter->first;
+	    totalkeybs += sizeof(PatternType) + pattern.bytesize();
+	    totalvaluebs += sizeof(ValueType);
+	  }
+	  OUT << "Total key bytesize (patterns): " <<  totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
+	  OUT << "Total value bytesize (counts/index): " <<  totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
+	  OUT << "Mean key bytesize: " << (totalkeybs / (float) this->size()) << std::endl;
+	  OUT << "Mean value bytesize: " << (totalvaluebs / (float) this->size()) << std::endl;
 
-            size_t ri_totalkeybs = 0;
-            size_t ri_totalvaluebs = 0;
-            if (this->reverseindex) {
-	      for ( auto iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
-		ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
-		ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
-	      }
-	      *OUT << "Total key bytesize in reverse index (references): " <<  ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
-	      *OUT << "Total value bytesize in reverse index (patterns): " <<  ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
-            }
+	  size_t ri_totalkeybs = 0;
+	  size_t ri_totalvaluebs = 0;
+	  if (this->reverseindex) {
+	    for ( auto iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
+	      ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
+	      ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
+	    }
+	    OUT << "Total key bytesize in reverse index (references): " <<  ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
+	    OUT << "Total value bytesize in reverse index (patterns): " <<  ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
+	  }
 
 
-            const size_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
-            *OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
+	  const size_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
+	  OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
         }
 
   /**
@@ -2507,7 +2502,7 @@ class PatternModel: public MapType, public PatternModelInterface {
         }
 
 
-  virtual void outputrelations(const PatternPointer & , const ClassDecoder & , std::ostream *, const std::string& = "", bool=true) {} //does nothing for unindexed models
+  virtual void outputrelations(const PatternPointer & , const ClassDecoder & , std::ostream&, const std::string& = "", bool=true) {} //does nothing for unindexed models
         virtual t_relationmap getsubchildren(const PatternPointer & , unsigned int = 0, int = 0, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap getsubparents(const PatternPointer &, unsigned int = 0, int = 0, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
         virtual t_relationmap gettemplates(const PatternPointer &, unsigned int = 0) { return t_relationmap(); } //does nothing for unindexed models
@@ -2518,8 +2513,8 @@ class PatternModel: public MapType, public PatternModelInterface {
         virtual t_relationmap_double getnpmi(const Pattern & , double ) { return t_relationmap_double(); } //does nothing for unindexed models
         virtual int computeflexgrams_fromskipgrams() { return 0; }//does nothing for unindexed models
         virtual int computeflexgrams_fromcooc(double) {return 0; }//does nothing for unindexed models
-        virtual void outputcooc_npmi(std::ostream *, const ClassDecoder& , double) {}
-        virtual void outputcooc(std::ostream *, const ClassDecoder&, double) {}
+        virtual void outputcooc_npmi(std::ostream& , const ClassDecoder& , double) {}
+        virtual void outputcooc(std::ostream&, const ClassDecoder&, double) {}
 
         /**
          * Get the instance of the pattern at the specified position
@@ -2703,56 +2698,56 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
   /**
    * Output information about the model to the output stream, includes some statistics and technical details such as space requirements.
    */
-  void info(std::ostream * OUT) override {
+  void info(std::ostream& OUT) override {
     if (this->getmodeltype() == INDEXEDPATTERNMODEL) {
-            *OUT << "Type: indexed" << std::endl;
-        } else if (this->getmodeltype() == UNINDEXEDPATTERNMODEL) {
-            *OUT << "Type: unindexed" << std::endl;
-        } else {
-            //should never happen
-            *OUT << "Type: unknown" << std::endl;
-        }
-        *OUT << "Total tokens: " << this->totaltokens << std::endl;
-        *OUT << "Total word types: " << this->totaltypes << std::endl;
-        *OUT << "Types patterns loaded: " << this->size() << std::endl;
-        *OUT << "Min n: " << this->minn << std::endl;
-        *OUT << "Max n: " << this->maxn << std::endl;
-        if (this->reverseindex)  {
-            *OUT << "Reverse index: yes" << std::endl;
-            *OUT << "References in reverse index: " << this->reverseindex->size() << std::endl;
-        } else {
-            *OUT << "Reverse index: no" << std::endl;
-        }
-        *OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
-        size_t totalkeybs = 0;
-        size_t totalvaluebs = 0;
-        size_t indexlengthsum = 0;
-        for ( auto iter = this->begin(); iter != this->end(); ++iter) {
-            const Pattern pattern = iter->first;
-            totalkeybs += sizeof(Pattern) + pattern.bytesize();
-            totalvaluebs += iter->second.size() * sizeof(IndexReference); //sentence + token;
-            indexlengthsum += iter->second.size();
-        }
-        *OUT << "Total key bytesize (patterns): " << totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
-        *OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
-        *OUT << "Mean key bytesize: " << (totalkeybs / (float) this->size()) << std::endl;
-        *OUT << "Mean value bytesize: " << (totalvaluebs / (float) this->size()) << std::endl;
-        *OUT << "Mean index length (ttr): " << (indexlengthsum / (float) this->size()) << std::endl;
-
-        size_t ri_totalkeybs = 0;
-        size_t ri_totalvaluebs = 0;
-        if (this->reverseindex) {
-	  for ( auto iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
-	    ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
-	    ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
-	  }
-	  *OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
-	  *OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
-        }
-
-        const size_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
-        *OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
+      OUT << "Type: indexed" << std::endl;
+    } else if (this->getmodeltype() == UNINDEXEDPATTERNMODEL) {
+      OUT << "Type: unindexed" << std::endl;
+    } else {
+      //should never happen
+      OUT << "Type: unknown" << std::endl;
     }
+    OUT << "Total tokens: " << this->totaltokens << std::endl;
+    OUT << "Total word types: " << this->totaltypes << std::endl;
+    OUT << "Types patterns loaded: " << this->size() << std::endl;
+    OUT << "Min n: " << this->minn << std::endl;
+    OUT << "Max n: " << this->maxn << std::endl;
+    if (this->reverseindex)  {
+      OUT << "Reverse index: yes" << std::endl;
+      OUT << "References in reverse index: " << this->reverseindex->size() << std::endl;
+    } else {
+      OUT << "Reverse index: no" << std::endl;
+    }
+    OUT << "Size of Pattern: " << sizeof(Pattern) << " byte" << std::endl;
+    size_t totalkeybs = 0;
+    size_t totalvaluebs = 0;
+    size_t indexlengthsum = 0;
+    for ( auto iter = this->begin(); iter != this->end(); ++iter) {
+      const Pattern pattern = iter->first;
+      totalkeybs += sizeof(Pattern) + pattern.bytesize();
+      totalvaluebs += iter->second.size() * sizeof(IndexReference); //sentence + token;
+      indexlengthsum += iter->second.size();
+    }
+    OUT << "Total key bytesize (patterns): " << totalkeybs << " bytes (" << (totalkeybs/1024/1024) << " MB)" << std::endl;
+    OUT << "Total value bytesize (counts/index): " << totalvaluebs << " bytes (" << (totalvaluebs/1024/1024) << " MB)" << std::endl;
+    OUT << "Mean key bytesize: " << (totalkeybs / (float) this->size()) << std::endl;
+    OUT << "Mean value bytesize: " << (totalvaluebs / (float) this->size()) << std::endl;
+    OUT << "Mean index length (ttr): " << (indexlengthsum / (float) this->size()) << std::endl;
+
+    size_t ri_totalkeybs = 0;
+    size_t ri_totalvaluebs = 0;
+    if (this->reverseindex) {
+      for ( auto iter = this->reverseindex->begin(); iter != this->reverseindex->end(); ++iter) {
+	ri_totalkeybs += sizeof(iter.index().sentence) + sizeof(iter.index().token);
+	ri_totalvaluebs += sizeof(IndexPattern); // sizeof(Pattern) + iter->pattern().bytesize();
+      }
+      OUT << "Total key bytesize in reverse index (references): " << ri_totalkeybs << " bytes (" << (ri_totalkeybs/1024/1024) << " MB)" << std::endl;
+      OUT << "Total value bytesize in reverse index (patterns): " << ri_totalvaluebs << " bytes (" << (ri_totalvaluebs/1024/1024) << " MB)" << std::endl;
+    }
+
+    const size_t t = (totalkeybs + totalvaluebs + ri_totalkeybs + ri_totalvaluebs);
+    OUT << "Total bytesize (without overhead): " << t << " bytes (" << (t/1024/1024) << " MB)" << std::endl;
+  }
 
 
     /**
@@ -3453,22 +3448,22 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
     void outputrelations(const PatternPointer & pattern,
 			 const t_relationmap & relations,
 			 const ClassDecoder & classdecoder,
-			 std::ostream *OUT,
+			 std::ostream& OUT,
 			 const std::string& label = "RELATED-TO") {
-        int total = 0;
-        for ( const auto& iter : relations ){
-	  total += iter.second;
-        }
-        if (total == 0) return;
-        double total_f = total;
-        const std::string pattern_s = pattern.tostring(classdecoder);
-        for ( const auto& iter : relations ){
-	  const PatternPointer pattern2 = iter.first;
-	  *OUT << "\t" << pattern_s << "\t" << label
-	       << "\t" << pattern2.tostring(classdecoder)
-	       << "\t" << iter.second << "\t" << iter.second / total_f
-	       << "\t" << this->occurrencecount(pattern2) << std::endl;
-        }
+      int total = 0;
+      for ( const auto& iter : relations ){
+	total += iter.second;
+      }
+      if (total == 0) return;
+      double total_f = total;
+      const std::string pattern_s = pattern.tostring(classdecoder);
+      for ( const auto& iter : relations ){
+	const PatternPointer pattern2 = iter.first;
+	OUT << "\t" << pattern_s << "\t" << label
+	    << "\t" << pattern2.tostring(classdecoder)
+	    << "\t" << iter.second << "\t" << iter.second / total_f
+	    << "\t" << this->occurrencecount(pattern2) << std::endl;
+      }
     }
 
     /**
@@ -3481,48 +3476,48 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * instances, templates
      * @param outputheader Output a header (default: true)
      */
-  void outputrelations(const PatternPointer & pattern, const ClassDecoder & classdecoder, std::ostream * OUT, const std::string& filter="", bool outputheader=true) override {
-        if (outputheader) *OUT << "#\tPATTERN1\tRELATION\tPATTERN2\tREL.COUNT\tREL.FREQUENCY\tCOUNT2" << std::endl;
+  void outputrelations(const PatternPointer & pattern, const ClassDecoder & classdecoder, std::ostream& OUT, const std::string& filter="", bool outputheader=true) override {
+    if (outputheader) OUT << "#\tPATTERN1\tRELATION\tPATTERN2\tREL.COUNT\tREL.FREQUENCY\tCOUNT2" << std::endl;
 
 
-        if (filter.empty() || (filter == "subparents") || (filter == "subsumed")) {
-	  t_relationmap relations = this->getsubparents(pattern);
-	  this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");
-        }
-        if (filter.empty() || (filter == "subchildren") || (filter == "subsumes")){
-            t_relationmap relations = this->getsubchildren(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMES");
-        }
-        if (filter.empty() || (filter == "rightneighbours") || (filter == "rightneighbors")){
-            t_relationmap relations = this->getleftneighbours(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-NEIGHBOUR-OF");
-        }
-        if (filter.empty() || (filter == "leftneighbours") || (filter == "leftneighbors")){
-            t_relationmap relations = this->getrightneighbours(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-NEIGHBOUR-OF");
-        }
-        if (filter.empty() || (filter == "rightcooc")){
-            t_relationmap relations = this->getrightcooc(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-COOC-OF");
-        }
-        if (filter.empty() || (filter == "leftcooc")){
-            t_relationmap relations = this->getleftcooc(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-COOC-OF");
-        }
-        if (filter.empty() || (filter == "skipcontent")){
-            t_relationmap relations = this->getskipcontent(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANTIATED-BY");
-        }
-        if (filter.empty() || (filter == "instances")){
-            t_relationmap relations = this->getinstances(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANCE-OF");
-        }
-        if (filter.empty() || (filter == "templates")){
-            t_relationmap relations = this->gettemplates(pattern);
-            this->outputrelations(pattern, relations, classdecoder, OUT, "TEMPLATE-OF");
-        }
-
+    if (filter.empty() || (filter == "subparents") || (filter == "subsumed")) {
+      t_relationmap relations = this->getsubparents(pattern);
+      this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMED-BY");
     }
+    if (filter.empty() || (filter == "subchildren") || (filter == "subsumes")){
+      t_relationmap relations = this->getsubchildren(pattern);
+      this->outputrelations(pattern, relations, classdecoder, OUT, "SUBSUMES");
+    }
+    if (filter.empty() || (filter == "rightneighbours") || (filter == "rightneighbors")){
+      t_relationmap relations = this->getleftneighbours(pattern);
+      this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-NEIGHBOUR-OF");
+    }
+    if (filter.empty() || (filter == "leftneighbours") || (filter == "leftneighbors")){
+      t_relationmap relations = this->getrightneighbours(pattern);
+      this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-NEIGHBOUR-OF");
+    }
+    if (filter.empty() || (filter == "rightcooc")){
+      t_relationmap relations = this->getrightcooc(pattern);
+      this->outputrelations(pattern, relations, classdecoder, OUT, "LEFT-COOC-OF");
+    }
+    if (filter.empty() || (filter == "leftcooc")){
+      t_relationmap relations = this->getleftcooc(pattern);
+      this->outputrelations(pattern, relations, classdecoder, OUT, "RIGHT-COOC-OF");
+    }
+    if (filter.empty() || (filter == "skipcontent")){
+      t_relationmap relations = this->getskipcontent(pattern);
+      this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANTIATED-BY");
+    }
+    if (filter.empty() || (filter == "instances")){
+      t_relationmap relations = this->getinstances(pattern);
+      this->outputrelations(pattern, relations, classdecoder, OUT, "INSTANCE-OF");
+    }
+    if (filter.empty() || (filter == "templates")){
+      t_relationmap relations = this->gettemplates(pattern);
+      this->outputrelations(pattern, relations, classdecoder, OUT, "TEMPLATE-OF");
+    }
+
+  }
 
 
     /*
@@ -3636,57 +3631,57 @@ class IndexedPatternModel: public PatternModel<IndexedData,IndexedDataHandler,Ma
      * Compute and output co-occurrence relations as Normalised Pointwise Mutual Information
      * @param threshold Normalised Pointwise Mutual Information threshold
      */
-    void outputcooc_npmi(std::ostream * OUT, const ClassDecoder& classdecoder, double threshold) override {
+    void outputcooc_npmi( std::ostream& OUT, const ClassDecoder& classdecoder, double threshold) override {
       std::map<PatternPointer,t_relationmap_double> npmimap;
       std::cerr << "Collecting patterns and computing NPMI..." << std::endl;
       computenpmi(npmimap, threshold);
 
-        std::cerr << "Building inverse map..." << std::endl;
-        //we want the reverse, so we can sort by co-occurrence
-        std::multimap<double,std::pair<PatternPointer,PatternPointer>> inversemap;
-        std::map<PatternPointer,t_relationmap_double>::iterator iter = npmimap.begin();
-        while (iter != npmimap.end()) {
-	  for ( const auto& rel : iter->second ){
-	    inversemap.insert(std::pair<double,std::pair<PatternPointer,PatternPointer>>(rel.second, std::pair<Pattern,Pattern>(iter->first, rel.first)));
-	  }
-	  iter = npmimap.erase(iter);
-        }
+      std::cerr << "Building inverse map..." << std::endl;
+      //we want the reverse, so we can sort by co-occurrence
+      std::multimap<double,std::pair<PatternPointer,PatternPointer>> inversemap;
+      std::map<PatternPointer,t_relationmap_double>::iterator iter = npmimap.begin();
+      while (iter != npmimap.end()) {
+	for ( const auto& rel : iter->second ){
+	  inversemap.insert(std::pair<double,std::pair<PatternPointer,PatternPointer>>(rel.second, std::pair<Pattern,Pattern>(iter->first, rel.first)));
+	}
+	iter = npmimap.erase(iter);
+      }
 
-        *OUT << "Pattern1\tPattern2\tNPMI" << std::endl;
-        for (std::multimap<double,std::pair<PatternPointer,PatternPointer>>::reverse_iterator iter2 = inversemap.rbegin(); iter2 != inversemap.rend(); ++iter2) {
-            const PatternPointer pattern1 = iter2->second.first;
-            const PatternPointer pattern2 = iter2->second.second;
-            *OUT << pattern1.tostring(classdecoder) << "\t" << pattern2.tostring(classdecoder) << "\t" << iter2->first << std::endl;
-        }
+      OUT << "Pattern1\tPattern2\tNPMI" << std::endl;
+      for (std::multimap<double,std::pair<PatternPointer,PatternPointer>>::reverse_iterator iter2 = inversemap.rbegin(); iter2 != inversemap.rend(); ++iter2) {
+	const PatternPointer pattern1 = iter2->second.first;
+	const PatternPointer pattern2 = iter2->second.second;
+	OUT << pattern1.tostring(classdecoder) << "\t" << pattern2.tostring(classdecoder) << "\t" << iter2->first << std::endl;
+      }
     }
 
-    /**
-     * Compute and output co-occurrence relations as joint occurrence count
-     * @param threshold Normalised Pointwise Mutual Information threshold
-     */
-    void outputcooc(std::ostream * OUT, const ClassDecoder& classdecoder, double threshold) override {
-        std::map<PatternPointer,t_relationmap> coocmap;
-        std::cerr << "Collecting patterns and computing co-occurrence..." << std::endl;
-        computecooc(coocmap, threshold);
+  /**
+   * Compute and output co-occurrence relations as joint occurrence count
+   * @param threshold Normalised Pointwise Mutual Information threshold
+   */
+  void outputcooc( std::ostream& OUT, const ClassDecoder& classdecoder, double threshold) override {
+    std::map<PatternPointer,t_relationmap> coocmap;
+    std::cerr << "Collecting patterns and computing co-occurrence..." << std::endl;
+    computecooc(coocmap, threshold);
 
-        std::cerr << "Building inverse map..." << std::endl;
-        //we want the reverse, so we can sort by co-occurrence
-        std::multimap<uint32_t,std::pair<PatternPointer,PatternPointer>> inversemap;
-        std::map<PatternPointer,t_relationmap>::iterator iter = coocmap.begin();
-        while (iter != coocmap.end()) {
-	  for ( const auto& rel : iter->second ){
-	    inversemap.insert(std::pair<uint32_t,std::pair<PatternPointer,PatternPointer>>(rel.second, std::pair<PatternPointer,PatternPointer>(iter->first, rel.first)));
-	  }
-	  iter = coocmap.erase(iter);
-        }
-
-        *OUT << "Pattern1\tPattern2\tCooc" << std::endl;
-        for (std::multimap<uint32_t,std::pair<PatternPointer,PatternPointer>>::reverse_iterator iter2 = inversemap.rbegin(); iter2 != inversemap.rend(); ++iter2) {
-            const Pattern pattern1 = iter2->second.first;
-            const Pattern pattern2 = iter2->second.second;
-            *OUT << pattern1.tostring(classdecoder) << "\t" << pattern2.tostring(classdecoder) << "\t" << iter2->first << std::endl;
-        }
+    std::cerr << "Building inverse map..." << std::endl;
+    //we want the reverse, so we can sort by co-occurrence
+    std::multimap<uint32_t,std::pair<PatternPointer,PatternPointer>> inversemap;
+    std::map<PatternPointer,t_relationmap>::iterator iter = coocmap.begin();
+    while (iter != coocmap.end()) {
+      for ( const auto& rel : iter->second ){
+	inversemap.insert(std::pair<uint32_t,std::pair<PatternPointer,PatternPointer>>(rel.second, std::pair<PatternPointer,PatternPointer>(iter->first, rel.first)));
+      }
+      iter = coocmap.erase(iter);
     }
+
+    OUT << "Pattern1\tPattern2\tCooc" << std::endl;
+    for (std::multimap<uint32_t,std::pair<PatternPointer,PatternPointer>>::reverse_iterator iter2 = inversemap.rbegin(); iter2 != inversemap.rend(); ++iter2) {
+      const Pattern pattern1 = iter2->second.first;
+      const Pattern pattern2 = iter2->second.second;
+      OUT << pattern1.tostring(classdecoder) << "\t" << pattern2.tostring(classdecoder) << "\t" << iter2->first << std::endl;
+    }
+  }
 
     /**
      * attempt to find the flexgram size for the given begin position,

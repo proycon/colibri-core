@@ -1183,22 +1183,22 @@ int main( int argc, const char *argv[] ) {
         cerr << "Extracting subsumption relations for " << querystring << endl;
 
         t_relationmap relations = indexedmodel.getsubchildren(patterndiesleep);
-        indexedmodel.outputrelations(ngram, relations, classdecoder, &cerr,"SUBSUMES");
+        indexedmodel.outputrelations(ngram, relations, classdecoder, cerr,"SUBSUMES");
 
 
         string querystring2  = "not";
         cerr << "Extracting subsumption relations for " << querystring2 << endl;
         Pattern patternnot = classencoder.buildpattern(querystring2, true);
         t_relationmap relations2 = indexedmodel.getsubparents(patternnot);
-        indexedmodel.outputrelations(patternnot, relations2, classdecoder, &cerr,"SUBSUMED-BY");
+        indexedmodel.outputrelations(patternnot, relations2, classdecoder, cerr,"SUBSUMED-BY");
 
 
         cerr << "Extracting neighbour relations for " << querystring2 << endl;
         t_relationmap relations3 = indexedmodel.getleftneighbours(patternnot);
-        indexedmodel.outputrelations(patternnot, relations3, classdecoder, &cerr,"RIGHT-OF");
+        indexedmodel.outputrelations(patternnot, relations3, classdecoder, cerr,"RIGHT-OF");
 
         t_relationmap relations4 = indexedmodel.getrightneighbours(patternnot);
-        indexedmodel.outputrelations(patternnot, relations4, classdecoder, &cerr,"LEFT-OF");
+        indexedmodel.outputrelations(patternnot, relations4, classdecoder, cerr,"LEFT-OF");
 
 
         string querystring3 = "To {*3*} to";
@@ -1206,12 +1206,12 @@ int main( int argc, const char *argv[] ) {
         cerr << "Extracting subsumption relations for " << querystring3 << endl;
 
         t_relationmap relations5 = indexedmodel.getsubchildren(skipgram);
-        indexedmodel.outputrelations(skipgram, relations5, classdecoder, &cerr,"SUBSUMES");
+        indexedmodel.outputrelations(skipgram, relations5, classdecoder, cerr,"SUBSUMES");
 
         cerr << "Extracting skipcontent relations for " << querystring3 << endl;
 
         t_relationmap relations6 = indexedmodel.getskipcontent(skipgram);
-        indexedmodel.outputrelations(skipgram, relations6, classdecoder, &cerr,"SKIPCONTENT");
+        indexedmodel.outputrelations(skipgram, relations6, classdecoder, cerr,"SKIPCONTENT");
         for ( const auto& [rel,dummy] : relations6 ){
 	  cerr << " length check: "; test(rel.n(), 3);
 	  cerr << " type check: "; test(rel.category(), NGRAM);
@@ -1222,7 +1222,7 @@ int main( int argc, const char *argv[] ) {
         Pattern skipgram2 = classencoder.buildpattern("To {*} or {*} to {*} ."); //this is a pattern actually in the model (important!)
         cerr << "Extracting instances for " << skipgram2.tostring(classdecoder) << endl;
         t_relationmap relations7 = indexedmodel.getinstances(skipgram2);
-        indexedmodel.outputrelations(skipgram2, relations7, classdecoder, &cerr,"INSTANTIATED-BY");
+        indexedmodel.outputrelations(skipgram2, relations7, classdecoder, cerr,"INSTANTIATED-BY");
         for ( const auto& [rel,dummy] : relations7 ){
 	  cerr << " length check: "; test(rel.n(), 7);
 	  cerr << " type check: "; test(rel.category(), NGRAM);
@@ -1241,7 +1241,7 @@ int main( int argc, const char *argv[] ) {
         cerr << "Verify count: "; test(relations8.size(), 8);  //other two are below threshold
 
         cerr << "All relations for  " << querystring3 << " in one go" << endl;
-        indexedmodel.outputrelations(skipgram, classdecoder, &cerr);
+        indexedmodel.outputrelations(skipgram, classdecoder, cerr);
 
         cerr << endl;
 
@@ -1256,7 +1256,7 @@ int main( int argc, const char *argv[] ) {
         Pattern flexgram = skipgram.toflexgram();
         cerr << "Extracting skipcontent relations for flexgram " << flexgram.tostring(classdecoder) << endl;
         t_relationmap relations62 = indexedmodel.getskipcontent(flexgram);
-        indexedmodel.outputrelations(flexgram, relations62, classdecoder, &cerr,"SKIPCONTENT");
+        indexedmodel.outputrelations(flexgram, relations62, classdecoder, cerr,"SKIPCONTENT");
         for ( const auto& [rel,dummy] : relations62 ){
 	  cerr << " type check: "; test(rel.category(), NGRAM);
         }
@@ -1265,7 +1265,7 @@ int main( int argc, const char *argv[] ) {
         Pattern flexgram2 = skipgram2.toflexgram(); //this is a pattern actually in the model (important!)
         t_relationmap relations72 = indexedmodel.getinstances(flexgram2);
         cerr << "Extracting instances for flexgram " << flexgram2.tostring(classdecoder) << endl;
-        indexedmodel.outputrelations(flexgram2, relations72, classdecoder, &cerr,"INSTANTIATED-BY");
+        indexedmodel.outputrelations(flexgram2, relations72, classdecoder, cerr,"INSTANTIATED-BY");
         for ( const auto& iter : relations72 ){
 	  cerr << " length check: "; test(iter.first.n(), 7);
 	  cerr << " type check: "; test(iter.first.category(), NGRAM);
@@ -1475,14 +1475,14 @@ int main( int argc, const char *argv[] ) {
         stringstream sscls;
         sscls << poem;
         unordered_map<string,unsigned int> freqlist;
-        classencoder.processcorpus( &sscls, freqlist);
+        classencoder.processcorpus( sscls, freqlist);
         classencoder.buildclasses(freqlist);
 
         stringstream sstxt;
         sstxt << poem;
 
         stringstream ssdat;
-        classencoder.encodefile(&sstxt, &ssdat,false, false);
+        classencoder.encodefile(sstxt, ssdat,false, false);
 
 
         PatternModelOptions options;

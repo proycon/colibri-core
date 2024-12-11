@@ -134,17 +134,17 @@ class ClassEncoder {
      * @param in The input stream
      * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
      */
-    void processcorpus(std::istream * in, std::unordered_map<std::string,unsigned int> & freqlist, std::unordered_set<std::string> * vocab = NULL);
-    #ifdef WITHFOLIA
-    /**
-     * Count word frequency in a given FoLiA corpus.
-     * @param filename The corpus file (FoLiA XML)
-     * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
-     */
-    void processfoliacorpus(const std::string & filename, std::unordered_map<std::string,unsigned int> & freqlist, std::unordered_set<std::string> * vocab = NULL);
-    #endif
+  void processcorpus( std::istream& in, std::unordered_map<std::string,unsigned int> & freqlist, std::unordered_set<std::string> * vocab = NULL);
+#ifdef WITHFOLIA
+  /**
+   * Count word frequency in a given FoLiA corpus.
+   * @param filename The corpus file (FoLiA XML)
+   * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
+   */
+  void processfoliacorpus(const std::string & filename, std::unordered_map<std::string,unsigned int> & freqlist, std::unordered_set<std::string> * vocab = NULL);
+#endif
 
-    std::unordered_map<unsigned int, std::string> added;
+  std::unordered_map<unsigned int, std::string> added;
 
 
     /**
@@ -185,7 +185,7 @@ class ClassEncoder {
      * @param append Set to true if this is not the first file to write to the stream
      * @return The number of bytes written to outputbuffer
      */
-    void encodefile(std::istream * IN, std::ostream * OUT, bool allowunknown, bool autoaddunknown, bool quiet=false, bool append=false, bool ignorenewlines=false);
+    void encodefile( std::istream& IN, std::ostream& OUT, bool allowunknown, bool autoaddunknown, bool quiet=false, bool append=false, bool ignorenewlines=false);
 
     std::vector<unsigned int> encodeseq(const std::vector<std::string> & seq);
 

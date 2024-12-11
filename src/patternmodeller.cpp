@@ -112,7 +112,7 @@ void processquerypattern(ModelType & model, const ClassDecoder * classdecoder, c
         cout << "PATTERN \"" << pattern.tostring(*classdecoder) << "\" NOT FOUND IN MODEL" << endl;
     } else {
         model.print(cout, *classdecoder, pattern, doinstantiate);
-        if (!dorelations.empty()) model.outputrelations(pattern, *classdecoder, &cout, dorelations == "all" ? "" : dorelations);
+        if (!dorelations.empty()) model.outputrelations(pattern, *classdecoder, cout, dorelations == "all" ? "" : dorelations);
     }
 }
 
@@ -200,7 +200,7 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
         }
     }
     if (printreverseindex) {
-        model.printreverseindex(&cout, *classdecoder);
+        model.printreverseindex(cout, *classdecoder);
     }
     if (report) {
         model.report(cout, nocoverage);
@@ -209,9 +209,9 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
         model.histogram(cout);
     }
     if (cooc == 2) {
-        model.outputcooc_npmi(&cout, *classdecoder,coocthreshold);
+        model.outputcooc_npmi(cout, *classdecoder,coocthreshold);
     } else if (cooc == 1) {
-        model.outputcooc(&cout, *classdecoder,coocthreshold);
+        model.outputcooc(cout, *classdecoder,coocthreshold);
     }
 
     if (query) {
@@ -227,13 +227,13 @@ void viewmodel(ModelType & model, ClassDecoder * classdecoder,  ClassEncoder * c
       bool first = true;
       for ( const auto& [pp,dummy] : model ){
 	cout << pp.tostring(*classdecoder) << endl;
-	model.outputrelations(pp, *classdecoder, &cout, dorelations == "all" ? "" : dorelations,first);
+	model.outputrelations(pp, *classdecoder, cout, dorelations == "all" ? "" : dorelations,first);
 	first = false;
       }
     }
 
     if (info) {
-        model.info(&cout);
+        model.info(cout);
     }
 }
 
