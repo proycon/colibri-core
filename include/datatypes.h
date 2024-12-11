@@ -45,10 +45,7 @@ class IndexReference {
     in.read( (char*) &sentence, sizeof(uint32_t));
     in.read( (char*) &token, sizeof(uint16_t));
   }
-  // IndexReference(const IndexReference& other) { //copy constructor
-  //     sentence = other.sentence;
-  //     token = other.token;
-  // };
+
     void write( std::ostream& out) const {
         out.write( (char*) &sentence, sizeof(uint32_t));
         out.write( (char*) &token, sizeof(uint16_t));
@@ -88,7 +85,7 @@ class IndexedData {
     std::vector<IndexReference> data;
   explicit IndexedData() { };
   explicit IndexedData(std::istream * in);
-    void write( std::ostream& out) const;
+  void write( std::ostream& out) const;
 
     bool has(const IndexReference & ref, bool sorted = false) const {
         if (sorted) {
@@ -174,7 +171,6 @@ class AbstractValueHandler {
     virtual unsigned int count(ValueType & value) const =0; //what count does this value represent?
     virtual void add(ValueType * value, const IndexReference & ref ) const=0; //add the indexreference to the value, will be called whenever a token is found during pattern building
 
-    // virtual void convertto( ValueType * source, ValueType* & target ) const { target = source; }; //this doesn't really convert as source and target are same type, but it is required!
 };
 
 /**
@@ -377,8 +373,7 @@ class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a 
     }
     return *this;
   }
-    /*   get double free or corruption error: //TODO: possible memory
-     *   leak?? */
+
   virtual ~PatternFeatureVectorMap() {
     for ( const auto& d : data ) {
       delete d;
