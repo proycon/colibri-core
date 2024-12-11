@@ -259,10 +259,10 @@ cdef extern from "patternstore.h":
         Pattern getpattern(IndexReference&,int)  except +KeyError #PatternPointer in reality
         vector[pair[IndexReference,PatternPointer]] findpattern(Pattern,int sentence,bool instantiate) nogil #high level
         PatternPointer getinstance(IndexReference begin, PatternPointer pattern) nogil #low level (alias for findpattern), returns ngrams since outputcategory uses default parameter NGRAM  in C++ code
-        int operator[](IndexReference&) nogil except +KeyError
+        int operator[](IndexReference&) except +KeyError nogil
         int sentencelength(int) nogil
         int sentences() nogil
-        Pattern getsentence(int) nogil except +KeyError #PatternPointer in reality
+        Pattern getsentence(int) except +KeyError nogil #PatternPointer in reality
 
     cdef cppclass AlignedPatternMap[ValueType, ValueHandler, NestedSizeType]:
         cppclass iterator:
@@ -292,16 +292,16 @@ cdef extern from "patternstore.h":
 
 cdef extern from "classdecoder.h":
     cdef cppclass ClassDecoder:
-        ClassDecoder() nogil except +
-        ClassDecoder(string&) nogil except +
+        ClassDecoder() except + nogil
+        ClassDecoder(string&) except + nogil
         void load(string&) nogil
         int size() nogil
         string decodefiletostring(string&,  int begin = 0, int end = 0, bool quiet = False) nogil
 
 cdef extern from "classencoder.h":
     cdef cppclass ClassEncoder:
-        ClassEncoder(int minlength=0, int maxlength=0) nogil except +
-        ClassEncoder(string, int minlength=0, int maxlength=0) nogil except +
+        ClassEncoder(int minlength=0, int maxlength=0) except + nogil
+        ClassEncoder(string, int minlength=0, int maxlength=0) except + nogil
         void load(string, int minlength, int maxlength) nogil
         int size() nogil
         void processcorpus(string filename, unordered_map[string,unsigned int]) nogil
@@ -309,7 +309,7 @@ cdef extern from "classencoder.h":
         void build(string& filename,int threshold=0) nogil #build a class from this dataset
         void encodefile(string&, string&, bool allowunknown, bool autoaddunknown, bool append,bool ignorenewlines, bool quiet) nogil
         void save(string&)
-        Pattern buildpattern(string&, bool allowunknown, bool autoaddunknown) nogil except +
+        Pattern buildpattern(string&, bool allowunknown, bool autoaddunknown) except + nogil
 
 cdef extern from "patternmodel.h":
     cdef cppclass PatternModelOptions:
@@ -374,8 +374,8 @@ cdef extern from "patternmodel.h":
 
         void insert(Pattern&) nogil
 
-        void load(string, PatternModelOptions) nogil except +IOError
-        void write(string) nogil except +IOError
+        void load(string, PatternModelOptions) except +IOError nogil
+        void write(string) except +IOError nogil
 
     cdef cppclass PatternModel[ValueType,ValueHandler,MapType]:
         cppclass iterator:
@@ -416,15 +416,15 @@ cdef extern from "patternmodel.h":
         bool erase(Pattern&) nogil
         unsigned int prune(int threshold, int n) nogil
         iterator find(Pattern&) nogil
-        void load(string, PatternModelOptions, PatternModelInterface*) nogil except +IOError
-        void write(string) nogil except +IOError
-        void printmodel(ostream*, ClassDecoder&) nogil
-        void printpattern(ostream*, ClassDecoder&, Pattern&,bool instantiate=false,bool eol=true) nogil
-        void report(ostream*) nogil
+        void load(string, PatternModelOptions, PatternModelInterface*) except +IOError nogil
+        void write(string) except +IOError nogil
+        void printmodel(ostream, ClassDecoder&) nogil
+        void printpattern(ostream, ClassDecoder&, Pattern&,bool instantiate=false,bool eol=true) nogil
+        void report(ostream) nogil
         void histogram(stdmap[unsigned int,unsigned int] & hist, unsigned int threshold, unsigned int cap,int,unsigned int)
-        void histogram(ostream*) nogil
+        void histogram(ostream) nogil
         unsigned int topthreshold(int,int,int) nogil
-        void outputrelations(Pattern&,ClassDecoder&, ostream*)
+        void outputrelations(Pattern&,ClassDecoder&, ostream)
 
 
 
@@ -484,15 +484,15 @@ cdef extern from "patternmodel.h":
         bool erase(Pattern&) nogil
         unsigned int prune(int threshold, int n) nogil
         iterator find(Pattern&) nogil
-        void load(string, PatternModelOptions, PatternModelInterface* ) nogil except +IOError
-        void write(string) nogil except +IOError
-        void printmodel(ostream*, ClassDecoder&) nogil
-        void printpattern(ostream*, ClassDecoder&, Pattern&,bool instantiate=false,bool eol=true) nogil
-        void report(ostream*) nogil
-        void histogram(ostream*) nogil
+        void load(string, PatternModelOptions, PatternModelInterface* ) except +IOError nogil
+        void write(string) except +IOError nogil
+        void printmodel(ostream, ClassDecoder&) nogil
+        void printpattern(ostream, ClassDecoder&, Pattern&,bool instantiate=false,bool eol=true) nogil
+        void report(ostream) nogil
+        void histogram(ostream) nogil
         void histogram(stdmap[unsigned int,unsigned int] & hist, unsigned int threshold , unsigned int cap,int,unsigned int )
         unsigned int topthreshold(int,int,int) nogil
-        void outputrelations(Pattern&,ClassDecoder&, ostream*)
+        void outputrelations(Pattern&,ClassDecoder&, ostream)
 
         void add(Pattern&, IndexedData*, IndexReference&)
 
@@ -548,8 +548,8 @@ cdef extern from "alignmodel.h":
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
 
-        void load(string&, PatternModelOptions) nogil except +IOError
-        void write(string&) nogil except +IOError
+        void load(string&, PatternModelOptions) except +IOError nogil
+        void write(string&) except +IOError nogil
 
     cdef cppclass BasicPatternAlignmentModel:
         cppclass iterator:
@@ -582,5 +582,5 @@ cdef extern from "alignmodel.h":
         iterator erase(Pattern&) nogil
         iterator find(Pattern&) nogil
 
-        void load(string&, PatternModelOptions) nogil except +IOError
-        void write(string&) nogil except +IOError
+        void load(string&, PatternModelOptions) except +IOError nogil
+        void write(string&) except +IOError nogil
