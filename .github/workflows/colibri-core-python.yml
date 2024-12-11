@@ -60,7 +60,7 @@ jobs:
           CXX: ${{ matrix.compiler }}
         run: |
           pip install .
-
+        continue-on-error: true
       - name: get build status
         uses: LanguageMachines/ticcactions/get-status@v1
         with:
