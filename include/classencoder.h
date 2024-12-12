@@ -23,7 +23,6 @@
 #include <common.h>
 
 #ifdef WITHFOLIA
-#include "libfolia/document.h"
 #include "libfolia/folia.h"
 #endif
 

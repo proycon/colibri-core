@@ -185,15 +185,15 @@ void ClassEncoder::processcorpus( istream& IN , unordered_map<string,unsigned in
 #ifdef WITHFOLIA
 void ClassEncoder::processfoliacorpus(const string & filename, unordered_map<string,unsigned int> & freqlist, unordered_set<string> * vocab) {
   folia::Document doc;
-  doc.readFromFile(filename);
+  doc.read_from_file(filename);
 
   vector<folia::Word*> words = doc.words();
   for (vector<folia::Word*>::iterator iterw = words.begin(); iterw != words.end(); ++iterw) {
-    folia::Word * word = *iterw;
+    const folia::Word * word = *iterw;
     const string wordtext = word->str();
-    if ((vocab == NULL) || (vocab->find(word) != vocab->end()) ) {
+    if ((vocab == NULL) || (vocab->find(wordtext) != vocab->end()) ) {
       if ((minlength > 0) || (maxlength > 0))  {
-	const int l = utf8_strlen(wordtext);
+	const unsigned int l = utf8_strlen(wordtext);
 	if (((minlength == 0) || (l >= minlength)) && ((maxlength == 0) || (l <= maxlength))) {
 	  freqlist[wordtext]++;
 	}
@@ -467,7 +467,7 @@ void ClassEncoder::encodefile(const std::string & inputfilename, const std::stri
         const char zero = 0;
         //FoLiA
         folia::Document doc;
-        doc.readFromFile(inputfilename);
+        doc.read_from_file(inputfilename);
 
 	    ofstream OUT;
 	    if (append) {

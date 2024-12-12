@@ -52,7 +52,7 @@ AC_ARG_WITH([folia], AS_HELP_STRING([--with-folia], [Build with FoLiA support (d
 
 AS_IF([test "x$with_folia" = "xyes"], [
     AC_MSG_NOTICE( [pkg-config search path: $PKG_CONFIG_PATH] )
-    PKG_CHECK_MODULES([folia],[folia >= 0.10])
+    PKG_CHECK_MODULES([folia],[folia >= 2.17])
     CXXFLAGS="$CXXFLAGS $folia_CFLAGS"
     LIBS="$folia_LIBS $LIBS"
     AC_DEFINE([WITHFOLIA],[1],[Compile with libfolia support])
