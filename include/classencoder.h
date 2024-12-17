@@ -48,17 +48,18 @@
  * receiving a higher class number.
  */
 class ClassEncoder {
-    private:
-     std::unordered_map<std::string,unsigned int> classes;
-     unsigned int highestclass;
-     unsigned int minlength;
-     unsigned int maxlength;
-    public:
-     static const unsigned char delimiterclass = 0;
-     static const unsigned char boundaryclass = 1;
-     static const unsigned char unknownclass = 2;
-     static const unsigned char skipclass = 3;
-     static const unsigned char flexclass = 4;
+  private:
+    std::unordered_map<std::string, unsigned int> classes;
+    unsigned int                                  highestclass;
+    unsigned int                                  minlength;
+    unsigned int                                  maxlength;
+
+  public:
+    static const unsigned char delimiterclass = 0;
+    static const unsigned char boundaryclass  = 1;
+    static const unsigned char unknownclass   = 2;
+    static const unsigned char skipclass      = 3;
+    static const unsigned char flexclass      = 4;
     /**
      * Constructor for an empty ClassEncoder
      * @param minlength Minimum supported length of words (default: 0)
@@ -72,7 +73,7 @@ class ClassEncoder {
      * @param minlength Minimum supported length of words (default: 0)
      * @param maxlength Maximum supported length of words (default: 0 = unlimited)
      */
-    ClassEncoder(const std::string & filename, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
+    ClassEncoder(const std::string& filename, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
 
     /**
      * Load a class encoding from file
@@ -80,8 +81,7 @@ class ClassEncoder {
      * @param minlength Minimum supported length of words (default: 0)
      * @param maxlength Maximum supported length of words (default: 0 = unlimited)
      */
-    void load(const std::string & filename, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
-
+    void load(const std::string& filename, const unsigned int minlength = 0, const unsigned int maxlength = 0); //load an existing classer
 
     /**
      * Build a class encoding from a plain-text corpus
@@ -90,7 +90,7 @@ class ClassEncoder {
      * @param vocabfile Plain text vocabulary file with one line per word,
      * constrains the classes to these words only
      */
-    void build(const std::string & filename, unsigned int threshold=0, const std::string & vocabfile = "");
+    void build(const std::string& filename, unsigned int threshold = 0, const std::string& vocabfile = "");
 
     /**
      * Build a class encoding from multiple plain-text corpus files
@@ -100,7 +100,7 @@ class ClassEncoder {
      * @param vocabfile Plain text vocabulary file with one line per word,
      * constrains the classes to these words only
      */
-    void build( const std::vector<std::string> & files, bool quiet=false, unsigned int threshold =0, const std::string & vocabfile = "");
+    void build(const std::vector<std::string>& files, bool quiet = false, unsigned int threshold = 0, const std::string& vocabfile = "");
 
     //auxiliary functions called by build: first do processcorpus() for each
     //corpus, then call buildclasses() once when done:
@@ -112,44 +112,43 @@ class ClassEncoder {
      * @param freqlist The data structure that will contain the frequency list
      * @param threshold Occurrence threshold, words occurring less will be pruned
      */
-    void buildclasses(const std::unordered_map<std::string,unsigned int> & freqlist, unsigned int threshold =0);
+    void buildclasses(const std::unordered_map<std::string, unsigned int>& freqlist, unsigned int threshold = 0);
 
     /**
      * Build classes from a pre-supplied frequency list (per line one word , a
      * tab, and an occurrence count)
      * @param filename The filename
      */
-    void buildclasses_freqlist(const std::string & filename, unsigned int threshold = 0);
+    void buildclasses_freqlist(const std::string& filename, unsigned int threshold = 0);
 
-    void loadvocab(const std::string & filename, std::unordered_set<std::string> & vocab);
+    void loadvocab(const std::string& filename, std::unordered_set<std::string>& vocab);
     /**
      * Count word frequency in a given plain-text corpus.
      * @param filename The corpus file
      * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
      */
-    void processcorpus(const std::string & filename, std::unordered_map<std::string,unsigned int> & freqlist, std::unordered_set<std::string> * vocab = NULL);
+    void processcorpus(const std::string& filename, std::unordered_map<std::string, unsigned int>& freqlist, std::unordered_set<std::string>* vocab = NULL);
     /**
      * Count word frequency in a given plain-text corpus.
      * @param in The input stream
      * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
      */
-  void processcorpus( std::istream& in, std::unordered_map<std::string,unsigned int> & freqlist, std::unordered_set<std::string> * vocab = NULL);
+    void processcorpus(std::istream& in, std::unordered_map<std::string, unsigned int>& freqlist, std::unordered_set<std::string>* vocab = NULL);
 #ifdef WITHFOLIA
-  /**
-   * Count word frequency in a given FoLiA corpus.
-   * @param filename The corpus file (FoLiA XML)
-   * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
-   */
-  void processfoliacorpus(const std::string & filename, std::unordered_map<std::string,unsigned int> & freqlist, std::unordered_set<std::string> * vocab = NULL);
+    /**
+    * Count word frequency in a given FoLiA corpus.
+    * @param filename The corpus file (FoLiA XML)
+    * @param freqlist The resulting frequency list, should be shared between multiple calls to processcorpus()
+    */
+    void processfoliacorpus(const std::string& filename, std::unordered_map<std::string, unsigned int>& freqlist, std::unordered_set<std::string>* vocab = NULL);
 #endif
 
-  std::unordered_map<unsigned int, std::string> added;
-
+    std::unordered_map<unsigned int, std::string> added;
 
     /**
      * Computes how many bytes the class repesentation for this input line would take
      */
-    int outputlength(const std::string & line);
+    int outputlength(const std::string& line);
 
     /**
      * Low-level function to encode a string of words as a binary representation of classes
@@ -160,7 +159,7 @@ class ClassEncoder {
      * @param nroftokens A pointer to a variable that contains the number of tokens outputted, will be written by this function if not NULL. (default: NULL)
      * @return The number of bytes written to outputbuffer
      */
-    int encodestring(const std::string & line, unsigned char * outputbuffer, bool allowunknown, bool autoaddunknown=false, unsigned int * nroftokens = NULL);
+    int encodestring(const std::string& line, unsigned char* outputbuffer, bool allowunknown, bool autoaddunknown = false, unsigned int* nroftokens = NULL);
 
     /**
      * Create a class-encoded corpus file from a plain-text corpus file. Each of the units of interest (e.g sentences) should occupy a single line (i.e., \n delimited)
@@ -172,7 +171,8 @@ class ClassEncoder {
      * @param append Set to true if this is not the first file to write to the stream
      * @return The number of bytes written to outputbuffer
      */
-    void encodefile(const std::string & inputfilename, const std::string & outputfilename, bool allowunknown, bool autoaddunknown=false,  bool append=false, bool ignorenewlines=false, bool quiet=false);
+    void encodefile(const std::string& inputfilename, const std::string& outputfilename, bool allowunknown, bool autoaddunknown = false, bool append = false,
+                    bool ignorenewlines = false, bool quiet = false);
     /**
      * Create a class-encoded corpus file from a plain-text corpus file. Each of the units of interest (e.g sentences) should occupy a single line (i.e., \n delimited)
      * @param IN Input stream of a plain-text corpus file
@@ -184,9 +184,9 @@ class ClassEncoder {
      * @param append Set to true if this is not the first file to write to the stream
      * @return The number of bytes written to outputbuffer
      */
-    void encodefile( std::istream& IN, std::ostream& OUT, bool allowunknown, bool autoaddunknown, bool quiet=false, bool append=false, bool ignorenewlines=false);
+    void encodefile(std::istream& IN, std::ostream& OUT, bool allowunknown, bool autoaddunknown, bool quiet = false, bool append = false, bool ignorenewlines = false);
 
-    std::vector<unsigned int> encodeseq(const std::vector<std::string> & seq);
+    std::vector<unsigned int> encodeseq(const std::vector<std::string>& seq);
 
     /**
      * Build a pattern from a string.
@@ -196,7 +196,7 @@ class ClassEncoder {
      * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)
      * @return a Pattern
      */
-    Pattern buildpattern(const std::string & patternstring, bool allowunknown=false, bool autoaddunknown = false);  //not thread-safe
+    Pattern buildpattern(const std::string& patternstring, bool allowunknown = false, bool autoaddunknown = false); //not thread-safe
     /**
      * Build a pattern from a string (thread-safe variant, slightly slower due to buffer allocation)
      * @param patternstring The string you want to turn into a Pattern
@@ -204,23 +204,24 @@ class ClassEncoder {
      * @param autoaddunknown If the string contains unknown words, automatically add these words to the class encoding. Note that the class encoding will no longer be optimal if this is used. (default: false)
      * @return a Pattern
      */
-    Pattern buildpattern_safe(const std::string &  patternstring, bool allowunknown=false, bool autoaddunknown = false);  //thread-safe
-
+    Pattern buildpattern_safe(const std::string& patternstring, bool allowunknown = false, bool autoaddunknown = false); //thread-safe
 
     /**
      * Add the word with the specified class to the class encoding
      */
-    void add(const std::string &, const unsigned int cls);
+    void add(const std::string&, const unsigned int cls);
 
     /**
      * Returns the highest assigned class in the class encoding
      */
-    unsigned int gethighestclass() { return highestclass; }
+    unsigned int gethighestclass() {
+        return highestclass;
+    }
 
     /**
      * Save the class encoding to file
      */
-    void save(const std::string & filename);
+    void save(const std::string& filename);
 
     /**
      * Returns the number of classes, i.e. word types
@@ -232,13 +233,13 @@ class ClassEncoder {
     /**
      * Return the class for the given word
      */
-    unsigned int operator[](const std::string & key) {
-         return classes[key];
+    unsigned int operator[](const std::string& key) {
+        return classes[key];
     }
 
     typedef std::unordered_map<std::string, unsigned int>::const_iterator const_iterator;
 
-    const_iterator find(const std::string & key) const {
+    const_iterator                                                        find(const std::string& key) const {
         return classes.find(key);
     }
 
@@ -250,12 +251,12 @@ class ClassEncoder {
     }
 };
 
-unsigned int  inttobytes(unsigned char * buffer, unsigned int cls);
-unsigned char * inttobytes_v1(unsigned int, int & length);
-int readline(std::istream* IN, unsigned char* buffer, const int);
+unsigned int   inttobytes(unsigned char* buffer, unsigned int cls);
+unsigned char* inttobytes_v1(unsigned int, int& length);
+int            readline(std::istream* IN, unsigned char* buffer, const int);
 
-unsigned char * convert_v1_v2(const unsigned char * olddata, unsigned int & newlength);
-unsigned char * convert_v1_v2( std::istream& in, bool ignoreeol, bool debug);
+unsigned char* convert_v1_v2(const unsigned char* olddata, unsigned int& newlength);
+unsigned char* convert_v1_v2(std::istream& in, bool ignoreeol, bool debug);
 
-int countwords(const unsigned char* data, const int l);
+int            countwords(const unsigned char* data, const int l);
 #endif

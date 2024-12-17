@@ -20,32 +20,27 @@ using namespace std;
 void usage() {
     cerr << "Syntax: colibri-extractngrams -n [size] -c classfile datafile datafile2 ..." << endl;
 
-    cerr << "Description: Simple tool that just extracts n-grams from corpus data (class encoded), i.e. it moves a simple sliding window over the data, and outputs n-grams in the order found, it does not generate any pattern models so is very low in memory" << endl << endl;
+    cerr << "Description: Simple tool that just extracts n-grams from corpus data (class encoded), i.e. it moves a simple sliding window over the data, and outputs n-grams in the "
+            "order found, it does not generate any pattern models so is very low in memory"
+         << endl
+         << endl;
     cerr << "Options:" << endl;
     cerr << "\t-n int   N-gram size" << endl;
     cerr << "\t-c str   Class file for decoding" << endl;
 }
 
-int main( int argc, char *argv[] ) {
-    string classfile = "";
+int main(int argc, char* argv[]) {
+    string         classfile = "";
     vector<string> datafiles;
-    int n = 3;
+    int            n = 3;
 
-    char c;
+    char           c;
     while ((c = getopt(argc, argv, "c:hn:")) != -1) {
         switch (c) {
-        case 'c':
-            classfile = optarg;
-            break;
-        case 'n':
-            n = atoi(optarg);
-            break;
-        case 'h':
-            usage();
-            exit(0);
-		default:
-            cerr << "ERROR: Unknown option: -" <<  optopt << endl;
-            abort ();
+            case 'c': classfile = optarg; break;
+            case 'n': n = atoi(optarg); break;
+            case 'h': usage(); exit(0);
+            default: cerr << "ERROR: Unknown option: -" << optopt << endl; abort();
         }
     }
 
@@ -60,23 +55,20 @@ int main( int argc, char *argv[] ) {
         exit(2);
     }
 
-    ClassDecoder classdecoder = ClassDecoder(classfile);
+    ClassDecoder                                classdecoder = ClassDecoder(classfile);
 
-    std::vector<std::pair<PatternPointer,int>> ngrams;
+    std::vector<std::pair<PatternPointer, int>> ngrams;
 
-
-    for ( const auto& file : datafiles ){
-      std::ifstream in(file, std::ios::in|std::ios::binary);
-      while (!in.eof()) {
-	//read line
-	Pattern line = Pattern(in);
-	ngrams.clear();
-	line.ngrams(ngrams, n);
-	for ( const auto& iter : ngrams ){
-	  cout << iter.first.tostring(classdecoder) << endl;
-	}
-      }
+    for (const auto& file : datafiles) {
+        std::ifstream in(file, std::ios::in | std::ios::binary);
+        while (!in.eof()) {
+            //read line
+            Pattern line = Pattern(in);
+            ngrams.clear();
+            line.ngrams(ngrams, n);
+            for (const auto& iter : ngrams) {
+                cout << iter.first.tostring(classdecoder) << endl;
+            }
+        }
     }
-
-
 }

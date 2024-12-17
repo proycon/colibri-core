@@ -42,78 +42,54 @@ void usage() {
     cerr << "         -V    Import vocabulary file (one word per line)" << endl;
 }
 
-int main( int argc, char *argv[] ) {
-    string classfile = "";
-    string corpusfile = "";
-    string outputprefix = "";
-    string outputdirectoryprefix = "";
-    string freqlistfile = "";
-    string vocabfile = "";
+int main(int argc, char* argv[]) {
+    string         classfile             = "";
+    string         corpusfile            = "";
+    string         outputprefix          = "";
+    string         outputdirectoryprefix = "";
+    string         freqlistfile          = "";
+    string         vocabfile             = "";
     vector<string> corpusfiles;
-    bool unified = false;
-    bool extend = false;
-    bool allowunknown = false;
-    bool ignorenewlines = false;
-    int threshold = 0;
-    ifstream listin;
-    string tmpfilename;
+    bool           unified        = false;
+    bool           extend         = false;
+    bool           allowunknown   = false;
+    bool           ignorenewlines = false;
+    int            threshold      = 0;
+    ifstream       listin;
+    string         tmpfilename;
 
-    char c;
+    char           c;
     while ((c = getopt(argc, argv, "f:hc:o:d:ul:eUt:F:V:n")) != -1) {
         switch (c) {
-        case 'f': //keep for backward compatibility
-            corpusfile = optarg;
-            corpusfiles.push_back(corpusfile);
-            break;
-        case 'c':
-            classfile = optarg;
-            break;
-        case 'o':
-            outputprefix = optarg;
-            break;
-        case 'd':
-        	outputdirectoryprefix = optarg;
-        	break;
-        case 'u':
-            unified = true;
-            break;
-        case 'n':
-            ignorenewlines = true;
-            break;
-        case 'e':
-            extend = true;
-            break;
-        case 'U':
-            allowunknown = true;
-            break;
-        case 't':
-            threshold = atoi(optarg);
-            break;
-        case 'l':
-            listin.open(optarg);
-            if (listin.good()) {
-                while (!listin.eof()) {
-                    listin >> tmpfilename;
-                    corpusfiles.push_back(tmpfilename);
+            case 'f': //keep for backward compatibility
+                corpusfile = optarg;
+                corpusfiles.push_back(corpusfile);
+                break;
+            case 'c': classfile = optarg; break;
+            case 'o': outputprefix = optarg; break;
+            case 'd': outputdirectoryprefix = optarg; break;
+            case 'u': unified = true; break;
+            case 'n': ignorenewlines = true; break;
+            case 'e': extend = true; break;
+            case 'U': allowunknown = true; break;
+            case 't': threshold = atoi(optarg); break;
+            case 'l':
+                listin.open(optarg);
+                if (listin.good()) {
+                    while (!listin.eof()) {
+                        listin >> tmpfilename;
+                        corpusfiles.push_back(tmpfilename);
+                    }
+                } else {
+                    cerr << "Can't read " << optarg << endl;
+                    abort();
                 }
-            } else {
-                cerr << "Can't read " << optarg << endl;
-                abort();
-            }
-            listin.close();
-            break;
-        case 'F':
-            freqlistfile = optarg;
-            break;
-        case 'V':
-            vocabfile = optarg;
-            break;
-        case 'h':
-            usage();
-            exit(0);
-		default:
-            cerr << "Unknown option: -" <<  optopt << endl;
-			exit(2);
+                listin.close();
+                break;
+            case 'F': freqlistfile = optarg; break;
+            case 'V': vocabfile = optarg; break;
+            case 'h': usage(); exit(0);
+            default: cerr << "Unknown option: -" << optopt << endl; exit(2);
         }
     }
 
@@ -123,40 +99,39 @@ int main( int argc, char *argv[] ) {
     }
 
     if (corpusfiles.empty() && (freqlistfile.empty())) {
-    	usage();
-    	exit(2);
+        usage();
+        exit(2);
     }
 
-	if (!corpusfiles.empty()) {
+    if (!corpusfiles.empty()) {
         corpusfile = corpusfiles[0]; //only for extension determination
     }
-
 
     if (outputprefix.empty()) {
         if (corpusfile.find_last_of("/") == string::npos) {
             outputprefix = corpusfile;
         } else {
-            outputprefix = corpusfile.substr(corpusfile.find_last_of("/")+1);
+            outputprefix = corpusfile.substr(corpusfile.find_last_of("/") + 1);
         }
-        strip_extension(outputprefix,"bz2");
-        strip_extension(outputprefix,"xml");
-        strip_extension(outputprefix,"txt");
+        strip_extension(outputprefix, "bz2");
+        strip_extension(outputprefix, "xml");
+        strip_extension(outputprefix, "txt");
     }
 
-	if ((!freqlistfile.empty()) && (outputprefix.empty())) {
+    if ((!freqlistfile.empty()) && (outputprefix.empty())) {
         if (freqlistfile.find_last_of("/") == string::npos) {
             outputprefix = freqlistfile;
         } else {
-            outputprefix = freqlistfile.substr(freqlistfile.find_last_of("/")+1);
+            outputprefix = freqlistfile.substr(freqlistfile.find_last_of("/") + 1);
         }
-        strip_extension(outputprefix,"bz2");
-        strip_extension(outputprefix,"xml");
-        strip_extension(outputprefix,"txt");
-	}
+        strip_extension(outputprefix, "bz2");
+        strip_extension(outputprefix, "xml");
+        strip_extension(outputprefix, "txt");
+    }
 
     ClassEncoder classencoder;
 
-    string prefixedoutputprefix = outputdirectoryprefix + outputprefix;
+    string       prefixedoutputprefix = outputdirectoryprefix + outputprefix;
     if (!classfile.empty()) {
         cerr << "Loading classes from file" << endl;
         classencoder = ClassEncoder(classfile);
@@ -184,20 +159,21 @@ int main( int argc, char *argv[] ) {
     for (size_t i = 0; i < corpusfiles.size(); i++) {
         string outfile = corpusfiles[i];
         if (outfile.find_last_of("/") != string::npos) {
-            outfile = outfile.substr(outfile.find_last_of("/")+1);
+            outfile = outfile.substr(outfile.find_last_of("/") + 1);
         }
-        if (unified) outfile = outputprefix;
-        strip_extension(outfile,"bz2");
-        strip_extension(outfile,"txt");
-        strip_extension(outfile,"xml");
+        if (unified)
+            outfile = outputprefix;
+        strip_extension(outfile, "bz2");
+        strip_extension(outfile, "txt");
+        strip_extension(outfile, "xml");
 
-        if(outputdirectoryprefix.compare("")) // output directory given
+        if (outputdirectoryprefix.compare("")) // output directory given
         {
             outfile = outputdirectoryprefix + "/" + outfile;
         }
 
         cerr << "Encoding corpus " << corpusfiles[i] << " to " << outfile << ".colibri.dat" << endl;
-        classencoder.encodefile(corpusfiles[i], outfile + ".colibri.dat", allowunknown, extend, (unified && i>0), ignorenewlines);
+        classencoder.encodefile(corpusfiles[i], outfile + ".colibri.dat", allowunknown, extend, (unified && i > 0), ignorenewlines);
         cerr << "...Done" << endl;
     }
 
@@ -209,5 +185,4 @@ int main( int argc, char *argv[] ) {
             cerr << "WARNING: classes were added but the result was ignored! Use -e!" << endl;
         }
     }
-
 }

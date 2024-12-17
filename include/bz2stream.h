@@ -1,4 +1,4 @@
- /*---------------------------------------------------------------------------\
+/*---------------------------------------------------------------------------\
  |                                                                            |
  |  bz2stream -- C++ Stream Classes for the BZ2 compression algorithm.        |
  |  Copyright (C) 2002 Aaron Isotton.                                         |
@@ -98,23 +98,23 @@
 /// is currently the only source code file.
 
 extern "C" {
-    /// \brief A pointer to a custom memory allocation function, to be
-    /// used by libbzip2.
-    ///
-    /// The opaque pointer specified in the class
-    /// constructor is passed as first parameter.  The function is
-    /// expected to return a pointer to n * m bytes of memory.  Notice
-    /// that this function should be declared as 'extern "C"'.
-    typedef void* (*bzalloc_ptr)(void* opaque, int n, int m);
+/// \brief A pointer to a custom memory allocation function, to be
+/// used by libbzip2.
+///
+/// The opaque pointer specified in the class
+/// constructor is passed as first parameter.  The function is
+/// expected to return a pointer to n * m bytes of memory.  Notice
+/// that this function should be declared as 'extern "C"'.
+typedef void* (*bzalloc_ptr)(void* opaque, int n, int m);
 
-    /// \brief A pointer to a custom memory deallocation function, to
-    /// be used by libbzip2.
-    ///
-    /// The opaque pointer specified in the class
-    /// constructor is passed as first parameter.  The function is
-    /// expected to free the memory pointed to by p.  Notice that this
-    /// function should be declared as 'extern "C"'.
-    typedef void (*bzfree_ptr)(void* opaque, void* p);
+/// \brief A pointer to a custom memory deallocation function, to
+/// be used by libbzip2.
+///
+/// The opaque pointer specified in the class
+/// constructor is passed as first parameter.  The function is
+/// expected to free the memory pointed to by p.  Notice that this
+/// function should be declared as 'extern "C"'.
+typedef void (*bzfree_ptr)(void* opaque, void* p);
 }
 
 /// \brief A stream buffer which takes any form of input, compresses
@@ -128,20 +128,20 @@ extern "C" {
 /// worse compression factor.  You should avoid flushing a bz2outbuf
 /// buffer at all costs.
 class bz2outbuf : public std::streambuf {
-protected:
-    std::streambuf* dest;
+  protected:
+    std::streambuf*   dest;
     std::vector<char> buffer;
     std::vector<char> out_buffer;
-    bz_stream cstream;
+    bz_stream         cstream;
 
-    bool process_block() {
-        int num = pptr() - pbase();
-        cstream.next_in = pbase();
+    bool              process_block() {
+        int num          = pptr() - pbase();
+        cstream.next_in  = pbase();
         cstream.avail_in = num;
 
         while (cstream.avail_in) {
             // set the pointers to the output buffer
-            cstream.next_out = &out_buffer[0];
+            cstream.next_out  = &out_buffer[0];
             cstream.avail_out = out_buffer.size();
 
             // compress the data; we don't need to check for errors
@@ -160,13 +160,13 @@ protected:
     }
 
     bool flush() {
-        bool flushed = false;
-        cstream.next_in = NULL;
+        bool flushed     = false;
+        cstream.next_in  = NULL;
         cstream.avail_in = 0;
 
         do {
             // set the pointers to the output buffer
-            cstream.next_out = &out_buffer[0];
+            cstream.next_out  = &out_buffer[0];
             cstream.avail_out = out_buffer.size();
 
             // here no errors should happen, too
@@ -182,13 +182,13 @@ protected:
     }
 
     bool finish() {
-        bool finished = false;
-        cstream.next_in = NULL;
+        bool finished    = false;
+        cstream.next_in  = NULL;
         cstream.avail_in = 0;
 
         do {
             // set the pointers to the output buffer
-            cstream.next_out = &out_buffer[0];
+            cstream.next_out  = &out_buffer[0];
             cstream.avail_out = out_buffer.size();
 
             // here no errors should happen, too
@@ -248,7 +248,8 @@ protected:
 
         return done;
     }
-public:
+
+  public:
     /// \brief Constructs a new bz2outbuf object.
     ///
     /// @param _dest The stream buffer to write the compressed data
@@ -304,13 +305,8 @@ public:
     /// std::exception derived exception.  All exceptions but
     /// std::bad_alloc include descriptions of what went bad.  Thus
     /// using the what() member makes sense.
-    explicit bz2outbuf(std::streambuf* _dest, unsigned int block_size_100K = 9,
-              unsigned int verbosity = 0, unsigned int work_factor = 0,
-              bzalloc_ptr bzalloc = NULL, bzfree_ptr bzfree = NULL,
-              void* opaque = NULL, size_t stream_buffer_size = 2048,
-              size_t out_buffer_size = 2048)
-        : dest(_dest)
-    {
+    explicit bz2outbuf(std::streambuf* _dest, unsigned int block_size_100K = 9, unsigned int verbosity = 0, unsigned int work_factor = 0, bzalloc_ptr bzalloc = NULL,
+                       bzfree_ptr bzfree = NULL, void* opaque = NULL, size_t stream_buffer_size = 2048, size_t out_buffer_size = 2048) : dest(_dest) {
         // check the parameters
         if (block_size_100K > 9)
             throw std::range_error("Block size out of range.");
@@ -338,23 +334,19 @@ public:
         // initialize the compressor stream
         memset(&cstream, 0, sizeof(cstream));
         cstream.bzalloc = bzalloc;
-        cstream.bzfree = bzfree;
-        cstream.opaque = opaque;
+        cstream.bzfree  = bzfree;
+        cstream.opaque  = opaque;
 
         // create a bz2 compressor stream
-        int ret = BZ2_bzCompressInit(&cstream, block_size_100K, verbosity,
-                                     work_factor);
+        int ret = BZ2_bzCompressInit(&cstream, block_size_100K, verbosity, work_factor);
         // BZ_PARAM_ERROR won't happen here because we checked before
         switch (ret) {
-        case BZ_OK:
-            break;
-        case BZ_CONFIG_ERROR:
-            throw std::runtime_error("libbz2 was not compiled correctly.");
-        case BZ_MEM_ERROR:
-            throw std::bad_alloc();
-        default:
-            throw std::runtime_error("Unknown error creating bz2 compressor "
-                                     "stream buffer.");
+            case BZ_OK: break;
+            case BZ_CONFIG_ERROR: throw std::runtime_error("libbz2 was not compiled correctly.");
+            case BZ_MEM_ERROR: throw std::bad_alloc();
+            default:
+                throw std::runtime_error("Unknown error creating bz2 compressor "
+                                         "stream buffer.");
         }
     }
 
@@ -384,20 +376,15 @@ public:
 /// specify in the constructor; it can thus be used to write to any
 /// stream buffer you want.
 class bz2ostream : public std::ostream {
-protected:
+  protected:
     bz2outbuf buf;
-public:
+
+  public:
     /// \brief Creates a new bz2ostream object.  See
     /// bz2outbuf::bz2outbuf for an explanation of the parameters.
-    explicit bz2ostream(std::streambuf* dest, unsigned int block_size_100K = 9,
-               unsigned int verbosity = 0, unsigned int work_factor = 0,
-               bzalloc_ptr bzalloc = NULL, bzfree_ptr bzfree = NULL,
-               void* opaque = NULL, size_t buffer_size = 1024,
-               size_t out_buffer_size = 1024)
-        : std::ostream(&buf),
-        buf(dest, block_size_100K, verbosity, work_factor, bzalloc, bzfree,
-            opaque, buffer_size, out_buffer_size)
-    {}
+    explicit bz2ostream(std::streambuf* dest, unsigned int block_size_100K = 9, unsigned int verbosity = 0, unsigned int work_factor = 0, bzalloc_ptr bzalloc = NULL,
+                        bzfree_ptr bzfree = NULL, void* opaque = NULL, size_t buffer_size = 1024, size_t out_buffer_size = 1024) :
+        std::ostream(&buf), buf(dest, block_size_100K, verbosity, work_factor, bzalloc, bzfree, opaque, buffer_size, out_buffer_size) {}
 };
 
 /// \brief A stream buffer reading from another stream buffer and
@@ -406,58 +393,54 @@ public:
 /// You specify the underlying "source" stream buffer in the
 /// constructor.
 class bz2inbuf : public std::streambuf {
-protected:
-    std::streambuf* source;
+  protected:
+    std::streambuf*   source;
     std::vector<char> buffer;
-    char* putback_end;
+    char*             putback_end;
     std::vector<char> in_buffer;
-    char* in_begin;
-    char* in_end;
-    bz_stream dstream;
+    char*             in_begin;
+    char*             in_end;
+    bz_stream         dstream;
 
-    virtual int_type underflow() {
+    virtual int_type  underflow() {
         // calculate the new size of the putback area
-        int new_putback_num = std::min(gptr() - eback(),
-                                       putback_end - &buffer[0]);
+        int new_putback_num = std::min(gptr() - eback(), putback_end - &buffer[0]);
 
         // copy the new putback data into the putback area
-        std::memcpy(putback_end - new_putback_num,
-                    gptr() - new_putback_num, new_putback_num);
+        std::memcpy(putback_end - new_putback_num, gptr() - new_putback_num, new_putback_num);
 
         // shovel data into the bzip stream until there is something
         // in the output buffer
         do {
             // refill the input buffer if necessary
             if (in_begin == in_end) {
-                std::streamsize read_num = source->sgetn(&in_buffer[0],
-                                               in_buffer.size());
+                std::streamsize read_num = source->sgetn(&in_buffer[0], in_buffer.size());
                 if (read_num == 0) {
                     // we can't read anymore
                     return traits_type::eof();
                 }
                 in_begin = &in_buffer[0];
-                in_end = in_begin + read_num;
+                in_end   = in_begin + read_num;
             }
 
             // decompress the data
-            dstream.next_in = in_begin;
-            dstream.avail_in = in_end - in_begin;
-            dstream.next_out = putback_end;
+            dstream.next_in   = in_begin;
+            dstream.avail_in  = in_end - in_begin;
+            dstream.next_out  = putback_end;
             dstream.avail_out = &*buffer.end() - putback_end;
-            int ret = BZ2_bzDecompress(&dstream);
+            int ret           = BZ2_bzDecompress(&dstream);
             switch (ret) {
-            case BZ_OK:
-                break;
-            case BZ_STREAM_END:
-                if (&*buffer.end() - putback_end == (int) dstream.avail_out)
+                case BZ_OK: break;
+                case BZ_STREAM_END:
+                    if (&*buffer.end() - putback_end == (int)dstream.avail_out)
+                        return traits_type::eof();
+                    break;
+                case BZ_DATA_ERROR:
+                case BZ_DATA_ERROR_MAGIC:
+                case BZ_MEM_ERROR:
+                default:
+                    // TODO: handle these errors separately
                     return traits_type::eof();
-                break;
-            case BZ_DATA_ERROR:
-            case BZ_DATA_ERROR_MAGIC:
-            case BZ_MEM_ERROR:
-            default:
-                // TODO: handle these errors separately
-                return traits_type::eof();
             }
 
             // update the input buffer pointers
@@ -466,15 +449,13 @@ protected:
         } while (dstream.avail_out + putback_end == &*buffer.end());
 
         // update the stream buffer pointers
-        setg(putback_end - new_putback_num,
-             putback_end,
-             &*buffer.end() - dstream.avail_out);
+        setg(putback_end - new_putback_num, putback_end, &*buffer.end() - dstream.avail_out);
 
         // return the next character
         return traits_type::to_int_type(*gptr());
     }
 
-public:
+  public:
     /// \brief Creates a new bz2inbuf object, using _source as
     /// underlying stream buffer.
     ///
@@ -527,13 +508,8 @@ public:
     ///
     /// For future compatibility, expect this constructor to throw any
     /// std::exception derived exception.
-    explicit bz2inbuf(std::streambuf* _source, unsigned int verbosity = 0,
-             bool small_but_slow = false, bzalloc_ptr bzalloc = NULL,
-             bzfree_ptr bzfree = NULL, void* opaque = NULL,
-             size_t stream_buffer_size = 1024, size_t in_buffer_size = 1024,
-             size_t max_putback_size = 64)
-        : source(_source)
-    {
+    explicit bz2inbuf(std::streambuf* _source, unsigned int verbosity = 0, bool small_but_slow = false, bzalloc_ptr bzalloc = NULL, bzfree_ptr bzfree = NULL, void* opaque = NULL,
+                      size_t stream_buffer_size = 1024, size_t in_buffer_size = 1024, size_t max_putback_size = 64) : source(_source) {
         // check the parameters
         if (verbosity > 4)
             throw std::range_error("Verbosity level out of range.");
@@ -558,24 +534,20 @@ public:
         // set up a decompressor stream
         std::memset(&dstream, 0, sizeof(dstream));
         dstream.bzalloc = bzalloc;
-        dstream.bzfree = bzfree;
-        dstream.opaque = opaque;
+        dstream.bzfree  = bzfree;
+        dstream.opaque  = opaque;
 
         // init a decompressor stream
-        int ret = BZ2_bzDecompressInit(&dstream, verbosity,
-                                       small_but_slow ? 1 : 0);
+        int ret = BZ2_bzDecompressInit(&dstream, verbosity, small_but_slow ? 1 : 0);
         // we don't need to handle BZ_PARAM_ERROR because we've
         // already checked the parameters
         switch (ret) {
-        case BZ_OK:
-            break;
-        case BZ_CONFIG_ERROR:
-            throw std::runtime_error("libbz2 was not compiled correctly.");
-        case BZ_MEM_ERROR:
-            throw std::bad_alloc();
-        default:
-            throw std::runtime_error("Unknow error creating bz2 decompressor "
-                                     "stream buffer.");
+            case BZ_OK: break;
+            case BZ_CONFIG_ERROR: throw std::runtime_error("libbz2 was not compiled correctly.");
+            case BZ_MEM_ERROR: throw std::bad_alloc();
+            default:
+                throw std::runtime_error("Unknow error creating bz2 decompressor "
+                                         "stream buffer.");
         }
     }
 
@@ -595,22 +567,17 @@ public:
 ///
 /// The data is read from a supplied stream buffer.
 class bz2istream : public std::istream {
-protected:
+  protected:
     bz2inbuf buf;
-public:
+
+  public:
     /// \brief Creates a new bz2istream, using source as the stream
     /// buffer to read data from.
     ///
     /// See bz2inbuf::bz2inbuf for an explanation of the parameters.
-    explicit bz2istream(std::streambuf* source, unsigned int verbosity = 0,
-               bool small_but_slow = false, bzalloc_ptr bzalloc = NULL,
-               bzfree_ptr bzfree = NULL, void* opaque = NULL,
-               size_t buffer_size = 1024, size_t in_buffer_size = 1024,
-               size_t max_putback_size = 64)
-        : std::istream(&buf),
-          buf(source, verbosity, small_but_slow, bzalloc, bzfree, opaque,
-              buffer_size, in_buffer_size, max_putback_size)
-    {}
+    explicit bz2istream(std::streambuf* source, unsigned int verbosity = 0, bool small_but_slow = false, bzalloc_ptr bzalloc = NULL, bzfree_ptr bzfree = NULL, void* opaque = NULL,
+                        size_t buffer_size = 1024, size_t in_buffer_size = 1024, size_t max_putback_size = 64) :
+        std::istream(&buf), buf(source, verbosity, small_but_slow, bzalloc, bzfree, opaque, buffer_size, in_buffer_size, max_putback_size) {}
 };
 
 #endif // !BZ2STREAM_BZ2STREAM_HPP

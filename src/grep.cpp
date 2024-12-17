@@ -20,7 +20,9 @@ using namespace std;
 void usage() {
     cerr << "Syntax: colibri-grep -c classfile pattern1 [pattern2 ..etc]" << endl;
 
-    cerr << "Description: Search for patterns in corpus data (-f) or an indexed pattern model (-i), output optionally with context. If multiple search patterns are specified, the disjunction is taken." << endl;
+    cerr << "Description: Search for patterns in corpus data (-f) or an indexed pattern model (-i), output optionally with context. If multiple search patterns are specified, the "
+            "disjunction is taken."
+         << endl;
     cerr << "Search Options:" << endl;
     cerr << "\t-l int   Left context size" << endl;
     cerr << "\t-r int   Right context size" << endl;
@@ -28,50 +30,34 @@ void usage() {
     cerr << "\t-i str   pattern model to search in (must be indexed)" << endl;
 }
 
-int main( int argc, char *argv[] ) {
-    string classfile = "";
-    string corpusfile = "";
-    string modelfile = "";
-    int leftcontextsize = 0;
-    int rightcontextsize = 0;
+int main(int argc, char* argv[]) {
+    string         classfile        = "";
+    string         corpusfile       = "";
+    string         modelfile        = "";
+    int            leftcontextsize  = 0;
+    int            rightcontextsize = 0;
     vector<string> querystrings;
-    int n = 3;
+    int            n = 3;
 
-    char c;
+    char           c;
     while ((c = getopt(argc, argv, "c:hf:i::l:r:s:")) != -1) {
-      switch (c) {
-      case 'c':
-	classfile = optarg;
-	break;
-      case 'f':
-	corpusfile = optarg;
-	break;
-      case 'i':
-	modelfile = optarg;
-	break;
-      case 'l':
-	leftcontextsize = atoi(optarg);
-	break;
-      case 'r':
-	rightcontextsize = atoi(optarg);
-	break;
-      case 'h':
-	usage();
-	exit(0);
-      default:
-	cerr << "ERROR: Unknown option: -" <<  optopt << endl;
-	abort ();
-      }
+        switch (c) {
+            case 'c': classfile = optarg; break;
+            case 'f': corpusfile = optarg; break;
+            case 'i': modelfile = optarg; break;
+            case 'l': leftcontextsize = atoi(optarg); break;
+            case 'r': rightcontextsize = atoi(optarg); break;
+            case 'h': usage(); exit(0);
+            default: cerr << "ERROR: Unknown option: -" << optopt << endl; abort();
+        }
     }
-    if ( !corpusfile.empty()
-	 || !modelfile.empty() ){
-      cerr << "ERROR: options: -i and -f are not implemented." << endl;
-      abort ();
+    if (!corpusfile.empty() || !modelfile.empty()) {
+        cerr << "ERROR: options: -i and -f are not implemented." << endl;
+        abort();
     }
-    if ( leftcontextsize != 0
-	 || rightcontextsize != 0 ){
-      cerr << "Sorry, options '-l' and '-r' are nor implemented yet." << endl;
-      abort();
+    if (leftcontextsize != 0 || rightcontextsize != 0) {
+        cerr << "Sorry, options '-l' and '-r' are nor implemented yet." << endl;
+        abort();
     }
     for (int i = optind; i < argc; i++) {
         string tmp = argv[i];
@@ -90,31 +76,27 @@ int main( int argc, char *argv[] ) {
         exit(2);
     }
 
-    ClassDecoder classdecoder = ClassDecoder(classfile);
-    ClassEncoder classencoder = ClassEncoder(classfile);
+    ClassDecoder    classdecoder = ClassDecoder(classfile);
+    ClassEncoder    classencoder = ClassEncoder(classfile);
 
     vector<Pattern> queries;
     for (int i = 0; i < querystrings.size(); i++) {
-        queries.push_back( classencoder.buildpattern(querystrings[i]) );
+        queries.push_back(classencoder.buildpattern(querystrings[i]));
     }
 
-
-    std::vector<std::pair<PatternPointer,int>> ngrams;
+    std::vector<std::pair<PatternPointer, int>> ngrams;
 
     for (int i = 0; i < datafiles.size(); ++i) {
-      std::ifstream in(datafiles[i], std::ios::in|std::ios::binary);
-      while (!in.eof()) {
-	//read line
-	Pattern line = Pattern(in);
-	ngrams.clear();
-	line.ngrams(ngrams, n);
+        std::ifstream in(datafiles[i], std::ios::in | std::ios::binary);
+        while (!in.eof()) {
+            //read line
+            Pattern line = Pattern(in);
+            ngrams.clear();
+            line.ngrams(ngrams, n);
 
-	for ( const auto& iter : ngrams ){
-	  cout << iter.first.tostring(classdecoder) << endl;
-	}
-      }
+            for (const auto& iter : ngrams) {
+                cout << iter.first.tostring(classdecoder) << endl;
+            }
+        }
     }
-
-
-
 }

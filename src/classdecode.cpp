@@ -27,39 +27,26 @@ void usage() {
     cerr << "\t-e 	end line number (default: infinite)" << endl;
 }
 
-int main( int argc, char *argv[] ) {
-    string classfile = "";
-    string corpusfile = "";
-    unsigned int start = 0;
-    unsigned int end = 0;
+int main(int argc, char* argv[]) {
+    string       classfile  = "";
+    string       corpusfile = "";
+    unsigned int start      = 0;
+    unsigned int end        = 0;
 
-    char c;
+    char         c;
     while ((c = getopt(argc, argv, "c:f:hs:e:")) != -1)
-        switch (c)
-        {
-        case 'c':
-            classfile = optarg;
-            break;
-        case 'f':
-            corpusfile = optarg;
-            break;
-        case 's':
-        	start = atoi(optarg);
-        	break;
-       	case 'e':
-        	end = atoi(optarg);
-        	break;
-        case 'h':
-            usage();
-            exit(0);
-		default:
-            cerr << "Unknown option: -" <<  optopt << endl;
-            abort ();
+        switch (c) {
+            case 'c': classfile = optarg; break;
+            case 'f': corpusfile = optarg; break;
+            case 's': start = atoi(optarg); break;
+            case 'e': end = atoi(optarg); break;
+            case 'h': usage(); exit(0);
+            default: cerr << "Unknown option: -" << optopt << endl; abort();
         }
 
     if (classfile.empty() || corpusfile.empty()) {
-    	usage();
-    	exit(2);
+        usage();
+        exit(2);
     }
 
     ClassDecoder classdecoder = ClassDecoder(classfile);

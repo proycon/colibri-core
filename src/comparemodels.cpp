@@ -24,7 +24,11 @@ void usage() {
     cerr << "  https://proycon.github.io/colibri-core" << endl << endl;
     cerr << "Syntax: colibri-comparemodels -c classfile patternmodelfile1 patternmodelfile2 etc..." << endl;
 
-    cerr << "Description: Compares the frequency of patterns between two or more pattern models by computing log likelihood, following the methodology of Rayson and Garside (2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the Association for Computational Linguistics (ACL 2000). 1-8 October 2000, Hong Kong, pp. 1 - 6: http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf" << endl << endl;
+    cerr << "Description: Compares the frequency of patterns between two or more pattern models by computing log likelihood, following the methodology of Rayson and Garside "
+            "(2000), Comparing corpora using frequency profiling. In proceedings of the workshop on Comparing Corpora, held in conjunction with the 38th annual meeting of the "
+            "Association for Computational Linguistics (ACL 2000). 1-8 October 2000, Hong Kong, pp. 1 - 6: http://www.comp.lancs.ac.uk/~paul/publications/rg_acl2000.pdf"
+         << endl
+         << endl;
     cerr << "Important notes: - All models should be full models, and best generated with the same occurrence threshold, rather than constrained train/test models!" << endl;
     cerr << "                 - Models must share the exact same class encoding to be comparable!" << endl;
     cerr << "Options:" << endl;
@@ -38,49 +42,28 @@ void usage() {
     cerr << "\t-d       Output directly, don't build a map, don't sort the output (conserves memory)" << endl;
 }
 
-int main( int argc, char *argv[] ) {
-    string classfile = "";
-    vector<string> modelfiles;
-    bool conjunctiononly = false;
-    bool directoutput = false;
-    PatternModelOptions options = PatternModelOptions();
-    string inputfile;
-    string outputfile;
+int main(int argc, char* argv[]) {
+    string              classfile = "";
+    vector<string>      modelfiles;
+    bool                conjunctiononly = false;
+    bool                directoutput    = false;
+    PatternModelOptions options         = PatternModelOptions();
+    string              inputfile;
+    string              outputfile;
 
-    char c;
+    char                c;
     while ((c = getopt(argc, argv, "c:hl:m:SFad")) != -1) {
-        switch (c)
-        {
-        case 'c':
-            classfile = optarg;
-            break;
-        case 'l':
-            options.MAXLENGTH = atoi(optarg);
-            break;
-        case 'm':
-            options.MINLENGTH = atoi(optarg);
-            break;
-        case 'N':
-            options.DOREMOVENGRAMS = true;
-            break;
-        case 'S':
-            options.DOREMOVESKIPGRAMS = true;
-            break;
-        case 'F':
-            options.DOREMOVEFLEXGRAMS = true;
-            break;
-        case 'a':
-            conjunctiononly = true;
-            break;
-        case 'd':
-            directoutput = true;
-            break;
-        case 'h':
-            usage();
-            exit(0);
-		default:
-            cerr << "ERROR: Unknown option: -" <<  optopt << endl;
-            abort ();
+        switch (c) {
+            case 'c': classfile = optarg; break;
+            case 'l': options.MAXLENGTH = atoi(optarg); break;
+            case 'm': options.MINLENGTH = atoi(optarg); break;
+            case 'N': options.DOREMOVENGRAMS = true; break;
+            case 'S': options.DOREMOVESKIPGRAMS = true; break;
+            case 'F': options.DOREMOVEFLEXGRAMS = true; break;
+            case 'a': conjunctiononly = true; break;
+            case 'd': directoutput = true; break;
+            case 'h': usage(); exit(0);
+            default: cerr << "ERROR: Unknown option: -" << optopt << endl; abort();
         }
     }
 
@@ -99,54 +82,53 @@ int main( int argc, char *argv[] ) {
 
     if (!inputfile.empty()) {
         cerr << "Reading log-likelihood patternmap from " << inputfile << endl;
-        llmodel.read(inputfile, options.MINTOKENS, options.MINLENGTH, options.MAXLENGTH,NULL, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
+        llmodel.read(inputfile, options.MINTOKENS, options.MINLENGTH, options.MAXLENGTH, NULL, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS);
     } else if (modelfiles.size() < 2) {
         cerr << "ERROR: Need at least two models" << endl;
-    	usage();
-    	exit(2);
+        usage();
+        exit(2);
     }
 
-    const ClassDecoder classdecoder = ClassDecoder(classfile);
+    const ClassDecoder              classdecoder = ClassDecoder(classfile);
 
-    vector<PatternModel<uint32_t>* > models; //first model is training model or background model
+    vector<PatternModel<uint32_t>*> models; //first model is training model or background model
 
-    for ( const auto& filename : modelfiles ){
-      cerr << "Loading model " << filename << endl;
-      PatternModel<uint32_t> * model = new PatternModel<uint32_t>(filename, options);
-      models.push_back(model);
+    for (const auto& filename : modelfiles) {
+        cerr << "Loading model " << filename << endl;
+        PatternModel<uint32_t>* model = new PatternModel<uint32_t>(filename, options);
+        models.push_back(model);
     }
 
     cerr << "Computing log-likelihood..." << endl;
 
     if (directoutput) {
-        comparemodels_loglikelihood(models, &llmodel, conjunctiononly, (ostream*) &cout, &classdecoder);
+        comparemodels_loglikelihood(models, &llmodel, conjunctiononly, (ostream*)&cout, &classdecoder);
     } else {
-      comparemodels_loglikelihood(models, &llmodel, conjunctiononly, NULL );
+        comparemodels_loglikelihood(models, &llmodel, conjunctiononly, NULL);
 
-      cerr << "Sorting results..." << endl;
-      set<pair<double,Pattern>> results;
-      for ( const auto& iter : llmodel ){
-	results.insert( make_pair(-1 * iter.second, iter.first));
-      }
+        cerr << "Sorting results..." << endl;
+        set<pair<double, Pattern>> results;
+        for (const auto& iter : llmodel) {
+            results.insert(make_pair(-1 * iter.second, iter.first));
+        }
 
-      cerr << "Output:" << endl;
-      cout << "PATTERN\tLOGLIKELIHOOD";
-      for (unsigned int i = 0; i < modelfiles.size(); ++i) {
-	cout << "\tOCC_" << i << "\tFREQ_" << i;
-      }
-      cout << endl;
+        cerr << "Output:" << endl;
+        cout << "PATTERN\tLOGLIKELIHOOD";
+        for (unsigned int i = 0; i < modelfiles.size(); ++i) {
+            cout << "\tOCC_" << i << "\tFREQ_" << i;
+        }
+        cout << endl;
 
-      for ( const auto& [freq,pattern] : results ){
-	cout << pattern.tostring(classdecoder) << "\t" << (freq * -1);
-	for ( const auto& m : models ){
-	  cout << "\t" << m->occurrencecount(pattern) << "\t" << m->frequency(pattern);
-	}
-	cout << endl;
-      }
+        for (const auto& [freq, pattern] : results) {
+            cout << pattern.tostring(classdecoder) << "\t" << (freq * -1);
+            for (const auto& m : models) {
+                cout << "\t" << m->occurrencecount(pattern) << "\t" << m->frequency(pattern);
+            }
+            cout << endl;
+        }
     }
 
-    for ( const auto& m : models ){
-      delete m;
+    for (const auto& m : models) {
+        delete m;
     }
-
 }

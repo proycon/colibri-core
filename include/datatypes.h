@@ -31,26 +31,32 @@
  * \brief Reference to a position in the corpus.
  */
 class IndexReference {
-   public:
+  public:
     uint32_t sentence;
     uint16_t token;
-    IndexReference() { sentence=0; token = 0; }
+    IndexReference() {
+        sentence = 0;
+        token    = 0;
+    }
 
     /**
      * Constructor for a reference to a position in the corpus, sentences (or whatever other unit delimits your data) start at 1, tokens start at 0
      */
-  explicit IndexReference(uint32_t sentence, uint16_t token ) { this->sentence = sentence; this->token = token; }
-
-  explicit IndexReference( std::istream& in) {
-    in.read( (char*) &sentence, sizeof(uint32_t));
-    in.read( (char*) &token, sizeof(uint16_t));
-  }
-
-    void write( std::ostream& out) const {
-        out.write( (char*) &sentence, sizeof(uint32_t));
-        out.write( (char*) &token, sizeof(uint16_t));
+    explicit IndexReference(uint32_t sentence, uint16_t token) {
+        this->sentence = sentence;
+        this->token    = token;
     }
-    bool operator< (const IndexReference& other) const {
+
+    explicit IndexReference(std::istream& in) {
+        in.read((char*)&sentence, sizeof(uint32_t));
+        in.read((char*)&token, sizeof(uint16_t));
+    }
+
+    void write(std::ostream& out) const {
+        out.write((char*)&sentence, sizeof(uint32_t));
+        out.write((char*)&token, sizeof(uint16_t));
+    }
+    bool operator<(const IndexReference& other) const {
         if (sentence < other.sentence) {
             return true;
         } else if (sentence == other.sentence) {
@@ -59,18 +65,24 @@ class IndexReference {
             return false;
         }
     }
-    bool operator> (const IndexReference& other) const {
+    bool operator>(const IndexReference& other) const {
         return other < *this;
     }
-    bool operator==(const IndexReference &other) const { return ( (sentence == other.sentence) && (token == other.token)); };
-    bool operator!=(const IndexReference &other) const { return ( (sentence != other.sentence) || (token != other.token)); };
-    IndexReference operator+(const int other) const { return IndexReference(sentence, token+ other); };
+    bool operator==(const IndexReference& other) const {
+        return ((sentence == other.sentence) && (token == other.token));
+    };
+    bool operator!=(const IndexReference& other) const {
+        return ((sentence != other.sentence) || (token != other.token));
+    };
+    IndexReference operator+(const int other) const {
+        return IndexReference(sentence, token + other);
+    };
 
     std::string tostring() const {
-        return std::to_string((long long unsigned int) sentence) + ":" + std::to_string((long long unsigned int) token);
+        return std::to_string((long long unsigned int)sentence) + ":" + std::to_string((long long unsigned int)token);
     }
 
-    friend std::ostream& operator<<(std::ostream & out, const IndexReference & iref) {
+    friend std::ostream& operator<<(std::ostream& out, const IndexReference& iref) {
         out << iref.tostring();
         return out;
     }
@@ -81,13 +93,13 @@ class IndexReference {
  * Used by Indexed Pattern models.
  */
 class IndexedData {
-   public:
+  public:
     std::vector<IndexReference> data;
-  explicit IndexedData() { };
-  explicit IndexedData(std::istream * in);
-  void write( std::ostream& out) const;
+    explicit IndexedData() {};
+    explicit IndexedData(std::istream* in);
+    void write(std::ostream& out) const;
 
-    bool has(const IndexReference & ref, bool sorted = false) const {
+    bool has(const IndexReference& ref, bool sorted = false) const {
         if (sorted) {
             return std::binary_search(this->begin(), this->end(), ref);
         } else {
@@ -98,22 +110,40 @@ class IndexedData {
     /**
      * Returns the number of indices in the collection, i.e. the occurrence count.
      */
-    unsigned int count() const { return data.size(); }
+    unsigned int count() const {
+        return data.size();
+    }
 
-    void insert(IndexReference ref) { data.push_back(ref); }
-    size_t size() const { return data.size(); }
+    void insert(IndexReference ref) {
+        data.push_back(ref);
+    }
+    size_t size() const {
+        return data.size();
+    }
 
-    typedef std::vector<IndexReference>::iterator iterator;
+    typedef std::vector<IndexReference>::iterator       iterator;
     typedef std::vector<IndexReference>::const_iterator const_iterator;
 
-    iterator begin() { return data.begin(); }
-    const_iterator begin() const { return data.begin(); }
+    iterator                                            begin() {
+        return data.begin();
+    }
+    const_iterator begin() const {
+        return data.begin();
+    }
 
-    iterator end() { return data.end(); }
-    const_iterator end() const { return data.end(); }
+    iterator end() {
+        return data.end();
+    }
+    const_iterator end() const {
+        return data.end();
+    }
 
-    iterator find(const IndexReference & ref) { return std::find(this->begin(), this->end(), ref); }
-    const_iterator find(const IndexReference & ref) const { return std::find(this->begin(), this->end(), ref); }
+    iterator find(const IndexReference& ref) {
+        return std::find(this->begin(), this->end(), ref);
+    }
+    const_iterator find(const IndexReference& ref) const {
+        return std::find(this->begin(), this->end(), ref);
+    }
 
     /**
      * Returns a set of all unique sentences covered by this collection of references.
@@ -131,7 +161,7 @@ class IndexedData {
      * Conversion to std::set<IndexReference>
      */
     std::set<IndexReference> set() const {
-        return std::set<IndexReference>(this->begin(), this->end() );
+        return std::set<IndexReference>(this->begin(), this->end());
     }
 
     /**
@@ -147,11 +177,9 @@ class IndexedData {
     void shrink_to_fit() {
         data.shrink_to_fit();
     }
-
 };
 
 /************* ValueHandler for reading/serialising basic types ********************/
-
 
 /**
  * \brief Abstract value handler class, all value handlers are derived from this.
@@ -161,63 +189,70 @@ class IndexedData {
  * from/to binary file. All are derived from the abstract class
  * AbstractValueHandler
 */
-template<class ValueType>
+template <class ValueType>
 class AbstractValueHandler {
-   public:
-    virtual std::string id() const { return "AbstractValueHandler"; }
-    virtual void read( std::istream& in, ValueType & value)=0; //read value from input stream (binary)
-    virtual void write( std::ostream& out, ValueType & value)=0; //write value to output stream (binary)
-    virtual std::string tostring(ValueType & value) const =0; //convert value to string)
-    virtual unsigned int count(ValueType & value) const =0; //what count does this value represent?
-    virtual void add(ValueType * value, const IndexReference & ref ) const=0; //add the indexreference to the value, will be called whenever a token is found during pattern building
-
+  public:
+    virtual std::string id() const {
+        return "AbstractValueHandler";
+    }
+    virtual void         read(std::istream& in, ValueType& value)       = 0; //read value from input stream (binary)
+    virtual void         write(std::ostream& out, ValueType& value)     = 0; //write value to output stream (binary)
+    virtual std::string  tostring(ValueType& value) const               = 0; //convert value to string)
+    virtual unsigned int count(ValueType& value) const                  = 0; //what count does this value represent?
+    virtual void add(ValueType* value, const IndexReference& ref) const = 0; //add the indexreference to the value, will be called whenever a token is found during pattern building
 };
 
 /**
  * \brief This templated class can be used for all numeric base types (such as int, uint16_t, float, etc).
  * @tparam ValueType the actual numeric base type used
  */
-template<class ValueType>
-class BaseValueHandler: public AbstractValueHandler<ValueType> {
-   public:
-    std::string id() const override { return "BaseValueHandler"; }
+template <class ValueType>
+class BaseValueHandler : public AbstractValueHandler<ValueType> {
+  public:
+    std::string id() const override {
+        return "BaseValueHandler";
+    }
     const static bool indexed = false;
-    void read( std::istream& in, ValueType & v) override {
-        in.read( (char*) &v, sizeof(ValueType));
+    void              read(std::istream& in, ValueType& v) override {
+        in.read((char*)&v, sizeof(ValueType));
     }
-    void write( std::ostream& out, ValueType & value) override {
-        out.write( (char*) &value, sizeof(ValueType));
+    void write(std::ostream& out, ValueType& value) override {
+        out.write((char*)&value, sizeof(ValueType));
     }
-    virtual std::string tostring(ValueType & value) const override {
-      return std::to_string(value);
+    virtual std::string tostring(ValueType& value) const override {
+        return std::to_string(value);
     }
-    unsigned int count(ValueType & value) const override {
-        return (unsigned int) value;
+    unsigned int count(ValueType& value) const override {
+        return (unsigned int)value;
     }
-    void add(ValueType * value, const IndexReference & ) const override {
+    void add(ValueType* value, const IndexReference&) const override {
         *value = *value + 1;
     }
 
-    void convertto( ValueType * source, ValueType* & target ) const { target = source; }; //this doesn't really convert as source and target are same type, but it is required!
+    void convertto(ValueType* source, ValueType*& target) const {
+        target = source;
+    }; //this doesn't really convert as source and target are same type, but it is required!
 
-    void convertto( ValueType *, IndexedData* & target ) const { target = new IndexedData(); }; //this doesn't convert either, it returns a totally EMPTY indexeddata, allowing unindexed models to be read as indexed, but losing all counts!
+    void convertto(ValueType*, IndexedData*& target) const {
+        target = new IndexedData();
+    }; //this doesn't convert either, it returns a totally EMPTY indexeddata, allowing unindexed models to be read as indexed, but losing all counts!
 };
 
-
 /************* ValueHandler for reading/serialising indexed types ********************/
-
 
 /**
  * \brief Data handler for IndexedData.
  * Deals with serialisation from/to file and conversions.
  */
-class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
-   public:
+class IndexedDataHandler : public AbstractValueHandler<IndexedData> {
+  public:
     const static bool indexed = true;
-    std::string id() const override { return "IndexedDataHandler"; }
-    void read( std::istream& in, IndexedData & v) override {
+    std::string       id() const override {
+        return "IndexedDataHandler";
+    }
+    void read(std::istream& in, IndexedData& v) override {
         uint32_t c;
-        in.read((char*) &c, sizeof(uint32_t));
+        in.read((char*)&c, sizeof(uint32_t));
         v.reserve(c); //reserve space to optimise
         for (unsigned int i = 0; i < c; ++i) {
             IndexReference ref = IndexReference(in);
@@ -225,441 +260,474 @@ class IndexedDataHandler: public AbstractValueHandler<IndexedData> {
         }
         v.shrink_to_fit(); //try to keep vector as small as possible (slows insertions down a bit)
     }
-    void write( std::ostream& out, IndexedData & value) override {
+    void write(std::ostream& out, IndexedData& value) override {
         const uint32_t c = value.count();
-        out.write((char*) &c, sizeof(uint32_t));
+        out.write((char*)&c, sizeof(uint32_t));
         //we already assume everything is nicely sorted!
-        for ( const auto& iter : value.data ){
-	  iter.write(out);
+        for (const auto& iter : value.data) {
+            iter.write(out);
         }
     }
-    virtual std::string tostring(IndexedData & value) const override {
+    virtual std::string tostring(IndexedData& value) const override {
         std::string s = "";
-        for ( const auto& iter : value.data ){
-	  if (!s.empty()) s += " ";
-	  s += iter.tostring();
+        for (const auto& iter : value.data) {
+            if (!s.empty())
+                s += " ";
+            s += iter.tostring();
         }
         return s;
     }
-    unsigned int count(IndexedData & value) const override {
+    unsigned int count(IndexedData& value) const override {
         return value.data.size();
     }
-    void add(IndexedData * value, const IndexReference & ref ) const override {
+    void add(IndexedData* value, const IndexReference& ref) const override {
         if (value == NULL) {
             std::cerr << "ValueHandler: Value is NULL!" << std::endl;
             throw InternalError();
         }
         value->insert(ref);
     }
-    void convertto( IndexedData * source , IndexedData *&  target) const { target = source;  }; //noop
-    void convertto( const IndexedData * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue =  value->count(); };
+    void convertto(IndexedData* source, IndexedData*& target) const {
+        target = source;
+    }; //noop
+    void convertto(const IndexedData* value, unsigned int*& convertedvalue) const {
+        convertedvalue  = new unsigned int;
+        *convertedvalue = value->count();
+    };
 };
 
-
-
-
-
-
-
-
-template<class FeatureType>
+template <class FeatureType>
 class PatternFeatureVector {
-    public:
-        Pattern pattern;
-        std::vector<FeatureType> data;
+  public:
+    Pattern                  pattern;
+    std::vector<FeatureType> data;
 
-  explicit PatternFeatureVector() {};
-  virtual ~PatternFeatureVector() {};
-  explicit PatternFeatureVector(const Pattern & ref): pattern(ref) {}
+    explicit PatternFeatureVector() {};
+    virtual ~PatternFeatureVector() {};
+    explicit PatternFeatureVector(const Pattern& ref) : pattern(ref) {}
 
-  explicit PatternFeatureVector(const Pattern & ref, const std::vector<FeatureType> & dataref): pattern(ref), data(dataref){
-  }
+    explicit PatternFeatureVector(const Pattern& ref, const std::vector<FeatureType>& dataref) : pattern(ref), data(dataref) {}
 
-  //copy constructor
-  PatternFeatureVector(const PatternFeatureVector & ref):
-    pattern(ref.pattern),
-    data(ref.data){
-  }
+    //copy constructor
+    PatternFeatureVector(const PatternFeatureVector& ref) : pattern(ref.pattern), data(ref.data) {}
 
-  explicit PatternFeatureVector( std::istream& in) {
-    read(in);
-  }
-
-
-  void read( std::istream& in) {
-    this->pattern = Pattern(in);
-    uint16_t c;
-    in.read((char*) &c, sizeof(uint16_t));
-    data.reserve(c);
-    for (unsigned int i = 0; i < c; ++i) {
-      FeatureType f;
-      in.read((char*) &f, sizeof(FeatureType));
-      data.push_back(f);
+    explicit PatternFeatureVector(std::istream& in) {
+        read(in);
     }
-    data.shrink_to_fit();
-  }
 
-  void write( std::ostream& out) {
-    this->pattern.write(out);
-    unsigned int s = data.size();
-    if (s >= 65536) {
-      std::cerr << "ERROR: PatternFeatureVector size exceeds maximum 16-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
-      s = 65536;
-    }
-    uint16_t c = (uint16_t) s;
-    out.write((char*) &c , sizeof(uint16_t));
-    for (unsigned int i = 0; i < s; ++i) {
-      FeatureType f = data[i];
-      out.write((char*) &f, sizeof(FeatureType));
-    }
-  }
-
-        typedef typename std::vector<FeatureType>::iterator iterator;
-        typedef typename std::vector<FeatureType>::const_iterator const_iterator;
-
-        size_t size() const { return data.size(); }
-
-        PatternFeatureVector<FeatureType>::iterator begin() { return data.begin(); }
-        PatternFeatureVector<FeatureType>::const_iterator begin() const { return data.begin(); }
-
-        PatternFeatureVector<FeatureType>::iterator end() { return data.end(); }
-        PatternFeatureVector<FeatureType>::const_iterator end() const { return data.end(); }
-
-        FeatureType get(int index) {
-            return data[index];
-        }
-
-        void clear() {
-            data.clear();
-        }
-        void push_back(FeatureType & f) {
+    void read(std::istream& in) {
+        this->pattern = Pattern(in);
+        uint16_t c;
+        in.read((char*)&c, sizeof(uint16_t));
+        data.reserve(c);
+        for (unsigned int i = 0; i < c; ++i) {
+            FeatureType f;
+            in.read((char*)&f, sizeof(FeatureType));
             data.push_back(f);
         }
-        void reserve(size_t size) {
-            data.reserve(size);
-        }
-        void shrink_to_fit() {
-            data.shrink_to_fit();
-        }
+        data.shrink_to_fit();
+    }
 
+    void write(std::ostream& out) {
+        this->pattern.write(out);
+        unsigned int s = data.size();
+        if (s >= 65536) {
+            std::cerr << "ERROR: PatternFeatureVector size exceeds maximum 16-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
+            s = 65536;
+        }
+        uint16_t c = (uint16_t)s;
+        out.write((char*)&c, sizeof(uint16_t));
+        for (unsigned int i = 0; i < s; ++i) {
+            FeatureType f = data[i];
+            out.write((char*)&f, sizeof(FeatureType));
+        }
+    }
+
+    typedef typename std::vector<FeatureType>::iterator       iterator;
+    typedef typename std::vector<FeatureType>::const_iterator const_iterator;
+
+    size_t                                                    size() const {
+        return data.size();
+    }
+
+    PatternFeatureVector<FeatureType>::iterator begin() {
+        return data.begin();
+    }
+    PatternFeatureVector<FeatureType>::const_iterator begin() const {
+        return data.begin();
+    }
+
+    PatternFeatureVector<FeatureType>::iterator end() {
+        return data.end();
+    }
+    PatternFeatureVector<FeatureType>::const_iterator end() const {
+        return data.end();
+    }
+
+    FeatureType get(int index) {
+        return data[index];
+    }
+
+    void clear() {
+        data.clear();
+    }
+    void push_back(FeatureType& f) {
+        data.push_back(f);
+    }
+    void reserve(size_t size) {
+        data.reserve(size);
+    }
+    void shrink_to_fit() {
+        data.shrink_to_fit();
+    }
 };
 
-template<class FeatureType>
+template <class FeatureType>
 class PatternFeatureVectorMap { //acts like a (small) map (but implemented as a vector to save memory), for 2nd-order use (i.e, within another map)
-    public:
+  public:
+    std::vector<PatternFeatureVector<FeatureType>*>                                  data;
 
-  std::vector<PatternFeatureVector<FeatureType> *> data;
+    typedef typename std::vector<PatternFeatureVector<FeatureType>*>::const_iterator const_iterator;
+    typedef typename std::vector<PatternFeatureVector<FeatureType>*>::iterator       iterator;
 
-  typedef typename std::vector<PatternFeatureVector<FeatureType>*>::const_iterator const_iterator;
-  typedef typename std::vector<PatternFeatureVector<FeatureType>*>::iterator iterator;
+    PatternFeatureVectorMap() {};
 
-  PatternFeatureVectorMap() {};
-
-  PatternFeatureVectorMap(const PatternFeatureVectorMap<FeatureType> & ref) {
-    for ( const auto& pfv_ref : ref ){
-      //make a copy
-      PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(*pfv_ref);
-      this->data.push_back(pfv);
-    }
-  }
-
-  PatternFeatureVectorMap<FeatureType>& operator=( const PatternFeatureVectorMap<FeatureType>& ref) {
-    if ( this != &ref ){
-      for ( const auto& pfv_ref : ref ){
-	//make a copy
-	PatternFeatureVector<FeatureType> *pfv = new PatternFeatureVector<FeatureType>(*pfv_ref);
-	this->data.push_back(pfv);
-      }
-    }
-    return *this;
-  }
-
-  virtual ~PatternFeatureVectorMap() {
-    for ( const auto& d : data ) {
-      delete d;
-    }
-  }
-
-    bool has(const Pattern & ref) const {
-      for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
-	const PatternFeatureVector<FeatureType> * pfv = *iter;
-	if (pfv->pattern == ref) {
-	  return true;
-	}
-      }
-      return false;
+    PatternFeatureVectorMap(const PatternFeatureVectorMap<FeatureType>& ref) {
+        for (const auto& pfv_ref : ref) {
+            //make a copy
+            PatternFeatureVector<FeatureType>* pfv = new PatternFeatureVector<FeatureType>(*pfv_ref);
+            this->data.push_back(pfv);
+        }
     }
 
-    iterator find(const Pattern & ref) {
-      for (iterator iter = this->begin(); iter != this->end(); ++iter) {
-	const PatternFeatureVector<FeatureType> * pfv = *iter;
-	if (pfv->pattern == ref) {
-	  return iter;
-	}
-      }
-      return this->end();
-    }
-
-    unsigned int count() const { return data.size(); }
-
-        void insert(PatternFeatureVector<FeatureType> * pfv, bool checkexists=true) {
-            //inserts pointer directly, makes no copy!!
-            if (checkexists) {
-                iterator found = this->find(pfv->pattern);
-                if (found != this->end()) {
-                    const PatternFeatureVector<FeatureType> * old = *found;
-                    delete old;
-                    *found = pfv;
-                } else {
-                    this->data.push_back(pfv);
-                }
-            } else {
+    PatternFeatureVectorMap<FeatureType>& operator=(const PatternFeatureVectorMap<FeatureType>& ref) {
+        if (this != &ref) {
+            for (const auto& pfv_ref : ref) {
+                //make a copy
+                PatternFeatureVector<FeatureType>* pfv = new PatternFeatureVector<FeatureType>(*pfv_ref);
                 this->data.push_back(pfv);
             }
         }
+        return *this;
+    }
 
-        void insert(const PatternFeatureVector<FeatureType> & value, bool checkexists=true) {
-            //make a copy, safer
-            PatternFeatureVector<FeatureType> * pfv = new PatternFeatureVector<FeatureType>(value);
-            if (checkexists) {
-                iterator found = this->find(value.pattern);
-                if (found != this->end()) {
-                    const PatternFeatureVector<FeatureType> * old = *found;
-                    delete old;
-                    *found = pfv;
-                } else {
-                    this->data.push_back(pfv);
-                }
+    virtual ~PatternFeatureVectorMap() {
+        for (const auto& d : data) {
+            delete d;
+        }
+    }
+
+    bool has(const Pattern& ref) const {
+        for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
+            const PatternFeatureVector<FeatureType>* pfv = *iter;
+            if (pfv->pattern == ref) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    iterator find(const Pattern& ref) {
+        for (iterator iter = this->begin(); iter != this->end(); ++iter) {
+            const PatternFeatureVector<FeatureType>* pfv = *iter;
+            if (pfv->pattern == ref) {
+                return iter;
+            }
+        }
+        return this->end();
+    }
+
+    unsigned int count() const {
+        return data.size();
+    }
+
+    void insert(PatternFeatureVector<FeatureType>* pfv, bool checkexists = true) {
+        //inserts pointer directly, makes no copy!!
+        if (checkexists) {
+            iterator found = this->find(pfv->pattern);
+            if (found != this->end()) {
+                const PatternFeatureVector<FeatureType>* old = *found;
+                delete old;
+                *found = pfv;
             } else {
                 this->data.push_back(pfv);
             }
+        } else {
+            this->data.push_back(pfv);
         }
+    }
 
-        size_t size() const { return data.size(); }
-
-        virtual std::string tostring() {
-            //we have no classdecoder at this point
-            std::cerr << "ERROR: PatternFeatureVector does not support serialisation to string" << std::endl;
-            throw InternalError();
-        }
-
-        iterator begin() { return data.begin(); }
-        const_iterator begin() const { return data.begin(); }
-
-        iterator end() { return data.end(); }
-        const_iterator end() const { return data.end(); }
-
-        virtual PatternFeatureVector<FeatureType> *getdata(const Pattern & pattern) {
-            iterator iter = this->find(pattern);
-            if (iter != this->end()) {
-                PatternFeatureVector<FeatureType> * pfv = *iter;
-                return pfv;
+    void insert(const PatternFeatureVector<FeatureType>& value, bool checkexists = true) {
+        //make a copy, safer
+        PatternFeatureVector<FeatureType>* pfv = new PatternFeatureVector<FeatureType>(value);
+        if (checkexists) {
+            iterator found = this->find(value.pattern);
+            if (found != this->end()) {
+                const PatternFeatureVector<FeatureType>* old = *found;
+                delete old;
+                *found = pfv;
+            } else {
+                this->data.push_back(pfv);
             }
-            return NULL;
+        } else {
+            this->data.push_back(pfv);
         }
+    }
 
-        void reserve(size_t size) {
-            data.reserve(size);
+    size_t size() const {
+        return data.size();
+    }
+
+    virtual std::string tostring() {
+        //we have no classdecoder at this point
+        std::cerr << "ERROR: PatternFeatureVector does not support serialisation to string" << std::endl;
+        throw InternalError();
+    }
+
+    iterator begin() {
+        return data.begin();
+    }
+    const_iterator begin() const {
+        return data.begin();
+    }
+
+    iterator end() {
+        return data.end();
+    }
+    const_iterator end() const {
+        return data.end();
+    }
+
+    virtual PatternFeatureVector<FeatureType>* getdata(const Pattern& pattern) {
+        iterator iter = this->find(pattern);
+        if (iter != this->end()) {
+            PatternFeatureVector<FeatureType>* pfv = *iter;
+            return pfv;
         }
-        void shrink_to_fit() {
-            data.shrink_to_fit();
-        }
+        return NULL;
+    }
 
-
+    void reserve(size_t size) {
+        data.reserve(size);
+    }
+    void shrink_to_fit() {
+        data.shrink_to_fit();
+    }
 };
 
-template<class FeatureType>
-class PatternFeatureVectorMapHandler: public AbstractValueHandler<PatternFeatureVectorMap<FeatureType>> {
-   public:
-    std::string id() const override { return "PatternFeatureVectorMapHandler"; }
-    void read( std::istream& in, PatternFeatureVectorMap<FeatureType> & v) override {
+template <class FeatureType>
+class PatternFeatureVectorMapHandler : public AbstractValueHandler<PatternFeatureVectorMap<FeatureType>> {
+  public:
+    std::string id() const override {
+        return "PatternFeatureVectorMapHandler";
+    }
+    void read(std::istream& in, PatternFeatureVectorMap<FeatureType>& v) override {
         uint16_t c;
-        in.read((char*) &c, sizeof(uint16_t));
+        in.read((char*)&c, sizeof(uint16_t));
         v.reserve(c); //reserve space to optimise
         for (unsigned int i = 0; i < c; ++i) {
             PatternFeatureVector<FeatureType> ref = PatternFeatureVector<FeatureType>(in);
             v.insert(ref, false); //checkifexists=false, to speed things up when loading, assuming data is sane
         }
         v.shrink_to_fit(); //try to keep vector as small as possible (slows additional insertions down a bit)
-
     }
-  void write( std::ostream& out,
-	      PatternFeatureVectorMap<FeatureType> & value)override {
+    void write(std::ostream& out, PatternFeatureVectorMap<FeatureType>& value) override {
         unsigned int s = value.size();
         if (s >= 65536) {
             std::cerr << "ERROR: PatternFeatureVector size exceeds maximum 16-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
             s = 65535;
         }
-        const uint16_t c = (uint16_t) s;
-        out.write((char*) &c, sizeof(uint16_t));
+        const uint16_t c = (uint16_t)s;
+        out.write((char*)&c, sizeof(uint16_t));
         unsigned int n = 0;
-        for ( auto& pfv : value ){
-	  if (n==s) break;
-	  pfv->write(out);
-	  n++;
+        for (auto& pfv : value) {
+            if (n == s)
+                break;
+            pfv->write(out);
+            n++;
         }
     }
-    virtual std::string tostring(PatternFeatureVectorMap<FeatureType> &) const override {
+    virtual std::string tostring(PatternFeatureVectorMap<FeatureType>&) const override {
         std::cerr << "ERROR: PatternFeatureVectorMapHandler does not support serialisation to string (no classdecoder at this point)" << std::endl;
         throw InternalError();
     }
-    unsigned int count(PatternFeatureVectorMap<FeatureType> & value) const override {
+    unsigned int count(PatternFeatureVectorMap<FeatureType>& value) const override {
         return value.size();
     }
-    void add(PatternFeatureVectorMap<FeatureType> *, const IndexReference & ) const override {
+    void add(PatternFeatureVectorMap<FeatureType>*, const IndexReference&) const override {
         std::cerr << "ERROR: PatternFeatureVectorMapHandler does not support insertion of index references, model can not be computed with train()" << std::endl;
         throw InternalError();
     }
-    void convertto(PatternFeatureVectorMap<FeatureType> * source , PatternFeatureVectorMap<FeatureType> * & target) const { target = source; }; //noop
-    void convertto(PatternFeatureVectorMap<FeatureType> *, IndexedData * &) const { }; //not possible, noop (target = NULL)
-    void convertto( const PatternFeatureVectorMap<FeatureType> * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
+    void convertto(PatternFeatureVectorMap<FeatureType>* source, PatternFeatureVectorMap<FeatureType>*& target) const {
+        target = source;
+    };                                                                             //noop
+    void convertto(PatternFeatureVectorMap<FeatureType>*, IndexedData*&) const {}; //not possible, noop (target = NULL)
+    void convertto(const PatternFeatureVectorMap<FeatureType>* value, unsigned int*& convertedvalue) const {
+        convertedvalue  = new unsigned int;
+        *convertedvalue = value->count();
+    };
 };
-
 
 //------
 //
 class PatternVector { //acts like a (small) map (but implemented as a vector to save memory), for 2nd-order use (i.e, within another map)
-public:
+  public:
+    std::vector<Pattern>                                  data;
 
+    typedef typename std::vector<Pattern>::const_iterator const_iterator;
+    typedef typename std::vector<Pattern>::iterator       iterator;
 
-  std::vector<Pattern> data;
+    PatternVector() {};
 
-  typedef typename std::vector<Pattern>::const_iterator const_iterator;
-  typedef typename std::vector<Pattern>::iterator iterator;
-
-  PatternVector() {};
-
-  PatternVector( const PatternVector& ref) {
-    this->data = ref.data;
-  }
-
-  PatternVector& operator=( const PatternVector& ref) {
-    if ( this != &ref ){
-      this->data = ref.data;
+    PatternVector(const PatternVector& ref) {
+        this->data = ref.data;
     }
-    return *this;
-  }
 
-  /*   get double free or corruption error: //TODO: possible memory
+    PatternVector& operator=(const PatternVector& ref) {
+        if (this != &ref) {
+            this->data = ref.data;
+        }
+        return *this;
+    }
+
+    /*   get double free or corruption error: //TODO: possible memory
    *   leak?? */
-  virtual ~PatternVector() {
-    /*
+    virtual ~PatternVector() {
+        /*
       const size_t s = this->data.size();
       for (int i = 0; i < s; i++) {
       PatternFeatureVector<FeatureType> * pfv = this->data[i];
       delete pfv;
       data[i] = NULL;
       }*/
-  }
-
-  bool has(const Pattern & ref) const {
-    for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
-      if (*iter == ref) {
-	return true;
-      }
     }
-    return false;
-  }
 
-
-  iterator find(const Pattern & ref) {
-    for (iterator iter = this->begin(); iter != this->end(); ++iter) {
-      if (*iter == ref) {
-	return iter;
-      }
+    bool has(const Pattern& ref) const {
+        for (const_iterator iter = this->begin(); iter != this->end(); ++iter) {
+            if (*iter == ref) {
+                return true;
+            }
+        }
+        return false;
     }
-    return this->end();
-  }
 
-  unsigned int count() const { return data.size(); }
-
-  void insert(const Pattern & pattern, bool checkexists=true) {
-    //make a copy, safer
-    if (checkexists) {
-      iterator found = this->find(pattern);
-      if (found == this->end()) {
-	this->data.push_back(pattern);
-      }
-    } else {
-      this->data.push_back(pattern);
+    iterator find(const Pattern& ref) {
+        for (iterator iter = this->begin(); iter != this->end(); ++iter) {
+            if (*iter == ref) {
+                return iter;
+            }
+        }
+        return this->end();
     }
-  }
 
-  size_t size() const { return data.size(); }
-
-  virtual std::string tostring() {
-    //we have no classdecoder at this point
-    std::cerr << "ERROR: PatternFeatureVector does not support serialisation to string" << std::endl;
-    throw InternalError();
-  }
-
-  iterator begin() { return data.begin(); }
-  const_iterator begin() const { return data.begin(); }
-
-  iterator end() { return data.end(); }
-  const_iterator end() const { return data.end(); }
-
-  virtual Pattern * getdata(const Pattern & pattern) {
-    iterator iter = this->find(pattern);
-    if (iter != this->end()) {
-      Pattern * p = &(*iter);
-      return p;
+    unsigned int count() const {
+        return data.size();
     }
-    return NULL;
-  }
 
-  void reserve(size_t size) {
-    data.reserve(size);
-  }
-  void shrink_to_fit() {
-    data.shrink_to_fit();
-  }
+    void insert(const Pattern& pattern, bool checkexists = true) {
+        //make a copy, safer
+        if (checkexists) {
+            iterator found = this->find(pattern);
+            if (found == this->end()) {
+                this->data.push_back(pattern);
+            }
+        } else {
+            this->data.push_back(pattern);
+        }
+    }
 
+    size_t size() const {
+        return data.size();
+    }
+
+    virtual std::string tostring() {
+        //we have no classdecoder at this point
+        std::cerr << "ERROR: PatternFeatureVector does not support serialisation to string" << std::endl;
+        throw InternalError();
+    }
+
+    iterator begin() {
+        return data.begin();
+    }
+    const_iterator begin() const {
+        return data.begin();
+    }
+
+    iterator end() {
+        return data.end();
+    }
+    const_iterator end() const {
+        return data.end();
+    }
+
+    virtual Pattern* getdata(const Pattern& pattern) {
+        iterator iter = this->find(pattern);
+        if (iter != this->end()) {
+            Pattern* p = &(*iter);
+            return p;
+        }
+        return NULL;
+    }
+
+    void reserve(size_t size) {
+        data.reserve(size);
+    }
+    void shrink_to_fit() {
+        data.shrink_to_fit();
+    }
 };
 
-class PatternVectorHandler: public AbstractValueHandler<PatternVector> {
-   public:
-    std::string id() const override { return "PatternVectorHandler"; }
-    void read( std::istream& in, PatternVector & v) override{
-      uint32_t c;
-      in.read((char*) &c, sizeof(uint32_t));
-      v.reserve(c); //reserve space to optimise
-      for (unsigned int i = 0; i < c; ++i) {
-	Pattern pattern = Pattern(in);
-	v.insert(pattern, false); //checkifexists=false, to speed things up when loading, assuming data is sane
-      }
-      v.shrink_to_fit(); //try to keep vector as small as possible (slows additional insertions down a bit)
+class PatternVectorHandler : public AbstractValueHandler<PatternVector> {
+  public:
+    std::string id() const override {
+        return "PatternVectorHandler";
+    }
+    void read(std::istream& in, PatternVector& v) override {
+        uint32_t c;
+        in.read((char*)&c, sizeof(uint32_t));
+        v.reserve(c); //reserve space to optimise
+        for (unsigned int i = 0; i < c; ++i) {
+            Pattern pattern = Pattern(in);
+            v.insert(pattern, false); //checkifexists=false, to speed things up when loading, assuming data is sane
+        }
+        v.shrink_to_fit(); //try to keep vector as small as possible (slows additional insertions down a bit)
     }
 
-  void write( std::ostream& out, PatternVector & value) override {
+    void write(std::ostream& out, PatternVector& value) override {
         unsigned int s = value.size();
         if (s >= std::numeric_limits<uint32_t>::max()) {
             std::cerr << "ERROR: PatternVector size exceeds maximum 32-bit capacity!! Not writing arbitrary parts!!! Set thresholds to prevent this!" << std::endl;
             throw InternalError();
         }
-        const uint32_t c = (uint32_t) s;
-        out.write((char*) &c, sizeof(uint32_t));
+        const uint32_t c = (uint32_t)s;
+        out.write((char*)&c, sizeof(uint32_t));
         unsigned int n = 0;
-        for ( auto& iter : value ){
-	  if (n==s) break;
-	  iter.write(out);
-	  n++;
+        for (auto& iter : value) {
+            if (n == s)
+                break;
+            iter.write(out);
+            n++;
         }
     }
-    virtual std::string tostring( PatternVector& ) const override {
+    virtual std::string tostring(PatternVector&) const override {
         std::cerr << "ERROR: PatternVectorHandler does not support serialisation to string (no classdecoder at this point)" << std::endl;
         throw InternalError();
     }
-    unsigned int count(PatternVector & value) const override {
+    unsigned int count(PatternVector& value) const override {
         return value.size();
     }
-    void add( PatternVector *, const IndexReference& ) const override {
+    void add(PatternVector*, const IndexReference&) const override {
         std::cerr << "ERROR: PatternVectorHandler does not support insertion of index references, model can not be computed with train()" << std::endl;
         throw InternalError();
     }
-    void convertto(PatternVector * source , PatternVector * & target) const { target = source; }; //noop
-    void convertto(PatternVector *, IndexedData * & ) const { }; //not possible, noop (target = NULL)
-    void convertto( const PatternVector * value, unsigned int * & convertedvalue) const { convertedvalue = new unsigned int; *convertedvalue = value->count(); };
+    void convertto(PatternVector* source, PatternVector*& target) const {
+        target = source;
+    };                                                      //noop
+    void convertto(PatternVector*, IndexedData*&) const {}; //not possible, noop (target = NULL)
+    void convertto(const PatternVector* value, unsigned int*& convertedvalue) const {
+        convertedvalue  = new unsigned int;
+        *convertedvalue = value->count();
+    };
 };
 
 #endif
