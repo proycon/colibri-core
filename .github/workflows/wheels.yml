@@ -72,10 +72,10 @@ jobs:
         if: ${{ runner.os == 'macOS' && matrix.python.cp != 'cp38' }}
         run: python -m cibuildwheel --output-dir wheelhouse
         env:
-           CIBW_ARCHS_MACOS: "x86_64 arm64"
+           CIBW_ARCHS_MACOS: "arm64"
            CIBW_BEFORE_ALL_MACOS: >
               brew install pkg-config autoconf automake autoconf-archive libtool &&
-              PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH" bash bootstrap.sh && ./configure && make && sudo make install
+              bash bootstrap.sh && ./configure && make && sudo make install
            CIBW_SKIP: "*-win* *-manylinux_i686 pp*"
 
       - uses: actions/upload-artifact@v4
