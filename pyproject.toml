@@ -6,3 +6,6 @@ requires = [
 ]
 
 build-backend = "setuptools.build_meta"
+
+[project]
+license = "GPL-3.0-only"

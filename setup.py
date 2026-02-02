@@ -97,7 +97,6 @@ setup(
         "Operating System :: POSIX",
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     ],
     install_requires=['Cython >= 3.0'],
 )
