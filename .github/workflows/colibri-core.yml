@@ -2,8 +2,9 @@
 name: C/C++ CI
 
 on:
+  workflow_dispatch:
   push:
-    brances:
+    branches:
       - master
       - develop
 
@@ -12,6 +13,7 @@ on:
       - src/**
       - include/**
       - .github/workflows/**
+
 
 jobs:
   notification:
