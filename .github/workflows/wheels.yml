@@ -10,18 +10,32 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, macOS-11]
+        buildplat:
+          - { runs_on: ubuntu-20.04, sys: manylinux, arch: x86_64, benv: "" }
+          - { runs_on: ubuntu-20.04, sys: musllinux, arch: x86_64, benv: "" }
+          - { runs_on: macos-14,     sys: macosx,    arch: arm64,  benv: "14.0" }
+        python:
+          - { cp: "cp38",   rel: "3.8" }
+          - { cp: "cp39",   rel: "3.9" }
+          - { cp: "cp310",  rel: "3.10" }
+          - { cp: "cp311",  rel: "3.11" }
+          - { cp: "cp312",  rel: "3.12" }          
+          - { cp: "cp313",  rel: "3.13" }          
+          - { cp: "cp314",  rel: "3.14" }          
 
     steps:
       - uses: actions/checkout@v4.1.1
 
       # Used to host cibuildwheel
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
 
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel
 
-      - name: Build wheels
+      - name: Build wheels (linux glibc)
+        if: ${{ matrix.buildplat.sys == 'manylinux' }}
         run: python -m cibuildwheel --output-dir wheelhouse
         env:
            CIBW_ARCHS_LINUX: "x86_64"
@@ -40,9 +54,35 @@ jobs:
            CIBW_BEFORE_ALL_MACOS: >
               brew install pkg-config autoconf automake libtool &&
               autoreconf -i && ./configure && make && make install
-           CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux2014_x86_64
+           CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux_2_28_x86_64
            CIBW_SKIP: "*-win* *-manylinux_i686 pp*"
 
-      - uses: actions/upload-artifact@v3
+      - name: Build wheels (linux musl)
+        if: ${{ matrix.buildplat.sys == 'musllinux' }}
+        run: python -m cibuildwheel --output-dir wheelhouse
+        env:
+           CIBW_ARCHS_LINUX: "x86_64"
+           CIBW_ARCHS_MACOS: "x86_64 arm64"
+           CIBW_BEFORE_ALL_LINUX: >
+              apk add build-base git autoconf-archive autoconf automake libtool bzip2-dev rsync &&
+              rsync -av --ignore-existing /usr/share/aclocal/*.m4 /usr/local/share/aclocal/
+              bash bootstrap && ./configure && make && make install
+           CIBW_MUSLLINUX_X86_64_IMAGE: quay.io/pypa/musllinux_1_1_x86_64
+           CIBW_MUSLLINUX_AARCH64_IMAGE: quay.io/pypa/musllinux_1_1_aarch64
+           CIBW_SKIP: "*-win* *-manylinux_i686 pp*"
+
+      - name: Build wheels (macos)
+        if: ${{ runner.os == 'macOS' && matrix.python.cp != 'cp38' }}
+        run: python -m cibuildwheel --output-dir wheelhouse
+        env:
+           CIBW_ARCHS_MACOS: "x86_64 arm64"
+           CIBW_BEFORE_ALL_MACOS: >
+              brew install pkg-config autoconf automake libtool &&
+              autoreconf -i && ./configure && make && make install
+           CIBW_SKIP: "*-win* *-manylinux_i686 pp*"
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ ! (runner.os == 'macOS' && matrix.python.cp == '3.8') }}
         with:
+          name: ${{matrix.python.cp}}-${{matrix.buildplat.sys}}-${{matrix.buildplat.arch}}
           path: ./wheelhouse/*.whl
