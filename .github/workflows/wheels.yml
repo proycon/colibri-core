@@ -11,17 +11,17 @@ jobs:
     strategy:
       matrix:
         buildplat:
-          - { runs_on: ubuntu-20.04, sys: manylinux, arch: x86_64, benv: "" }
-          - { runs_on: ubuntu-20.04, sys: musllinux, arch: x86_64, benv: "" }
+          - { runs_on: ubuntu-22.04, sys: manylinux, arch: x86_64, benv: "" }
+          - { runs_on: ubuntu-22.04, sys: musllinux, arch: x86_64, benv: "" }
           - { runs_on: macos-14,     sys: macosx,    arch: arm64,  benv: "14.0" }
         python:
           - { cp: "cp38",   rel: "3.8" }
           - { cp: "cp39",   rel: "3.9" }
           - { cp: "cp310",  rel: "3.10" }
           - { cp: "cp311",  rel: "3.11" }
-          - { cp: "cp312",  rel: "3.12" }          
-          - { cp: "cp313",  rel: "3.13" }          
-          - { cp: "cp314",  rel: "3.14" }          
+          - { cp: "cp312",  rel: "3.12" }
+          - { cp: "cp313",  rel: "3.13" }
+          - { cp: "cp314",  rel: "3.14" }
 
     steps:
       - uses: actions/checkout@v4.1.1
