@@ -67,7 +67,7 @@ else:
     extra_options = []
 
 extensions = cythonize([ Extension("colibricore",
-                ["unordered_set.pxd","unordered_map.pxd", "colibricore_classes.pxd", "colibricore_wrapper.pyx"],
+                ["colibricore_wrapper.pyx"],
                 language='c++',
                 include_dirs=includedirs,
                 library_dirs=libdirs,
@@ -99,5 +99,5 @@ setup(
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     ],
-    install_requires=['Cython >= 0.29'],
+    install_requires=['Cython >= 3.0'],
 )
