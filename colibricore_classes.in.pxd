@@ -416,7 +416,7 @@ cdef extern from "patternmodel.h":
         bool erase(Pattern&) nogil
         unsigned int prune(int threshold, int n) nogil
         iterator find(Pattern&) nogil
-        void load(string, PatternModelOptions, PatternModelInterface*) except +IOError nogil
+        void load(string&, PatternModelOptions&, PatternModelInterface*) except +IOError nogil
         void write(string) except +IOError nogil
         void printmodel(ostream, ClassDecoder&) nogil
         void printpattern(ostream, ClassDecoder&, Pattern&,bool instantiate=false,bool eol=true) nogil

@@ -372,7 +372,7 @@ class PatternSetModel : public PatternSet<uint64_t>, public PatternModelInterfac
          * @param options The options for loading
          * @param constrainmodel Load only patterns that occur in this model
          */
-    virtual void load(std::string& filename, const PatternModelOptions& options, PatternModelInterface* constrainmodel = NULL) {
+    virtual void load(const std::string& filename, const PatternModelOptions& options, PatternModelInterface* constrainmodel = NULL) {
         if (!options.QUIET)
             std::cerr << "Loading " << filename << " as set-model" << std::endl;
         std::ifstream in(filename);
@@ -761,7 +761,7 @@ class PatternModel : public MapType, public PatternModelInterface {
          * @param options Options for reading, these act as filter for the data, allowing you to raise thresholds etc
          * @param constrainmodel Pointer to another pattern model which should be used to constrain the loading of this one, only patterns also occurring in the other model will be included. Defaults to NULL (no constraining)
          */
-    virtual void load(std::string& filename, const PatternModelOptions& options, PatternModelInterface* constrainmodel = NULL) {
+    virtual void load(const std::string& filename, const PatternModelOptions& options, PatternModelInterface* constrainmodel = NULL) {
         if (!options.QUIET)
             std::cerr << "Loading " << filename << std::endl;
         std::ifstream in(filename);

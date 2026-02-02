@@ -221,7 +221,8 @@ def load(self, str filename, PatternModelOptions options=None, constrainmodel = 
     elif isinstance(constrainmodel, UnindexedPatternModel):
         self.loadconstrainedbysetmodel(filename,options, constrainmodel)
     else:
-        self.data.load(encode(filename), options.coptions, NULL)
+        encoded_filename = encode(filename)
+        self.data.load(encoded_filename, options.coptions, NULL)
 
 def loadreverseindex(self, IndexedCorpus reverseindex):
     self.data.reverseindex = reverseindex.data
@@ -229,13 +230,16 @@ def loadreverseindex(self, IndexedCorpus reverseindex):
 
 
 cpdef loadconstrainedbyindexedmodel(self, str filename, PatternModelOptions options, IndexedPatternModel constrainmodel):
-    self.data.load(encode(filename),options.coptions,  constrainmodel.getinterface())
+    encoded_filename = encode(filename)
+    self.data.load(encoded_filename,options.coptions,  constrainmodel.getinterface())
 
 cpdef loadconstrainedbyunindexedmodel(self, str filename, PatternModelOptions options, UnindexedPatternModel constrainmodel):
-    self.data.load(encode(filename),options.coptions,  constrainmodel.getinterface())
+    encoded_filename = encode(filename)
+    self.data.load(encoded_filename,options.coptions,  constrainmodel.getinterface())
 
 cpdef loadconstrainedbysetmodel(self, str filename, PatternModelOptions options, PatternSetModel constrainmodel):
-    self.data.load(encode(filename),options.coptions,  constrainmodel.getinterface())
+    encoded_filename = encode(filename)
+    self.data.load(encoded_filename,options.coptions,  constrainmodel.getinterface())
 
 def read(self, str filename, PatternModelOptions options=None):
     """Alias for load"""
