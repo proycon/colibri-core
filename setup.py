@@ -72,7 +72,7 @@ extensions = cythonize([ Extension("colibricore",
                 include_dirs=includedirs,
                 library_dirs=libdirs,
                 libraries=['colibricore','bz2'],
-                extra_compile_args=['--std=c++0x'] + extra_options,
+                extra_compile_args=['--std=c++17'] + extra_options,
                 ) ],
                 compiler_directives={"language_level": "3"}
             )
@@ -86,7 +86,7 @@ setup(
     keywords = "nlp computational_linguistics frequency ngram skipgram pmi cooccurrence linguistics",
     long_description=read('README.md'),
     long_description_content_type = "text/markdown",
-    version = '2.5.9',
+    version = '2.5.10',
     ext_modules = extensions,
     cmdclass = {'build_ext': build_ext},
     classifiers=[
