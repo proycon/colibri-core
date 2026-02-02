@@ -41,7 +41,7 @@ jobs:
       - name: Install Build Environment
         run: |
              if [ "$RUNNER_OS" == "Linux" ]; then
-             sudo apt-get install pkg-config autoconf-archive
+             sudo apt-get install pkg-config autoconf-archive libbz2-dev
              fi
 #      - uses: LanguageMachines/ticcactions/setup-cppcheck@v1
       - uses: LanguageMachines/ticcactions/irc-nick@v1
