@@ -50,7 +50,7 @@ jobs:
                 apk add build-base git autoconf-archive autoconf automake libtool bzip2-dev rsync &&
                 rsync -av --ignore-existing /usr/share/aclocal/*.m4 /usr/local/share/aclocal/
               fi &&
-              bash bootstrap.sh && ./configure && make && make install
+              bash bootstrap.sh && ./configure && make && sudo make install
            CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux_2_28_x86_64
            CIBW_SKIP: "*-win* *-manylinux_i686 pp*"
 
@@ -63,7 +63,7 @@ jobs:
            CIBW_BEFORE_ALL_LINUX: >
               apk add build-base git autoconf-archive autoconf automake libtool bzip2-dev rsync &&
               rsync -av --ignore-existing /usr/share/aclocal/*.m4 /usr/local/share/aclocal/
-              bash bootstrap.sh && ./configure && make && make install
+              bash bootstrap.sh && ./configure && make && sudo make install
            CIBW_MUSLLINUX_X86_64_IMAGE: quay.io/pypa/musllinux_1_1_x86_64
            CIBW_MUSLLINUX_AARCH64_IMAGE: quay.io/pypa/musllinux_1_1_aarch64
            CIBW_SKIP: "*-win* *-manylinux_i686 pp*"
@@ -75,7 +75,7 @@ jobs:
            CIBW_ARCHS_MACOS: "x86_64 arm64"
            CIBW_BEFORE_ALL_MACOS: >
               brew install pkg-config autoconf automake autoconf-archive libtool &&
-              PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH" bash bootstrap.sh && ./configure && make && make install
+              PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH" bash bootstrap.sh && ./configure && make && sudo make install
            CIBW_SKIP: "*-win* *-manylinux_i686 pp*"
 
       - uses: actions/upload-artifact@v4
