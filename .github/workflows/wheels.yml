@@ -6,8 +6,8 @@ on: [workflow_dispatch]
 
 jobs:
   build_wheels:
-    name: Build wheels on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Build wheels on for ${{matrix.python.cp}}-${{ matrix.buildplat.sys }}
+    runs-on: ${{ matrix.buildplat.runs_on }}
     strategy:
       matrix:
         buildplat:
