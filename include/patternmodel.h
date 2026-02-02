@@ -853,7 +853,7 @@ class PatternModel : public MapType, public PatternModelInterface {
                 f, options.MINTOKENS, options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS,
                 options.DORESET, options.DEBUG);
         } else {
-            MapType::template read(f, options.MINTOKENS, options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS,
+            MapType::read(f, options.MINTOKENS, options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS, !options.DOREMOVESKIPGRAMS,
                                    !options.DOREMOVEFLEXGRAMS, options.DORESET,
                                    options.DEBUG); //read PatternStore (also works for reading unindexed pattern models as indexed, which will load patterns but lose the counts)
         }
