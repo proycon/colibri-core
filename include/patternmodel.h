@@ -641,7 +641,7 @@ class PatternModel : public MapType, public PatternModelInterface {
     /**
          * Begin a new pattern model, optionally pre-setting a reverseindex.
          */
-    PatternModel(IndexedCorpus* corpus = NULL) {
+    explicit PatternModel(IndexedCorpus* corpus = NULL) {
         totaltokens   = 0;
         totaltypes    = 0;
         maxn          = 0;
@@ -2718,7 +2718,7 @@ class IndexedPatternModel : public PatternModel<IndexedData, IndexedDataHandler,
     /**
     * Begin a new pattern model, optionally pre-setting a reverseindex.
     */
-    IndexedPatternModel(IndexedCorpus* corpus = NULL) : PatternModel<IndexedData, IndexedDataHandler, MapType, PatternType>() {
+  explicit IndexedPatternModel(IndexedCorpus* corpus = NULL) : PatternModel<IndexedData, IndexedDataHandler, MapType, PatternType>() {
         this->model_type    = this->getmodeltype();
         this->model_version = this->getmodelversion();
         if (corpus) {

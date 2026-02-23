@@ -65,7 +65,7 @@ class ClassEncoder {
      * @param minlength Minimum supported length of words (default: 0)
      * @param maxlength Maximum supported length of words (default: 0 = unlimited)
      */
-    ClassEncoder(const unsigned int minlength = 0, const unsigned int maxlength = 0);
+  explicit ClassEncoder(const unsigned int minlength = 0, const unsigned int maxlength = 0);
 
     /**
      * Constructor for a ClassEncoder read from file
