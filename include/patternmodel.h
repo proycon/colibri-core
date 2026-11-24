@@ -384,10 +384,10 @@ class PatternSetModel : public PatternSet<uint64_t>, public PatternModelInterfac
     }
 
     /**
-         * Load a PatternSetModel from stream
-         * @param options The options for loading
-         * @param constrainmodel Load only patterns that occur in this model
-         */
+     * Load a PatternSetModel from stream
+     * @param options The options for loading
+     * @param constrainmodel Load only patterns that occur in this model
+     */
     virtual void load(std::istream& f, const PatternModelOptions& options, PatternModelInterface* constrainmodel = NULL) { //load from file
         char null;
         f.read((char*)&null, sizeof(char));
@@ -2665,7 +2665,7 @@ class PatternModel : public MapType, public PatternModelInterface {
          * Throws a KeyError if the pattern was not found.
          */
     PatternPointer getinstance(const IndexReference& begin, const PatternPointer& pattern) {
-        if ((this->reverseindex == NULL)) {
+        if ( this->reverseindex == NULL ) {
             std::cerr << "ERROR: You must specify a reverse index to use getinstance()!" << std::endl;
             throw InternalError();
         }

@@ -114,7 +114,7 @@ class AbstractAlignmentModel : public PatternMap<ValueType, ValueHandler>, publi
         if (constrainmodel)
             constrainstore = constrainmodel->getstoreinterface();
 
-        PatternMap<ValueType, ValueHandler>::template read(f, options.MINTOKENS, options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS,
+        PatternMap<ValueType, ValueHandler>::template read<ValueType, ValueHandler>(f, options.MINTOKENS, options.MINLENGTH, options.MAXLENGTH, constrainstore, !options.DOREMOVENGRAMS,
                                                            !options.DOREMOVESKIPGRAMS, !options.DOREMOVEFLEXGRAMS, options.DORESET, options.DEBUG);
         if (options.DEBUG)
             std::cerr << "Read " << this->size() << " patterns" << std::endl;
