@@ -38,8 +38,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4.1.1
-
-      - name: Install Build Environment
       - uses: LanguageMachines/ticcactions/cpp-build-env@v1
       - uses: LanguageMachines/ticcactions/cpp-dependencies@v1
 #      - uses: LanguageMachines/ticcactions/setup-cppcheck@v1
