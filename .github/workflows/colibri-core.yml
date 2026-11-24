@@ -10,6 +10,7 @@ on:
 
     paths:
       - configure.ac
+      - bootstrap.sh
       - src/**
       - include/**
       - .github/workflows/**
@@ -33,7 +34,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        compiler: [g++, clang++]
+        compiler: [g++ -std=c++17, clang++ -std=c++17]
 
     steps:
       - uses: actions/checkout@v4.1.1
