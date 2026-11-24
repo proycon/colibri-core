@@ -33,17 +33,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macos-latest]
         compiler: [g++ -std=c++17, clang++ -std=c++17]
 
     steps:
       - uses: actions/checkout@v4.1.1
 
       - name: Install Build Environment
-        run: |
-             if [ "$RUNNER_OS" == "Linux" ]; then
-             sudo apt-get install pkg-config autoconf-archive libbz2-dev
-             fi
+      - uses: LanguageMachines/ticcactions/cpp-build-env@v1
+      - uses: LanguageMachines/ticcactions/cpp-dependencies@v1
 #      - uses: LanguageMachines/ticcactions/setup-cppcheck@v1
       - uses: LanguageMachines/ticcactions/irc-nick@v1
 
